@@ -4,24 +4,14 @@ declare(strict_types=1);
 
 /**
  * @var string $text
+ * @var string $classnames
  */
 
+$classnames = trim($classnames);   
+$divattrib = $classnames ? ' class="' . $classnames . '"' : '';
 
-/*
-<div class="img-thumbnail"><svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
-    <rect width="200" height="200" fill="#F88" />
-    <foreignObject x="10" y="10" width="180" height="180" style="background: gainsboro">
-		<div xmlns="http://www.w3.org/1999/xhtml" style="width: 100%; word-wrap: break-word; padding: 4px; font-size:12px;"><?= e($text) ?></div>
-	</foreignObject>
-</svg></div>
-
-<div>
-		<div class="img-thumbnail" style="width:200px; height: 200px; background-color:#F88; word-wrap: break-word; padding: 4px; font-size:12px; text-align:center;"><?= e($text) ?></div>
-</div>
-*/
-
-    $text = e($text);
-    $svg = <<<"END"
+$text = e($text);
+$svg = <<<"END"
 <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
     <rect width="200" height="200" fill="#F88" />
     <foreignObject x="10" y="10" width="180" height="180" style="background: gainsboro">
@@ -30,4 +20,6 @@ declare(strict_types=1);
 </svg>
 END;
 ?>
-<img class="img-thumbnail" src="data:image/svg+xml;base64,<?= base64_encode($svg) ?>" alt="<?= $text ?>" />
+<div<?= $divattrib ?>>
+  <img class="img-thumbnail" src="data:image/svg+xml;base64,<?= base64_encode($svg) ?>" alt="<?= $text ?>" />
+</div>

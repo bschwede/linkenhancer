@@ -6,7 +6,9 @@
 
 declare(strict_types=1);
 
-namespace Schwendinger\Webtrees;
+namespace Schwendinger\Webtrees\Module\LinkEnhancer;
+
+use Schwendinger\Webtrees\Module\LinkEnhancer\CustomMarkdownFactory;
 use Exception;
 use Fisharebest\Localization\Translation;
 use Fisharebest\Webtrees\I18N;
@@ -57,10 +59,15 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         self::CUSTOM_MODULE . '/main/latest-version.txt';
 
 
-    public const PREF_HOME_TYPE = 'HOME_TYPE';
-    public const PREF_WTHB_ACTIVE = 'WTHB_ACTIVE';
-    public const PREF_MDE_ACTIVE = 'MDE_ACTIVE';
-    public const PREF_LINK_ACTIVE = 'LINK_ACTIVE';
+    public const PREF_HOME_TYPE = 'HOME_TYPE'; // home link type: 0=off, 1=tree, 2=my-page
+    public const PREF_WTHB_ACTIVE = 'WTHB_ACTIVE'; // link to GenWiki "Webtrees Hanbuch"
+    public const PREF_MDE_ACTIVE = 'MDE_ACTIVE'; // enable markdown editor for note textareas
+    public const PREF_LINK_ACTIVE = 'LINK_ACTIVE'; // enable enhanced links 
+
+    public const PREF_MD_IMG_STDCLASS = 'MD_IMG_STDCLASS'; // standard classname(s) for div wrapping img- and link-tag    
+    public const STDCLASS_MD_IMG = 'md-img';
+    public const STDCLASS_MD_IMG_TITLE = 'md-img-title';
+    
 
   
     /**
@@ -152,9 +159,9 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public function boot(): void
     {
         // Register a namespace for our views.
-        View::registerNamespace(__DIR__, $this->resourcesFolder() . 'views/');
+        View::registerNamespace($this->name(), $this->resourcesFolder() . 'views/');
 
-        Registry::markdownFactory(new CustomMarkdownFactory());
+        Registry::markdownFactory(new CustomMarkdownFactory($this));
     }
 
     
