@@ -1,0 +1,44 @@
+.TinyMDE div[class^="TM"] {
+  position: relative;
+  transition: padding-left 0.2s ease;
+  padding-left: calc(var(--line-num-width, 2em) + 10px);
+}
+.TMHR:before { 
+  bottom: unset;
+  left: unset;
+  border-bottom: unset;
+}
+.TMHR:after { 
+  content: '';
+  position: absolute;
+  bottom: 50%;
+  left: 40%;
+  border-bottom: 2px solid #808080;
+  width: 20%;
+  z-index:0;
+}
+  
+.TinyMDE div[class^="TM"]::before, .TMH1::before, .TMH2::before {
+  content: attr(data-line-num-view) "  ";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: gray;
+  font-size: 0.8rem !important;
+  font-weight: normal;
+  background-color: #f0f0f0;
+  border-right: 5px solid white;
+  text-align: right;
+  height: 100%;
+  pointer-events: none;
+  width: var(--line-num-width, 2em);
+  box-sizing: border-box;
+}
+.TMH1 { margin-bottom: unset; padding-bottom: 8px;}
+.TMH2 { margin-bottom: unset; padding-bottom: 4px;}
+.TinyMDE {
+  min-height: 50px;
+  max-height: 500px;
+  overflow: scroll; 
+  resize: vertical;
+}
