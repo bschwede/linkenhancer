@@ -49,7 +49,6 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     /**
      * list of const for module administration
      */
-    public const CUSTOM_TITLE = 'Link Enhancement';
     public const CUSTOM_MODULE = 'linkenhancer';
     public const CUSTOM_AUTHOR = 'Bernd Schwendinger';
     public const GITHUB_USER = 'bschwede';
@@ -77,7 +76,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
      */
     public function title(): string
     {
-        return I18N::translate(self::CUSTOM_TITLE);
+        return I18N::translate("LinkEnhancer");
     }
 
     /**
@@ -87,7 +86,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
      */
     public function description(): string
     {
-        return I18N::translate('This module does not do anything');
+        return I18N::translate('Links from notes to Gedcom records, Markdown editor, context help for the Webtrees manual'); // Verknüpfungen aus Notizen zu Gedcom-Datensätzen, Markdown-Editor, Kontext-Hilfe zum Webtrees Handbuch
     }
 
     /**
@@ -149,7 +148,8 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
      */
     public function customTranslations(string $language): array
     {
-        return [];
+        $file = $this->resourcesFolder() . 'lang' . DIRECTORY_SEPARATOR . $language . '.mo';
+        return file_exists($file) ? (new Translation($file))->asArray() : [];
     }
 
 
@@ -209,7 +209,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         $includeRes = '';
         $initJs = '';
 
-        // Home Link
+        // --- Home Link
         if ($cfg_home_active) {
             $tree = Validator::attributes($request)->treeOptional();
             if ($tree != null) {
@@ -219,7 +219,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             }
         }
         
-        // -- Link++
+        // --- Link++
         if ($cfg_link_active) {
             $includeRes .= '<link rel="stylesheet" type="text/css" href="' . $this->assetUrl('css/linkenhancer.css') . '">';
             $includeRes .= '<script src="' . $this->assetUrl('js/linkenhancer.js') . '"></script>';
