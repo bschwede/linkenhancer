@@ -1,0 +1,32 @@
+<?php
+
+declare(strict_types=1);
+
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
+
+/**
+ * @var string $public_url
+ * @var string $mime_type
+ * @var string|null $classnames
+ * @var string $alt_text
+ * @var string|null $title
+ * @var int|null $width
+ * @var int|null $height
+ * 
+ */
+
+$classnames = trim($classnames);
+$divattrib = $classnames ? ' class="' . $classnames . '"' : '';
+$title = $title ? ' title="' . e($title) . '"' : '';
+//$title = $title ? '<span class="media-img-title">' . e($title) . '</span>' : '';
+$width = isset($width) ? ' width="' . $width . '"' : '';
+$height = isset($height) ? ' height="' . $height . '"' : '';
+
+// <a type="image/?"> - necessary for display of data-title and gallery function of light box
+?>
+<div<?= $divattrib ?>>
+  <a class="gallery cboxElement" type="<?= $mime_type ?>" href="<?= $public_url ?>" data-title="<?= e($alt_text); ?>">
+    <img class="img-thumbnail img-fluid" dir="auto" src="<?= $public_url ?>" alt="<?= e($alt_text); ?>"<?= $title ?><?= $width ?><?= $height ?> />
+    <span class="<?= LinkEnhancerModule::STDCLASS_MD_IMG_TITLE ?>"><?= e($alt_text); ?></span>
+  </a>
+</div>
