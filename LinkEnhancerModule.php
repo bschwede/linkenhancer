@@ -94,7 +94,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
      */
     public function title(): string
     {
-        return I18N::translate("LinkEnhancer");
+        return /*I18N: Module title */I18N::translate("LinkEnhancer");
     }
 
     /**
@@ -104,7 +104,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
      */
     public function description(): string
     {
-        return I18N::translate('Links from notes to Gedcom records, Markdown editor, context help for the Webtrees manual'); // Verknüpfungen aus Notizen zu Gedcom-Datensätzen, Markdown-Editor, Kontext-Hilfe zum Webtrees Handbuch
+        return /*I18N: Module description */I18N::translate('Cross-references to Gedcom datasets, Markdown editor, context-sensitive link to the GenWiki Webtrees manual');
     }
 
     /**
@@ -341,7 +341,7 @@ EOD;
                 $this->setPreference($preference, trim(Validator::parsedBody($request)->string($preference)));
             }
 
-            FlashMessages::addMessage(I18N::translate(
+            FlashMessages::addMessage(/*I18N: webtrees.pot */I18N::translate(
                 'The preferences for the module “%s” have been updated.',
                 $this->title()
             ), 'success');

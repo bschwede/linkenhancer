@@ -14,10 +14,18 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
 ?>
 
 <?= view('components/breadcrumbs', [
-        'links' => [route(ControlPanel::class) => I18N::translate('Control panel'), $title]]) ?>
+        'links' => [route(ControlPanel::class) => /*I18N: webtrees.pot */I18N::translate('Control panel'), $title]]) ?>
 
 <h1><?= e($title) ?></h1>
 <p><?= e($description) ?></p>
+
+<p class="text-muted">
+    <?= /*I18N: Settings - prologue sentence 1 */I18N::translate('The main purpose of this module is to make links to data records stored in family trees more convenient.') ?>
+    <?= /*I18N: Settings - prologue sentence 2 */ I18N::translate('This avoids having to store fully qualified links, which impairs the portability of Gedcom data.') ?>
+    <?= /*I18N: Settings - prologue sentence 3 */ I18N::translate('By linking the notes to the GEDCOM data records (persons, families, sources, etc.) from the text, it is easier to replace the history module and thus also save this information in the GEDCOM file.') ?>
+    <?= /*I18N: Settings - prologue sentence 4 */ I18N::translate('The option of embedding the images already inserted in the family tree in the notes rounds off this approach.') ?>
+    <?= /*I18N: Settings - prologue sentence 5 */ I18N::translate('The link function is controlled via the anchor part of the URI.') ?>
+</p>
 
 <div class="linkenhancer mb-5">
     <form method="post">
@@ -25,7 +33,7 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
         <input type="hidden" name="save" id="save" value="1">
 
         <p>&nbsp;</p>
-        <h4><?= I18N::translate('Activate Support') ?></h4>
+        <h4><?= /*I18N: Settings - section title */I18N::translate('Activate Support') ?></h4>
 
         <div class="row">
             <!-- home link --><?php $prefId = LinkEnhancerModule::PREF_HOME_LINK_TYPE; ?>
@@ -39,9 +47,9 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
                             'id' => $prefId,
                             'name' => $prefId,
                             'options' => [
-                                I18N::translate('no'), 
-                                I18N::translate('Home page'),
-                                I18N::translate('My page')
+                                /*I18N: webtrees.pot */I18N::translate('no'),
+                                /*I18N: webtrees.pot */I18N::translate('Home page'),
+                                /*I18N: webtrees.pot */I18N::translate('My page')
                             ],
                             'selected' => (int) $prefs[$prefId]
                         ]) ?>
@@ -59,7 +67,10 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
                         <?= view('components/radios-inline', [
                             'id' => $prefId,
                             'name' => $prefId,
-                            'options' => [I18N::translate('no'), I18N::translate('yes')],
+                            'options' => [
+                                I18N::translate('no'),
+                                /*I18N: webtrees.pot */I18N::translate('yes')
+                            ],
                             'selected' => (int) $prefs[$prefId]
                         ]) ?>
                     </div>
@@ -80,9 +91,9 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
                             'selected' => (int) $prefs[$prefId]
                         ]) ?>
                         <div class="form-text">
-                        <?= I18N::translate("Markdown is a simple system of formatting, used on websites such as Wikipedia. It uses unobtrusive punctuation characters to create headings and sub-headings, bold and italic text, lists, tables, etc.") ?>    
+                        <?= /*I18N: webtrees.pot */I18N::translate("Markdown is a simple system of formatting, used on websites such as Wikipedia. It uses unobtrusive punctuation characters to create headings and sub-headings, bold and italic text, lists, tables, etc.") ?>    
                         <br />
-                        <strong><?= I18N::translate("Precondition: Tree preference '%s' need to be set to markdown.", I18N::translate('Format text and notes')) ?></strong>
+                        <strong><?= I18N::translate("Precondition: Tree preference '%s' need to be set to markdown.", /*I18N: webtrees.pot */I18N::translate('Format text and notes')) ?></strong>
                         </div>
 
                     </div>
@@ -91,7 +102,7 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
         </div>
         
         <hr/>
-        <h4><?= I18N::translate('Enhanced Link Support') ?></h4>
+        <h4><?= /*I18N: Settings - section title */I18N::translate('Enhanced Link Support') ?></h4>
 
         <div class="row">
             <!-- activate link++ --><?php $prefId = LinkEnhancerModule::PREF_LINKSPP_ACTIVE; ?>
@@ -107,6 +118,14 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
                             'options' => [I18N::translate('no'), I18N::translate('yes')],
                             'selected' => (int) $prefs[$prefId]
                         ]) ?>
+                        <div class="form-text">
+                            <?= /*I18N: Enhanced Links */ I18N::translate('Function is realized via Javascript - works with links in notes and HTML blocks.') ?>
+                            <br />
+                            <b>Syntax</b>: <ul>
+                                <li><code>[<?= /*I18N: Enhanced Links code example 1 */ I18N::translate('Link display title') ?>](#@wt=i@I1@)</code> (Markdown)</li>
+                                <li><code>&lt;a href="#@wt=i@I1@"&gt;<?= /*I18N: Enhanced Links code example 2 */ I18N::translate('Link display title') ?>&lt;/a&gt;</code> (HTML)</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </fieldset>
@@ -114,12 +133,12 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
 
             <!-- links++ javascript --><?php $prefId = LinkEnhancerModule::PREF_LINKSPP_JS; ?>
             <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
-                <?= I18N::translate('JSON for additional link targets') . ' (' . I18N::translate('optional') . ')' ?>
+                <?= I18N::translate('JSON for additional link targets') . ' (' . /*I18N: webtrees.pot */I18N::translate('optional') . ')' ?>
             </label>
             <div class="col-sm-9 wt-page-options-value">
                 <textarea id="<?= $prefId ?>" name="<?= $prefId ?>" class="form-control font-monospace" dir="ltr" rows="5"><?= e($prefs[$prefId]) ?></textarea>
                 <p class="text-muted">
-                    <?= I18N::translate('Include the <code>&lt;style&gt;&lt;/style&gt;</code> tags.') ?>
+                    
                 </p>
             </div>
 
@@ -127,7 +146,7 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
 
         <hr/>
 
-        <h4><?= I18N::translate('Markdown Image Support') ?></h4>
+        <h4><?= /*I18N: Settings - section title */I18N::translate('Markdown Image Support') ?></h4>
 
         <div class="row">
             <!-- md img active --><?php $prefId = LinkEnhancerModule::PREF_MD_IMG_ACTIVE; ?>
@@ -143,6 +162,14 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
                             'options' => [I18N::translate('no'), I18N::translate('yes')],
                             'selected' => (int)$prefs[$prefId]
                         ]) ?>
+                        <div class="form-text">
+                            <?= /*I18N: MD img */ I18N::translate('Only works in notes that are formatted with Markdown.') ?>
+                            <br />
+                            <b>Syntax</b>:<ul>
+                            <li><code>![<?= /*I18N: MD img code example 1 */ I18N::translate('alternate text for gedcom object') ?>](#@id=@M1@)</code></li>
+                            <li><code>![<?= /*I18N: MD img code example 2 */ I18N::translate('alternate text for picture in public folder') ?>](#@public=webtrees.png "title")</code></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </fieldset>
@@ -171,7 +198,7 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
 
         <button type="submit" class="btn btn-primary">
             <?= view('icons/save') ?>
-            <?= I18N::translate('save') ?>
+            <?= /*I18N: webtrees.pot */I18N::translate('save') ?>
         </button>
     </form>
 </div>

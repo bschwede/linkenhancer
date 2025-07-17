@@ -1,55 +1,60 @@
+# German translations for PACKAGE package.
+# Copyright (C) 2025 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Automatically generated, 2025.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: LinkEnhancer\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-17 19:48+0200\n"
-"PO-Revision-Date: 2025-07-16 17:33+0200\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: en\n"
+"PO-Revision-Date: 2025-07-17 19:44+0200\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.0.1\n"
-"X-Poedit-Basepath: ../..\n"
-"X-Poedit-SearchPath-0: CustomMarkdownFactory.php\n"
-"X-Poedit-SearchPath-1: LinkEnhancerModule.php\n"
-"X-Poedit-SearchPath-2: module.php\n"
 
 #. I18N: MD img error precondition
 #: CustomMarkdownFactory.php:66
 msgid ""
 "Neither a media object nor a file from the public directory was specified."
 msgstr ""
+"Es wurde weder ein Medienobjekt noch eine Datei aus dem public-Verzeichnis "
+"angegeben."
 
 #. I18N: MD img error precondition
 #: CustomMarkdownFactory.php:72
 msgid ""
 "Only one media object OR one file from the public directory can be specified."
 msgstr ""
+"Es kann nur ein Medienobjekt ODER eine Datei aus dem public-Verzeichnis "
+"angegeben werden."
 
 #. I18N: MD img error crossreference
 #: CustomMarkdownFactory.php:108
 msgid "There is no image file available for display."
-msgstr ""
+msgstr "Es ist keine Bilddatei zur Anzeige vorhanden."
 
 #. I18N: MD img error public file, %s the relative filename
 #: CustomMarkdownFactory.php:139
 #, php-format
 msgid "File ‘%s’ does not exist in the public folder"
-msgstr ""
+msgstr "Datei '%s' existiert nicht im public-Ordner"
 
 #. I18N: MD img error public file
 #: CustomMarkdownFactory.php:146
 msgid "Only files within the public folder are supported"
-msgstr ""
+msgstr "Es werden nur Dateien innerhalb des public-Ordners unterstützt"
 
 #. I18N: MD img error public file, %s1=rel. filename, %s2=mimetype
 #: CustomMarkdownFactory.php:154
 #, php-format
 msgid "File ‘%s’ in the public folder is not an image but '%s'"
-msgstr ""
+msgstr "Datei '%s' im public-Ordner ist kein Bild sondern '%s'"
 
 #. I18N: Settings - prologue sentence 1
 #: resources/views/settings.phtml:23
@@ -57,6 +62,8 @@ msgid ""
 "The main purpose of this module is to make links to data records stored in "
 "family trees more convenient."
 msgstr ""
+"Im wesentlichen dient dieses Modul dazu Verknüpfungen auf in Stammbäumen "
+"gespeicherte Datensätze komfortabler zu gestalten."
 
 #. I18N: Settings - prologue sentence 2
 #: resources/views/settings.phtml:24
@@ -64,6 +71,8 @@ msgid ""
 "This avoids having to store fully qualified links, which impairs the "
 "portability of Gedcom data."
 msgstr ""
+"Es wird damit vermieden voll qualifizierte Links hinterlegen zu müssen, die "
+"die Portabilität der Gedcom-Daten verschlechtert."
 
 #. I18N: Settings - prologue sentence 3
 #: resources/views/settings.phtml:25
@@ -72,6 +81,10 @@ msgid ""
 "etc.) from the text, it is easier to replace the history module and thus "
 "also save this information in the GEDCOM file."
 msgstr ""
+"Mit dem Verknüpfen der Notizen mit den GEDCOM-Datensätzen (Personen, "
+"Familien, Quellen etc.) aus dem Text heraus gelingt es besser das "
+"Geschichten-Modul zu ersetzen und damit diese Informationen auch in der "
+"GEDCOM-Datei mit zu speichern."
 
 #. I18N: Settings - prologue sentence 4
 #: resources/views/settings.phtml:26
@@ -79,42 +92,45 @@ msgid ""
 "The option of embedding the images already inserted in the family tree in "
 "the notes rounds off this approach."
 msgstr ""
+"Die Möglichkeit, die im Stammbaum bereits eingefügten Bilder in den Notizen "
+"einzubetten, rundet diesen Ansatz ab."
 
 #. I18N: Settings - prologue sentence 5
 #: resources/views/settings.phtml:27
 msgid "The link function is controlled via the anchor part of the URI."
-msgstr ""
+msgstr "Über den Anker-Teil der URI wird die Verknüpfungsfunktion gesteuert."
 
 #. I18N: Settings - section title
 #: resources/views/settings.phtml:36
 msgid "Activate Support"
-msgstr ""
+msgstr "Aktivieren der Unterstützung"
 
 #: resources/views/settings.phtml:43
 msgid "Site title links to tree"
-msgstr ""
+msgstr "Webseitentitel als Link zum aktiven Stammbaum"
 
 #: resources/views/settings.phtml:64
 msgid "Link to GenWiki Webtrees Manual"
-msgstr ""
+msgstr "Link zum GenWiki Webtrees Handbuch"
 
 #: resources/views/settings.phtml:84
 msgid "Markdown editor for note textareas"
-msgstr ""
+msgstr "Markdown-Editor für Notizen-Texteingabefelder"
 
 #: resources/views/settings.phtml:96
 #, php-format
 msgid "Precondition: Tree preference '%s' need to be set to markdown."
 msgstr ""
+"Vorbedingung: Stammbaum-Einstellung '%s' muss auf markdown gesetzt sein."
 
 #. I18N: Settings - section title
 #: resources/views/settings.phtml:105
 msgid "Enhanced Link Support"
-msgstr ""
+msgstr "Verbesserte Link-Unterstützung"
 
 #: resources/views/settings.phtml:112
 msgid "Activate enhanced links?"
-msgstr ""
+msgstr "Verbesserte Links aktivieren?"
 
 #. I18N: Enhanced Links
 #: resources/views/settings.phtml:122
@@ -122,48 +138,50 @@ msgid ""
 "Function is realized via Javascript - works with links in notes and HTML "
 "blocks."
 msgstr ""
+"Funktion wird über Javascript realisiert - geht mit Links in Notizen und "
+"HTML-Blöcken."
 
 #. I18N: Enhanced Links code example 1
 #. I18N: Enhanced Links code example 2
 #: resources/views/settings.phtml:125 resources/views/settings.phtml:126
 msgid "Link display title"
-msgstr ""
+msgstr "Link-Anzeigetitel"
 
 #: resources/views/settings.phtml:136
 msgid "JSON for additional link targets"
-msgstr ""
+msgstr "JSON-Objekt für zusätzliche Link-Ziele"
 
 #. I18N: Settings - section title
 #: resources/views/settings.phtml:149
 msgid "Markdown Image Support"
-msgstr ""
+msgstr "Markdown Bild Unterstützung"
 
 #: resources/views/settings.phtml:156
 msgid "Activate markdown image tweak?"
-msgstr ""
+msgstr "Markdown Bilderlink Optimierung aktivieren?"
 
 #. I18N: MD img
 #: resources/views/settings.phtml:166
 msgid "Only works in notes that are formatted with Markdown."
-msgstr ""
+msgstr "Funktioniert nur in Notizen, die mit Markdown formatiert sind."
 
 #. I18N: MD img code example 1
 #: resources/views/settings.phtml:169
 msgid "alternate text for gedcom object"
-msgstr ""
+msgstr "alternativer Text für GEDCOM-Objekt"
 
 #. I18N: MD img code example 2
 #: resources/views/settings.phtml:170
 msgid "alternate text for picture in public folder"
-msgstr ""
+msgstr "alternativer Text für Bild im Public-Ordner"
 
 #: resources/views/settings.phtml:179
 msgid "Markdown image container standard css class"
-msgstr ""
+msgstr "Standard CSS-Klasse(n) für Markdown Bild-Container"
 
 #: resources/views/settings.phtml:187
 msgid "Markdown image title container standard css class"
-msgstr ""
+msgstr "Standard CSS-Klasse(n) für Markdown Bildtitel-Container"
 
 #. I18N: Module title
 #: LinkEnhancerModule.php:97
@@ -176,3 +194,5 @@ msgid ""
 "Cross-references to Gedcom datasets, Markdown editor, context-sensitive link "
 "to the GenWiki Webtrees manual"
 msgstr ""
+"Querverweise zu Gedcom-Datensätzen, Markdown-Editor, kontextabhängiger Link "
+"zum GenWiki Webtrees Handbuch"

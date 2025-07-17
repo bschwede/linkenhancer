@@ -63,13 +63,13 @@ class CustomMarkdownFactory extends MarkdownFactory {
 
                 if (!isset($params['id']) && !isset($params['public'])) {
                     return view($this->module->name() . '::error-img-svg', [
-                        'text'       => I18N::translate("Neither a media object nor a file from the public directory was specified."), //"Es wurde weder ein Medienobjekt noch eine Datei aus dem public-Verzeichnis angegeben.",
+                        'text'       => /*I18N: MD img error precondition */I18N::translate("Neither a media object nor a file from the public directory was specified."),
                         'classnames' => $classnames,
                     ]);                    
                 }
                 if (isset($params['id']) && isset($params['public'])) {
                     return view($this->module->name() . '::error-img-svg', [
-                        'text'       => I18N::translate("Only one media object OR one file from the public directory can be specified."), //"Es kann nur ein Medienobjekt ODER eine Datei aus dem public-Verzeichnis angegeben werden.",
+                        'text'       => /*I18N: MD img error precondition */I18N::translate("Only one media object OR one file from the public directory can be specified."),
                         'classnames' => $classnames,
                     ]);
                 }
@@ -89,7 +89,7 @@ class CustomMarkdownFactory extends MarkdownFactory {
                                 $record = Auth::checkMediaAccess($record);
                             } catch (HttpAccessDeniedException $e) {
                                 return view($this->module->name() . '::error-img-svg', [
-                                    'text'       => "XREF $xref - " . $e->getMessage(),
+                                    'text'       => $e->getMessage() . " - XREF $xref",
                                     'classnames' => $classnames,
                                 ]);
                             }
@@ -105,13 +105,13 @@ class CustomMarkdownFactory extends MarkdownFactory {
                                 ]);
                             } else {
                                 return view($this->module->name() . '::error-img-svg', [
-                                    'text'       => I18N::translate("There is no image file available for display.") . " - XREF $xref", //Es ist keine Bilddatei zur Anzeige vorhanden",
+                                    'text'       => /*I18N: MD img error crossreference */I18N::translate("There is no image file available for display.") . " - XREF $xref",
                                     'classnames' => $classnames,
                                 ]);
                             }
                         } else {
                             return view($this->module->name() . '::error-img-svg', [
-                                'text'       => I18N::translate('This media object does not exist or you do not have permission to view it.') . " - XREF $xref", // ungültig oder Medienobjekt nicht mehr existent", //$message = I18N::translate('This media object does not exist or you do not have permission to view it.');
+                                'text'       => /*I18N: webtrees.pot */I18N::translate('This media object does not exist or you do not have permission to view it.') . " - XREF $xref",
                                 'classnames' => $classnames,
                             ]);
                         }
@@ -136,14 +136,14 @@ class CustomMarkdownFactory extends MarkdownFactory {
 
                     if (! $public_file) { //(!file_exists($public_file))
                         return view($this->module->name() . '::error-img-svg', [
-                            'text' => I18N::translate("File ‘%s’ does not exist in the public folder", $public_relpath), //"Datei '$public_relpath' existiert nicht im public-Ordner",
+                            'text' => /*I18N: MD img error public file, %s the relative filename */I18N::translate("File ‘%s’ does not exist in the public folder", $public_relpath),
                             'classnames' => $classnames,
                         ]);
                     }
 
                     if (! strstr($public_file, $public_basedir)) {
                         return view($this->module->name() . '::error-img-svg', [
-                            'text' => I18N::translate("Only files within the public folder are supported") . " - '$public_relpath'", //"Es werden nur Dateien innerhalb des public-Ordners unterstützt - '$public_relpath'",
+                            'text' => /*I18N: MD img error public file */I18N::translate("Only files within the public folder are supported") . " - '$public_relpath'",
                             'classnames' => $classnames,
                         ]);
                     }
@@ -151,7 +151,7 @@ class CustomMarkdownFactory extends MarkdownFactory {
                     $public_type = mime_content_type($public_file);
                     if (! strstr($public_type, 'image/')) {
                         return view($this->module->name() . '::error-img-svg', [
-                            'text' => I18N::translate("File ‘%s’ in the public folder is not an image but '%s'", $public_relpath, $public_type), //"Datei '$public_relpath' im public-Ordner ist kein Bild sondern '$public_type'"
+                            'text' => /*I18N: MD img error public file, %s1=rel. filename, %s2=mimetype */I18N::translate("File ‘%s’ in the public folder is not an image but '%s'", $public_relpath, $public_type),
                             'classnames' => $classnames,
                         ]);
                     }

@@ -1,21 +1,21 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: LinkEnhancer\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-17 19:48+0200\n"
-"PO-Revision-Date: 2025-07-16 17:33+0200\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: en\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.0.1\n"
-"X-Poedit-Basepath: ../..\n"
-"X-Poedit-SearchPath-0: CustomMarkdownFactory.php\n"
-"X-Poedit-SearchPath-1: LinkEnhancerModule.php\n"
-"X-Poedit-SearchPath-2: module.php\n"
 
 #. I18N: MD img error precondition
 #: CustomMarkdownFactory.php:66
@@ -34,6 +34,12 @@ msgstr ""
 msgid "There is no image file available for display."
 msgstr ""
 
+#. I18N: webtrees.pot
+#: CustomMarkdownFactory.php:114
+msgid ""
+"This media object does not exist or you do not have permission to view it."
+msgstr ""
+
 #. I18N: MD img error public file, %s the relative filename
 #: CustomMarkdownFactory.php:139
 #, php-format
@@ -49,6 +55,11 @@ msgstr ""
 #: CustomMarkdownFactory.php:154
 #, php-format
 msgid "File ‘%s’ in the public folder is not an image but '%s'"
+msgstr ""
+
+#. I18N: webtrees.pot
+#: resources/views/settings.phtml:17
+msgid "Control panel"
 msgstr ""
 
 #. I18N: Settings - prologue sentence 1
@@ -94,12 +105,48 @@ msgstr ""
 msgid "Site title links to tree"
 msgstr ""
 
+#. I18N: webtrees.pot
+#: resources/views/settings.phtml:50 resources/views/settings.phtml:71
+#: resources/views/settings.phtml:90 resources/views/settings.phtml:118
+#: resources/views/settings.phtml:162
+msgid "no"
+msgstr ""
+
+#. I18N: webtrees.pot
+#: resources/views/settings.phtml:51
+msgid "Home page"
+msgstr ""
+
+#. I18N: webtrees.pot
+#: resources/views/settings.phtml:52
+msgid "My page"
+msgstr ""
+
 #: resources/views/settings.phtml:64
 msgid "Link to GenWiki Webtrees Manual"
 msgstr ""
 
+#. I18N: webtrees.pot
+#: resources/views/settings.phtml:72 resources/views/settings.phtml:90
+#: resources/views/settings.phtml:118 resources/views/settings.phtml:162
+msgid "yes"
+msgstr ""
+
 #: resources/views/settings.phtml:84
 msgid "Markdown editor for note textareas"
+msgstr ""
+
+#. I18N: webtrees.pot
+#: resources/views/settings.phtml:94
+msgid ""
+"Markdown is a simple system of formatting, used on websites such as "
+"Wikipedia. It uses unobtrusive punctuation characters to create headings and "
+"sub-headings, bold and italic text, lists, tables, etc."
+msgstr ""
+
+#. I18N: webtrees.pot
+#: resources/views/settings.phtml:96
+msgid "Format text and notes"
 msgstr ""
 
 #: resources/views/settings.phtml:96
@@ -131,6 +178,11 @@ msgstr ""
 
 #: resources/views/settings.phtml:136
 msgid "JSON for additional link targets"
+msgstr ""
+
+#. I18N: webtrees.pot
+#: resources/views/settings.phtml:136
+msgid "optional"
 msgstr ""
 
 #. I18N: Settings - section title
@@ -165,6 +217,11 @@ msgstr ""
 msgid "Markdown image title container standard css class"
 msgstr ""
 
+#. I18N: webtrees.pot
+#: resources/views/settings.phtml:201
+msgid "save"
+msgstr ""
+
 #. I18N: Module title
 #: LinkEnhancerModule.php:97
 msgid "LinkEnhancer"
@@ -175,4 +232,10 @@ msgstr ""
 msgid ""
 "Cross-references to Gedcom datasets, Markdown editor, context-sensitive link "
 "to the GenWiki Webtrees manual"
+msgstr ""
+
+#. I18N: webtrees.pot
+#: LinkEnhancerModule.php:345
+#, php-format
+msgid "The preferences for the module “%s” have been updated."
 msgstr ""
