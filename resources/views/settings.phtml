@@ -1,0 +1,177 @@
+<?php
+
+declare(strict_types=1);
+
+use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
+use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
+
+/**
+ * @var string                  $title                  title of this custom module
+ * @var string                  $description            description of this module
+ * @var array<string>           $prefs                  list of chapter objects
+ */
+?>
+
+<?= view('components/breadcrumbs', [
+        'links' => [route(ControlPanel::class) => I18N::translate('Control panel'), $title]]) ?>
+
+<h1><?= e($title) ?></h1>
+<p><?= e($description) ?></p>
+
+<div class="linkenhancer mb-5">
+    <form method="post">
+        <?= csrf_field() ?>
+        <input type="hidden" name="save" id="save" value="1">
+
+        <p>&nbsp;</p>
+        <h4><?= I18N::translate('Activate Support') ?></h4>
+
+        <div class="row">
+            <!-- home link --><?php $prefId = LinkEnhancerModule::PREF_HOME_LINK_TYPE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                        <?= I18N::translate('Site title links to tree') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value">
+                        <?= view('components/radios-inline', [
+                            'id' => $prefId,
+                            'name' => $prefId,
+                            'options' => [
+                                I18N::translate('no'), 
+                                I18N::translate('Home page'),
+                                I18N::translate('My page')
+                            ],
+                            'selected' => (int) $prefs[$prefId]
+                        ]) ?>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- show wthb-link --><?php $prefId = LinkEnhancerModule::PREF_WTHB_ACTIVE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                        <?= I18N::translate('Link to GenWiki Webtrees Manual') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value">
+                        <?= view('components/radios-inline', [
+                            'id' => $prefId,
+                            'name' => $prefId,
+                            'options' => [I18N::translate('no'), I18N::translate('yes')],
+                            'selected' => (int) $prefs[$prefId]
+                        ]) ?>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- mde active --><?php $prefId = LinkEnhancerModule::PREF_MDE_ACTIVE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                        <?= I18N::translate('Markdown editor for note textareas') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value">
+                        <?= view('components/radios-inline', [
+                            'id' => $prefId,
+                            'name' => $prefId,
+                            'options' => [I18N::translate('no'), I18N::translate('yes')],
+                            'selected' => (int) $prefs[$prefId]
+                        ]) ?>
+                        <div class="form-text">
+                        <?= I18N::translate("Markdown is a simple system of formatting, used on websites such as Wikipedia. It uses unobtrusive punctuation characters to create headings and sub-headings, bold and italic text, lists, tables, etc.") ?>    
+                        <br />
+                        <strong><?= I18N::translate("Precondition: Tree preference '%s' need to be set to markdown.", I18N::translate('Format text and notes')) ?></strong>
+                        </div>
+
+                    </div>
+                </div>
+            </fieldset>            
+        </div>
+        
+        <hr/>
+        <h4><?= I18N::translate('Enhanced Link Support') ?></h4>
+
+        <div class="row">
+            <!-- activate link++ --><?php $prefId = LinkEnhancerModule::PREF_LINKSPP_ACTIVE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                        <?= I18N::translate('Activate enhanced links?') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value">
+                        <?= view('components/radios-inline', [
+                            'id' => $prefId,
+                            'name' => $prefId,
+                            'options' => [I18N::translate('no'), I18N::translate('yes')],
+                            'selected' => (int) $prefs[$prefId]
+                        ]) ?>
+                    </div>
+                </div>
+            </fieldset>
+
+
+            <!-- links++ javascript --><?php $prefId = LinkEnhancerModule::PREF_LINKSPP_JS; ?>
+            <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
+                <?= I18N::translate('JSON for additional link targets') . ' (' . I18N::translate('optional') . ')' ?>
+            </label>
+            <div class="col-sm-9 wt-page-options-value">
+                <textarea id="<?= $prefId ?>" name="<?= $prefId ?>" class="form-control font-monospace" dir="ltr" rows="5"><?= e($prefs[$prefId]) ?></textarea>
+                <p class="text-muted">
+                    <?= I18N::translate('Include the <code>&lt;style&gt;&lt;/style&gt;</code> tags.') ?>
+                </p>
+            </div>
+
+        </div>
+
+        <hr/>
+
+        <h4><?= I18N::translate('Markdown Image Support') ?></h4>
+
+        <div class="row">
+            <!-- md img active --><?php $prefId = LinkEnhancerModule::PREF_MD_IMG_ACTIVE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                        <?= I18N::translate('Activate markdown image tweak?') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value">
+                        <?= view('components/radios-inline', [
+                            'id' => $prefId,
+                            'name' => $prefId,
+                            'options' => [I18N::translate('no'), I18N::translate('yes')],
+                            'selected' => (int)$prefs[$prefId]
+                        ]) ?>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- md img stdclass --><?php $prefId = LinkEnhancerModule::PREF_MD_IMG_STDCLASS; ?>
+            <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
+                <?= I18N::translate('Markdown image container standard css class') ?>
+            </label>
+            <div class="col-sm-9 wt-page-options-value">
+                <input class="form-control" id="<?= $prefId ?>" name="<?= $prefId ?>" type="text" value="<?= e($prefs[$prefId]) ?>">
+            </div>
+
+            <!-- md img title stdclass --><?php $prefId = LinkEnhancerModule::PREF_MD_IMG_TITLE_STDCLASS; ?>
+            <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
+                <?= I18N::translate('Markdown image title container standard css class') ?>
+            </label>
+            <div class="col-sm-9 wt-page-options-value">
+                <input class="form-control" id="<?= $prefId ?>" name="<?= $prefId ?>" type="text"
+                       value="<?= e($prefs[$prefId]) ?>">
+            </div>
+
+        </div>        
+
+
+        <p>&nbsp;</p>
+
+        <button type="submit" class="btn btn-primary">
+            <?= view('icons/save') ?>
+            <?= I18N::translate('save') ?>
+        </button>
+    </form>
+</div>

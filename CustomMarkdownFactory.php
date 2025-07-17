@@ -54,11 +54,12 @@ class CustomMarkdownFactory extends MarkdownFactory {
                 $hashvalue = htmlspecialchars_decode($imgmatch[1]);
 
                 parse_str($hashvalue, $params);
-                //return "<pre>$hashvalue\n" . print_r($params, true) . "</pre>";
+
                 $classnames = isset($params['cname']) ? explode(' ',urldecode($params['cname'])) : [];
-                $stdclassnames = explode(' ', $this->module->getPreference($this->module::PREF_MD_IMG_STDCLASS, $this->module::STDCLASS_MD_IMG));
+                $stdclassnames = explode(' ', $this->module->getPref($this->module::PREF_MD_IMG_STDCLASS));
                 $classnames = array_merge($classnames, $stdclassnames);
                 $classnames = implode(' ', array_unique($classnames));
+                $titleclassnames = $this->module->getPref($this->module::PREF_MD_IMG_TITLE_STDCLASS);
 
                 if (!isset($params['id']) && !isset($params['public'])) {
                     return view($this->module->name() . '::error-img-svg', [
@@ -77,8 +78,8 @@ class CustomMarkdownFactory extends MarkdownFactory {
                 $height = isset($params['h']) && preg_match('/^\d+$/', $params['h'], $match) ? intval($params['h']) : 200;
 
                 if (isset($params['id'])) {
-                //--- XREF - alt_text and title taken from mediaobject
-
+                //--- XREF - alt_text and title taken from mediaobject;
+                //    in webtrees media title is used for a[data-title] and img[alt]
                     if (preg_match('/^@(\w+)@$/',$params['id'], $match)) {
                         $xref = $match[1];
                         $record = Registry::mediaFactory()->make($xref, $this->tree);
@@ -96,10 +97,11 @@ class CustomMarkdownFactory extends MarkdownFactory {
                             $media_file = $record->firstImageFile();
                             if ($media_file instanceof MediaFile) {
                                 return view($this->module->name() . '::md-img-media', [
-                                    'media_file' => $media_file,
-                                    'classnames' => $classnames,
-                                    'width'      => $width,
-                                    'height'     => $height,
+                                    'media_file'      => $media_file,
+                                    'classnames'      => $classnames,
+                                    'width'           => $width,
+                                    'height'          => $height,
+                                    'titleclassnames' => $titleclassnames,
                                 ]);
                             } else {
                                 return view($this->module->name() . '::error-img-svg', [
@@ -115,7 +117,9 @@ class CustomMarkdownFactory extends MarkdownFactory {
                         }
                     }
                 } else { 
-                //--- public file - alt_text and title effective
+                //--- public file - alt_text and title are used
+                //    alt_text for a[data-title] and img[alt] and visible picture title,
+                //    title for img[title]
                     $title = preg_match('/title="([^"]+)"/',$imgmatch[0], $match) ? $match[1] : '';
                     $alt_text = preg_match('/alt="([^"]+)"/', $imgmatch[0], $match) ? $match[1] : '';
 
@@ -128,7 +132,7 @@ class CustomMarkdownFactory extends MarkdownFactory {
                         ]);
                     }
 
-                    $public_file = realpath("$public_basedir/" . $public_relpath);
+                    $public_file = realpath($public_basedir . DIRECTORY_SEPARATOR . $public_relpath);
 
                     if (! $public_file) { //(!file_exists($public_file))
                         return view($this->module->name() . '::error-img-svg', [
@@ -153,13 +157,14 @@ class CustomMarkdownFactory extends MarkdownFactory {
                     }
                     
                     return view($this->module->name() . '::md-img-public', [
-                        'public_url' => $this->public_url . $public_relpath,
-                        'mime_type'  => $public_type,
-                        'classnames' => $classnames,
-                        'alt_text'   => $alt_text,
-                        'title'      => $title,
-                        'width'      => $width,
-                        'height'     => $height,
+                        'public_url'      => $this->public_url . $public_relpath,
+                        'mime_type'       => $public_type,
+                        'classnames'      => $classnames,
+                        'alt_text'        => $alt_text,
+                        'title'           => $title,
+                        'width'           => $width,
+                        'height'          => $height,
+                        'titleclassnames' => $titleclassnames,
                     ]);
                 }
 

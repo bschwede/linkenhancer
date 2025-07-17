@@ -19,10 +19,14 @@ use Fisharebest\Webtrees\Module\ModuleCustomInterface;
 use Fisharebest\Webtrees\Module\ModuleCustomTrait;
 use Fisharebest\Webtrees\Module\ModuleGlobalInterface;
 use Fisharebest\Webtrees\Module\ModuleGlobalTrait;
+use Fisharebest\Webtrees\Module\ModuleConfigInterface;
+use Fisharebest\Webtrees\Module\ModuleConfigTrait;
 use Fisharebest\Webtrees\Http\RequestHandlers\TreePage;
 use Fisharebest\Webtrees\Http\RequestHandlers\HomePage;
 use Fisharebest\Webtrees\Validator;
+use Fisharebest\Webtrees\FlashMessages;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 
 /**
@@ -39,12 +43,13 @@ use Psr\Http\Message\ServerRequestInterface;
  *
  * 
  */
-class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface, ModuleGlobalInterface {
+class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface, ModuleGlobalInterface, ModuleConfigInterface {
 
 
     // For every module interface that is implemented, the corresponding trait *should* also use be used.
     use ModuleCustomTrait;
     use ModuleGlobalTrait;
+    use ModuleConfigTrait;
 
     /**
      * list of const for module administration
@@ -58,15 +63,28 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         self::CUSTOM_MODULE . '/main/latest-version.txt';
 
 
-    public const PREF_HOME_TYPE = 'HOME_TYPE'; // home link type: 0=off, 1=tree, 2=my-page
-    public const PREF_WTHB_ACTIVE = 'WTHB_ACTIVE'; // link to GenWiki "Webtrees Hanbuch"
+    public const PREF_HOME_LINK_TYPE = 'HOME_LINK_TYPE'; // home link type: 0=off, 1=tree, 2=my-page
+    public const PREF_WTHB_ACTIVE = 'WTHB_LINK_ACTIVE'; // link to GenWiki "Webtrees Handbuch"
     public const PREF_MDE_ACTIVE = 'MDE_ACTIVE'; // enable markdown editor for note textareas
-    public const PREF_LINK_ACTIVE = 'LINK_ACTIVE'; // enable enhanced links 
+    public const PREF_LINKSPP_ACTIVE = 'LINKSPP_ACTIVE'; // enable links++
+    public const PREF_LINKSPP_JS = 'LINKSPP_JS'; // Javascript
 
+    public const PREF_MD_IMG_ACTIVE = 'MD_IMG_ACTIVE'; // enable enhanced markdown img syntax
     public const PREF_MD_IMG_STDCLASS = 'MD_IMG_STDCLASS'; // standard classname(s) for div wrapping img- and link-tag    
+    public const PREF_MD_IMG_TITLE_STDCLASS = 'MD_IMG_TITLE_STDCLASS'; // standard classname(s) for picture subtitle
     public const STDCLASS_MD_IMG = 'md-img';
     public const STDCLASS_MD_IMG_TITLE = 'md-img-title';
     
+    protected const DEFAULT_PREFERENCES = [
+        self::PREF_HOME_LINK_TYPE        => '1', //int triple-state, 0=off, 1=tree, 2=my-page
+        self::PREF_WTHB_ACTIVE           => '1', //bool
+        self::PREF_MDE_ACTIVE            => '1', //bool
+        self::PREF_LINKSPP_ACTIVE        => '1', //bool
+        self::PREF_LINKSPP_JS            => '',  //string
+        self::PREF_MD_IMG_ACTIVE         => '1', //bool
+        self::PREF_MD_IMG_STDCLASS       => self::STDCLASS_MD_IMG, //string
+        self::PREF_MD_IMG_TITLE_STDCLASS => self::STDCLASS_MD_IMG_TITLE, //string
+    ];
 
   
     /**
@@ -161,7 +179,9 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         // Register a namespace for our views.
         View::registerNamespace($this->name(), $this->resourcesFolder() . 'views/');
 
-        Registry::markdownFactory(new CustomMarkdownFactory($this));
+        if (boolval($this->getPref(self::PREF_MD_IMG_ACTIVE))) {
+            Registry::markdownFactory(new CustomMarkdownFactory($this));
+        }
     }
 
     
@@ -186,6 +206,21 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     }
 
     /**
+     * Get a module setting. Return a user or Module default if the setting is not set.
+     * extends getPreference
+     *
+     * @param string $setting_name
+     * @param string $default
+     *
+     * @return string
+     */
+    public function getPref(string $setting_name, string $default = ''): string
+    {
+        $result = $this->getPreference($setting_name, $default);
+        return (isset($result) && $result != '' ? $result : self::DEFAULT_PREFERENCES[$setting_name] ?? '');
+    }
+
+    /**
      * Raw content, to be added at the end of the <head> element.
      * Typically, this will be <link> and <meta> elements.
      *
@@ -195,11 +230,11 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     {
         //self::exportRoutes();
 
-        $cfg_home_type = intval($this->getPreference(self::PREF_HOME_TYPE, '1')); // 0=off, 1=Home, 2=My-Page
+        $cfg_home_type = intval($this->getPref(self::PREF_HOME_LINK_TYPE)); // 0=off, 1=Home, 2=My-Page
         $cfg_home_active = boolval($cfg_home_type);
-        $cfg_wthb_active = boolval($this->getPreference(self::PREF_WTHB_ACTIVE, '1'));
-        $cfg_mde_active = boolval($this->getPreference(self::PREF_MDE_ACTIVE, '1'));
-        $cfg_link_active = boolval($this->getPreference(self::PREF_LINK_ACTIVE, '1'));
+        $cfg_wthb_active = boolval($this->getPref(self::PREF_WTHB_ACTIVE));
+        $cfg_mde_active = boolval($this->getPref(self::PREF_MDE_ACTIVE));
+        $cfg_link_active = boolval($this->getPref(self::PREF_LINKSPP_ACTIVE));
 
         if (!$cfg_home_active && !$cfg_wthb_active && ! $cfg_mde_active && !$cfg_link_active) {
             return '';
@@ -208,15 +243,13 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         $request = Registry::container()->get(ServerRequestInterface::class);
         $includeRes = '';
         $initJs = '';
+        $tree = Validator::attributes($request)->treeOptional();
 
         // --- Home Link
-        if ($cfg_home_active) {
-            $tree = Validator::attributes($request)->treeOptional();
-            if ($tree != null) {
-                $params = [ 'tree' => $tree->name()];
-                $url = $cfg_home_type == 1 ? route(TreePage::class, $params) : route(HomePage::class, $params);
-                $initJs .= '$(".wt-site-title").wrapInner(`<a href="' . e($url) . '"></a>`);';
-            }
+        if ($cfg_home_active && $tree != null) {
+            $params = [ 'tree' => $tree->name()];
+            $url = $cfg_home_type == 1 ? route(TreePage::class, $params) : route(HomePage::class, $params);
+            $initJs .= '$(".wt-site-title").wrapInner(`<a href="' . e($url) . '"></a>`);';
         }
         
         // --- Link++
@@ -235,7 +268,7 @@ EOD;
 
         
         // --- TinyMDE
-        if ($cfg_mde_active) {
+        if ($cfg_mde_active && $tree != null && $tree->getPreference('FORMAT_TEXT') == 'markdown') {
             $route = Validator::attributes($request)->route();
             $routename = basename(strtr($route->name ?? '/', ['\\' => '/']));
     
@@ -257,7 +290,63 @@ EOD;
             }
         }
         
-        return $includeRes . "<script>/* Module */ document.addEventListener('DOMContentLoaded', function(event) { " . $initJs . "});</script>";
+        return $includeRes . ($initJs ? "<script>/* Module */ document.addEventListener('DOMContentLoaded', function(event) { " . $initJs . "});</script>" :'');
     }
- 
+
+
+    /**
+     * Open control panel page with options
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    public function getAdminAction(ServerRequestInterface $request): ResponseInterface
+    {
+        $this->layout = 'layouts/administration';
+        return $this->viewResponse($this->name() . '::' . 'settings', $this->getInitializedOptions($request));
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     *
+     * @return array
+     */
+    private function getInitializedOptions(ServerRequestInterface $request): array
+    {
+        $response = [];
+
+        $response['title'] = $this->title();
+        $response['description'] = $this->description();
+
+        $preferences = array_keys(self::DEFAULT_PREFERENCES);
+        foreach ($preferences as $preference) {
+            $response['prefs'][$preference] = $this->getPref($preference);
+        }
+
+        return $response;
+    }
+
+    /**
+     * Save the user preferences in the database
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    public function postAdminAction(ServerRequestInterface $request): ResponseInterface
+    {
+        if (Validator::parsedBody($request)->string('save') === '1') {
+
+            $preferences = array_keys(self::DEFAULT_PREFERENCES);
+            foreach ($preferences as $preference) {
+                $this->setPreference($preference, trim(Validator::parsedBody($request)->string($preference)));
+            }
+
+            FlashMessages::addMessage(I18N::translate(
+                'The preferences for the module “%s” have been updated.',
+                $this->title()
+            ), 'success');
+        }
+        return redirect($this->getConfigLink());
+    }
+
 }

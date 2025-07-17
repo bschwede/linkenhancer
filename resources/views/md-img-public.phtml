@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
-
 /**
  * @var string $public_url
  * @var string $mime_type
@@ -12,11 +10,14 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
  * @var string|null $title
  * @var int|null $width
  * @var int|null $height
+ * @var string|null $titleclassnames
  * 
  */
 
 $classnames = trim($classnames);
 $divattrib = $classnames ? ' class="' . $classnames . '"' : '';
+$titleclassnames = trim($titleclassnames);
+$subattrib = $titleclassnames ? ' class="' . $titleclassnames . '"' : '';
 $title = $title ? ' title="' . e($title) . '"' : '';
 //$title = $title ? '<span class="media-img-title">' . e($title) . '</span>' : '';
 $width = isset($width) ? ' width="' . $width . '"' : '';
@@ -27,6 +28,6 @@ $height = isset($height) ? ' height="' . $height . '"' : '';
 <div<?= $divattrib ?>>
   <a class="gallery cboxElement" type="<?= $mime_type ?>" href="<?= $public_url ?>" data-title="<?= e($alt_text); ?>">
     <img class="img-thumbnail img-fluid" dir="auto" src="<?= $public_url ?>" alt="<?= e($alt_text); ?>"<?= $title ?><?= $width ?><?= $height ?> />
-    <span class="<?= LinkEnhancerModule::STDCLASS_MD_IMG_TITLE ?>"><?= e($alt_text); ?></span>
+    <span<?= $subattrib ?>><?= e($alt_text); ?></span>
   </a>
 </div>

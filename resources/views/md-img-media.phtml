@@ -3,19 +3,22 @@
 declare(strict_types=1);
 
 use Fisharebest\Webtrees\MediaFile;
-use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 
 /**
  * @var MediaFile $media_file
  * @var string $classnames
  * @var int $width
  * @var int $height
+ * @var string|null $titleclassnames
  */
 
- $classnames = trim($classnames);   
- $divattrib = $classnames ? ' class="' . $classnames . '"' : '';
+$classnames = trim($classnames);   
+$divattrib = $classnames ? ' class="' . $classnames . '"' : '';
+$titleclassnames = trim($titleclassnames);
+$subattrib = $titleclassnames ? ' class="' . $titleclassnames . '"' : '';
+
 ?>
 <div<?= $divattrib ?>>
     <?= $media_file->displayImage($width, $height, 'contain', ['class' => 'img-thumbnail img-fluid']) ?>
-    <a class="<?= LinkEnhancerModule::STDCLASS_MD_IMG_TITLE ?>" href="<?= e($media_file->media()->url() ) ?>"><?= $media_file->media()->fullName() ?></a>
+    <a<?= $subattrib ?> href="<?= e($media_file->media()->url() ) ?>"><?= $media_file->media()->fullName() ?></a>
 </div>
