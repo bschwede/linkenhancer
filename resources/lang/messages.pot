@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-17 19:48+0200\n"
+"POT-Creation-Date: 2025-07-17 21:14+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -102,22 +102,30 @@ msgstr ""
 msgid "Markdown editor for note textareas"
 msgstr ""
 
-#: resources/views/settings.phtml:96
+#. I18N: MDE
+#: resources/views/settings.phtml:95
+msgid ""
+"The project “TinyMDE - A tiny, dependency-free embeddable HTML/JavaScript "
+"Markdown editor” is used - see also"
+msgstr ""
+
+#. I18N: MDE
+#: resources/views/settings.phtml:98
 #, php-format
 msgid "Precondition: Tree preference '%s' need to be set to markdown."
 msgstr ""
 
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:105
+#: resources/views/settings.phtml:107
 msgid "Enhanced Link Support"
 msgstr ""
 
-#: resources/views/settings.phtml:112
+#: resources/views/settings.phtml:114
 msgid "Activate enhanced links?"
 msgstr ""
 
 #. I18N: Enhanced Links
-#: resources/views/settings.phtml:122
+#: resources/views/settings.phtml:124
 msgid ""
 "Function is realized via Javascript - works with links in notes and HTML "
 "blocks."
@@ -125,43 +133,57 @@ msgstr ""
 
 #. I18N: Enhanced Links code example 1
 #. I18N: Enhanced Links code example 2
-#: resources/views/settings.phtml:125 resources/views/settings.phtml:126
+#: resources/views/settings.phtml:126 resources/views/settings.phtml:127
 msgid "Link display title"
 msgstr ""
 
-#: resources/views/settings.phtml:136
+#: resources/views/settings.phtml:137
 msgid "JSON for additional link targets"
 msgstr ""
 
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:149
+#: resources/views/settings.phtml:150
 msgid "Markdown Image Support"
 msgstr ""
 
-#: resources/views/settings.phtml:156
+#: resources/views/settings.phtml:157
 msgid "Activate markdown image tweak?"
 msgstr ""
 
-#. I18N: MD img
-#: resources/views/settings.phtml:166
+#. I18N: MD img - sentence 1
+#: resources/views/settings.phtml:167
 msgid "Only works in notes that are formatted with Markdown."
 msgstr ""
 
-#. I18N: MD img code example 1
+#. I18N: MD img - sentence 2
 #: resources/views/settings.phtml:169
+msgid ""
+"The images are packed into a div container together with an image subtitle - "
+"which is also a link to the media data set for GEDCOM objects."
+msgstr ""
+
+#. I18N: MD img - sentence 3
+#: resources/views/settings.phtml:170
+msgid ""
+"The display can be customized as required using the following standard CSS "
+"classes or additional CSS classes."
+msgstr ""
+
+#. I18N: MD img code example 1
+#: resources/views/settings.phtml:173
 msgid "alternate text for gedcom object"
 msgstr ""
 
 #. I18N: MD img code example 2
-#: resources/views/settings.phtml:170
+#: resources/views/settings.phtml:174
 msgid "alternate text for picture in public folder"
 msgstr ""
 
-#: resources/views/settings.phtml:179
+#: resources/views/settings.phtml:183
 msgid "Markdown image container standard css class"
 msgstr ""
 
-#: resources/views/settings.phtml:187
+#: resources/views/settings.phtml:191
 msgid "Markdown image title container standard css class"
 msgstr ""
 

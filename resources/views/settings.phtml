@@ -91,9 +91,11 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
                             'selected' => (int) $prefs[$prefId]
                         ]) ?>
                         <div class="form-text">
-                        <?= /*I18N: webtrees.pot */I18N::translate("Markdown is a simple system of formatting, used on websites such as Wikipedia. It uses unobtrusive punctuation characters to create headings and sub-headings, bold and italic text, lists, tables, etc.") ?>    
-                        <br />
-                        <strong><?= I18N::translate("Precondition: Tree preference '%s' need to be set to markdown.", /*I18N: webtrees.pot */I18N::translate('Format text and notes')) ?></strong>
+                        <p><?= /*I18N: webtrees.pot */I18N::translate("Markdown is a simple system of formatting, used on websites such as Wikipedia. It uses unobtrusive punctuation characters to create headings and sub-headings, bold and italic text, lists, tables, etc.") ?></p>
+                        <p><?= /*I18N: MDE */ I18N::translate('The project “TinyMDE - A tiny, dependency-free embeddable HTML/JavaScript Markdown editor” is used - see also') ?>:<br />
+                            <a href="https://github.com/jefago/tiny-markdown-editor">https://github.com/jefago/tiny-markdown-editor</a>
+                            (<a href="https://github.com/jefago/tiny-markdown-editor/blob/main/LICENSE">MIT License</a>)</p>
+                        <p><strong><?= /*I18N: MDE */I18N::translate("Precondition: Tree preference '%s' need to be set to markdown.", /*I18N: webtrees.pot */I18N::translate('Format text and notes')) ?></strong></p>
                         </div>
 
                     </div>
@@ -119,11 +121,10 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
                             'selected' => (int) $prefs[$prefId]
                         ]) ?>
                         <div class="form-text">
-                            <?= /*I18N: Enhanced Links */ I18N::translate('Function is realized via Javascript - works with links in notes and HTML blocks.') ?>
-                            <br />
+                            <p><?= /*I18N: Enhanced Links */ I18N::translate('Function is realized via Javascript - works with links in notes and HTML blocks.') ?></p>
                             <b>Syntax</b>: <ul>
-                                <li><code>[<?= /*I18N: Enhanced Links code example 1 */ I18N::translate('Link display title') ?>](#@wt=i@I1@)</code> (Markdown)</li>
-                                <li><code>&lt;a href="#@wt=i@I1@"&gt;<?= /*I18N: Enhanced Links code example 2 */ I18N::translate('Link display title') ?>&lt;/a&gt;</code> (HTML)</li>
+                                <li><u>Markdown:</u> <code>[<?= /*I18N: Enhanced Links code example 1 */ I18N::translate('Link display title') ?>](#@wt=i@I1@)</code></li>
+                                <li><u>HTML:</u> <code>&lt;a href="#@wt=i@I1@"&gt;<?= /*I18N: Enhanced Links code example 2 */ I18N::translate('Link display title') ?>&lt;/a&gt;</code></li>
                             </ul>
                         </div>
                     </div>
@@ -163,8 +164,11 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
                             'selected' => (int)$prefs[$prefId]
                         ]) ?>
                         <div class="form-text">
-                            <?= /*I18N: MD img */ I18N::translate('Only works in notes that are formatted with Markdown.') ?>
-                            <br />
+                            <p><?= /*I18N: MD img - sentence 1 */ I18N::translate('Only works in notes that are formatted with Markdown.') ?></p>
+                            <p>
+                                <?= /*I18N: MD img - sentence 2 */ I18N::translate('The images are packed into a div container together with an image subtitle - which is also a link to the media data set for GEDCOM objects.') ?>
+                                <?= /*I18N: MD img - sentence 3 */ I18N::translate('The display can be customized as required using the following standard CSS classes or additional CSS classes.') ?>
+                            </p>
                             <b>Syntax</b>:<ul>
                             <li><code>![<?= /*I18N: MD img code example 1 */ I18N::translate('alternate text for gedcom object') ?>](#@id=@M1@)</code></li>
                             <li><code>![<?= /*I18N: MD img code example 2 */ I18N::translate('alternate text for picture in public folder') ?>](#@public=webtrees.png "title")</code></li>
