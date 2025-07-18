@@ -52,8 +52,7 @@ function getLECfg() {
         name: 'Family Search Tree - $ID',
         url: 'https://www.familysearch.org/tree/person/details/',
         cname: 'icon-fsft'
-    }
-    ,
+    },
     "osm": {
         name: 'OpenStreetMap',
         url: (id, title) => { 

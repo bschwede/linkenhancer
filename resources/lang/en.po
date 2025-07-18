@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-18 06:52+0200\n"
+"POT-Creation-Date: 2025-07-18 07:34+0200\n"
 "PO-Revision-Date: 2025-07-16 17:33+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -168,49 +168,61 @@ msgid ""
 "point for adjustments."
 msgstr ""
 
+#. I18N: Enhanced Links js
+#: resources/views/settings.phtml:148
+msgid "Any CSS rules required are best added via the “CSS and JS” module."
+msgstr ""
+
+#. I18N: Enhanced Links js
+#: resources/views/settings.phtml:149
+msgid ""
+"Only the definition of the icon as a background image is actually needed - "
+"referencing as data: URL."
+msgstr ""
+
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:155
+#: resources/views/settings.phtml:160
 msgid "Markdown Image Support"
 msgstr ""
 
-#: resources/views/settings.phtml:162
+#: resources/views/settings.phtml:167
 msgid "Activate markdown image tweak?"
 msgstr ""
 
 #. I18N: MD img - sentence 1
-#: resources/views/settings.phtml:172
+#: resources/views/settings.phtml:177
 msgid "Only works in notes that are formatted with Markdown."
 msgstr ""
 
 #. I18N: MD img - sentence 2
-#: resources/views/settings.phtml:174
+#: resources/views/settings.phtml:179
 msgid ""
 "The images are packed into a div container together with an image subtitle - "
 "which is also a link to the media data set for GEDCOM objects."
 msgstr ""
 
 #. I18N: MD img - sentence 3
-#: resources/views/settings.phtml:175
+#: resources/views/settings.phtml:180
 msgid ""
 "The display can be customized as required using the following standard CSS "
 "classes or additional CSS classes."
 msgstr ""
 
 #. I18N: MD img code example 1
-#: resources/views/settings.phtml:178
+#: resources/views/settings.phtml:183
 msgid "alternate text for gedcom object"
 msgstr ""
 
 #. I18N: MD img code example 2
-#: resources/views/settings.phtml:179
+#: resources/views/settings.phtml:184
 msgid "alternate text for picture in public folder"
 msgstr ""
 
-#: resources/views/settings.phtml:188
+#: resources/views/settings.phtml:193
 msgid "Markdown image container standard css class"
 msgstr ""
 
-#: resources/views/settings.phtml:196
+#: resources/views/settings.phtml:201
 msgid "Markdown image title container standard css class"
 msgstr ""
 

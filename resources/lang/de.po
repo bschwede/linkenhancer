@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-18 06:52+0200\n"
-"PO-Revision-Date: 2025-07-18 07:01+0200\n"
+"POT-Creation-Date: 2025-07-18 07:34+0200\n"
+"PO-Revision-Date: 2025-07-18 07:35+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: de\n"
@@ -196,22 +196,38 @@ msgstr ""
 "die dem nachfolgenden Code-Auszug entnommen werden und auch als Anhaltspunkt "
 "für Anpassungen dienen können."
 
+#. I18N: Enhanced Links js
+#: resources/views/settings.phtml:148
+msgid "Any CSS rules required are best added via the “CSS and JS” module."
+msgstr ""
+"Eventuell benötigte CSS-Definitionen am besten über das Modul \"CSS und JS\" "
+"einbringen."
+
+#. I18N: Enhanced Links js
+#: resources/views/settings.phtml:149
+msgid ""
+"Only the definition of the icon as a background image is actually needed - "
+"referencing as data: URL."
+msgstr ""
+"Es wird dabei eigentlich nur die Definition des Icons als Hintergrundbild "
+"benötigt - empfehlenswert ist die Referenzierung als data: URL."
+
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:155
+#: resources/views/settings.phtml:160
 msgid "Markdown Image Support"
 msgstr "Markdown Bild Unterstützung"
 
-#: resources/views/settings.phtml:162
+#: resources/views/settings.phtml:167
 msgid "Activate markdown image tweak?"
 msgstr "Markdown Bilderlink Optimierung aktivieren?"
 
 #. I18N: MD img - sentence 1
-#: resources/views/settings.phtml:172
+#: resources/views/settings.phtml:177
 msgid "Only works in notes that are formatted with Markdown."
 msgstr "Funktioniert nur in Notizen, die mit Markdown formatiert sind."
 
 #. I18N: MD img - sentence 2
-#: resources/views/settings.phtml:174
+#: resources/views/settings.phtml:179
 msgid ""
 "The images are packed into a div container together with an image subtitle - "
 "which is also a link to the media data set for GEDCOM objects."
@@ -221,7 +237,7 @@ msgstr ""
 "verpackt."
 
 #. I18N: MD img - sentence 3
-#: resources/views/settings.phtml:175
+#: resources/views/settings.phtml:180
 msgid ""
 "The display can be customized as required using the following standard CSS "
 "classes or additional CSS classes."
@@ -230,20 +246,20 @@ msgstr ""
 "kann die Darstellung beliebig angepasst werden."
 
 #. I18N: MD img code example 1
-#: resources/views/settings.phtml:178
+#: resources/views/settings.phtml:183
 msgid "alternate text for gedcom object"
 msgstr "alternativer Text für GEDCOM-Objekt"
 
 #. I18N: MD img code example 2
-#: resources/views/settings.phtml:179
+#: resources/views/settings.phtml:184
 msgid "alternate text for picture in public folder"
 msgstr "alternativer Text für Bild im Public-Ordner"
 
-#: resources/views/settings.phtml:188
+#: resources/views/settings.phtml:193
 msgid "Markdown image container standard css class"
 msgstr "Standard CSS-Klasse(n) für Markdown Bild-Container"
 
-#: resources/views/settings.phtml:196
+#: resources/views/settings.phtml:201
 msgid "Markdown image title container standard css class"
 msgstr "Standard CSS-Klasse(n) für Markdown Bildtitel-Container"
 

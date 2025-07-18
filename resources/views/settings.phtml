@@ -145,6 +145,11 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
                 <div class="form-text">
                     <p><?= /*I18N: Enhanced Links js */ I18N::translate('The JSON object overwrites and supplements the predefined settings, which are taken from the following code excerpt and can also serve as a reference point for adjustments.') ?></p>
                     <textarea class="form-control font-monospace" dir="ltr" rows="5" disabled readonly wrap="off" style="font-size:0.9em; color: gray;"><?= e($jscode_linkpp) ?></textarea>
+                    <p><?= /*I18N: Enhanced Links js */ I18N::translate('Any CSS rules required are best added via the “CSS and JS” module.') ?>
+                       <?= /*I18N: Enhanced Links js */ I18N::translate('Only the definition of the icon as a background image is actually needed - referencing as data: URL.') ?>
+                       <br />
+                       <code>.icon-whatever { background-image: url(...) }</code> - <a href="https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Schemes/data">mdn web docs - data: URLs</a>
+                    </p>
                 </div>
             </div>
 
