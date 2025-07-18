@@ -5,8 +5,13 @@ function getLECfg() {
   // - name = label, placeholder $ID for inserting given id
   // - url = service url- id will be appended to the end, can also be a function(id, title)
   // - cname = css class name(s) whitespace separated
+  // - help = [{n:'', e:''},..] - optional parameter examples (in e) with explanation (in n)
     "wt": { // placeholder - is always the first link
         name: 'webtrees ' + I18N['cross reference'],
+        help: [ 
+            {n: I18N['wt-help1'].replace(/%s/, getLErecTypes(1)), e:'n@XREF@'}, 
+            {n: I18N['wt-help2'] + ' ' + I18N['Interactive tree'], e: 'i@XREF@othertree+dia' }
+        ]
     },
     "wpde": {
         name: 'Wikipedia DE - $ID',
@@ -56,9 +61,6 @@ function getLECfg() {
     "osm": {
         name: 'OpenStreetMap',
         url: (id, title) => { 
-            // id = 16/47.38972/9.78414      => zoom/lat/lon for locating map
-            //      16/47.38972/9.78414/!    => same as before with additional marker
-            //      16/47.38972/9.78414/?... => for supported options see https://wiki.openstreetmap.org/wiki/DE:Browsing
             let parts = id.split('/');
             let map = parts.slice(0, 3).join('/');
             let urlsearch = '';
@@ -66,12 +68,18 @@ function getLECfg() {
                 if (parts[3].trim() === '!') {
                     urlsearch = `?mlat=${parts[1]}&mlon=${parts[2]}`;
                 } else {
-                    urlsearch = "?" + parts[3].trim();
+                    urlsearch = parts.slice(3).join('/');
                 }
             }
             return {url:`https://www.openstreetmap.org/${urlsearch}#map=${map}`, title};
         },
-        cname: 'icon-osm'
+        cname: 'icon-osm',
+        help: [
+            { n: I18N['osm-help1'], e: '17/53.619095/10.037395' },
+            { n: I18N['osm-help2'], e: '17/53.619095/10.037395/!' },
+            { n: I18N['osm-help3'] + ' <a href="https://wiki.openstreetmap.org/wiki/DE:Browsing">OSM-Wiki</a>', e: '16/50.11185/8.09636/way/60367151' },
+            { n: I18N['osm-help4'], e: '13/50.09906/8.04660/?relation=403139' },
+        ]
     }
 }
 //--- code-snippet end
@@ -98,8 +106,36 @@ function getTreeInfoFromURL() {
     return { tree, baseurl, urlmode };
 }
 
-function processLinks(linkElement) {
+function getLEhelpInfo() {
+    let lis = [];
+    Object.keys(LEcfg).forEach((key) => {
+        let cfg = LEcfg[key];
+        let html = '<u>' + cfg.name.replace(/ - \$ID/, '') + ':</u>';
+        if (!cfg['help']) {
+            html += ` <code>${key}=ID</code>`;
+        } else {
+            let opthtml = [];
+            cfg['help'].forEach(opt => {
+                opthtml.push(`<code>${key}=${opt['e']}</code> - <em>${opt['n']}</em>`);
+            });
+            html += '<br>' + opthtml.join('<br>');
+        }
+        lis.push(html);
+    });
+    return '<ul><li>' + lis.join('</li><li>') + '</li></ul>';
+}
+
+function getLErecTypes(asString) {
     const rectypes = { 'i': 'individual', 'f': 'family', 's': 'source', 'r': 'repository', 'n': 'note', 'l': 'sharedPlace' };
+    if (asString) {
+        let arr = [];
+        Object.keys(rectypes).forEach(key => arr.push(`${key}=${rectypes[key]}`))
+        return arr.join(', ');
+    }
+    return rectypes;
+}
+function processLinks(linkElement) {
+    const rectypes = getLErecTypes();
     const separator = { 'default': { 'path': '%2F', 'option': '&' }, 'pretty': { 'path': '/', 'option': '?' } };
 
     function getNextLink(link, lastlink) {

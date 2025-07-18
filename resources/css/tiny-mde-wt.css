@@ -42,3 +42,7 @@
   overflow: scroll; 
   resize: vertical;
 }
+
+.helpsection {
+  margin-top: 50px !important;
+}

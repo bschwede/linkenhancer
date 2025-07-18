@@ -272,7 +272,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         $initJs .= 'window.LEhelp = "' . e(route('module', [ 'module' => $this->name(), 'action' => 'help' ])) . '";';
 
         $activeRouteInfo = $this->getActiveRoute();
-        $initJs .= "console.log('Active route:', $activeRouteInfo);";
+        $initJs .= "console.log('Active route:', $activeRouteInfo);"; //TODO debug output route - optional per setting?!
 
         // --- I18N for JS MDE and enhanced links
         if ($cfg_link_active || $cfg_mde_active) {
@@ -450,6 +450,12 @@ EOD;
             'ewp'              => /*I18N: JS enhanced link */ I18N::translate('Residents database - Family research in West Prussia'),
             'Interactive tree' => /*I18N: webtrees.pot */ I18N::translate('Interactive tree'),
             'syntax error'     => /*I18N: JS enhanced link */ I18N::translate('Syntax error'),
+            'wt-help1'         => /*I18N: JS enhanced link wt1 - %s=rectypes*/ I18N::translate('standard link to note (available record types: %s) with XREF in active tree', '%s'),
+            'wt-help2'         => /*I18N: JS enhanced link wt2 */ I18N::translate('link to record type individual with XREF from "othertree" and also link to'),
+            'osm-help1'        => /*I18N: JS enhanced link osm1 */ I18N::translate('zoom/lat/lon for locating map'),
+            'osm-help2'        => /*I18N: JS enhanced link osm2 */ I18N::translate('same as before with additional marker'),
+            'osm-help3'        => /*I18N: JS enhanced link osm3 */ I18N::translate('show also node/way/relation, see also'),
+            'osm-help4'        => /*I18N: JS enhanced link osm4 */ I18N::translate('show also node/way/relation - alternative notation'),
         ]);
     }
 

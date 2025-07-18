@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-18 15:32+0200\n"
-"PO-Revision-Date: 2025-07-18 15:33+0200\n"
+"POT-Creation-Date: 2025-07-18 22:35+0200\n"
+"PO-Revision-Date: 2025-07-18 22:48+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: de\n"
@@ -63,30 +63,30 @@ msgstr ""
 "Webtrees nutzt eine CommonMark-Implementierung und unterstützt eine "
 "Teilmenge des Markups"
 
-#: resources/views/help-md.phtml:19 resources/views/help-md.phtml:52
-#: resources/views/help-md.phtml:62 resources/views/settings.phtml:96
+#: resources/views/help-md.phtml:19 resources/views/help-md.phtml:51
+#: resources/views/help-md.phtml:60 resources/views/settings.phtml:96
 msgid "See also"
 msgstr "Siehe auch"
 
-#: resources/views/help-md.phtml:24
+#: resources/views/help-md.phtml:23
 msgid "The following overview only briefly lists common formatting options"
 msgstr ""
 "In der folgenden Übersicht werden nur kurz gängige Formatierungen aufgelistet"
 
-#: resources/views/help-md.phtml:33
+#: resources/views/help-md.phtml:32
 msgid "Rendered output"
 msgstr "Gerenderte Ausgabe"
 
-#: resources/views/help-md.phtml:52
+#: resources/views/help-md.phtml:51
 msgid "For more depth of detail"
 msgstr "Für mehr Detailtiefe"
 
-#: resources/views/help-md.phtml:60 resources/views/settings.phtml:85
+#: resources/views/help-md.phtml:58 resources/views/settings.phtml:85
 msgid "Markdown editor for note textareas"
 msgstr "Markdown-Editor für Notizen-Texteingabefelder"
 
 #. I18N: MDE
-#: resources/views/help-md.phtml:61 resources/views/settings.phtml:96
+#: resources/views/help-md.phtml:59 resources/views/settings.phtml:96
 msgid ""
 "The project “TinyMDE - A tiny, dependency-free embeddable HTML/JavaScript "
 "Markdown editor” is used"
@@ -96,12 +96,12 @@ msgstr ""
 
 #. I18N: help md - section title
 #. I18N: Settings - section title
-#: resources/views/help-md.phtml:70 resources/views/settings.phtml:108
+#: resources/views/help-md.phtml:67 resources/views/settings.phtml:108
 msgid "Enhanced Link Support"
 msgstr "Verbesserte Link-Unterstützung"
 
 #. I18N: Enhanced Links
-#: resources/views/help-md.phtml:71 resources/views/settings.phtml:126
+#: resources/views/help-md.phtml:68 resources/views/settings.phtml:126
 msgid ""
 "Different destinations can be addressed with a link, whereby the cross-"
 "reference is always the first link and the others are represented by "
@@ -112,7 +112,7 @@ msgstr ""
 "klickbare Icons dargestellt werden."
 
 #. I18N: Settings - prologue sentence 3
-#: resources/views/help-md.phtml:72 resources/views/settings.phtml:26
+#: resources/views/help-md.phtml:69 resources/views/settings.phtml:26
 msgid ""
 "By linking the notes to the GEDCOM data records (persons, families, sources, "
 "etc.) from the text, it is easier to replace the history module and thus "
@@ -124,25 +124,30 @@ msgstr ""
 "GEDCOM-Datei mit zu speichern."
 
 #. I18N: Settings - prologue sentence 5
-#: resources/views/help-md.phtml:73 resources/views/settings.phtml:28
+#: resources/views/help-md.phtml:70 resources/views/settings.phtml:28
 msgid "The link function is controlled via the anchor part of the URI."
 msgstr "Über den Anker-Teil der URI wird die Verknüpfungsfunktion gesteuert."
 
 #. I18N: Enhanced Links code example 1
 #. I18N: Enhanced Links code example 2
-#: resources/views/help-md.phtml:75 resources/views/settings.phtml:128
+#: resources/views/help-md.phtml:72 resources/views/settings.phtml:128
 #: resources/views/settings.phtml:129
 msgid "Link display title"
 msgstr "Link-Anzeigetitel"
 
+#. I18N: Enhanced Links code
+#: resources/views/help-md.phtml:73
+msgid "The following parameters can be used"
+msgstr "Folgende Parameter können genutzt werden"
+
 #. I18N: help md - section title
 #. I18N: Settings - section title
-#: resources/views/help-md.phtml:81 resources/views/settings.phtml:160
+#: resources/views/help-md.phtml:79 resources/views/settings.phtml:160
 msgid "Markdown Image Support"
 msgstr "Markdown Bild Unterstützung"
 
 #. I18N: MD img - sentence 2
-#: resources/views/help-md.phtml:83 resources/views/settings.phtml:179
+#: resources/views/help-md.phtml:81 resources/views/settings.phtml:179
 msgid ""
 "The images are packed into a div container together with an image subtitle - "
 "which is also a link to the media data set for GEDCOM objects."
@@ -152,7 +157,7 @@ msgstr ""
 "verpackt."
 
 #. I18N: MD img - sentence 3
-#: resources/views/help-md.phtml:84 resources/views/settings.phtml:180
+#: resources/views/help-md.phtml:82 resources/views/settings.phtml:180
 msgid ""
 "The display can be customized as required using the following standard CSS "
 "classes or additional CSS classes."
@@ -160,30 +165,30 @@ msgstr ""
 "Über die folgenden Standard CSS-Klassen oder auch zusätzliche CSS-Klassen "
 "kann die Darstellung beliebig angepasst werden."
 
-#: resources/views/help-md.phtml:87 resources/views/settings.phtml:194
+#: resources/views/help-md.phtml:85 resources/views/settings.phtml:194
 msgid "Markdown image container standard css class"
 msgstr "Standard CSS-Klasse(n) für Markdown Bild-Container"
 
-#: resources/views/help-md.phtml:88 resources/views/help-md.phtml:91
+#: resources/views/help-md.phtml:86 resources/views/help-md.phtml:89
 msgid "not defined"
 msgstr "nicht definiert"
 
-#: resources/views/help-md.phtml:90 resources/views/settings.phtml:202
+#: resources/views/help-md.phtml:88 resources/views/settings.phtml:202
 msgid "Markdown image title container standard css class"
 msgstr "Standard CSS-Klasse(n) für Markdown Bildtitel-Container"
 
 #. I18N: MD img code example 1
-#: resources/views/help-md.phtml:97 resources/views/settings.phtml:183
+#: resources/views/help-md.phtml:95 resources/views/settings.phtml:183
 msgid "alternate text for gedcom object"
 msgstr "alternativer Text für GEDCOM-Objekt"
 
 #. I18N: MD img code example 2
-#: resources/views/help-md.phtml:99 resources/views/settings.phtml:184
+#: resources/views/help-md.phtml:97 resources/views/settings.phtml:184
 msgid "alternate text for picture in public folder"
 msgstr "alternativer Text für Bild im Public-Ordner"
 
 #. I18N: MD img code example 3
-#: resources/views/help-md.phtml:101 resources/views/settings.phtml:185
+#: resources/views/help-md.phtml:99 resources/views/settings.phtml:185
 msgid "picture with defined height, width and additional css class"
 msgstr "Bild mit Angaben zu Höhe, Breite und zusätzlicher CSS Klasse"
 
@@ -315,99 +320,139 @@ msgstr ""
 "zum GenWiki Webtrees Handbuch"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:432 LinkEnhancerModule.php:477
-#: LinkEnhancerModule.php:478
+#: LinkEnhancerModule.php:433 LinkEnhancerModule.php:484
+#: LinkEnhancerModule.php:485
 msgid "bold"
 msgstr "fett"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:433 LinkEnhancerModule.php:473
-#: LinkEnhancerModule.php:474
+#: LinkEnhancerModule.php:434 LinkEnhancerModule.php:480
+#: LinkEnhancerModule.php:481
 msgid "italic"
 msgstr "kursiv"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:434 LinkEnhancerModule.php:485
-#: LinkEnhancerModule.php:486
+#: LinkEnhancerModule.php:435 LinkEnhancerModule.php:492
+#: LinkEnhancerModule.php:493
 msgid "format as code"
 msgstr "als Code formatieren"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:435 LinkEnhancerModule.php:481
-#: LinkEnhancerModule.php:482
+#: LinkEnhancerModule.php:436 LinkEnhancerModule.php:488
+#: LinkEnhancerModule.php:489
 msgid "Level 1 heading"
 msgstr "Ebene 1 Überschrift"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:436 LinkEnhancerModule.php:489
-#: LinkEnhancerModule.php:490
+#: LinkEnhancerModule.php:437 LinkEnhancerModule.php:496
+#: LinkEnhancerModule.php:497
 msgid "Bulleted list"
 msgstr "Aufzählungsliste"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:437 LinkEnhancerModule.php:493
-#: LinkEnhancerModule.php:494
+#: LinkEnhancerModule.php:438 LinkEnhancerModule.php:500
+#: LinkEnhancerModule.php:501
 msgid "Numbered list"
 msgstr "Nummerierte Liste"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:438 LinkEnhancerModule.php:497
-#: LinkEnhancerModule.php:498
+#: LinkEnhancerModule.php:439 LinkEnhancerModule.php:504
+#: LinkEnhancerModule.php:505
 msgid "Insert link"
 msgstr "Link einfügen"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:439 LinkEnhancerModule.php:501
-#: LinkEnhancerModule.php:502
+#: LinkEnhancerModule.php:440 LinkEnhancerModule.php:508
+#: LinkEnhancerModule.php:509
 msgid "Insert image"
 msgstr "Bild einfügen"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:440 LinkEnhancerModule.php:506
-#: LinkEnhancerModule.php:507
+#: LinkEnhancerModule.php:441 LinkEnhancerModule.php:513
+#: LinkEnhancerModule.php:514
 msgid "Horizontal rule"
 msgstr "Horizontale Linie"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:441
+#: LinkEnhancerModule.php:442
 msgid "Undo"
 msgstr "Wiederherstellen"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:442
+#: LinkEnhancerModule.php:443
 msgid "Redo"
 msgstr "Rückgängig"
 
 #. I18N: JS enhanced link
-#: LinkEnhancerModule.php:445
+#: LinkEnhancerModule.php:446
 msgid "cross reference"
 msgstr "Querverweis"
 
 #. I18N: JS enhanced link, %s name of location
-#: LinkEnhancerModule.php:446
+#: LinkEnhancerModule.php:447
 #, php-format
 msgid "Online Local heritage book of %s at CompGen"
 msgstr "Online-Ortsfamilienbuch %s bei CompGen"
 
 #. I18N: JS enhanced link
-#: LinkEnhancerModule.php:447
+#: LinkEnhancerModule.php:448
 msgid "The Historic Geo Information System (GOV)"
 msgstr "Das Geschichtliche Orts-Verzeichnis"
 
 #. I18N: JS enhanced link
-#: LinkEnhancerModule.php:448
+#: LinkEnhancerModule.php:449
 msgid "Family Book of Dornbirn"
 msgstr "Dornbirner Familienbuch"
 
 #. I18N: JS enhanced link
-#: LinkEnhancerModule.php:449
+#: LinkEnhancerModule.php:450
 msgid "Residents database - Family research in West Prussia"
 msgstr "Einwohnerdatenbank - Familienforschung in Westpreussen"
 
 #. I18N: JS enhanced link
-#: LinkEnhancerModule.php:451
+#: LinkEnhancerModule.php:452
 msgid "Syntax error"
 msgstr "Syntaxfehler"
+
+#. I18N: JS enhanced link wt1 - %s=rectypes
+#: LinkEnhancerModule.php:453
+#, php-format
+msgid ""
+"standard link to note (available record types: %s) with XREF in active tree"
+msgstr ""
+"Standardlink zu Notiz (verfügbare Datensatztypen: %s) mit XREF im aktiven "
+"Baum"
+
+#. I18N: JS enhanced link wt2
+#: LinkEnhancerModule.php:454
+msgid ""
+"link to record type individual with XREF from \"othertree\" and also link to"
+msgstr ""
+"Verknüpfung auf Individuum-Datensatz mit XREF von „othertree“ und auch Link "
+"auf"
+
+#. I18N: JS enhanced link osm1
+#: LinkEnhancerModule.php:455
+msgid "zoom/lat/lon for locating map"
+msgstr "zoom/lat/lon zur Ausrichtung der Karte"
+
+#. I18N: JS enhanced link osm2
+#: LinkEnhancerModule.php:456
+msgid "same as before with additional marker"
+msgstr "wie zuvor mit zusätzlichem Marker"
+
+#. I18N: JS enhanced link osm3
+#: LinkEnhancerModule.php:457
+msgid "show also node/way/relation, see also"
+msgstr ""
+"auch node/way/relation (Knoten-/Weg-/Relation-Objekt) anzeigen, siehe auch"
+
+#. I18N: JS enhanced link osm4
+#: LinkEnhancerModule.php:458
+msgid "show also node/way/relation - alternative notation"
+msgstr ""
+"auch node/way/relation (Knoten-/Weg-/Relation-Objekt) anzeigen - alternative "
+"Schreibweise"
 
 #~ msgid ""
 #~ "The project “TinyMDE - A tiny, dependency-free embeddable HTML/JavaScript "

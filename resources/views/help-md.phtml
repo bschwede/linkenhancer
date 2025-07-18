@@ -19,8 +19,7 @@ use Fisharebest\Webtrees\I18N;
  - <?= lcfirst(I18N::translate('See also')) ?> <a href="https://commonmark.thephpleague.com/">https://commonmark.thephpleague.com/</a>
 </p>
 
-<p><hr></p>
-<h4>Markdown Syntax</h4>
+<h4 class="helpsection">Markdown Syntax</h4>
 <p><?= I18N::translate('The following overview only briefly lists common formatting options') ?>:</p>
 <div style="overflow:scroll;">
 <table class="table table-bordered table-sm">
@@ -56,8 +55,7 @@ use Fisharebest\Webtrees\I18N;
     </ul>
 </p>
 
-<p><hr></p>
-<h4><?= I18N::translate('Markdown editor for note textareas') ?></h4>
+<h4 class="helpsection"><?= I18N::translate('Markdown editor for note textareas') ?></h4>
 <p><?= /*I18N: MDE */ I18N::translate('The project “TinyMDE - A tiny, dependency-free embeddable HTML/JavaScript Markdown editor” is used') ?> 
   - <?= lcfirst(I18N::translate('See also')) ?>:
   <br />
@@ -66,19 +64,18 @@ use Fisharebest\Webtrees\I18N;
 </p>
 
 <?php if ($link_active) : ?>
-<p><hr></p>
-<h4><?= /*I18N: help md - section title */ I18N::translate('Enhanced Link Support') ?></h4>
+<h4 class="helpsection"><?= /*I18N: help md - section title */ I18N::translate('Enhanced Link Support') ?></h4>
 <p><?= /*I18N: Enhanced Links */ I18N::translate('Different destinations can be addressed with a link, whereby the cross-reference is always the first link and the others are represented by attached clickable icons.') ?></p>
 <p><?= /*I18N: Settings - prologue sentence 3 */ I18N::translate('By linking the notes to the GEDCOM data records (persons, families, sources, etc.) from the text, it is easier to replace the history module and thus also save this information in the GEDCOM file.') ?>
     <?= /*I18N: Settings - prologue sentence 5 */ I18N::translate('The link function is controlled via the anchor part of the URI.') ?>
 </p>
-<p><b>Syntax</b>:  <code>[<?= /*I18N: Enhanced Links code example 1 */ I18N::translate('Link display title') ?>](#@wt=i@I1@)</code></p>
-<?php //TODO javascript routine for composing syntax help form config object
-endif ?>
+<p><b>Syntax</b>: <code>[<?= /*I18N: Enhanced Links code example 1 */ I18N::translate('Link display title') ?>](#@param1&amp;paramN)</code>
+<br><?= /*I18N: Enhanced Links code */ I18N::translate('The following parameters can be used') ?>:
+<div id="syntaxLE">...</div> <script>document.querySelector('#syntaxLE').innerHTML = getLEhelpInfo();</script></p>
+<?php endif ?>
 
 <?php if ($mdimg_active) : ?>
-<p><hr></p>
-<h4><?= /*I18N: help md - section title */I18N::translate('Markdown Image Support') ?></h4>
+<h4 class="helpsection"><?= /*I18N: help md - section title */I18N::translate('Markdown Image Support') ?></h4>
 <p>
     <?= /*I18N: MD img - sentence 2 */ I18N::translate('The images are packed into a div container together with an image subtitle - which is also a link to the media data set for GEDCOM objects.') ?>
     <?= /*I18N: MD img - sentence 3 */ I18N::translate('The display can be customized as required using the following standard CSS classes or additional CSS classes.') ?>
@@ -98,8 +95,6 @@ endif ?>
     </li>
     <li><code>![<?= /*I18N: MD img code example 2 */ I18N::translate('alternate text for picture in public folder') ?>](#@public=webtrees.png "title")</code>
     </li>
-    <li><code>![<?= /*I18N: MD img code example 3 */ I18N::translate('picture with defined height, width and additional css class') ?>](#@id=@M1@&h=200&w=200&cname=float-right)</code></li>
+    <li><code>![<?= /*I18N: MD img code example 3 */ I18N::translate('picture with defined height, width and additional css class') ?>](#@id=@M1@&amp;h=200&amp;w=200&cname=float-right)</code></li>
 </ul>
-
 <?php endif ?>
-
