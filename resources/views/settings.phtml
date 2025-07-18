@@ -62,7 +62,7 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
             <fieldset class="form-group mb-3">
                 <div class="row">
                     <legend class="col-form-label col-sm-3 wt-page-options-label">
-                        <?= I18N::translate('Link to GenWiki Webtrees Manual') ?>
+                        <?= I18N::translate('Link to GenWiki') . ' ' . I18N::translate('Webtrees Manual')?>
                     </legend>
                     <div class="col-sm-9 wt-page-options-value">
                         <?= view('components/radios-inline', [
@@ -123,6 +123,7 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
                         ]) ?>
                         <div class="form-text">
                             <p><?= /*I18N: Enhanced Links */ I18N::translate('Function is realized via Javascript - works with links in notes and HTML blocks.') ?></p>
+                            <p><?= /*I18N: Enhanced Links */ I18N::translate('Different destinations can be addressed with a link, whereby the cross-reference is always the first link and the others are represented by attached clickable icons.') ?></p>
                             <b>Syntax</b>: <ul>
                                 <li><u>Markdown:</u> <code>[<?= /*I18N: Enhanced Links code example 1 */ I18N::translate('Link display title') ?>](#@wt=i@I1@)</code></li>
                                 <li><u>HTML:</u> <code>&lt;a href="#@wt=i@I1@"&gt;<?= /*I18N: Enhanced Links code example 2 */ I18N::translate('Link display title') ?>&lt;/a&gt;</code>

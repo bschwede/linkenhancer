@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-18 02:43+0200\n"
-"PO-Revision-Date: 2025-07-18 02:52+0200\n"
+"POT-Creation-Date: 2025-07-18 06:52+0200\n"
+"PO-Revision-Date: 2025-07-18 07:01+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: de\n"
@@ -110,8 +110,12 @@ msgid "Site title links to tree"
 msgstr "Webseitentitel als Link zum aktiven Stammbaum"
 
 #: resources/views/settings.phtml:65
-msgid "Link to GenWiki Webtrees Manual"
-msgstr "Link zum GenWiki Webtrees Handbuch"
+msgid "Link to GenWiki"
+msgstr "Link zum GenWiki"
+
+#: resources/views/settings.phtml:65
+msgid "Webtrees Manual"
+msgstr "Webtrees Handbuch"
 
 #: resources/views/settings.phtml:85
 msgid "Markdown editor for note textareas"
@@ -151,14 +155,25 @@ msgstr ""
 "Funktion wird über Javascript realisiert - geht mit Links in Notizen und "
 "HTML-Blöcken."
 
+#. I18N: Enhanced Links
+#: resources/views/settings.phtml:126
+msgid ""
+"Different destinations can be addressed with a link, whereby the cross-"
+"reference is always the first link and the others are represented by "
+"attached clickable icons."
+msgstr ""
+"Mit einem Link können dabei verschiedene Ziele adressiert werden, wobei der "
+"Querverweis stets die erste Verknüpfung ist und die weiteren durch angefügte "
+"klickbare Icons dargestellt werden."
+
 #. I18N: Enhanced Links code example 1
 #. I18N: Enhanced Links code example 2
-#: resources/views/settings.phtml:127 resources/views/settings.phtml:128
+#: resources/views/settings.phtml:128 resources/views/settings.phtml:129
 msgid "Link display title"
 msgstr "Link-Anzeigetitel"
 
 #. I18N: Enhanced Links code example 3 vesta module
-#: resources/views/settings.phtml:129
+#: resources/views/settings.phtml:130
 msgid ""
 "e.g. also in cooperation with the name badge function of the “⚶ Vesta "
 "Classic Look & Feel” module"
@@ -166,12 +181,12 @@ msgstr ""
 "bspw. auch in Zusammenarbeit mit der Namensschild-Funktion des Moduls \"⚶ "
 "Vesta Classic Look & Feel\""
 
-#: resources/views/settings.phtml:140
+#: resources/views/settings.phtml:141
 msgid "JSON for additional link targets"
 msgstr "JSON-Objekt für zusätzliche Link-Ziele"
 
 #. I18N: Enhanced Links js
-#: resources/views/settings.phtml:145
+#: resources/views/settings.phtml:146
 msgid ""
 "The JSON object overwrites and supplements the predefined settings, which "
 "are taken from the following code excerpt and can also serve as a reference "
@@ -182,21 +197,21 @@ msgstr ""
 "für Anpassungen dienen können."
 
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:154
+#: resources/views/settings.phtml:155
 msgid "Markdown Image Support"
 msgstr "Markdown Bild Unterstützung"
 
-#: resources/views/settings.phtml:161
+#: resources/views/settings.phtml:162
 msgid "Activate markdown image tweak?"
 msgstr "Markdown Bilderlink Optimierung aktivieren?"
 
 #. I18N: MD img - sentence 1
-#: resources/views/settings.phtml:171
+#: resources/views/settings.phtml:172
 msgid "Only works in notes that are formatted with Markdown."
 msgstr "Funktioniert nur in Notizen, die mit Markdown formatiert sind."
 
 #. I18N: MD img - sentence 2
-#: resources/views/settings.phtml:173
+#: resources/views/settings.phtml:174
 msgid ""
 "The images are packed into a div container together with an image subtitle - "
 "which is also a link to the media data set for GEDCOM objects."
@@ -206,7 +221,7 @@ msgstr ""
 "verpackt."
 
 #. I18N: MD img - sentence 3
-#: resources/views/settings.phtml:174
+#: resources/views/settings.phtml:175
 msgid ""
 "The display can be customized as required using the following standard CSS "
 "classes or additional CSS classes."
@@ -215,20 +230,20 @@ msgstr ""
 "kann die Darstellung beliebig angepasst werden."
 
 #. I18N: MD img code example 1
-#: resources/views/settings.phtml:177
+#: resources/views/settings.phtml:178
 msgid "alternate text for gedcom object"
 msgstr "alternativer Text für GEDCOM-Objekt"
 
 #. I18N: MD img code example 2
-#: resources/views/settings.phtml:178
+#: resources/views/settings.phtml:179
 msgid "alternate text for picture in public folder"
 msgstr "alternativer Text für Bild im Public-Ordner"
 
-#: resources/views/settings.phtml:187
+#: resources/views/settings.phtml:188
 msgid "Markdown image container standard css class"
 msgstr "Standard CSS-Klasse(n) für Markdown Bild-Container"
 
-#: resources/views/settings.phtml:195
+#: resources/views/settings.phtml:196
 msgid "Markdown image title container standard css class"
 msgstr "Standard CSS-Klasse(n) für Markdown Bildtitel-Container"
 
@@ -259,7 +274,7 @@ msgstr "kursiv"
 #. I18N: JS MDE
 #: LinkEnhancerModule.php:411
 msgid "format as code"
-msgstr "Als Code formatieren"
+msgstr "als Code formatieren"
 
 #. I18N: JS MDE
 #: LinkEnhancerModule.php:412
@@ -269,12 +284,12 @@ msgstr "Ebene 1 Überschrift"
 #. I18N: JS MDE
 #: LinkEnhancerModule.php:413
 msgid "Bulleted list"
-msgstr "Stichpunktartige Aufzählung"
+msgstr "Aufzählungsliste"
 
 #. I18N: JS MDE
 #: LinkEnhancerModule.php:414
 msgid "Numbered list"
-msgstr "Nummerierte Aufzählung"
+msgstr "Nummerierte Liste"
 
 #. I18N: JS MDE
 #: LinkEnhancerModule.php:415
@@ -289,14 +304,40 @@ msgstr "Bild einfügen"
 #. I18N: JS MDE
 #: LinkEnhancerModule.php:417
 msgid "Undo"
-msgstr "Rückgängig"
+msgstr "Wiederherstellen"
 
 #. I18N: JS MDE
 #: LinkEnhancerModule.php:418
 msgid "Redo"
-msgstr "Wiederholen"
+msgstr "Rückgängig"
 
 #. I18N: JS enhanced link
 #: LinkEnhancerModule.php:420
 msgid "cross reference"
 msgstr "Querverweis"
+
+#. I18N: JS enhanced link, %s name of location
+#: LinkEnhancerModule.php:421
+#, php-format
+msgid "Online Local heritage book of %s at CompGen"
+msgstr "Online-Ortsfamilienbuch %s bei CompGen"
+
+#. I18N: JS enhanced link
+#: LinkEnhancerModule.php:422
+msgid "The Historic Geo Information System (GOV)"
+msgstr "Das Geschichtliche Orts-Verzeichnis"
+
+#. I18N: JS enhanced link
+#: LinkEnhancerModule.php:423
+msgid "Family Book of Dornbirn"
+msgstr "Dornbirner Familienbuch"
+
+#. I18N: JS enhanced link
+#: LinkEnhancerModule.php:424
+msgid "Residents database - Family research in West Prussia"
+msgstr "Einwohnerdatenbank - Familienforschung in Westpreussen"
+
+#. I18N: JS enhanced link
+#: LinkEnhancerModule.php:426
+msgid "Syntax error"
+msgstr "Syntaxfehler"

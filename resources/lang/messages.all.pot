@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-18 02:43+0200\n"
+"POT-Creation-Date: 2025-07-18 06:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -108,7 +108,7 @@ msgstr ""
 #. I18N: webtrees.pot
 #: resources/views/settings.phtml:51 resources/views/settings.phtml:72
 #: resources/views/settings.phtml:91 resources/views/settings.phtml:121
-#: resources/views/settings.phtml:167
+#: resources/views/settings.phtml:168
 msgid "no"
 msgstr ""
 
@@ -123,12 +123,16 @@ msgid "My page"
 msgstr ""
 
 #: resources/views/settings.phtml:65
-msgid "Link to GenWiki Webtrees Manual"
+msgid "Link to GenWiki"
+msgstr ""
+
+#: resources/views/settings.phtml:65
+msgid "Webtrees Manual"
 msgstr ""
 
 #. I18N: webtrees.pot
 #: resources/views/settings.phtml:73 resources/views/settings.phtml:91
-#: resources/views/settings.phtml:121 resources/views/settings.phtml:167
+#: resources/views/settings.phtml:121 resources/views/settings.phtml:168
 msgid "yes"
 msgstr ""
 
@@ -179,30 +183,38 @@ msgid ""
 "blocks."
 msgstr ""
 
+#. I18N: Enhanced Links
+#: resources/views/settings.phtml:126
+msgid ""
+"Different destinations can be addressed with a link, whereby the cross-"
+"reference is always the first link and the others are represented by "
+"attached clickable icons."
+msgstr ""
+
 #. I18N: Enhanced Links code example 1
 #. I18N: Enhanced Links code example 2
-#: resources/views/settings.phtml:127 resources/views/settings.phtml:128
+#: resources/views/settings.phtml:128 resources/views/settings.phtml:129
 msgid "Link display title"
 msgstr ""
 
 #. I18N: Enhanced Links code example 3 vesta module
-#: resources/views/settings.phtml:129
+#: resources/views/settings.phtml:130
 msgid ""
 "e.g. also in cooperation with the name badge function of the “⚶ Vesta "
 "Classic Look & Feel” module"
 msgstr ""
 
-#: resources/views/settings.phtml:140
+#: resources/views/settings.phtml:141
 msgid "JSON for additional link targets"
 msgstr ""
 
 #. I18N: webtrees.pot
-#: resources/views/settings.phtml:140
+#: resources/views/settings.phtml:141
 msgid "optional"
 msgstr ""
 
 #. I18N: Enhanced Links js
-#: resources/views/settings.phtml:145
+#: resources/views/settings.phtml:146
 msgid ""
 "The JSON object overwrites and supplements the predefined settings, which "
 "are taken from the following code excerpt and can also serve as a reference "
@@ -210,53 +222,53 @@ msgid ""
 msgstr ""
 
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:154
+#: resources/views/settings.phtml:155
 msgid "Markdown Image Support"
 msgstr ""
 
-#: resources/views/settings.phtml:161
+#: resources/views/settings.phtml:162
 msgid "Activate markdown image tweak?"
 msgstr ""
 
 #. I18N: MD img - sentence 1
-#: resources/views/settings.phtml:171
+#: resources/views/settings.phtml:172
 msgid "Only works in notes that are formatted with Markdown."
 msgstr ""
 
 #. I18N: MD img - sentence 2
-#: resources/views/settings.phtml:173
+#: resources/views/settings.phtml:174
 msgid ""
 "The images are packed into a div container together with an image subtitle - "
 "which is also a link to the media data set for GEDCOM objects."
 msgstr ""
 
 #. I18N: MD img - sentence 3
-#: resources/views/settings.phtml:174
+#: resources/views/settings.phtml:175
 msgid ""
 "The display can be customized as required using the following standard CSS "
 "classes or additional CSS classes."
 msgstr ""
 
 #. I18N: MD img code example 1
-#: resources/views/settings.phtml:177
+#: resources/views/settings.phtml:178
 msgid "alternate text for gedcom object"
 msgstr ""
 
 #. I18N: MD img code example 2
-#: resources/views/settings.phtml:178
+#: resources/views/settings.phtml:179
 msgid "alternate text for picture in public folder"
 msgstr ""
 
-#: resources/views/settings.phtml:187
+#: resources/views/settings.phtml:188
 msgid "Markdown image container standard css class"
 msgstr ""
 
-#: resources/views/settings.phtml:195
+#: resources/views/settings.phtml:196
 msgid "Markdown image title container standard css class"
 msgstr ""
 
 #. I18N: webtrees.pot
-#: resources/views/settings.phtml:209
+#: resources/views/settings.phtml:210
 msgid "save"
 msgstr ""
 
@@ -331,4 +343,35 @@ msgstr ""
 #. I18N: JS enhanced link
 #: LinkEnhancerModule.php:420
 msgid "cross reference"
+msgstr ""
+
+#. I18N: JS enhanced link, %s name of location
+#: LinkEnhancerModule.php:421
+#, php-format
+msgid "Online Local heritage book of %s at CompGen"
+msgstr ""
+
+#. I18N: JS enhanced link
+#: LinkEnhancerModule.php:422
+msgid "The Historic Geo Information System (GOV)"
+msgstr ""
+
+#. I18N: JS enhanced link
+#: LinkEnhancerModule.php:423
+msgid "Family Book of Dornbirn"
+msgstr ""
+
+#. I18N: JS enhanced link
+#: LinkEnhancerModule.php:424
+msgid "Residents database - Family research in West Prussia"
+msgstr ""
+
+#. I18N: webtrees.pot
+#: LinkEnhancerModule.php:425
+msgid "Interactive tree"
+msgstr ""
+
+#. I18N: JS enhanced link
+#: LinkEnhancerModule.php:426
+msgid "Syntax error"
 msgstr ""

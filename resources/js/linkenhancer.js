@@ -1,9 +1,9 @@
-function getSupportedKeys() {
+function getLECfg() {
     let cfg = //+++ code-snippet begin next line - used for display in admin settings page
 { // link targets
   // - key = query parameter key;
   // - name = label, placeholder $ID for inserting given id
-  // - url = service url- id will be appended to the end, can also be a function(id)
+  // - url = service url- id will be appended to the end, can also be a function(id, title)
   // - cname = css class name(s) whitespace separated
     "wt": { // placeholder - is always the first link
         name: 'webtrees ' + I18N['cross reference'],
@@ -19,17 +19,17 @@ function getSupportedKeys() {
         cname: 'icon-wp'
     },
     "dbfam": {
-        name: 'Dornbirn Familienbuch',
+        name: I18N['dbfam'],
         url: 'https://www.wer-wir-waren.at/daten?guid=',
         cname: 'icon-dbfam'
     },
     "ofbdb": {
-        name: 'Online-Ortsfamilienbuch Dornbirn bei CompGen',
+        name: I18N['oofb'].replace(/%s/, 'Dornbirn'),
         url: "https://ofb.genealogy.net/famreport.php?ofb=dornbirn&UID=",
         cname: 'icon-compgen'
     },
     "ofbs": {
-        name: 'Online-Ortsfamilienbuch Saatzig bei CompGen',
+        name: I18N['oofb'].replace(/%s/, 'Saatzig'),
         url: "https://ofb.genealogy.net/famreport.php?ofb=saatzig&UID=",
         cname: 'icon-compgen'
     },
@@ -39,12 +39,12 @@ function getSupportedKeys() {
         cname: 'icon-compgen'
     },
     "gov": {
-        name: 'Das Geschichtliche Orts-Verzeichnis - $ID',
+        name: I18N['gov'] + ' - $ID',
         url: "https://gov.genealogy.net/item/show/",
         cname: 'icon-compgen'
     },
     "ewp": {
-        name: 'Einwohnerdatenbank - Familienforschung in Westpreussen (westpreussen.de)',
+        name: I18N['ewp'] + ' (westpreussen.de)',
         url: 'https://westpreussen.de/tngeinwohner/getperson.php?personID=',
         cname: 'icon-ewp'
     },
@@ -56,7 +56,7 @@ function getSupportedKeys() {
     ,
     "osm": {
         name: 'OpenStreetMap',
-        url: (id) => { 
+        url: (id, title) => { 
             // id = 16/47.38972/9.78414      => zoom/lat/lon for locating map
             //      16/47.38972/9.78414/!    => same as before with additional marker
             //      16/47.38972/9.78414/?... => for supported options see https://wiki.openstreetmap.org/wiki/DE:Browsing
@@ -70,7 +70,7 @@ function getSupportedKeys() {
                     urlsearch = "?" + parts[3].trim();
                 }
             }
-            return `https://www.openstreetmap.org/${urlsearch}#map=${map}`;
+            return {url:`https://www.openstreetmap.org/${urlsearch}#map=${map}`, title};
         },
         cname: 'icon-osm'
     }
@@ -78,7 +78,12 @@ function getSupportedKeys() {
 //--- code-snippet end
     return cfg;
 }
-const supportedKeys = getSupportedKeys();
+let LEcfg = getLECfg();
+
+function initLE(cfg) {
+    LEcfg = (typeof cfg == 'object' && cfg !== null ? Object.assign(getLECfg(), cfg) : getLECfg());
+    observeDomLinks();
+}
 
 function getTreeInfoFromURL() {
     const href = document.location.href;
@@ -139,7 +144,7 @@ function processLinks(linkElement) {
         if (!hash) return;
 
         const params = new URLSearchParams(hash);
-        const matchingKeys = Object.keys(supportedKeys).filter(key => params.has(key));
+        const matchingKeys = Object.keys(LEcfg).filter(key => params.has(key));
 
         let lastLink = null;
         matchingKeys.forEach(key => {
@@ -150,7 +155,7 @@ function processLinks(linkElement) {
                 const { type, xref, newtree, dia } = parseCrossReferenceLink(option);
                 if (!type || !xref) {
                     let nextLink = getNextLink(link, lastLink);
-                    lastLink = setLink(nextLink, lastLink, '', supportedKeys[key].name + " - Syntaxfehler!", supportedKeys[key].cname);
+                    lastLink = setLink(nextLink, lastLink, '', LEcfg[key].name + " - " + I18N['syntax error'] + "!", LEcfg[key].cname);
                     lastLink.classList.add('icon-wt-xref-error');
                     return;
                 }
@@ -161,7 +166,7 @@ function processLinks(linkElement) {
                 }
                 let urlxref = url + separator[urlmode].path + rectypes[type] + separator[urlmode].path + xref;
                 let nextLink = getNextLink(link, lastLink);
-                lastLink = setLink(nextLink, lastLink, urlxref, supportedKeys[key].name + ` - ${xref}`, supportedKeys[key].cname);
+                lastLink = setLink(nextLink, lastLink, urlxref, LEcfg[key].name + ` - ${xref}`, LEcfg[key].cname);
                 lastLink.classList.add('icon-wt-xref');
 
                 if (type == 'i' && dia) {
@@ -170,20 +175,23 @@ function processLinks(linkElement) {
                     lastLink = setLink(nextLink, lastLink, diaurl, `${diatitle} - ${xref}`, 'icon-wt-dia');//'menu-chart-tree');
                 }
             } else {
-                let url = (typeof supportedKeys[key].url == 'function' ?
-                    supportedKeys[key].url(option) :
-                    supportedKeys[key].url + encodeURIComponent(option)
-                );
+                let url = '';
+                let title = LEcfg[key].name;
+                if (typeof LEcfg[key].url == 'function') {
+                    ({ url, title } = LEcfg[key].url(option, title));
+                } else {
+                    url =  LEcfg[key].url + encodeURIComponent(option);
+                }
                 let nextLink = getNextLink(link, lastLink);
-                let title = supportedKeys[key].name.replace(/\$ID/ig, decodeURIComponent(option));
-                lastLink = setLink(nextLink, lastLink, url, title, supportedKeys[key].cname);
+                title = title.replace(/\$ID/ig, decodeURIComponent(option));
+                lastLink = setLink(nextLink, lastLink, url, title, LEcfg[key].cname);
             }
         });
     }
 
     // Alle a-Tags durchlaufen
     const { tree, baseurl, urlmode } = getTreeInfoFromURL();
-    const diatitle = $("a.dropdown-item.menu-chart-tree[role=menuitem]").text().trim() || 'Interaktives Sanduhrdiagramm';
+    const diatitle = $("a.dropdown-item.menu-chart-tree[role=menuitem]").text().trim() || I18N['Interactive tree'];
 
     if (linkElement) {
         processLink(linkElement);

@@ -213,7 +213,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         $router = Registry::routeFactory()->routeMap();
         $existingRoutes = $router->getRoutes();
         $csv = fopen(__DIR__ . "/wt-routes.csv", "w");
-        //fputcsv($csv, [ 'Name', 'Path', 'Handler', 'Method', 'Extras']);
+        
         fputcsv($csv, ['Path', 'Handler', 'Method', 'Middleware']);
         foreach ($existingRoutes as $route) {
             //$extras = isset($route->extras) ? json_encode($route->extras) : '';
@@ -271,6 +271,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         $activeRouteInfo = $this->getActiveRoute();
         $initJs .= "console.log('Active route:', $activeRouteInfo);";
 
+        // --- I18N for JS MDE and enhanced links
         if ($cfg_link_active || $cfg_mde_active) {
             $includeRes .= "<script>window.I18N = " . $this->getJsonI18N() . "; </script>";
         }
@@ -285,7 +286,8 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         if ($cfg_link_active) {
             $includeRes .= '<link rel="stylesheet" type="text/css" href="' . $this->assetUrl('css/linkenhancer.css') . '">';
             $includeRes .= '<script src="' . $this->assetUrl('js/linkenhancer.js') . '"></script>';
-            $initJs .= 'observeDomLinks();';
+            $lecfg = $this->getPref(self::PREF_LINKSPP_JS);
+            $initJs .= "initLE($lecfg);";
         }
 
         // --- Webtrees Handbuch Link
@@ -294,7 +296,6 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 jQuery('.wt-user-menu').prepend('<li class="nav-item menu-wthb"><a class="nav-link" href="https://wiki.genealogy.net/Webtrees_Handbuch"><i class="fa-solid fa-circle-question"></i> Webtrees-Handbuch</a></li>');
 EOD;
         }
-
         
         // --- TinyMDE
         if ($cfg_mde_active && $tree != null && $tree->getPreference('FORMAT_TEXT') == 'markdown') {
@@ -314,12 +315,11 @@ EOD;
                     $includeRes .= '<script src="' . $this->assetUrl('js/tiny-mde.min.js') . '"></script>';
                     $includeRes .= '<script src="' . $this->assetUrl('js/tiny-mde-wt.js') . '"></script>';
                     $initJs .= 'installMDE();';
-                    //return "<script>console.log('LEM injecting CSS an JS');</script>";
                 }
             }
         }
         
-        return $includeRes . ($initJs ? "<script>/* Module */ document.addEventListener('DOMContentLoaded', function(event) { " . $initJs . "});</script>" :'');
+        return $includeRes . ($initJs ? "<script>document.addEventListener('DOMContentLoaded', function(event) { " . $initJs . "});</script>" :'');
     }
 
 
@@ -406,18 +406,24 @@ EOD;
     public function getJsonI18N() : string {
         return json_encode([
             // MDE
-            'bold'            => /*I18N: JS MDE */ I18N::translate('bold'),
-            'italic'          => /*I18N: JS MDE */ I18N::translate('italic'),
-            'format as code'  => /*I18N: JS MDE */ I18N::translate('format as code'),
-            'Level 1 heading' => /*I18N: JS MDE */ I18N::translate('Level 1 heading'),
-            'Bulleted list'   => /*I18N: JS MDE */ I18N::translate('Bulleted list'),
-            'Numbered list'   => /*I18N: JS MDE */ I18N::translate('Numbered list'),
-            'Insert link'     => /*I18N: JS MDE */ I18N::translate('Insert link'),
-            'Insert image'    => /*I18N: JS MDE */ I18N::translate('Insert image'),
-            'Undo'            => /*I18N: JS MDE */ I18N::translate('Undo'),
-            'Redo'            => /*I18N: JS MDE */ I18N::translate('Redo'),
-            // enhanced links
-            'cross reference' => /*I18N: JS enhanced link */ I18N::translate('cross reference'),
+            'bold'             => /*I18N: JS MDE */ I18N::translate('bold'),
+            'italic'           => /*I18N: JS MDE */ I18N::translate('italic'),
+            'format as code'   => /*I18N: JS MDE */ I18N::translate('format as code'),
+            'Level 1 heading'  => /*I18N: JS MDE */ I18N::translate('Level 1 heading'),
+            'Bulleted list'    => /*I18N: JS MDE */ I18N::translate('Bulleted list'),
+            'Numbered list'    => /*I18N: JS MDE */ I18N::translate('Numbered list'),
+            'Insert link'      => /*I18N: JS MDE */ I18N::translate('Insert link'),
+            'Insert image'     => /*I18N: JS MDE */ I18N::translate('Insert image'),
+            'Undo'             => /*I18N: JS MDE */ I18N::translate('Undo'),
+            'Redo'             => /*I18N: JS MDE */ I18N::translate('Redo'),
+            // enhanced links 
+            'cross reference'  => /*I18N: JS enhanced link */ I18N::translate('cross reference'),
+            'oofb'             => /*I18N: JS enhanced link, %s name of location */ I18N::translate('Online Local heritage book of %s at CompGen', '%s'),
+            'gov'              => /*I18N: JS enhanced link */ I18N::translate('The Historic Geo Information System (GOV)'),
+            'dbfam'            => /*I18N: JS enhanced link */ I18N::translate('Family Book of Dornbirn'),
+            'ewp'              => /*I18N: JS enhanced link */ I18N::translate('Residents database - Family research in West Prussia'),
+            'Interactive tree' => /*I18N: webtrees.pot */ I18N::translate('Interactive tree'),
+            'syntax error'     => /*I18N: JS enhanced link */ I18N::translate('Syntax error'),
         ]);
     }
 
