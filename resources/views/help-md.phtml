@@ -1,0 +1,76 @@
+<?php
+
+declare(strict_types=1);
+
+use Fisharebest\Webtrees\I18N;
+
+/**
+ * @var bool                  $link_active             enhanced links activated
+ * @var bool                  $mdimg_active            markdown extended image support activated
+ * @var array                 $mdsyntax                syntax format examples
+ */
+?>
+
+
+<p><?= /*I18N: webtrees.pot */I18N::translate("Markdown is a simple system of formatting, used on websites such as Wikipedia. It uses unobtrusive punctuation characters to create headings and sub-headings, bold and italic text, lists, tables, etc.") ?></p>
+<p><?= I18N::translate("Webtrees uses a CommonMark implementation and supports a subset of the markup") ?> 
+ - <?= lcfirst(I18N::translate('See also')) ?> <a href="https://commonmark.thephpleague.com/">https://commonmark.thephpleague.com/</a>
+</p>
+
+<h4>Markdown Syntax</h4>
+<p><?= I18N::translate('The following overview only briefly lists common formatting options') ?>:</p>
+<table class="table table-bordered table-sm">
+    <thead>
+        <tr>
+            <th>
+                Markdown
+            </th>
+            <th>
+                HTML
+            </th>
+            <th>
+                <?= I18N::translate('Rendered output') ?>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($mdsyntax as $example) : ?>
+        <tr>
+            <td><code><?= $example['md'] ?></code></td>
+            <td><kbd dir="ltr" lang="en"><?= e($example['html']) ?></kbd></td>
+            <td><?= $example['html'] ?></td>
+        </tr>
+        <?php endforeach ?>
+    </tbody>
+</table>
+<p><b><?= I18N::translate('For more depth of detail') ?> <?= lcfirst(I18N::translate('See also')) ?>:</b>
+    <ul>
+        <li><a href="https://commonmark.org/help/">https://commonmark.org/help/</a></li>
+        <li><a href="https://www.markdownguide.org/basic-syntax/">https://www.markdownguide.org/basic-syntax/</a></li>
+    </ul>
+</p>
+
+<p><hr></p>
+<h4><?= I18N::translate('Markdown editor for note textareas') ?></h4>
+<p><?= /*I18N: MDE */ I18N::translate('The project “TinyMDE - A tiny, dependency-free embeddable HTML/JavaScript Markdown editor” is used') ?> 
+  - <?= lcfirst(I18N::translate('See also')) ?>:
+  <br />
+    <a href="https://github.com/jefago/tiny-markdown-editor">https://github.com/jefago/tiny-markdown-editor</a>
+    (<a href="https://github.com/jefago/tiny-markdown-editor/blob/main/LICENSE">MIT License</a>)
+</p>
+
+<?php if ($link_active) : ?>
+<p><hr></p>
+<h4><?= /*I18N: help md - section title */ I18N::translate('Enhanced Link Support') ?></h4>
+<p><?= /*I18N: Enhanced Links */ I18N::translate('Different destinations can be addressed with a link, whereby the cross-reference is always the first link and the others are represented by attached clickable icons.') ?></p>
+<p><?= /*I18N: Settings - prologue sentence 3 */ I18N::translate('By linking the notes to the GEDCOM data records (persons, families, sources, etc.) from the text, it is easier to replace the history module and thus also save this information in the GEDCOM file.') ?>
+    <?= /*I18N: Settings - prologue sentence 5 */ I18N::translate('The link function is controlled via the anchor part of the URI.') ?>
+</p>
+<p><b>Syntax</b>:  <code>[<?= /*I18N: Enhanced Links code example 1 */ I18N::translate('Link display title') ?>](#@wt=i@I1@)</code></p>
+<?php endif ?>
+
+<?php if ($mdimg_active) : ?>
+<p><hr></p>
+<h4><?= /*I18N: help md - section title */I18N::translate('Markdown Image Support') ?></h4>
+<?php endif ?>
+

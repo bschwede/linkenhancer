@@ -75,28 +75,16 @@ function createMDECommandbar(editor) {
                 }
             },
             { name: 'insertImage', title: I18N['Insert image'] },
+            { name: 'hr', title: I18N['hr'] },
             '|',
             { name: 'undo', title: I18N['Undo'] },
             { name: 'redo', title: I18N['Redo'] },
             '|',
             {
-                name: 'mdHelp',
-                title: 'Howto Markdown',
-                innerHTML: '<small>MD</small>', //https://www.markdownguide.org/assets/images/markdown-mark-white.svg
-                action: editor => window.open('https://www.markdownguide.org/basic-syntax/', '_blank')
+                name: 'modHelp',
+                title: I18N['Help'],
+                innerHTML: `<a href="#" data-bs-backdrop="static" data-bs-toggle="modal" data-bs-target="#wt-ajax-modal" data-wt-href="${LEhelp}"><b>?</b></a>`,
             },
-            {
-                name: 'moreInfoCommonMark',
-                title: 'More information about CommonMark (parser used by webtrees)',
-                innerHTML: '<small>CM</small>',
-                action: editor => window.open('https://commonmark.thephpleague.com/', '_blank')
-            },
-            {
-                name: 'moreInfoTinyMDE',
-                title: 'More information about TinyMDE (javascript editor)',
-                innerHTML: '<b>?</b>',
-                action: editor => window.open('https://github.com/jefago/tiny-markdown-editor', '_blank')
-            }
         ]
     });
     editor.e.parentNode.insertBefore(barDiv, editor.e);

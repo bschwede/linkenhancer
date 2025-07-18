@@ -268,6 +268,8 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         $initJs = '';
         $tree = Validator::attributes($request)->treeOptional();
 
+        $initJs .= 'window.LEhelp = "' . e(route('module', [ 'module' => $this->name(), 'action' => 'help' ])) . '";';
+
         $activeRouteInfo = $this->getActiveRoute();
         $initJs .= "console.log('Active route:', $activeRouteInfo);";
 
@@ -322,6 +324,27 @@ EOD;
         return $includeRes . ($initJs ? "<script>document.addEventListener('DOMContentLoaded', function(event) { " . $initJs . "});</script>" :'');
     }
 
+    /**
+     * Raw content, to be added at the end of the <body> element.
+     * Typically, this will be <script> elements.
+     *
+     * @return string
+     */
+    public function bodyContent(): string {
+        $cfg_mde_active = boolval($this->getPref(self::PREF_MDE_ACTIVE));
+
+        if ($cfg_mde_active) {
+            $request = Registry::container()->get(ServerRequestInterface::class);
+            $route = Validator::attributes($request)->route();
+            
+            if (strstr($route->name, 'EditNotePage')) {
+                //fix - should in be included in resources/views/edit/shared-note.phtml
+                return view('modals/ajax');
+            }
+            
+        }
+        return '';
+    }    
 
     /**
      * Open control panel page with options
@@ -414,8 +437,10 @@ EOD;
             'Numbered list'    => /*I18N: JS MDE */ I18N::translate('Numbered list'),
             'Insert link'      => /*I18N: JS MDE */ I18N::translate('Insert link'),
             'Insert image'     => /*I18N: JS MDE */ I18N::translate('Insert image'),
+            'hr'               => /*I18N: JS MDE */ I18N::translate('Horizontal rule'),
             'Undo'             => /*I18N: JS MDE */ I18N::translate('Undo'),
             'Redo'             => /*I18N: JS MDE */ I18N::translate('Redo'),
+            'Help'             => /*I18N: webtrees.pot */ I18N::translate('Help'),
             // enhanced links 
             'cross reference'  => /*I18N: JS enhanced link */ I18N::translate('cross reference'),
             'oofb'             => /*I18N: JS enhanced link, %s name of location */ I18N::translate('Online Local heritage book of %s at CompGen', '%s'),
@@ -425,6 +450,62 @@ EOD;
             'Interactive tree' => /*I18N: webtrees.pot */ I18N::translate('Interactive tree'),
             'syntax error'     => /*I18N: JS enhanced link */ I18N::translate('Syntax error'),
         ]);
+    }
+
+
+ /**
+     * Serve help page.
+     *
+     * @param ServerRequestInterface $request
+     *
+     * @return ResponseInterface
+     */
+    public function getHelpAction(ServerRequestInterface $request): ResponseInterface {
+        // resources/views/edit/shared-note.phtml doesn't include < ?= view('modals/ajax') ? >
+        // see also app/Http/RequestHandlers/HelpText.php
+        //$topic = $request->getAttribute('topic');
+
+        $mdsyntax = [
+            [ 
+                'md'   => '*' . I18N::translate('italic') .'*',
+                'html' => '<em>' . I18N::translate('italic') . '</em>'
+            ],
+            [
+                'md' => '**' . I18N::translate('bold') .'**',
+                'html' => '<strong>' . I18N::translate('bold') . '</strong>'
+            ],
+            [
+                'md' => '# ' . I18N::translate('Level 1 heading'),
+                'html' => '<h1>' . I18N::translate('Level 1 heading') . '</h1>'
+            ],
+            [
+                'md' => '`' . I18N::translate('format as code') . '`',
+                'html' => '<code>' . I18N::translate('format as code') . '</code>'
+            ],
+            [
+                'md' => '[' . I18N::translate('Insert link') . '](#anchor)',
+                'html' => '<a href="#anchor">' . I18N::translate('Insert link') . '</a>'
+            ],
+            [
+                'md' => I18N::translate('Horizontal rule') . "\n\n---",
+                'html' => I18N::translate('Horizontal rule') . '<hr />'
+            ],
+
+        ];
+
+        $title = /*I18N: webtrees.pot */ I18N::translate('Help') . ' - Markdown';
+        $text  = view($this->name() . '::help-md', [
+            'link_active'  => boolval($this->getPref(self::PREF_LINKSPP_ACTIVE)),
+            'mdimg_active' => boolval($this->getPref(self::PREF_MD_IMG_ACTIVE)),
+            'mdsyntax'     => $mdsyntax,
+        ]);
+
+        $html = view('modals/help', [
+            'title' => $title,
+            'text' => $text,
+        ]);
+
+        return response($html);        
     }
 
     //same as Database::getSchema, but use module settings instead of site settings (Issue #3 in personal_facts_with_hooks)
