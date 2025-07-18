@@ -239,6 +239,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
      */
     public function getPref(string $setting_name, string $default = ''): string
     {
+        //TODO values with DEFAULT_PREF set, but user doesn't want to set a value (std class) are reseted to DEFAULT_PREF
         $result = $this->getPreference($setting_name, $default);
         return (isset($result) && $result != '' ? $result : self::DEFAULT_PREFERENCES[$setting_name] ?? '');
     }
@@ -465,6 +466,9 @@ EOD;
         // see also app/Http/RequestHandlers/HelpText.php
         //$topic = $request->getAttribute('topic');
 
+        $base_url = Validator::attributes($request)->string('base_url');
+        $public_url = $base_url . '/public/apple-touch-icon.png';
+
         $mdsyntax = [
             [ 
                 'md'   => '*' . I18N::translate('italic') .'*',
@@ -483,21 +487,36 @@ EOD;
                 'html' => '<code>' . I18N::translate('format as code') . '</code>'
             ],
             [
+                'md' => str_repeat('- ' . I18N::translate('Bulleted list') . "\n", 2),
+                'html' => "<ul>\n" . str_repeat('  <li>' . I18N::translate('Bulleted list') ."</li>\n", 2) . '</ul>'
+            ],
+            [
+                'md' => str_repeat('1. ' . I18N::translate('Numbered list') . "\n", 2),
+                'html' => "<ol>\n" . str_repeat('  <li>' . I18N::translate('Numbered list') . "</li>\n", 2) . '</ol>'
+            ],
+            [
                 'md' => '[' . I18N::translate('Insert link') . '](#anchor)',
                 'html' => '<a href="#anchor">' . I18N::translate('Insert link') . '</a>'
             ],
             [
+                'md' => '![' . I18N::translate('Insert image') . '](webtrees.png)',
+                'html' => '<img src="webtrees.png" alt="' . I18N::translate('Insert image') . '" />',
+                'out'  => '<img src="' . $public_url . '" width="100">'
+            ],
+            [
                 'md' => I18N::translate('Horizontal rule') . "\n\n---",
-                'html' => I18N::translate('Horizontal rule') . '<hr />'
+                'html' => I18N::translate('Horizontal rule') . "\n<hr>"
             ],
 
         ];
 
         $title = /*I18N: webtrees.pot */ I18N::translate('Help') . ' - Markdown';
         $text  = view($this->name() . '::help-md', [
-            'link_active'  => boolval($this->getPref(self::PREF_LINKSPP_ACTIVE)),
-            'mdimg_active' => boolval($this->getPref(self::PREF_MD_IMG_ACTIVE)),
-            'mdsyntax'     => $mdsyntax,
+            'link_active'       => boolval($this->getPref(self::PREF_LINKSPP_ACTIVE)),
+            'mdimg_active'      => boolval($this->getPref(self::PREF_MD_IMG_ACTIVE)),
+            'mdsyntax'          => $mdsyntax,
+            'mdimg_css_class1'  => $this->getPref(self::PREF_MD_IMG_STDCLASS),
+            'mdimg_css_class2'  => $this->getPref(self::PREF_MD_IMG_TITLE_STDCLASS)
         ]);
 
         $html = view('modals/help', [

@@ -8,6 +8,8 @@ use Fisharebest\Webtrees\I18N;
  * @var bool                  $link_active             enhanced links activated
  * @var bool                  $mdimg_active            markdown extended image support activated
  * @var array                 $mdsyntax                syntax format examples
+ * @var string                $mdimg_css_class1
+ * @var string                $mdimg_css_class2
  */
 ?>
 
@@ -17,8 +19,10 @@ use Fisharebest\Webtrees\I18N;
  - <?= lcfirst(I18N::translate('See also')) ?> <a href="https://commonmark.thephpleague.com/">https://commonmark.thephpleague.com/</a>
 </p>
 
+<p><hr></p>
 <h4>Markdown Syntax</h4>
 <p><?= I18N::translate('The following overview only briefly lists common formatting options') ?>:</p>
+<div style="overflow:scroll;">
 <table class="table table-bordered table-sm">
     <thead>
         <tr>
@@ -26,23 +30,25 @@ use Fisharebest\Webtrees\I18N;
                 Markdown
             </th>
             <th>
-                HTML
+                <?= I18N::translate('Rendered output') ?>
             </th>
             <th>
-                <?= I18N::translate('Rendered output') ?>
+                HTML
             </th>
         </tr>
     </thead>
     <tbody>
         <?php foreach ($mdsyntax as $example) : ?>
         <tr>
-            <td><code><?= $example['md'] ?></code></td>
-            <td><kbd dir="ltr" lang="en"><?= e($example['html']) ?></kbd></td>
-            <td><?= $example['html'] ?></td>
+            <td><pre><?= $example['md'] ?></pre></td>
+            <td><?= isset($example['out']) ? $example['out'] : $example['html'] ?></td>
+            <td><pre><?= e($example['html']) ?></pre></td>
         </tr>
         <?php endforeach ?>
     </tbody>
 </table>
+</div>
+
 <p><b><?= I18N::translate('For more depth of detail') ?> <?= lcfirst(I18N::translate('See also')) ?>:</b>
     <ul>
         <li><a href="https://commonmark.org/help/">https://commonmark.org/help/</a></li>
@@ -67,10 +73,33 @@ use Fisharebest\Webtrees\I18N;
     <?= /*I18N: Settings - prologue sentence 5 */ I18N::translate('The link function is controlled via the anchor part of the URI.') ?>
 </p>
 <p><b>Syntax</b>:  <code>[<?= /*I18N: Enhanced Links code example 1 */ I18N::translate('Link display title') ?>](#@wt=i@I1@)</code></p>
-<?php endif ?>
+<?php //TODO javascript routine for composing syntax help form config object
+endif ?>
 
 <?php if ($mdimg_active) : ?>
 <p><hr></p>
 <h4><?= /*I18N: help md - section title */I18N::translate('Markdown Image Support') ?></h4>
+<p>
+    <?= /*I18N: MD img - sentence 2 */ I18N::translate('The images are packed into a div container together with an image subtitle - which is also a link to the media data set for GEDCOM objects.') ?>
+    <?= /*I18N: MD img - sentence 3 */ I18N::translate('The display can be customized as required using the following standard CSS classes or additional CSS classes.') ?>
+</p>
+<b>CSS</b>:<ul>
+    <li><u><?= I18N::translate('Markdown image container standard css class') ?>:</u>
+    <?= $mdimg_css_class1 ? '<code>' . $mdimg_css_class1 . '</code>' : I18N::translate('not defined') ?>
+    </li>
+    <li><u><?= I18N::translate('Markdown image title container standard css class') ?>:</u>
+    <?= $mdimg_css_class2 ? '<code>' . $mdimg_css_class2 . '</code>' : I18N::translate('not defined') ?>
+    </li>
+</ul>
+
+
+<b>Syntax</b>:<ul>
+    <li><code>![<?= /*I18N: MD img code example 1 */ I18N::translate('alternate text for gedcom object') ?>](#@id=@M1@)</code>
+    </li>
+    <li><code>![<?= /*I18N: MD img code example 2 */ I18N::translate('alternate text for picture in public folder') ?>](#@public=webtrees.png "title")</code>
+    </li>
+    <li><code>![<?= /*I18N: MD img code example 3 */ I18N::translate('picture with defined height, width and additional css class') ?>](#@id=@M1@&h=200&w=200&cname=float-right)</code></li>
+</ul>
+
 <?php endif ?>
 
