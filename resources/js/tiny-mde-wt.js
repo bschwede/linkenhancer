@@ -57,23 +57,27 @@ function createMDECommandbar(editor) {
         element: barDiv,
         editor: editor,
         commands: [
-            'bold',
-            'italic',
-            "code",
+            { name: 'bold', title: I18N['bold']},
+            { name: 'italic', title: I18N['italic']},
+            { name: 'code', title: I18N['format as code']},
             '|',
-            "h1", "ul", "ol",
+            { name: "h1", title: I18N['Level 1 heading'] },
+            { name: "ul", title: I18N['Bulleted list'] },
+            { name: "ol", title: I18N['Numbered list'] },
             '|',
             {
                 name: 'insertLink',
+                title: I18N['Insert link'],
                 action: editor => {
                     let dest = window.prompt('Link destination');
                     if (!dest) dest = "#@wt=i@@+dia&wpde=&gov=&osm=";
                     editor.wrapSelection('[', `](${dest})`);
                 }
             },
-            "insertImage",
+            { name: 'insertImage', title: I18N['Insert image'] },
             '|',
-            'undo', 'redo',
+            { name: 'undo', title: I18N['Undo'] },
+            { name: 'redo', title: I18N['Redo'] },
             '|',
             {
                 name: 'mdHelp',

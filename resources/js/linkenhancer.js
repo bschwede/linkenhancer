@@ -1,11 +1,21 @@
-const supportedKeys = { // as link targets: key = query parameter key; name = label; url = service url- id will be appended to the end; cname = css class name
-    "wt": {
-        name: 'webtrees Querverweis',
-        cname: ''
+function getSupportedKeys() {
+    let cfg = //+++ code-snippet begin next line - used for display in admin settings page
+{ // link targets
+  // - key = query parameter key;
+  // - name = label, placeholder $ID for inserting given id
+  // - url = service url- id will be appended to the end, can also be a function(id)
+  // - cname = css class name(s) whitespace separated
+    "wt": { // placeholder - is always the first link
+        name: 'webtrees ' + I18N['cross reference'],
     },
     "wpde": {
         name: 'Wikipedia DE - $ID',
         url: "https://de.wikipedia.org/wiki/",
+        cname: 'icon-wp'
+    },
+    "wpen": {
+        name: 'Wikipedia EN - $ID',
+        url: "https://en.wikipedia.org/wiki/",
         cname: 'icon-wp'
     },
     "dbfam": {
@@ -46,7 +56,10 @@ const supportedKeys = { // as link targets: key = query parameter key; name = la
     ,
     "osm": {
         name: 'OpenStreetMap',
-        url: (id) => {
+        url: (id) => { 
+            // id = 16/47.38972/9.78414      => zoom/lat/lon for locating map
+            //      16/47.38972/9.78414/!    => same as before with additional marker
+            //      16/47.38972/9.78414/?... => for supported options see https://wiki.openstreetmap.org/wiki/DE:Browsing
             let parts = id.split('/');
             let map = parts.slice(0, 3).join('/');
             let urlsearch = '';
@@ -58,12 +71,14 @@ const supportedKeys = { // as link targets: key = query parameter key; name = la
                 }
             }
             return `https://www.openstreetmap.org/${urlsearch}#map=${map}`;
-        }, //16/47.38972/9.78414
-        // Details siehe https://wiki.openstreetmap.org/wiki/DE:Browsing
+        },
         cname: 'icon-osm'
     }
-};
-
+}
+//--- code-snippet end
+    return cfg;
+}
+const supportedKeys = getSupportedKeys();
 
 function getTreeInfoFromURL() {
     const href = document.location.href;

@@ -10,6 +10,7 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
  * @var string                  $title                  title of this custom module
  * @var string                  $description            description of this module
  * @var array<string>           $prefs                  list of chapter objects
+ * @var string                  $jscode_linkpp          javascript code snippet from js-file
  */
 ?>
 
@@ -124,7 +125,9 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
                             <p><?= /*I18N: Enhanced Links */ I18N::translate('Function is realized via Javascript - works with links in notes and HTML blocks.') ?></p>
                             <b>Syntax</b>: <ul>
                                 <li><u>Markdown:</u> <code>[<?= /*I18N: Enhanced Links code example 1 */ I18N::translate('Link display title') ?>](#@wt=i@I1@)</code></li>
-                                <li><u>HTML:</u> <code>&lt;a href="#@wt=i@I1@"&gt;<?= /*I18N: Enhanced Links code example 2 */ I18N::translate('Link display title') ?>&lt;/a&gt;</code></li>
+                                <li><u>HTML:</u> <code>&lt;a href="#@wt=i@I1@"&gt;<?= /*I18N: Enhanced Links code example 2 */ I18N::translate('Link display title') ?>&lt;/a&gt;</code>
+                                  <p><?= /*I18N: Enhanced Links code example 3 vesta module */ I18N::translate('e.g. also in cooperation with the name badge function of the “⚶ Vesta Classic Look & Feel” module') ?>: <code>&lt;a href="#@fsft=&lt;ref/&gt;"&gt;&lt;/a&gt;</code></p>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -138,9 +141,10 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
             </label>
             <div class="col-sm-9 wt-page-options-value">
                 <textarea id="<?= $prefId ?>" name="<?= $prefId ?>" class="form-control font-monospace" dir="ltr" rows="5"><?= e($prefs[$prefId]) ?></textarea>
-                <p class="text-muted">
-                    
-                </p>
+                <div class="form-text">
+                    <p><?= /*I18N: Enhanced Links js */ I18N::translate('The JSON object overwrites and supplements the predefined settings, which are taken from the following code excerpt and can also serve as a reference point for adjustments.') ?></p>
+                    <textarea class="form-control font-monospace" dir="ltr" rows="5" disabled readonly wrap="off" style="font-size:0.9em; color: gray;"><?= e($jscode_linkpp) ?></textarea>
+                </div>
             </div>
 
         </div>

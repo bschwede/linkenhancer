@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Schwendinger\Webtrees\Module\LinkEnhancer;
 
+use Fisharebest\Webtrees\Http\Middleware\Router;
 use Schwendinger\Webtrees\Module\LinkEnhancer\CustomMarkdownFactory;
 use Exception;
 use Fisharebest\Localization\Translation;
@@ -185,6 +186,28 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     }
 
     
+    public function getActiveRoute() : string {
+        $request = Registry::container()->get(ServerRequestInterface::class);
+/*        $routerContainer = Registry::container()->get(Router::class);
+        $matcher = $routerContainer->getMatcher();
+
+        // .. and try to match the request to a route.
+        $route = $matcher->match($request);
+*/
+        $route = $request->getAttribute('route');
+        if ($route) {
+            $extras = is_array($route->extras) && isset($route->extras['middleware']) ? implode('|', $route->extras['middleware']) : '';
+            return json_encode( [
+                $route->path,
+                $route->name, //name entspricht als String handler; gettype($route->handler) == 'object' ? get_class($route->handler) : $route->handler,
+                implode('|', $route->allows),
+                $extras
+            ]);
+
+        }
+        return '';
+    }
+
     public function exportRoutes() : void
     {
         $router = Registry::routeFactory()->routeMap();
@@ -245,6 +268,12 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         $initJs = '';
         $tree = Validator::attributes($request)->treeOptional();
 
+        $activeRouteInfo = $this->getActiveRoute();
+        $initJs .= "console.log('Active route:', $activeRouteInfo);";
+
+        if ($cfg_link_active || $cfg_mde_active) {
+            $includeRes .= "<script>window.I18N = " . $this->getJsonI18N() . "; </script>";
+        }
         // --- Home Link
         if ($cfg_home_active && $tree != null) {
             $params = [ 'tree' => $tree->name()];
@@ -323,6 +352,24 @@ EOD;
             $response['prefs'][$preference] = $this->getPref($preference);
         }
 
+        $jsfile = $this->resourcesFolder() . 'js' . DIRECTORY_SEPARATOR . 'linkenhancer.js';
+        $jscode = '';
+        if (file_exists($jsfile)) {
+            $text = file($jsfile);
+            if (gettype($text) == 'array') {
+                $inSnippet = false;
+                foreach ($text as $line) {
+                    if ($inSnippet) {
+                        if (boolval(preg_match('/\/\/ *-{3,} *code-snippet/i', $line, $match))) break;
+                        $jscode .= $line;
+                    } else {
+                        $inSnippet = boolval(preg_match('/\/\/ *\+{3,} *code-snippet/i', $line, $match));
+                    }
+                }
+            }
+        }
+        $response['jscode_linkpp'] = $jscode;
+
         return $response;
     }
 
@@ -349,4 +396,68 @@ EOD;
         return redirect($this->getConfigLink());
     }
 
+
+    /**
+     * Save the user preferences in the database
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    public function getJsonI18N() : string {
+        return json_encode([
+            // MDE
+            'bold'            => /*I18N: JS MDE */ I18N::translate('bold'),
+            'italic'          => /*I18N: JS MDE */ I18N::translate('italic'),
+            'format as code'  => /*I18N: JS MDE */ I18N::translate('format as code'),
+            'Level 1 heading' => /*I18N: JS MDE */ I18N::translate('Level 1 heading'),
+            'Bulleted list'   => /*I18N: JS MDE */ I18N::translate('Bulleted list'),
+            'Numbered list'   => /*I18N: JS MDE */ I18N::translate('Numbered list'),
+            'Insert link'     => /*I18N: JS MDE */ I18N::translate('Insert link'),
+            'Insert image'    => /*I18N: JS MDE */ I18N::translate('Insert image'),
+            'Undo'            => /*I18N: JS MDE */ I18N::translate('Undo'),
+            'Redo'            => /*I18N: JS MDE */ I18N::translate('Redo'),
+            // enhanced links
+            'cross reference' => /*I18N: JS enhanced link */ I18N::translate('cross reference'),
+        ]);
+    }
+
+    //same as Database::getSchema, but use module settings instead of site settings (Issue #3 in personal_facts_with_hooks)
+/* TODO for routehelpmapping table - taken from modules_v4/vesta_common/VestaModuleTrait.php
+    protected function updateSchema($namespace, $schema_name, $target_version): bool
+    {
+        try {
+            $current_version = intval($this->getPreference($schema_name));
+        } catch (PDOException $ex) {
+            // During initial installation, the site_preference table won’t exist.
+            $current_version = 0;
+        }
+
+        $updates_applied = false;
+
+        // Update the schema, one version at a time.
+        while ($current_version < $target_version) {
+            $class = $namespace . '\\Migration' . $current_version;
+            /** @var MigrationInterface $migration * /
+            $migration = new $class();
+            $migration->upgrade();
+            $current_version++;
+
+            //when a module is first installed, we may not be able to setPreference at this point
+            ////(if this is called e.g. from SetName())
+            //because of foreign key constraints:
+            //the module may not have been inserted in the 'module' table at this point!
+            //cf. ModuleService.all()
+            //
+            //not that critical, we can just set the preference next time
+            //
+            //let's just check this directly (using ModuleService at this point may lead to looping, if we're indirectly called from there)
+            if (DB::table('module')->where('module_name', '=', $this->name())->exists()) {
+                $this->setPreference($schema_name, (string) $current_version);
+            }
+            $updates_applied = true;
+        }
+
+        return $updates_applied;
+    }
+*/
 }

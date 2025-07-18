@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-17 21:14+0200\n"
-"PO-Revision-Date: 2025-07-17 21:18+0200\n"
+"POT-Creation-Date: 2025-07-18 02:43+0200\n"
+"PO-Revision-Date: 2025-07-18 02:52+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: de\n"
@@ -57,7 +57,7 @@ msgid "File ‘%s’ in the public folder is not an image but '%s'"
 msgstr "Datei '%s' im public-Ordner ist kein Bild sondern '%s'"
 
 #. I18N: Settings - prologue sentence 1
-#: resources/views/settings.phtml:23
+#: resources/views/settings.phtml:24
 msgid ""
 "The main purpose of this module is to make links to data records stored in "
 "family trees more convenient."
@@ -66,7 +66,7 @@ msgstr ""
 "gespeicherte Datensätze komfortabler zu gestalten."
 
 #. I18N: Settings - prologue sentence 2
-#: resources/views/settings.phtml:24
+#: resources/views/settings.phtml:25
 msgid ""
 "This avoids having to store fully qualified links, which impairs the "
 "portability of Gedcom data."
@@ -75,7 +75,7 @@ msgstr ""
 "die Portabilität der Gedcom-Daten verschlechtert."
 
 #. I18N: Settings - prologue sentence 3
-#: resources/views/settings.phtml:25
+#: resources/views/settings.phtml:26
 msgid ""
 "By linking the notes to the GEDCOM data records (persons, families, sources, "
 "etc.) from the text, it is easier to replace the history module and thus "
@@ -87,7 +87,7 @@ msgstr ""
 "GEDCOM-Datei mit zu speichern."
 
 #. I18N: Settings - prologue sentence 4
-#: resources/views/settings.phtml:26
+#: resources/views/settings.phtml:27
 msgid ""
 "The option of embedding the images already inserted in the family tree in "
 "the notes rounds off this approach."
@@ -96,29 +96,29 @@ msgstr ""
 "einzubetten, rundet diesen Ansatz ab."
 
 #. I18N: Settings - prologue sentence 5
-#: resources/views/settings.phtml:27
+#: resources/views/settings.phtml:28
 msgid "The link function is controlled via the anchor part of the URI."
 msgstr "Über den Anker-Teil der URI wird die Verknüpfungsfunktion gesteuert."
 
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:36
+#: resources/views/settings.phtml:37
 msgid "Activate Support"
 msgstr "Aktivieren der Unterstützung"
 
-#: resources/views/settings.phtml:43
+#: resources/views/settings.phtml:44
 msgid "Site title links to tree"
 msgstr "Webseitentitel als Link zum aktiven Stammbaum"
 
-#: resources/views/settings.phtml:64
+#: resources/views/settings.phtml:65
 msgid "Link to GenWiki Webtrees Manual"
 msgstr "Link zum GenWiki Webtrees Handbuch"
 
-#: resources/views/settings.phtml:84
+#: resources/views/settings.phtml:85
 msgid "Markdown editor for note textareas"
 msgstr "Markdown-Editor für Notizen-Texteingabefelder"
 
 #. I18N: MDE
-#: resources/views/settings.phtml:95
+#: resources/views/settings.phtml:96
 msgid ""
 "The project “TinyMDE - A tiny, dependency-free embeddable HTML/JavaScript "
 "Markdown editor” is used - see also"
@@ -127,23 +127,23 @@ msgstr ""
 "einbettbarer HTML/JavaScript Markdown-Editor\" Verwendung - siehe auch"
 
 #. I18N: MDE
-#: resources/views/settings.phtml:98
+#: resources/views/settings.phtml:99
 #, php-format
 msgid "Precondition: Tree preference '%s' need to be set to markdown."
 msgstr ""
 "Vorbedingung: Stammbaum-Einstellung '%s' muss auf markdown gesetzt sein."
 
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:107
+#: resources/views/settings.phtml:108
 msgid "Enhanced Link Support"
 msgstr "Verbesserte Link-Unterstützung"
 
-#: resources/views/settings.phtml:114
+#: resources/views/settings.phtml:115
 msgid "Activate enhanced links?"
 msgstr "Verbesserte Links aktivieren?"
 
 #. I18N: Enhanced Links
-#: resources/views/settings.phtml:124
+#: resources/views/settings.phtml:125
 msgid ""
 "Function is realized via Javascript - works with links in notes and HTML "
 "blocks."
@@ -153,30 +153,50 @@ msgstr ""
 
 #. I18N: Enhanced Links code example 1
 #. I18N: Enhanced Links code example 2
-#: resources/views/settings.phtml:126 resources/views/settings.phtml:127
+#: resources/views/settings.phtml:127 resources/views/settings.phtml:128
 msgid "Link display title"
 msgstr "Link-Anzeigetitel"
 
-#: resources/views/settings.phtml:137
+#. I18N: Enhanced Links code example 3 vesta module
+#: resources/views/settings.phtml:129
+msgid ""
+"e.g. also in cooperation with the name badge function of the “⚶ Vesta "
+"Classic Look & Feel” module"
+msgstr ""
+"bspw. auch in Zusammenarbeit mit der Namensschild-Funktion des Moduls \"⚶ "
+"Vesta Classic Look & Feel\""
+
+#: resources/views/settings.phtml:140
 msgid "JSON for additional link targets"
 msgstr "JSON-Objekt für zusätzliche Link-Ziele"
 
+#. I18N: Enhanced Links js
+#: resources/views/settings.phtml:145
+msgid ""
+"The JSON object overwrites and supplements the predefined settings, which "
+"are taken from the following code excerpt and can also serve as a reference "
+"point for adjustments."
+msgstr ""
+"Das JSON-Objekt überschreibt und ergänzt die vordefinierten Einstellungen, "
+"die dem nachfolgenden Code-Auszug entnommen werden und auch als Anhaltspunkt "
+"für Anpassungen dienen können."
+
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:150
+#: resources/views/settings.phtml:154
 msgid "Markdown Image Support"
 msgstr "Markdown Bild Unterstützung"
 
-#: resources/views/settings.phtml:157
+#: resources/views/settings.phtml:161
 msgid "Activate markdown image tweak?"
 msgstr "Markdown Bilderlink Optimierung aktivieren?"
 
 #. I18N: MD img - sentence 1
-#: resources/views/settings.phtml:167
+#: resources/views/settings.phtml:171
 msgid "Only works in notes that are formatted with Markdown."
 msgstr "Funktioniert nur in Notizen, die mit Markdown formatiert sind."
 
 #. I18N: MD img - sentence 2
-#: resources/views/settings.phtml:169
+#: resources/views/settings.phtml:173
 msgid ""
 "The images are packed into a div container together with an image subtitle - "
 "which is also a link to the media data set for GEDCOM objects."
@@ -186,7 +206,7 @@ msgstr ""
 "verpackt."
 
 #. I18N: MD img - sentence 3
-#: resources/views/settings.phtml:170
+#: resources/views/settings.phtml:174
 msgid ""
 "The display can be customized as required using the following standard CSS "
 "classes or additional CSS classes."
@@ -195,33 +215,88 @@ msgstr ""
 "kann die Darstellung beliebig angepasst werden."
 
 #. I18N: MD img code example 1
-#: resources/views/settings.phtml:173
+#: resources/views/settings.phtml:177
 msgid "alternate text for gedcom object"
 msgstr "alternativer Text für GEDCOM-Objekt"
 
 #. I18N: MD img code example 2
-#: resources/views/settings.phtml:174
+#: resources/views/settings.phtml:178
 msgid "alternate text for picture in public folder"
 msgstr "alternativer Text für Bild im Public-Ordner"
 
-#: resources/views/settings.phtml:183
+#: resources/views/settings.phtml:187
 msgid "Markdown image container standard css class"
 msgstr "Standard CSS-Klasse(n) für Markdown Bild-Container"
 
-#: resources/views/settings.phtml:191
+#: resources/views/settings.phtml:195
 msgid "Markdown image title container standard css class"
 msgstr "Standard CSS-Klasse(n) für Markdown Bildtitel-Container"
 
 #. I18N: Module title
-#: LinkEnhancerModule.php:97
+#: LinkEnhancerModule.php:98
 msgid "LinkEnhancer"
 msgstr ""
 
 #. I18N: Module description
-#: LinkEnhancerModule.php:107
+#: LinkEnhancerModule.php:108
 msgid ""
 "Cross-references to Gedcom datasets, Markdown editor, context-sensitive link "
 "to the GenWiki Webtrees manual"
 msgstr ""
 "Querverweise zu Gedcom-Datensätzen, Markdown-Editor, kontextabhängiger Link "
 "zum GenWiki Webtrees Handbuch"
+
+#. I18N: JS MDE
+#: LinkEnhancerModule.php:409
+msgid "bold"
+msgstr "fett"
+
+#. I18N: JS MDE
+#: LinkEnhancerModule.php:410
+msgid "italic"
+msgstr "kursiv"
+
+#. I18N: JS MDE
+#: LinkEnhancerModule.php:411
+msgid "format as code"
+msgstr "Als Code formatieren"
+
+#. I18N: JS MDE
+#: LinkEnhancerModule.php:412
+msgid "Level 1 heading"
+msgstr "Ebene 1 Überschrift"
+
+#. I18N: JS MDE
+#: LinkEnhancerModule.php:413
+msgid "Bulleted list"
+msgstr "Stichpunktartige Aufzählung"
+
+#. I18N: JS MDE
+#: LinkEnhancerModule.php:414
+msgid "Numbered list"
+msgstr "Nummerierte Aufzählung"
+
+#. I18N: JS MDE
+#: LinkEnhancerModule.php:415
+msgid "Insert link"
+msgstr "Link einfügen"
+
+#. I18N: JS MDE
+#: LinkEnhancerModule.php:416
+msgid "Insert image"
+msgstr "Bild einfügen"
+
+#. I18N: JS MDE
+#: LinkEnhancerModule.php:417
+msgid "Undo"
+msgstr "Rückgängig"
+
+#. I18N: JS MDE
+#: LinkEnhancerModule.php:418
+msgid "Redo"
+msgstr "Wiederholen"
+
+#. I18N: JS enhanced link
+#: LinkEnhancerModule.php:420
+msgid "cross reference"
+msgstr "Querverweis"
