@@ -43,6 +43,18 @@
   resize: vertical;
 }
 
+/* help */
 .helpsection {
   margin-top: 50px !important;
 }
+.comp-overview td { padding: 10px !important; border-top: 1px solid lightgray !important;}
+
+.md-example table, .md-example tr, .md-example th, .md-example td {
+  border: 1px solid lightgray !important;
+  border-collapse: collapse;
+}
+.md-example th, .md-example td { width:75px; padding: 0 !important;}
+
+.md-example .left { text-align:left;}
+.md-example .center { text-align:center;}
+.md-example .right { text-align:right;}

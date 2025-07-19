@@ -93,12 +93,12 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
                         ]) ?>
                         <div class="form-text">
                         <p><?= /*I18N: webtrees.pot */I18N::translate("Markdown is a simple system of formatting, used on websites such as Wikipedia. It uses unobtrusive punctuation characters to create headings and sub-headings, bold and italic text, lists, tables, etc.") ?></p>
-                        <p><?= /*I18N: MDE */ I18N::translate('The project “TinyMDE - A tiny, dependency-free embeddable HTML/JavaScript Markdown editor” is used') . ' - ' . I18N::translate('See also') ?>:<br />
+                        <p><?= /*I18N: MDE */ I18N::translate('The project “TinyMDE - A tiny, dependency-free embeddable HTML/JavaScript Markdown editor” is used') . ' - ' . lcfirst(I18N::translate('See also')) ?>:<br />
                             <a href="https://github.com/jefago/tiny-markdown-editor">https://github.com/jefago/tiny-markdown-editor</a>
                             (<a href="https://github.com/jefago/tiny-markdown-editor/blob/main/LICENSE">MIT License</a>)</p>
                         <p><strong><?= /*I18N: MDE */I18N::translate("Precondition: Tree preference '%s' need to be set to markdown.", /*I18N: webtrees.pot */I18N::translate('Format text and notes')) ?></strong></p>
+                        <p><?= /*I18N: MDE */ I18N::translate('On the subject of') . ' ' . /*I18N: webtrees.pot */I18N::translate('markdown') . ' '. lcfirst(I18N::translate('See also')) ?>: <a href="https://github.com/fisharebest/webtrees/issues?q=is%3Aissue%20markdown">Github webtrees Issues</a></p>
                         </div>
-
                     </div>
                 </div>
             </fieldset>            
@@ -146,9 +146,9 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
                     <p><?= /*I18N: Enhanced Links js */ I18N::translate('The JSON object overwrites and supplements the predefined settings, which are taken from the following code excerpt and can also serve as a reference point for adjustments.') ?></p>
                     <textarea class="form-control font-monospace" dir="ltr" rows="5" disabled readonly wrap="off" style="font-size:0.9em; color: gray;"><?= e($jscode_linkpp) ?></textarea>
                     <p><?= /*I18N: Enhanced Links js */ I18N::translate('Any CSS rules required are best added via the “CSS and JS” module.') ?>
-                       <?= /*I18N: Enhanced Links js */ I18N::translate('Only the definition of the icon as a background image is actually needed - referencing as data: URL.') ?>
+                       <?= /*I18N: Enhanced Links js */ I18N::translate('Only the definition of the icon as a background image is actually needed - referencing as data: URL.') ?> <?= I18N::translate('See also') ?>: <a href="https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Schemes/data">mdn web docs - data: URLs</a>
                        <br />
-                       <code>.icon-whatever { background-image: url(...) }</code> - <a href="https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Schemes/data">mdn web docs - data: URLs</a>
+                       <code>.icon-whatever { background-image: url(...) }</code>
                     </p>
                 </div>
             </div>

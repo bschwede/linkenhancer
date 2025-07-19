@@ -22,7 +22,7 @@ use Fisharebest\Webtrees\I18N;
 <h4 class="helpsection">Markdown Syntax</h4>
 <p><?= I18N::translate('The following overview only briefly lists common formatting options') ?>:</p>
 <div style="overflow:scroll;">
-<table class="table table-bordered table-sm">
+<table class="table table-bordered table-sm comp-overview">
     <thead>
         <tr>
             <th>
@@ -39,9 +39,9 @@ use Fisharebest\Webtrees\I18N;
     <tbody>
         <?php foreach ($mdsyntax as $example) : ?>
         <tr>
-            <td><pre><?= $example['md'] ?></pre></td>
-            <td><?= isset($example['out']) ? $example['out'] : $example['html'] ?></td>
-            <td><pre><?= e($example['html']) ?></pre></td>
+            <td><pre><?= e($example['md']) ?></pre></td>
+            <td><?= isset($example['out']) ? $example['out'] : (isset($example['html']) ? $example['html'] : '&nbsp;' ) ?></td>
+            <td><pre><?= isset($example['html']) ? e($example['html']) : '&nbsp;' ?></pre></td>
         </tr>
         <?php endforeach ?>
     </tbody>
@@ -51,7 +51,8 @@ use Fisharebest\Webtrees\I18N;
 <p><b><?= I18N::translate('For more depth of detail') ?> <?= lcfirst(I18N::translate('See also')) ?>:</b>
     <ul>
         <li><a href="https://commonmark.org/help/">https://commonmark.org/help/</a></li>
-        <li><a href="https://www.markdownguide.org/basic-syntax/">https://www.markdownguide.org/basic-syntax/</a></li>
+        <li><a href="https://www.markdownguide.org/cheat-sheet/">https://www.markdownguide.org/cheat-sheet/</a></li>
+        <li><a href="https://www.tablesgenerator.com/markdown_tables">https://www.tablesgenerator.com/markdown_tables</a></li>
     </ul>
 </p>
 
@@ -68,6 +69,7 @@ use Fisharebest\Webtrees\I18N;
 <p><?= /*I18N: Enhanced Links */ I18N::translate('Different destinations can be addressed with a link, whereby the cross-reference is always the first link and the others are represented by attached clickable icons.') ?></p>
 <p><?= /*I18N: Settings - prologue sentence 3 */ I18N::translate('By linking the notes to the GEDCOM data records (persons, families, sources, etc.) from the text, it is easier to replace the history module and thus also save this information in the GEDCOM file.') ?>
     <?= /*I18N: Settings - prologue sentence 5 */ I18N::translate('The link function is controlled via the anchor part of the URI.') ?>
+    <?= I18N::translate('See also') ?>: <a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Web_mechanics/What_is_a_URL#anchor">mdn web docs - What is a URL?</a>
 </p>
 <p><b>Syntax</b>: <code>[<?= /*I18N: Enhanced Links code example 1 */ I18N::translate('Link display title') ?>](#@param1&amp;paramN)</code>
 <br><?= /*I18N: Enhanced Links code */ I18N::translate('The following parameters can be used') ?>:

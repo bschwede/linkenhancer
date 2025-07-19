@@ -442,6 +442,9 @@ EOD;
             'Undo'             => /*I18N: JS MDE */ I18N::translate('Undo'),
             'Redo'             => /*I18N: JS MDE */ I18N::translate('Redo'),
             'Help'             => /*I18N: webtrees.pot */ I18N::translate('Help'),
+            'Link destination' => /*I18N: JS MDE */ I18N::translate('Link destination'),
+            'Insert table'     => /*I18N: JS MDE */ I18N::translate('Insert table'),
+            'queryTableCnR'    => /*I18N: JS MDE */ I18N::translate('How many columns and rows should the table have (input: [number] [number])?'),
             // enhanced links 
             'cross reference'  => /*I18N: JS enhanced link */ I18N::translate('cross reference'),
             'oofb'             => /*I18N: JS enhanced link, %s name of location */ I18N::translate('Online Local heritage book of %s at CompGen', '%s'),
@@ -475,6 +478,9 @@ EOD;
         $base_url = Validator::attributes($request)->string('base_url');
         $public_url = $base_url . '/public/apple-touch-icon.png';
 
+        $tablemarkup = "<table>\n  "
+            ."<tr>\n    <th class=\"left\">Title 1</th>\n    <th class=\"center\">Title 2</th>\n    <th class=\"right\">Title 3</th>\n  </tr>\n  <tr>\n    "
+            . "<td class=\"left\">Text 1</td>\n    <td class=\"center\">Text 2</td>\n    <td class=\"right\">Text 3</td>\n  </tr>\n</table>";
         $mdsyntax = [
             [ 
                 'md'   => '*' . I18N::translate('italic') .'*',
@@ -513,7 +519,11 @@ EOD;
                 'md' => I18N::translate('Horizontal rule') . "\n\n---",
                 'html' => I18N::translate('Horizontal rule') . "\n<hr>"
             ],
-
+            [
+                'md' => I18N::translate('Insert table') . "\n\n|Title 1  | Title 2 |  Title 3|\n|:----    |  :---:  |     ---:|\n|Text 1   |  Text2  |    Text3|\n",
+                'html' => $tablemarkup,
+                'out' => '<div class="md-example">' . $tablemarkup . '</div>'
+            ],
         ];
 
         $title = /*I18N: webtrees.pot */ I18N::translate('Help') . ' - Markdown';

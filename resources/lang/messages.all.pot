@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-18 22:35+0200\n"
+"POT-Creation-Date: 2025-07-19 08:37+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -71,7 +71,9 @@ msgid ""
 msgstr ""
 
 #: resources/views/help-md.phtml:19 resources/views/help-md.phtml:51
-#: resources/views/help-md.phtml:60 resources/views/settings.phtml:96
+#: resources/views/help-md.phtml:60 resources/views/help-md.phtml:71
+#: resources/views/settings.phtml:96 resources/views/settings.phtml:100
+#: resources/views/settings.phtml:151
 msgid "See also"
 msgstr ""
 
@@ -127,13 +129,13 @@ msgstr ""
 
 #. I18N: Enhanced Links code example 1
 #. I18N: Enhanced Links code example 2
-#: resources/views/help-md.phtml:72 resources/views/settings.phtml:128
+#: resources/views/help-md.phtml:73 resources/views/settings.phtml:128
 #: resources/views/settings.phtml:129
 msgid "Link display title"
 msgstr ""
 
 #. I18N: Enhanced Links code
-#: resources/views/help-md.phtml:73
+#: resources/views/help-md.phtml:74
 msgid "The following parameters can be used"
 msgstr ""
 
@@ -262,6 +264,16 @@ msgstr ""
 msgid "Precondition: Tree preference '%s' need to be set to markdown."
 msgstr ""
 
+#. I18N: MDE
+#: resources/views/settings.phtml:100
+msgid "On the subject of"
+msgstr ""
+
+#. I18N: webtrees.pot
+#: resources/views/settings.phtml:100
+msgid "markdown"
+msgstr ""
+
 #: resources/views/settings.phtml:115
 msgid "Activate enhanced links?"
 msgstr ""
@@ -342,56 +354,56 @@ msgid "The preferences for the module “%s” have been updated."
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:433 LinkEnhancerModule.php:484
-#: LinkEnhancerModule.php:485
+#: LinkEnhancerModule.php:433 LinkEnhancerModule.php:487
+#: LinkEnhancerModule.php:488
 msgid "bold"
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:434 LinkEnhancerModule.php:480
-#: LinkEnhancerModule.php:481
+#: LinkEnhancerModule.php:434 LinkEnhancerModule.php:483
+#: LinkEnhancerModule.php:484
 msgid "italic"
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:435 LinkEnhancerModule.php:492
-#: LinkEnhancerModule.php:493
+#: LinkEnhancerModule.php:435 LinkEnhancerModule.php:495
+#: LinkEnhancerModule.php:496
 msgid "format as code"
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:436 LinkEnhancerModule.php:488
-#: LinkEnhancerModule.php:489
+#: LinkEnhancerModule.php:436 LinkEnhancerModule.php:491
+#: LinkEnhancerModule.php:492
 msgid "Level 1 heading"
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:437 LinkEnhancerModule.php:496
-#: LinkEnhancerModule.php:497
+#: LinkEnhancerModule.php:437 LinkEnhancerModule.php:499
+#: LinkEnhancerModule.php:500
 msgid "Bulleted list"
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:438 LinkEnhancerModule.php:500
-#: LinkEnhancerModule.php:501
+#: LinkEnhancerModule.php:438 LinkEnhancerModule.php:503
+#: LinkEnhancerModule.php:504
 msgid "Numbered list"
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:439 LinkEnhancerModule.php:504
-#: LinkEnhancerModule.php:505
+#: LinkEnhancerModule.php:439 LinkEnhancerModule.php:507
+#: LinkEnhancerModule.php:508
 msgid "Insert link"
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:440 LinkEnhancerModule.php:508
-#: LinkEnhancerModule.php:509
+#: LinkEnhancerModule.php:440 LinkEnhancerModule.php:511
+#: LinkEnhancerModule.php:512
 msgid "Insert image"
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:441 LinkEnhancerModule.php:513
-#: LinkEnhancerModule.php:514
+#: LinkEnhancerModule.php:441 LinkEnhancerModule.php:516
+#: LinkEnhancerModule.php:517
 msgid "Horizontal rule"
 msgstr ""
 
@@ -406,75 +418,91 @@ msgid "Redo"
 msgstr ""
 
 #. I18N: webtrees.pot
-#: LinkEnhancerModule.php:444 LinkEnhancerModule.php:519
+#: LinkEnhancerModule.php:444 LinkEnhancerModule.php:522
 msgid "Help"
 msgstr ""
 
-#. I18N: JS enhanced link
+#. I18N: JS MDE
+#: LinkEnhancerModule.php:445
+msgid "Link destination"
+msgstr ""
+
+#. I18N: JS MDE
 #: LinkEnhancerModule.php:446
+msgid "Insert table"
+msgstr ""
+
+#. I18N: JS MDE
+#: LinkEnhancerModule.php:447
+msgid ""
+"How many columns and rows should the table have (input: [number] [number])?"
+msgstr ""
+
+#. I18N: JS enhanced link
+#: LinkEnhancerModule.php:449
 msgid "cross reference"
 msgstr ""
 
 #. I18N: JS enhanced link, %s name of location
-#: LinkEnhancerModule.php:447
+#: LinkEnhancerModule.php:450
 #, php-format
 msgid "Online Local heritage book of %s at CompGen"
 msgstr ""
 
 #. I18N: JS enhanced link
-#: LinkEnhancerModule.php:448
+#: LinkEnhancerModule.php:451
 msgid "The Historic Geo Information System (GOV)"
 msgstr ""
 
 #. I18N: JS enhanced link
-#: LinkEnhancerModule.php:449
+#: LinkEnhancerModule.php:452
 msgid "Family Book of Dornbirn"
 msgstr ""
 
 #. I18N: JS enhanced link
-#: LinkEnhancerModule.php:450
+#: LinkEnhancerModule.php:453
 msgid "Residents database - Family research in West Prussia"
 msgstr ""
 
 #. I18N: webtrees.pot
-#: LinkEnhancerModule.php:451
+#: LinkEnhancerModule.php:454
 msgid "Interactive tree"
 msgstr ""
 
 #. I18N: JS enhanced link
-#: LinkEnhancerModule.php:452
+#: LinkEnhancerModule.php:455
 msgid "Syntax error"
 msgstr ""
 
 #. I18N: JS enhanced link wt1 - %s=rectypes
-#: LinkEnhancerModule.php:453
+#: LinkEnhancerModule.php:456
 #, php-format
 msgid ""
 "standard link to note (available record types: %s) with XREF in active tree"
 msgstr ""
 
 #. I18N: JS enhanced link wt2
-#: LinkEnhancerModule.php:454
+#: LinkEnhancerModule.php:457
 msgid ""
 "link to record type individual with XREF from \"othertree\" and also link to"
 msgstr ""
 
 #. I18N: JS enhanced link osm1
-#: LinkEnhancerModule.php:455
+#: LinkEnhancerModule.php:458
 msgid "zoom/lat/lon for locating map"
 msgstr ""
 
 #. I18N: JS enhanced link osm2
-#: LinkEnhancerModule.php:456
+#: LinkEnhancerModule.php:459
 msgid "same as before with additional marker"
 msgstr ""
 
 #. I18N: JS enhanced link osm3
-#: LinkEnhancerModule.php:457
+#: LinkEnhancerModule.php:460
 msgid "show also node/way/relation, see also"
 msgstr ""
 
 #. I18N: JS enhanced link osm4
-#: LinkEnhancerModule.php:458
+#: LinkEnhancerModule.php:461
 msgid "show also node/way/relation - alternative notation"
 msgstr ""

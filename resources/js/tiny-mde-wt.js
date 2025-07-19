@@ -69,12 +69,36 @@ function createMDECommandbar(editor) {
                 name: 'insertLink',
                 title: I18N['Insert link'],
                 action: editor => {
-                    let dest = window.prompt('Link destination');
-                    if (!dest) dest = "#@wt=i@@+dia&wpde=&gov=&osm=";
+                    let dest = window.prompt(I18N['Link destination']);
+                    if (!dest) dest = "#@wt=i@@";
                     editor.wrapSelection('[', `](${dest})`);
                 }
             },
             { name: 'insertImage', title: I18N['Insert image'] },
+            {
+                name: 'insertTable',
+                title: I18N['Insert table'],
+                action: editor => {
+                    const getTabRow = (cols, cellvalue) => ['', Array.from({ length: cols }, () => cellvalue).join('|'), ''].join('|');
+                    let colsNrows = window.prompt(I18N['queryTableCnR']);
+                    if (!colsNrows) return;
+                    let cols = 3;
+                    let rows = 2;
+                    let markup = '';
+                    let m = colsNrows.trim().match(/^(\d+)[, ]+(\d+)/)
+                    if (m) {
+                        cols = m[1];
+                        rows = m[2];
+                    }
+                    rows = rows < 2 ? 2 : rows;
+                    for (let i=0; i <= rows; i++) { // one more for second row with dashes
+                        markup += getTabRow(cols, (i == 1 ? '-' : ' ').repeat(3)) + '\n';
+                    }
+                    editor.paste(markup);
+                },
+                innerHTML: '<b>T</b>'
+            },
+
             { name: 'hr', title: I18N['hr'] },
             '|',
             { name: 'undo', title: I18N['Undo'] },
@@ -83,7 +107,7 @@ function createMDECommandbar(editor) {
             {
                 name: 'modHelp',
                 title: I18N['Help'],
-                innerHTML: `<a href="#" data-bs-backdrop="static" data-bs-toggle="modal" data-bs-target="#wt-ajax-modal" data-wt-href="${LEhelp}"><b>?</b></a>`,
+                innerHTML: `<a href="#" data-bs-backdrop="static" data-bs-toggle="modal" data-bs-target="#wt-ajax-modal" data-wt-href="${LEhelp}"><b style="padding:0 3px;">?</b></a>`,
             },
         ]
     });
@@ -100,13 +124,14 @@ function installMDE() {
         editor.e.id = edId;
         //editor.e.classList.add('form-control');
 
-        // Workaround - Eingabehilfe
+        // Workaround - input help/OSK
         const oskElem = document.querySelector(`.wt-osk-trigger[data-wt-id="${elem.id}"]`)
         if (oskElem) {
             oskElem.dataset.wtId = txtId;
             const txtNode = document.createElement("input");
             txtNode.id = txtId;
             txtNode.type = 'text';
+            //txtNode.addEventListener('input', (e) => editor.paste(e.target.value)); //inserted always to the end
             oskElem.insertAdjacentElement('afterend', txtNode);
         }
         setupDynamicLineNumbers(editor.e);
