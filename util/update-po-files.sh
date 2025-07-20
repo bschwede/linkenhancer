@@ -1,10 +1,8 @@
 #!/bin/bash
 # I18N - Update PO-/POT-files from source code
-pushd .
+#pushd .
 SCRIPTDIR=$(dirname "$(realpath -s "${BASH_SOURCE:-$0}")")
 
-
-# Projektverzeichnis (Pfad zum Root deiner App)
 PROJECT_ROOT=$(realpath "${SCRIPTDIR}/..")
 LANG_DIR="$PROJECT_ROOT/resources/lang"
 POT_FILE_ALL="$LANG_DIR/messages.all.pot"
@@ -12,10 +10,10 @@ POT_FILE_FILTERED="$LANG_DIR/messages.pot"
 
 cd "$PROJECT_ROOT" || exit 1
 
-# Liste unterstützter Sprachen (ISO-Codes)
+# list of supported lLanguages (ISO-Codes)
 LANGUAGES=("de" "en")
 
-echo "📦 Generiere POT-Datei: $POT_FILE_ALL"
+echo "📦 Generate POT-File: $POT_FILE_ALL"
 
 # Erzeuge messages.pot mit relativen Pfaden
 xgettext -L PHP \
@@ -23,9 +21,9 @@ xgettext -L PHP \
   --add-comments=I18N \
   --from-code=utf-8 \
   --output="$POT_FILE_ALL" \
-  $(find . -name "*.php" -o -name "*.phtml")
+  $(find . -not -path "./util/*" \( -name "*.php" -o -name "*.phtml" \))
 
-echo "✅ POT-Datei erstellt."
+echo "✅ POT-file created."
 
 
 awk '
@@ -34,7 +32,7 @@ BEGIN {
   skip_block = 0;
   block = "";
 }
-# Leere Zeile markiert Ende eines Blocks
+# blank line marks end of block
 /^$/ {
   if (!skip_block) {
     printf "%s\n", block;
@@ -45,18 +43,18 @@ BEGIN {
   next;
 }
 {
-  # Beginn eines neuen Blocks
+  # begin of new block
   if (!in_block) {
     in_block = 1;
     block = "";
   }
 
-  # Prüfen, ob Kommentar enthalten ist
+  # check if specific filter comment is present - we do not need to translate standard webtrees entries again
   if ($0 ~ /^#. I18N: webtrees.pot/) {
     skip_block = 1;
   }
 
-  # Zeile zum Block hinzufügen
+  # add line to block
   block = block $0 "\n";
 }
 END {
@@ -68,19 +66,19 @@ END {
 ' "$POT_FILE_ALL" > "$POT_FILE_FILTERED"
 POT_FILE="$POT_FILE_FILTERED"
 
-# Initialisiere PO-Dateien
+# init PO-files
 for lang in "${LANGUAGES[@]}"; do
   PO_FILE="$LANG_DIR/$lang.po"
 
   if [[ -f "$PO_FILE" ]]; then
-    echo "🔄 Aktualisiere bestehende PO-Datei für [$lang]"
+    echo "🔄 Update existing PO-file for [$lang]"
     msgmerge --update --backup=none "$PO_FILE" "$POT_FILE"
   else
-    echo "🆕 Erzeuge neue PO-Datei für [$lang]"
+    echo "🆕 Create new PO-file for [$lang]"
     msginit --input="$POT_FILE" --locale="$lang" --output-file="$PO_FILE" --no-translator
   fi
 done
 
-echo "✅ Alle Sprachdateien sind aktuell."
-popd || exit 1
+echo "✅ All language files are up to date."
+#popd || exit 1
 exit 0
