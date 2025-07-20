@@ -73,7 +73,10 @@ use Fisharebest\Webtrees\I18N;
 </p>
 <p><b>Syntax</b>: <code>[<?= /*I18N: Enhanced Links code example 1 */ I18N::translate('Link display title') ?>](#@param1&amp;paramN)</code>
 <br><?= /*I18N: Enhanced Links code */ I18N::translate('The following parameters can be used') ?>:
-<div id="syntaxLE">...</div> <script>document.querySelector('#syntaxLE').innerHTML = getLEhelpInfo();</script></p>
+<div id="syntaxLE"><?= /*I18N: Enhanced Links */ I18N::translate('The parameter definitions will be inserted by a javascript routine'); ?>...</div> <script>document.querySelector('#syntaxLE').innerHTML = getLEhelpInfo();</script></p>
+<p><?= /*I18N: Enhanced Links */ I18N::translate('This function is implemented via Javascript and only affects links in notes and HTML blocks on the client side.') ?>
+    <?= /*I18N: Enhanced Links */ I18N::translate('The existence of the linked data records is not checked in advance. Errors only appear when the link is clicked.') ?>
+</p>
 <?php endif ?>
 
 <?php if ($mdimg_active) : ?>

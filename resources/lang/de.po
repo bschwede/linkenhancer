@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-19 08:37+0200\n"
-"PO-Revision-Date: 2025-07-19 08:39+0200\n"
+"POT-Creation-Date: 2025-07-20 21:36+0200\n"
+"PO-Revision-Date: 2025-07-20 21:36+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: de\n"
@@ -64,9 +64,9 @@ msgstr ""
 "Teilmenge des Markups"
 
 #: resources/views/help-md.phtml:19 resources/views/help-md.phtml:51
-#: resources/views/help-md.phtml:60 resources/views/help-md.phtml:71
+#: resources/views/help-md.phtml:61 resources/views/help-md.phtml:72
 #: resources/views/settings.phtml:96 resources/views/settings.phtml:100
-#: resources/views/settings.phtml:151
+#: resources/views/settings.phtml:149
 msgid "See also"
 msgstr "Siehe auch"
 
@@ -83,12 +83,12 @@ msgstr "Gerenderte Ausgabe"
 msgid "For more depth of detail"
 msgstr "Für mehr Detailtiefe"
 
-#: resources/views/help-md.phtml:58 resources/views/settings.phtml:85
+#: resources/views/help-md.phtml:59 resources/views/settings.phtml:85
 msgid "Markdown editor for note textareas"
 msgstr "Markdown-Editor für Notizen-Texteingabefelder"
 
 #. I18N: MDE
-#: resources/views/help-md.phtml:59 resources/views/settings.phtml:96
+#: resources/views/help-md.phtml:60 resources/views/settings.phtml:96
 msgid ""
 "The project “TinyMDE - A tiny, dependency-free embeddable HTML/JavaScript "
 "Markdown editor” is used"
@@ -98,12 +98,12 @@ msgstr ""
 
 #. I18N: help md - section title
 #. I18N: Settings - section title
-#: resources/views/help-md.phtml:67 resources/views/settings.phtml:108
+#: resources/views/help-md.phtml:68 resources/views/settings.phtml:108
 msgid "Enhanced Link Support"
 msgstr "Verbesserte Link-Unterstützung"
 
 #. I18N: Enhanced Links
-#: resources/views/help-md.phtml:68 resources/views/settings.phtml:126
+#: resources/views/help-md.phtml:69 resources/views/settings.phtml:126
 msgid ""
 "Different destinations can be addressed with a link, whereby the cross-"
 "reference is always the first link and the others are represented by "
@@ -114,7 +114,7 @@ msgstr ""
 "klickbare Icons dargestellt werden."
 
 #. I18N: Settings - prologue sentence 3
-#: resources/views/help-md.phtml:69 resources/views/settings.phtml:26
+#: resources/views/help-md.phtml:70 resources/views/settings.phtml:26
 msgid ""
 "By linking the notes to the GEDCOM data records (persons, families, sources, "
 "etc.) from the text, it is easier to replace the history module and thus "
@@ -126,30 +126,54 @@ msgstr ""
 "GEDCOM-Datei mit zu speichern."
 
 #. I18N: Settings - prologue sentence 5
-#: resources/views/help-md.phtml:70 resources/views/settings.phtml:28
+#: resources/views/help-md.phtml:71 resources/views/settings.phtml:28
 msgid "The link function is controlled via the anchor part of the URI."
 msgstr "Über den Anker-Teil der URI wird die Verknüpfungsfunktion gesteuert."
 
 #. I18N: Enhanced Links code example 1
 #. I18N: Enhanced Links code example 2
-#: resources/views/help-md.phtml:73 resources/views/settings.phtml:128
+#: resources/views/help-md.phtml:74 resources/views/settings.phtml:128
 #: resources/views/settings.phtml:129
 msgid "Link display title"
 msgstr "Link-Anzeigetitel"
 
 #. I18N: Enhanced Links code
-#: resources/views/help-md.phtml:74
+#: resources/views/help-md.phtml:75
 msgid "The following parameters can be used"
 msgstr "Folgende Parameter können genutzt werden"
 
+#. I18N: Enhanced Links
+#: resources/views/help-md.phtml:76
+msgid "The parameter definitions will be inserted by a javascript routine"
+msgstr ""
+"Die Parameterdefinitionen werden von einer Javascript-Routine eingefügt"
+
+#. I18N: Enhanced Links
+#: resources/views/help-md.phtml:77 resources/views/settings.phtml:125
+msgid ""
+"This function is implemented via Javascript and only affects links in notes "
+"and HTML blocks on the client side."
+msgstr ""
+"Diese Funktion wird über Javascript realisiert und wirkt sich auf Links in "
+"Notizen und HTML-Blöcken nur clientseitig aus."
+
+#. I18N: Enhanced Links
+#: resources/views/help-md.phtml:78
+msgid ""
+"The existence of the linked data records is not checked in advance. Errors "
+"only appear when the link is clicked."
+msgstr ""
+"Auf Existenz der verknüpften Datensätze wird nicht im Vorhinein geprüft. "
+"Fehler zeigen sich erst beim Anklicken des Links."
+
 #. I18N: help md - section title
 #. I18N: Settings - section title
-#: resources/views/help-md.phtml:79 resources/views/settings.phtml:160
+#: resources/views/help-md.phtml:83 resources/views/settings.phtml:160
 msgid "Markdown Image Support"
 msgstr "Markdown Bild Unterstützung"
 
 #. I18N: MD img - sentence 2
-#: resources/views/help-md.phtml:81 resources/views/settings.phtml:179
+#: resources/views/help-md.phtml:85 resources/views/settings.phtml:179
 msgid ""
 "The images are packed into a div container together with an image subtitle - "
 "which is also a link to the media data set for GEDCOM objects."
@@ -159,7 +183,7 @@ msgstr ""
 "Container verpackt."
 
 #. I18N: MD img - sentence 3
-#: resources/views/help-md.phtml:82 resources/views/settings.phtml:180
+#: resources/views/help-md.phtml:86 resources/views/settings.phtml:180
 msgid ""
 "The display can be customized as required using the following standard CSS "
 "classes or additional CSS classes."
@@ -167,30 +191,30 @@ msgstr ""
 "Über die folgenden Standard CSS-Klassen oder auch zusätzliche CSS-Klassen "
 "kann die Darstellung beliebig angepasst werden."
 
-#: resources/views/help-md.phtml:85 resources/views/settings.phtml:194
+#: resources/views/help-md.phtml:89 resources/views/settings.phtml:194
 msgid "Markdown image container standard css class"
 msgstr "Standard CSS-Klasse(n) für Markdown Bild-Container"
 
-#: resources/views/help-md.phtml:86 resources/views/help-md.phtml:89
+#: resources/views/help-md.phtml:90 resources/views/help-md.phtml:93
 msgid "not defined"
 msgstr "nicht definiert"
 
-#: resources/views/help-md.phtml:88 resources/views/settings.phtml:202
+#: resources/views/help-md.phtml:92 resources/views/settings.phtml:202
 msgid "Markdown image title container standard css class"
 msgstr "Standard CSS-Klasse(n) für Markdown Bildtitel-Container"
 
 #. I18N: MD img code example 1
-#: resources/views/help-md.phtml:95 resources/views/settings.phtml:183
+#: resources/views/help-md.phtml:99 resources/views/settings.phtml:183
 msgid "alternate text for gedcom object"
 msgstr "alternativer Text für GEDCOM-Objekt"
 
 #. I18N: MD img code example 2
-#: resources/views/help-md.phtml:97 resources/views/settings.phtml:184
+#: resources/views/help-md.phtml:101 resources/views/settings.phtml:184
 msgid "alternate text for picture in public folder"
 msgstr "alternativer Text für Bild im Public-Ordner"
 
 #. I18N: MD img code example 3
-#: resources/views/help-md.phtml:99 resources/views/settings.phtml:185
+#: resources/views/help-md.phtml:103 resources/views/settings.phtml:185
 msgid "picture with defined height, width and additional css class"
 msgstr "Bild mit Angaben zu Höhe, Breite und zusätzlicher CSS Klasse"
 
@@ -253,15 +277,6 @@ msgstr "Zum Thema"
 #: resources/views/settings.phtml:115
 msgid "Activate enhanced links?"
 msgstr "Verbesserte Links aktivieren?"
-
-#. I18N: Enhanced Links
-#: resources/views/settings.phtml:125
-msgid ""
-"Function is realized via Javascript - works with links in notes and HTML "
-"blocks."
-msgstr ""
-"Funktion wird über Javascript realisiert - geht mit Links in Notizen und "
-"HTML-Blöcken."
 
 #. I18N: Enhanced Links code example 3 vesta module
 #: resources/views/settings.phtml:130
@@ -327,119 +342,119 @@ msgstr ""
 "zum GenWiki Webtrees Handbuch"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:433 LinkEnhancerModule.php:487
-#: LinkEnhancerModule.php:488
+#: LinkEnhancerModule.php:439 LinkEnhancerModule.php:496
+#: LinkEnhancerModule.php:497
 msgid "bold"
 msgstr "fett"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:434 LinkEnhancerModule.php:483
-#: LinkEnhancerModule.php:484
+#: LinkEnhancerModule.php:440 LinkEnhancerModule.php:492
+#: LinkEnhancerModule.php:493
 msgid "italic"
 msgstr "kursiv"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:435 LinkEnhancerModule.php:495
-#: LinkEnhancerModule.php:496
+#: LinkEnhancerModule.php:441 LinkEnhancerModule.php:504
+#: LinkEnhancerModule.php:505
 msgid "format as code"
 msgstr "als Code formatieren"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:436 LinkEnhancerModule.php:491
-#: LinkEnhancerModule.php:492
+#: LinkEnhancerModule.php:442 LinkEnhancerModule.php:500
+#: LinkEnhancerModule.php:501
 msgid "Level 1 heading"
 msgstr "Ebene 1 Überschrift"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:437 LinkEnhancerModule.php:499
-#: LinkEnhancerModule.php:500
+#: LinkEnhancerModule.php:443 LinkEnhancerModule.php:508
+#: LinkEnhancerModule.php:509
 msgid "Bulleted list"
 msgstr "Aufzählungsliste"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:438 LinkEnhancerModule.php:503
-#: LinkEnhancerModule.php:504
+#: LinkEnhancerModule.php:444 LinkEnhancerModule.php:512
+#: LinkEnhancerModule.php:513
 msgid "Numbered list"
 msgstr "Nummerierte Liste"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:439 LinkEnhancerModule.php:507
-#: LinkEnhancerModule.php:508
+#: LinkEnhancerModule.php:445 LinkEnhancerModule.php:516
+#: LinkEnhancerModule.php:517
 msgid "Insert link"
 msgstr "Link einfügen"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:440 LinkEnhancerModule.php:511
-#: LinkEnhancerModule.php:512
+#: LinkEnhancerModule.php:446 LinkEnhancerModule.php:520
+#: LinkEnhancerModule.php:521
 msgid "Insert image"
 msgstr "Bild einfügen"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:441 LinkEnhancerModule.php:516
-#: LinkEnhancerModule.php:517
+#: LinkEnhancerModule.php:447 LinkEnhancerModule.php:525
+#: LinkEnhancerModule.php:526
 msgid "Horizontal rule"
 msgstr "Horizontale Linie"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:442
+#: LinkEnhancerModule.php:448
 msgid "Undo"
 msgstr "Wiederherstellen"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:443
+#: LinkEnhancerModule.php:449
 msgid "Redo"
 msgstr "Rückgängig"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:445
+#: LinkEnhancerModule.php:451
 msgid "Link destination"
 msgstr "Link Ziel-URL"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:446
+#: LinkEnhancerModule.php:452 LinkEnhancerModule.php:529
 msgid "Insert table"
 msgstr "Tabelle einfügen"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:447
+#: LinkEnhancerModule.php:453
 msgid ""
 "How many columns and rows should the table have (input: [number] [number])?"
 msgstr ""
 "Wie viele Spalten und Zeilen soll die Tabelle haben (Eingabe: [Zahl] [Zahl])?"
 
 #. I18N: JS enhanced link
-#: LinkEnhancerModule.php:449
+#: LinkEnhancerModule.php:455
 msgid "cross reference"
 msgstr "Querverweis"
 
 #. I18N: JS enhanced link, %s name of location
-#: LinkEnhancerModule.php:450
+#: LinkEnhancerModule.php:456
 #, php-format
 msgid "Online Local heritage book of %s at CompGen"
 msgstr "Online-Ortsfamilienbuch %s bei CompGen"
 
 #. I18N: JS enhanced link
-#: LinkEnhancerModule.php:451
+#: LinkEnhancerModule.php:457
 msgid "The Historic Geo Information System (GOV)"
 msgstr "Das Geschichtliche Orts-Verzeichnis"
 
 #. I18N: JS enhanced link
-#: LinkEnhancerModule.php:452
+#: LinkEnhancerModule.php:458
 msgid "Family Book of Dornbirn"
 msgstr "Dornbirner Familienbuch"
 
 #. I18N: JS enhanced link
-#: LinkEnhancerModule.php:453
+#: LinkEnhancerModule.php:459
 msgid "Residents database - Family research in West Prussia"
 msgstr "Einwohnerdatenbank - Familienforschung in Westpreussen"
 
 #. I18N: JS enhanced link
-#: LinkEnhancerModule.php:455
+#: LinkEnhancerModule.php:461
 msgid "Syntax error"
 msgstr "Syntaxfehler"
 
 #. I18N: JS enhanced link wt1 - %s=rectypes
-#: LinkEnhancerModule.php:456
+#: LinkEnhancerModule.php:462
 #, php-format
 msgid ""
 "standard link to note (available record types: %s) with XREF in active tree"
@@ -448,7 +463,7 @@ msgstr ""
 "Baum"
 
 #. I18N: JS enhanced link wt2
-#: LinkEnhancerModule.php:457
+#: LinkEnhancerModule.php:463
 msgid ""
 "link to record type individual with XREF from \"othertree\" and also link to"
 msgstr ""
@@ -456,23 +471,23 @@ msgstr ""
 "auf"
 
 #. I18N: JS enhanced link osm1
-#: LinkEnhancerModule.php:458
+#: LinkEnhancerModule.php:464
 msgid "zoom/lat/lon for locating map"
 msgstr "zoom/lat/lon zur Ausrichtung der Karte"
 
 #. I18N: JS enhanced link osm2
-#: LinkEnhancerModule.php:459
+#: LinkEnhancerModule.php:465
 msgid "same as before with additional marker"
 msgstr "wie zuvor mit zusätzlichem Marker"
 
 #. I18N: JS enhanced link osm3
-#: LinkEnhancerModule.php:460
+#: LinkEnhancerModule.php:466
 msgid "show also node/way/relation, see also"
 msgstr ""
 "auch node/way/relation (Knoten-/Weg-/Relation-Objekt) anzeigen, siehe auch"
 
 #. I18N: JS enhanced link osm4
-#: LinkEnhancerModule.php:461
+#: LinkEnhancerModule.php:467
 msgid "show also node/way/relation - alternative notation"
 msgstr ""
 "auch node/way/relation (Knoten-/Weg-/Relation-Objekt) anzeigen - alternative "
