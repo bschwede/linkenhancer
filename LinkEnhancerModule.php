@@ -186,7 +186,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     }
 
     
-    public function getActiveRoute() : string {
+    public function getActiveRoute() : array {
         $request = Registry::container()->get(ServerRequestInterface::class);
 /*        $routerContainer = Registry::container()->get(Router::class);
         $matcher = $routerContainer->getMatcher();
@@ -197,15 +197,15 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         $route = $request->getAttribute('route');
         if ($route) {
             $extras = is_array($route->extras) && isset($route->extras['middleware']) ? implode('|', $route->extras['middleware']) : '';
-            return json_encode( [
-                $route->path,
-                $route->name, //name entspricht als String handler; gettype($route->handler) == 'object' ? get_class($route->handler) : $route->handler,
-                implode('|', $route->allows),
-                $extras
-            ]);
+            return [
+                'path'    => $route->path,
+                'handler' => $route->name, //name entspricht als String handler; gettype($route->handler) == 'object' ? get_class($route->handler) : $route->handler,
+                'method'  => implode('|', $route->allows),
+                'extras'  => $extras
+            ];
 
         }
-        return '';
+        return [];
     }
 
     public function exportRoutes() : void
@@ -282,18 +282,26 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             return '';
         }
 
-        $request = Registry::container()->get(ServerRequestInterface::class);
         $includeRes = '';
-        $initJs = '';
-        $tree = Validator::attributes($request)->treeOptional();
-
-        $initJs .= 'window.LEhelp = "' . e(route('module', [ 'module' => $this->name(), 'action' => 'help' ])) . '";';
+        $initJs = '';     
 
         $activeRouteInfo = $this->getActiveRoute();
-        $initJs .= "console.log('Active route:', $activeRouteInfo);"; //TODO debug output route - optional per setting?!
-
-        //$initJs .= "console.log('" . get_class().'::class' . "');";
+        $initJs .= "console.log('Active route:', " . json_encode($activeRouteInfo) . ");"; //TODO debug output route - optional per setting?!
         
+        // === admin backend - only if patch P002 for administration.phtml was applied; default: headContent of custom modules is not called on the admin backend
+        if (str_starts_with($activeRouteInfo['path'], '/admin') 
+            || str_contains($activeRouteInfo['extras'], 'AuthAdministrator')) {
+                if ($cfg_wthb_active) {
+                    $initJs .= "jQuery('ul.nav.small').prepend('<li class=\"nav-item menu-wthb\"><a class=\"nav-link\" href=\"https://wiki.genealogy.net/Webtrees_Handbuch\"><i class=\"fa-solid fa-circle-question\"></i> Webtrees-Handbuch</a></li>');";
+                    return "<script>document.addEventListener('DOMContentLoaded', function(event) { " . $initJs . "});</script>";
+                }
+                return ''; # other stuff is of no use in admin backend
+        }
+
+        $request = Registry::container()->get(ServerRequestInterface::class);
+        $tree = Validator::attributes($request)->treeOptional();
+
+        $initJs .= 'window.LEhelp = "' . e(route('module', ['module' => $this->name(), 'action' => 'help'])) . '";';
 
         // === include on all pages
         // --- I18N for JS MDE and enhanced links
@@ -362,7 +370,7 @@ EOD;
             $route = Validator::attributes($request)->route();
             
             if (strstr($route->name, 'EditNotePage')) {
-                //fix - should in be included in resources/views/edit/shared-note.phtml
+                //fix - should be included in resources/views/edit/shared-note.phtml
                 return view('modals/ajax');
             }
             
@@ -446,7 +454,7 @@ EOD;
 
 
     /**
-     * Save the user preferences in the database
+     * wrap I18N strings needed by javascript routines in a json object
      *
      * @param ServerRequestInterface $request
      * @return ResponseInterface
@@ -486,32 +494,26 @@ EOD;
         ]);
     }
 
-
- /**
-     * Serve help page.
+   /**
+     * Markdown examples for help screen
      *
      * @param ServerRequestInterface $request
-     *
-     * @return ResponseInterface
+     * @return array
      */
-    public function getHelpAction(ServerRequestInterface $request): ResponseInterface {
-        // resources/views/edit/shared-note.phtml doesn't include < ?= view('modals/ajax') ? >
-        // see also app/Http/RequestHandlers/HelpText.php
-        //$topic = $request->getAttribute('topic');
-
+    public function getMarkdownHelpExamples(ServerRequestInterface $request) : array {
         $base_url = Validator::attributes($request)->string('base_url');
         $public_url = $base_url . '/public/apple-touch-icon.png';
 
         $tablemarkup = "<table>\n  "
-            ."<tr>\n    <th class=\"left\">Title 1</th>\n    <th class=\"center\">Title 2</th>\n    <th class=\"right\">Title 3</th>\n  </tr>\n  <tr>\n    "
+            . "<tr>\n    <th class=\"left\">Title 1</th>\n    <th class=\"center\">Title 2</th>\n    <th class=\"right\">Title 3</th>\n  </tr>\n  <tr>\n    "
             . "<td class=\"left\">Text 1</td>\n    <td class=\"center\">Text 2</td>\n    <td class=\"right\">Text 3</td>\n  </tr>\n</table>";
         $mdsyntax = [
-            [ 
-                'md'   => '*' . I18N::translate('italic') .'*',
+            [
+                'md' => '*' . I18N::translate('italic') . '*',
                 'html' => '<em>' . I18N::translate('italic') . '</em>'
             ],
             [
-                'md' => '**' . I18N::translate('bold') .'**',
+                'md' => '**' . I18N::translate('bold') . '**',
                 'html' => '<strong>' . I18N::translate('bold') . '</strong>'
             ],
             [
@@ -524,7 +526,7 @@ EOD;
             ],
             [
                 'md' => str_repeat('- ' . I18N::translate('Bulleted list') . "\n", 2),
-                'html' => "<ul>\n" . str_repeat('  <li>' . I18N::translate('Bulleted list') ."</li>\n", 2) . '</ul>'
+                'html' => "<ul>\n" . str_repeat('  <li>' . I18N::translate('Bulleted list') . "</li>\n", 2) . '</ul>'
             ],
             [
                 'md' => str_repeat('1. ' . I18N::translate('Numbered list') . "\n", 2),
@@ -537,7 +539,7 @@ EOD;
             [
                 'md' => '![' . I18N::translate('Insert image') . '](webtrees.png)',
                 'html' => '<img src="webtrees.png" alt="' . I18N::translate('Insert image') . '" />',
-                'out'  => '<img src="' . $public_url . '" width="100">'
+                'out' => '<img src="' . $public_url . '" width="100">'
             ],
             [
                 'md' => I18N::translate('Horizontal rule') . "\n\n---",
@@ -550,11 +552,26 @@ EOD;
             ],
         ];
 
+        return $mdsyntax;
+    }
+
+    /**
+     * Serve help page.
+     *
+     * @param ServerRequestInterface $request
+     *
+     * @return ResponseInterface
+     */
+    public function getHelpAction(ServerRequestInterface $request): ResponseInterface {
+        // resources/views/edit/shared-note.phtml doesn't include < ?= view('modals/ajax') ? >
+        // see also app/Http/RequestHandlers/HelpText.php
+        //$topic = $request->getAttribute('topic');
+
         $title = /*I18N: webtrees.pot */ I18N::translate('Help') . ' - Markdown';
         $text  = view($this->name() . '::help-md', [
             'link_active'       => boolval($this->getPref(self::PREF_LINKSPP_ACTIVE)),
             'mdimg_active'      => boolval($this->getPref(self::PREF_MD_IMG_ACTIVE)),
-            'mdsyntax'          => $mdsyntax,
+            'mdsyntax'          => $this->getMarkdownHelpExamples($request),
             'mdimg_css_class1'  => $this->getPref(self::PREF_MD_IMG_STDCLASS),
             'mdimg_css_class2'  => $this->getPref(self::PREF_MD_IMG_TITLE_STDCLASS)
         ]);
