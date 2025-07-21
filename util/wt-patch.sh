@@ -1,6 +1,10 @@
 #!/bin/bash
 #set -e
-SCRIPTDIRPATH=$(dirname "$(readlink -f "$0")") #SCRIPTDIR=$(dirname "$(realpath -s "${BASH_SOURCE:-$0}")")
+#echo "readlink -f: $(dirname "$(readlink -f "$0")")"
+#echo "realpath -s: $(dirname "$(realpath -s "${BASH_SOURCE:-$0}")")"
+#exit 0
+#SCRIPTDIRPATH=$(dirname "$(readlink -f "$0")") #SCRIPTDIR=$(dirname "$(realpath -s "${BASH_SOURCE:-$0}")")
+SCRIPTDIRPATH=$(dirname "$(realpath -s "${BASH_SOURCE:-$0}")")
 SCRIPTFILENAME=$(basename "$0")
 SCRIPTBASENAME="${SCRIPTFILENAME%.*}"
 SCRIPTDATAPATH="${SCRIPTDIRPATH}/${SCRIPTBASENAME}"
@@ -44,7 +48,8 @@ REVERSE=""
 WTFILE="$WTDIR/app/Webtrees.php"
 [[ -f "$WTFILE" ]] || { log "❌ no webtrees found in $WTDIR"; exit 1; }
 WTVERSION="$(get_wt_version "$WTFILE")"
-echo "Webtrees Version: $WTVERSION"
+echo "WT base path: $WTDIR"
+echo "WT version  : $WTVERSION"
 
 
 # parse arguments
