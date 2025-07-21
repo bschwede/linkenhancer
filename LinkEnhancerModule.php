@@ -66,6 +66,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
     public const PREF_HOME_LINK_TYPE = 'HOME_LINK_TYPE'; // home link type: 0=off, 1=tree, 2=my-page
     public const PREF_WTHB_ACTIVE = 'WTHB_LINK_ACTIVE'; // link to GenWiki "Webtrees Handbuch"
+    public const PREF_WTHB_STD_LINK = 'WTHB_STD_LINK'; // standard link to GenWiki "Webtrees Handbuch"
     public const PREF_MDE_ACTIVE = 'MDE_ACTIVE'; // enable markdown editor for note textareas
     public const PREF_LINKSPP_ACTIVE = 'LINKSPP_ACTIVE'; // enable links++
     public const PREF_LINKSPP_JS = 'LINKSPP_JS'; // Javascript
@@ -73,12 +74,17 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public const PREF_MD_IMG_ACTIVE = 'MD_IMG_ACTIVE'; // enable enhanced markdown img syntax
     public const PREF_MD_IMG_STDCLASS = 'MD_IMG_STDCLASS'; // standard classname(s) for div wrapping img- and link-tag    
     public const PREF_MD_IMG_TITLE_STDCLASS = 'MD_IMG_TITLE_STDCLASS'; // standard classname(s) for picture subtitle
+    public const PREF_GENWIKI_LINK = 'GENWIKI_LINK'; // base link to GenWiki
     public const STDCLASS_MD_IMG = 'md-img';
     public const STDCLASS_MD_IMG_TITLE = 'md-img-title';
+    public const STDLINK_GENWIKI = 'https://wiki.genealogy.net/';
+    public const STDLINK_WTHB = 'https://wiki.genealogy.net/Webtrees_Handbuch';
     
     protected const DEFAULT_PREFERENCES = [
         self::PREF_HOME_LINK_TYPE        => '1', //int triple-state, 0=off, 1=tree, 2=my-page
         self::PREF_WTHB_ACTIVE           => '1', //bool
+        self::PREF_WTHB_STD_LINK         => self::STDLINK_WTHB, //string
+        self::PREF_GENWIKI_LINK          => self::STDLINK_GENWIKI, //string
         self::PREF_MDE_ACTIVE            => '1', //bool
         self::PREF_LINKSPP_ACTIVE        => '1', //bool
         self::PREF_LINKSPP_JS            => '',  //string
@@ -95,7 +101,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
      */
     public function title(): string
     {
-        return /*I18N: Module title */I18N::translate("LinkEnhancer");
+        return /*I18N: Module title */I18N::translate("Link-Enhancer");
     }
 
     /**
@@ -263,6 +269,20 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     }
 
     /**
+     * Wrapper for javascript for init
+     * 
+     * @param string $initJs
+     *
+     * @return string
+     */
+    public function getInitJavascript(string $initJs): string
+    {
+        return "<script>document.addEventListener('DOMContentLoaded', function(event) { " . $initJs . "});</script>";
+    }
+
+
+
+    /**
      * Raw content, to be added at the end of the <head> element.
      * Typically, this will be <link> and <meta> elements.
      *
@@ -270,8 +290,6 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
      */
     public function headContent(): string
     {
-        //self::exportRoutes();
-
         $cfg_home_type = intval($this->getPref(self::PREF_HOME_LINK_TYPE)); // 0=off, 1=Home, 2=My-Page
         $cfg_home_active = boolval($cfg_home_type);
         $cfg_wthb_active = boolval($this->getPref(self::PREF_WTHB_ACTIVE));
@@ -281,27 +299,39 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         if (!$cfg_home_active && !$cfg_wthb_active && ! $cfg_mde_active && !$cfg_link_active) {
             return '';
         }
-
+        
+        $request = Registry::container()->get(ServerRequestInterface::class);
+        //ressources to include
+        $cssFiles = [];
+        $jsFiles = [];
         $includeRes = '';
-        $initJs = '';     
+        $initJs = ''; // init on document ready
 
         $activeRouteInfo = $this->getActiveRoute();
-        $initJs .= "console.log('Active route:', " . json_encode($activeRouteInfo) . ");"; //TODO debug output route - optional per setting?!
-        
+        $initJs .= "console.log('LE-Mod active route:', " . json_encode($activeRouteInfo) . ");"; //TODO debug output route - optional per setting?!
+
+        // --- Webtrees Handbuch Link
+        if ($cfg_wthb_active) {
+            $initJs .= "jQuery('ul.wt-user-menu, ul.nav.small').prepend('<li class=\"nav-item menu-wthb\"><a class=\"nav-link\" href=\"https://wiki.genealogy.net/Webtrees_Handbuch\"><i class=\"fa-solid fa-circle-question\"></i> Webtrees-Handbuch</a></li>');";
+        }        
+
         // === admin backend - only if patch P002 for administration.phtml was applied; default: headContent of custom modules is not called on the admin backend
+        // TODO - is it possible to determine the underlying page layout or should the info for backend pages be stored in DB?!
+        $action = strtolower(($request->getAttribute('action') ?? ''));
+
         if (str_starts_with($activeRouteInfo['path'], '/admin') 
-            || str_contains($activeRouteInfo['extras'], 'AuthAdministrator')) {
+            || str_contains($activeRouteInfo['extras'], 'AuthAdministrator')
+            || (str_contains($activeRouteInfo['extras'], 'AuthManager') && !str_contains($activeRouteInfo['path'], '/tree-page-'))
+            || (str_starts_with($activeRouteInfo['path'], '/module') && str_starts_with($action, 'admin'))
+        ) {
                 if ($cfg_wthb_active) {
-                    $initJs .= "jQuery('ul.nav.small').prepend('<li class=\"nav-item menu-wthb\"><a class=\"nav-link\" href=\"https://wiki.genealogy.net/Webtrees_Handbuch\"><i class=\"fa-solid fa-circle-question\"></i> Webtrees-Handbuch</a></li>');";
-                    return "<script>document.addEventListener('DOMContentLoaded', function(event) { " . $initJs . "});</script>";
+                    return $this->getInitJavascript($initJs);
                 }
                 return ''; # other stuff is of no use in admin backend
         }
 
-        $request = Registry::container()->get(ServerRequestInterface::class);
-        $tree = Validator::attributes($request)->treeOptional();
 
-        $initJs .= 'window.LEhelp = "' . e(route('module', ['module' => $this->name(), 'action' => 'help'])) . '";';
+        $tree = Validator::attributes($request)->treeOptional();
 
         // === include on all pages
         // --- I18N for JS MDE and enhanced links
@@ -317,17 +347,10 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         
         // --- Link++
         if ($cfg_link_active) {
-            $includeRes .= '<link rel="stylesheet" type="text/css" href="' . $this->assetUrl('css/linkenhancer.css') . '">';
-            $includeRes .= '<script src="' . $this->assetUrl('js/linkenhancer.js') . '"></script>';
+            $cssFiles[] = 'css/linkenhancer.css';
+            $jsFiles[] = 'js/linkenhancer.js';
             $lecfg = $this->getPref(self::PREF_LINKSPP_JS);
             $initJs .= "initLE($lecfg);";
-        }
-
-        // --- Webtrees Handbuch Link
-        if ($cfg_wthb_active) {
-            $initJs .= <<< "EOD"
-jQuery('.wt-user-menu').prepend('<li class="nav-item menu-wthb"><a class="nav-link" href="https://wiki.genealogy.net/Webtrees_Handbuch"><i class="fa-solid fa-circle-question"></i> Webtrees-Handbuch</a></li>');
-EOD;
         }
 
         // === include selectively
@@ -344,16 +367,25 @@ EOD;
                 }
 
                 if (($routename == 'AddNewFact' && $fact == 'NOTE') || $routename != 'AddNewFact') {
-                    $includeRes .= '<link rel="stylesheet" type="text/css" href="' . $this->assetUrl('css/tiny-mde.min.css') . '">';
-                    $includeRes .= '<link rel="stylesheet" type="text/css" href="' . $this->assetUrl('css/tiny-mde-wt.css') . '">';
-                    $includeRes .= '<script src="' . $this->assetUrl('js/tiny-mde.min.js') . '"></script>';
-                    $includeRes .= '<script src="' . $this->assetUrl('js/tiny-mde-wt.js') . '"></script>';
+                    $cssFiles[] = 'css/tiny-mde.min.css';
+                    $cssFiles[] = 'css/tiny-mde-wt.css';
+                    $jsFiles[] = 'js/tiny-mde.min.js';
+                    $jsFiles[] = 'js/tiny-mde-wt.js';
+                    $initJs .= 'window.LEhelp = "' . e(route('module', ['module' => $this->name(), 'action' => 'help'])) . '";';
                     $initJs .= 'installMDE();';
                 }
             }
         }
         
-        return $includeRes . ($initJs ? "<script>document.addEventListener('DOMContentLoaded', function(event) { " . $initJs . "});</script>" :'');
+
+        foreach ($cssFiles as $file) {
+            $includeRes .= '<link rel="stylesheet" type="text/css" href="' . $this->assetUrl($file) . '">';
+        }
+        foreach ($jsFiles as $file) {
+            $includeRes .= '<script src="' . $this->assetUrl($file) . '"></script>';
+        }
+
+        return $includeRes . ($initJs ? $this->getInitJavascript($initJs) :'');
     }
 
     /**
@@ -622,5 +654,23 @@ EOD;
 
         return $updates_applied;
     }
+*/
+/*
+
+- i.d.R. ist für einen Handler nur eine Route vorhanden
+- Sonderfall stellt ModuleAction als Standard-Proxy für die CustomModules dar, der die Zugriffe mind. aufs Backend regelt:
+  eigentlichen Handler über Attribut {module} ( => könnte man als generische Regel eintragen, Wert dann als handler)
+  im Handler der aktuellen Route steht "module-no-tree"
+  bei Vesta LAF Badges: "module-tree", da es einen tree-Attribut hat
+- vermutlich
+
+
+SQL-Abfrage:
+1. spezifischer Match
+   a) für handler und method (ev. auch path?!)
+   b) bei path ^=/module und handler ^=module müssten die Attribute module und ggf. action mit Berücksichtigung finden
+2. Fallback: extras=Auth* und die anderen Felder sind null
+3. wenn überhaupt nichts passt einfach auf die Hauptseite verweisen
+
 */
 }
