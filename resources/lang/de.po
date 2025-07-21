@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-20 21:36+0200\n"
-"PO-Revision-Date: 2025-07-20 21:36+0200\n"
+"POT-Creation-Date: 2025-07-21 16:20+0200\n"
+"PO-Revision-Date: 2025-07-21 16:20+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: de\n"
@@ -64,7 +64,7 @@ msgstr ""
 "Teilmenge des Markups"
 
 #: resources/views/help-md.phtml:19 resources/views/help-md.phtml:51
-#: resources/views/help-md.phtml:61 resources/views/help-md.phtml:72
+#: resources/views/help-md.phtml:61 resources/views/help-md.phtml:73
 #: resources/views/settings.phtml:96 resources/views/settings.phtml:100
 #: resources/views/settings.phtml:149
 msgid "See also"
@@ -96,14 +96,27 @@ msgstr ""
 "Es findet das Projekt \"TinyMDE - Ein kleiner, abhängigkeitsfreier, "
 "einbettbarer HTML/JavaScript Markdown-Editor\" Verwendung"
 
+#. I18N: MDE
+#: resources/views/help-md.phtml:66
+msgid ""
+"Note: Unfortunately, the on-screen keyboard does NOT work as before with the "
+"previous text input field. The selected characters end up as an intermediate "
+"step in the small text field below the Markdown editor and must then be "
+"copied manually to the desired position."
+msgstr ""
+"Hinweis: Die Bildschirmtastatur funktioniert leider NICHT wie zuvor mit dem "
+"bisherigen Texteingabefeld. Die gewählten Zeichen landen als Zwischenschritt "
+"im kleinen Textfeld unterhalb des Markdown-Editors und müssen dann manuell "
+"an die gewünschte Stelle kopiert werden."
+
 #. I18N: help md - section title
 #. I18N: Settings - section title
-#: resources/views/help-md.phtml:68 resources/views/settings.phtml:108
+#: resources/views/help-md.phtml:69 resources/views/settings.phtml:108
 msgid "Enhanced Link Support"
 msgstr "Verbesserte Link-Unterstützung"
 
 #. I18N: Enhanced Links
-#: resources/views/help-md.phtml:69 resources/views/settings.phtml:126
+#: resources/views/help-md.phtml:70 resources/views/settings.phtml:126
 msgid ""
 "Different destinations can be addressed with a link, whereby the cross-"
 "reference is always the first link and the others are represented by "
@@ -114,7 +127,7 @@ msgstr ""
 "klickbare Icons dargestellt werden."
 
 #. I18N: Settings - prologue sentence 3
-#: resources/views/help-md.phtml:70 resources/views/settings.phtml:26
+#: resources/views/help-md.phtml:71 resources/views/settings.phtml:26
 msgid ""
 "By linking the notes to the GEDCOM data records (persons, families, sources, "
 "etc.) from the text, it is easier to replace the history module and thus "
@@ -126,30 +139,30 @@ msgstr ""
 "GEDCOM-Datei mit zu speichern."
 
 #. I18N: Settings - prologue sentence 5
-#: resources/views/help-md.phtml:71 resources/views/settings.phtml:28
+#: resources/views/help-md.phtml:72 resources/views/settings.phtml:28
 msgid "The link function is controlled via the anchor part of the URI."
 msgstr "Über den Anker-Teil der URI wird die Verknüpfungsfunktion gesteuert."
 
 #. I18N: Enhanced Links code example 1
 #. I18N: Enhanced Links code example 2
-#: resources/views/help-md.phtml:74 resources/views/settings.phtml:128
+#: resources/views/help-md.phtml:75 resources/views/settings.phtml:128
 #: resources/views/settings.phtml:129
 msgid "Link display title"
 msgstr "Link-Anzeigetitel"
 
 #. I18N: Enhanced Links code
-#: resources/views/help-md.phtml:75
+#: resources/views/help-md.phtml:76
 msgid "The following parameters can be used"
 msgstr "Folgende Parameter können genutzt werden"
 
 #. I18N: Enhanced Links
-#: resources/views/help-md.phtml:76
+#: resources/views/help-md.phtml:77
 msgid "The parameter definitions will be inserted by a javascript routine"
 msgstr ""
 "Die Parameterdefinitionen werden von einer Javascript-Routine eingefügt"
 
 #. I18N: Enhanced Links
-#: resources/views/help-md.phtml:77 resources/views/settings.phtml:125
+#: resources/views/help-md.phtml:78 resources/views/settings.phtml:125
 msgid ""
 "This function is implemented via Javascript and only affects links in notes "
 "and HTML blocks on the client side."
@@ -158,7 +171,7 @@ msgstr ""
 "Notizen und HTML-Blöcken nur clientseitig aus."
 
 #. I18N: Enhanced Links
-#: resources/views/help-md.phtml:78
+#: resources/views/help-md.phtml:79
 msgid ""
 "The existence of the linked data records is not checked in advance. Errors "
 "only appear when the link is clicked."
@@ -168,12 +181,12 @@ msgstr ""
 
 #. I18N: help md - section title
 #. I18N: Settings - section title
-#: resources/views/help-md.phtml:83 resources/views/settings.phtml:160
+#: resources/views/help-md.phtml:84 resources/views/settings.phtml:160
 msgid "Markdown Image Support"
 msgstr "Markdown Bild Unterstützung"
 
 #. I18N: MD img - sentence 2
-#: resources/views/help-md.phtml:85 resources/views/settings.phtml:179
+#: resources/views/help-md.phtml:86 resources/views/settings.phtml:179
 msgid ""
 "The images are packed into a div container together with an image subtitle - "
 "which is also a link to the media data set for GEDCOM objects."
@@ -183,7 +196,7 @@ msgstr ""
 "Container verpackt."
 
 #. I18N: MD img - sentence 3
-#: resources/views/help-md.phtml:86 resources/views/settings.phtml:180
+#: resources/views/help-md.phtml:87 resources/views/settings.phtml:180
 msgid ""
 "The display can be customized as required using the following standard CSS "
 "classes or additional CSS classes."
@@ -191,30 +204,30 @@ msgstr ""
 "Über die folgenden Standard CSS-Klassen oder auch zusätzliche CSS-Klassen "
 "kann die Darstellung beliebig angepasst werden."
 
-#: resources/views/help-md.phtml:89 resources/views/settings.phtml:194
+#: resources/views/help-md.phtml:90 resources/views/settings.phtml:194
 msgid "Markdown image container standard css class"
 msgstr "Standard CSS-Klasse(n) für Markdown Bild-Container"
 
-#: resources/views/help-md.phtml:90 resources/views/help-md.phtml:93
+#: resources/views/help-md.phtml:91 resources/views/help-md.phtml:94
 msgid "not defined"
 msgstr "nicht definiert"
 
-#: resources/views/help-md.phtml:92 resources/views/settings.phtml:202
+#: resources/views/help-md.phtml:93 resources/views/settings.phtml:202
 msgid "Markdown image title container standard css class"
 msgstr "Standard CSS-Klasse(n) für Markdown Bildtitel-Container"
 
 #. I18N: MD img code example 1
-#: resources/views/help-md.phtml:99 resources/views/settings.phtml:183
+#: resources/views/help-md.phtml:100 resources/views/settings.phtml:183
 msgid "alternate text for gedcom object"
 msgstr "alternativer Text für GEDCOM-Objekt"
 
 #. I18N: MD img code example 2
-#: resources/views/help-md.phtml:101 resources/views/settings.phtml:184
+#: resources/views/help-md.phtml:102 resources/views/settings.phtml:184
 msgid "alternate text for picture in public folder"
 msgstr "alternativer Text für Bild im Public-Ordner"
 
 #. I18N: MD img code example 3
-#: resources/views/help-md.phtml:103 resources/views/settings.phtml:185
+#: resources/views/help-md.phtml:104 resources/views/settings.phtml:185
 msgid "picture with defined height, width and additional css class"
 msgstr "Bild mit Angaben zu Höhe, Breite und zusätzlicher CSS Klasse"
 
@@ -330,7 +343,7 @@ msgstr "Funktioniert nur in Notizen, die mit Markdown formatiert sind."
 #. I18N: Module title
 #: LinkEnhancerModule.php:98
 msgid "LinkEnhancer"
-msgstr ""
+msgstr "Link-Enhancer"
 
 #. I18N: Module description
 #: LinkEnhancerModule.php:108
