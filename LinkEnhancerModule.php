@@ -239,9 +239,27 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
      */
     public function getPref(string $setting_name, string $default = ''): string
     {
-        //TODO values with DEFAULT_PREF set, but user doesn't want to set a value (std class) are reseted to DEFAULT_PREF
         $result = $this->getPreference($setting_name, $default);
-        return (isset($result) && $result != '' ? $result : self::DEFAULT_PREFERENCES[$setting_name] ?? '');
+        return trim(isset($result) && $result != '' ? $result : self::DEFAULT_PREFERENCES[$setting_name] ?? '');
+    }
+
+    /**
+     * Set a module setting.
+     *
+     * Since module settings are NOT NULL, setting a value to NULL will cause
+     * it to be deleted.
+     *
+     * extends/wraps setPreference
+     * 
+     * @param string $setting_name
+     * @param string $setting_value
+     *
+     * @return void
+     */
+    public function setPref(string $setting_name, string $setting_value): void {
+        //allow user to blank a setting, also if we have a DEFAULT_PREFERENCE
+        $setting_value = (self::DEFAULT_PREFERENCES[$setting_name] && !$setting_value ? ' ': $setting_value);
+        $this->setPreference($setting_name, $setting_value);
     }
 
     /**
@@ -274,6 +292,10 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         $activeRouteInfo = $this->getActiveRoute();
         $initJs .= "console.log('Active route:', $activeRouteInfo);"; //TODO debug output route - optional per setting?!
 
+        //$initJs .= "console.log('" . get_class().'::class' . "');";
+        
+
+        // === include on all pages
         // --- I18N for JS MDE and enhanced links
         if ($cfg_link_active || $cfg_mde_active) {
             $includeRes .= "<script>window.I18N = " . $this->getJsonI18N() . "; </script>";
@@ -299,8 +321,9 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 jQuery('.wt-user-menu').prepend('<li class="nav-item menu-wthb"><a class="nav-link" href="https://wiki.genealogy.net/Webtrees_Handbuch"><i class="fa-solid fa-circle-question"></i> Webtrees-Handbuch</a></li>');
 EOD;
         }
-        
-        // --- TinyMDE
+
+        // === include selectively
+        // --- TinyMDE -- only nessary on edit pages
         if ($cfg_mde_active && $tree != null && $tree->getPreference('FORMAT_TEXT') == 'markdown') {
             $route = Validator::attributes($request)->route();
             $routename = basename(strtr($route->name ?? '/', ['\\' => '/']));
@@ -376,6 +399,7 @@ EOD;
             $response['prefs'][$preference] = $this->getPref($preference);
         }
 
+        //TODO maybe outsource with dist preparation by webpack or similar?!
         $jsfile = $this->resourcesFolder() . 'js' . DIRECTORY_SEPARATOR . 'linkenhancer.js';
         $jscode = '';
         if (file_exists($jsfile)) {
@@ -409,7 +433,7 @@ EOD;
 
             $preferences = array_keys(self::DEFAULT_PREFERENCES);
             foreach ($preferences as $preference) {
-                $this->setPreference($preference, trim(Validator::parsedBody($request)->string($preference)));
+                $this->setPref($preference, trim(Validator::parsedBody($request)->string($preference)));
             }
 
             FlashMessages::addMessage(/*I18N: webtrees.pot */I18N::translate(
