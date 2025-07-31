@@ -434,22 +434,10 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             $response['prefs'][$preference] = $this->getPref($preference);
         }
 
-        //TODO maybe outsource with dist preparation by webpack or similar?!
-        $jsfile = $this->resourcesFolder() . 'js' . DIRECTORY_SEPARATOR . 'linkenhancer.js';
+        $jsfile = $this->resourcesFolder() . 'js' . DIRECTORY_SEPARATOR . 'bundle-le-config.js';
         $jscode = '';
         if (file_exists($jsfile)) {
-            $text = file($jsfile);
-            if (gettype($text) == 'array') {
-                $inSnippet = false;
-                foreach ($text as $line) {
-                    if ($inSnippet) {
-                        if (boolval(preg_match('/\/\/ *-{3,} *code-snippet/i', $line, $match))) break;
-                        $jscode .= $line;
-                    } else {
-                        $inSnippet = boolval(preg_match('/\/\/ *\+{3,} *code-snippet/i', $line, $match));
-                    }
-                }
-            }
+            $jscode = strval(file_get_contents($jsfile));
         }
         $response['jscode_linkpp'] = $jscode;
 

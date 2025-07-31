@@ -68,10 +68,30 @@ const jsPipe = (inputFile, outputInfix) =>
         .pipe(gulp.dest("./resources/js"))
         .pipe(size({ showFiles: true }));
 
+const jsExtractLeConfig = async () => {
+    const srcfile = "./resources/js/linkenhancer.js";
+    const dstfile = "./resources/js/bundle-le-config.js";
+    if (! await fileExists(srcfile)) {
+        log.error(`${srcfile} not exists`);
+        return;
+    }
+    let jscode = await fs.readFile(srcfile, 'utf8');
+
+    const snippetRegex = /\/\/ *\+{3,} *code-snippet.*?\r?\n(.+?)\/\/ *-{3,} *code-snippet/is;
+
+    const match = jscode.match(snippetRegex);
+    if (match) {
+        await fs.writeFile(dstfile, match[1], 'utf8');
+        log(`${dstfile} was created`);
+    } else {
+        log.error(`no code snippet found`);
+    }   
+}
+
 const jsMde = () => jsPipe("./resources/js/tiny-mde-wt.js", 'mde');
 const jsMdeLe = () => jsPipe("./resources/js/index-le-mde.js", 'le-mde');
 const jsLe = () => jsPipe("./resources/js/linkenhancer.js", 'le');
-const jscripts = gulp.series(jsMde, jsMdeLe, jsLe);
+const jscripts = gulp.series(jsMde, jsMdeLe, jsLe, jsExtractLeConfig);
 
 //--- CSS
 const cssPipe = (inputFile, outputInfix) => 
