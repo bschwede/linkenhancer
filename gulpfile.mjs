@@ -186,11 +186,17 @@ const gitCheckClean = async () => {
     });
 };
 
+const createarchive = () => {
+    return execPromise("./util/create-archive.sh");
+};
+
 
 const clean = () => del(["./resources/js/bundle*", "./resources/css/bundle*"]);
 
 const build = gulp.series(clean, jscripts, css);
 const bumpversion = gulp.series(gitCheckClean, bumpVersion, syncVersion);
 
+const archive = gulp.series(build, createmo, createarchive);
 
-export { build, bumpversion, updatepo, createmo };
+
+export { build, bumpversion, updatepo, createmo, archive };
