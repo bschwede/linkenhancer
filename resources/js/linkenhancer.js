@@ -258,3 +258,5 @@ function observeDomLinks() {
     const observer = new MutationObserver(callback);
     observer.observe(document.body, { childList: true, subtree: true });
 }
+
+export { initLE, getLEhelpInfo };

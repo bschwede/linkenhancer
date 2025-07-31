@@ -1,0 +1,3 @@
+node_modules/*
+resources/js/bundle-*
+resources/css/bundle-*
