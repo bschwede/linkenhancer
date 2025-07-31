@@ -295,6 +295,8 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         $cfg_wthb_active = boolval($this->getPref(self::PREF_WTHB_ACTIVE));
         $cfg_mde_active = boolval($this->getPref(self::PREF_MDE_ACTIVE));
         $cfg_link_active = boolval($this->getPref(self::PREF_LINKSPP_ACTIVE));
+        $cfg_img_active = boolval($this->getPref(self::PREF_MD_IMG_ACTIVE));
+        
 
         if (!$cfg_home_active && !$cfg_wthb_active && ! $cfg_mde_active && !$cfg_link_active) {
             return '';
@@ -367,7 +369,13 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                 if (($routename == 'AddNewFact' && $fact == 'NOTE') || $routename != 'AddNewFact') {
                     $bundleShortcuts[] = 'mde';
                     $initJs .= 'window.LEhelp = "' . e(route('module', ['module' => $this->name(), 'action' => 'help'])) . '";';
-                    $initJs .= 'LinkEnhMod.installMDE();';
+                    
+                    $linkSupport = [];
+                    if (! $cfg_link_active) $linkSupport[] = "href:0";
+                    if (! $cfg_img_active) $linkSupport[] = "src:0";
+                    $linkCfg = implode(',', $linkSupport);
+                    $linkCfg = $linkCfg ? '{' . $linkCfg . '}' : '';
+                    $initJs .= "LinkEnhMod.installMDE($linkCfg);";
                 }
             }
         }

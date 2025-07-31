@@ -1,5 +1,14 @@
 import TinyMDE from 'tiny-markdown-editor';
 
+function getLinkSupportCfg() {
+    return {
+        href: true,
+        src: true
+    }
+}
+
+let linkSupport = getLinkSupportCfg();
+
 function setupDynamicLineNumbers(editorEl) {
     if (!editorEl) return;
 
@@ -72,11 +81,18 @@ function createMDECommandbar(editor) {
                 title: I18N['Insert link'],
                 action: editor => {
                     let dest = window.prompt(I18N['Link destination']);
-                    if (!dest) dest = "#@wt=i@@";
+                    if (!dest && linkSupport.href) dest = "#@wt=i@@";
                     editor.wrapSelection('[', `](${dest})`);
                 }
             },
-            { name: 'insertImage', title: I18N['Insert image'] },
+            { 
+                name: 'insertImage', 
+                title: I18N['Insert image'],
+                action: editor => {
+                    let dest = linkSupport.src ? "#@id=@@" : '';
+                    editor.wrapSelection('![', `](${dest})`);
+                }
+            },
             {
                 name: 'insertTable',
                 title: I18N['Insert table'],
@@ -118,7 +134,8 @@ function createMDECommandbar(editor) {
     return cmdBar;
 }
 
-function installMDE() {
+function installMDE(cfg) {
+    linkSupport = (typeof cfg == 'object' && cfg !== null ? Object.assign(getLinkSupportCfg(), cfg) : getLinkSupportCfg());
     document.querySelectorAll("textarea[id$='NOTE']").forEach((elem) => {
         let editor = new TinyMDE.Editor({ element: elem });
         let edId = `md-${elem.id}`;
