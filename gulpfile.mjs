@@ -95,7 +95,7 @@ const css = gulp.series(cssMde, cssMdeLe, cssLe);
 
 //--- Version
 const bumpversion = () => {
-    return execPromise("npm version patch");
+    return execPromise("npm --no-git-tag-version version patch");
 };
 
 const syncversion = async () => {
