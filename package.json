@@ -1,6 +1,6 @@
 {
   "name": "linkenhancer",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Cross-references to Gedcom datasets, Markdown editor, context-sensitive link to the GenWiki Webtrees manual",
   "keywords": [
     "webtrees",
