@@ -1,4 +1,4 @@
-//import packageConfig from './package.json' with { type: 'json' }; 
+import pkg from './package.json' with { type: 'json' }; 
 
 import pkgTiny from './node_modules/tiny-markdown-editor/package.json' with { type: 'json' };
 
@@ -10,6 +10,7 @@ import concat from 'gulp-concat';
 import terser from "gulp-terser";
 import source from "vinyl-source-stream";
 import buffer from "vinyl-buffer";
+import log from 'fancy-log';
 
 import rollupStream from "@rollup/stream";
 import { babel as rollupBabel } from "@rollup/plugin-babel";
@@ -22,7 +23,18 @@ import postcssUrl from 'postcss-url';
 
 import { deleteAsync as del } from "del";
 
+import * as fs from 'node:fs/promises';
 
+import child_process from "node:child_process";
+//import readline from "node:readline/promises";
+//import process from "process";
+
+//--- common consts
+const VERSION_TXT = 'latest-version.txt';
+const VERSION_PHP = 'LinkEnhancerModule.php';
+
+
+//--- Rollup - javascript
 const rollupConfig = (inputFile, sourcemaps = false) => {
     return {
         input: inputFile,
@@ -61,7 +73,7 @@ const jsMdeLe = () => jsPipe("./resources/js/index-le-mde.js", 'le-mde');
 const jsLe = () => jsPipe("./resources/js/linkenhancer.js", 'le');
 const jscripts = gulp.series(jsMde, jsMdeLe, jsLe);
 
-
+//--- CSS
 const cssPipe = (inputFile, outputInfix) => 
     gulp
         .src(inputFile)
@@ -81,8 +93,71 @@ const cssLe = () => cssPipe(["./resources/css/linkenhancer.css"], 'le');
 const css = gulp.series(cssMde, cssMdeLe, cssLe);
 
 
+//--- Version
+const bumpversion = () => {
+    return execPromise("npm version patch");
+};
+
+const syncversion = async () => {
+    const version = pkg.version;
+
+    let currentTxt = '';
+    if (await fileExists(VERSION_TXT)) {
+        currentTxt = await fs.readFile(VERSION_TXT, 'utf8');
+        currentTxt = currentTxt.trim();
+    }
+    if (currentTxt !== version) {
+        await fs.writeFile(VERSION_TXT, version, 'utf8');
+        log(`${VERSION_TXT} update to ${version}`);
+    } else {
+        log(`${VERSION_TXT} - no change.`);
+    }
+
+    let currentPhp = '';
+    if (await fileExists(VERSION_PHP)) {
+        currentPhp = await fs.readFile(VERSION_PHP, 'utf8');
+    }
+
+    const phpRegex = /(public\s+const\s+CUSTOM_VERSION\s*=\s*["'])([\d.]+)(["']\s*;)/;
+    const replacedPhp = currentPhp.replace(phpRegex, `$1${version}$3`);
+    
+    if (replacedPhp !== currentPhp) {
+        await fs.writeFile(VERSION_PHP, replacedPhp, 'utf8');
+        log(`${VERSION_PHP} updated to ${version}`);
+    } else {
+        log(`${VERSION_PHP} - no change.`);
+    }
+}
+
+//--- Lang files
+const updatepo = () => {
+    return execPromise("./util/update-po-files.sh");
+};
+
+const createmo = () => {
+    return execPromise("./util/convert-po2mo.sh");
+};
+
+//--- Utils
+const fileExists = async path => !!(await fs.stat(path).catch(e => false));
+
+const execPromise = (command) => {
+    const cp = child_process.exec(command, { shell: "/bin/bash" });
+    cp.stdout.on("data", (data) => {
+        console.log(data.toString());
+    });
+    cp.stderr.on("data", (data) => {
+        console.error(data.toString());
+    });
+    return new Promise((resolve, reject) => {
+        cp.on("exit", (code) => (code ? reject(code) : resolve()));
+    });
+};
+
+
+
 const clean = () => del(["./resources/js/bundle*", "./resources/css/bundle*"]);
 
 const build = gulp.series(clean, jscripts, css);
 
-export { build };
+export { build, syncversion, bumpversion, updatepo, createmo };
