@@ -1,3 +1,5 @@
+import TinyMDE from 'tiny-markdown-editor';
+
 function setupDynamicLineNumbers(editorEl) {
     if (!editorEl) return;
 
@@ -139,3 +141,5 @@ function installMDE() {
         createMDECommandbar(editor);
     });
 }
+
+export { installMDE };

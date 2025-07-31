@@ -59,7 +59,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public const CUSTOM_AUTHOR = 'Bernd Schwendinger';
     public const GITHUB_USER = 'bschwede';
     public const CUSTOM_WEBSITE = 'https://github.com/' . self::GITHUB_USER . '/' . self::CUSTOM_MODULE . '/';
-    public const CUSTOM_VERSION = '0.1';
+    public const CUSTOM_VERSION = '0.0.3';
     public const CUSTOM_LAST = 'https://raw.githubusercontent.com/' . self::GITHUB_USER . '/' .
         self::CUSTOM_MODULE . '/main/latest-version.txt';
 
@@ -302,8 +302,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         
         $request = Registry::container()->get(ServerRequestInterface::class);
         //ressources to include
-        $cssFiles = [];
-        $jsFiles = [];
+        $bundleShortcuts = [];
         $includeRes = '';
         $initJs = ''; // init on document ready
 
@@ -347,10 +346,9 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         
         // --- Link++
         if ($cfg_link_active) {
-            $cssFiles[] = 'css/linkenhancer.css';
-            $jsFiles[] = 'js/linkenhancer.js';
+            $bundleShortcuts[] = 'le';
             $lecfg = $this->getPref(self::PREF_LINKSPP_JS);
-            $initJs .= "initLE($lecfg);";
+            $initJs .= "LinkEnhMod.initLE($lecfg);";
         }
 
         // === include selectively
@@ -367,22 +365,19 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                 }
 
                 if (($routename == 'AddNewFact' && $fact == 'NOTE') || $routename != 'AddNewFact') {
-                    $cssFiles[] = 'css/tiny-mde.min.css';
-                    $cssFiles[] = 'css/tiny-mde-wt.css';
-                    $jsFiles[] = 'js/tiny-mde.min.js';
-                    $jsFiles[] = 'js/tiny-mde-wt.js';
+                    $bundleShortcuts[] = 'mde';
                     $initJs .= 'window.LEhelp = "' . e(route('module', ['module' => $this->name(), 'action' => 'help'])) . '";';
-                    $initJs .= 'installMDE();';
+                    $initJs .= 'LinkEnhMod.installMDE();';
                 }
             }
         }
         
-
-        foreach ($cssFiles as $file) {
-            $includeRes .= '<link rel="stylesheet" type="text/css" href="' . $this->assetUrl($file) . '">';
-        }
-        foreach ($jsFiles as $file) {
-            $includeRes .= '<script src="' . $this->assetUrl($file) . '"></script>';
+        
+        if ($bundleShortcuts) {
+            asort($bundleShortcuts);
+            $infix = implode("-",$bundleShortcuts);
+            $includeRes .= '<link rel="stylesheet" type="text/css" href="' . $this->assetUrl("css/bundle-{$infix}.min.css") . '">';
+            $includeRes .= '<script src="' . $this->assetUrl("js/bundle-{$infix}.min.js") . '"></script>';
         }
 
         return $includeRes . ($initJs ? $this->getInitJavascript($initJs) :'');
