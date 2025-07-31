@@ -48,35 +48,21 @@ const rollupConfig = (inputFile, sourcemaps = false) => {
     };
 };
 
-
-const jsMde = () =>
-    rollupStream(rollupConfig("./resources/js/tiny-mde-wt.js"))
-        .pipe(source("bundle-mde.min.js"))
+const jsPipe = (inputFile, outputInfix) =>
+    rollupStream(rollupConfig(inputFile))
+        .pipe(source(`bundle-${outputInfix}.min.js`))
         .pipe(buffer())
         .pipe(terser())
         .pipe(gulp.dest("./resources/js"))
         .pipe(size({ showFiles: true }));
 
-const jsMdeLe = () =>
-    rollupStream(rollupConfig("resources/js/index-le-mde.js")) 
-        .pipe(source("bundle-le-mde.min.js"))
-        .pipe(buffer())
-        .pipe(terser())
-        .pipe(gulp.dest("./resources/js"))
-        .pipe(size({ showFiles: true }));
-
-const jsLe = () =>
-    rollupStream(rollupConfig("./resources/js/linkenhancer.js"))
-        .pipe(source("bundle-le.min.js"))
-        .pipe(buffer())
-        .pipe(terser())
-        .pipe(gulp.dest("./resources/js"))
-        .pipe(size({ showFiles: true }));
-
+const jsMde = () => jsPipe("./resources/js/tiny-mde-wt.js", 'mde');
+const jsMdeLe = () => jsPipe("./resources/js/index-le-mde.js", 'le-mde');
+const jsLe = () => jsPipe("./resources/js/linkenhancer.js", 'le');
 const jscripts = gulp.series(jsMde, jsMdeLe, jsLe);
 
 
-const cssConfig = (inputFile, outputInfix) => 
+const cssPipe = (inputFile, outputInfix) => 
     gulp
         .src(inputFile)
         .pipe(postcss([autoprefixer()]))
@@ -89,19 +75,14 @@ const cssConfig = (inputFile, outputInfix) =>
         .pipe(gulp.dest("./resources/css"))
         .pipe(size({ showFiles: true }));
 
-const cssMde = () => cssConfig(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/tiny-mde-wt.css"], 'mde');
-
-const cssMdeLe = () => cssConfig(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/tiny-mde-wt.css", "./resources/css/linkenhancer.css"], 'le-mde');
-
-const cssLe = () => cssConfig(["./resources/css/linkenhancer.css"], 'le');
-
+const cssMde = () => cssPipe(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/tiny-mde-wt.css"], 'mde');
+const cssMdeLe = () => cssPipe(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/tiny-mde-wt.css", "./resources/css/linkenhancer.css"], 'le-mde');
+const cssLe = () => cssPipe(["./resources/css/linkenhancer.css"], 'le');
 const css = gulp.series(cssMde, cssMdeLe, cssLe);
+
 
 const clean = () => del(["./resources/js/bundle*", "./resources/css/bundle*"]);
 
-
-
 const build = gulp.series(clean, jscripts, css);
-//const build = gulp.series(clean, jsMde);
 
 export { build };
