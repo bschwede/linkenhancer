@@ -94,11 +94,11 @@ const css = gulp.series(cssMde, cssMdeLe, cssLe);
 
 
 //--- Version
-const bumpversion = () => {
+const bumpVersion = () => {
     return execPromise("npm --no-git-tag-version version patch");
 };
 
-const syncversion = async () => {
+const syncVersion = async () => {
     const version = pkg.version;
 
     let currentTxt = '';
@@ -154,10 +154,43 @@ const execPromise = (command) => {
     });
 };
 
+const gitCheckBranch = async () => {
+    return new Promise((resolve, reject) => {
+        child_process.exec("git branch --show-current", (err, stdout) => {
+            if (err) reject(err);
+            const branch = stdout.trim();
+            if (branch === "main") {
+                resolve();
+            } else {
+                reject(
+                    `Releases can only be made from the main branch, current branch is ${branch}`
+                );
+            }
+        });
+    });
+};
+
+const gitCheckClean = async () => {
+    return new Promise((resolve, reject) => {
+        child_process.exec("git status -s", (err, stdout) => {
+            if (err) reject(err);
+            const status = stdout.trim();
+            if (!status) {
+                resolve();
+            } else {
+                reject(
+                    `git repo is not clean: ${status}`
+                );
+            }
+        });
+    });
+};
 
 
 const clean = () => del(["./resources/js/bundle*", "./resources/css/bundle*"]);
 
 const build = gulp.series(clean, jscripts, css);
+const bumpversion = gulp.series(gitCheckClean, bumpVersion, syncVersion);
 
-export { build, syncversion, bumpversion, updatepo, createmo };
+
+export { build, bumpversion, updatepo, createmo };
