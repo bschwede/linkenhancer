@@ -1,5 +1,7 @@
 //import packageConfig from './package.json' with { type: 'json' }; 
 
+import pkgTiny from './node_modules/tiny-markdown-editor/package.json' with { type: 'json' };
+
 import gulp from "gulp";
 
 import size from "gulp-size";
@@ -16,6 +18,7 @@ import commonjs from "@rollup/plugin-commonjs";
 
 import autoprefixer from "autoprefixer";
 import cssnano from "cssnano";
+import postcssUrl from 'postcss-url';
 
 import { deleteAsync as del } from "del";
 
@@ -73,32 +76,24 @@ const jsLe = () =>
 const jscripts = gulp.series(jsMde, jsMdeLe, jsLe);
 
 
-const cssMde = () =>
+const cssConfig = (inputFile, outputInfix) => 
     gulp
-        .src(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/tiny-mde-wt.css"])
+        .src(inputFile)
         .pipe(postcss([autoprefixer()]))
-        .pipe(postcss([cssnano()]))
-        .pipe(concat("bundle-mde.min.css"))
+        .pipe(postcss([cssnano(), postcssUrl({
+            url: 'inline',
+            maxSize: 20,
+            fallback: 'copy'
+        })]))
+        .pipe(concat(`bundle-${outputInfix}.min.css`))
         .pipe(gulp.dest("./resources/css"))
         .pipe(size({ showFiles: true }));
 
-const cssMdeLe = () =>
-    gulp
-        .src(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/tiny-mde-wt.css", "./resources/css/linkenhancer.css"])
-        .pipe(postcss([autoprefixer()]))
-        .pipe(postcss([cssnano()]))
-        .pipe(concat("bundle-le-mde.min.css"))
-        .pipe(gulp.dest("./resources/css"))
-        .pipe(size({ showFiles: true }));
+const cssMde = () => cssConfig(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/tiny-mde-wt.css"], 'mde');
 
-const cssLe = () =>
-    gulp
-        .src(["./resources/css/linkenhancer.css"])
-        .pipe(postcss([autoprefixer()]))
-        .pipe(postcss([cssnano()]))
-        .pipe(concat("bundle-le.min.css"))
-        .pipe(gulp.dest("./resources/css"))
-        .pipe(size({ showFiles: true }));
+const cssMdeLe = () => cssConfig(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/tiny-mde-wt.css", "./resources/css/linkenhancer.css"], 'le-mde');
+
+const cssLe = () => cssConfig(["./resources/css/linkenhancer.css"], 'le');
 
 const css = gulp.series(cssMde, cssMdeLe, cssLe);
 
