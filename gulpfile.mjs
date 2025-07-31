@@ -99,7 +99,7 @@ const bumpVersion = () => {
 };
 
 const syncVersion = async () => {
-    const version = pkg.version;
+    const version = JSON.parse(await fs.readFile('./package.json', 'utf8')).version;
 
     let currentTxt = '';
     if (await fileExists(VERSION_TXT)) {
