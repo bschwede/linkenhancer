@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-21 23:39+0200\n"
+"POT-Creation-Date: 2025-07-31 21:05+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -327,146 +327,146 @@ msgid ""
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:497 LinkEnhancerModule.php:548
-#: LinkEnhancerModule.php:549
+#: LinkEnhancerModule.php:492 LinkEnhancerModule.php:543
+#: LinkEnhancerModule.php:544
 msgid "bold"
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:498 LinkEnhancerModule.php:544
-#: LinkEnhancerModule.php:545
+#: LinkEnhancerModule.php:493 LinkEnhancerModule.php:539
+#: LinkEnhancerModule.php:540
 msgid "italic"
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:499 LinkEnhancerModule.php:556
-#: LinkEnhancerModule.php:557
+#: LinkEnhancerModule.php:494 LinkEnhancerModule.php:551
+#: LinkEnhancerModule.php:552
 msgid "format as code"
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:500 LinkEnhancerModule.php:552
-#: LinkEnhancerModule.php:553
+#: LinkEnhancerModule.php:495 LinkEnhancerModule.php:547
+#: LinkEnhancerModule.php:548
 msgid "Level 1 heading"
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:501 LinkEnhancerModule.php:560
-#: LinkEnhancerModule.php:561
+#: LinkEnhancerModule.php:496 LinkEnhancerModule.php:555
+#: LinkEnhancerModule.php:556
 msgid "Bulleted list"
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:502 LinkEnhancerModule.php:564
-#: LinkEnhancerModule.php:565
+#: LinkEnhancerModule.php:497 LinkEnhancerModule.php:559
+#: LinkEnhancerModule.php:560
 msgid "Numbered list"
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:503 LinkEnhancerModule.php:568
-#: LinkEnhancerModule.php:569
+#: LinkEnhancerModule.php:498 LinkEnhancerModule.php:563
+#: LinkEnhancerModule.php:564
 msgid "Insert link"
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:504 LinkEnhancerModule.php:572
-#: LinkEnhancerModule.php:573
+#: LinkEnhancerModule.php:499 LinkEnhancerModule.php:567
+#: LinkEnhancerModule.php:568
 msgid "Insert image"
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:505 LinkEnhancerModule.php:577
-#: LinkEnhancerModule.php:578
+#: LinkEnhancerModule.php:500 LinkEnhancerModule.php:572
+#: LinkEnhancerModule.php:573
 msgid "Horizontal rule"
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:506
+#: LinkEnhancerModule.php:501
 msgid "Undo"
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:507
+#: LinkEnhancerModule.php:502
 msgid "Redo"
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:509
+#: LinkEnhancerModule.php:504
 msgid "Link destination"
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:510 LinkEnhancerModule.php:581
+#: LinkEnhancerModule.php:505 LinkEnhancerModule.php:576
 msgid "Insert table"
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:511
+#: LinkEnhancerModule.php:506
 msgid ""
 "How many columns and rows should the table have (input: [number] [number])?"
 msgstr ""
 
 #. I18N: JS enhanced link
-#: LinkEnhancerModule.php:513
+#: LinkEnhancerModule.php:508
 msgid "cross reference"
 msgstr ""
 
 #. I18N: JS enhanced link, %s name of location
-#: LinkEnhancerModule.php:514
+#: LinkEnhancerModule.php:509
 #, php-format
 msgid "Online Local heritage book of %s at CompGen"
 msgstr ""
 
 #. I18N: JS enhanced link
-#: LinkEnhancerModule.php:515
+#: LinkEnhancerModule.php:510
 msgid "The Historic Geo Information System (GOV)"
 msgstr ""
 
 #. I18N: JS enhanced link
-#: LinkEnhancerModule.php:516
+#: LinkEnhancerModule.php:511
 msgid "Family Book of Dornbirn"
 msgstr ""
 
 #. I18N: JS enhanced link
-#: LinkEnhancerModule.php:517
+#: LinkEnhancerModule.php:512
 msgid "Residents database - Family research in West Prussia"
 msgstr ""
 
 #. I18N: JS enhanced link
-#: LinkEnhancerModule.php:519
+#: LinkEnhancerModule.php:514
 msgid "Syntax error"
 msgstr ""
 
 #. I18N: JS enhanced link wt1 - %s=rectypes
-#: LinkEnhancerModule.php:520
+#: LinkEnhancerModule.php:515
 #, php-format
 msgid ""
 "standard link to note (available record types: %s) with XREF in active tree"
 msgstr ""
 
 #. I18N: JS enhanced link wt2
-#: LinkEnhancerModule.php:521
+#: LinkEnhancerModule.php:516
 msgid ""
 "link to record type individual with XREF from \"othertree\" and also link to"
 msgstr ""
 
 #. I18N: JS enhanced link osm1
-#: LinkEnhancerModule.php:522
+#: LinkEnhancerModule.php:517
 msgid "zoom/lat/lon for locating map"
 msgstr ""
 
 #. I18N: JS enhanced link osm2
-#: LinkEnhancerModule.php:523
+#: LinkEnhancerModule.php:518
 msgid "same as before with additional marker"
 msgstr ""
 
 #. I18N: JS enhanced link osm3
-#: LinkEnhancerModule.php:524
+#: LinkEnhancerModule.php:519
 msgid "show also node/way/relation, see also"
 msgstr ""
 
 #. I18N: JS enhanced link osm4
-#: LinkEnhancerModule.php:525
+#: LinkEnhancerModule.php:520
 msgid "show also node/way/relation - alternative notation"
 msgstr ""
 

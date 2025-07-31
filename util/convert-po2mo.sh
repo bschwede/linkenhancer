@@ -8,3 +8,4 @@ for pofile in "$LANGDIR"/*.po; do
     echo "- ${mofile}"
     msgfmt -o "$mofile" "$pofile"
 done
+exit 0
