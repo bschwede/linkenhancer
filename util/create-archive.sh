@@ -16,6 +16,7 @@ dist
 gulpfile.mjs
 package*.json
 util/wt-patch/src/*/a
+util/wt-patch/src/*/replacements.sed
 util/wt-patch/patch.log
 util/create-archive.sh
 util/update-po-files.sh
