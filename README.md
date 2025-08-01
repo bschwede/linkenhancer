@@ -27,7 +27,13 @@ This module wraps up some [examples mentioned in the German Webtrees Manual](htt
 The main purpose of this module is to make **links to data records** stored in family trees more convenient. This avoids having to store fully qualified links, which impairs the portability of Gedcom data. By linking the notes to the GEDCOM data records (persons, families, sources, etc.) from the text, it is easier to replace the history module and thus also save this information in the GEDCOM file. The option of embedding the **images** already inserted in the family tree in the notes rounds off this approach. The link function is controlled via the anchor part of the URI.
 
 ### Links
-Cross references are made with the XREF-ID by providing the GEDCOM record type and if necessary the tree name.
+Cross references are made with the XREF-ID by providing the GEDCOM record type and if necessary the tree name. It extends webtrees builtin feature, which adds record links with the standard display name by just typing `@XREF-ID@` in text or markdown.
+
+When webtrees better supports UID, referencing by UID will be probably implemented in this module too, because links become more fail safe.
+See also:
+* Forum post [ Feature Request: Improved support for UID / _UID ](https://www.webtrees.net/index.php/forum/9-request-for-new-feature/39942-feature-request-improved-support-for-uid-uid)
+* PR [UID References in notes and text #5145](https://github.com/fisharebest/webtrees/pull/5145)
+
 
 Different destinations can be addressed with a link, whereby the cross-reference is always the first link (if set) and the others are represented by attached clickable icons. 
 Included are the following external targets:
@@ -127,7 +133,6 @@ If everything was successful, you should see a subdirectory ``linkenhancer`` wit
 
 If you'd like to contribute to this module, great! You can contribute by
 
-* Reading and commenting the legal chapters carefully - choose a specific topic and please [create an issue](https://github.com/bschwede/linkenhancer/issues) for that topic.
 * Contributing code - check out the issues for things that need attention. If you have changes you want to make not listed in an issue, please create one, then you can link your pull request.
 * Testing - it's all manual currently, please [create an issue](https://github.com/bschwede/linkenhancer/issues) for any bugs you find.
 

@@ -67,6 +67,8 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public const PREF_HOME_LINK_TYPE = 'HOME_LINK_TYPE'; // home link type: 0=off, 1=tree, 2=my-page
     public const PREF_WTHB_ACTIVE = 'WTHB_LINK_ACTIVE'; // link to GenWiki "Webtrees Handbuch"
     public const PREF_WTHB_STD_LINK = 'WTHB_STD_LINK'; // standard link to GenWiki "Webtrees Handbuch"
+    public const PREF_WTHB_DEBUG = 'WTHB_DEBUG'; // console.debug with active route info; 0=off, 1=on
+    public const PREF_GENWIKI_LINK = 'GENWIKI_LINK'; // base link to GenWiki
     public const PREF_MDE_ACTIVE = 'MDE_ACTIVE'; // enable markdown editor for note textareas
     public const PREF_LINKSPP_ACTIVE = 'LINKSPP_ACTIVE'; // enable links++
     public const PREF_LINKSPP_JS = 'LINKSPP_JS'; // Javascript
@@ -74,7 +76,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public const PREF_MD_IMG_ACTIVE = 'MD_IMG_ACTIVE'; // enable enhanced markdown img syntax
     public const PREF_MD_IMG_STDCLASS = 'MD_IMG_STDCLASS'; // standard classname(s) for div wrapping img- and link-tag    
     public const PREF_MD_IMG_TITLE_STDCLASS = 'MD_IMG_TITLE_STDCLASS'; // standard classname(s) for picture subtitle
-    public const PREF_GENWIKI_LINK = 'GENWIKI_LINK'; // base link to GenWiki
+    
     public const STDCLASS_MD_IMG = 'md-img';
     public const STDCLASS_MD_IMG_TITLE = 'md-img-title';
     public const STDLINK_GENWIKI = 'https://wiki.genealogy.net/';
@@ -83,6 +85,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     protected const DEFAULT_PREFERENCES = [
         self::PREF_HOME_LINK_TYPE        => '1', //int triple-state, 0=off, 1=tree, 2=my-page
         self::PREF_WTHB_ACTIVE           => '1', //bool
+        self::PREF_WTHB_DEBUG            => '0', //bool
         self::PREF_WTHB_STD_LINK         => self::STDLINK_WTHB, //string
         self::PREF_GENWIKI_LINK          => self::STDLINK_GENWIKI, //string
         self::PREF_MDE_ACTIVE            => '1', //bool
@@ -293,6 +296,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         $cfg_home_type = intval($this->getPref(self::PREF_HOME_LINK_TYPE)); // 0=off, 1=Home, 2=My-Page
         $cfg_home_active = boolval($cfg_home_type);
         $cfg_wthb_active = boolval($this->getPref(self::PREF_WTHB_ACTIVE));
+        $cfg_wthb_debug = boolval($this->getPref(self::PREF_WTHB_DEBUG));
         $cfg_mde_active = boolval($this->getPref(self::PREF_MDE_ACTIVE));
         $cfg_link_active = boolval($this->getPref(self::PREF_LINKSPP_ACTIVE));
         $cfg_img_active = boolval($this->getPref(self::PREF_MD_IMG_ACTIVE));
@@ -309,7 +313,9 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         $initJs = ''; // init on document ready
 
         $activeRouteInfo = $this->getActiveRoute();
-        $initJs .= "console.log('LE-Mod active route:', " . json_encode($activeRouteInfo) . ");"; //TODO debug output route - optional per setting?!
+        if ($cfg_wthb_debug) {
+            $initJs .= "console.debug('LE-Mod active route:', " . json_encode($activeRouteInfo) . ");";
+        }
 
         // --- Webtrees Handbuch Link
         if ($cfg_wthb_active) {
