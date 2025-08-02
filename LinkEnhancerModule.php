@@ -210,7 +210,8 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                 'path'    => $route->path,
                 'handler' => $route->name, //name entspricht als String handler; gettype($route->handler) == 'object' ? get_class($route->handler) : $route->handler,
                 'method'  => implode('|', $route->allows),
-                'extras'  => $extras
+                'extras'  => $extras,
+                'attr'    => $route->attributes
             ];
 
         }
