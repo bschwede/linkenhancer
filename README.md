@@ -1,26 +1,14 @@
 # webtrees module LinkEnhancer
 
+**Cross-references to Gedcom datasets, Markdown editor, context-sensitive link to the GenWiki Webtrees manual**
+
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0) ![webtrees major version](https://img.shields.io/badge/webtrees-v2.2.x-green) ![Latest Release](https://img.shields.io/github/v/release/bschwede/linkenhancer)
 
-<a name="Contents"></a>
-## Contents
-
-This Readme contains the following main sections
-
-* [Description](#description)
-* [webtrees](#webtrees)
-* [Requirements](#requirements)
-* [Installation](#installation)
-* [Contributing](#contributing)
-* [Translation](#translation)
-* [Support](#support)
-* [License](#license)
+[Description](#description) | [webtrees](#webtrees) | [Requirements](#requirements) | [Installation](#installation) | [Contributing](#contributing) | [Translation](#translation) | [Support](#support) | [License](#license)
 
 
 <a name="description"></a>
 ## Description
-
-**Cross-references to Gedcom datasets, Markdown editor, context-sensitive link to the GenWiki Webtrees manual**
 
 This module wraps up some [examples mentioned in the German Webtrees Manual](https://wiki.genealogy.net/Webtrees_Handbuch/Entwicklungsumgebung#Anpassungen_mit_dem_Modul_.22CSS_und_JS.22) and improves the application of these improvements - each component can be activated individually.
 
@@ -29,7 +17,7 @@ The main purpose of this module is to make **links to data records** stored in f
 ### Links
 Cross references are made with the XREF-ID by providing the GEDCOM record type and if necessary the tree name. It extends webtrees builtin feature, which adds record links with the standard display name by just typing `@XREF-ID@` in text or markdown.
 
-When webtrees better supports UID, referencing by UID will be probably implemented in this module too, because links become more fail safe.
+If Webtrees provides better support for UID, referencing via UID will probably also be implemented in this module, as this will make links more fail-safe.
 See also:
 * Forum post [ Feature Request: Improved support for UID / _UID ](https://www.webtrees.net/index.php/forum/9-request-for-new-feature/39942-feature-request-improved-support-for-uid-uid)
 * PR [UID References in notes and text #5145](https://github.com/fisharebest/webtrees/pull/5145)
@@ -47,7 +35,7 @@ Included are the following external targets:
 Additional external targets can be configured. Any CSS rules required are best added via the “CSS and JS” module. Only the definition of the icon as a background image is actually needed - referencing as data: URL. See also: [mdn web docs - data: URLs](https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Schemes/data)
 `.icon-whatever { background-image: url(...) }`
 
-This function is implemented via Javascript and only affects links in notes (with markdown enabled) and HTML blocks on the client side. The existence of the linked data records is not checked in advance. Errors only appear when the link is clicked.
+This function is implemented via Javascript and only affects links in notes (with markdown enabled) and HTML blocks on the client side. The existence of the linked data records is not checked in advance. Errors only occur when the link is clicked.
 
 **Syntax:**
 - Markdown: `[Link display title](#@wt=i@I1@)`
@@ -76,7 +64,7 @@ Note: Unfortunately, the on-screen keyboard does NOT work as before with the pre
 
 
 ### German Webtrees Manual
-A context-sensitive link to the [German Webtrees Manual](https://wiki.genealogy.net/Webtrees_Handbuch) can be added by javascript to the small navigation menu (without applying patch P002 only on the frontend of webtrees).
+A context-sensitive link to the [German Webtrees Manual](https://wiki.genealogy.net/Webtrees_Handbuch) can be added by javascript to the small navigation menu (only on the frontend of webtrees, without applying patch P002).
 
 TODO routes in database table XXX define the context help link. Fallback by generic rules, if nothing applies to the startpage of the manual.
 
@@ -89,7 +77,7 @@ Usage: util/wt-patch.sh [-R] [FILTER]
   -R                  undo Patch (patch -R)
   FILTER              '*' for all or specific (e.g. '01')
 ```
-Don't forget to re-apply patches after an update of webtrees.
+Don't forget to reapply the patches after updating webtrees.
 
 These are minor bug fixes or functional enhancements — usually in a single file — that are intended to bridge the gap until they are officially fixed/implemented in the webtrees core.
 
