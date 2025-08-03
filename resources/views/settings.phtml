@@ -10,7 +10,8 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
  * @var string                  $title                  title of this custom module
  * @var string                  $description            description of this module
  * @var array<string>           $prefs                  list of chapter objects
- * @var string                  $jscode_linkpp          javascript code snippet from js-file
+ * @var string                  $jscode_linkpp          javascript code snippet from js-file, csv-export...
+ * @var array<string>           $links                  links for: csvexport
  */
 ?>
 
@@ -111,7 +112,7 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
             <fieldset class="form-group mb-3">
                 <div class="row">
                     <legend class="col-form-label col-sm-3 wt-page-options-label">
-                        <?= I18N::translate('Debug information about the active route in the JS console') ?>
+                        <?= I18N::translate('Output of debug information on the JS console') ?>
                     </legend>
                     <div class="col-sm-9 wt-page-options-value">
                         <?= view('components/radios-inline', [
@@ -123,9 +124,26 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
                             ],
                             'selected' => (int) $prefs[$prefId]
                         ]) ?>
+                        <div class="form-text">
+                            <p><?= /*I18N: WTHB Debug */ I18N::translate('With the information on the active route and, if applicable, data table entries found for matching routing to help topics, the context help can be more easily adjusted in case of discrepancies.') ?>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </fieldset>
+
+
+            <!-- -->
+            <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
+                <?= I18N::translate('Data table') ?>
+            </label>
+            <div class="col-sm-9 wt-page-options-value">
+                <div class="form-text">
+                    <p><a href="<?= e($links['csvexport']) ?>">CSV-Export</a>
+                    </p>
+                </div>
+            </div>
+
 
             <!-- genwiki std link --><?php $prefId = LinkEnhancerModule::PREF_GENWIKI_LINK; ?>
             <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">

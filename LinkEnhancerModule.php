@@ -10,7 +10,6 @@ namespace Schwendinger\Webtrees\Module\LinkEnhancer;
 
 use Fisharebest\Webtrees\Http\Middleware\Router;
 use Schwendinger\Webtrees\Module\LinkEnhancer\CustomMarkdownFactory;
-use Exception;
 use Fisharebest\Localization\Translation;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Registry;
@@ -30,6 +29,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Illuminate\Database\Capsule\Manager as DB;
 use Fisharebest\Webtrees\Schema\MigrationInterface;
+use Fisharebest\Webtrees\Html;
+use Exception;
 use PDOException;
 
 /**
@@ -556,6 +557,54 @@ EOT;
         return $this->viewResponse($this->name() . '::' . 'settings', $this->getInitializedOptions($request));
     }
 
+
+    /**
+     * Download context help mapping table as CSV
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    public function getAdminCsvExportAction(ServerRequestInterface $request): ResponseInterface
+    {
+        $filename = "wthb-route-mapping-export.csv";
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . addcslashes($filename, '"') . '"',
+        ];
+
+        try {
+            $data = DB::table(self::HELP_TABLE)->get();
+
+            if (count($data) == 0) {
+                throw new Exception(I18N::translate('No data available for export.'));
+            }
+
+            ob_start();
+            $file = fopen('php://output', 'w');
+            $columns = array_keys(get_object_vars($data->first()));
+            fputcsv($file, $columns, ";", "\"", "\\", "\n");
+            foreach ($data as $datarow) {
+                $row = [];
+                foreach ($columns as $column) {
+                    $row[] = $datarow->$column;
+                }
+                fputcsv($file, $row, ";", "\"", "\\", "\n");
+            }
+            fclose($file);
+            $csv = ob_get_clean();
+
+            return response($csv, 200, $headers);
+
+        } catch (Exception $ex) {
+            FlashMessages::addMessage(
+                /*I18N: webtrees.pot */I18N::translate('The file %s could not be created.', Html::filename($filename)) . '<hr><samp dir="ltr">' . $ex->getMessage() . '</samp>',
+                'danger'
+            );
+            return redirect(route('module', ['module' => $this->name(), 'action' => 'Admin']));
+        }
+    }
+
+
     /**
      * @param ServerRequestInterface $request
      *
@@ -579,6 +628,13 @@ EOT;
             $jscode = strval(file_get_contents($jsfile));
         }
         $response['jscode_linkpp'] = $jscode;
+        
+        $response['links'] = [];
+        $response['links']['csvexport'] = route('module', [
+            'module' => $this->name(),
+            'action' => 'AdminCsvExport'
+        ]);
+
 
         return $response;
     }
@@ -739,7 +795,7 @@ EOT;
     }
 
     //same as Database::getSchema, but use module settings instead of site settings (Issue #3 in personal_facts_with_hooks)
-/* TODO for routehelpmapping table - taken from modules_v4/vesta_common/VestaModuleTrait.php */
+    /* taken from modules_v4/vesta_common/VestaModuleTrait.php */
     protected function updateSchema($namespace, $schema_name, $target_version): bool
     {
         try {
@@ -776,22 +832,5 @@ EOT;
 
         return $updates_applied;
     }
-
-/*
-- i.d.R. ist für einen Handler nur eine Route vorhanden
-- Sonderfall stellt ModuleAction als Standard-Proxy für die CustomModules dar, der die Zugriffe mind. aufs Backend regelt:
-  eigentlichen Handler über Attribut {module} ( => könnte man als generische Regel eintragen, Wert dann als handler)
-  im Handler der aktuellen Route steht "module-no-tree"
-  bei Vesta LAF Badges: "module-tree", da es einen tree-Attribut hat
-- vermutlich
-
-
-SQL-Abfrage:
-1. spezifischer Match
-   a) für handler und method (ev. auch path?!)
-   b) bei path ^=/module und handler ^=module müssten die Attribute module und ggf. action mit Berücksichtigung finden
-2. Fallback: extras=Auth* und die anderen Felder sind null
-3. wenn überhaupt nichts passt einfach auf die Hauptseite verweisen
-*/
 
 }
