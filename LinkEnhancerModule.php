@@ -28,7 +28,9 @@ use Fisharebest\Webtrees\Validator;
 use Fisharebest\Webtrees\FlashMessages;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
+use Illuminate\Database\Capsule\Manager as DB;
+use Fisharebest\Webtrees\Schema\MigrationInterface;
+use PDOException;
 
 /**
  * Class LinkEnhancerModule
@@ -82,6 +84,8 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public const STDLINK_GENWIKI = 'https://wiki.genealogy.net/';
     public const STDLINK_WTHB = 'https://wiki.genealogy.net/Webtrees_Handbuch';
     
+    public const HELP_TABLE = 'route_help_map';
+
     protected const DEFAULT_PREFERENCES = [
         self::PREF_HOME_LINK_TYPE        => '1', //int triple-state, 0=off, 1=tree, 2=my-page
         self::PREF_WTHB_ACTIVE           => '1', //bool
@@ -186,6 +190,8 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
      */
     public function boot(): void
     {
+        $this->updateSchema('\Schwendinger\Webtrees\Module\LinkEnhancer\Schema', 'SCHEMA_VERSION', 1);
+
         // Register a namespace for our views.
         View::registerNamespace($this->name(), $this->resourcesFolder() . 'views/');
 
@@ -194,6 +200,47 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         }
     }
 
+    public function getContextHelp(array|null $activeroute = null): mixed  {
+        $activeroute ??= $this->getActiveRoute();
+
+        $std_url = $this->getPref(self::PREF_WTHB_STD_LINK, self::STDLINK_WTHB);
+        $url = $std_url;
+        $wiki_url = rtrim($this->getPref(self::PREF_GENWIKI_LINK, self::STDLINK_GENWIKI), '/') . '/';
+        
+        if ($activeroute) {
+            // module?
+            $handler = str_starts_with($activeroute['path'],"/" . "module/" ) && ($activeroute['attr']['module'] ?? false)
+                ? $activeroute['attr']['module']
+                : $activeroute['handler'];
+
+            $result = DB::table(self::HELP_TABLE)
+                ->where('path', '=', $activeroute['path'])
+                ->where('handler', '=', $handler)
+                ->whereNotNull('url')
+                ->where('url', '!=', '')
+                ->orderBy('order')
+                ->first();
+            
+            // generic by access level
+            if (!$result && ($activeroute['extras'] ?? false)) {
+                $result = DB::table(self::HELP_TABLE)
+                    ->where('category', '=', 'generic')
+                    ->where('extras', '=', $activeroute['extras'])
+                    ->whereNotNull('url')
+                    ->where('url', '!=', '')
+                    ->orderBy('order')
+                    ->first();
+            }
+            
+            if ($result) {
+                $first_url = trim($result->url);//(string) reset($result);
+                $result->url = $first_url == '' ? $std_url : (preg_match('/^https?:\/\//',$first_url) ? $first_url : $wiki_url . ltrim($first_url, '/'));
+                return $result;                
+            }
+        }
+
+        return $url;
+    }
     
     public function getActiveRoute() : array {
         $request = Registry::container()->get(ServerRequestInterface::class);
@@ -315,12 +362,20 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
         $activeRouteInfo = $this->getActiveRoute();
         if ($cfg_wthb_debug) {
-            $initJs .= "console.debug('LE-Mod active route:', " . json_encode($activeRouteInfo) . ");";
+            $initJs .= "console.debug('LE-Mod active route:', " . json_encode($activeRouteInfo) .");";
         }
 
         // --- Webtrees Handbuch Link
         if ($cfg_wthb_active) {
-            $initJs .= "jQuery('ul.wt-user-menu, ul.nav.small').prepend('<li class=\"nav-item menu-wthb\"><a class=\"nav-link\" href=\"https://wiki.genealogy.net/Webtrees_Handbuch\"><i class=\"fa-solid fa-circle-question\"></i> Webtrees-Handbuch</a></li>');";
+            $help = $this->getContextHelp($activeRouteInfo);
+            if ($cfg_wthb_debug) {
+                $initJs .= "console.debug('LE-Mod help:', " . json_encode($help) . ");";
+            }
+
+            $help_url = gettype($help) == 'string' ? $help : $help->url;
+            $initJs .= "jQuery('ul.wt-user-menu, ul.nav.small').prepend('<li class=\"nav-item menu-wthb\"><a class=\"nav-link\" href=\"" 
+                . $help_url
+                . "\"><i class=\"fa-solid fa-circle-question\"></i> Webtrees-Handbuch</a></li>');";
         }        
 
         // === admin backend - only if patch P002 for administration.phtml was applied; default: headContent of custom modules is not called on the admin backend
@@ -615,7 +670,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     }
 
     //same as Database::getSchema, but use module settings instead of site settings (Issue #3 in personal_facts_with_hooks)
-/* TODO for routehelpmapping table - taken from modules_v4/vesta_common/VestaModuleTrait.php
+/* TODO for routehelpmapping table - taken from modules_v4/vesta_common/VestaModuleTrait.php */
     protected function updateSchema($namespace, $schema_name, $target_version): bool
     {
         try {
@@ -630,7 +685,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         // Update the schema, one version at a time.
         while ($current_version < $target_version) {
             $class = $namespace . '\\Migration' . $current_version;
-            /** @var MigrationInterface $migration * /
+            /** @var MigrationInterface $migration */
             $migration = new $class();
             $migration->upgrade();
             $current_version++;
@@ -652,9 +707,8 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
         return $updates_applied;
     }
-*/
-/*
 
+/*
 - i.d.R. ist für einen Handler nur eine Route vorhanden
 - Sonderfall stellt ModuleAction als Standard-Proxy für die CustomModules dar, der die Zugriffe mind. aufs Backend regelt:
   eigentlichen Handler über Attribut {module} ( => könnte man als generische Regel eintragen, Wert dann als handler)
@@ -669,6 +723,6 @@ SQL-Abfrage:
    b) bei path ^=/module und handler ^=module müssten die Attribute module und ggf. action mit Berücksichtigung finden
 2. Fallback: extras=Auth* und die anderen Felder sind null
 3. wenn überhaupt nichts passt einfach auf die Hauptseite verweisen
-
 */
+
 }
