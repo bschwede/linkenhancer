@@ -200,6 +200,16 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         }
     }
 
+    public function getHelpTableCount():string {
+        $totalCnt  = DB::table(self::HELP_TABLE)->count();
+        $mappedCnt = DB::table(self::HELP_TABLE)
+            ->whereNotNull('url')
+            ->where('url', '!=', '')
+            ->count();
+
+        return "{$totalCnt} / {$mappedCnt}";
+    }
+
     /**
      * Query route to help mapping table for matching entries
      *
