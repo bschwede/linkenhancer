@@ -200,6 +200,13 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         }
     }
 
+    /**
+     * Query route to help mapping table for matching entries
+     *
+     * @param array|null $activeroute
+     *
+     * @return mixed
+     */
     public function getContextHelp(array|null $activeroute = null): mixed  {
         $activeroute ??= $this->getActiveRoute();
 
@@ -208,54 +215,69 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         $wiki_url = rtrim($this->getPref(self::PREF_GENWIKI_LINK, self::STDLINK_GENWIKI), '/') . '/';
         
         if ($activeroute) {
-            // module?
-            $handler = str_starts_with($activeroute['path'],"/" . "module/" ) && ($activeroute['attr']['module'] ?? false)
+            // custom module?
+            $module = str_starts_with($activeroute['path'],"/" . "module/" ) && ($activeroute['attr']['module'] ?? false)
                 ? $activeroute['attr']['module']
-                : $activeroute['handler'];
+                : '';
 
+            // WHERE url is not null AND
+            // (
+            //      (path = route[path] AND handler = route[handler]) 
+            //   OR (path = route[path] AND handler = module)         #if route.path ^=/module/
+            //   OR (handler = module)                                #if route.path ^=/module/
+            //   OR (category=generic AND extras=route[extras])       #last try by Auth-Level
+            // )
             $result = DB::table(self::HELP_TABLE)
-                ->where('path', '=', $activeroute['path'])
-                ->where('handler', '=', $handler)
                 ->whereNotNull('url')
                 ->where('url', '!=', '')
+                ->where(function($query) use ($module, $activeroute) {
+                    $query
+                        ->where('path', '=', $activeroute['path'])
+                        ->where('handler', '=', $activeroute['handler'])
+                        ->when($module != '', function($query2) use ($module, $activeroute) {
+                            $query2
+                                ->orWhere('path', '=', $activeroute['path'])
+                                ->where('handler', '=', $module)
+                                ->orWhere('handler', '=', $module);
+                        })
+                        ->when(($activeroute['extras'] ?? false), function($query3) use ($activeroute) {
+                            $query3
+                                ->orWhere('category', '=', 'generic')
+                                ->where('extras', '=', $activeroute['extras']);
+                        });
+                })
                 ->orderBy('order')
-                ->first();
-            
-            // generic by access level
-            if (!$result && ($activeroute['extras'] ?? false)) {
-                $result = DB::table(self::HELP_TABLE)
-                    ->where('category', '=', 'generic')
-                    ->where('extras', '=', $activeroute['extras'])
-                    ->whereNotNull('url')
-                    ->where('url', '!=', '')
-                    ->orderBy('order')
-                    ->first();
-            }
-            
-            if ($result) {
-                $first_url = trim($result->url);//(string) reset($result);
-                $result->url = $first_url == '' ? $std_url : (preg_match('/^https?:\/\//',$first_url) ? $first_url : $wiki_url . ltrim($first_url, '/'));
-                return $result;                
+                ->get()
+                ->map(function ($obj) use ($std_url, $wiki_url): mixed { // complete url by appending prefix to url path - also external url are possible
+                    $first_url = trim($obj->url);
+                    $obj->url = $first_url == '' ? $std_url : (preg_match('/^https?:\/\//', $first_url) ? $first_url : $wiki_url . ltrim($first_url, '/'));
+                    return $obj;
+                });
+                        
+            if (!$result->isEmpty()) {
+                return $result;
             }
         }
 
         return $url;
     }
-    
-    public function getActiveRoute() : array {
-        $request = Registry::container()->get(ServerRequestInterface::class);
-/*        $routerContainer = Registry::container()->get(Router::class);
-        $matcher = $routerContainer->getMatcher();
 
-        // .. and try to match the request to a route.
-        $route = $matcher->match($request);
-*/
+    /**
+     * returns informations for active route of current request; needed for context help
+     *
+     * @param ServerRequestInterface|null $request
+     *
+     * @return array
+     */    
+    public function getActiveRoute(ServerRequestInterface|null $request = null) : array {
+        $request ??= Registry::container()->get(ServerRequestInterface::class);
+
         $route = $request->getAttribute('route');
         if ($route) {
             $extras = is_array($route->extras) && isset($route->extras['middleware']) ? implode('|', $route->extras['middleware']) : '';
             return [
                 'path'    => $route->path,
-                'handler' => $route->name, //name entspricht als String handler; gettype($route->handler) == 'object' ? get_class($route->handler) : $route->handler,
+                'handler' => $route->name,
                 'method'  => implode('|', $route->allows),
                 'extras'  => $extras,
                 'attr'    => $route->attributes
@@ -267,6 +289,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
     public function exportRoutes() : void
     {
+        //TODO - export to database table
         $router = Registry::routeFactory()->routeMap();
         $existingRoutes = $router->getRoutes();
         $csv = fopen(__DIR__ . "/wt-routes.csv", "w");
@@ -277,7 +300,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             $extras = is_array($route->extras) && isset($route->extras['middleware']) ? implode('|', $route->extras['middleware']) :'';
             fputcsv($csv, [
                 $route->path,
-                $route->name, //name entspricht als String handler; gettype($route->handler) == 'object' ? get_class($route->handler) : $route->handler,
+                $route->name,
                 implode('|', $route->allows),
                 $extras
             ]);
@@ -320,7 +343,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     }
 
     /**
-     * Wrapper for javascript for init
+     * Wrapper for init javascript when document is ready
      * 
      * @param string $initJs
      *
@@ -360,7 +383,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         $includeRes = '';
         $initJs = ''; // init on document ready
 
-        $activeRouteInfo = $this->getActiveRoute();
+        $activeRouteInfo = $this->getActiveRoute($request);
         if ($cfg_wthb_debug) {
             $initJs .= "console.debug('LE-Mod active route:', " . json_encode($activeRouteInfo) .");";
         }
@@ -372,10 +395,15 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                 $initJs .= "console.debug('LE-Mod help:', " . json_encode($help) . ");";
             }
 
-            $help_url = gettype($help) == 'string' ? $help : $help->url;
+            $help_url = gettype($help) == 'string' ? $help : $help->first()->url;
+            
+            // link to Webtrees Manual in GenWiki or external link?
+            $wiki_url = $this->getPref(self::PREF_GENWIKI_LINK, self::STDLINK_GENWIKI);
+            $help_title = str_starts_with($help_url, $wiki_url) ? I18N::translate('Webtrees Manual') : /*I18N: webtrees.pot */ I18N::translate('Help');
+            
             $initJs .= "jQuery('ul.wt-user-menu, ul.nav.small').prepend('<li class=\"nav-item menu-wthb\"><a class=\"nav-link\" href=\"" 
-                . $help_url
-                . "\"><i class=\"fa-solid fa-circle-question\"></i> Webtrees-Handbuch</a></li>');";
+                . e($help_url)
+                . "\"><i class=\"fa-solid fa-circle-question\"></i> {$help_title}</a></li>');";
         }        
 
         // === admin backend - only if patch P002 for administration.phtml was applied; default: headContent of custom modules is not called on the admin backend
