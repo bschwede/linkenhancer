@@ -486,28 +486,36 @@ EOT;
         }
 
         // === include selectively
-        // --- TinyMDE -- only nessary on edit pages
-        if ($cfg_mde_active && $tree != null && $tree->getPreference('FORMAT_TEXT') == 'markdown') {
-            $route = Validator::attributes($request)->route();
-            $routename = basename(strtr($route->name ?? '/', ['\\' => '/']));
-    
-            if (in_array($routename, ['EditFactPage', 'EditNotePage', 'AddNewFact'])) {
-                $fact = '';
-                try {
-                    $fact = Validator::attributes($request)->string('fact');
-                } catch (Exception $e) {
-                }
+        // --- markdown support
+        if ($tree != null && $tree->getPreference('FORMAT_TEXT') == 'markdown') {
+            if ($cfg_img_active) {
+                // markdown image support
+                $bundleShortcuts[] = 'img';
+            }
 
-                if (($routename == 'AddNewFact' && $fact == 'NOTE') || $routename != 'AddNewFact') {
-                    $bundleShortcuts[] = 'mde';
-                    $initJs .= 'window.LEhelp = "' . e(route('module', ['module' => $this->name(), 'action' => 'help'])) . '";';
-                    
-                    $linkSupport = [];
-                    if (! $cfg_link_active) $linkSupport[] = "href:0";
-                    if (! $cfg_img_active) $linkSupport[] = "src:0";
-                    $linkCfg = implode(',', $linkSupport);
-                    $linkCfg = $linkCfg ? '{' . $linkCfg . '}' : '';
-                    $initJs .= "LinkEnhMod.installMDE($linkCfg);";
+            if ($cfg_mde_active) {
+                // --- TinyMDE -- only nessary on edit pages
+                $route = Validator::attributes($request)->route();
+                $routename = basename(strtr($route->name ?? '/', ['\\' => '/']));
+        
+                if (in_array($routename, ['EditFactPage', 'EditNotePage', 'AddNewFact'])) {
+                    $fact = '';
+                    try {
+                        $fact = Validator::attributes($request)->string('fact');
+                    } catch (Exception $e) {
+                    }
+
+                    if (($routename == 'AddNewFact' && $fact == 'NOTE') || $routename != 'AddNewFact') {
+                        $bundleShortcuts[] = 'mde';
+                        $initJs .= 'window.LEhelp = "' . e(route('module', ['module' => $this->name(), 'action' => 'help'])) . '";';
+                        
+                        $linkSupport = [];
+                        if (! $cfg_link_active) $linkSupport[] = "href:0";
+                        if (! $cfg_img_active) $linkSupport[] = "src:0";
+                        $linkCfg = implode(',', $linkSupport);
+                        $linkCfg = $linkCfg ? '{' . $linkCfg . '}' : '';
+                        $initJs .= "LinkEnhMod.installMDE($linkCfg);";
+                    }
                 }
             }
         }
@@ -517,7 +525,12 @@ EOT;
             asort($bundleShortcuts);
             $infix = implode("-",$bundleShortcuts);
             $includeRes .= '<link rel="stylesheet" type="text/css" href="' . $this->assetUrl("css/bundle-{$infix}.min.css") . '">';
-            $includeRes .= '<script src="' . $this->assetUrl("js/bundle-{$infix}.min.js") . '"></script>';
+            
+            $bundleShortcuts = array_filter($bundleShortcuts, function($var) { return $var !== 'img'; });
+            if ($bundleShortcuts) { // markdown image support - only css
+                $infix = implode("-", $bundleShortcuts);
+                $includeRes .= '<script src="' . $this->assetUrl("js/bundle-{$infix}.min.js") . '"></script>';
+            }
         }
 
         return $includeRes . ($initJs ? $this->getInitJavascript($initJs) :'');

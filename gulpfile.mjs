@@ -110,7 +110,11 @@ const cssPipe = (inputFile, outputInfix) =>
 const cssMde = () => cssPipe(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/tiny-mde-wt.css"], 'mde');
 const cssMdeLe = () => cssPipe(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/tiny-mde-wt.css", "./resources/css/linkenhancer.css"], 'le-mde');
 const cssLe = () => cssPipe(["./resources/css/linkenhancer.css"], 'le');
-const css = gulp.series(cssMde, cssMdeLe, cssLe);
+const cssImg = () => cssPipe(["./resources/css/md-img.css"], 'img');
+const cssImgLe = () => cssPipe(["./resources/css/linkenhancer.css", "./resources/css/md-img.css"], 'img-le');
+const cssImgMde = () => cssPipe(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/tiny-mde-wt.css", "./resources/css/md-img.css"], 'img-mde');
+const cssImgMdeLe = () => cssPipe(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/tiny-mde-wt.css", "./resources/css/linkenhancer.css", "./resources/css/md-img.css"], 'img-le-mde');
+const css = gulp.series(cssMde, cssMdeLe, cssLe, cssImg, cssImgLe, cssImgMde, cssImgMdeLe);
 
 
 //--- Version

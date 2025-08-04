@@ -1,0 +1,9 @@
+/* markdown image support for gedcom media and public images */
+.md-img {
+  padding: 2px 5px;
+}
+
+.md-img-title {
+  display: block;
+  padding-top: 5px;
+}
