@@ -47,7 +47,7 @@ This function is implemented via Javascript and only affects links in notes (wit
 Images of gedcom media records reside behind the media firewall. Therefore, this function cannot be provided with JavaScript, but by extending the MarkDownFactory Class.
 If restriction rules apply to the record, instead of the image, a message is displayed.
 
-The images are packed into a div container together with an image subtitle - which is also a link to the media data set for GEDCOM objects. The display can be customized as required using the standard or additional CSS classes.
+The images are packed into a div container together with an image subtitle - which is also a link to the media data set for GEDCOM objects. The display can be customized as required using the standard CSS classes or per image additional CSS classes (e.g. `float-start` or `float-end`).
 
 **Syntax:**
 - `![alternate text for gedcom object](#@id=@M1@)`
