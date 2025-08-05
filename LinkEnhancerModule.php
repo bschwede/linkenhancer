@@ -201,14 +201,18 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         }
     }
 
-    public function getHelpTableCount():string {
-        $totalCnt  = DB::table(self::HELP_TABLE)->count();
-        $mappedCnt = DB::table(self::HELP_TABLE)
-            ->whereNotNull('url')
-            ->where('url', '!=', '')
-            ->count();
+    public function getHelpTableCount():array {
+        $totalCnt = 0;
+        $mappedCnt = 0;
+        try {
+            $totalCnt  = DB::table(self::HELP_TABLE)->count();
+            $mappedCnt = DB::table(self::HELP_TABLE)
+                ->whereNotNull('url')
+                ->where('url', '!=', '')
+                ->count();
+        } catch (Exception $e) {}
 
-        return "{$totalCnt} / {$mappedCnt}";
+        return [ 'total' => (int) $totalCnt, 'assigned' => (int) $mappedCnt];
     }
 
     /**
@@ -524,7 +528,14 @@ EOT;
         if ($bundleShortcuts) {
             asort($bundleShortcuts);
             $infix = implode("-",$bundleShortcuts);
-            $includeRes .= '<link rel="stylesheet" type="text/css" href="' . $this->assetUrl("css/bundle-{$infix}.min.css") . '">';
+            $assetFile = $this->assetUrl("css/bundle-{$infix}.min.css");
+            if (file_exists($assetFile)) {
+                if (filesize($assetFile) > 500) {
+                    $includeRes .= '<link rel="stylesheet" type="text/css" href="' . $assetFile . '">';
+                } else {
+                    $includeRes .= '<style>' . file_get_contents($assetFile) . '</style>';
+                }
+            }
             
             $bundleShortcuts = array_filter($bundleShortcuts, function($var) { return $var !== 'img'; });
             if ($bundleShortcuts) { // markdown image support - only css
@@ -647,6 +658,8 @@ EOT;
             'module' => $this->name(),
             'action' => 'AdminCsvExport'
         ]);
+
+        $response['tablerows'] = $this->getHelpTableCount();
 
 
         return $response;

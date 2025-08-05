@@ -12,6 +12,7 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
  * @var array<string>           $prefs                  list of chapter objects
  * @var string                  $jscode_linkpp          javascript code snippet from js-file, csv-export...
  * @var array<string>           $links                  links for: csvexport
+ * @var array<int>              $tablerows              [total, assigned]
  */
 ?>
 
@@ -104,34 +105,13 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
                             ],
                             'selected' => (int) $prefs[$prefId]
                         ]) ?>
-                    </div>
-                </div>
-            </fieldset>
-
-            <!-- route debug info in js console --><?php $prefId = LinkEnhancerModule::PREF_WTHB_DEBUG; ?>
-            <fieldset class="form-group mb-3">
-                <div class="row">
-                    <legend class="col-form-label col-sm-3 wt-page-options-label">
-                        <?= I18N::translate('Output of debug information on the JS console') ?>
-                    </legend>
-                    <div class="col-sm-9 wt-page-options-value">
-                        <?= view('components/radios-inline', [
-                            'id' => $prefId,
-                            'name' => $prefId,
-                            'options' => [
-                                /*I18N: webtrees.pot */ I18N::translate('no'),
-                                /*I18N: webtrees.pot */ I18N::translate('yes')
-                            ],
-                            'selected' => (int) $prefs[$prefId]
-                        ]) ?>
                         <div class="form-text">
-                            <p><?= /*I18N: WTHB Debug */ I18N::translate('With the information on the active route and, if applicable, data table entries found for matching routing to help topics, the context help can be more easily adjusted in case of discrepancies.') ?>
+                            <p><?= /*I18N: */ I18N::translate("A context-sensitive link to the German Webtrees Manual can be added by javascript to the small navigation menu (only on the frontend of webtrees, without applying patch P002).") ?>
                             </p>
                         </div>
                     </div>
                 </div>
             </fieldset>
-
 
             <!-- -->
             <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
@@ -139,7 +119,12 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
             </label>
             <div class="col-sm-9 wt-page-options-value">
                 <div class="form-text">
-                    <p><a href="<?= e($links['csvexport']) ?>">CSV-Export</a>
+                    <p><?= /*I18N: WTHB Link table */ I18N::translate('The context is established by assigning the routes used in webtrees to the corresponding sections in the manual.') ?>
+                        <br>
+                        <?= /*I18N: WTHB Link table */ I18N::translate('The data is stored in the database table') ?>: <code><?= LinkEnhancerModule::HELP_TABLE ?></code>
+                        <em>(<strong><?= /*I18N: WTHB Link table rows */ I18N::translate('Data rows') ?>:</strong> <?= /*I18N: WTHB Link table rows assigned/total */ I18N::translate('%s of %s assigned', $tablerows['assigned'] ?? 0, $tablerows['total'] ?? 0) ?>)</em>
+                    </p>
+                    <p><a class="btn btn-secondary" href="<?= e($links['csvexport']) ?>"><?= I18N::translate('CSV-Export')?></a>
                     </p>
                 </div>
             </div>
@@ -166,6 +151,30 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
                     <p><?= /*I18N: WTHB Link */ I18N::translate('This fallback link is used, when no specific context link was defined.') ?></p>
                 </div>
             </div>
+
+            <!-- route debug info in js console --><?php $prefId = LinkEnhancerModule::PREF_WTHB_DEBUG; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                        <?= I18N::translate('Output of debug information on the JS console') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value">
+                        <?= view('components/radios-inline', [
+                            'id' => $prefId,
+                            'name' => $prefId,
+                            'options' => [
+                                /*I18N: webtrees.pot */ I18N::translate('no'),
+                                /*I18N: webtrees.pot */ I18N::translate('yes')
+                            ],
+                            'selected' => (int) $prefs[$prefId]
+                        ]) ?>
+                        <div class="form-text">
+                            <p><?= /*I18N: WTHB Debug */ I18N::translate('With the information on the active route and, if applicable, data table entries found for matching routing to help topics, the context help can be more easily adjusted in case of discrepancies.') ?>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
         </div>
 
 
@@ -240,6 +249,7 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
                         ]) ?>
                         <div class="form-text">
                             <p><?= /*I18N: MD img - sentence 1 */ I18N::translate('Only works in notes that are formatted with Markdown.') ?></p>
+                            <p><strong><?= /*I18N: MDE */ I18N::translate("Precondition: Tree preference '%s' need to be set to markdown.", /*I18N: webtrees.pot */ I18N::translate('Format text and notes')) ?></strong></p>
                             <p>
                                 <?= /*I18N: MD img - sentence 2 */ I18N::translate('The images are packed into a div container together with an image subtitle - which is also a link to the media data set for GEDCOM objects.') ?>
                                 <?= /*I18N: MD img - sentence 3 */ I18N::translate('The display can be customized as required using the following standard CSS classes or additional CSS classes.') ?>
