@@ -580,10 +580,10 @@ EOT;
         if ($bundleShortcuts) {
             asort($bundleShortcuts);
             $infix = implode("-",$bundleShortcuts);
-            $assetFile = $this->assetUrl("css/bundle-{$infix}.min.css");
+            $assetFile = $this->resourcesFolder() . "css/bundle-{$infix}.min.css";
             if (file_exists($assetFile)) {
                 if (filesize($assetFile) > 500) {
-                    $includeRes .= '<link rel="stylesheet" type="text/css" href="' . $assetFile . '">';
+                    $includeRes .= '<link rel="stylesheet" type="text/css" href="' . $this->assetUrl("css/bundle-{$infix}.min.css") . '">';
                 } else {
                     $includeRes .= '<style>' . file_get_contents($assetFile) . '</style>';
                 }
