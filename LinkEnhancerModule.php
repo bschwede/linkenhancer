@@ -30,6 +30,7 @@ use Psr\Http\Message\ResponseInterface;
 use Illuminate\Database\Capsule\Manager as DB;
 use Fisharebest\Webtrees\Schema\MigrationInterface;
 use Fisharebest\Webtrees\Html;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Schema\SeedHelpTable;
 use Exception;
 use PDOException;
 
@@ -186,12 +187,50 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     }
 
 
+    public function loadCsvStream($stream, string $separator = ";") :array
+    {
+        $data = [];
+
+        $header = fgetcsv($stream, null, $separator);
+
+        while (($row = fgetcsv($stream, null, $separator)) !== false) {
+            $data[] = array_combine($header, $row);
+        }
+
+        return $data;
+    }    
+
+
+    public function importCsv2HelpTable(string|StreamInterface $file, bool $truncate = true) {
+        $result = [ 'total' => 0, 'skipped' => 0 ];
+        if (gettype($file) == 'string') {
+            if (file_exists($file)) {
+                $stream = fopen($file, 'r');
+                $data = $this->loadCsvStream($stream);
+                fclose($stream);
+                $seeder = new SeedHelpTable($data, $truncate);
+                $seeder->run();
+                $result = ['total' => $seeder->cntRowsTotal, 'skipped' => $seeder->cntRowsSkipped];
+            }
+        } else {
+            // TODO
+        }
+        return $result;
+    }
+
+
     /**
      * Called for all *enabled* modules.
      */
     public function boot(): void
     {
         $this->updateSchema('\Schwendinger\Webtrees\Module\LinkEnhancer\Schema', 'SCHEMA_VERSION', 1);
+
+        if ((int) ($this->getHelpTableCount()['total'] ?? 0) === 0) {
+            $csvfile = __DIR__ . DIRECTORY_SEPARATOR . 'Schema/SeedHelpTable.csv';
+            $result = $this->importCsv2HelpTable($csvfile);
+            FlashMessages::addMessage('CSV-Import - ' . $result['total'], 'info');
+        }
 
         // Register a namespace for our views.
         View::registerNamespace($this->name(), $this->resourcesFolder() . 'views/');
@@ -204,13 +243,15 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public function getHelpTableCount():array {
         $totalCnt = 0;
         $mappedCnt = 0;
-        try {
-            $totalCnt  = DB::table(self::HELP_TABLE)->count();
-            $mappedCnt = DB::table(self::HELP_TABLE)
-                ->whereNotNull('url')
-                ->where('url', '!=', '')
-                ->count();
-        } catch (Exception $e) {}
+        if (DB::schema()->hasTable(self::HELP_TABLE)) {
+            try {
+                $totalCnt  = DB::table(self::HELP_TABLE)->count();
+                $mappedCnt = DB::table(self::HELP_TABLE)
+                    ->whereNotNull('url')
+                    ->where('url', '!=', '')
+                    ->count();
+            } catch (Exception $e) {}
+        }
 
         return [ 'total' => (int) $totalCnt, 'assigned' => (int) $mappedCnt];
     }
@@ -223,11 +264,17 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
      * @return mixed
      */
     public function getContextHelp(array|null $activeroute = null): mixed  {
-        $activeroute ??= $this->getActiveRoute();
-
         $std_url = $this->getPref(self::PREF_WTHB_STD_LINK, self::STDLINK_WTHB);
+        if (!DB::schema()->hasTable(self::HELP_TABLE)) {
+            FlashMessages::addMessage(
+                I18N::translate('Table for context help is missing - fallback to standard url'),
+                'info'
+            );
+            return $std_url;
+        }
         $url = $std_url;
         $wiki_url = rtrim($this->getPref(self::PREF_GENWIKI_LINK, self::STDLINK_GENWIKI), '/') . '/';
+        $activeroute ??= $this->getActiveRoute();
         
         if ($activeroute) {
             // custom module?
@@ -302,26 +349,31 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         return [];
     }
 
-    public function exportRoutes() : void
+
+    public function importRoutes(): array
     {
-        //TODO - export to database table
         $router = Registry::routeFactory()->routeMap();
         $existingRoutes = $router->getRoutes();
-        $csv = fopen(__DIR__ . "/wt-routes.csv", "w");
-        
-        fputcsv($csv, ['Path', 'Handler', 'Method', 'Middleware']);
+        $data = [];
+
         foreach ($existingRoutes as $route) {
-            //$extras = isset($route->extras) ? json_encode($route->extras) : '';
-            $extras = is_array($route->extras) && isset($route->extras['middleware']) ? implode('|', $route->extras['middleware']) :'';
-            fputcsv($csv, [
-                $route->path,
-                $route->name,
-                implode('|', $route->allows),
-                $extras
-            ]);
+            $extras = is_array($route->extras) && isset($route->extras['middleware']) ? implode('|', $route->extras['middleware']) : '';
+            $data[] = [
+                'path' => $route->path,
+                'handler' => $route->name,
+                'method' => implode('|', $route->allows),
+                'extras' => $extras,
+                'attr' => $route->attributes
+            ];            
         }
-        fclose($csv);
+
+        $result = [ 'total' => 0, 'skipped' => 0 ];
+        $seeder = new SeedHelpTable($data, false);
+        $seeder->run();
+        $result = ['total' => $seeder->cntRowsTotal, 'skipped' => $seeder->cntRowsSkipped];        
+        return $result;
     }
+
 
     /**
      * Get a module setting. Return a user or Module default if the setting is not set.
@@ -588,8 +640,40 @@ EOT;
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
+    public function getAdminImportRoutesAction(ServerRequestInterface $request): ResponseInterface
+    {
+        try {
+            $this->importRoutes();
+            FlashMessages::addMessage(
+                'Route import',
+                'info'
+            );          
+        } catch (Exception $ex) {
+            FlashMessages::addMessage(
+                $ex->getMessage(),
+                'danger'
+            );
+        }
+        return redirect(route('module', ['module' => $this->name(), 'action' => 'Admin']));   
+    }
+
+
+    /**
+     * Download context help mapping table as CSV
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
     public function getAdminCsvExportAction(ServerRequestInterface $request): ResponseInterface
     {
+        if (!DB::schema()->hasTable(self::HELP_TABLE)) {
+            FlashMessages::addMessage(
+                I18N::translate('Table for context help is missing - fallback to standard url'),
+                'info'
+            );
+            return redirect(route('module', ['module' => $this->name(), 'action' => 'Admin']));
+        }
+
         $filename = "wthb-route-mapping-export.csv";
         $headers = [
             'Content-Type' => 'text/csv',
@@ -658,6 +742,10 @@ EOT;
             'module' => $this->name(),
             'action' => 'AdminCsvExport'
         ]);
+        $response['links']['routeimport'] = route('module', [
+            'module' => $this->name(),
+            'action' => 'AdminImportRoutes'
+        ]);        
 
         $response['tablerows'] = $this->getHelpTableCount();
 
@@ -835,6 +923,7 @@ EOT;
 
         // Update the schema, one version at a time.
         while ($current_version < $target_version) {
+            
             $class = $namespace . '\\Migration' . $current_version;
             /** @var MigrationInterface $migration */
             $migration = new $class();

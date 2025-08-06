@@ -18,14 +18,15 @@ class Migration0 implements MigrationInterface
         if (!DB::schema()->hasTable('route_help_map')) {
             DB::schema()->create('route_help_map', function (Blueprint $table): void {
                 $table->integer('id', true);
-                $table->string('path', 100)->nullable();
-                $table->string('handler', 150)->nullable();
-                $table->string('method', 20)->nullable();
-                $table->string('extras', 60)->nullable();
-                $table->string('category', 60);
-                $table->integer('order', false);
-                $table->string('url', 250)->nullable();
+                $table->string('path', 100)->default('');
+                $table->string('handler', 150)->default('');
+                $table->string('method', 20)->default('');
+                $table->string('extras', 60)->default('');
+                $table->string('category', 60)->default('');
+                $table->integer('order', false)->default(10);
+                $table->string('url', 250)->default('');
                 $table->index(['path', 'handler']);
+                $table->timestamp('updated_at', 0)->nullable();
             });
         }
     }
