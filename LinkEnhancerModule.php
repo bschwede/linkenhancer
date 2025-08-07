@@ -70,6 +70,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
     public const PREF_HOME_LINK_TYPE = 'HOME_LINK_TYPE'; // home link type: 0=off, 1=tree, 2=my-page
     public const PREF_WTHB_ACTIVE = 'WTHB_LINK_ACTIVE'; // link to GenWiki "Webtrees Handbuch"
+    public const PREF_WTHB_FAICON = 'WTHB_FAICON'; // prepend fa icon to help link
     public const PREF_WTHB_STD_LINK = 'WTHB_STD_LINK'; // standard link to GenWiki "Webtrees Handbuch"
     public const PREF_WTHB_DEBUG = 'WTHB_DEBUG'; // console.debug with active route info; 0=off, 1=on
     public const PREF_GENWIKI_LINK = 'GENWIKI_LINK'; // base link to GenWiki
@@ -91,6 +92,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     protected const DEFAULT_PREFERENCES = [
         self::PREF_HOME_LINK_TYPE        => '1', //int triple-state, 0=off, 1=tree, 2=my-page
         self::PREF_WTHB_ACTIVE           => '1', //bool
+        self::PREF_WTHB_FAICON           => '1', //bool
         self::PREF_WTHB_DEBUG            => '0', //bool
         self::PREF_WTHB_STD_LINK         => self::STDLINK_WTHB, //string
         self::PREF_GENWIKI_LINK          => self::STDLINK_GENWIKI, //string
@@ -459,6 +461,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         if ($cfg_wthb_active) {
             $jsfile = $this->resourcesFolder() . 'js/bundle-wthb-link.min.js';
             if (file_exists($jsfile)) {
+                $cfg_wthb_faicon = boolval($this->getPref(self::PREF_WTHB_FAICON)) ? 'true' : 'false';
 
                 $help = $this->getContextHelp($activeRouteInfo);
                 if ($cfg_wthb_debug) {
@@ -476,7 +479,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                 #    . "\"><i class=\"fa-solid fa-circle-question\"></i> {$help_title}</a></li>');";
                 // less flickering than with initJs variant
                 $help_url_e = e($help_url);
-                $includeRes .= "<script>((help_title, help_url) => {" . file_get_contents($jsfile) . "})('{$help_title}', '{$help_url_e}')</script>";
+                $includeRes .= "<script>((help_title, help_url, faicon) => {" . file_get_contents($jsfile) . "})('{$help_title}', '{$help_url_e}', {$cfg_wthb_faicon})</script>";
             } else {
                 // TODO error flash?
             }

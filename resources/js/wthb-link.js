@@ -1,13 +1,13 @@
 // included in LinkEnhancerModule.php headContent and wrapped in iife syntax; help_url is escaped in php
 //<script>
-//((help_title, help_url) => {
+//((help_title, help_url, faicon) => {
     const fnwtlink = (node) => {
         if (document.querySelector('li.nav-item.menu-wthb')) return;
         const topmenu = node ?? document.querySelector('ul.wt-user-menu, ul.nav.small');
 
         if (!topmenu) return;
-
-        topmenu.insertAdjacentHTML('afterbegin', `<li class="nav-item menu-wthb"><a class="nav-link" href="${help_url}"><i class="fa-solid fa-circle-question"></i> ${help_title}</a ></li>`);
+        let fahtml = faicon ? '<i class="fa-solid fa-circle-question"></i> ' : '';
+        topmenu.insertAdjacentHTML('afterbegin', `<li class="nav-item menu-wthb"><a class="nav-link" target="_blank" href="${help_url}">${fahtml}${help_title}</a ></li>`);
     };
     const callback = function (mutationsList, observer) {
         for (const mutation of mutationsList) {
