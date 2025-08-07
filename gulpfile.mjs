@@ -35,11 +35,11 @@ const VERSION_PHP = 'LinkEnhancerModule.php';
 
 
 //--- Rollup - javascript
-const rollupConfig = (inputFile, sourcemaps = false) => {
+const rollupConfig = (inputFile, sourcemaps = false, format ='iife') => {
     return {
         input: inputFile,
         output: {
-            format: "iife",
+            format: format,
             name: "LinkEnhMod",
             sourcemap: sourcemaps,
         },
@@ -60,8 +60,8 @@ const rollupConfig = (inputFile, sourcemaps = false) => {
     };
 };
 
-const jsPipe = (inputFile, outputInfix) =>
-    rollupStream(rollupConfig(inputFile))
+const jsPipe = (inputFile, outputInfix, format ='iife') =>
+    rollupStream(rollupConfig(inputFile, false, format))
         .pipe(source(`bundle-${outputInfix}.min.js`))
         .pipe(buffer())
         .pipe(terser())
@@ -91,7 +91,8 @@ const jsExtractLeConfig = async () => {
 const jsMde = () => jsPipe("./resources/js/tiny-mde-wt.js", 'mde');
 const jsMdeLe = () => jsPipe("./resources/js/index-le-mde.js", 'le-mde');
 const jsLe = () => jsPipe("./resources/js/linkenhancer.js", 'le');
-const jscripts = gulp.series(jsMde, jsMdeLe, jsLe, jsExtractLeConfig);
+const jsWTHBLink = () => jsPipe("./resources/js/wthb-link.js", 'wthb-link', 'cjs');
+const jscripts = gulp.series(jsMde, jsMdeLe, jsLe, jsExtractLeConfig, jsWTHBLink);
 
 //--- CSS
 const cssPipe = (inputFile, outputInfix) => 

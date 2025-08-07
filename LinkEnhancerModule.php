@@ -457,50 +457,29 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
         // --- Webtrees Handbuch Link
         if ($cfg_wthb_active) {
-            $help = $this->getContextHelp($activeRouteInfo);
-            if ($cfg_wthb_debug) {
-                $initJs .= "console.debug('LE-Mod help:', " . json_encode($help) . ");";
-            }
+            $jsfile = $this->resourcesFolder() . 'js/bundle-wthb-link.min.js';
+            if (file_exists($jsfile)) {
 
-            $help_url = gettype($help) == 'string' ? $help : $help->first()->url;
-            
-            // link to Webtrees Manual in GenWiki or external link?
-            $wiki_url = $this->getPref(self::PREF_GENWIKI_LINK, self::STDLINK_GENWIKI);
-            $help_title = str_starts_with($help_url, $wiki_url) ? I18N::translate('Webtrees Manual') : /*I18N: webtrees.pot */ I18N::translate('Help');
-            
-            #$initJs .= "jQuery('ul.wt-user-menu, ul.nav.small').prepend('<li class=\"nav-item menu-wthb\"><a class=\"nav-link\" href=\"" 
-            #    . e($help_url)
-            #    . "\"><i class=\"fa-solid fa-circle-question\"></i> {$help_title}</a></li>');";
-            // less flickering than with initJs variant
-            $help_url_e = e($help_url);
-            $includeRes .= <<<EOT
-<script>(() => {
-    const fnwtlink = (node) => {
-        if (document.querySelector('li.nav-item.menu-wthb')) return;
-        const topmenu = node ?? document.querySelector('ul.wt-user-menu, ul.nav.small');
-        if (!topmenu) return;
-        topmenu.insertAdjacentHTML('afterbegin', "<li class=\"nav-item menu-wthb\"><a class=\"nav-link\" href=\"$help_url_e\"><i class=\"fa-solid fa-circle-question\"></i> $help_title</a></li>");
-    };
-    const callback = function (mutationsList, observer) {
-        for (const mutation of mutationsList) {
-            if (mutation.type === 'childList') {
-                mutation.addedNodes.forEach(node => {
-                    if (node.nodeType === Node.ELEMENT_NODE) {
-                        if (node.tagName === 'UL' && (node.classList.contains('wt-user-menu') || (node.classList.contains('nav') && node.classList.contains('small')))) {
-                            fnwtlink(node);
-                        }
-                    }
-                });
-            }
-        }
-    };
+                $help = $this->getContextHelp($activeRouteInfo);
+                if ($cfg_wthb_debug) {
+                    $initJs .= "console.debug('LE-Mod help:', " . json_encode($help) . ");";
+                }
 
-    fnwtlink();
-    const observer = new MutationObserver(callback);
-    observer.observe(document, { childList: true, subtree: true });
-})()</script>
-EOT;
-            
+                $help_url = gettype($help) == 'string' ? $help : $help->first()->url;
+                
+                // link to Webtrees Manual in GenWiki or external link?
+                $wiki_url = $this->getPref(self::PREF_GENWIKI_LINK, self::STDLINK_GENWIKI);
+                $help_title = str_starts_with($help_url, $wiki_url) ? I18N::translate('Webtrees Manual') : /*I18N: webtrees.pot */ I18N::translate('Help');
+                
+                #$initJs .= "jQuery('ul.wt-user-menu, ul.nav.small').prepend('<li class=\"nav-item menu-wthb\"><a class=\"nav-link\" href=\"" 
+                #    . e($help_url)
+                #    . "\"><i class=\"fa-solid fa-circle-question\"></i> {$help_title}</a></li>');";
+                // less flickering than with initJs variant
+                $help_url_e = e($help_url);
+                $includeRes .= "<script>((help_title, help_url) => {" . file_get_contents($jsfile) . "})('{$help_title}', '{$help_url_e}')</script>";
+            } else {
+                // TODO error flash?
+            }
         }        
 
         // === admin backend - only if patch P002 for administration.phtml was applied; default: headContent of custom modules is not called on the admin backend
