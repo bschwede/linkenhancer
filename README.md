@@ -1,10 +1,22 @@
 # webtrees module LinkEnhancer
 
-**Cross-references to Gedcom datasets, Markdown editor, context-sensitive link to the GenWiki Webtrees manual**
+[TL;DR](#tlrdr) | [Description](#description) | [webtrees](#webtrees) | [Requirements](#requirements) | [Installation](#installation) | [Contributing](#contributing) | [Translation](#translation) | [Support](#support) | [License](#license)
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0) ![webtrees major version](https://img.shields.io/badge/webtrees-v2.2.x-green) ![Latest Release](https://img.shields.io/github/v/release/bschwede/linkenhancer)
 
-[Description](#description) | [webtrees](#webtrees) | [Requirements](#requirements) | [Installation](#installation) | [Contributing](#contributing) | [Translation](#translation) | [Support](#support) | [License](#license)
+
+<a name="tldr"></a>
+## TL;DR
+**Cross-references to Gedcom datasets, Markdown editor, context-sensitive link to the GenWiki Webtrees manual**
+
+What you can expect from the module, illustrated with screenshots:
+
+| Screenshots | Screenshots |
+| :---: | :---: |
+| [![note with links](resources/img/screenshot_note-with-links-and-img_200.png)](resources/img/screenshot_note-with-links-and-img.png) | [![site title as link](resources/img/screenshot_sitetitle-as-link_200.png)](resources/img/screenshot_sitetitle-as-link.png)<br><br>[![small menu with help link](resources/img/screenshot_small-menu-wthb-link_200.png)](resources/img/screenshot_small-menu-wthb-link.png) |
+| note with links and image | site title as link / small menu with help link |
+| [![Markdown editor](resources/img/screenshot_tinymde-sharednote_200.png)](resources/img/screenshot_tinymde-sharednote.png) | [![Markdown Help](resources/img/screenshot_markdown-help_200.png)](resources/img/screenshot_markdown-help.png) |
+| markdown editor | markdown help |
 
 
 <a name="description"></a>
@@ -66,9 +78,11 @@ Note: Unfortunately, the on-screen keyboard does NOT work as before with the pre
 ### German Webtrees Manual
 A context-sensitive link to the [German Webtrees Manual](https://wiki.genealogy.net/Webtrees_Handbuch) can be added by javascript to the small navigation menu (only on the frontend of webtrees, without applying patch P002).
 
-TODO routes in database table XXX define the context help link. Fallback by generic rules, if nothing applies to the startpage of the manual.
+The mapping of routes to help articles in the manual is stored in the database table `route_help_map`. This module comes with predefined mapping rules. Generic fallback rules are possible to be set and if nothing else applies the link points to the startpage of the manual. On the module admin page it is possible to store routes registered in webtrees on demand. This make it easier to cover individual custom module configurations. Further more you can import and export data in csv format in order to make changes more convenient.
 
 ### Patches
+**The patches can be applied additionally — the module also works without them!**
+
 The util subfolder contains minor patches for the webtrees core.
 These are [diff-files](https://www.gnu.org/software/diffutils/) that can be easily applied or removed using shell from within the installed module folder (necessary for auto detecting webtrees sources):
 
