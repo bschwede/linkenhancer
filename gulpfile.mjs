@@ -222,6 +222,7 @@ const build = gulp.series(clean, jscripts, css);
 const bumpversion = gulp.series(gitCheckClean, bumpVersion, syncVersion);
 
 const archive = gulp.series(build, createmo, createarchive);
+const syncversion = syncVersion
 
 
-export { build, bumpversion, updatepo, createmo, archive };
+export { build, bumpversion, syncversion, updatepo, createmo, archive };

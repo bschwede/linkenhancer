@@ -62,7 +62,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public const CUSTOM_AUTHOR = 'Bernd Schwendinger';
     public const GITHUB_USER = 'bschwede';
     public const CUSTOM_WEBSITE = 'https://github.com/' . self::GITHUB_USER . '/' . self::CUSTOM_MODULE . '/';
-    public const CUSTOM_VERSION = '0.0.3';
+    public const CUSTOM_VERSION = '0.0.4';
     public const CUSTOM_LAST = 'https://raw.githubusercontent.com/' . self::GITHUB_USER . '/' .
         self::CUSTOM_MODULE . '/main/latest-version.txt';
 
@@ -647,10 +647,10 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public function getAdminImportRoutesAction(ServerRequestInterface $request): ResponseInterface
     {
         try {
-            $this->importRoutes();
+            $result = $this->importRoutes();
             FlashMessages::addMessage(
-                'Route import',
-                'info'
+                I18N::translate('Routes imported (Total: %s / skipped: %s)', $result['total'], $result['skipped']),
+                'success'
             );          
         } catch (Exception $ex) {
             FlashMessages::addMessage(
