@@ -24,7 +24,7 @@ What you can expect from the module, illustrated with screenshots:
 
 This module wraps up some [examples mentioned in the German Webtrees Manual](https://wiki.genealogy.net/Webtrees_Handbuch/Entwicklungsumgebung#Anpassungen_mit_dem_Modul_.22CSS_und_JS.22) and improves the application of these improvements - each component can be activated individually.
 
-The main purpose of this module is to make **links to data records** stored in family trees more convenient. This avoids having to store fully qualified links, which impairs the portability of Gedcom data. By linking the notes to the GEDCOM data records (persons, families, sources, etc.) from the text, it is easier to replace the history module and thus also save this information in the GEDCOM file. The option of embedding the **images** already inserted in the family tree in the notes rounds off this approach. The link function is controlled via the anchor part of the URI.
+The main purpose of this module is to make **links to data records** stored in family trees more convenient. This avoids having to store fully qualified links, which impairs the portability of Gedcom data. By linking the notes to the GEDCOM data records (persons, families, sources, etc.) from the text, it is easier to replace the history module and thus also save this information in the GEDCOM file. The option of embedding the **images** already inserted in the family tree in the notes rounds off this approach. The link function is controlled via the [anchor part of the URI](https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Web_mechanics/What_is_a_URL).
 
 ### Links
 Cross references are made with the XREF-ID by providing the GEDCOM record type and if necessary the tree name. It extends webtrees builtin feature, which adds record links with the standard display name by just typing `@XREF-ID@` in text or markdown.
@@ -47,7 +47,7 @@ Included are the following external targets:
 Additional external targets can be configured. Any CSS rules required are best added via the “CSS and JS” module. Only the definition of the icon as a background image is actually needed - referencing as data: URL. See also: [mdn web docs - data: URLs](https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Schemes/data)
 `.icon-whatever { background-image: url(...) }`
 
-This function is implemented via Javascript and only affects links in notes (with markdown enabled) and HTML blocks on the client side. The existence of the linked data records is not checked in advance. Errors only occur when the link is clicked.
+This function is implemented via Javascript and only affects links in notes (with markdown enabled) and HTML blocks on the client side. The existence of the linked data records is not checked in advance. Errors only occur when the link is clicked (e. g. if the access to the ressource is restricted).
 
 **Syntax:**
 - Markdown: `[Link display title](#@wt=i@I1@)`
@@ -56,7 +56,7 @@ This function is implemented via Javascript and only affects links in notes (wit
 
 
 ### Markdown Image Support
-Images of gedcom media records reside behind the media firewall. Therefore, this function cannot be provided with JavaScript, but by extending the MarkDownFactory Class.
+Images of gedcom media records reside behind the media firewall. Therefore, this function cannot be provided with JavaScript, but by extending the [MarkDownFactory class](https://github.com/fisharebest/webtrees/blob/main/app/Factories/MarkdownFactory.php).
 If restriction rules apply to the record, instead of the image, a message is displayed.
 
 The images are packed into a div container together with an image subtitle - which is also a link to the media data set for GEDCOM objects. The display can be customized as required using the standard CSS classes or per image additional CSS classes (e.g. `float-start` or `float-end`).
