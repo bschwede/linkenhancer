@@ -50,7 +50,7 @@ function getLECfg() {
     },
     "ewp": {
         name: I18N['ewp'] + ' (westpreussen.de)',
-        url: 'https://westpreussen.de/tngeinwohner/getperson.php?personID=',
+        url: 'https://westpreussen.de/tngeinwohner/getperson.php?tree=DB1&personID=',
         cname: 'icon-ewp'
     },
     "fsft": {
