@@ -497,10 +497,6 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                 $wiki_url = $this->getPref(self::PREF_GENWIKI_LINK, self::STDLINK_GENWIKI);
                 $help_title = str_starts_with($help_url, $wiki_url) ? I18N::translate('Webtrees Manual') : /*I18N: webtrees.pot */ I18N::translate('Help');
                 
-                #$initJs .= "jQuery('ul.wt-user-menu, ul.nav.small').prepend('<li class=\"nav-item menu-wthb\"><a class=\"nav-link\" href=\"" 
-                #    . e($help_url)
-                #    . "\"><i class=\"fa-solid fa-circle-question\"></i> {$help_title}</a></li>');";
-                // less flickering than with initJs variant
                 $help_url_e = e($help_url);
                 $includeRes .= "<script>((help_title, help_url, faicon) => {" . file_get_contents($jsfile) . "})('{$help_title}', '{$help_url_e}', {$cfg_wthb_faicon})</script>";
             } else {
