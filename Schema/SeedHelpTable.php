@@ -51,7 +51,7 @@ class SeedHelpTable //implements SeedInterface
                 $category = str_contains($handler, 'Redirect') ? 'standard redirect' : 'standard';
             } elseif (str_starts_with($handler, 'Fisharebest\Webtrees\Module\\')) {
                 $category = 'standard module';
-            } elseif (count(explode('//', $handler)) > 2) {
+            } elseif (count(explode('\\', $handler)) > 2) {
                 $category = 'custom module';
             }
         }
