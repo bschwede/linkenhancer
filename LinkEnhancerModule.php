@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace Schwendinger\Webtrees\Module\LinkEnhancer;
 
-use Fisharebest\Webtrees\Http\Middleware\Router;
 use Schwendinger\Webtrees\Module\LinkEnhancer\CustomMarkdownFactory;
 use Fisharebest\Localization\Translation;
 use Fisharebest\Webtrees\I18N;
@@ -189,6 +188,14 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     }
 
 
+    /**
+     * load csv data from stream into array needed to populate route_help_map table
+     *
+     * @param $stream
+     * @param string $separator  character between data fields
+     *
+     * @return array<string>
+     */
     public function loadCsvStream($stream, string $separator = ";") :array
     {
         $data = [];
@@ -205,18 +212,24 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
     public function importCsv2HelpTable(string|StreamInterface $file, bool $truncate = true) {
         $result = [ 'total' => 0, 'skipped' => 0 ];
+        $data = [];
         if (gettype($file) == 'string') {
             if (file_exists($file)) {
                 $stream = fopen($file, 'r');
                 $data = $this->loadCsvStream($stream);
                 fclose($stream);
-                $seeder = new SeedHelpTable($data, $truncate);
-                $seeder->run();
-                $result = ['total' => $seeder->cntRowsTotal, 'skipped' => $seeder->cntRowsSkipped];
+            } else {
+                return $result;
             }
         } else {
-            // TODO
+            // TODO - test
+            //$data = $this->loadCsvStream($file);
         }
+
+        $seeder = new SeedHelpTable($data, $truncate);
+        $seeder->run();
+        $result = ['total' => $seeder->cntRowsTotal, 'skipped' => $seeder->cntRowsSkipped];
+
         return $result;
     }
 
@@ -242,6 +255,11 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         }
     }
 
+    /**
+     * Query route to help mapping table for total count of rows and count of mapped rows (where an url is set)
+     *
+     * @return array
+     */
     public function getHelpTableCount():array {
         $totalCnt = 0;
         $mappedCnt = 0;
@@ -352,6 +370,11 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     }
 
 
+    /**
+     * import in webtrees registered routes into table route_help_map
+     *
+     * @return array  count of rows in total and skipped
+     */
     public function importRoutes(): array
     {
         $router = Registry::routeFactory()->routeMap();
@@ -420,7 +443,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
      */
     public function getInitJavascript(string $initJs): string
     {
-        return "<script>document.addEventListener('DOMContentLoaded', function(event) { " . $initJs . "});</script>";
+        return $initJs ? "<script>document.addEventListener('DOMContentLoaded', function(event) { " . $initJs . "});</script>" : '';
     }
 
 
@@ -495,8 +518,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             || (str_starts_with($activeRouteInfo['path'], '/module') && str_starts_with($action, 'admin'))
         ) {
                 if ($cfg_wthb_active) {
-                    //return $this->getInitJavascript($initJs);
-                    return $includeRes . ($initJs ? $this->getInitJavascript($initJs) : '');
+                    return $includeRes . $this->getInitJavascript($initJs);
                 }
                 return ''; # other stuff is of no use in admin backend
         }
@@ -578,7 +600,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             }
         }
 
-        return $includeRes . ($initJs ? $this->getInitJavascript($initJs) :'');
+        return $includeRes . $this->getInitJavascript($initJs);
     }
 
     /**
@@ -636,7 +658,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                 'danger'
             );
         }
-        return redirect(route('module', ['module' => $this->name(), 'action' => 'Admin']));   
+        return redirect($this->getConfigLink());
     }
 
 
@@ -653,7 +675,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                 I18N::translate('Table for context help is missing - fallback to standard url'),
                 'info'
             );
-            return redirect(route('module', ['module' => $this->name(), 'action' => 'Admin']));
+            return redirect($this->getConfigLink());
         }
 
         $filename = "wthb-route-mapping-export.csv";
@@ -690,12 +712,13 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                 /*I18N: webtrees.pot */I18N::translate('The file %s could not be created.', Html::filename($filename)) . '<hr><samp dir="ltr">' . $ex->getMessage() . '</samp>',
                 'danger'
             );
-            return redirect(route('module', ['module' => $this->name(), 'action' => 'Admin']));
+            return redirect($this->getConfigLink());
         }
     }
 
 
     /**
+     * prepare preferences and values used in settings view
      * @param ServerRequestInterface $request
      *
      * @return array
@@ -727,7 +750,12 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         $response['links']['routeimport'] = route('module', [
             'module' => $this->name(),
             'action' => 'AdminImportRoutes'
-        ]);        
+        ]);
+
+        $response['links']['tinymde'] = $this->assetUrl('img/screenshot_tinymde-sharednote.png');
+        $response['links']['wthb'] = $this->assetUrl('img/screenshot_small-menu-wthb-link.png');
+        $response['links']['noterendered'] = $this->assetUrl('img/screenshot_note-with-links-and-img.png');
+
 
         $response['tablerows'] = $this->getHelpTableCount();
 
