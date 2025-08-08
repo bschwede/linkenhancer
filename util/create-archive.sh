@@ -28,7 +28,7 @@ rm "$exclude_file"
 
 cd "$DSTDIR/.." || exit 1
 zipfile="linkenhancer_v${VER}.zip"
-rm "$zipfile"
+[[ -f "$zipfile" ]] && rm "$zipfile"
 zip -rq "$zipfile" linkenhancer
 rm -rf "$DSTDIR"
 echo "archive: $(realpath -m "$DSTDIR/..")/$zipfile"
