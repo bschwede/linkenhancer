@@ -26,40 +26,91 @@ This module wraps up some [examples mentioned in the German Webtrees Manual](htt
 
 The main purpose of this module is to make **links to data records** stored in family trees more convenient. This avoids having to store fully qualified links, which impairs the portability of Gedcom data. By linking the notes to the GEDCOM data records (persons, families, sources, etc.) from the text, it is easier to replace the history module and thus also save this information in the GEDCOM file. The option of embedding the **images** already inserted in the family tree in the notes rounds off this approach. The link function is controlled via the [anchor part of the URI](https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Web_mechanics/What_is_a_URL).
 
-### Links
-Cross references are made with the XREF-ID by providing the GEDCOM record type and if necessary the tree name. It extends webtrees builtin feature, which adds record links with the standard display name by just typing `@XREF-ID@` in text or markdown.
+### Enhanced links
+**Cross-references** are made with the XREF-ID by providing the GEDCOM record type and if necessary the tree name. It extends webtrees builtin feature, which adds record links with the standard display name by just typing `@XREF-ID@` in text or markdown.
 
 If Webtrees provides better support for UID, referencing via UID will probably also be implemented in this module, as this will make links more fail-safe.
 See also:
 * Forum post [ Feature Request: Improved support for UID / _UID ](https://www.webtrees.net/index.php/forum/9-request-for-new-feature/39942-feature-request-improved-support-for-uid-uid)
 * PR [UID References in notes and text #5145](https://github.com/fisharebest/webtrees/pull/5145)
 
-
-Different destinations can be addressed with a link, whereby the cross-reference is always the first link (if set) and the others are represented by attached clickable icons. 
-Included are the following external targets:
-- Wikipedia DE/EN
-- Family Search Family Tree
-- GenWiki
-- GOV
-- Residents database - Family research in West Prussia (westpreussen.de)
-- OpenStreetMap
-
-Additional external targets can be configured. Any CSS rules required are best added via the “CSS and JS” module. Only the definition of the icon as a background image is actually needed - referencing as data: URL. See also: [mdn web docs - data: URLs](https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Schemes/data)
-`.icon-whatever { background-image: url(...) }`
-
 This function is implemented via Javascript and only affects links in notes (with markdown enabled) and HTML blocks on the client side. The existence of the linked data records is not checked in advance. Errors only occur when the link is clicked (e. g. if the access to the ressource is restricted).
 
+
+Different destinations can be addressed with one link, whereby the cross-reference is always the first link (if set) and the others are represented by attached clickable icons only. 
+Included are the following **predefined external targets**:
+- Wikipedia DE/EN
+- Family Search Family Tree
+- [GenWiki](https://wiki.genealogy.net/)
+- [GOV](https://gov.genealogy.net/?lang=en)
+- [Residents database - Family research in West Prussia](https://westpreussen.de/pages/forschungsergebnisse/einwohnerdatenbank/einwohner.php)
+- OpenStreetMap
+
+
 **Syntax:**
-- Markdown: `[Link display title](#@wt=i@I1@)`
-- HTML: `<a href="#@wt=i@I1@">Link display title</a>`
-  e.g. also in cooperation with the name badge function of the [“⚶ Vesta Classic Look & Feel” module](https://github.com/vesta-webtrees-2-custom-modules/vesta_classic_laf): `<a href="#@fsft=<ref/>"></a>`
+
+* **Markdown**: In general, a link looks like this `[Link display title](#@param1&paramN` so that one or more targets can be addressed at once. For cross-references in webtrees, the parameter looks like this
+  * `wt=n@XREF@` - standard link to note (available record types: i=individual, f=family, s=source, r=repository, n=note, l=sharedPlace) with XREF in active tree
+  * `wt=i@XREF@othertree+dia` - link to record type individual with XREF from "othertree" and also link to Interactive tree of this person
+* **HTML**: The same applies to html links `<a href="#@wt=i@I1@">Link display title</a>`
+  e.g. also useable in cooperation with the name badge function of the [“⚶ Vesta Classic Look & Feel” module](https://github.com/vesta-webtrees-2-custom-modules/vesta_classic_laf) in the HTML snippet field: `<a href="#@fsft=<ref/>"></a>` for linking to a record in the Family Search Family Tree.
+
+The syntax of the external targets is listed by the markdown help function of this module. In most cases, only one key-value parameter pair needs to be specified, consisting of the short name of the desired target and the ID of the data record located there.
 
 
-### Markdown Image Support
+**Additional external targets** can be configured by providing a custom JavaScript object on the admin page of this module. Here two example entries from predefined targets to illustrate the principle:
+```javascript
+{
+  "fsft": {
+      name: 'Family Search Tree - $ID',
+      url: 'https://www.familysearch.org/tree/person/details/',
+      cname: 'icon-fsft'
+  },
+  "osm": {
+      name: 'OpenStreetMap',
+      url: (id, title) => { 
+          let parts = id.split('/');
+          let map = parts.slice(0, 3).join('/');
+          let urlsearch = '';
+          if (parts.length > 3 && parts[3].trim()) {
+              if (parts[3].trim() === '!') {
+                  urlsearch = `?mlat=${parts[1]}&mlon=${parts[2]}`;
+              } else {
+                  urlsearch = parts.slice(3).join('/');
+              }
+          }
+          return {url:`https://www.openstreetmap.org/${urlsearch}#map=${map}`, title};
+      },
+      cname: 'icon-osm',
+      help: [
+          { n: I18N['osm-help1'], e: '17/53.619095/10.037395' },
+      ]
+  }
+}
+```
+Explanation:
+* key = is the obove mentioned short name or query parameter key
+* name = title/label to be displayed as link title, placeholder $ID for inserting given id
+* url = service url to be called - standard: parameter value / given record id will be appended to the end of the url; It can also be a function(id, title) provided.
+* cname = CSS class name(s) whitespace separated
+* help = array of objects [{n:'', e:''},..] - optional parameter examples (in e) with explanation (in n)
+
+
+Any [CSS](https://en.wikipedia.org/wiki/CSS) rules required are best added via the “CSS and JS” module. Only the definition of the icon as a background image is actually needed - referencing as data: URL (see also: [mdn web docs - data: URLs](https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Schemes/data)).
+For example: `.icon-whatever { background-image: url(...) }`
+
+
+### Markdown
+Markdown is a simple system of formatting, used on websites such as Wikipedia or Github. It uses unobtrusive punctuation characters to create headings and sub-headings, bold and italic text, lists, tables, etc.
+
+In webtrees it is optionally supported in note records.
+On the subject of markdown see also: [Github webtrees Issues](https://github.com/fisharebest/webtrees/issues?q=is%3Aissue%20markdown)
+
+#### Markdown Image Support
 Images of gedcom media records reside behind the media firewall. Therefore, this function cannot be provided with JavaScript, but by extending the [MarkDownFactory class](https://github.com/fisharebest/webtrees/blob/main/app/Factories/MarkdownFactory.php).
 If restriction rules apply to the record, instead of the image, a message is displayed.
 
-The images are packed into a div container together with an image subtitle - which is also a link to the media data set for GEDCOM objects. The display can be customized as required using the standard CSS classes or per image additional CSS classes (e.g. `float-start` or `float-end`).
+The images are packed into a div container together with an image subtitle - which is also a link to the media data set for GEDCOM objects. The display can be customized as required using the standard CSS classes or per image additional CSS classes (e.g. `float-start` or `float-end` from webtrees vendor.css).
 
 **Syntax:**
 - `![alternate text for gedcom object](#@id=@M1@)`
@@ -67,7 +118,7 @@ The images are packed into a div container together with an image subtitle - whi
 - `![picture with defined height, width and additional css class](#@id=@M1@&h=200&w=200&cname=float-right)`
 
 
-### Markdown editor
+#### Markdown editor
 You can also enable a visual **markdown editor** for note textareas. Under the hood the project “TinyMDE - A tiny, dependency-free embeddable HTML/JavaScript Markdown editor” is used - see also: <https://github.com/jefago/tiny-markdown-editor>
 
 Besides syntax higlighting it ships with an icon bar for common format commands, a help popup and line numbering.
@@ -75,10 +126,27 @@ Besides syntax higlighting it ships with an icon bar for common format commands,
 Note: Unfortunately, the on-screen keyboard does NOT work as before with the previous text input field. The selected characters end up as an intermediate step in the small text field below the Markdown editor and then must be copied manually to the desired position.
 
 
-### German Webtrees Manual
-A context-sensitive link to the [German Webtrees Manual](https://wiki.genealogy.net/Webtrees_Handbuch) can be added by javascript to the small navigation menu (only on the frontend of webtrees, without applying patch P002).
+### German webtrees manual
+A context sensitive link to the [german webtrees manual](https://wiki.genealogy.net/Webtrees_Handbuch) can be added by javascript to the small navigation menu (if this function is also desired in the admin backend, patch P002 would need to be applied).
 
-The mapping of routes to help articles in the manual is stored in the database table `route_help_map`. This module comes with predefined mapping rules. Generic fallback rules are possible to be set and if nothing else applies the link points to the startpage of the manual. On the module admin page it is possible to store routes registered in webtrees on demand. This make it easier to cover individual custom module configurations. Further more you can import and export data in csv format in order to make changes more convenient.
+The mapping of routes to help articles in the manual is stored in the database table `route_help_map`. This module comes with predefined mapping rules. Generic fallback rules are possible to be set and if nothing else applies, the link points to the startpage of the manual. It is possible to import routes registered in webtrees on demand on this module admin page. This make it easier to cover individual custom module configurations.<br>Standard webtrees routes are defined in [app/Http/Routes/WebRoutes.php](https://github.com/fisharebest/webtrees/blob/main/app/Http/Routes/WebRoutes.php).
+
+Further more you can import and export data in csv format in order to make changes more convenient.
+
+The table has the following headers (the headers required in a CSV file for import are marked with !):
+
+* **id**: automatic key; not relevant
+* **path** !: route path - corresponds to the path of webtres pretty urls
+* **handler** !: usually corresponds to the php class name of the code that handles the request
+* **method** !: web request method (GET, POST, HEAD)<br>Only GET routes are generally relevant for assignment to manual sections.
+* **extras** !: php class name of access level (Fisharebest\Webtrees\Http\Middleware\Auth*)
+* **category**: string value for better grouping data rows; only value 'generic' has a special meaning
+* **order** !: arbitrary numerical sort key, matching data rows are sorted in ascending order; standard value is 10
+- **url** !: path of the url to the webtrees manual (then it's concated with the given GenWiki base/domain url); also fully qualified url to other web ressources are possible and supported (for example to Github repo readmes or wikis of custom modules, that aren't documented in the manual yet)
+- **updated_at**: timestamp of last update; this helps to identify possibly outdated data rows
+
+
+
 
 ### Patches
 **The patches can be applied additionally — the module also works without them!**
