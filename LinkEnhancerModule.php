@@ -811,7 +811,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             'cross reference'  => /*I18N: JS enhanced link */ I18N::translate('cross reference'),
             'oofb'             => /*I18N: JS enhanced link, %s name of location */ I18N::translate('Online Local heritage book of %s at CompGen', '%s'),
             'gov'              => /*I18N: JS enhanced link */ I18N::translate('The Historic Geo Information System (GOV)'),
-            'dbfam'            => /*I18N: JS enhanced link */ I18N::translate('Family Book of Dornbirn'),
+            'www'              => /*I18N: JS enhanced link */ I18N::translate('wer-wir-waren.at'),
             'ewp'              => /*I18N: JS enhanced link */ I18N::translate('Residents database - Family research in West Prussia'),
             'Interactive tree' => /*I18N: webtrees.pot */ I18N::translate('Interactive tree'),
             'syntax error'     => /*I18N: JS enhanced link */ I18N::translate('Syntax error'),
@@ -821,6 +821,9 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             'osm-help2'        => /*I18N: JS enhanced link osm2 */ I18N::translate('same as before with additional marker'),
             'osm-help3'        => /*I18N: JS enhanced link osm3 */ I18N::translate('show also node/way/relation, see also'),
             'osm-help4'        => /*I18N: JS enhanced link osm4 */ I18N::translate('show also node/way/relation - alternative notation'),
+            'ofb-help1'        => /*I18N: JS enhanced link ofb1 */ I18N::translate('link to Online Local heritage book at CompGen with given uid'),
+            'wp-help1'         => /*I18N: JS enhanced link wp1 */ I18N::translate('open the article in the german wikipedia'),
+            'wp-help2'         => /*I18N: JS enhanced link wp2 */ I18N::translate('open the english version of the article'),
         ]);
     }
 

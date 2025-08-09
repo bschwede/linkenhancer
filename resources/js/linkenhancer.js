@@ -13,30 +13,48 @@ function getLECfg() {
             {n: I18N['wt-help2'] + ' ' + I18N['Interactive tree'], e: 'i@XREF@othertree+dia' }
         ]
     },
-    "wpde": {
-        name: 'Wikipedia DE - $ID',
-        url: "https://de.wikipedia.org/wiki/",
-        cname: 'icon-wp'
+    "wp": {
+        name: 'Wikipedia',
+        url: (id, title) => {
+            let parts = id.split('/', 2);
+            if (parts.length != 2) {
+                title = title + " - " + I18N['syntax error'] + "!";
+                return { url: '', title };
+            }
+            let subdomain = parts[0];
+            let article = parts[1];
+            title = `${title} - ` + decodeURIComponent(article);
+            return { url: `https://${subdomain}.wikipedia.org/wiki/${article}`, title };
+        },
+        cname: 'icon-wp',
+        help: [
+            { n: I18N['wp-help1'], e: 'de/Webtrees' },
+            { n: I18N['wp-help2'], e: 'en/Webtrees' },
+        ]
     },
-    "wpen": {
-        name: 'Wikipedia EN - $ID',
-        url: "https://en.wikipedia.org/wiki/",
-        cname: 'icon-wp'
-    },
-    "dbfam": {
-        name: I18N['dbfam'],
+    "www": {
+        name: I18N['www'],
         url: 'https://www.wer-wir-waren.at/daten?guid=',
-        cname: 'icon-dbfam'
+        cname: 'icon-www'
     },
-    "ofbdb": {
-        name: I18N['oofb'].replace(/%s/, 'Dornbirn'),
-        url: "https://ofb.genealogy.net/famreport.php?ofb=dornbirn&UID=",
-        cname: 'icon-compgen'
-    },
-    "ofbs": {
-        name: I18N['oofb'].replace(/%s/, 'Saatzig'),
-        url: "https://ofb.genealogy.net/famreport.php?ofb=saatzig&UID=",
-        cname: 'icon-compgen'
+    "ofb": {
+        name: I18N['oofb'],
+        url: (id, title) => {
+            let parts = id.split('/', 2);
+            if (parts.length != 2) {
+                title = title + ' - ' + I18N['syntax error'] + "!";
+                return { url: '', title };
+            }
+            let ofb = parts[0];
+            let uid = parts[1];
+            const capitalize = s => (s && String(s[0]).toUpperCase() + String(s).slice(1)) || "";
+            title = title.replace(/%s/, capitalize(decodeURIComponent(ofb)));
+            return { url: `https://ofb.genealogy.net/famreport.php?ofb=${ofb}&UID=${uid}`, title };
+        },
+        cname: 'icon-compgen',
+        help: [
+            { n: I18N['ofb-help1'], e: 'dornbirn/BDDBBFB7531C4A2EB0F56852BDD7720F8697A5' },
+        ]        
     },
     "gw": {
         name: 'GenWiki - $ID',
@@ -62,6 +80,10 @@ function getLECfg() {
         name: 'OpenStreetMap',
         url: (id, title) => { 
             let parts = id.split('/');
+            if (parts.length < 3) {
+                title = title + ' - ' + I18N['syntax error'] + "!";
+                return { url: '', title };
+            }
             let map = parts.slice(0, 3).join('/');
             let urlsearch = '';
             if (parts.length > 3 && parts[3].trim()) {
@@ -146,8 +168,12 @@ function processLinks(linkElement) {
         }
     }
     function setLink(link, lastlink, href, title, classname) {
-        if (href) link.setAttribute("href", href);
-        link.setAttribute("target", '_blank');
+        if (href) {
+            link.setAttribute("href", href);
+            link.setAttribute("target", '_blank');
+        } else { // assume syntax error
+            link.onclick = () => { alert( link.title ?? I18N['syntax error'] + "!" ); }
+        }
         if (title) link.setAttribute("title", title);
         if (classname) {
             const iconSpan = document.createElement("span");
