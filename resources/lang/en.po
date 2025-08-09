@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-08 15:54+0200\n"
+"POT-Creation-Date: 2025-08-09 14:20+0200\n"
 "PO-Revision-Date: 2025-07-16 17:33+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -58,8 +58,8 @@ msgstr ""
 
 #: resources/views/help-md.phtml:19 resources/views/help-md.phtml:51
 #: resources/views/help-md.phtml:61 resources/views/help-md.phtml:73
-#: resources/views/settings.phtml:80 resources/views/settings.phtml:84
-#: resources/views/settings.phtml:248
+#: resources/views/settings.phtml:128 resources/views/settings.phtml:132
+#: resources/views/settings.phtml:288
 msgid "See also"
 msgstr ""
 
@@ -75,12 +75,12 @@ msgstr ""
 msgid "For more depth of detail"
 msgstr ""
 
-#: resources/views/help-md.phtml:59 resources/views/settings.phtml:68
+#: resources/views/help-md.phtml:59 resources/views/settings.phtml:116
 msgid "Markdown editor for note textareas"
 msgstr ""
 
 #. I18N: MDE
-#: resources/views/help-md.phtml:60 resources/views/settings.phtml:80
+#: resources/views/help-md.phtml:60 resources/views/settings.phtml:128
 msgid ""
 "The project “TinyMDE - A tiny, dependency-free embeddable HTML/JavaScript "
 "Markdown editor” is used"
@@ -97,12 +97,12 @@ msgstr ""
 
 #. I18N: help md - section title
 #. I18N: Settings - section title
-#: resources/views/help-md.phtml:69 resources/views/settings.phtml:207
+#: resources/views/help-md.phtml:69 resources/views/settings.phtml:276
 msgid "Enhanced Link Support"
 msgstr ""
 
 #. I18N: Enhanced Links
-#: resources/views/help-md.phtml:70 resources/views/settings.phtml:225
+#: resources/views/help-md.phtml:70 resources/views/settings.phtml:59
 msgid ""
 "Different destinations can be addressed with a link, whereby the cross-"
 "reference is always the first link and the others are represented by "
@@ -124,8 +124,8 @@ msgstr ""
 
 #. I18N: Enhanced Links code example 1
 #. I18N: Enhanced Links code example 2
-#: resources/views/help-md.phtml:75 resources/views/settings.phtml:227
-#: resources/views/settings.phtml:228
+#: resources/views/help-md.phtml:75 resources/views/settings.phtml:63
+#: resources/views/settings.phtml:66
 msgid "Link display title"
 msgstr ""
 
@@ -140,7 +140,7 @@ msgid "The parameter definitions will be inserted by a javascript routine"
 msgstr ""
 
 #. I18N: Enhanced Links
-#: resources/views/help-md.phtml:78 resources/views/settings.phtml:224
+#: resources/views/help-md.phtml:78 resources/views/settings.phtml:57
 msgid ""
 "This function is implemented via Javascript and only affects links in notes "
 "and HTML blocks on the client side."
@@ -155,25 +155,25 @@ msgstr ""
 
 #. I18N: help md - section title
 #. I18N: Settings - section title
-#: resources/views/help-md.phtml:84 resources/views/settings.phtml:259
+#: resources/views/help-md.phtml:84 resources/views/settings.phtml:298
 msgid "Markdown Image Support"
 msgstr ""
 
 #. I18N: MD img - sentence 2
-#: resources/views/help-md.phtml:86 resources/views/settings.phtml:280
+#: resources/views/help-md.phtml:86 resources/views/settings.phtml:96
 msgid ""
 "The images are packed into a div container together with an image subtitle - "
 "which is also a link to the media data set for GEDCOM objects."
 msgstr ""
 
 #. I18N: MD img - sentence 3
-#: resources/views/help-md.phtml:87 resources/views/settings.phtml:281
+#: resources/views/help-md.phtml:87 resources/views/settings.phtml:97
 msgid ""
 "The display can be customized as required using the following standard CSS "
 "classes or additional CSS classes."
 msgstr ""
 
-#: resources/views/help-md.phtml:90 resources/views/settings.phtml:295
+#: resources/views/help-md.phtml:90 resources/views/settings.phtml:302
 msgid "Markdown image container standard css class"
 msgstr ""
 
@@ -181,22 +181,22 @@ msgstr ""
 msgid "not defined"
 msgstr ""
 
-#: resources/views/help-md.phtml:93 resources/views/settings.phtml:303
+#: resources/views/help-md.phtml:93 resources/views/settings.phtml:310
 msgid "Markdown image title container standard css class"
 msgstr ""
 
 #. I18N: MD img code example 1
-#: resources/views/help-md.phtml:100 resources/views/settings.phtml:284
+#: resources/views/help-md.phtml:100 resources/views/settings.phtml:100
 msgid "alternate text for gedcom object"
 msgstr ""
 
 #. I18N: MD img code example 2
-#: resources/views/help-md.phtml:102 resources/views/settings.phtml:285
+#: resources/views/help-md.phtml:102 resources/views/settings.phtml:102
 msgid "alternate text for picture in public folder"
 msgstr ""
 
 #. I18N: MD img code example 3
-#: resources/views/help-md.phtml:104 resources/views/settings.phtml:286
+#: resources/views/help-md.phtml:104 resources/views/settings.phtml:104
 msgid "picture with defined height, width and additional css class"
 msgstr ""
 
@@ -227,150 +227,155 @@ msgid "Activate Support"
 msgstr ""
 
 #: resources/views/settings.phtml:47
-msgid "Site title links to tree"
+msgid "Activate enhanced links?"
+msgstr ""
+
+#. I18N: Enhanced Links code example 3 vesta module
+#: resources/views/settings.phtml:67
+msgid ""
+"e.g. also in cooperation with the name badge function of the “⚶ Vesta "
+"Classic Look & Feel” module"
+msgstr ""
+
+#: resources/views/settings.phtml:80
+msgid "Activate markdown image tweak?"
+msgstr ""
+
+#. I18N: MD img - sentence 1
+#: resources/views/settings.phtml:91
+msgid "Only works in notes that are formatted with Markdown."
 msgstr ""
 
 #. I18N: MDE
-#: resources/views/settings.phtml:83 resources/views/settings.phtml:278
+#: resources/views/settings.phtml:93 resources/views/settings.phtml:131
 #, php-format
 msgid "Precondition: Tree preference '%s' need to be set to markdown."
 msgstr ""
 
 #. I18N: MDE
-#: resources/views/settings.phtml:84
+#: resources/views/settings.phtml:132
 msgid "On the subject of"
 msgstr ""
 
-#. I18N: Settings - section title
-#: resources/views/settings.phtml:92 LinkEnhancerModule.php:498
-msgid "Webtrees Manual"
-msgstr ""
-
-#: resources/views/settings.phtml:98
+#: resources/views/settings.phtml:142
 msgid "Show Help Link"
 msgstr ""
 
 #. I18N:
-#: resources/views/settings.phtml:112
+#: resources/views/settings.phtml:156
 msgid ""
 "A context-sensitive link to the German Webtrees Manual can be added by "
 "javascript to the small navigation menu (only on the frontend of webtrees, "
 "without applying patch P002)."
 msgstr ""
 
-#: resources/views/settings.phtml:123
+#: resources/views/settings.phtml:167
+msgid "Site title links to tree"
+msgstr ""
+
+#. I18N: Settings - section title
+#: resources/views/settings.phtml:186
+msgid "More options"
+msgstr ""
+
+#. I18N: Settings - section title
+#: resources/views/settings.phtml:187 LinkEnhancerModule.php:498
+msgid "Webtrees Manual"
+msgstr ""
+
+#: resources/views/settings.phtml:193
 msgid "Precede the help link with an icon"
 msgstr ""
 
-#: resources/views/settings.phtml:141
+#: resources/views/settings.phtml:211
 msgid "Data table"
 msgstr ""
 
 #. I18N: WTHB Link table
-#: resources/views/settings.phtml:145
+#: resources/views/settings.phtml:215
 msgid ""
 "The context is established by assigning the routes used in webtrees to the "
 "corresponding sections in the manual."
 msgstr ""
 
 #. I18N: WTHB Link table
-#: resources/views/settings.phtml:147
+#: resources/views/settings.phtml:217
 msgid "The data is stored in the database table"
 msgstr ""
 
 #. I18N: WTHB Link table rows
-#: resources/views/settings.phtml:148
+#: resources/views/settings.phtml:218
 msgid "Data rows"
 msgstr ""
 
 #. I18N: WTHB Link table rows assigned/total
-#: resources/views/settings.phtml:148
+#: resources/views/settings.phtml:218
 #, php-format
 msgid "%s of %s assigned"
 msgstr ""
 
-#: resources/views/settings.phtml:150
+#: resources/views/settings.phtml:220
 msgid "CSV-Export"
 msgstr ""
 
-#: resources/views/settings.phtml:152
+#: resources/views/settings.phtml:222
 msgid "Import Routes"
 msgstr ""
 
-#: resources/views/settings.phtml:160
+#: resources/views/settings.phtml:230
 msgid "Link to GenWiki"
 msgstr ""
 
 #. I18N: WTHB Link
-#: resources/views/settings.phtml:165
+#: resources/views/settings.phtml:235
 msgid ""
 "This is the base link that is combined with the relative context links from "
 "the database table."
 msgstr ""
 
-#: resources/views/settings.phtml:171
+#: resources/views/settings.phtml:241
 msgid "Standard Link to Webtrees Manual"
 msgstr ""
 
 #. I18N: WTHB Link
-#: resources/views/settings.phtml:176
+#: resources/views/settings.phtml:246
 msgid "This fallback link is used, when no specific context link was defined."
 msgstr ""
 
-#: resources/views/settings.phtml:184
+#: resources/views/settings.phtml:254
 msgid "Output of debug information on the JS console"
 msgstr ""
 
 #. I18N: WTHB Debug
-#: resources/views/settings.phtml:197
+#: resources/views/settings.phtml:267
 msgid ""
 "With the information on the active route and, if applicable, data table "
 "entries found for matching routing to help topics, the context help can be "
 "more easily adjusted in case of discrepancies."
 msgstr ""
 
-#: resources/views/settings.phtml:214
-msgid "Activate enhanced links?"
-msgstr ""
-
-#. I18N: Enhanced Links code example 3 vesta module
-#: resources/views/settings.phtml:229
-msgid ""
-"e.g. also in cooperation with the name badge function of the “⚶ Vesta "
-"Classic Look & Feel” module"
-msgstr ""
-
-#: resources/views/settings.phtml:240
-msgid "JSON for additional link targets"
+#: resources/views/settings.phtml:280
+msgid "JavaScript for additional link targets"
 msgstr ""
 
 #. I18N: Enhanced Links js
-#: resources/views/settings.phtml:245
+#: resources/views/settings.phtml:285
 msgid ""
-"The JSON object overwrites and supplements the predefined settings, which "
-"are taken from the following code excerpt and can also serve as a reference "
-"point for adjustments."
+"The JavaScript object overwrites and supplements the predefined settings, "
+"which are taken from the following code excerpt and can also serve as a "
+"reference point for adjustments."
 msgstr ""
 
 #. I18N: Enhanced Links js
-#: resources/views/settings.phtml:247
+#: resources/views/settings.phtml:287
 msgid "Any CSS rules required are best added via the “CSS and JS” module."
 msgstr ""
 
 #. I18N: Enhanced Links js
-#: resources/views/settings.phtml:248
+#: resources/views/settings.phtml:288
 msgid ""
 "Only the definition of the icon as a background image is actually needed - "
 "referencing as data: URL."
-msgstr ""
-
-#: resources/views/settings.phtml:266
-msgid "Activate markdown image tweak?"
-msgstr ""
-
-#. I18N: MD img - sentence 1
-#: resources/views/settings.phtml:277
-msgid "Only works in notes that are formatted with Markdown."
 msgstr ""
 
 #. I18N: Module title
@@ -385,159 +390,174 @@ msgid ""
 "to the GenWiki Webtrees manual"
 msgstr ""
 
-#: LinkEnhancerModule.php:290 LinkEnhancerModule.php:675
+#: LinkEnhancerModule.php:290 LinkEnhancerModule.php:671
 msgid "Table for context help is missing - fallback to standard url"
 msgstr ""
 
-#: LinkEnhancerModule.php:652
+#: LinkEnhancerModule.php:648
 #, php-format
 msgid "Routes imported (Total: %s / skipped: %s)"
 msgstr ""
 
-#: LinkEnhancerModule.php:691
+#: LinkEnhancerModule.php:687
 msgid "No data available for export."
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:799 LinkEnhancerModule.php:850
-#: LinkEnhancerModule.php:851
+#: LinkEnhancerModule.php:795 LinkEnhancerModule.php:849
+#: LinkEnhancerModule.php:850
 msgid "bold"
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:800 LinkEnhancerModule.php:846
-#: LinkEnhancerModule.php:847
+#: LinkEnhancerModule.php:796 LinkEnhancerModule.php:845
+#: LinkEnhancerModule.php:846
 msgid "italic"
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:801 LinkEnhancerModule.php:858
-#: LinkEnhancerModule.php:859
+#: LinkEnhancerModule.php:797 LinkEnhancerModule.php:857
+#: LinkEnhancerModule.php:858
 msgid "format as code"
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:802 LinkEnhancerModule.php:854
-#: LinkEnhancerModule.php:855
+#: LinkEnhancerModule.php:798 LinkEnhancerModule.php:853
+#: LinkEnhancerModule.php:854
 msgid "Level 1 heading"
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:803 LinkEnhancerModule.php:862
-#: LinkEnhancerModule.php:863
+#: LinkEnhancerModule.php:799 LinkEnhancerModule.php:861
+#: LinkEnhancerModule.php:862
 msgid "Bulleted list"
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:804 LinkEnhancerModule.php:866
-#: LinkEnhancerModule.php:867
+#: LinkEnhancerModule.php:800 LinkEnhancerModule.php:865
+#: LinkEnhancerModule.php:866
 msgid "Numbered list"
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:805 LinkEnhancerModule.php:870
-#: LinkEnhancerModule.php:871
+#: LinkEnhancerModule.php:801 LinkEnhancerModule.php:869
+#: LinkEnhancerModule.php:870
 msgid "Insert link"
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:806 LinkEnhancerModule.php:874
-#: LinkEnhancerModule.php:875
+#: LinkEnhancerModule.php:802 LinkEnhancerModule.php:873
+#: LinkEnhancerModule.php:874
 msgid "Insert image"
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:807 LinkEnhancerModule.php:879
-#: LinkEnhancerModule.php:880
+#: LinkEnhancerModule.php:803 LinkEnhancerModule.php:878
+#: LinkEnhancerModule.php:879
 msgid "Horizontal rule"
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:808
+#: LinkEnhancerModule.php:804
 msgid "Undo"
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:809
+#: LinkEnhancerModule.php:805
 msgid "Redo"
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:811
+#: LinkEnhancerModule.php:807
 msgid "Link destination"
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:812 LinkEnhancerModule.php:883
+#: LinkEnhancerModule.php:808 LinkEnhancerModule.php:882
 msgid "Insert table"
 msgstr ""
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:813
+#: LinkEnhancerModule.php:809
 msgid ""
 "How many columns and rows should the table have (input: [number] [number])?"
 msgstr ""
 
 #. I18N: JS enhanced link
-#: LinkEnhancerModule.php:815
+#: LinkEnhancerModule.php:811
 msgid "cross reference"
 msgstr ""
 
 #. I18N: JS enhanced link, %s name of location
-#: LinkEnhancerModule.php:816
+#: LinkEnhancerModule.php:812
 #, php-format
 msgid "Online Local heritage book of %s at CompGen"
 msgstr ""
 
 #. I18N: JS enhanced link
-#: LinkEnhancerModule.php:817
+#: LinkEnhancerModule.php:813
 msgid "The Historic Geo Information System (GOV)"
 msgstr ""
 
 #. I18N: JS enhanced link
-#: LinkEnhancerModule.php:818
-msgid "Family Book of Dornbirn"
+#: LinkEnhancerModule.php:814
+msgid "wer-wir-waren.at"
 msgstr ""
 
 #. I18N: JS enhanced link
-#: LinkEnhancerModule.php:819
+#: LinkEnhancerModule.php:815
 msgid "Residents database - Family research in West Prussia"
 msgstr ""
 
 #. I18N: JS enhanced link
-#: LinkEnhancerModule.php:821
+#: LinkEnhancerModule.php:817
 msgid "Syntax error"
 msgstr ""
 
 #. I18N: JS enhanced link wt1 - %s=rectypes
-#: LinkEnhancerModule.php:822
+#: LinkEnhancerModule.php:818
 #, php-format
 msgid ""
 "standard link to note (available record types: %s) with XREF in active tree"
 msgstr ""
 
 #. I18N: JS enhanced link wt2
-#: LinkEnhancerModule.php:823
+#: LinkEnhancerModule.php:819
 msgid ""
 "link to record type individual with XREF from \"othertree\" and also link to"
 msgstr ""
 
 #. I18N: JS enhanced link osm1
-#: LinkEnhancerModule.php:824
+#: LinkEnhancerModule.php:820
 msgid "zoom/lat/lon for locating map"
 msgstr ""
 
 #. I18N: JS enhanced link osm2
-#: LinkEnhancerModule.php:825
+#: LinkEnhancerModule.php:821
 msgid "same as before with additional marker"
 msgstr ""
 
 #. I18N: JS enhanced link osm3
-#: LinkEnhancerModule.php:826
+#: LinkEnhancerModule.php:822
 msgid "show also node/way/relation, see also"
 msgstr ""
 
 #. I18N: JS enhanced link osm4
-#: LinkEnhancerModule.php:827
+#: LinkEnhancerModule.php:823
 msgid "show also node/way/relation - alternative notation"
+msgstr ""
+
+#. I18N: JS enhanced link ofb1
+#: LinkEnhancerModule.php:824
+msgid "link to Online Local heritage book at CompGen with given uid"
+msgstr ""
+
+#. I18N: JS enhanced link wp1
+#: LinkEnhancerModule.php:825
+msgid "open the article in the german wikipedia"
+msgstr ""
+
+#. I18N: JS enhanced link wp2
+#: LinkEnhancerModule.php:826
+msgid "open the english version of the article"
 msgstr ""
