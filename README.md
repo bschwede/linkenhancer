@@ -24,13 +24,15 @@ What you can expect from the module, illustrated with screenshots:
 
 This module wraps up some [examples mentioned in the German Webtrees Manual](https://wiki.genealogy.net/Webtrees_Handbuch/Entwicklungsumgebung#Beispiel_-_Querverweise_zu_Datens.C3.A4tzen) and improves the application of these improvements - each component can be activated individually.
 
-The main purpose of this module is to make **links to data records** stored in family trees more convenient. This avoids having to store fully qualified links, which impairs the portability of Gedcom data. By linking the notes to the GEDCOM data records (persons, families, sources, etc.) from the text, it is easier to replace the history module and thus also save this information in the GEDCOM file. The option of embedding the **images** already inserted in the family tree in the notes rounds off this approach. The link function is controlled via the [anchor part of the URI](https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Web_mechanics/What_is_a_URL), so it's no problem, if this module is not active - the url just point to the current webtrees page.
+The main purpose of this module is to make [**links to data records**](#enhancedlinks) stored in family trees more convenient. This avoids having to store fully qualified links, which impairs the portability of Gedcom data. By linking the notes to the GEDCOM data records (persons, families, sources, etc.) from the text, it is easier to replace the history module and thus also save this information in the GEDCOM file. The option of embedding the [**images**](#mdimg) already inserted in the family tree in the notes rounds off this approach. The link function is controlled via the [anchor part of the URI](https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Web_mechanics/What_is_a_URL), so it's no problem, if this module is not active - the url just point to the current webtrees page.
 
 Additionally there are some goodies more or less related with links:
-- A **context sensitive help link** to the [german webtrees manual](https://wiki.genealogy.net/Webtrees_Handbuch) can be activated in the small menu at the top of the page.
-- The **site title can be a link** to the tree homepage or the user my page.
-- The note textarea can be a **visual markdown editor** with **markdown help**.
 
+- The note textarea can be a [**visual markdown editor**](#mde) with **markdown help**.
+- A [**context sensitive help link**](#wthb) to the [german webtrees manual](https://wiki.genealogy.net/Webtrees_Handbuch) can be activated in the small menu at the top of the page.
+- The **site title can be a link** to the tree homepage or the user my page.
+
+<a name="enhancedlinks"></a>
 ### Enhanced links
 Although webtrees replaces [XREFs](https://wiki.genealogy.net/GEDCOM/XREF_ID) such as `@I2@` in notes with a **cross-reference** and it's appropriate display name, this is not so flexible. You can't determine the display name. Unfortunately, this does not work in the HTML block on the start page if you want to refer to a data record in the continuous text without inserting absolute references (such absolute references could be entered in the source code of the HTML block as follows, for example: `<a href="https://mytree.somewhere/tree/mytree/individual/I2">Jon Doe</a>`).
 
@@ -67,7 +69,7 @@ Included are the following **predefined external targets** (the parameter keys a
 The syntax of the external targets is listed by the markdown help function of this module. In most cases, only one key-value parameter pair needs to be specified, consisting of the short name of the desired target and the ID of the data record located there.
 
 
-**Additional external targets** can be configured by providing a custom JavaScript object on the admin page of this module. Here two example entries from predefined targets to illustrate the principle:
+**Additional external targets** can be configured by providing a custom JavaScript object on the admin page of this module. Here two example entries from [predefined targets](resources/js/linkenhancer.js) to illustrate the principle:
 ```javascript
 {
   "fsft": {
@@ -109,12 +111,12 @@ Now some **explanation** for the used properties in the code snippet above (as a
 * *url* = service url to be called
   standard: the parameter value / given record id (param-value) will be appended to the end of the url
   It can also be a function provided, that accepts as parameter (id, title) and returns an object `{ url, title }`. This returned title will be set instead of the name-property.
-* *cname* = CSS class name(s) whitespace separated
+- *cname* = [CSS](https://en.wikipedia.org/wiki/CSS) class name(s) whitespace separated
 * *help* = optional array of objects `[{n:'', e:''},..]` to illustrate the use of a non standard target (where the url-property is a function) by examples (in e), provided with explanatory text (in n). This information is listed in the markdown help.
 
 `I18N` is an JavaScript object passed through from this module. 
 
-Any [CSS](https://en.wikipedia.org/wiki/CSS) rules required are best added via the “CSS and JS” module. Only the definition of the icon as a background image is actually needed - referencing as data: URL (see also: [mdn web docs - data: URLs](https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Schemes/data)).
+Any CSS rules required are best added via the [“CSS and JS” module](https://wiki.genealogy.net/Webtrees_Handbuch/Anleitung_f%C3%BCr_Administratoren/Module#CSS_und_JS). Only the definition of the icon (size 30 x 30 pixels is sufficient) as a background image is actually needed - referencing as data: URL (see also: [mdn web docs - data: URLs](https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Schemes/data)).
 For example: `.icon-whatever { background-image: url(...) }`
 
 
@@ -135,6 +137,7 @@ On the subject of markdown see also:
 - GEDCOM-Standard: [NOTE.MIME and markdown #222](https://github.com/FamilySearch/GEDCOM/issues/222) - support in GEDCOM 7.1
 
 
+<a name="mdimg"></a>
 #### Markdown Image Support
 Images of gedcom media records reside behind the media firewall. Therefore, this function cannot be provided with JavaScript, but by extending the [MarkDownFactory class](https://github.com/fisharebest/webtrees/blob/main/app/Factories/MarkdownFactory.php).
 If restriction rules apply to the record, instead of the image, a message is displayed.
@@ -146,7 +149,7 @@ The images are packed into a div container together with an image subtitle - whi
 - `![alternate text for picture in public folder](#@public=webtrees.png "title")`
 - `![picture with defined height, width and additional css class](#@id=@M1@&h=200&w=200&cname=float-right)`
 
-
+<a name="mde"></a>
 #### Markdown editor
 You can also enable a visual **markdown editor** for note textareas. Under the hood the project “TinyMDE - A tiny, dependency-free embeddable HTML/JavaScript Markdown editor” is used - see also: <https://github.com/jefago/tiny-markdown-editor>
 
@@ -154,29 +157,46 @@ Besides syntax higlighting it ships with an icon bar for common format commands,
 
 Note: Unfortunately, the on-screen keyboard does NOT work as before with the previous text input field. The selected characters end up as an intermediate step in the small text field below the Markdown editor and then must be copied manually to the desired position.
 
-
+<a name="wthb"></a>
 ### German webtrees manual
 A context sensitive link to the [german webtrees manual](https://wiki.genealogy.net/Webtrees_Handbuch) can be added by javascript to the small navigation menu (if this function is also desired in the admin backend, patch P002 would need to be applied).
 
-The mapping of routes to help articles in the manual is stored in the database table `route_help_map`. This module comes with predefined mapping rules. Generic fallback rules are possible to be set and if nothing else applies, the link points to the startpage of the manual. It is possible to import routes registered in webtrees on demand on this module admin page. This make it easier to cover individual custom module configurations.<br>Standard webtrees routes are defined in [app/Http/Routes/WebRoutes.php](https://github.com/fisharebest/webtrees/blob/main/app/Http/Routes/WebRoutes.php).
+The mapping of routes to help articles in the manual is stored in the database table `route_help_map`. The table has the following headers (the headers required in a CSV file for import are marked with !!):
 
-Further more you can import and export data in csv format in order to make changes more convenient.
+* `id`: automatic key - not relevant, the data field is only used to make it easier to identify the data record during editing.
+* `path` **!!**: route path - corresponds to the path of webtres pretty urls
+* `handler` **!!**: usually corresponds to the php class name of the code that handles the request
+* `method` **!!**: web request method (GET, POST, HEAD)<br>Only GET routes are generally relevant for assignment to manual sections.
+* `extras` **!!**: php class name of access level (Fisharebest\Webtrees\Http\Middleware\Auth*)
+* `category`: string value for better grouping data rows; only value 'generic' has a special meaning
+* `order` **!!**: arbitrary numerical sort key, matching data rows are sorted in ascending order
+  standard value is 10
+* `url` **!!**: path of the url to the webtrees manual (then it's concated with the given GenWiki base/domain url); also fully qualified url to other web ressources are possible and supported (for example to Github repo readmes or wikis of custom modules, that aren't documented in the manual yet)
+* `updated_at`: timestamp of last update; this helps to identify possibly outdated data rows
 
-The table has the following headers (the headers required in a CSV file for import are marked with !):
+As we can see in [app/Http/Routes/WebRoutes.php](https://github.com/fisharebest/webtrees/blob/main/app/Http/Routes/WebRoutes.php), where standard webtrees routes are defined, for a route the following information is mandatory:
+1. `path`
+2. `handler`
+3. `method`
 
-* **id**: automatic key; not relevant
-* **path** !: route path - corresponds to the path of webtres pretty urls
-* **handler** !: usually corresponds to the php class name of the code that handles the request
-* **method** !: web request method (GET, POST, HEAD)<br>Only GET routes are generally relevant for assignment to manual sections.
-* **extras** !: php class name of access level (Fisharebest\Webtrees\Http\Middleware\Auth*)
-* **category**: string value for better grouping data rows; only value 'generic' has a special meaning
-* **order** !: arbitrary numerical sort key, matching data rows are sorted in ascending order; standard value is 10
-- **url** !: path of the url to the webtrees manual (then it's concated with the given GenWiki base/domain url); also fully qualified url to other web ressources are possible and supported (for example to Github repo readmes or wikis of custom modules, that aren't documented in the manual yet)
-- **updated_at**: timestamp of last update; this helps to identify possibly outdated data rows
+Optionally `extras` can be provided. If none of those four mentioned fields is set, the data row ist filtered by the [seeder](Schema/SeedHelpTable.php). On import `category` and `order` are set automatically if not set.
 
+In order to get a first class match with the current route those four fields have to match.
 
+Normally, it is only necessary to assign GET routes to an article. We also have a few redirect routes and ajax helper routes (which provide data for form controls) that can be ignored.
 
+A special case is the `path` which starts with `/module/{module}/{action}`. It is handled by the [ModuleAction class](https://github.com/fisharebest/webtrees/blob/main/app/Http/RequestHandlers/ModuleAction.php), that has a proxy function for custom module admin pages. For mapping such a route to a specific custom module help article the `handler` is set to the routes attribut value for module (e.g. `_vesta_classic_look_and_feel_`). For a more generic rule, `path` can also be empty.
 
+Fallback rules for access levels are matched by `category='generic'` and the specific Auth classname in `extras`.
+
+If nothing else applies, the link points to the startpage of the manual.
+
+On this module **admin page** it is possible to import routes registered in webtrees on demand. This make it easier to cover individual custom module configurations.
+Further more you can import and export data in csv format in order to make changes more convenient. You can see at a glance how many data rows are stored in the table and how many of them have an url assigned.
+
+This module comes with predefined mapping rules. If there is something missing or you find an issue, don't hesitate to share it. I'll include it in the next release.
+
+<a name="patches"></a>
 ### Patches
 **The patches can be applied additionally — the module also works without them!**
 
