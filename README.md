@@ -22,38 +22,47 @@ What you can expect from the module, illustrated with screenshots:
 <a name="description"></a>
 ## Description
 
-This module wraps up some [examples mentioned in the German Webtrees Manual](https://wiki.genealogy.net/Webtrees_Handbuch/Entwicklungsumgebung#Anpassungen_mit_dem_Modul_.22CSS_und_JS.22) and improves the application of these improvements - each component can be activated individually.
+This module wraps up some [examples mentioned in the German Webtrees Manual](https://wiki.genealogy.net/Webtrees_Handbuch/Entwicklungsumgebung#Beispiel_-_Querverweise_zu_Datens.C3.A4tzen) and improves the application of these improvements - each component can be activated individually.
 
-The main purpose of this module is to make **links to data records** stored in family trees more convenient. This avoids having to store fully qualified links, which impairs the portability of Gedcom data. By linking the notes to the GEDCOM data records (persons, families, sources, etc.) from the text, it is easier to replace the history module and thus also save this information in the GEDCOM file. The option of embedding the **images** already inserted in the family tree in the notes rounds off this approach. The link function is controlled via the [anchor part of the URI](https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Web_mechanics/What_is_a_URL).
+The main purpose of this module is to make **links to data records** stored in family trees more convenient. This avoids having to store fully qualified links, which impairs the portability of Gedcom data. By linking the notes to the GEDCOM data records (persons, families, sources, etc.) from the text, it is easier to replace the history module and thus also save this information in the GEDCOM file. The option of embedding the **images** already inserted in the family tree in the notes rounds off this approach. The link function is controlled via the [anchor part of the URI](https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Web_mechanics/What_is_a_URL), so it's no problem, if this module is not active - the url just point to the current webtrees page.
+
+Additionally there are some goodies more or less related with links:
+- A **context sensitive help link** to the [german webtrees manual](https://wiki.genealogy.net/Webtrees_Handbuch) can be activated in the small menu at the top of the page.
+- The **site title can be a link** to the tree homepage or the user my page.
+- The note textarea can be a **visual markdown editor** with **markdown help**.
 
 ### Enhanced links
-**Cross-references** are made with the XREF-ID by providing the GEDCOM record type and if necessary the tree name. It extends webtrees builtin feature, which adds record links with the standard display name by just typing `@XREF-ID@` in text or markdown.
+Although webtrees replaces [XREFs](https://wiki.genealogy.net/GEDCOM/XREF_ID) such as `@I2@` in notes with a **cross-reference** and it's appropriate display name, this is not so flexible. You can't determine the display name. Unfortunately, this does not work in the HTML block on the start page if you want to refer to a data record in the continuous text without inserting absolute references (such absolute references could be entered in the source code of the HTML block as follows, for example: `<a href="https://mytree.somewhere/tree/mytree/individual/I2">Jon Doe</a>`).
 
-If Webtrees provides better support for UID, referencing via UID will probably also be implemented in this module, as this will make links more fail-safe.
-See also:
-* Forum post [ Feature Request: Improved support for UID / _UID ](https://www.webtrees.net/index.php/forum/9-request-for-new-feature/39942-feature-request-improved-support-for-uid-uid)
-* PR [UID References in notes and text #5145](https://github.com/fisharebest/webtrees/pull/5145)
+The enhanced links function is implemented via Javascript and searches in the rendered output of webtrees for `<a>` tags whose href attribute values begin with `#@`. This way it is possible to handle links in markdown and html markup. Because it is processed in the browser on client side, the existence of the cross-referenced data records in webtrees is not checked in advance. Errors only occur when the link is clicked (e. g. if the access to the ressource is restricted).
 
-This function is implemented via Javascript and only affects links in notes (with markdown enabled) and HTML blocks on the client side. The existence of the linked data records is not checked in advance. Errors only occur when the link is clicked (e. g. if the access to the ressource is restricted).
-
-
-Different destinations can be addressed with one link, whereby the cross-reference is always the first link (if set) and the others are represented by attached clickable icons only. 
-Included are the following **predefined external targets**:
-- Wikipedia DE/EN
-- Family Search Family Tree
-- [GenWiki](https://wiki.genealogy.net/)
-- [GOV](https://gov.genealogy.net/?lang=en)
-- [Residents database - Family research in West Prussia](https://westpreussen.de/pages/forschungsergebnisse/einwohnerdatenbank/einwohner.php)
-- OpenStreetMap
+As a bonus different destinations can be addressed with one link definition, whereby the cross-reference is always the first link (if set) and the others are represented by attached clickable icons only. 
+Included are the following **predefined external targets** (the parameter keys are listed in parentheses):
+- Wikipedia *(wp)*
+- Family Search Family Tree *(fsft)*
+- [Residents database - Family research in West Prussia](https://westpreussen.de/pages/forschungsergebnisse/einwohnerdatenbank/einwohner.php) *(ewp)*
+- OpenStreetMap *(osm)*
+- [Wer-wir-waren.at](https://www.wer-wir-waren.at/) (*www*) - a service of the [Vorarlberger Landesmuseumsverein](https://vlmv.at/)
+- [CompGen](https://www.compgen.de/) services:
+  - [GenWiki](https://wiki.genealogy.net/) *(gw)*
+  - [Online Local heritage books](https://ofb.genealogy.net/?lang=en) *(ofb)*
+  - [The Historic Geo Information System](https://gov.genealogy.net/?lang=en) *(gov)*
 
 
 **Syntax:**
 
-* **Markdown**: In general, a link looks like this `[Link display title](#@param1&paramN` so that one or more targets can be addressed at once. For cross-references in webtrees, the parameter looks like this
-  * `wt=n@XREF@` - standard link to note (available record types: i=individual, f=family, s=source, r=repository, n=note, l=sharedPlace) with XREF in active tree
-  * `wt=i@XREF@othertree+dia` - link to record type individual with XREF from "othertree" and also link to Interactive tree of this person
-* **HTML**: The same applies to html links `<a href="#@wt=i@I1@">Link display title</a>`
-  e.g. also useable in cooperation with the name badge function of the [“⚶ Vesta Classic Look & Feel” module](https://github.com/vesta-webtrees-2-custom-modules/vesta_classic_laf) in the HTML snippet field: `<a href="#@fsft=<ref/>"></a>` for linking to a record in the Family Search Family Tree.
+* **Markdown**: In general, an enhanced link looks like this `[Link display title](#@param1&paramN)` so that one or more targets can be addressed at once. For cross-references in webtrees a record type and the XREF is expected, the parameter looks as follows
+  - `wt=n@XREF@` - standard link to note with XREF in the current tree
+    available record types:
+    - i=individual
+    - f=family
+    - s=source
+    - r=repository
+    - n=note
+    - l=sharedPlace
+  * `wt=i@XREF@othertree+dia` - link to record type individual with XREF from tree "othertree" and also link to Interactive tree of this person
+* **HTML**: The same applies to html links: `<a href="#@wt=i@I1@">Link display title</a>`
+  So this is also useable in cooperation with the name badge function of the [“⚶ Vesta Classic Look & Feel” module](https://github.com/vesta-webtrees-2-custom-modules/vesta_classic_laf) in the HTML snippet field: `<a href="#@fsft=<ref/>"></a>` for linking to a record in the Family Search Family Tree.
 
 The syntax of the external targets is listed by the markdown help function of this module. In most cases, only one key-value parameter pair needs to be specified, consisting of the short name of the desired target and the ID of the data record located there.
 
@@ -70,6 +79,10 @@ The syntax of the external targets is listed by the markdown help function of th
       name: 'OpenStreetMap',
       url: (id, title) => { 
           let parts = id.split('/');
+          if (parts.length < 3) {
+              title = title + ' - ' + I18N['syntax error'] + "!";
+              return { url: '', title };
+          }
           let map = parts.slice(0, 3).join('/');
           let urlsearch = '';
           if (parts.length > 3 && parts[3].trim()) {
@@ -88,23 +101,39 @@ The syntax of the external targets is listed by the markdown help function of th
   }
 }
 ```
-Explanation:
-* key = is the obove mentioned short name or query parameter key
-* name = title/label to be displayed as link title, placeholder $ID for inserting given id
-* url = service url to be called - standard: parameter value / given record id will be appended to the end of the url; It can also be a function(id, title) provided.
-* cname = CSS class name(s) whitespace separated
-* help = array of objects [{n:'', e:''},..] - optional parameter examples (in e) with explanation (in n)
 
+Now some **explanation** for the used properties in the code snippet above (as a reminder, how the syntax of a base enhanced link looks like: `#@param-key=param-value`):
+* *key* = is the above mentioned short name or query parameter key (param-key)
+* *name* = title or label to be displayed as link title;
+  standard: the placeholder `$ID` will be replaced by the given id (param-value)
+* *url* = service url to be called
+  standard: the parameter value / given record id (param-value) will be appended to the end of the url
+  It can also be a function provided, that accepts as parameter (id, title) and returns an object `{ url, title }`. This returned title will be set instead of the name-property.
+* *cname* = CSS class name(s) whitespace separated
+* *help* = optional array of objects `[{n:'', e:''},..]` to illustrate the use of a non standard target (where the url-property is a function) by examples (in e), provided with explanatory text (in n). This information is listed in the markdown help.
+
+`I18N` is an JavaScript object passed through from this module. 
 
 Any [CSS](https://en.wikipedia.org/wiki/CSS) rules required are best added via the “CSS and JS” module. Only the definition of the icon as a background image is actually needed - referencing as data: URL (see also: [mdn web docs - data: URLs](https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Schemes/data)).
 For example: `.icon-whatever { background-image: url(...) }`
 
 
+**Note:** If Webtrees provides better support for UID, referencing via UID will probably also be implemented in this module, as this will make links more fail-safe.
+See also:
+- Forum post [Feature Request: Improved support for UID / _UID](https://www.webtrees.net/index.php/forum/9-request-for-new-feature/39942-feature-request-improved-support-for-uid-uid)
+- PR [UID References in notes and text #5145](https://github.com/fisharebest/webtrees/pull/5145)
+
 ### Markdown
 Markdown is a simple system of formatting, used on websites such as Wikipedia or Github. It uses unobtrusive punctuation characters to create headings and sub-headings, bold and italic text, lists, tables, etc.
 
-In webtrees it is optionally supported in note records.
-On the subject of markdown see also: [Github webtrees Issues](https://github.com/fisharebest/webtrees/issues?q=is%3Aissue%20markdown)
+Webtrees uses a CommonMark implementation and supports a subset of the markup. It is optionally supported in note records on a per tree basis.
+
+On the subject of markdown see also:
+
+- <https://commonmark.thephpleague.com/>
+- [Github webtrees Issues](https://github.com/fisharebest/webtrees/issues?q=is%3Aissue%20markdown)
+- GEDCOM-Standard: [NOTE.MIME and markdown #222](https://github.com/FamilySearch/GEDCOM/issues/222) - support in GEDCOM 7.1
+
 
 #### Markdown Image Support
 Images of gedcom media records reside behind the media firewall. Therefore, this function cannot be provided with JavaScript, but by extending the [MarkDownFactory class](https://github.com/fisharebest/webtrees/blob/main/app/Factories/MarkdownFactory.php).
