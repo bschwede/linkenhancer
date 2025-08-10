@@ -1,7 +1,25 @@
 <?php
 
-/**
- * 
+/*
+ * webtrees - linkenhancer (custom module)
+ *
+ * Copyright (C) 2025 Bernd Schwendinger
+ *
+ * webtrees: online genealogy application
+ * Copyright (C) 2025 webtrees development team.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -34,20 +52,6 @@ use Fisharebest\Webtrees\Session;
 use Exception;
 use PDOException;
 
-/**
- * Class LinkEnhancerModule
- *
- * support short-links in html block and markdown text
- * - cross references (wt=i@I100@othertree+dia)
- * - self defined keys (osm, wpde...) for calling external websites with id
- * 
- * home link for tree title in site head
- * 
- * Integration of https://github.com/jefago/tiny-markdown-editor
- * for visual editing of markdown fields (notes)
- *
- * 
- */
 class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface, ModuleGlobalInterface, ModuleConfigInterface {
 
 
