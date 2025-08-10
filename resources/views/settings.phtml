@@ -29,6 +29,8 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
     <?= /*I18N: Settings - prologue sentence 3 */ I18N::translate('By linking the notes to the GEDCOM data records (persons, families, sources, etc.) from the text, it is easier to replace the history module and thus also save this information in the GEDCOM file.') ?>
     <?= /*I18N: Settings - prologue sentence 4 */ I18N::translate('The option of embedding the images already inserted in the family tree in the notes rounds off this approach.') ?>
     <?= /*I18N: Settings - prologue sentence 5 */ I18N::translate('The link function is controlled via the anchor part of the URI.') ?>
+    <br>
+    <?= I18N::translate('See also') ?>: <a target="_blank" href="<?= LinkEnhancerModule::CUSTOM_WEBSITE ?>">GitHub README</a>
 </p>
 
 <div class="linkenhancer mb-5">
@@ -150,7 +152,12 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
                 </div>
             </fieldset>
         </div>
-        
+
+        <button type="submit" class="btn btn-primary">
+            <?= view('icons/save') ?>
+            <?= /*I18N: webtrees.pot */ I18N::translate('save') ?>
+        </button>
+
         <hr/>
         <h3><?= /*I18N: Settings - section title */ I18N::translate('More options') ?></h3>
 
