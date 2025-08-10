@@ -30,7 +30,7 @@ Additionally there are some goodies more or less related with links:
 
 - The note textarea can be a [**visual markdown editor**](#mde) with **markdown help**.
 - A [**context sensitive help link**](#wthb) to the [german webtrees manual](https://wiki.genealogy.net/Webtrees_Handbuch) can be activated in the small menu at the top of the page.
-- The **site title can be a link** to the tree homepage or the user my page.
+- The [**site title can be a link**](#homelink) to the tree homepage or the user my page.
 - A few minor **patches**, that can applied by bash script (not necessary for this module).
 
 <a name="enhancedlinks"></a>
@@ -200,6 +200,21 @@ On this module **admin page** it is possible to import routes registered in webt
 Further more you can import and export data in csv format in order to make changes more convenient. You can see at a glance how many data rows are stored in the table and how many of them have an url assigned.
 
 This module comes with predefined mapping rules. If there is something missing or you find an issue, don't hesitate to share it. I'll include it in the next release.
+
+
+<a name="homelink"></a>
+### Home link
+Dynamic CSS styles can be applied to match the current theme, ensuring that the display contrasts well. Of course it is not limited to the home link use case.
+
+On this module admin page you can configure a JavaScript object to achieve this: 
+```javascript
+{ 
+  "*": ".homelink { color: #039; }",
+  "colors_nocturnal": ".homelink { color: antiquewhite; }"
+}
+```
+The key name is set to the theme name, and the value contains one ore more css style rules. Theme *colors* is a special case, where we also have palettes. In order to address this combination the key is set to `theme name_palette name`. Just activate the option "Output of debug information on the JS console" in order to figure out the correct values.
+
 
 <a name="patches"></a>
 ### Patches
