@@ -14,7 +14,7 @@ What you can expect from the module, illustrated with screenshots:
 | Screenshots | Screenshots |
 | :---: | :---: |
 | [![note with links](resources/img/screenshot_note-with-links-and-img_200.png)](resources/img/screenshot_note-with-links-and-img.png) | [![site title as link](resources/img/screenshot_sitetitle-as-link_200.png)](resources/img/screenshot_sitetitle-as-link.png)<br><br>[![small menu with help link](resources/img/screenshot_small-menu-wthb-link_200.png)](resources/img/screenshot_small-menu-wthb-link.png) |
-| note with links and image | site title as link / small menu with help link |
+| note with enhanced links and<br>image from media record | site title as home link<br>small menu with help link |
 | [![Markdown editor](resources/img/screenshot_tinymde-sharednote_200.png)](resources/img/screenshot_tinymde-sharednote.png) | [![Markdown Help](resources/img/screenshot_markdown-help_200.png)](resources/img/screenshot_markdown-help.png) |
 | markdown editor | markdown help |
 
@@ -22,7 +22,7 @@ What you can expect from the module, illustrated with screenshots:
 <a name="description"></a>
 ## Description
 
-This module wraps up some [examples mentioned in the German Webtrees Manual](https://wiki.genealogy.net/Webtrees_Handbuch/Entwicklungsumgebung#Beispiel_-_Querverweise_zu_Datens.C3.A4tzen) and improves the application of these improvements - each component can be activated individually.
+This module wraps up some [examples mentioned in the German Webtrees Manual](https://wiki.genealogy.net/Webtrees_Handbuch/Entwicklungsumgebung#Beispiel_-_Querverweise_zu_Datens.C3.A4tzen) and improves the application of these features - each component can be activated individually.
 
 The main purpose of this module is to make [**links to data records**](#enhancedlinks) stored in family trees more convenient. This avoids having to store fully qualified links, which impairs the portability of Gedcom data. By linking the notes to the GEDCOM data records (persons, families, sources, etc.) from the text, it is easier to replace the history module and thus also save this information in the GEDCOM file. The option of embedding the [**images**](#mdimg) already inserted in the family tree in the notes rounds off this approach. The link function is controlled via the [anchor part of the URI](https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Web_mechanics/What_is_a_URL), so it's no problem, if this module is not active - the url just point to the current webtrees page.
 
@@ -31,6 +31,7 @@ Additionally there are some goodies more or less related with links:
 - The note textarea can be a [**visual markdown editor**](#mde) with **markdown help**.
 - A [**context sensitive help link**](#wthb) to the [german webtrees manual](https://wiki.genealogy.net/Webtrees_Handbuch) can be activated in the small menu at the top of the page.
 - The **site title can be a link** to the tree homepage or the user my page.
+- A few minor **patches**, that can applied by bash script (not necessary for this module).
 
 <a name="enhancedlinks"></a>
 ### Enhanced links
@@ -67,6 +68,9 @@ Included are the following **predefined external targets** (the parameter keys a
   So this is also useable in cooperation with the name badge function of the [“⚶ Vesta Classic Look & Feel” module](https://github.com/vesta-webtrees-2-custom-modules/vesta_classic_laf) in the HTML snippet field: `<a href="#@fsft=<ref/>"></a>` for linking to a record in the Family Search Family Tree.
 
 The syntax of the external targets is listed by the markdown help function of this module. In most cases, only one key-value parameter pair needs to be specified, consisting of the short name of the desired target and the ID of the data record located there.
+
+After a lot of theory: How does it look like in webtrees?! In the upper part of the image we can see the edit mode of a note record, below how it ist rendered in view mode:
+![Note with enhanced links - edit and view](resources/img/screenshot_note-enh-links-edit-and-view.png)
 
 
 **Additional external targets** can be configured by providing a custom JavaScript object on the admin page of this module. Here two example entries from [predefined targets](resources/js/linkenhancer.js) to illustrate the principle:
@@ -142,12 +146,13 @@ On the subject of markdown see also:
 Images of gedcom media records reside behind the media firewall. Therefore, this function cannot be provided with JavaScript, but by extending the [MarkDownFactory class](https://github.com/fisharebest/webtrees/blob/main/app/Factories/MarkdownFactory.php).
 If restriction rules apply to the record, instead of the image, a message is displayed.
 
-The images are packed into a div container together with an image subtitle - which is also a link to the media data set for GEDCOM objects. The display can be customized as required using the standard CSS classes or per image additional CSS classes (e.g. `float-start` or `float-end` from webtrees vendor.css).
-
 **Syntax:**
 - `![alternate text for gedcom object](#@id=@M1@)`
 - `![alternate text for picture in public folder](#@public=webtrees.png "title")`
 - `![picture with defined height, width and additional css class](#@id=@M1@&h=200&w=200&cname=float-right)`
+
+Technically the images are packed into a div container together with an image subtitle - which is also a link to the media data set for GEDCOM objects. The display can be customized as required using the standard CSS classes or per image additional CSS classes (e.g. `float-start` or `float-end` from webtrees vendor.css).
+
 
 <a name="mde"></a>
 #### Markdown editor
