@@ -8,6 +8,10 @@ use Fisharebest\Webtrees\Schema\MigrationInterface;
 
 /**
  * Upgrade the database schema from version 0 (empty database) to version 1.
+ * 
+ * Known issue: with MySQL an exception is thrown - "PDO error - There is no active transaction"
+ * it happens only once, if the table needs to be created. This operation finishs successfully.
+ * see also: "[PHP8] PdoException with Transactions and MySQL implicit commits #3856" https://github.com/fisharebest/webtrees/issues/3856
  */
 class Migration0 implements MigrationInterface
 {
