@@ -176,8 +176,10 @@ The mapping of routes to help articles in the manual is stored in the database t
 * `category`: string value for better grouping data rows; only value 'generic' has a special meaning
 * `order` **!!**: arbitrary numerical sort key, matching data rows are sorted in ascending order
   standard value is 10
-* `url` **!!**: path of the url to the webtrees manual (then it's concated with the given GenWiki base/domain url); also fully qualified url to other web ressources are possible and supported (for example to Github repo readmes or wikis of custom modules, that aren't documented in the manual yet)
-* `updated_at`: timestamp of last update; this helps to identify possibly outdated data rows
+* `url` **!!**: path of the url to the webtrees manual (then it's concated with the given GenWiki base/domain url)
+  also fully qualified url to other web ressources are possible and supported (for example to Github repo readmes or wikis of custom modules, that aren't documented in the manual yet)
+* `updated_at`: timestamp of last update
+  this helps to identify possibly outdated data rows
 
 As we can see in [app/Http/Routes/WebRoutes.php](https://github.com/fisharebest/webtrees/blob/main/app/Http/Routes/WebRoutes.php), where standard webtrees routes are defined, for a route the following information is mandatory:
 1. `path`
@@ -199,6 +201,8 @@ If nothing else applies, the link points to the startpage of the manual.
 On this module **admin page** it is possible to import routes registered in webtrees on demand. This make it easier to cover individual custom module configurations.
 Further more you can import and export data in csv format in order to make changes more convenient. You can see at a glance how many data rows are stored in the table and how many of them have an url assigned.
 
+In case of discrepancies the context help can be more easily adjusted by activating the option "Output of debug information on the JS console". This provides you with information on the active route and, if applicable, data table entries found for matching routing to help topics.
+
 This module comes with predefined mapping rules. If there is something missing or you find an issue, don't hesitate to share it. I'll include it in the next release.
 
 
@@ -213,7 +217,10 @@ On this module admin page you can configure a JavaScript object to achieve this:
   "colors_nocturnal": ".homelink { color: antiquewhite; }"
 }
 ```
-The key name is set to the theme name, and the value contains one ore more css style rules. Theme *colors* is a special case, where we also have palettes. In order to address this combination the key is set to `theme name_palette name`. Just activate the option "Output of debug information on the JS console" in order to figure out the correct values.
+**Explanation:** The object key name is set to the theme name to be matched, and the value contains one or more css style rules. In this example we have a fallback rule with key `*` that matches all themes unless there is a specific key.
+Theme *colors* is a special case, where we also have palettes. In order to address this combination the key is set to `theme name_palette name`. The Key *colors* matches to all subthemes.
+
+Just activate the option "Output of debug information on the JS console" in order to figure out the correct values.
 
 
 <a name="patches"></a>
