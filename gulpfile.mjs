@@ -92,7 +92,8 @@ const jsMde = () => jsPipe("./resources/js/tiny-mde-wt.js", 'mde');
 const jsMdeLe = () => jsPipe("./resources/js/index-le-mde.js", 'le-mde');
 const jsLe = () => jsPipe("./resources/js/linkenhancer.js", 'le');
 const jsWTHBLink = () => jsPipe("./resources/js/wthb-link.js", 'wthb-link', 'cjs');
-const jscripts = gulp.series(jsMde, jsMdeLe, jsLe, jsExtractLeConfig, jsWTHBLink);
+const jsHomeLink = () => jsPipe("./resources/js/home-link.js", 'home-link', 'cjs');
+const jscripts = gulp.series(jsMde, jsMdeLe, jsLe, jsExtractLeConfig, jsWTHBLink, jsHomeLink);
 
 //--- CSS
 const cssPipe = (inputFile, outputInfix) => 

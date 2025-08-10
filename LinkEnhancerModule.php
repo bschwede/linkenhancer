@@ -30,6 +30,7 @@ use Illuminate\Database\Capsule\Manager as DB;
 use Fisharebest\Webtrees\Schema\MigrationInterface;
 use Fisharebest\Webtrees\Html;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Schema\SeedHelpTable;
+use Fisharebest\Webtrees\Session;
 use Exception;
 use PDOException;
 
@@ -68,10 +69,11 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
 
     public const PREF_HOME_LINK_TYPE = 'HOME_LINK_TYPE'; // home link type: 0=off, 1=tree, 2=my-page
+    public const PREF_HOME_LINK_JS = 'HOME_LINK_JS'; // string; javascript object { '*': stylerules-string, 'theme': stylerules-string}
     public const PREF_WTHB_ACTIVE = 'WTHB_LINK_ACTIVE'; // link to GenWiki "Webtrees Handbuch"
     public const PREF_WTHB_FAICON = 'WTHB_FAICON'; // prepend fa icon to help link
     public const PREF_WTHB_STD_LINK = 'WTHB_STD_LINK'; // standard link to GenWiki "Webtrees Handbuch"
-    public const PREF_WTHB_DEBUG = 'WTHB_DEBUG'; // console.debug with active route info; 0=off, 1=on
+    public const PREF_JS_DEBUG_CONSOLE = 'JS_DEBUG_CONSOLE'; // console.debug with active route info; 0=off, 1=on
     public const PREF_GENWIKI_LINK = 'GENWIKI_LINK'; // base link to GenWiki
     public const PREF_MDE_ACTIVE = 'MDE_ACTIVE'; // enable markdown editor for note textareas
     public const PREF_LINKSPP_ACTIVE = 'LINKSPP_ACTIVE'; // enable links++
@@ -80,7 +82,8 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public const PREF_MD_IMG_ACTIVE = 'MD_IMG_ACTIVE'; // enable enhanced markdown img syntax
     public const PREF_MD_IMG_STDCLASS = 'MD_IMG_STDCLASS'; // standard classname(s) for div wrapping img- and link-tag    
     public const PREF_MD_IMG_TITLE_STDCLASS = 'MD_IMG_TITLE_STDCLASS'; // standard classname(s) for picture subtitle
-    
+
+    public const STDCLASS_HOME_LINK = 'homelink';
     public const STDCLASS_MD_IMG = 'md-img';
     public const STDCLASS_MD_IMG_TITLE = 'md-img-title';
     public const STDLINK_GENWIKI = 'https://wiki.genealogy.net/';
@@ -90,9 +93,10 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
     protected const DEFAULT_PREFERENCES = [
         self::PREF_HOME_LINK_TYPE        => '1', //int triple-state, 0=off, 1=tree, 2=my-page
+        self::PREF_HOME_LINK_JS          => '{ "*": ".homelink { color: #039; }" }', // string; javascript object { '*': stylerules-string, 'theme': stylerules-string}
         self::PREF_WTHB_ACTIVE           => '1', //bool
         self::PREF_WTHB_FAICON           => '1', //bool
-        self::PREF_WTHB_DEBUG            => '0', //bool
+        self::PREF_JS_DEBUG_CONSOLE            => '0', //bool
         self::PREF_WTHB_STD_LINK         => self::STDLINK_WTHB, //string
         self::PREF_GENWIKI_LINK          => self::STDLINK_GENWIKI, //string
         self::PREF_MDE_ACTIVE            => '1', //bool
@@ -446,7 +450,25 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         return $initJs ? "<script>document.addEventListener('DOMContentLoaded', function(event) { " . $initJs . "});</script>" : '';
     }
 
-
+    /**
+     * Wrapper for iife javascript statements, the innerJs is embedded in try-catch with eval in order to intercept also SyntaxErrors
+     * caused by user configuration. So there is no impact to other components.
+     * 
+     * @param string $innerJs            javascript code to be wrapped in iife
+     * @param string $iife_paramnames    parameter definition for iife
+     * @param string $iife_paramvalues   values that are passed in to the innerJs
+     * @param string $errorhint          additional error message, e.g. component name
+     * @return string
+     */
+    public function getIifeJavascript(string $innerJs, string $iife_paramnames = '', string $iife_paramvalues = '', string $errorhint = ''): string
+    {
+        if (!$innerJs) return '';
+        
+        $iife = "(({$iife_paramnames}) => {" . $innerJs . "})({$iife_paramvalues})";       
+        $iife = json_encode($iife);
+        $errorhint = json_encode($errorhint);
+        return "<script>try{eval({$iife});} catch (e){console.error('LE-Mod Error: check parameter', {$errorhint}, e);}</script>";
+    }    
 
     /**
      * Raw content, to be added at the end of the <head> element.
@@ -459,7 +481,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         $cfg_home_type = intval($this->getPref(self::PREF_HOME_LINK_TYPE)); // 0=off, 1=Home, 2=My-Page
         $cfg_home_active = boolval($cfg_home_type);
         $cfg_wthb_active = boolval($this->getPref(self::PREF_WTHB_ACTIVE));
-        $cfg_wthb_debug = boolval($this->getPref(self::PREF_WTHB_DEBUG));
+        $cfg_js_debug_console = boolval($this->getPref(self::PREF_JS_DEBUG_CONSOLE));
         $cfg_mde_active = boolval($this->getPref(self::PREF_MDE_ACTIVE));
         $cfg_link_active = boolval($this->getPref(self::PREF_LINKSPP_ACTIVE));
         $cfg_img_active = boolval($this->getPref(self::PREF_MD_IMG_ACTIVE));
@@ -475,8 +497,12 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         $includeRes = '';
         $initJs = ''; // init on document ready
 
+        $theme = Session::get('theme');
+        $palette = Session::get('palette', '');
+        
         $activeRouteInfo = $this->getActiveRoute($request);
-        if ($cfg_wthb_debug) {
+        if ($cfg_js_debug_console) {
+            $initJs .= "console.debug('LE-Mod theme:', '$theme'" . ($palette ? ", 'palette=$palette'" : '') . ");";
             $initJs .= "console.debug('LE-Mod active route:', " . json_encode($activeRouteInfo) .");";
         }
 
@@ -487,7 +513,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                 $cfg_wthb_faicon = boolval($this->getPref(self::PREF_WTHB_FAICON)) ? 'true' : 'false';
 
                 $help = $this->getContextHelp($activeRouteInfo);
-                if ($cfg_wthb_debug) {
+                if ($cfg_js_debug_console) {
                     $initJs .= "console.debug('LE-Mod help:', " . json_encode($help) . ");";
                 }
 
@@ -498,7 +524,12 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                 $help_title = str_starts_with($help_url, $wiki_url) ? I18N::translate('Webtrees Manual') : /*I18N: webtrees.pot */ I18N::translate('Help');
                 
                 $help_url_e = e($help_url);
-                $includeRes .= "<script>((help_title, help_url, faicon) => {" . file_get_contents($jsfile) . "})('{$help_title}', '{$help_url_e}', {$cfg_wthb_faicon})</script>";
+                $includeRes .= $this->getIifeJavascript(
+                    file_get_contents($jsfile),
+                    "help_title, help_url, faicon",
+                    "'{$help_title}', '{$help_url_e}', {$cfg_wthb_faicon}",
+                    "wthb-link"
+                );                
             } else {
                 // TODO error flash?
             }
@@ -531,7 +562,18 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         if ($cfg_home_active && $tree != null) {
             $params = [ 'tree' => $tree->name()];
             $url = $cfg_home_type == 1 ? route(TreePage::class, $params) : route(HomePage::class, $params);
-            $initJs .= '$(".wt-site-title").wrapInner(`<a href="' . e($url) . '"></a>`);';
+            $initJs .= '$(".wt-site-title").wrapInner(`<a class="' . self::STDCLASS_HOME_LINK .'" href="' . e($url) . '"></a>`);';
+
+            $cfg_home_link_js = $this->getPref(self::PREF_HOME_LINK_JS);
+            $jsfile = $this->resourcesFolder() . 'js/bundle-home-link.min.js';
+            if (file_exists($jsfile) ) {
+                $themejs = $theme . ($palette ? "_{$palette}" : '');
+                $includeRes .= $this->getIifeJavascript(file_get_contents($jsfile),
+                    "theme, config", 
+                    "'{$themejs}', {$cfg_home_link_js}",
+                    "home-link"
+                );
+            }
         }
         
         // --- Link++
@@ -747,11 +789,6 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             'module' => $this->name(),
             'action' => 'AdminImportRoutes'
         ]);
-
-        $response['links']['tinymde'] = $this->assetUrl('img/screenshot_tinymde-sharednote.png');
-        $response['links']['wthb'] = $this->assetUrl('img/screenshot_small-menu-wthb-link.png');
-        $response['links']['noterendered'] = $this->assetUrl('img/screenshot_note-with-links-and-img.png');
-
 
         $response['tablerows'] = $this->getHelpTableCount();
 
