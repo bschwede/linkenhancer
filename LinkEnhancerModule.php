@@ -590,15 +590,23 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             $initJs .= '$(".wt-site-title").wrapInner(`<a class="' . self::STDCLASS_HOME_LINK .'" href="' . e($url) . '"></a>`);';
 
             // TODO implement in php instead?!
-            $cfg_home_link_js = $this->getPref(self::PREF_HOME_LINK_JS);
-            $jsfile = $this->resourcesFolder() . 'js/bundle-home-link.min.js';
-            if (file_exists($jsfile) ) {
-                $themejs = $theme . ($palette ? "_{$palette}" : '');
-                $includeRes .= $this->getIifeJavascript(file_get_contents($jsfile),
-                    "theme, config", 
-                    "'{$themejs}', {$cfg_home_link_js}",
-                    "home-link"
-                );
+            $cfg_home_link_json = trim($this->getPref(self::PREF_HOME_LINK_JS));
+            if ($cfg_home_link_json) {
+                $theme_palette = $theme . ($palette ? "_{$palette}" : '');
+                $json = json_decode($cfg_home_link_json, true);
+                if ($json) {
+                    $stylerules = $json[$theme_palette] ?? $json[$theme] ?? $json['*'] ?? null;
+                    if ($stylerules) {
+                        $includeRes .= "<style>{$stylerules}</style>";
+                    } elseif ($cfg_js_debug_console) {
+                        $initJs .= "console.debug('LE-Mod home link: JSON contains no matching style rule for current theme');";
+                    }
+                } else {
+                    FlashMessages::addMessage(
+                        I18N::translate('Home link - JSON with CSS rules seems to be invalid.'),
+                        'warning'
+                    );
+                }
             }
         }
         
