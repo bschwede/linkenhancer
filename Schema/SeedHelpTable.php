@@ -76,12 +76,12 @@ class SeedHelpTable //implements SeedInterface
 
 
         if ($this->truncate) {
-            //DB::table('route_help_map')->truncate(); // => error trace with PHP Version 8.3.20
+            //DB::table('route_help_map')->truncate(); // => error trace with PHP Version 8.3.20 and mysql
             // There is no active transaction …/vendor/illuminate/database/Concerns/ManagesTransactions.php:51
             // #0 …/vendor/illuminate/database/Concerns/ManagesTransactions.php(51): PDO->commit()
             // #1 …/app/Http/Middleware/UseTransaction.php(44): Illuminate\Database\Connection->transaction()
             // #2 …/vendor/oscarotero/middleland/src/Dispatcher.php(136): Fisharebest\Webtrees\Http\Middleware\UseTransaction->process()            
-            //DB::table($table)->delete();
+            DB::table($table)->delete();
         }
 
 
