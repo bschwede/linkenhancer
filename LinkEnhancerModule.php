@@ -49,6 +49,9 @@ use Fisharebest\Webtrees\Schema\MigrationInterface;
 use Fisharebest\Webtrees\Html;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Schema\SeedHelpTable;
 use Fisharebest\Webtrees\Session;
+use Fisharebest\Webtrees\Services\TreeService;
+use Psr\Http\Message\StreamInterface;
+use Fisharebest\Webtrees\GedcomFilters\GedcomEncodingFilter;
 use Exception;
 use PDOException;
 
@@ -217,21 +220,41 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         return $data;
     }    
 
+    public function importDeliveredCsv() {
+        $csvfile = __DIR__ . DIRECTORY_SEPARATOR . 'Schema/SeedHelpTable.csv';
+        try {
+            $result = $this->importCsv2HelpTable($csvfile);
+            FlashMessages::addMessage(
+                I18N::translate('Routes imported (Total: %s / skipped: %s)', $result['total'], $result['skipped']),
+                'success'
+            );
+        } catch (Exception $ex) {
+            FlashMessages::addMessage(
+                $ex->getMessage(),
+                'danger'
+            );
+        }            
+    }
 
-    public function importCsv2HelpTable(string|StreamInterface $file, bool $truncate = true) {
+
+    public function importCsv2HelpTable(string|StreamInterface $file, string $separator = ';', bool $truncate = true, string $encoding = '')  {
         $result = [ 'total' => 0, 'skipped' => 0 ];
         $data = [];
         if (gettype($file) == 'string') {
             if (file_exists($file)) {
                 $stream = fopen($file, 'r');
-                $data = $this->loadCsvStream($stream);
+                $data = $this->loadCsvStream($stream, $separator);
                 fclose($stream);
             } else {
                 return $result;
             }
         } else {
-            // TODO - test
-            //$data = $this->loadCsvStream($file);
+            // similar to the implementation in:
+            // - app/Services/TreeService.php
+            // - resources/views/admin/trees-import.phtml
+            $stream = $file->detach();
+            stream_filter_append($stream, GedcomEncodingFilter::class, STREAM_FILTER_READ, ['src_encoding' => $encoding]);
+            $data = $this->loadCsvStream($stream,$separator);
         }
 
         $seeder = new SeedHelpTable($data, $truncate);
@@ -250,9 +273,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         $this->updateSchema('\Schwendinger\Webtrees\Module\LinkEnhancer\Schema', 'SCHEMA_VERSION', 1);
 
         if ((int) ($this->getHelpTableCount()['total'] ?? 0) === 0) {
-            $csvfile = __DIR__ . DIRECTORY_SEPARATOR . 'Schema/SeedHelpTable.csv';
-            $result = $this->importCsv2HelpTable($csvfile);
-            FlashMessages::addMessage('CSV-Import - ' . $result['total'], 'info');
+            $this->importDeliveredCsv();
         }
 
         // Register a namespace for our views.
@@ -568,6 +589,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             $url = $cfg_home_type == 1 ? route(TreePage::class, $params) : route(HomePage::class, $params);
             $initJs .= '$(".wt-site-title").wrapInner(`<a class="' . self::STDCLASS_HOME_LINK .'" href="' . e($url) . '"></a>`);';
 
+            // TODO implement in php instead?!
             $cfg_home_link_js = $this->getPref(self::PREF_HOME_LINK_JS);
             $jsfile = $this->resourcesFolder() . 'js/bundle-home-link.min.js';
             if (file_exists($jsfile) ) {
@@ -681,6 +703,18 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
 
     /**
+     * Reset routes to dilivered status / shipped CSV
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    public function getAdminResetRoutesAction(ServerRequestInterface $request): ResponseInterface
+    {
+        $this->importDeliveredCsv();
+        return redirect($this->getConfigLink());
+    }    
+
+    /**
      * Download context help mapping table as CSV
      *
      * @param ServerRequestInterface $request
@@ -703,6 +737,18 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         return redirect($this->getConfigLink());
     }
 
+    private function getSeparator(ServerRequestInterface $request) :string {
+        //$sepsallowed = [';', ',', '|', ':', '\\t'];
+        $separator = trim(Validator::parsedBody($request)->string('csv-separator'));
+        $separator = $separator == '\\t' ? "\t" : $separator;
+        if (strlen($separator) === 0) {
+            throw new Exception(I18N::translate('Separator is not set.'));
+        }
+        if (strlen($separator) > 1) {
+            throw new Exception(I18N::translate('For the separator is only a single character allowed.'));
+        }
+        return $separator;
+    }
 
     /**
      * Download context help mapping table as CSV
@@ -710,23 +756,20 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function getAdminCsvExportAction(ServerRequestInterface $request): ResponseInterface
+    public function postAdminCsvExportAction(ServerRequestInterface $request): ResponseInterface
     {
-        if (!DB::schema()->hasTable(self::HELP_TABLE)) {
-            FlashMessages::addMessage(
-                I18N::translate('Table for context help is missing - fallback to standard url'),
-                'info'
-            );
-            return redirect($this->getConfigLink());
-        }
-
         $filename = "wthb-route-mapping-export.csv";
         $headers = [
-            'Content-Type' => 'text/csv',
+            'Content-Type' => 'text/csv; charset=utf-8',
             'Content-Disposition' => 'attachment; filename="' . addcslashes($filename, '"') . '"',
         ];
 
         try {
+            $separator = $this->getSeparator($request);
+            if (!DB::schema()->hasTable(self::HELP_TABLE)) {
+                throw new Exception(I18N::translate('Table for context help is missing - nothing to do.'));
+            }
+
             $data = DB::table(self::HELP_TABLE)->get();
 
             if (count($data) == 0) {
@@ -736,13 +779,13 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             ob_start();
             $file = fopen('php://output', 'w');
             $columns = array_keys(get_object_vars($data->first()));
-            fputcsv($file, $columns, ";", "\"", "\\", "\n");
+            fputcsv($file, $columns, $separator, "\"", "\\", "\n");
             foreach ($data as $datarow) {
                 $row = [];
                 foreach ($columns as $column) {
                     $row[] = $datarow->$column;
                 }
-                fputcsv($file, $row, ";", "\"", "\\", "\n");
+                fputcsv($file, $row, $separator, "\"", "\\", "\n");
             }
             fclose($file);
             $csv = ob_get_clean();
@@ -751,12 +794,51 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
         } catch (Exception $ex) {
             FlashMessages::addMessage(
-                /*I18N: webtrees.pot */I18N::translate('The file %s could not be created.', Html::filename($filename)) . '<hr><samp dir="ltr">' . $ex->getMessage() . '</samp>',
+                /*I18N: webtrees.pot */I18N::translate('Export failed') . '<hr><samp dir="ltr">' . $ex->getMessage() . '</samp>',
                 'danger'
             );
             return redirect($this->getConfigLink());
         }
     }
+
+    public function postAdminCsvImportAction(ServerRequestInterface $request): ResponseInterface {
+        $encodings = ['' => ''] + Registry::encodingFactory()->list();
+        $encoding = Validator::parsedBody($request)->isInArrayKeys($encodings)->string('encoding');
+
+        try {
+            if (!DB::schema()->hasTable(self::HELP_TABLE)) {
+                throw new Exception(I18N::translate('Table for context help is missing - nothing to do.'));
+            }
+
+            $separator = $this->getSeparator($request);
+
+            $truncate = Validator::parsedBody($request)->boolean('table-truncate', false);
+
+            $csv_file = $request->getUploadedFiles()['csv-file'] ?? null;
+            if ($csv_file === null || $csv_file->getError() === UPLOAD_ERR_NO_FILE) {
+                throw new Exception(I18N::translate('No CSV file was received.'));
+            }
+            if ($csv_file->getError() !== UPLOAD_ERR_OK) {
+                throw new FileUploadException($csv_file);
+            }
+            //app/Services/TreeService.php
+            $stream = $csv_file->getStream();
+            //$stream = $stream->detach();
+
+            $result = $this->importCsv2HelpTable($stream, $separator, $truncate, $encoding);
+            FlashMessages::addMessage(
+                I18N::translate('Routes imported (Total: %s / skipped: %s)', $result['total'], $result['skipped']),
+                'success'
+            );
+        } catch (Exception $ex) {
+            FlashMessages::addMessage(
+                /*I18N: webtrees.pot */ I18N::translate('Import failed') . '<hr><samp dir="ltr">' . $ex->getMessage() . '</samp>',
+                'danger'
+            );
+        }
+        return redirect($this->getConfigLink());   
+    }
+
 
 
     /**
@@ -789,12 +871,43 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             'module' => $this->name(),
             'action' => 'AdminCsvExport'
         ]);
+        $response['links']['csvimport'] = route('module', [
+            'module' => $this->name(),
+            'action' => 'AdminCsvImport'
+        ]);        
         $response['links']['routeimport'] = route('module', [
             'module' => $this->name(),
             'action' => 'AdminImportRoutes'
         ]);
+        $response['links']['resetroutes'] = route('module', [
+            'module' => $this->name(),
+            'action' => 'AdminResetRoutes'
+        ]);
+        
 
         $response['tablerows'] = $this->getHelpTableCount();
+
+
+        $tree_service = Registry::container()->get(TreeService::class);
+
+        //FORMAT_TEXT = markdown
+        $trees = $tree_service->all();
+        $trees_w_md = [];
+        $trees_w_text = [];
+        foreach ($trees as $tree) {
+            if ($tree->getPreference('FORMAT_TEXT') === 'markdown') {
+                $trees_w_md[] = $tree->name();
+            } else {
+                $trees_w_text[] = $tree->name();
+            }
+        }
+        $cntTotal = count($trees);
+        $response['mdcfg'] = [
+            'total'        => $cntTotal,
+            'activated'    => count($trees_w_md),
+            'trees_w_md'   => $trees_w_md,
+            'trees_w_text' => $trees_w_text
+        ];
 
 
         return $response;

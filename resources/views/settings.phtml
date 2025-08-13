@@ -6,6 +6,8 @@ use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\DB;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
+use Fisharebest\Webtrees\Registry;
+use Fisharebest\Webtrees\View;
 
 /**
  * @var string                  $title                  title of this custom module
@@ -14,7 +16,14 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
  * @var string                  $jscode_linkpp          javascript code snippet from js-file, csv-export...
  * @var array<string>           $links                  links for: csvexport
  * @var array<int>              $tablerows              [total, assigned]
+ * @var array                   $mdcfg                  [int total, int activated, array<string> trees_wo_md]
  */
+
+$trees_w_md = join('</li><li>', $mdcfg['trees_w_md']);
+$trees_w_md = $trees_w_md ?  "<ol><li>{$trees_w_md}</li></ol>" : '';
+
+$trees_w_text = join('</li><li>', $mdcfg['trees_w_text']);
+$trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
 ?>
 
 <?= view('components/breadcrumbs', [
@@ -34,7 +43,7 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
 </p>
 
 <div class="linkenhancer mb-5">
-    <form method="post">
+    <form method="post" enctype="multipart/form-data" onsubmit="return checkForm();">
         <?= csrf_field() ?>
         <input type="hidden" name="save" id="save" value="1">
 
@@ -79,7 +88,17 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
                         <div class="form-text">
                             <p><?= /*I18N: MD img - sentence 1 */ I18N::translate('Only works in notes that are formatted with Markdown.') ?>
                             </p>
-                            <p><strong><?= /*I18N: MDE */ I18N::translate("Precondition: Tree preference '%s' need to be set to markdown.", /*I18N: webtrees.pot */ I18N::translate('Format text and notes')) ?></strong>
+                            <p style="color: gray;">[2] + [3] <strong><?= /*I18N: MDE */ I18N::translate("Precondition: Tree preference '%s' need to be set to markdown.", /*I18N: webtrees.pot */ I18N::translate('Format text and notes')) ?></strong>
+                            <table style="color: gray;">
+                              <thead><tr>
+                                <th style="background-color: lightgreen; min-width:150px; text-align: center;">markdown</th>
+                                <th style="background-color: rgba(236, 74, 34, 0.52); min-width:150px; text-align: center;">text</th>
+                              </tr></thead>
+                              <tbody><tr>
+                                <td><?= $trees_w_md ?></td>
+                                <td><?= $trees_w_text ?></td>
+                            </tr></tbody>
+                            </table>
                             </p>
                         </div>
                     </div>
@@ -100,7 +119,6 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
                             'selected' => (int) $prefs[$prefId]
                         ]) ?>
                         <div class="form-text">
-                        <p><strong><?= /*I18N: MDE */I18N::translate("Precondition: Tree preference '%s' need to be set to markdown.", /*I18N: webtrees.pot */I18N::translate('Format text and notes')) ?></strong></p>
                         </div>
                     </div>
                 </div>
@@ -251,9 +269,9 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
             </fieldset>
         
             <!-- -->
-            <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
+            <div class="col-sm-3 col-form-label wt-page-options-label">
                 <?= I18N::translate('Data table') ?>
-            </label>
+            </div>
             <div class="col-sm-9 wt-page-options-value">
                 <div class="form-text">
                     <p><?= /*I18N: WTHB Link table */ I18N::translate('The context is established by assigning the routes used in webtrees to the corresponding sections in the manual.') ?>
@@ -263,11 +281,56 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
                         <em>(<strong><?= /*I18N: WTHB Link table rows */ I18N::translate('Data rows') ?>:</strong>
                             <?= /*I18N: WTHB Link table rows assigned/total */ I18N::translate('%s of %s assigned', $tablerows['assigned'] ?? 0, $tablerows['total'] ?? 0) ?>)</em>
                     </p>
-                    <p><a class="btn btn-secondary"
+                </div>                    
+                <div class="row mt-1">
+                    <div class="col-5 d-flex align-items-center justify-content-start">
+                        <a class="btn btn-secondary"
                             href="<?= e($links['routeimport']) ?>"><?= I18N::translate('Import registered routes') ?></a>
-                    </p>
-                    <p><a class="btn btn-secondary" href="<?= e($links['csvexport']) ?>"><?= I18N::translate('CSV-Export') ?></a>
-                    </p>
+                    </div>
+                    <div class="col-2 d-flex align-items-center justify-content-start" title="<?= e(I18N::translate('truncate table before import routes or csv file')) ?>">
+                        <input type="checkbox" class="form-check-input me-1" name="table-truncate" id="table-truncate" value="1">
+                        <label class="form-check-label ms-1 mb-0" for="table-truncate"> <?= I18N::translate('Table truncate') ?></label>
+                    </div>
+                    <div class="col-5 d-flex align-items-center justify-content-end">
+                        <a class="btn btn-secondary"
+                            href="<?= e($links['resetroutes']) ?>"><?= I18N::translate('Reset routes to delivery status') ?></a>
+                    </div>
+
+                </div>
+                <div class="row mt-3 mb-1">
+                    <div class="col-5 d-flex align-items-center justify-content-start">
+                        <button type="submit" class="btn btn-secondary" formaction="<?= e($links['csvimport']) ?>">
+                            <?= I18N::translate('CSV-Import') ?>
+                        </button>
+                    </div>
+                    <div class="col-2 d-flex align-items-center justify-content-center">
+                        <label for="csv-separator" class="me-1 mb-0"> <?= I18N::translate('Separator') ?></label>
+                        <input class="form-control form-control-sm text-center" type="text" id="csv-separator" name="csv-separator" size="3" maxlength="3" value=";" required>
+                    </div>
+                    <div class="col-5 d-flex align-items-center justify-content-end">
+                        <button type="submit" class="btn btn-secondary" formaction="<?= e($links['csvexport']) ?>">
+                            <?= I18N::translate('CSV-Export') ?>
+                        </button>
+
+                    </div>
+                </div>
+                <div class="row mt-1 mb-1">
+                    <label for="csv-file" class="col-sm-3 mt-2">
+                        <?= I18N::translate('CSV import file') ?>
+                    </label>
+                
+                    <div class="col-sm-9">
+                        <input id="csv-file" type="file" name="csv-file" class="form-control">
+                    </div>
+                </div>
+                <div class="row mt-1 mb-3">
+                    <label for="encoding" class="col-sm-3 mt-2">
+                        <?= /*I18N: webtrees.pot */ I18N::translate('Character encoding') ?>
+                    </label>
+                    
+                    <div class="col-sm-9">
+                        <?= view('components/select', ['name' => 'encoding', 'selected' => '', 'options' => ['' => /*I18N: webtrees.pot */I18N::translate('automatic')] + Registry::encodingFactory()->list()]) ?>
+                    </div>
                 </div>
             </div>
         
@@ -325,3 +388,31 @@ use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
         </button>
     </form>
 </div>
+
+<?php View::push('javascript') ?>
+<script>
+    function checkForm(message) {
+        let jsonString = $('#<?= LinkEnhancerModule::PREF_HOME_LINK_JS; ?>').val().trim();
+        if (jsonString) {
+            try {
+                const obj = JSON.parse(jsonString); // Syntax-Validierung
+            } catch(e) {
+                alert('JSON nicht valide');
+                return false;
+            }
+        }
+
+        let jsString = $('#<?= LinkEnhancerModule::PREF_LINKSPP_JS; ?>').val().trim();
+        if (jsString) {
+            try {
+                eval(`() => { let a = ${jsString}}`);
+            } catch (e) { 
+                console.log(e);
+                // e.message and e.stack
+            }
+        }
+        
+        return true;
+    }
+</script>
+<?php View::endpush() ?>
