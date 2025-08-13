@@ -24,7 +24,7 @@ What you can expect from the module, illustrated with screenshots:
 
 This module wraps up some [examples mentioned in the German Webtrees Manual](https://wiki.genealogy.net/Webtrees_Handbuch/Entwicklungsumgebung#Beispiel_-_Querverweise_zu_Datens.C3.A4tzen) and improves the application of these features - each component can be activated individually.
 
-The main purpose of this module is to make [**links to data records**](#enhancedlinks) stored in family trees more convenient. This avoids having to store fully qualified links, which impairs the portability of Gedcom data. By linking the notes to the GEDCOM data records (persons, families, sources, etc.) from the text, it is easier to replace the history module and thus also save this information in the GEDCOM file. The option of embedding the [**images**](#mdimg) already inserted in the family tree in the notes rounds off this approach. The link function is controlled via the [anchor part of the URI](https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Web_mechanics/What_is_a_URL), so it's no problem, if this module is not active - the url just point to the current webtrees page.
+The main purpose of this module is to make [**links to data records**](#enhancedlinks) stored in family trees more convenient. This avoids having to store fully qualified links, which impairs the portability of Gedcom data. By linking the notes to the GEDCOM data records (persons, families, sources, etc.) from the text makes story telling much easier and thus also save this information in the GEDCOM file (maybe this is an alternative for the [stories module](https://wiki.genealogy.net/Webtrees_Handbuch/Anleitung_f%C3%BCr_Besucher#Geschichten)). The option of embedding the [**images**](#mdimg) already inserted in the family tree in the notes rounds off this approach. The link function is controlled via the [anchor part of the URI](https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Web_mechanics/What_is_a_URL), so it's no problem, if this module is not active - the url just point to the current webtrees page.
 
 Additionally there are some goodies more or less related with links:
 
@@ -210,14 +210,14 @@ This module comes with predefined mapping rules. If there is something missing o
 ### Home link
 Dynamic CSS styles can be applied to match the current theme, ensuring that the display contrasts well. Of course it is not limited to the home link use case.
 
-On this module admin page you can configure a JavaScript object to achieve this: 
+On this module admin page you can configure a [JSON](https://en.wikipedia.org/wiki/JSON) object to achieve this: 
 ```javascript
 { 
   "*": ".homelink { color: #039; }",
   "colors_nocturnal": ".homelink { color: antiquewhite; }"
 }
 ```
-**Explanation:** The object key name is set to the theme name to be matched, and the value contains one or more css style rules. In this example we have a fallback rule with key `*` that matches all themes unless there is a specific key.
+**Explanation:** The object key name is set to the theme name to be matched, and the string value contains one or more css style rules. In this example we have a fallback rule with key `*` that matches all themes unless there is a specific key.
 Theme *colors* is a special case, where we also have palettes. In order to address this combination the key is set to `theme name_palette name`. The Key *colors* matches to all subthemes.
 
 Just activate the option "Output of debug information on the JS console" in order to figure out the correct values.
