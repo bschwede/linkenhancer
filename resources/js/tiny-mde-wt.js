@@ -9,6 +9,14 @@ function getLinkSupportCfg() {
 
 let linkSupport = getLinkSupportCfg();
 
+
+//https://stackoverflow.com/questions/6838104/pure-javascript-method-to-wrap-content-in-a-div
+const wrap = (toWrap, wrapper) => {
+    wrapper = wrapper || document.createElement('div');
+    toWrap.parentNode.insertBefore(wrapper, toWrap);
+    return wrapper.appendChild(toWrap);
+};
+
 function setupDynamicLineNumbers(editorEl) {
     if (!editorEl) return;
 
@@ -141,6 +149,8 @@ function installMDE(cfg) {
         let edId = `md-${elem.id}`;
         let txtId = `txt-${elem.id}`;
         editor.e.id = edId;
+
+        wrap(editor.e); //#2
         //editor.e.classList.add('form-control');
 
         // Workaround - input help/OSK
