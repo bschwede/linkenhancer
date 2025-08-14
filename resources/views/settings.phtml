@@ -367,7 +367,7 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
         <div class="row">
             <!-- home link --><?php $prefId = LinkEnhancerModule::PREF_HOME_LINK_JS; ?>
             <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
-                <?= I18N::translate('JavaScript for home link styling') . ' (' . /*I18N: webtrees.pot */ I18N::translate('optional') . ')' ?>
+                <?= I18N::translate('JSON for home link styling') . ' (' . /*I18N: webtrees.pot */ I18N::translate('optional') . ')' ?>
             </label>
             <div class="col-sm-9 wt-page-options-value">
                 <textarea id="<?= $prefId ?>" name="<?= $prefId ?>" class="form-control font-monospace" dir="ltr"
@@ -392,27 +392,56 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
 <?php View::push('javascript') ?>
 <script>
     function checkForm(message) {
-        let jsonString = $('#<?= LinkEnhancerModule::PREF_HOME_LINK_JS; ?>').val().trim();
-        if (jsonString) {
-            try {
-                const obj = JSON.parse(jsonString); // Syntax-Validierung
-            } catch(e) {
-                alert('JSON nicht valide');
-                return false;
+        const showError = (elem, msg) => {
+            let errId = 'error-' + elem.attr('id');
+            let errElem = $(`#${errId}`);
+            console.log(errElem);
+            if (errElem.length == 1) {
+                $(errElem).text(msg);
+            } else {
+                $(elem).after(`<div id="${errId}" class="error">${msg}</div>`);
             }
+            console.log(msg);
         }
+        
+        let firstErrElem = null;
 
-        let jsString = $('#<?= LinkEnhancerModule::PREF_LINKSPP_JS; ?>').val().trim();
+        let linkspp = $('#<?= LinkEnhancerModule::PREF_LINKSPP_JS; ?>');
+        let jsString = linkspp.val().trim();
         if (jsString) {
             try {
                 eval(`() => { let a = ${jsString}}`);
             } catch (e) { 
-                console.log(e);
-                // e.message and e.stack
+                showError(linkspp, 'JavaScript nicht valide: ' + e.message);
+                firstErrElem ??= linkspp;
             }
         }
-        
+
+        let homelink = $('#<?= LinkEnhancerModule::PREF_HOME_LINK_JS; ?>');
+        let jsonString = homelink.val().trim();
+        if (jsonString) {
+            try {
+                const obj = JSON.parse(jsonString); // Syntax-Validierung
+            } catch (e) {
+                showError(homelink, 'JSON nicht valide');
+                firstErrElem ??= homelink;
+            }
+        }
+
+        if (firstErrElem) {
+            $(firstErrElem).get(0).scrollIntoView({behavior: 'smooth'});
+            return false;
+        }
         return true;
     }
 </script>
+<?php View::endpush() ?>
+
+<?php View::push('styles') ?>
+<style>
+.error {
+    color: #d00;
+    font-weight: bold;
+}
+</style>
 <?php View::endpush() ?>
