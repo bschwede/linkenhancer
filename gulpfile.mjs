@@ -8,6 +8,8 @@ import size from "gulp-size";
 import postcss from "gulp-postcss";
 import concat from 'gulp-concat';
 import terser from "gulp-terser";
+import file from "gulp-file";
+import { hashFileSync } from 'hasha';
 import source from "vinyl-source-stream";
 import buffer from "vinyl-buffer";
 import log from 'fancy-log';
@@ -20,6 +22,8 @@ import commonjs from "@rollup/plugin-commonjs";
 import autoprefixer from "autoprefixer";
 import cssnano from "cssnano";
 import postcssUrl from 'postcss-url';
+
+import path from "path";
 
 import { deleteAsync as del } from "del";
 
@@ -164,6 +168,15 @@ const createmo = () => {
 };
 
 //--- Utils
+const hashFile = async (filepath) => {
+    const hashValue = hashFileSync(filepath, { algorithm: 'sha256' });
+    const destpath = path.dirname(filepath);
+    const hashfile = path.basename(filepath) + '.hash';
+    
+    return file(hashfile, hashValue)
+        .pipe(gulp.dest(destpath));
+}
+
 const fileExists = async path => !!(await fs.stat(path).catch(e => false));
 
 const execPromise = (command) => {
@@ -217,8 +230,9 @@ const createarchive = () => {
 
 
 const clean = () => del(["./resources/js/bundle*", "./resources/css/bundle*"]);
+const hashCsv = () => hashFile('./Schema/SeedHelpTable.csv');
 
-const build = gulp.series(clean, jscripts, css);
+const build = gulp.series(clean, jscripts, css, hashCsv);
 const bumpversion = gulp.series(gitCheckClean, bumpVersion, syncVersion);
 
 const archive = gulp.series(build, createmo, createarchive);

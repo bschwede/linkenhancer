@@ -3,3 +3,4 @@ resources/js/bundle-*
 resources/css/bundle-*
 resources/lang/*.mo
 dist/*
+*.hash
