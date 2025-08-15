@@ -142,7 +142,7 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
                         ]) ?>
                         <div class="form-text">
                             <p>
-                                <?= /*I18N: */ I18N::translate("A context-sensitive link to the German Webtrees Manual can be added by javascript to the small navigation menu (only on the frontend of webtrees, without applying patch P002).") ?>
+                                <?= /*I18N: */ I18N::translate("A context-sensitive link to the German webtrees manual can be added by javascript to the small navigation menu (only on the frontend of webtrees, without applying patch P002).") ?>
                             </p>
                         </div>
                     </div>
@@ -246,7 +246,7 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
 
         </div>        
 
-        <h4 style="border-bottom:1px solid lightgray; margin-top: 1.2em;">[4] <?= /*I18N: Settings - section title */ I18N::translate('Webtrees Manual') ?></h4>
+        <h4 style="border-bottom:1px solid lightgray; margin-top: 1.2em;">[4] <?= /*I18N: Settings - section title */ I18N::translate('Webtrees manual') ?></h4>
         <div class="row">
             <!-- prepend faicon to wthb-link --><?php $prefId = LinkEnhancerModule::PREF_WTHB_FAICON; ?>
             <fieldset class="form-group mb-3">
@@ -334,7 +334,26 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
                 </div>
             </div>
         
-        
+            <!-- auto update to wthb-link --><?php $prefId = LinkEnhancerModule::PREF_WTHB_UPDATE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                        <?= I18N::translate('Automatically refresh data table when module is updated') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value">
+                        <?= view('components/radios-inline', [
+                            'id' => $prefId,
+                            'name' => $prefId,
+                            'options' => [
+                                I18N::translate('no'),
+                                /*I18N: webtrees.pot */ I18N::translate('yes')
+                            ],
+                            'selected' => (int) $prefs[$prefId]
+                        ]) ?>
+                    </div>
+                </div>
+            </fieldset>
+            
             <!-- genwiki std link --><?php $prefId = LinkEnhancerModule::PREF_GENWIKI_LINK; ?>
             <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
                 <?= I18N::translate('Link to GenWiki') ?>
@@ -350,7 +369,7 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
         
             <!-- wthb std link --><?php $prefId = LinkEnhancerModule::PREF_WTHB_STD_LINK; ?>
             <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
-                <?= I18N::translate('Standard Link to Webtrees Manual') ?>
+                <?= I18N::translate('Standard Link to webtrees manual') ?>
             </label>
             <div class="col-sm-9 wt-page-options-value">
                 <input class="form-control" id="<?= $prefId ?>" name="<?= $prefId ?>" type="text"
@@ -401,7 +420,6 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
             } else {
                 $(elem).after(`<div id="${errId}" class="error">${msg}</div>`);
             }
-            console.log(msg);
         }
         
         let firstErrElem = null;
@@ -412,7 +430,7 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
             try {
                 eval(`() => { let a = ${jsString}}`);
             } catch (e) { 
-                showError(linkspp, 'JavaScript nicht valide: ' + e.message);
+                showError(linkspp, '<?= e(I18N::translate('Javascript is invalid')) ?>: ' + e.message);
                 firstErrElem ??= linkspp;
             }
         }
@@ -423,7 +441,7 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
             try {
                 const obj = JSON.parse(jsonString); // Syntax-Validierung
             } catch (e) {
-                showError(homelink, 'JSON nicht valide');
+                showError(homelink, '<?= e(I18N::translate('JSON is invalid')) ?>');
                 firstErrElem ??= homelink;
             }
         }
