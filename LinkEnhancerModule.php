@@ -79,6 +79,8 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public const PREF_HOME_LINK_JS = 'HOME_LINK_JS'; // string; javascript object { '*': stylerules-string, 'theme': stylerules-string}
     public const PREF_WTHB_ACTIVE = 'WTHB_LINK_ACTIVE'; // link to GenWiki "Webtrees Handbuch"
     public const PREF_WTHB_FAICON = 'WTHB_FAICON'; // prepend fa icon to help link
+    public const PREF_WTHB_UPDATE = 'WTHB_UPDATE'; // auto refresh table on module update
+    public const PREF_WTHB_LASTHASH = 'WTHB_LASTHASH'; // last csv hash used for import
     public const PREF_WTHB_STD_LINK = 'WTHB_STD_LINK'; // standard link to GenWiki "Webtrees Handbuch"
     public const PREF_JS_DEBUG_CONSOLE = 'JS_DEBUG_CONSOLE'; // console.debug with active route info; 0=off, 1=on
     public const PREF_GENWIKI_LINK = 'GENWIKI_LINK'; // base link to GenWiki
@@ -103,6 +105,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         self::PREF_HOME_LINK_JS          => '{ "*": ".homelink { color: #039; }" }', // string; javascript object { '*': stylerules-string, 'theme': stylerules-string}
         self::PREF_WTHB_ACTIVE           => '1', //bool
         self::PREF_WTHB_FAICON           => '1', //bool
+        self::PREF_WTHB_UPDATE           => '1', //bool
         self::PREF_JS_DEBUG_CONSOLE            => '0', //bool
         self::PREF_WTHB_STD_LINK         => self::STDLINK_WTHB, //string
         self::PREF_GENWIKI_LINK          => self::STDLINK_GENWIKI, //string
@@ -132,7 +135,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
      */
     public function description(): string
     {
-        return /*I18N: Module description */I18N::translate('Cross-references to Gedcom datasets, Markdown editor, context-sensitive link to the GenWiki Webtrees manual');
+        return /*I18N: Module description */I18N::translate('Cross-references to Gedcom datasets, Markdown editor, context-sensitive link to the GenWiki webtrees manual');
     }
 
     /**
@@ -272,8 +275,23 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     {
         $this->updateSchema('\Schwendinger\Webtrees\Module\LinkEnhancer\Schema', 'SCHEMA_VERSION', 1);
 
-        if ((int) ($this->getHelpTableCount()['total'] ?? 0) === 0) {
+        $importOnUpdate = false;
+        $this_hash = null;
+        $cfg_wthb_update = boolval($this->getPref(self::PREF_WTHB_UPDATE));
+        if ($cfg_wthb_update) {
+            $csvfile = __DIR__ . "/Schema/SeedHelpTable.csv";
+            if (file_exists($csvfile)) {
+                $this_hash = hash_file('sha256', $csvfile);
+                $cfg_wthb_lasthash = $this->getPref(self::PREF_WTHB_LASTHASH);
+                $importOnUpdate = $this_hash != $cfg_wthb_lasthash;
+            }            
+        }
+
+        if ((int) ($this->getHelpTableCount()['total'] ?? 0) === 0 || $importOnUpdate) {
             $this->importDeliveredCsv();
+            if ($this_hash) {
+                $this->setPref(self::PREF_WTHB_LASTHASH, $this_hash);
+            }
         }
 
         // Register a namespace for our views.
@@ -459,7 +477,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
      */
     public function setPref(string $setting_name, string $setting_value): void {
         //allow user to blank a setting, also if we have a DEFAULT_PREFERENCE
-        $setting_value = (self::DEFAULT_PREFERENCES[$setting_name] && !$setting_value ? ' ': $setting_value);
+        $setting_value = ((self::DEFAULT_PREFERENCES[$setting_name] ?? false) && !$setting_value ? ' ': $setting_value);
         $this->setPreference($setting_name, $setting_value);
     }
 
@@ -546,7 +564,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                 
                 // link to Webtrees Manual in GenWiki or external link?
                 $wiki_url = $this->getPref(self::PREF_GENWIKI_LINK, self::STDLINK_GENWIKI);
-                $help_title = str_starts_with($help_url, $wiki_url) ? I18N::translate('Webtrees Manual') : /*I18N: webtrees.pot */ I18N::translate('Help');
+                $help_title = str_starts_with($help_url, $wiki_url) ? I18N::translate('Webtrees manual') : /*I18N: webtrees.pot */ I18N::translate('Help');
                 
                 $help_url_e = e($help_url);
                 $includeRes .= $this->getIifeJavascript(
@@ -589,10 +607,9 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             $url = $cfg_home_type == 1 ? route(TreePage::class, $params) : route(HomePage::class, $params);
             $initJs .= '$(".wt-site-title").wrapInner(`<a class="' . self::STDCLASS_HOME_LINK .'" href="' . e($url) . '"></a>`);';
 
-            // TODO implement in php instead?!
             $cfg_home_link_json = trim($this->getPref(self::PREF_HOME_LINK_JS));
             if ($cfg_home_link_json) {
-                $theme_palette = $theme . ($palette ? "_{$palette}" : '');
+                $theme_palette = $theme . ($palette ? "_{$palette}" : ''); // palette is also set with other themes than colors
                 $json = json_decode($cfg_home_link_json, true);
                 if ($json) {
                     $stylerules = $json[$theme_palette] ?? $json[$theme] ?? $json['*'] ?? null;
