@@ -232,7 +232,7 @@ const createarchive = () => {
 const clean = () => del(["./resources/js/bundle*", "./resources/css/bundle*"]);
 const hashCsv = () => hashFile('./Schema/SeedHelpTable.csv');
 
-const build = gulp.series(clean, jscripts, css, hashCsv);
+const build = gulp.series(clean, jscripts, css); //, hashCsv);
 const bumpversion = gulp.series(gitCheckClean, bumpVersion, syncVersion);
 
 const archive = gulp.series(build, createmo, createarchive);
