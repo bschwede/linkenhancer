@@ -32,7 +32,7 @@ class SeedHelpTable //implements SeedInterface
 
     public function skipRow(array $row): bool
     {
-        return (bool) ($row['path'] ?? '' . $row['handler'] ?? '' . $row['method'] ?? '' . $row['extras'] ?? '') == '';
+        return (bool) (($row['path'] ?? '') . ($row['handler'] ?? '') . ($row['method'] ?? '') . ($row['extras'] ?? '')) == '';
     }
 
 
