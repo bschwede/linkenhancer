@@ -102,7 +102,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
     protected const DEFAULT_PREFERENCES = [
         self::PREF_HOME_LINK_TYPE        => '1', //int triple-state, 0=off, 1=tree, 2=my-page
-        self::PREF_HOME_LINK_JS          => '{ "*": ".homelink { color: #039; }" }', // string; javascript object { '*': stylerules-string, 'theme': stylerules-string}
+        self::PREF_HOME_LINK_JS          => '{ "*": ".homelink { color: #039; }",  "colors_nocturnal": ".homelink { color: antiquewhite; }" }', // string; javascript object { '*': stylerules-string, 'theme': stylerules-string}
         self::PREF_WTHB_ACTIVE           => '1', //bool
         self::PREF_WTHB_FAICON           => '1', //bool
         self::PREF_WTHB_UPDATE           => '1', //bool

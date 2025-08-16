@@ -1,13 +1,12 @@
-diff -urwB a/administration.phtml b/administration.phtml
 --- a/resources/views/layouts/administration.phtml	2025-08-15 21:46:22.691143157 +0200
-+++ b/resources/views/layouts/administration.phtml	2025-07-20 04:56:06.195735000 +0200
++++ b/resources/views/layouts/administration.phtml	2025-08-16 22:22:44.533940367 +0200
 @@ -37,7 +37,9 @@
  
          <?= View::stack('styles') ?>
  
 -        <?= Registry::container()->get(ModuleService::class)->findByInterface(ModuleGlobalInterface::class)->map(static fn (ModuleGlobalInterface $module): string => $module instanceof ModuleCustomInterface || $module instanceof CustomCssJsModule ? '' : $module->headContent())->implode('') ?>
 +        <?= Registry::container()->get(ModuleService::class)->findByInterface(ModuleGlobalInterface::class)->map(static function (ModuleGlobalInterface $module): string {
-+    return $module instanceof ModuleCustomInterface && !preg_match('/LinkEnhancerModule$/i', get_class($module)) || $module instanceof CustomCssJsModule ? '' : $module->headContent();
++    return $module instanceof ModuleCustomInterface && !preg_match('/LinkEnhancerModule/i', get_class($module)) || $module instanceof CustomCssJsModule ? '' : $module->headContent();
 +        })->implode('') /* =-Fix-P002-= */?>
      </head>
      <body class="container-lg wt-global wt-control-panel">
@@ -18,7 +17,7 @@ diff -urwB a/administration.phtml b/administration.phtml
  
 -        <?= Registry::container()->get(ModuleService::class)->findByInterface(ModuleGlobalInterface::class)->map(static fn (ModuleGlobalInterface $module): string => $module instanceof ModuleCustomInterface || $module instanceof CustomCssJsModule ? '' : $module->bodyContent())->implode('') ?>
 +        <?= Registry::container()->get(ModuleService::class)->findByInterface(ModuleGlobalInterface::class)->map(static function (ModuleGlobalInterface $module): string {
-+    return $module instanceof ModuleCustomInterface && !preg_match('/LinkEnhancerModule$/i', get_class($module)) || $module instanceof CustomCssJsModule ? '' : $module->bodyContent();
++    return $module instanceof ModuleCustomInterface && !preg_match('/LinkEnhancerModule/i', get_class($module)) || $module instanceof CustomCssJsModule ? '' : $module->bodyContent();
 +        })->implode('') /* =-Fix-P002-= */ ?>
      </body>
  </html>

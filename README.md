@@ -165,7 +165,7 @@ Note: Unfortunately, the on-screen keyboard does NOT work as before with the pre
 
 <a name="wthb"></a>
 ### German webtrees manual
-A context sensitive link to the [german webtrees manual](https://wiki.genealogy.net/Webtrees_Handbuch) can be added by javascript to the small navigation menu (if this function is also desired in the admin backend, patch P002 would need to be applied).
+A context sensitive link to the [german webtrees manual](https://wiki.genealogy.net/Webtrees_Handbuch) can be added by javascript to the small navigation menu (if this feature is also desired in the admin backend, patch P002 would need to be applied or at least the custom module [vesta_common](https://github.com/vesta-webtrees-2-custom-modules/vesta_common/tree/master) would need to be installed).
 
 The mapping of routes to help articles in the manual is stored in the database table `route_help_map`. The table has the following headers (the headers required in a CSV file for import are marked with !!):
 

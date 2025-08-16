@@ -38,7 +38,7 @@ use Fisharebest\Webtrees\View;
         <?= View::stack('styles') ?>
 
         <?= Registry::container()->get(ModuleService::class)->findByInterface(ModuleGlobalInterface::class)->map(static function (ModuleGlobalInterface $module): string {
-    return $module instanceof ModuleCustomInterface && !preg_match('/LinkEnhancerModule$/i', get_class($module)) || $module instanceof CustomCssJsModule ? '' : $module->headContent();
+    return $module instanceof ModuleCustomInterface && !preg_match('/LinkEnhancerModule/i', get_class($module)) || $module instanceof CustomCssJsModule ? '' : $module->headContent();
         })->implode('') /* =-Fix-P002-= */?>
     </head>
     <body class="container-lg wt-global wt-control-panel">
@@ -89,7 +89,7 @@ use Fisharebest\Webtrees\View;
         <?= View::stack('javascript') ?>
 
         <?= Registry::container()->get(ModuleService::class)->findByInterface(ModuleGlobalInterface::class)->map(static function (ModuleGlobalInterface $module): string {
-    return $module instanceof ModuleCustomInterface && !preg_match('/LinkEnhancerModule$/i', get_class($module)) || $module instanceof CustomCssJsModule ? '' : $module->bodyContent();
+    return $module instanceof ModuleCustomInterface && !preg_match('/LinkEnhancerModule/i', get_class($module)) || $module instanceof CustomCssJsModule ? '' : $module->bodyContent();
         })->implode('') /* =-Fix-P002-= */ ?>
     </body>
 </html>
