@@ -18,6 +18,8 @@ What you can expect from the module, illustrated with screenshots:
 | [![Markdown editor](resources/img/screenshot_tinymde-sharednote_200.png)](resources/img/screenshot_tinymde-sharednote.png) | [![Markdown Help](resources/img/screenshot_markdown-help_200.png)](resources/img/screenshot_markdown-help.png) |
 | markdown editor | markdown help |
 
+Here the available options to be set on this modules admin page:
+[![admin page](resources/img/screenshot_admin-page.png)](resources/img/screenshot_admin-page.png)
 
 <a name="description"></a>
 ## Description
