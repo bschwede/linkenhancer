@@ -425,3 +425,4 @@ id;path;handler;method;extras;category;order;url
 453;/tree/{tree}/pedigree-{style}-{generations}/{xref};Fisharebest\Webtrees\Module\PedigreeChartModule;GET|POST;Fisharebest\Webtrees\Http\Middleware\AuthNotRobot;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
 454;/tree/{tree}/relationships-{ancestors}-{recursion}/{xref}{/xref2};Fisharebest\Webtrees\Module\RelationshipsChartModule;GET|POST;Fisharebest\Webtrees\Http\Middleware\AuthNotRobot;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
 455;/tree/{tree}/timeline-{scale};Fisharebest\Webtrees\Module\TimelineChartModule;GET|POST;Fisharebest\Webtrees\Http\Middleware\AuthNotRobot;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
+456;;_linkenhancer_;GET;;custom module;20;https://github.com/bschwede/linkenhancer
