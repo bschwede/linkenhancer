@@ -30,6 +30,7 @@ function getLECfg() {
         help: [
             { n: I18N['wp-help1'], e: 'de/Webtrees' },
             { n: I18N['wp-help2'], e: 'en/Webtrees' },
+            { n: I18N['wp-help3'], e: 'other-subdomain/Webtrees' },
         ]
     },
     "www": {
@@ -66,6 +67,26 @@ function getLECfg() {
         url: "https://gov.genealogy.net/item/show/",
         cname: 'icon-compgen'
     },
+    "gedbas": {
+        name: I18N['gedbas'],
+        url: (id, title) => {
+            let parts = id.split('/');
+            switch (parts.length) {
+                case 1: // dataset number
+                    return { url: `https://gedbas.genealogy.net/person/show/${id}`, title };
+                case 2: // UID
+                    return { url: `https://gedbas.genealogy.net/person/uid/${id}`, title };
+                default:
+                    title = title + ' - ' + I18N['syntax error'] + "!";
+                    return { url: '', title };
+            }
+        },
+        cname: 'icon-compgen',
+        help: [
+            { n: I18N['gedbas-help1'], e: '1234567' },
+            { n: I18N['gedbas-help2'], e: '56789/136049f257c96e34430aec053fa0fbce865c' },
+        ]
+    },    
     "ewp": {
         name: I18N['ewp'] + ' (westpreussen.de)',
         url: 'https://westpreussen.de/tngeinwohner/getperson.php?tree=DB1&personID=',

@@ -974,7 +974,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             'bold'             => /*I18N: JS MDE */ I18N::translate('bold'),
             'italic'           => /*I18N: JS MDE */ I18N::translate('italic'),
             'format as code'   => /*I18N: JS MDE */ I18N::translate('format as code'),
-            'Level 1 heading'  => /*I18N: JS MDE */ I18N::translate('Level 1 heading'),
+            'Level 1 heading'  => /*I18N: JS MDE */ I18N::translate('Level %s heading', '1'),
             'Bulleted list'    => /*I18N: JS MDE */ I18N::translate('Bulleted list'),
             'Numbered list'    => /*I18N: JS MDE */ I18N::translate('Numbered list'),
             'Insert link'      => /*I18N: JS MDE */ I18N::translate('Insert link'),
@@ -989,7 +989,8 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             // enhanced links 
             'cross reference'  => /*I18N: JS enhanced link */ I18N::translate('cross reference'),
             'oofb'             => /*I18N: JS enhanced link, %s name of location */ I18N::translate('Online Local heritage book of %s at CompGen', '%s'),
-            'gov'              => /*I18N: JS enhanced link */ I18N::translate('The Historic Geo Information System (GOV)'),
+            'gov'              => /*I18N: JS enhanced link */ I18N::translate('Historic Geo Information System (GOV)'),
+            'gedbas'           => /*I18N: JS enhanced link */ I18N::translate('GEDBAS (Genealogical Database - collected personal data)'),
             'www'              => /*I18N: JS enhanced link */ I18N::translate('wer-wir-waren.at'),
             'ewp'              => /*I18N: JS enhanced link */ I18N::translate('Residents database - Family research in West Prussia'),
             'Interactive tree' => /*I18N: webtrees.pot */ I18N::translate('Interactive tree'),
@@ -1003,6 +1004,9 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             'ofb-help1'        => /*I18N: JS enhanced link ofb1 */ I18N::translate('link to Online Local heritage book at CompGen with given uid'),
             'wp-help1'         => /*I18N: JS enhanced link wp1 */ I18N::translate('open the article in the german wikipedia'),
             'wp-help2'         => /*I18N: JS enhanced link wp2 */ I18N::translate('open the english version of the article'),
+            'wp-help3'         => /*I18N: JS enhanced link wp3 */ I18N::translate('you can address every subdomain instance of wikipedia.org'),
+            'gedbas-help1'     => /*I18N: JS enhanced link gedbas1 */ I18N::translate('open person record with given number'),
+            'gedbas-help2'     => /*I18N: JS enhanced link gedbas2 */ I18N::translate('open person record with UID'),
         ]);
     }
 
@@ -1029,8 +1033,13 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                 'html' => '<strong>' . I18N::translate('bold') . '</strong>'
             ],
             [
-                'md' => '# ' . I18N::translate('Level 1 heading'),
-                'html' => '<h1>' . I18N::translate('Level 1 heading') . '</h1>'
+                'md' => '# ' . I18N::translate('Level %s heading', '1'),
+                'html' => '<h1>' . I18N::translate('Level %s heading', '1') . '</h1>'
+            ],
+            [
+                'md' => '## ' . I18N::translate('Level %s heading', '2') . "\n\n"
+                         . I18N::translate('and so on until level %s', '6'),
+                'html' => '<h2>' . I18N::translate('Level %s heading', '2') . '</h2>'
             ],
             [
                 'md' => '`' . I18N::translate('format as code') . '`',

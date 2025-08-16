@@ -50,6 +50,7 @@ Included are the following **predefined external targets** (the parameter keys a
   - [GenWiki](https://wiki.genealogy.net/) *(gw)*
   - [Online Local heritage books](https://ofb.genealogy.net/?lang=en) *(ofb)*
   - [The Historic Geo Information System](https://gov.genealogy.net/?lang=en) *(gov)*
+  - [GEDBAS - Genealogical Database - collected personal data](https://gedbas.genealogy.net/?lang=en) *(gedbas)*
 
 
 **Syntax:**

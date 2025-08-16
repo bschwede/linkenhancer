@@ -67,23 +67,22 @@ use Fisharebest\Webtrees\I18N;
 
 <?php if ($link_active) : ?>
 <h4 class="helpsection"><?= /*I18N: help md - section title */ I18N::translate('Enhanced Link Support') ?></h4>
-<p><?= /*I18N: Enhanced Links */ I18N::translate('Different destinations can be addressed with a link, whereby the cross-reference is always the first link and the others are represented by attached clickable icons.') ?></p>
-<p><?= /*I18N: Settings - prologue sentence 3 */ I18N::translate('By linking the notes to the GEDCOM data records (persons, families, sources, etc.) from the text, it is easier to replace the history module and thus also save this information in the GEDCOM file.') ?>
-    <?= /*I18N: Settings - prologue sentence 5 */ I18N::translate('The link function is controlled via the anchor part of the URI.') ?>
-    <?= I18N::translate('See also') ?>: <a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Web_mechanics/What_is_a_URL#anchor">mdn web docs - What is a URL?</a>
+<p><?= /*I18N: Enhanced Links */ I18N::translate('By linking the notes to the GEDCOM data records (persons, families, sources, etc.) from the text makes story telling much easier and thus also save this information in the GEDCOM file.'); ?>
+  <?= /*I18N: Enhanced Links */ I18N::translate('Different destinations can be addressed with one link definition, whereby the internal cross-reference is always the first link and the other external targets are represented by attached clickable icons.') ?>
 </p>
+
 <p><b>Syntax</b>: <code>[<?= /*I18N: Enhanced Links code example 1 */ I18N::translate('Link display title') ?>](#@param1&amp;paramN)</code>
 <br><?= /*I18N: Enhanced Links code */ I18N::translate('The following parameters can be used') ?>:
 <div id="syntaxLE"><?= /*I18N: Enhanced Links */ I18N::translate('The parameter definitions will be inserted by a javascript routine'); ?>...</div> <script>document.querySelector('#syntaxLE').innerHTML = LinkEnhMod.getLEhelpInfo();</script></p>
-<p><?= /*I18N: Enhanced Links */ I18N::translate('This function is implemented via Javascript and only affects links in notes and HTML blocks on the client side.') ?>
-    <?= /*I18N: Enhanced Links */ I18N::translate('The existence of the linked data records is not checked in advance. Errors only appear when the link is clicked.') ?>
+<p><?= /*I18N: Enhanced Links */ I18N::translate('The existence of the linked data records is not checked in advance. Errors only appear when the link is clicked.') ?>
 </p>
 <?php endif ?>
 
 <?php if ($mdimg_active) : ?>
 <h4 class="helpsection"><?= /*I18N: help md - section title */I18N::translate('Markdown Image Support') ?></h4>
+<p><?= /*I18N: MD img - sentence 1 */ I18N::translate('This option allows you to easily embed images from GEDCOM media records or from the public directory into notes.'); ?></p>
 <p>
-    <?= /*I18N: MD img - sentence 2 */ I18N::translate('The images are packed into a div container together with an image subtitle - which is also a link to the media data set for GEDCOM objects.') ?>
+    <?= /*I18N: MD img - sentence 2 */ I18N::translate('Technically the images are packed into a div container together with an image subtitle - which is also a link to the media data set for GEDCOM objects.') ?>
     <?= /*I18N: MD img - sentence 3 */ I18N::translate('The display can be customized as required using the following standard CSS classes or additional CSS classes.') ?>
 </p>
 <b>CSS</b>:<ul>
@@ -101,6 +100,6 @@ use Fisharebest\Webtrees\I18N;
     </li>
     <li><code>![<?= /*I18N: MD img code example 2 */ I18N::translate('alternate text for picture in public folder') ?>](#@public=webtrees.png "title")</code>
     </li>
-    <li><code>![<?= /*I18N: MD img code example 3 */ I18N::translate('picture with defined height, width and additional css class') ?>](#@id=@M1@&amp;h=200&amp;w=200&cname=float-right)</code></li>
+    <li><code>![<?= /*I18N: MD img code example 3 */ I18N::translate('picture with defined height, width and additional css class') ?>](#@id=@M1@&amp;h=200&amp;w=200&cname=float-end)</code></li>
 </ul>
 <?php endif ?>
