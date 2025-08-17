@@ -39,6 +39,8 @@ Additionally there are some goodies more or less related with links:
 ### Enhanced links
 Although webtrees replaces [XREFs](https://wiki.genealogy.net/GEDCOM/XREF_ID) such as `@I2@` in notes with a **cross-reference** and it's appropriate display name, this is not so flexible. You can't determine the display name. Unfortunately, this does not work in the HTML block on the start page if you want to refer to a data record in the continuous text without inserting absolute references (such absolute references could be entered in the source code of the HTML block as follows, for example: `<a href="https://mytree.somewhere/tree/mytree/individual/I2">Jon Doe</a>`).
 
+**Hint:** The custom module [webtrees-mitalteli-show-xref](https://github.com/elysch/webtrees-mitalteli-show-xref) can help for you find the XREF reference of personal data records.
+
 The enhanced links function is implemented via Javascript and searches in the rendered output of webtrees for `<a>` tags whose href attribute values begin with `#@`. This way it is possible to handle links in markdown and html markup. Because it is processed in the browser on client side, the existence of the cross-referenced data records in webtrees is not checked in advance. Errors only occur when the link is clicked (e. g. if the access to the ressource is restricted).
 
 As a bonus different destinations can be addressed with one link definition, whereby the cross-reference is always the first link (if set) and the others are represented by attached clickable icons only. 
@@ -146,7 +148,7 @@ On the subject of markdown see also:
 
 <a name="mdimg"></a>
 #### Markdown Image Support
-Images of gedcom media records reside behind the media firewall. Therefore, this function cannot be provided with JavaScript, but by extending the [MarkDownFactory class](https://github.com/fisharebest/webtrees/blob/main/app/Factories/MarkdownFactory.php).
+This feature allows you to easily embed images from GEDCOM media records or from the public directory into notes.
 If restriction rules apply to the record, instead of the image, a message is displayed.
 
 **Syntax:**
@@ -156,6 +158,8 @@ If restriction rules apply to the record, instead of the image, a message is dis
 
 Technically the images are packed into a div container together with an image subtitle - which is also a link to the media data set for GEDCOM objects. The display can be customized as required using the standard CSS classes or per image additional CSS classes (e.g. `float-start` or `float-end` from webtrees vendor.css).
 
+Images of gedcom media records reside behind the media firewall. Therefore, this function cannot be provided with JavaScript, but by extending the [MarkDownFactory class](https://github.com/fisharebest/webtrees/blob/main/app/Factories/MarkdownFactory.php).
+
 
 <a name="mde"></a>
 #### Markdown editor
@@ -163,7 +167,7 @@ You can also enable a visual **markdown editor** for note textareas. Under the h
 
 Besides syntax higlighting it ships with an icon bar for common format commands, a help popup and line numbering.
 
-Note: Unfortunately, the on-screen keyboard does NOT work as before with the previous text input field. The selected characters end up as an intermediate step in the small text field below the Markdown editor and then must be copied manually to the desired position.
+**Note:** Unfortunately, the on-screen keyboard does NOT work as before with the previous text input field. The selected characters end up as an intermediate step in the small text field below the Markdown editor and then must be copied manually to the desired position.
 
 <a name="wthb"></a>
 ### German webtrees manual
@@ -263,7 +267,7 @@ This can be hosted on your own server by following the [Install instructions](ht
 This module requires **webtrees** version 2.2.
 This module has the same requirements as [webtrees#system-requirements](https://github.com/fisharebest/webtrees#system-requirements).
 
-This module was tested with **webtrees** versions 2.2.1
+This module was tested with **webtrees** versions 2.2.4
 and all available themes and some other custom modules.
 
 <a name="installation"></a>
