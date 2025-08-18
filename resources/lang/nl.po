@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-16 22:30+0200\n"
-"PO-Revision-Date: 2025-08-18 19:38+0200\n"
+"POT-Creation-Date: 2025-08-18 21:17+0200\n"
+"PO-Revision-Date: 2025-08-18 21:18+0200\n"
 "Last-Translator: TheDutchJewel <thedutchjewel@gmail.com>\n"
 "Language-Team: TheDutchJewel\n"
 "Language: nl\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.6\n"
+"X-Generator: Poedit 3.0.1\n"
 "X-Poedit-Basepath: ../..\n"
 "X-Poedit-SearchPath-0: CustomMarkdownFactory.php\n"
 "X-Poedit-SearchPath-1: LinkEnhancerModule.php\n"
@@ -61,8 +61,8 @@ msgstr ""
 "subset van de opmaak."
 
 #: resources/views/help-md.phtml:19 resources/views/help-md.phtml:51
-#: resources/views/help-md.phtml:61 resources/views/settings.phtml:42
-#: resources/views/settings.phtml:219
+#: resources/views/help-md.phtml:61 resources/views/settings.phtml:41
+#: resources/views/settings.phtml:218
 msgid "See also"
 msgstr "Zie ook"
 
@@ -80,7 +80,7 @@ msgstr "Weergegeven uitvoer"
 msgid "For more depth of detail"
 msgstr "Voor meer gedetailleerde informatie"
 
-#: resources/views/help-md.phtml:59 resources/views/settings.phtml:112
+#: resources/views/help-md.phtml:59 resources/views/settings.phtml:111
 msgid "Markdown editor for note textareas"
 msgstr "Markdown-editor voor tekstvelden in notities"
 
@@ -108,7 +108,7 @@ msgstr ""
 
 #. I18N: help md - section title
 #. I18N: Settings - section title
-#: resources/views/help-md.phtml:69 resources/views/settings.phtml:207
+#: resources/views/help-md.phtml:69 resources/views/settings.phtml:206
 msgid "Enhanced Link Support"
 msgstr "Ondersteuning voor verbeterde links"
 
@@ -162,7 +162,7 @@ msgstr ""
 
 #. I18N: help md - section title
 #. I18N: Settings - section title
-#: resources/views/help-md.phtml:82 resources/views/settings.phtml:229
+#: resources/views/help-md.phtml:82 resources/views/settings.phtml:228
 msgid "Markdown Image Support"
 msgstr "Markdown-afbeeldingsondersteuning"
 
@@ -195,7 +195,7 @@ msgstr ""
 "De weergave kan naar wens worden aangepast met behulp van de volgende "
 "standaard CSS-klassen of aanvullende CSS-klassen."
 
-#: resources/views/help-md.phtml:89 resources/views/settings.phtml:233
+#: resources/views/help-md.phtml:89 resources/views/settings.phtml:232
 msgid "Markdown image container standard css class"
 msgstr "Markdown-afbeeldingscontainer standaard CSS-klasse"
 
@@ -203,7 +203,7 @@ msgstr "Markdown-afbeeldingscontainer standaard CSS-klasse"
 msgid "not defined"
 msgstr "niet gedefinieerd"
 
-#: resources/views/help-md.phtml:92 resources/views/settings.phtml:241
+#: resources/views/help-md.phtml:92 resources/views/settings.phtml:240
 msgid "Markdown image title container standard css class"
 msgstr "Markdown-afbeeldingstitelcontainer standaard CSS-klasse"
 
@@ -249,22 +249,17 @@ msgstr ""
 "De mogelijkheid om de reeds in de stamboom ingevoegde afbeeldingen in de "
 "notities in te sluiten, maakt deze aanpak compleet."
 
-#. I18N: Settings - prologue sentence 5
-#: resources/views/settings.phtml:40
-msgid "The link function is controlled via the anchor part of the URI."
-msgstr "De linkfunctie wordt geregeld via het ankergedeelte van de URI."
-
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:51
+#: resources/views/settings.phtml:50
 msgid "Activate Support"
 msgstr "Ondersteuning activeren"
 
-#: resources/views/settings.phtml:58
+#: resources/views/settings.phtml:57
 msgid "Activate enhanced links?"
 msgstr "Verbeterde links activeren?"
 
 #. I18N: Enhanced Links
-#: resources/views/settings.phtml:68
+#: resources/views/settings.phtml:67
 msgid ""
 "This function is implemented via Javascript and only affects links in notes "
 "and HTML blocks on the client side."
@@ -272,27 +267,27 @@ msgstr ""
 "Deze functie wordt geïmplementeerd via Javascript en heeft alleen invloed op "
 "links in notities en HTML-blokken aan de kant van de client."
 
-#: resources/views/settings.phtml:79
+#: resources/views/settings.phtml:78
 msgid "Activate markdown image tweak?"
 msgstr "Markdown-afbeeldingsaanpassing activeren?"
 
 #. I18N: MD img - sentence 1
-#: resources/views/settings.phtml:89
+#: resources/views/settings.phtml:88
 msgid "Only works in notes that are formatted with Markdown."
 msgstr "Werkt alleen in notities die zijn opgemaakt met Markdown."
 
 #. I18N: MDE
-#: resources/views/settings.phtml:91
+#: resources/views/settings.phtml:90
 #, php-format
 msgid "Precondition: Tree preference '%s' need to be set to markdown."
 msgstr "Voorwaarde: De boomvoorkeur ‘%s’ moet worden ingesteld op markdown."
 
-#: resources/views/settings.phtml:131
+#: resources/views/settings.phtml:130
 msgid "Show Help Link"
 msgstr "Toon Help-link"
 
 #. I18N:
-#: resources/views/settings.phtml:145
+#: resources/views/settings.phtml:144
 msgid ""
 "A context-sensitive link to the German webtrees manual can be added by "
 "javascript to the small navigation menu."
@@ -301,7 +296,7 @@ msgstr ""
 "javascript worden toegevoegd aan het kleine navigatiemenu."
 
 #. I18N:
-#: resources/views/settings.phtml:146
+#: resources/views/settings.phtml:145
 msgid ""
 "If this feature is also desired in the admin backend, patch P002 would need "
 "to be applied or at least the custom module vesta_common would need to be "
@@ -311,35 +306,35 @@ msgstr ""
 "toegepast of moet ten minste de aangepaste module vesta_common worden "
 "geïnstalleerd."
 
-#: resources/views/settings.phtml:157
+#: resources/views/settings.phtml:156
 msgid "Site title as home link"
 msgstr "Sitetitel als startpagina-link"
 
 #. I18N: home link
-#: resources/views/settings.phtml:165
+#: resources/views/settings.phtml:164
 msgid "home page of the current tree"
 msgstr "startpagina van de huidige stamboom"
 
 #. I18N: home link
-#: resources/views/settings.phtml:166
+#: resources/views/settings.phtml:165
 msgid "my page of the registered user"
 msgstr "mijn pagina van de geregistreerde gebruiker"
 
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:181
+#: resources/views/settings.phtml:180
 msgid "More options"
 msgstr "Meer opties"
 
-#: resources/views/settings.phtml:188
+#: resources/views/settings.phtml:187
 msgid "Output of debug information on the JS console"
 msgstr "Uitvoer van debug-informatie op de JS-console"
 
-#: resources/views/settings.phtml:211
+#: resources/views/settings.phtml:210
 msgid "JavaScript for additional link targets"
 msgstr "JavaScript voor extra linkdoelen"
 
 #. I18N: Enhanced Links js
-#: resources/views/settings.phtml:216
+#: resources/views/settings.phtml:215
 msgid ""
 "The JavaScript object overwrites and supplements the predefined settings, "
 "which are taken from the following code excerpt and can also serve as a "
@@ -350,14 +345,14 @@ msgstr ""
 "als referentiepunt voor aanpassingen kunnen dienen."
 
 #. I18N: Enhanced Links js
-#: resources/views/settings.phtml:218
+#: resources/views/settings.phtml:217
 msgid "Any CSS rules required are best added via the “CSS and JS” module."
 msgstr ""
 "Alle benodigde CSS-regels kunnen het beste worden toegevoegd via de module "
 "‘CSS en JS’."
 
 #. I18N: Enhanced Links js
-#: resources/views/settings.phtml:219
+#: resources/views/settings.phtml:218
 msgid ""
 "Only the definition of the icon as a background image is actually needed - "
 "referencing as data: URL."
@@ -366,20 +361,20 @@ msgstr ""
 "daadwerkelijk nodig - verwijzen als data: URL."
 
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:250 LinkEnhancerModule.php:567
+#: resources/views/settings.phtml:249 LinkEnhancerModule.php:568
 msgid "Webtrees manual"
 msgstr "Webtreeshandleiding"
 
-#: resources/views/settings.phtml:256
+#: resources/views/settings.phtml:255
 msgid "Precede the help link with an icon"
 msgstr "Voeg een pictogram toe vóór de helplink"
 
-#: resources/views/settings.phtml:274
+#: resources/views/settings.phtml:273
 msgid "Data table"
 msgstr "Gegevenstabel"
 
 #. I18N: WTHB Link table
-#: resources/views/settings.phtml:278
+#: resources/views/settings.phtml:277
 msgid ""
 "The context is established by assigning the routes used in webtrees to the "
 "corresponding sections in the manual."
@@ -388,64 +383,64 @@ msgstr ""
 "toe te wijzen aan de overeenkomstige secties in de handleiding."
 
 #. I18N: WTHB Link table
-#: resources/views/settings.phtml:280
+#: resources/views/settings.phtml:279
 msgid "The data is stored in the database table"
 msgstr "De gegevens worden opgeslagen in de databasetabel."
 
 #. I18N: WTHB Link table rows
-#: resources/views/settings.phtml:282
+#: resources/views/settings.phtml:281
 msgid "Data rows"
 msgstr "Gegevensrijen"
 
 #. I18N: WTHB Link table rows assigned/total
-#: resources/views/settings.phtml:283
+#: resources/views/settings.phtml:282
 #, php-format
 msgid "%s of %s assigned"
 msgstr "%s van %s toegewezen"
 
-#: resources/views/settings.phtml:289
+#: resources/views/settings.phtml:288
 msgid "Import registered routes"
 msgstr "Geregistreerde routes importeren"
 
-#: resources/views/settings.phtml:291
+#: resources/views/settings.phtml:290
 msgid "truncate table before import routes or csv file"
 msgstr "Tabel afkappen vóór het importeren van routes of CSV-bestand"
 
-#: resources/views/settings.phtml:293
+#: resources/views/settings.phtml:292
 msgid "Table truncate"
 msgstr "Tabel afkappen"
 
-#: resources/views/settings.phtml:297
+#: resources/views/settings.phtml:296
 msgid "Reset routes to delivery status"
 msgstr "Routes terugzetten naar leveringsstatus"
 
-#: resources/views/settings.phtml:304
+#: resources/views/settings.phtml:303
 msgid "CSV-Import"
 msgstr "CSV-import"
 
-#: resources/views/settings.phtml:308
+#: resources/views/settings.phtml:307
 msgid "Separator"
 msgstr "Scheidingsteken"
 
-#: resources/views/settings.phtml:313
+#: resources/views/settings.phtml:312
 msgid "CSV-Export"
 msgstr "CSV-export"
 
-#: resources/views/settings.phtml:320
+#: resources/views/settings.phtml:319
 msgid "CSV import file"
 msgstr "CSV-importbestand"
 
-#: resources/views/settings.phtml:342
+#: resources/views/settings.phtml:341
 msgid "Automatically refresh data table when module is updated"
 msgstr ""
 "De gegevenstabel automatisch vernieuwen wanneer de module wordt bijgewerkt"
 
-#: resources/views/settings.phtml:360
+#: resources/views/settings.phtml:359
 msgid "Link to GenWiki"
 msgstr "Link naar GenWiki"
 
 #. I18N: WTHB Link
-#: resources/views/settings.phtml:366
+#: resources/views/settings.phtml:365
 msgid ""
 "This is the base link that is combined with the relative context links from "
 "the database table."
@@ -453,39 +448,44 @@ msgstr ""
 "Dit is de basislink die wordt gecombineerd met de relatieve contextlinks uit "
 "de databasetabel."
 
-#: resources/views/settings.phtml:373
+#: resources/views/settings.phtml:372
 msgid "Standard Link to webtrees manual"
 msgstr "Standaardlink naar webtreeshandleiding"
 
 #. I18N: WTHB Link
-#: resources/views/settings.phtml:379
+#: resources/views/settings.phtml:378
 msgid "This fallback link is used, when no specific context link was defined."
 msgstr ""
 "Deze terugval-link wordt gebruikt wanneer er geen specifieke contextlink is "
 "gedefinieerd."
 
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:386
+#: resources/views/settings.phtml:385
 msgid "Home link"
 msgstr "startpagina-link"
 
-#: resources/views/settings.phtml:390
+#: resources/views/settings.phtml:389
 msgid "JSON for home link styling"
 msgstr "JSON voor opmaak startpagina-link"
 
 #. I18N: Home link js
-#: resources/views/settings.phtml:396
+#: resources/views/settings.phtml:395
 msgid ""
-"JavaScript object that can be used to dynamically apply CSS styles for the "
-"home link that match the current theme."
+"JSON object that can be used to dynamically apply CSS styles for the home "
+"link that match the current theme."
 msgstr ""
-"JavaScript-object dat kan worden gebruikt om dynamisch CSS-stijlen toe te "
-"passen op de startpagina-link die overeenkomt met het huidige thema."
+"JSON-object dat kan worden gebruikt om dynamisch CSS-stijlen toe te passen "
+"op de startpagina-link die overeenkomt met het huidige thema."
 
 #. I18N: Home link js
-#: resources/views/settings.phtml:398
+#: resources/views/settings.phtml:397
 msgid "Standard CSS class name"
 msgstr "Standaard CSS-klassenaam"
+
+#. I18N: Home link js
+#: resources/views/settings.phtml:399
+msgid "Example"
+msgstr "Voorbeeld"
 
 #: resources/views/settings.phtml:434
 msgid "Javascript is invalid"
@@ -496,12 +496,12 @@ msgid "JSON is invalid"
 msgstr "JSON is ongeldig"
 
 #. I18N: Module title
-#: LinkEnhancerModule.php:128
+#: LinkEnhancerModule.php:129
 msgid "Link-Enhancer"
 msgstr "Link-verbeteraar"
 
 #. I18N: Module description
-#: LinkEnhancerModule.php:138
+#: LinkEnhancerModule.php:139
 msgid ""
 "Cross-references to Gedcom datasets, Markdown editor, context-sensitive link "
 "to the GenWiki webtrees manual"
@@ -509,161 +509,161 @@ msgstr ""
 "Kruisverwijzingen naar Gedcom-gegevenssets, Markdown-editor, "
 "contextgevoelige link naar de GenWiki-webtreeshandleiding"
 
-#: LinkEnhancerModule.php:231 LinkEnhancerModule.php:753
-#: LinkEnhancerModule.php:855
+#: LinkEnhancerModule.php:232 LinkEnhancerModule.php:754
+#: LinkEnhancerModule.php:856
 #, php-format
 msgid "Routes imported (Total: %s / skipped: %s)"
 msgstr "Geïmporteerde routes (Totaal: %s / overgeslagen: %s)"
 
-#: LinkEnhancerModule.php:337
+#: LinkEnhancerModule.php:338
 msgid "Table for context help is missing - fallback to standard url"
 msgstr "Tabel voor contextuele hulp ontbreekt - terugvallen op standaard-URL"
 
-#: LinkEnhancerModule.php:623
+#: LinkEnhancerModule.php:624
 msgid "Home link - JSON with CSS rules seems to be invalid."
 msgstr "Startpagina-link - JSON met CSS-regels lijkt ongeldig te zijn."
 
-#: LinkEnhancerModule.php:770
+#: LinkEnhancerModule.php:771
 msgid "Separator is not set."
 msgstr "Scheidingsteken is niet ingesteld."
 
-#: LinkEnhancerModule.php:773
+#: LinkEnhancerModule.php:774
 msgid "For the separator is only a single character allowed."
 msgstr "Voor het scheidingsteken is slechts één teken toegestaan."
 
-#: LinkEnhancerModule.php:795 LinkEnhancerModule.php:835
+#: LinkEnhancerModule.php:796 LinkEnhancerModule.php:836
 msgid "Table for context help is missing - nothing to do."
 msgstr "Tabel voor contextuele hulp ontbreekt - niets te doen."
 
-#: LinkEnhancerModule.php:801
+#: LinkEnhancerModule.php:802
 msgid "No data available for export."
 msgstr "Geen gegevens beschikbaar voor export."
 
-#: LinkEnhancerModule.php:844
+#: LinkEnhancerModule.php:845
 msgid "No CSV file was received."
 msgstr "Geen CSV-bestand ontvangen."
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:974 LinkEnhancerModule.php:1032
-#: LinkEnhancerModule.php:1033
+#: LinkEnhancerModule.php:975 LinkEnhancerModule.php:1033
+#: LinkEnhancerModule.php:1034
 msgid "bold"
 msgstr "vet"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:975 LinkEnhancerModule.php:1028
-#: LinkEnhancerModule.php:1029
+#: LinkEnhancerModule.php:976 LinkEnhancerModule.php:1029
+#: LinkEnhancerModule.php:1030
 msgid "italic"
 msgstr "cursief"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:976 LinkEnhancerModule.php:1045
-#: LinkEnhancerModule.php:1046
+#: LinkEnhancerModule.php:977 LinkEnhancerModule.php:1046
+#: LinkEnhancerModule.php:1047
 msgid "format as code"
 msgstr "opmaak als code"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:977 LinkEnhancerModule.php:1036
-#: LinkEnhancerModule.php:1037 LinkEnhancerModule.php:1040
-#: LinkEnhancerModule.php:1042
+#: LinkEnhancerModule.php:978 LinkEnhancerModule.php:1037
+#: LinkEnhancerModule.php:1038 LinkEnhancerModule.php:1041
+#: LinkEnhancerModule.php:1043
 #, php-format
 msgid "Level %s heading"
 msgstr "Niveau %s koptekst"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:978 LinkEnhancerModule.php:1049
-#: LinkEnhancerModule.php:1050
+#: LinkEnhancerModule.php:979 LinkEnhancerModule.php:1050
+#: LinkEnhancerModule.php:1051
 msgid "Bulleted list"
 msgstr "Opsommingstekenslijst"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:979 LinkEnhancerModule.php:1053
-#: LinkEnhancerModule.php:1054
+#: LinkEnhancerModule.php:980 LinkEnhancerModule.php:1054
+#: LinkEnhancerModule.php:1055
 msgid "Numbered list"
 msgstr "Genummerde lijst"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:980 LinkEnhancerModule.php:1057
-#: LinkEnhancerModule.php:1058
+#: LinkEnhancerModule.php:981 LinkEnhancerModule.php:1058
+#: LinkEnhancerModule.php:1059
 msgid "Insert link"
 msgstr "Link invoegen"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:981 LinkEnhancerModule.php:1061
-#: LinkEnhancerModule.php:1062
+#: LinkEnhancerModule.php:982 LinkEnhancerModule.php:1062
+#: LinkEnhancerModule.php:1063
 msgid "Insert image"
 msgstr "Afbeelding invoegen"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:982 LinkEnhancerModule.php:1066
-#: LinkEnhancerModule.php:1067
+#: LinkEnhancerModule.php:983 LinkEnhancerModule.php:1067
+#: LinkEnhancerModule.php:1068
 msgid "Horizontal rule"
 msgstr "Horizontale regel"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:983
+#: LinkEnhancerModule.php:984
 msgid "Undo"
 msgstr "Ongedaan maken"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:984
+#: LinkEnhancerModule.php:985
 msgid "Redo"
 msgstr "Opnieuw doen"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:986
+#: LinkEnhancerModule.php:987
 msgid "Link destination"
 msgstr "Linkbestemming"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:987 LinkEnhancerModule.php:1070
+#: LinkEnhancerModule.php:988 LinkEnhancerModule.php:1071
 msgid "Insert table"
 msgstr "Tabel invoegen"
 
 #. I18N: JS MDE
-#: LinkEnhancerModule.php:988
+#: LinkEnhancerModule.php:989
 msgid ""
 "How many columns and rows should the table have (input: [number] [number])?"
 msgstr ""
 "Hoeveel kolommen en rijen moet de tabel hebben (invoer: [getal] [getal])?"
 
 #. I18N: JS enhanced link
-#: LinkEnhancerModule.php:990
+#: LinkEnhancerModule.php:991
 msgid "cross reference"
 msgstr "kruisverwijzing"
 
 #. I18N: JS enhanced link, %s name of location
-#: LinkEnhancerModule.php:991
+#: LinkEnhancerModule.php:992
 #, php-format
 msgid "Online Local heritage book of %s at CompGen"
 msgstr "Online-lokaalerfgoedboek van %s bij CompGen"
 
 #. I18N: JS enhanced link
-#: LinkEnhancerModule.php:992
+#: LinkEnhancerModule.php:993
 msgid "Historic Geo Information System (GOV)"
 msgstr "Historisch geo-informatiesysteem (GOV)"
 
 #. I18N: JS enhanced link
-#: LinkEnhancerModule.php:993
+#: LinkEnhancerModule.php:994
 msgid "GEDBAS (Genealogical Database - collected personal data)"
 msgstr "GEDBAS (Genealogische database - verzamelde persoonsgegevens)"
 
 #. I18N: JS enhanced link
-#: LinkEnhancerModule.php:994
+#: LinkEnhancerModule.php:995
 msgid "wer-wir-waren.at"
 msgstr "wer-wir-waren.at"
 
 #. I18N: JS enhanced link
-#: LinkEnhancerModule.php:995
+#: LinkEnhancerModule.php:996
 msgid "Residents database - Family research in West Prussia"
 msgstr "Inwonersdatabase- Familieonderzoek in West-Pruisen"
 
 #. I18N: JS enhanced link
-#: LinkEnhancerModule.php:997
+#: LinkEnhancerModule.php:998
 msgid "Syntax error"
 msgstr "Syntaxfout"
 
 #. I18N: JS enhanced link wt1 - %s=rectypes
-#: LinkEnhancerModule.php:998
+#: LinkEnhancerModule.php:999
 #, php-format
 msgid ""
 "standard link to note (available record types: %s) with XREF in active tree"
@@ -672,62 +672,65 @@ msgstr ""
 "stamboom"
 
 #. I18N: JS enhanced link wt2
-#: LinkEnhancerModule.php:999
+#: LinkEnhancerModule.php:1000
 msgid ""
 "link to record type individual with XREF from \"othertree\" and also link to"
 msgstr "link naar recordtype persoon met XREF uit “othertree” en ook link naar"
 
 #. I18N: JS enhanced link osm1
-#: LinkEnhancerModule.php:1000
+#: LinkEnhancerModule.php:1001
 msgid "zoom/lat/lon for locating map"
 msgstr "zoom/lat/lon voor lokaliseren kaart"
 
 #. I18N: JS enhanced link osm2
-#: LinkEnhancerModule.php:1001
+#: LinkEnhancerModule.php:1002
 msgid "same as before with additional marker"
 msgstr "hetzelfde als voorheen, met extra markering"
 
 #. I18N: JS enhanced link osm3
-#: LinkEnhancerModule.php:1002
+#: LinkEnhancerModule.php:1003
 msgid "show also node/way/relation, see also"
 msgstr "toon ook knooppunt/weg/relatie, zie ook"
 
 #. I18N: JS enhanced link osm4
-#: LinkEnhancerModule.php:1003
+#: LinkEnhancerModule.php:1004
 msgid "show also node/way/relation - alternative notation"
 msgstr "toon ook knooppunt/weg/relatie - alternatieve notatie"
 
 #. I18N: JS enhanced link ofb1
-#: LinkEnhancerModule.php:1004
+#: LinkEnhancerModule.php:1005
 msgid "link to Online Local heritage book at CompGen with given uid"
 msgstr "Link naar online-lokaalerfgoedboek bij CompGen met opgegeven uid"
 
 #. I18N: JS enhanced link wp1
-#: LinkEnhancerModule.php:1005
+#: LinkEnhancerModule.php:1006
 msgid "open the article in the german wikipedia"
 msgstr "Open het artikel in de Duitse wikipedia."
 
 #. I18N: JS enhanced link wp2
-#: LinkEnhancerModule.php:1006
+#: LinkEnhancerModule.php:1007
 msgid "open the english version of the article"
 msgstr "Open de Engelse versie van het artikel."
 
 #. I18N: JS enhanced link wp3
-#: LinkEnhancerModule.php:1007
+#: LinkEnhancerModule.php:1008
 msgid "you can address every subdomain instance of wikipedia.org"
 msgstr "U kunt elke subdomeininstantie van wikipedia.org aanspreken."
 
 #. I18N: JS enhanced link gedbas1
-#: LinkEnhancerModule.php:1008
+#: LinkEnhancerModule.php:1009
 msgid "open person record with given number"
 msgstr "Open persoonsrecord met opgegeven nummer."
 
 #. I18N: JS enhanced link gedbas2
-#: LinkEnhancerModule.php:1009
+#: LinkEnhancerModule.php:1010
 msgid "open person record with UID"
 msgstr "open persoonrecord met UID"
 
-#: LinkEnhancerModule.php:1041
+#: LinkEnhancerModule.php:1042
 #, php-format
 msgid "and so on until level %s"
 msgstr "enzovoort tot niveau %s"
+
+#~ msgid "The link function is controlled via the anchor part of the URI."
+#~ msgstr "De linkfunctie wordt geregeld via het ankergedeelte van de URI."

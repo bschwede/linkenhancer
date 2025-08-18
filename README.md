@@ -299,9 +299,10 @@ Discussion on translating can be done by creating an [issue](https://github.com/
 Updated translations will be included in the next release of this module.
 
 Beside English the following languages are available:
-* German
 * Catalan (by Bernat Josep Banyuls i Sala)
+* Dutch (by TheDutchJewel)
 * Español (by Bernat Josep Banyuls i Sala)
+* German
 
 
 
