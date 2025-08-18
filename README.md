@@ -2,7 +2,7 @@
 
 [TL;DR](#tlrdr) | [Description](#description) | [webtrees](#webtrees) | [Requirements](#requirements) | [Installation](#installation) | [Contributing](#contributing) | [Translation](#translation) | [Support](#support) | [License](#license)
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0) ![webtrees major version](https://img.shields.io/badge/webtrees-v2.2.x-green) ![Latest Release](https://img.shields.io/github/v/release/bschwede/linkenhancer)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0) ![webtrees major version](https://img.shields.io/badge/webtrees-v2.2.x-green) ![Latest Release](https://img.shields.io/github/v/release/bschwede/linkenhancer) ![Downloads](https://img.shields.io/github/downloads/bschwede/linkenhancer/total.svg)
 
 
 <a name="tldr"></a>
@@ -19,7 +19,7 @@ What you can expect from the module, illustrated with screenshots:
 | markdown editor | markdown help |
 
 Here the available options to be set on this modules admin page:
-[![admin page](resources/img/screenshot_admin-page.png)](resources/img/screenshot_admin-page.png)
+[![admin page](resources/img/screenshot_admin-page_small.png)](resources/img/screenshot_admin-page.png)
 
 <a name="description"></a>
 ## Description
