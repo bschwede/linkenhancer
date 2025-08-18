@@ -76,7 +76,8 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
 
     public const PREF_HOME_LINK_TYPE = 'HOME_LINK_TYPE'; // home link type: 0=off, 1=tree, 2=my-page
-    public const PREF_HOME_LINK_JS = 'HOME_LINK_JS'; // string; javascript object { '*': stylerules-string, 'theme': stylerules-string}
+    public const PREF_HOME_LINK_JSON = 'HOME_LINK_JS'; // string; javascript object { '*': stylerules-string, 'theme': stylerules-string}
+    public const EXAMPLE_HOME_LINK_JSON = '{ "*": ".homelink { color: #039; }",  "colors_nocturnal": ".homelink { color: antiquewhite; }" }';
     public const PREF_WTHB_ACTIVE = 'WTHB_LINK_ACTIVE'; // link to GenWiki "Webtrees Handbuch"
     public const PREF_WTHB_FAICON = 'WTHB_FAICON'; // prepend fa icon to help link
     public const PREF_WTHB_UPDATE = 'WTHB_UPDATE'; // auto refresh table on module update
@@ -102,7 +103,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
     protected const DEFAULT_PREFERENCES = [
         self::PREF_HOME_LINK_TYPE        => '1', //int triple-state, 0=off, 1=tree, 2=my-page
-        self::PREF_HOME_LINK_JS          => '{ "*": ".homelink { color: #039; }",  "colors_nocturnal": ".homelink { color: antiquewhite; }" }', // string; javascript object { '*': stylerules-string, 'theme': stylerules-string}
+        self::PREF_HOME_LINK_JSON        => '', // string; json object { '*': stylerules-string, 'theme': stylerules-string}
         self::PREF_WTHB_ACTIVE           => '1', //bool
         self::PREF_WTHB_FAICON           => '1', //bool
         self::PREF_WTHB_UPDATE           => '1', //bool
@@ -607,7 +608,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             $url = $cfg_home_type == 1 ? route(TreePage::class, $params) : route(HomePage::class, $params);
             $initJs .= '$(".wt-site-title").wrapInner(`<a class="' . self::STDCLASS_HOME_LINK .'" href="' . e($url) . '"></a>`);';
 
-            $cfg_home_link_json = trim($this->getPref(self::PREF_HOME_LINK_JS));
+            $cfg_home_link_json = trim($this->getPref(self::PREF_HOME_LINK_JSON));
             if ($cfg_home_link_json) {
                 $theme_palette = $theme . ($palette ? "_{$palette}" : ''); // palette is also set with other themes than colors
                 $json = json_decode($cfg_home_link_json, true);

@@ -37,7 +37,6 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
     <?= /*I18N: Settings - prologue sentence 2 */ I18N::translate('This avoids having to store fully qualified links, which impairs the portability of Gedcom data.') ?>
     <?= /*I18N: Settings - prologue sentence 3 */ I18N::translate('By linking the notes to the GEDCOM data records (persons, families, sources, etc.) from the text makes story telling much easier and thus also save this information in the GEDCOM file.'); ?>
     <?= /*I18N: Settings - prologue sentence 4 */ I18N::translate('The option of embedding the images already inserted in the family tree in the notes rounds off this approach.') ?>
-    <?= /*I18N: Settings - prologue sentence 5 */ I18N::translate('The link function is controlled via the anchor part of the URI.') ?>
     <br>
     <?= I18N::translate('See also') ?>: <a target="_blank" href="<?= LinkEnhancerModule::CUSTOM_WEBSITE ?>">GitHub README</a>
 </p>
@@ -385,7 +384,7 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
 
         <h4 style="border-bottom:1px solid lightgray; margin-top: 1.2em;">[5] <?= /*I18N: Settings - section title */ I18N::translate('Home link') ?></h4>
         <div class="row">
-            <!-- home link --><?php $prefId = LinkEnhancerModule::PREF_HOME_LINK_JS; ?>
+            <!-- home link --><?php $prefId = LinkEnhancerModule::PREF_HOME_LINK_JSON; ?>
             <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
                 <?= I18N::translate('JSON for home link styling') . ' (' . /*I18N: webtrees.pot */ I18N::translate('optional') . ')' ?>
             </label>
@@ -393,10 +392,11 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
                 <textarea id="<?= $prefId ?>" name="<?= $prefId ?>" class="form-control font-monospace" dir="ltr"
                     rows="5"><?= e($prefs[$prefId]) ?></textarea>
                 <div class="form-text">
-                    <p><?= /*I18N: Home link js */ I18N::translate('JavaScript object that can be used to dynamically apply CSS styles for the home link that match the current theme.') ?>
+                    <p><?= /*I18N: Home link js */ I18N::translate('JSON object that can be used to dynamically apply CSS styles for the home link that match the current theme.') ?>
                     <br>
                     <?= /*I18N: Home link js */ I18N::translate('Standard CSS class name') ?>: <code><?= LinkEnhancerModule::STDCLASS_HOME_LINK ?></code>
                     </p>
+                    <p><?= /*I18N: Home link js */ I18N::translate('Example') ?>: <code><?= LinkEnhancerModule::EXAMPLE_HOME_LINK_JSON ?></code></p>
                 </div>
             </div>
         </div>
@@ -436,7 +436,7 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
             }
         }
 
-        let homelink = $('#<?= LinkEnhancerModule::PREF_HOME_LINK_JS; ?>');
+        let homelink = $('#<?= LinkEnhancerModule::PREF_HOME_LINK_JSON; ?>');
         let jsonString = homelink.val().trim();
         if (jsonString) {
             try {
