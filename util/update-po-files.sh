@@ -10,9 +10,6 @@ POT_FILE_FILTERED="$LANG_DIR/messages.pot"
 
 cd "$PROJECT_ROOT" || exit 1
 
-# list of supported lLanguages (ISO-Codes)
-LANGUAGES=("de" "en")
-
 echo "📦 Generate POT-File: $POT_FILE_ALL"
 
 # Erzeuge messages.pot mit relativen Pfaden
@@ -67,8 +64,8 @@ END {
 POT_FILE="$POT_FILE_FILTERED"
 
 # init PO-files
-for lang in "${LANGUAGES[@]}"; do
-  PO_FILE="$LANG_DIR/$lang.po"
+for PO_FILE in "$LANG_DIR"/*.po; do
+  lang=$(basename "${PO_FILE%.*}")
 
   if [[ -f "$PO_FILE" ]]; then
     echo "🔄 Update existing PO-file for [$lang]"
