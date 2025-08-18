@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-18 18:47+0200\n"
+"POT-Creation-Date: 2025-08-18 18:57+0200\n"
 "PO-Revision-Date: 2025-07-16 17:33+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -63,8 +63,8 @@ msgstr ""
 "marcatge"
 
 #: resources/views/help-md.phtml:19 resources/views/help-md.phtml:51
-#: resources/views/help-md.phtml:61 resources/views/settings.phtml:42
-#: resources/views/settings.phtml:219
+#: resources/views/help-md.phtml:61 resources/views/settings.phtml:41
+#: resources/views/settings.phtml:218
 msgid "See also"
 msgstr "Veure també"
 
@@ -82,7 +82,7 @@ msgstr "Resultat renderitzat"
 msgid "For more depth of detail"
 msgstr "Per a més detalls"
 
-#: resources/views/help-md.phtml:59 resources/views/settings.phtml:112
+#: resources/views/help-md.phtml:59 resources/views/settings.phtml:111
 msgid "Markdown editor for note textareas"
 msgstr "Editor Markdown per a àrees de text de notes"
 
@@ -110,7 +110,7 @@ msgstr ""
 
 #. I18N: help md - section title
 #. I18N: Settings - section title
-#: resources/views/help-md.phtml:69 resources/views/settings.phtml:207
+#: resources/views/help-md.phtml:69 resources/views/settings.phtml:206
 msgid "Enhanced Link Support"
 msgstr "Suport d'enllaços millorat"
 
@@ -165,7 +165,7 @@ msgstr ""
 
 #. I18N: help md - section title
 #. I18N: Settings - section title
-#: resources/views/help-md.phtml:82 resources/views/settings.phtml:229
+#: resources/views/help-md.phtml:82 resources/views/settings.phtml:228
 msgid "Markdown Image Support"
 msgstr "Suport d'imatges Markdown"
 
@@ -198,7 +198,7 @@ msgstr ""
 "La visualització pot personalitzar-se com es desitja utilitzant les següents "
 "classes CSS estàndard o classe CSS addicionals."
 
-#: resources/views/help-md.phtml:89 resources/views/settings.phtml:233
+#: resources/views/help-md.phtml:89 resources/views/settings.phtml:232
 msgid "Markdown image container standard css class"
 msgstr "Classe CSS estàndard de contenidor d'imatges Markdown"
 
@@ -206,7 +206,7 @@ msgstr "Classe CSS estàndard de contenidor d'imatges Markdown"
 msgid "not defined"
 msgstr "sense definir"
 
-#: resources/views/help-md.phtml:92 resources/views/settings.phtml:241
+#: resources/views/help-md.phtml:92 resources/views/settings.phtml:240
 msgid "Markdown image title container standard css class"
 msgstr "Classe CSS estàndard per al contenidor del títol d'imatge a Markdown"
 
@@ -252,23 +252,17 @@ msgstr ""
 "L'opció d'incrustar les imatges ja inserides en l'arbre genealògic en les "
 "notes, completen aquest procediment."
 
-#. I18N: Settings - prologue sentence 5
-#: resources/views/settings.phtml:40
-msgid "The link function is controlled via the anchor part of the URI."
-msgstr ""
-"La funció d'enllaç es controla a través de la part d'ancoratge de la URL."
-
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:51
+#: resources/views/settings.phtml:50
 msgid "Activate Support"
 msgstr "Activar assistència"
 
-#: resources/views/settings.phtml:58
+#: resources/views/settings.phtml:57
 msgid "Activate enhanced links?"
 msgstr "Activar enllaços millorats?"
 
 #. I18N: Enhanced Links
-#: resources/views/settings.phtml:68
+#: resources/views/settings.phtml:67
 #, fuzzy
 msgid ""
 "This function is implemented via Javascript and only affects links in notes "
@@ -277,29 +271,29 @@ msgstr ""
 "Aquesta funció s'implementa mitjançant JavaScript i només afecta els "
 "enllaços de les notes i als blocs de l'àrea del client."
 
-#: resources/views/settings.phtml:79
+#: resources/views/settings.phtml:78
 msgid "Activate markdown image tweak?"
 msgstr "Activar l'ajust d'imatge Markdown?"
 
 #. I18N: MD img - sentence 1
-#: resources/views/settings.phtml:89
+#: resources/views/settings.phtml:88
 msgid "Only works in notes that are formatted with Markdown."
 msgstr "Només funciona en notes amb Markdown."
 
 #. I18N: MDE
-#: resources/views/settings.phtml:91
+#: resources/views/settings.phtml:90
 #, php-format
 msgid "Precondition: Tree preference '%s' need to be set to markdown."
 msgstr ""
 "Condició prèvia: La preferència de l'arbre '%s' ha d'estar establerta a "
 "Markown."
 
-#: resources/views/settings.phtml:131
+#: resources/views/settings.phtml:130
 msgid "Show Help Link"
 msgstr "Mostrar enllaç d'ajuda"
 
 #. I18N:
-#: resources/views/settings.phtml:145
+#: resources/views/settings.phtml:144
 #, fuzzy
 msgid ""
 "A context-sensitive link to the German webtrees manual can be added by "
@@ -309,7 +303,7 @@ msgstr ""
 "Javascrip al petit menú de navegació."
 
 #. I18N:
-#: resources/views/settings.phtml:146
+#: resources/views/settings.phtml:145
 msgid ""
 "If this feature is also desired in the admin backend, patch P002 would need "
 "to be applied or at least the custom module vesta_common would need to be "
@@ -319,35 +313,35 @@ msgstr ""
 "aplicar el parxís P002 o, almenys, instal·lar el mòdul personalitzat "
 "Vesta_common."
 
-#: resources/views/settings.phtml:157
+#: resources/views/settings.phtml:156
 msgid "Site title as home link"
 msgstr "Títol del lloc web com a enllaç d'inici"
 
 #. I18N: home link
-#: resources/views/settings.phtml:165
+#: resources/views/settings.phtml:164
 msgid "home page of the current tree"
 msgstr "Pàgina d'inici de l'arbre actual"
 
 #. I18N: home link
-#: resources/views/settings.phtml:166
+#: resources/views/settings.phtml:165
 msgid "my page of the registered user"
 msgstr "la meva pàgina d'usuari registrat"
 
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:181
+#: resources/views/settings.phtml:180
 msgid "More options"
 msgstr "Més opcions"
 
-#: resources/views/settings.phtml:188
+#: resources/views/settings.phtml:187
 msgid "Output of debug information on the JS console"
 msgstr "Sortida d'informació de depuració a la consola JS"
 
-#: resources/views/settings.phtml:211
+#: resources/views/settings.phtml:210
 msgid "JavaScript for additional link targets"
 msgstr "JavaScrip per a enllaços addicionals"
 
 #. I18N: Enhanced Links js
-#: resources/views/settings.phtml:216
+#: resources/views/settings.phtml:215
 msgid ""
 "The JavaScript object overwrites and supplements the predefined settings, "
 "which are taken from the following code excerpt and can also serve as a "
@@ -358,13 +352,13 @@ msgstr ""
 "punt de referència per als ajustos."
 
 #. I18N: Enhanced Links js
-#: resources/views/settings.phtml:218
+#: resources/views/settings.phtml:217
 msgid "Any CSS rules required are best added via the “CSS and JS” module."
 msgstr ""
 "Les regles CSS necessàries s'afegeixen millor a través del mòdul «CCS i JS"
 
 #. I18N: Enhanced Links js
-#: resources/views/settings.phtml:219
+#: resources/views/settings.phtml:218
 msgid ""
 "Only the definition of the icon as a background image is actually needed - "
 "referencing as data: URL."
@@ -373,20 +367,20 @@ msgstr ""
 "fons fent referència com a dades: URL."
 
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:250 LinkEnhancerModule.php:567
+#: resources/views/settings.phtml:249 LinkEnhancerModule.php:567
 msgid "Webtrees manual"
 msgstr "Manual Webtrees"
 
-#: resources/views/settings.phtml:256
+#: resources/views/settings.phtml:255
 msgid "Precede the help link with an icon"
 msgstr "Anteposar una icona a l'enllaç d'ajuda"
 
-#: resources/views/settings.phtml:274
+#: resources/views/settings.phtml:273
 msgid "Data table"
 msgstr "Tabla de dades"
 
 #. I18N: WTHB Link table
-#: resources/views/settings.phtml:278
+#: resources/views/settings.phtml:277
 msgid ""
 "The context is established by assigning the routes used in webtrees to the "
 "corresponding sections in the manual."
@@ -395,64 +389,64 @@ msgstr ""
 "les seccions corresponents del manual."
 
 #. I18N: WTHB Link table
-#: resources/views/settings.phtml:280
+#: resources/views/settings.phtml:279
 msgid "The data is stored in the database table"
 msgstr "Les dades s'emmagatzemen a la tabla de la base de dades"
 
 #. I18N: WTHB Link table rows
-#: resources/views/settings.phtml:282
+#: resources/views/settings.phtml:281
 msgid "Data rows"
 msgstr "Línia de dades"
 
 #. I18N: WTHB Link table rows assigned/total
-#: resources/views/settings.phtml:283
+#: resources/views/settings.phtml:282
 #, php-format
 msgid "%s of %s assigned"
 msgstr "%s de %s assignats"
 
-#: resources/views/settings.phtml:289
+#: resources/views/settings.phtml:288
 msgid "Import registered routes"
 msgstr "Importar rutes registrades"
 
-#: resources/views/settings.phtml:291
+#: resources/views/settings.phtml:290
 msgid "truncate table before import routes or csv file"
 msgstr "retallar tabla abans d'importar rutes o arxiu CSV"
 
-#: resources/views/settings.phtml:293
+#: resources/views/settings.phtml:292
 msgid "Table truncate"
 msgstr "Retallar tabla"
 
-#: resources/views/settings.phtml:297
+#: resources/views/settings.phtml:296
 msgid "Reset routes to delivery status"
 msgstr "Restablir rutes al format de lliurament"
 
-#: resources/views/settings.phtml:304
+#: resources/views/settings.phtml:303
 msgid "CSV-Import"
 msgstr "Importar CSV"
 
-#: resources/views/settings.phtml:308
+#: resources/views/settings.phtml:307
 msgid "Separator"
 msgstr "Separador"
 
-#: resources/views/settings.phtml:313
+#: resources/views/settings.phtml:312
 msgid "CSV-Export"
 msgstr "Exportar CSV"
 
-#: resources/views/settings.phtml:320
+#: resources/views/settings.phtml:319
 msgid "CSV import file"
 msgstr "Arxiu CSV d'importació"
 
-#: resources/views/settings.phtml:342
+#: resources/views/settings.phtml:341
 msgid "Automatically refresh data table when module is updated"
 msgstr ""
 "Actualitzar automàticament la taula de dades quan s'actualitza el mòdul"
 
-#: resources/views/settings.phtml:360
+#: resources/views/settings.phtml:359
 msgid "Link to GenWiki"
 msgstr "Enllaç a GenWiki"
 
 #. I18N: WTHB Link
-#: resources/views/settings.phtml:366
+#: resources/views/settings.phtml:365
 msgid ""
 "This is the base link that is combined with the relative context links from "
 "the database table."
@@ -460,47 +454,47 @@ msgstr ""
 "Aquest és l'enllaç que es combina amb els enllaços contextuals relatius de "
 "la tabla de base de dades."
 
-#: resources/views/settings.phtml:373
+#: resources/views/settings.phtml:372
 msgid "Standard Link to webtrees manual"
 msgstr "Enllaç al manual de webtrees"
 
 #. I18N: WTHB Link
-#: resources/views/settings.phtml:379
+#: resources/views/settings.phtml:378
 msgid "This fallback link is used, when no specific context link was defined."
 msgstr ""
 "Aquest enllaç alternatiu s'utilitza quan no s'ha definit cap enllaç "
 "contextual específic."
 
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:386
+#: resources/views/settings.phtml:385
 msgid "Home link"
 msgstr "Enllaç d'inici"
 
-#: resources/views/settings.phtml:390
+#: resources/views/settings.phtml:389
 msgid "JSON for home link styling"
 msgstr "JSON per dissenyar els enllaços d'inici"
 
 #. I18N: Home link js
-#: resources/views/settings.phtml:396
+#: resources/views/settings.phtml:395
 #, fuzzy
 msgid ""
 "JSON object that can be used to dynamically apply CSS styles for the home "
 "link that match the current theme."
 msgstr ""
-"JavaScript es pot utilitzar per aplicar dinàmicament estils CSS per al "
-"enllaç d'inici que coincideixin amb el tema actual."
+"JSON es pot utilitzar per aplicar dinàmicament estils CSS per al enllaç "
+"d'inici que coincideixin amb el tema actual."
 
 #. I18N: Home link js
-#: resources/views/settings.phtml:398
+#: resources/views/settings.phtml:397
 msgid "Standard CSS class name"
 msgstr "Nom de la classe CSS estàndard"
 
-#: resources/views/settings.phtml:434
+#: resources/views/settings.phtml:433
 #, fuzzy
 msgid "Javascript is invalid"
 msgstr "JavaScript no és vàlid"
 
-#: resources/views/settings.phtml:445
+#: resources/views/settings.phtml:444
 msgid "JSON is invalid"
 msgstr "JSON no és vàlid"
 
@@ -740,3 +734,7 @@ msgstr "obrir fitxa d'una persona amb l'identificador UID"
 #, php-format
 msgid "and so on until level %s"
 msgstr "i així successivament fins al nivell %s"
+
+#~ msgid "The link function is controlled via the anchor part of the URI."
+#~ msgstr ""
+#~ "La funció d'enllaç es controla a través de la part d'ancoratge de la URL."
