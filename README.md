@@ -68,7 +68,7 @@ Included are the following **predefined external targets** (the parameter keys a
     - r=repository
     - n=note
     - l=sharedPlace
-  * `wt=i@XREF@othertree+dia` - link to record type individual with XREF from tree "othertree" and also link to Interactive tree of this person
+  - `wt=i@XREF@othertree+dia` - link to record type individual with XREF from tree "othertree" and also link to Interactive tree of this person
 * **HTML**: The same applies to html links: `<a href="#@wt=i@I1@">Link display title</a>`
   So this is also useable in cooperation with the name badge function of the [“⚶ Vesta Classic Look & Feel” module](https://github.com/vesta-webtrees-2-custom-modules/vesta_classic_laf) in the HTML snippet field: `<a href="#@fsft=<ref/>"></a>` for linking to a record in the Family Search Family Tree.
 
@@ -120,7 +120,7 @@ Now some **explanation** for the used properties in the code snippet above (as a
 * *url* = service url to be called
   standard: the parameter value / given record id (param-value) will be appended to the end of the url
   It can also be a function provided, that accepts as parameter (id, title) and returns an object `{ url, title }`. This returned title will be set instead of the name-property.
-- *cname* = [CSS](https://en.wikipedia.org/wiki/CSS) class name(s) whitespace separated
+* *cname* = [CSS](https://en.wikipedia.org/wiki/CSS) class name(s) whitespace separated
 * *help* = optional array of objects `[{n:'', e:''},..]` to illustrate the use of a non standard target (where the url-property is a function) by examples (in e), provided with explanatory text (in n). This information is listed in the markdown help.
 
 `I18N` is an JavaScript object passed through from this module. 
@@ -300,6 +300,9 @@ Updated translations will be included in the next release of this module.
 
 Beside English the following languages are available:
 * German
+* Catalan (by Bernat Josep Banyuls i Sala)
+* Español (by Bernat Josep Banyuls i Sala)
+
 
 
 
