@@ -58,13 +58,18 @@ class CustomMarkdownFactory extends MarkdownFactory {
      * - Public-file: ![img alt text](#@public=relpath/file.jpg&w=100&h=200&cname=css-classname1+css-classname2 "img title")
      * 
      * @param string $html
+     * @param Tree|null $tree
      *
      * @return string
      */
-    public function handleEnhancedImageSrc(string $html): string
+    public function handleEnhancedImageSrc(string $html, Tree|null $tree = null): string
     {
+        if ($tree == null) { // on admin pages there is no tree parameter
+            return $html;
+        }
+        $this->tree = $tree;
+
         $request = Registry::container()->get(ServerRequestInterface::class);
-        $this->tree = Validator::attributes($request)->tree();
         $base_url = Validator::attributes($request)->string('base_url');
         $this->public_url = $base_url . '/public/';
 
@@ -201,7 +206,7 @@ class CustomMarkdownFactory extends MarkdownFactory {
     {
         $html = parent::markdown($markdown, $tree);
         
-        $html = $this->handleEnhancedImageSrc($html);
+        $html = $this->handleEnhancedImageSrc($html, $tree);
 
         return $html;
     }
