@@ -39,7 +39,7 @@ Additionally there are some goodies more or less related with links:
 ### Enhanced links
 Although webtrees replaces [XREFs](https://wiki.genealogy.net/GEDCOM/XREF_ID) such as `@I2@` in notes with a **cross-reference** and it's appropriate display name, this is not so flexible. You can't determine the display name. Unfortunately, this does not work in the HTML block on the start page if you want to refer to a data record in the continuous text without inserting absolute references (such absolute references could be entered in the source code of the HTML block as follows, for example: `<a href="https://mytree.somewhere/tree/mytree/individual/I2">Jon Doe</a>`).
 
-**Hint:** The custom module [webtrees-mitalteli-show-xref](https://github.com/elysch/webtrees-mitalteli-show-xref) can help for you find the XREF reference of personal data records.
+**Hint:** The custom module [webtrees-mitalteli-show-xref](https://github.com/elysch/webtrees-mitalteli-show-xref) can help you find the XREF reference of personal data records.
 
 The enhanced links function is implemented via Javascript and searches in the rendered output of webtrees for `<a>` tags whose href attribute values begin with `#@`. This way it is possible to handle links in markdown and html markup. Because it is processed in the browser on client side, the existence of the cross-referenced data records in webtrees is not checked in advance. Errors only occur when the link is clicked (e. g. if the access to the ressource is restricted).
 
@@ -60,8 +60,7 @@ Included are the following **predefined external targets** (the parameter keys a
 **Syntax:**
 
 * **Markdown**: In general, an enhanced link looks like this `[Link display title](#@param1&paramN)` so that one or more targets can be addressed at once. For cross-references in webtrees a record type and the XREF is expected, the parameter looks as follows
-  - `wt=n@XREF@` - standard link to note with XREF in the current tree
-    available record types:
+  - `wt=n@XREF@` - standard link to note with XREF in the current tree<br>available record types:
     - i=individual
     - f=family
     - s=source
@@ -74,7 +73,7 @@ Included are the following **predefined external targets** (the parameter keys a
 
 The syntax of the external targets is listed by the markdown help function of this module. In most cases, only one key-value parameter pair needs to be specified, consisting of the short name of the desired target and the ID of the data record located there.
 
-After a lot of theory: How does it look like in webtrees?! In the upper part of the image we can see the edit mode of a note record, below how it ist rendered in view mode:
+After a lot of theory: How does it looks like in webtrees?! In the upper part of the image we can see the edit mode of a note record, below how it ist rendered in view mode:
 ![Note with enhanced links - edit and view](resources/img/screenshot_note-enh-links-edit-and-view.png)
 
 

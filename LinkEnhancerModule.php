@@ -46,7 +46,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Illuminate\Database\Capsule\Manager as DB;
 use Fisharebest\Webtrees\Schema\MigrationInterface;
-use Fisharebest\Webtrees\Html;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Schema\SeedHelpTable;
 use Fisharebest\Webtrees\Session;
 use Fisharebest\Webtrees\Services\TreeService;
@@ -107,7 +106,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         self::PREF_WTHB_ACTIVE           => '1', //bool
         self::PREF_WTHB_FAICON           => '1', //bool
         self::PREF_WTHB_UPDATE           => '1', //bool
-        self::PREF_JS_DEBUG_CONSOLE            => '0', //bool
+        self::PREF_JS_DEBUG_CONSOLE      => '0', //bool
         self::PREF_WTHB_STD_LINK         => self::STDLINK_WTHB, //string
         self::PREF_GENWIKI_LINK          => self::STDLINK_GENWIKI, //string
         self::PREF_MDE_ACTIVE            => '1', //bool
@@ -222,9 +221,13 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         }
 
         return $data;
-    }    
+    }
 
-    public function importDeliveredCsv() {
+
+    /**
+     * import shipped csv route mapping
+     */
+    public function importDeliveredCsv(): void {
         $csvfile = __DIR__ . DIRECTORY_SEPARATOR . 'Schema/SeedHelpTable.csv';
         try {
             $result = $this->importCsv2HelpTable($csvfile);
@@ -241,6 +244,9 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     }
 
 
+    /**
+     * import csv data from file or stream and feed it to the seeder
+     */
     public function importCsv2HelpTable(string|StreamInterface $file, string $separator = ';', bool $truncate = true, string $encoding = '')  {
         $result = [ 'total' => 0, 'skipped' => 0 ];
         $data = [];
