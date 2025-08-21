@@ -33,7 +33,7 @@ Additionally there are some goodies more or less related with links:
 - The note textarea can be a [**visual markdown editor**](#mde) with **markdown help**.
 - A [**context sensitive help link**](#wthb) to the [german webtrees manual](https://wiki.genealogy.net/Webtrees_Handbuch) can be activated in the small menu at the top of the page.
 - The [**site title can be a link**](#homelink) to the tree homepage or the user my page.
-- A few minor **patches**, that can applied by bash script (not necessary for this module).
+- A few minor [**patches**](#patches), that can applied by bash script (not necessary for this module).
 
 <a name="enhancedlinks"></a>
 ### Enhanced links
@@ -171,6 +171,11 @@ Besides syntax higlighting it ships with an icon bar for common format commands,
 <a name="wthb"></a>
 ### German webtrees manual
 A context sensitive link to the [german webtrees manual](https://wiki.genealogy.net/Webtrees_Handbuch) can be added by javascript to the small navigation menu (if this feature is also desired in the admin backend, patch P002 would need to be applied or at least the custom module [vesta_common](https://github.com/vesta-webtrees-2-custom-modules/vesta_common/tree/master) would need to be installed).
+
+If the webtrees page is displayed in a language other than German, it is possible to open the webtrees manual URL via a translation service ([Google Translate](https://translate.google.com/)). This can be enabled or disabled as a site setting or delegated to the visitor to decide.
+![WTHB user setting](resources/img/screenshot_wthb-user-setting.png)
+The link to the setting dialog is displayed when you hover the mouse cursor over the help link for a few seconds.
+
 
 The mapping of routes to help articles in the manual is stored in the database table `route_help_map`. The table has the following headers (the headers required in a CSV file for import are marked with !!):
 
