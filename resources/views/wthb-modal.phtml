@@ -1,0 +1,41 @@
+<?php
+declare(strict_types=1);
+use Fisharebest\Webtrees\I18N;
+?>
+<div class="modal fade" data-bs-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true" id="wthb-modal" 
+  aria-labelledby="wthb-modal-title">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="wthb-modal-title">
+                    <?= /*I18N: wthb link user setting title */ I18N::translate('Webtrees manual link - user setting') ?>
+                </h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<?= /*I18N: webtrees.pot */ I18N::translate('close') ?>">
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="wthb-prologue"><?= /*I18N: wthb link user setting prologue */ I18N::translate('Please select whether you want to access the help page directly or via a translation service.') ?>
+                </p>
+                <div class="row mt-2 mb-2">
+                    <legend class="col-form-label col-sm-6">
+                        <?= /*I18N: wthb link setting option */ I18N::translate('Open webtrees manual URL with Google Translate?') ?>
+                    </legend>
+                    <div class="col-sm-6">
+                        <?= view('components/radios-inline', [
+                            'id' => 'wthb-translate',
+                            'name' => 'wthb-translate',
+                            'options' => [ /*I18N: webtrees.pot */ I18N::translate('no'), /*I18N: webtrees.pot */ I18N::translate('yes')],
+                            'selected' => null
+                        ]) ?>
+                    </div>
+                </div>
+                <p id="wthb-epilogue" style="display:none;" aria-hidden="true">
+                    <?= /*I18N: wthb link user setting epilogue 1 */ I18N::translate('This setting can be adjusted at any time.') ?>
+                    <br>
+                    <?= /*I18N: wthb link user setting epilogue 2 */ I18N::translate('The link to the setting dialog is displayed when you hover the mouse cursor over the help link for a few seconds.') ?>
+                </p>
+            </div>
+            <?= view('modals/footer-save-cancel') ?>
+        </div>
+    </div>
+</div>
