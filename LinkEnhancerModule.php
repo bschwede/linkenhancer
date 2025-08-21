@@ -82,6 +82,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public const PREF_WTHB_UPDATE = 'WTHB_UPDATE'; // auto refresh table on module update
     public const PREF_WTHB_LASTHASH = 'WTHB_LASTHASH'; // last csv hash used for import
     public const PREF_WTHB_STD_LINK = 'WTHB_STD_LINK'; // standard link to GenWiki "Webtrees Handbuch"
+    public const PREF_WTHB_TRANSLATE = 'WTHB_TRANSLATE'; // use translation service for webtrees manual pages
     public const PREF_JS_DEBUG_CONSOLE = 'JS_DEBUG_CONSOLE'; // console.debug with active route info; 0=off, 1=on
     public const PREF_GENWIKI_LINK = 'GENWIKI_LINK'; // base link to GenWiki
     public const PREF_MDE_ACTIVE = 'MDE_ACTIVE'; // enable markdown editor for note textareas
@@ -109,6 +110,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         self::PREF_JS_DEBUG_CONSOLE      => '0', //bool
         self::PREF_WTHB_STD_LINK         => self::STDLINK_WTHB, //string
         self::PREF_GENWIKI_LINK          => self::STDLINK_GENWIKI, //string
+        self::PREF_WTHB_TRANSLATE        => '1', //int triple-state. 0=off, 1=user defined, 2=on
         self::PREF_MDE_ACTIVE            => '1', //bool
         self::PREF_LINKSPP_ACTIVE        => '1', //bool
         self::PREF_LINKSPP_JS            => '',  //string
@@ -571,13 +573,21 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                 
                 // link to Webtrees Manual in GenWiki or external link?
                 $wiki_url = $this->getPref(self::PREF_GENWIKI_LINK, self::STDLINK_GENWIKI);
-                $help_title = str_starts_with($help_url, $wiki_url) ? I18N::translate('Webtrees manual') : /*I18N: webtrees.pot */ I18N::translate('Help');
+                $iswthb = str_starts_with($help_url, $wiki_url);
                 
-                $help_url_e = e($help_url);
+                $options = [
+                    'help_title'   => ($iswthb ? I18N::translate('Webtrees manual') : /*I18N: webtrees.pot */ I18N::translate('Help')),
+                    'help_url'     => e($help_url),
+                    'help_tooltip' => /*I18N: wthb link user setting epilogue 2 */ I18N::translate('The link to the setting dialog is displayed when you hover the mouse cursor over the help link for a few seconds.'),
+                    'cfg_tooltip'  => /*I18N: wthb link user setting title */ I18N::translate('Webtrees manual link - user setting'),
+                    'faicon'       => $cfg_wthb_faicon,
+                    'iswthb'       => $iswthb,
+                    'dotranslate'  => intval($this->getPref(self::PREF_WTHB_TRANSLATE)), // 0=off, 1=user defined, 2=on
+                ];
                 $includeRes .= $this->getIifeJavascript(
                     file_get_contents($jsfile),
-                    "help_title, help_url, faicon",
-                    "'{$help_title}', '{$help_url_e}', {$cfg_wthb_faicon}",
+                    "options",
+                    json_encode($options),
                     "wthb-link"
                 );                
             } else {
@@ -707,18 +717,25 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
      */
     public function bodyContent(): string {
         $cfg_mde_active = boolval($this->getPref(self::PREF_MDE_ACTIVE));
+        $cfg_wthb_active = boolval($this->getPref(self::PREF_WTHB_ACTIVE));
 
+        $html = '';
+        
         if ($cfg_mde_active) {
             $request = Registry::container()->get(ServerRequestInterface::class);
             $route = Validator::attributes($request)->route();
             
             if (strstr($route->name, 'EditNotePage')) {
                 //fix - should be included in resources/views/edit/shared-note.phtml
-                return view('modals/ajax');
+                $html .= view('modals/ajax');
             }
             
         }
-        return '';
+        if ($cfg_wthb_active) {
+            $html .= view($this->name() . '::wthb-modal');
+        }
+        
+        return $html;
     }    
 
     /**

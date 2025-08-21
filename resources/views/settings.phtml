@@ -378,7 +378,28 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
                     <p><?= /*I18N: WTHB Link */ I18N::translate('This fallback link is used, when no specific context link was defined.') ?>
                     </p>
                 </div>
-            </div>        
+            </div>
+
+            <!-- translate wthb-link --><?php $prefId = LinkEnhancerModule::PREF_WTHB_TRANSLATE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                        <?= /*I18N: wthb link setting option */ I18N::translate('Open webtrees manual URL with Google Translate?') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value">
+                        <?= view('components/radios-inline', [
+                            'id' => $prefId,
+                            'name' => $prefId,
+                            'options' => [
+                                /*I18N: webtrees.pot */ I18N::translate('no'),
+                                /*I18N: wthb translate */ I18N::translate('user defined'),
+                                /*I18N: webtrees.pot */ I18N::translate('yes')
+                            ],
+                            'selected' => (int) $prefs[$prefId]
+                        ]) ?>
+                    </div>
+                </div>
+            </fieldset>
         </div>
 
 
