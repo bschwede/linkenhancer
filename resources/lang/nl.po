@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-21 16:49+0200\n"
-"PO-Revision-Date: 2025-08-18 21:18+0200\n"
+"PO-Revision-Date: 2025-08-21 20:46+0200\n"
 "Last-Translator: TheDutchJewel <thedutchjewel@gmail.com>\n"
 "Language-Team: TheDutchJewel\n"
 "Language: nl\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.7\n"
 "X-Poedit-Basepath: ../..\n"
 "X-Poedit-SearchPath-0: CustomMarkdownFactory.php\n"
 "X-Poedit-SearchPath-1: LinkEnhancerModule.php\n"
@@ -40,12 +40,12 @@ msgstr "Er is geen afbeeldingsbestand beschikbaar om weer te geven."
 #: CustomMarkdownFactory.php:165
 #, php-format
 msgid "File ‘%s’ does not exist in the public folder"
-msgstr "Bestand ‘%s’ bestaat niet in de openbare map."
+msgstr "Bestand ‘%s’ bestaat niet in de openbare map"
 
 #. I18N: MD img error public file
 #: CustomMarkdownFactory.php:172
 msgid "Only files within the public folder are supported"
-msgstr "Alleen bestanden in de openbare map worden ondersteund."
+msgstr "Alleen bestanden in de openbare map worden ondersteund"
 
 #. I18N: MD img error public file, %s1=rel. filename, %s2=mimetype
 #: CustomMarkdownFactory.php:180
@@ -58,7 +58,7 @@ msgid ""
 "Webtrees uses a CommonMark implementation and supports a subset of the markup"
 msgstr ""
 "Webtrees maakt gebruik van een CommonMark-implementatie en ondersteunt een "
-"subset van de opmaak."
+"subset van de opmaak"
 
 #: resources/views/help-md.phtml:19 resources/views/help-md.phtml:51
 #: resources/views/help-md.phtml:61 resources/views/settings.phtml:41
@@ -70,7 +70,7 @@ msgstr "Zie ook"
 msgid "The following overview only briefly lists common formatting options"
 msgstr ""
 "Het volgende overzicht geeft slechts een beknopt overzicht van veelgebruikte "
-"opmaakopties."
+"opmaakopties"
 
 #: resources/views/help-md.phtml:32
 msgid "Rendered output"
@@ -91,7 +91,7 @@ msgid ""
 "Markdown editor” is used"
 msgstr ""
 "Het project “TinyMDE - Een kleine, onafhankelijke, insluitbare HTML/"
-"JavaScript Markdown-editor” wordt gebruikt."
+"JavaScript Markdown-editor” wordt gebruikt"
 
 #. I18N: MDE
 #: resources/views/help-md.phtml:66
@@ -149,7 +149,7 @@ msgstr "De volgende parameters kunnen worden gebruikt"
 #. I18N: Enhanced Links
 #: resources/views/help-md.phtml:76
 msgid "The parameter definitions will be inserted by a javascript routine"
-msgstr "De parameterdefinities worden ingevoegd door een JavaScript-routine."
+msgstr "De parameterdefinities worden ingevoegd door een JavaScript-routine"
 
 #. I18N: Enhanced Links
 #: resources/views/help-md.phtml:77
@@ -224,9 +224,8 @@ msgstr "afbeelding met gedefinieerde hoogte, breedte en extra CSS-klasse"
 
 #. I18N: wthb link user setting title
 #: resources/views/wthb-modal.phtml:11 LinkEnhancerModule.php:582
-#, fuzzy
 msgid "Webtrees manual link - user setting"
-msgstr "Webtreeshandleiding"
+msgstr "Webtreeshandleiding-link - gebruikersinstelling"
 
 #. I18N: wthb link user setting prologue
 #: resources/views/wthb-modal.phtml:17
@@ -234,16 +233,17 @@ msgid ""
 "Please select whether you want to access the help page directly or via a "
 "translation service."
 msgstr ""
+"Kies of u de helppagina rechtstreeks wilt openen of via een vertaaldienst."
 
 #. I18N: wthb link setting option
 #: resources/views/wthb-modal.phtml:21 resources/views/settings.phtml:387
 msgid "Open webtrees manual URL with Google Translate?"
-msgstr ""
+msgstr "Open webtreeshandleiding-URL met Google Translate?"
 
 #. I18N: wthb link user setting epilogue 1
 #: resources/views/wthb-modal.phtml:33
 msgid "This setting can be adjusted at any time."
-msgstr ""
+msgstr "Deze instelling kan op elk moment worden aangepast."
 
 #. I18N: wthb link user setting epilogue 2
 #: resources/views/wthb-modal.phtml:35 LinkEnhancerModule.php:581
@@ -251,6 +251,8 @@ msgid ""
 "The link to the setting dialog is displayed when you hover the mouse cursor "
 "over the help link for a few seconds."
 msgstr ""
+"De link naar het instellingenvenster wordt weergegeven wanneer u de "
+"muiscursor enkele seconden op de help-link houdt."
 
 #. I18N: Settings - prologue sentence 1
 #: resources/views/settings.phtml:36
@@ -415,7 +417,7 @@ msgstr ""
 #. I18N: WTHB Link table
 #: resources/views/settings.phtml:279
 msgid "The data is stored in the database table"
-msgstr "De gegevens worden opgeslagen in de databasetabel."
+msgstr "De gegevens worden opgeslagen in de databasetabel"
 
 #. I18N: WTHB Link table rows
 #: resources/views/settings.phtml:281
@@ -434,7 +436,7 @@ msgstr "Geregistreerde routes importeren"
 
 #: resources/views/settings.phtml:290
 msgid "truncate table before import routes or csv file"
-msgstr "Tabel afkappen vóór het importeren van routes of CSV-bestand"
+msgstr "tabel afkappen vóór het importeren van routes of CSV-bestand"
 
 #: resources/views/settings.phtml:292
 msgid "Table truncate"
@@ -491,14 +493,13 @@ msgstr ""
 
 #. I18N: wthb translate
 #: resources/views/settings.phtml:395
-#, fuzzy
 msgid "user defined"
-msgstr "niet gedefinieerd"
+msgstr "door gebruiker gedefinieerd"
 
 #. I18N: Settings - section title
 #: resources/views/settings.phtml:406
 msgid "Home link"
-msgstr "startpagina-link"
+msgstr "Startpagina-link"
 
 #: resources/views/settings.phtml:410
 msgid "JSON for home link styling"
@@ -736,27 +737,27 @@ msgstr "toon ook knooppunt/weg/relatie - alternatieve notatie"
 #. I18N: JS enhanced link ofb1
 #: LinkEnhancerModule.php:1028
 msgid "link to Online Local heritage book at CompGen with given uid"
-msgstr "Link naar online-lokaalerfgoedboek bij CompGen met opgegeven uid"
+msgstr "link naar online-lokaalerfgoedboek bij CompGen met opgegeven uid"
 
 #. I18N: JS enhanced link wp1
 #: LinkEnhancerModule.php:1029
 msgid "open the article in the german wikipedia"
-msgstr "Open het artikel in de Duitse wikipedia."
+msgstr "open het artikel in de Duitse wikipedia"
 
 #. I18N: JS enhanced link wp2
 #: LinkEnhancerModule.php:1030
 msgid "open the english version of the article"
-msgstr "Open de Engelse versie van het artikel."
+msgstr "open de Engelse versie van het artikel"
 
 #. I18N: JS enhanced link wp3
 #: LinkEnhancerModule.php:1031
 msgid "you can address every subdomain instance of wikipedia.org"
-msgstr "U kunt elke subdomeininstantie van wikipedia.org aanspreken."
+msgstr "u kunt elke subdomeininstantie van wikipedia.org aanspreken"
 
 #. I18N: JS enhanced link gedbas1
 #: LinkEnhancerModule.php:1032
 msgid "open person record with given number"
-msgstr "Open persoonsrecord met opgegeven nummer."
+msgstr "open persoonsrecord met opgegeven nummer"
 
 #. I18N: JS enhanced link gedbas2
 #: LinkEnhancerModule.php:1033
