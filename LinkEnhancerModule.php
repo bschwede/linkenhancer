@@ -562,8 +562,6 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         if ($cfg_wthb_active) {
             $jsfile = $this->resourcesFolder() . 'js/bundle-wthb-link.min.js';
             if (file_exists($jsfile)) {
-                $cfg_wthb_faicon = boolval($this->getPref(self::PREF_WTHB_FAICON)) ? 'true' : 'false';
-
                 $help = $this->getContextHelp($activeRouteInfo);
                 if ($cfg_js_debug_console) {
                     $initJs .= "console.debug('LE-Mod help:', " . json_encode($help) . ");";
@@ -580,7 +578,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                     'help_url'     => e($help_url),
                     'help_tooltip' => /*I18N: wthb link user setting epilogue 2 */ I18N::translate('The link to the setting dialog is displayed when you hover the mouse cursor over the help link for a few seconds.'),
                     'cfg_tooltip'  => /*I18N: wthb link user setting title */ I18N::translate('Webtrees manual link - user setting'),
-                    'faicon'       => $cfg_wthb_faicon,
+                    'faicon'       => boolval($this->getPref(self::PREF_WTHB_FAICON)),
                     'iswthb'       => $iswthb,
                     'dotranslate'  => intval($this->getPref(self::PREF_WTHB_TRANSLATE)), // 0=off, 1=user defined, 2=on
                 ];
