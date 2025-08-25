@@ -144,7 +144,7 @@ function createMDECommandbar(editor) {
 
 function installMDE(cfg) {
     linkSupport = (typeof cfg == 'object' && cfg !== null ? Object.assign(getLinkSupportCfg(), cfg) : getLinkSupportCfg());
-    document.querySelectorAll("textarea[id$='NOTE']").forEach((elem) => {
+    document.querySelectorAll("textarea[id$='NOTE'], textarea[id$='NOTE-CONC']").forEach((elem) => {
         let editor = new TinyMDE.Editor({ element: elem });
         let edId = `md-${elem.id}`;
         let txtId = `txt-${elem.id}`;

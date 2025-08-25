@@ -662,7 +662,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                 $route = Validator::attributes($request)->route();
                 $routename = basename(strtr($route->name ?? '/', ['\\' => '/']));
         
-                if (in_array($routename, ['EditFactPage', 'EditNotePage', 'AddNewFact'])) {
+                if (in_array($routename, ['EditFactPage', 'EditNotePage', 'AddNewFact', 'EditRecordPage', 'EditMainFieldsPage'])) {
                     $fact = '';
                     try {
                         $fact = Validator::attributes($request)->string('fact');
