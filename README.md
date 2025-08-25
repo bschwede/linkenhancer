@@ -210,7 +210,8 @@ Fallback rules for access levels are matched by `category='generic'` and the spe
 If nothing else applies, the link points to the startpage of the manual.
 
 On this module **admin page** it is possible to import routes registered in webtrees on demand. This make it easier to cover individual custom module configurations.
-Further more you can import and export data in csv format in order to make changes more convenient. You can see at a glance how many data rows are stored in the table and how many of them have an url assigned.
+Further more you can import and export data in csv format in order to make changes more convenient. You can define the separator and for import the character encoding (on export it is always utf-8).   You can see at a glance how many data rows are stored in the table and how many of them have an url assigned.
+![admin page data table](resources/img/screenshot_admin-page-data-table.png)
 
 In case of discrepancies the context help can be more easily adjusted by activating the option "Output of debug information on the JS console". This provides you with information on the active route and, if applicable, data table entries found for matching routing to help topics.
 
@@ -253,8 +254,8 @@ These are minor bug fixes or functional enhancements — usually in a single fil
 | #    | Description | applies to version |
 | :--: | :----       | :---:   |
 | P001 | Backlink for level 1 shared notes [#5181](https://github.com/fisharebest/webtrees/issues/5181) <br> */app/Fact.php* | 2.2.1 - |
-| P002 | Enable headContent/bodyContent for this module on admin backend in order to show the context help link <br> *resources/views/layouts/administration.phtml* | 2.2.1 - |
-| P003 | Record has multiple uid fields [#4828](https://github.com/fisharebest/webtrees/issues/4828) <br> *app/Services/GedcomEditService.php* | 2.2.1 - |
+| P002 | Enable headContent/bodyContent for this module on admin backend in order to show the context help link [#5214](https://github.com/fisharebest/webtrees/issues/5214)<br> *resources/views/layouts/administration.phtml* | 2.2.1 - |
+| ~~P003~~ | Record has multiple uid fields [#4828](https://github.com/fisharebest/webtrees/issues/4828) <br> *app/Services/GedcomEditService.php* | 2.2.1 |
 
 
 
@@ -284,6 +285,8 @@ To manually install the module, perform the following steps:
 4. Rename the folder to ``linkenhancer``
 
 If everything was successful, you should see a subdirectory ``linkenhancer`` with the unpacked content in the ``modules_v4`` directory.
+
+During the initial installation, the following problem may occur: "PDO error - There is no active transaction" - for more details see [known issues](./issues?q=label%3A"known-issue").
 
 <a name="contributing"></a>
 ## Contributing
