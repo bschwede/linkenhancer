@@ -1,3 +1,4 @@
+diff -urwB a/administration.phtml b/administration.phtml
 --- a/resources/views/layouts/administration.phtml	2025-08-15 21:46:22.691143157 +0200
 +++ b/resources/views/layouts/administration.phtml	2025-08-16 22:22:44.533940367 +0200
 @@ -37,7 +37,9 @@
