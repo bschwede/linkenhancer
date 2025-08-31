@@ -1,1 +1,2 @@
-app/Fact.php
+resources/views/fact.phtml
+resources/views/modules/notes/tab.phtml
