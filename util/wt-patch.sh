@@ -72,7 +72,7 @@ done
 [[ "$FILTER" == "*" ]] && FILTER=""
 
 cd "$WTDIR"
-for patch in "$(realpath -s --relative-to="$WTDIR" "$PATCH_DIR")"/*.patch; do
+for patch in "$(realpath -s --relative-to="$WTDIR" "$PATCH_DIR")/$WTVERSION"/*.patch; do
     [[ -e "$patch" ]] || continue
 
     base_name=$(basename "$patch" .patch)

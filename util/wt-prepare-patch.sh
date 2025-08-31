@@ -105,6 +105,11 @@ sedfile="$PSRC_DIR/replacements.sed"
 reporef="$PSRC_DIR/reporef.txt"
 repofiles="$PSRC_DIR/repofiles.txt"
 
+# ref: heads/main, tags/2.2.1 ...
+WT_REF="$WT_STD_REF"
+[[  -f "$reporef" ]] && WT_REF="$(head -n 1 "$reporef")"
+[[ -z "$WT_REF" ]] && fail "Repo ref is not defined"
+
 case "$ACTION" in
     new)
         [[ ! -d "$PSRC_DIR_B" ]] && mkdir -p "$PSRC_DIR_B"
@@ -130,11 +135,6 @@ case "$ACTION" in
         esac
         ;;
     get) 
-        # ref: heads/main, tags/2.2.1 ...
-        WT_REF="$WT_STD_REF"
-        [[  -f "$reporef" ]] && WT_REF="$(head -n 1 "$reporef")"
-        [[ -z "$WT_REF" ]] && fail "Repo ref is not defined"
-
         # relative filepaths https://raw.githubusercontent.com/fisharebest/webtrees/refs/[ref]/ >> app/Fact.php <<
         [[ ! -f "$repofiles" ]] && fail "File $repofiles not found - nothing to do"
         mapfile -t lines < "$repofiles"
@@ -160,7 +160,10 @@ case "$ACTION" in
         [[ ! -d "$PSRC_DIR_B" ]] && fail "b-subdir for $PNAME doesn't exist - nothing to do"
 
         cd "$PSRC_DIR"
-        patchfile="$PATCH_DIR/$PNAME.patch"
+        WT_REF_VER=${WT_REF#*/}
+        patchdir="$PATCH_DIR/$WT_REF_VER"
+        [[ ! -d "$patchdir" ]] && mkdir -p "$patchdir"
+        patchfile="$patchdir/$PNAME.patch"
         
         # -B   ignore changes where lines are all blank
         # -r   recursively compare any subdirectories found
