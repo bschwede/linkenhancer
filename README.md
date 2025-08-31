@@ -18,7 +18,7 @@ What you can expect from the module, illustrated with screenshots:
 | [![Markdown editor](resources/img/screenshot_tinymde-sharednote_200.png)](resources/img/screenshot_tinymde-sharednote.png) | [![Markdown Help](resources/img/screenshot_markdown-help_200.png)](resources/img/screenshot_markdown-help.png) |
 | markdown editor | markdown help |
 
-Here the available options to be set on this modules admin page:
+Here are the available options that can be set on the admin page of this module:
 [![admin page](resources/img/screenshot_admin-page_small.png)](resources/img/screenshot_admin-page.png)
 
 <a name="description"></a>
@@ -209,7 +209,7 @@ Fallback rules for access levels are matched by `category='generic'` and the spe
 
 If nothing else applies, the link points to the startpage of the manual.
 
-On this module **admin page** it is possible to import routes registered in webtrees on demand. This make it easier to cover individual custom module configurations.
+On the **admin page** of this module it is possible to import routes registered in webtrees on demand. This make it easier to cover individual custom module configurations.
 Further more you can import and export data in csv format in order to make changes more convenient. You can define the separator and for import the character encoding (on export it is always utf-8).   You can see at a glance how many data rows are stored in the table and how many of them have an url assigned.
 ![admin page data table](resources/img/screenshot_admin-page-data-table.png)
 
@@ -222,7 +222,7 @@ This module comes with predefined mapping rules. If there is something missing o
 ### Home link
 Dynamic CSS styles can be applied to match the current theme, ensuring that the display contrasts well. Of course it is not limited to the home link use case.
 
-On this module admin page you can configure a [JSON](https://en.wikipedia.org/wiki/JSON) object to achieve this: 
+On the admin page of this module you can configure a [JSON](https://en.wikipedia.org/wiki/JSON) object to achieve this:
 ```javascript
 { 
   "*": ".homelink { color: #039; }",
@@ -272,8 +272,8 @@ This can be hosted on your own server by following the [Install instructions](ht
 This module requires **webtrees** version 2.2.
 This module has the same requirements as [webtrees#system-requirements](https://github.com/fisharebest/webtrees#system-requirements).
 
-This module was tested with **webtrees** versions 2.2.4
-and all available themes and some other custom modules.
+This module was tested with **webtrees** version 2.2.4
+and build-in themes and some other custom modules.
 
 <a name="installation"></a>
 ## Installation
