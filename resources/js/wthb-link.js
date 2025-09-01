@@ -1,6 +1,6 @@
 // included in LinkEnhancerModule.php headContent and wrapped in iife syntax; help_url is escaped in php
 //<script>
-//((help_title, help_url, faicon) => {
+//((options) => {
     const cfg = Object.assign({
         help_title: 'Webtrees manual', //i18n for link displayname
         help_url: '#',
@@ -157,4 +157,4 @@
             if (doClickHelplink) $("#wthb-link").click();
         });
     });
-// }) (help_title, help_url)</script >
+// }) ({help_title, help_url})</script >
