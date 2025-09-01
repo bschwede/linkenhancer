@@ -93,7 +93,7 @@ function getLECfg() {
         cname: 'icon-ewp'
     },
     "fsft": {
-        name: 'Family Search Tree - $ID',
+        name: 'FamilySearch Family Tree - $ID',
         url: 'https://www.familysearch.org/tree/person/details/',
         cname: 'icon-fsft'
     },
@@ -153,7 +153,7 @@ function getLEhelpInfo() {
     let lis = [];
     Object.keys(LEcfg).forEach((key) => {
         let cfg = LEcfg[key];
-        let html = '<u>' + cfg.name.replace(/ - \$ID/, '') + ':</u>';
+        let html = '<u>' + cfg.name.replace(/ - \$ID/, '').replace(/%s/, '').replace(/ {2,}/, ' ') + ':</u>';
         if (!cfg['help']) {
             html += ` <code>${key}=ID</code>`;
         } else {
@@ -193,9 +193,12 @@ function processLinks(linkElement) {
             link.setAttribute("href", href);
             link.setAttribute("target", '_blank');
         } else { // assume syntax error
-            link.onclick = () => { alert( link.title ?? I18N['syntax error'] + "!" ); }
+            link.onclick = (e) => { alert(link.title ?? I18N['syntax error'] + "!"); e.preventDefault(); }
         }
-        if (title) link.setAttribute("title", title);
+        if (title) {
+            link.setAttribute("title", title);
+            link.setAttribute("aria-label", title);
+        }
         if (classname) {
             const iconSpan = document.createElement("span");
             iconSpan.classList.add('linkicon');
