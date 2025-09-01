@@ -675,23 +675,15 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                     'AddSpouseToIndividualPage',
                     'AddUnlinkedPage'
                 ])) {
-                    $fact = '';
-                    try {
-                        $fact = Validator::attributes($request)->string('fact');
-                    } catch (Exception $e) {
-                    }
-
-                    if (($routename == 'AddNewFact' && $fact == 'NOTE') || $routename != 'AddNewFact') {
-                        $bundleShortcuts[] = 'mde';
-                        $initJs .= 'window.LEhelp = "' . e(route('module', ['module' => $this->name(), 'action' => 'help'])) . '";';
-                        
-                        $linkSupport = [];
-                        if (! $cfg_link_active) $linkSupport[] = "href:0";
-                        if (! $cfg_img_active) $linkSupport[] = "src:0";
-                        $linkCfg = implode(',', $linkSupport);
-                        $linkCfg = $linkCfg ? '{' . $linkCfg . '}' : '';
-                        $initJs .= "LinkEnhMod.installMDE($linkCfg);";
-                    }
+                    $bundleShortcuts[] = 'mde';
+                    $initJs .= 'window.LEhelp = "' . e(route('module', ['module' => $this->name(), 'action' => 'help'])) . '";';
+                    
+                    $linkSupport = [];
+                    if (! $cfg_link_active) $linkSupport[] = "href:0";
+                    if (! $cfg_img_active) $linkSupport[] = "src:0";
+                    $linkCfg = implode(',', $linkSupport);
+                    $linkCfg = $linkCfg ? '{' . $linkCfg . '}' : '';
+                    $initJs .= "LinkEnhMod.installMDE($linkCfg);";
                 }
             }
         }
