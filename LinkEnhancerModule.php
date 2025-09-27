@@ -100,7 +100,9 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     
     public const HELP_TABLE = 'route_help_map';
 
-    public const HELP_CSV = __DIR__ . DIRECTORY_SEPARATOR . 'Schema/SeedHelpTable.csv';
+    public const HELP_CSV = __DIR__ . DIRECTORY_SEPARATOR . 'Schema' . DIRECTORY_SEPARATOR . 'SeedHelpTable.csv';
+
+    public const HELP_SCHEMA_TARGET_VERSION = 1;
 
     protected const DEFAULT_PREFERENCES = [
         self::PREF_HOME_LINK_TYPE        => '1', //int triple-state, 0=off, 1=tree, 2=my-page
@@ -223,7 +225,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
      */
     public function boot(): void
     {
-        $this->updateSchema('\Schwendinger\Webtrees\Module\LinkEnhancer\Schema', 'SCHEMA_VERSION', 1);
+        $this->updateSchema('\Schwendinger\Webtrees\Module\LinkEnhancer\Schema', 'SCHEMA_VERSION', self::HELP_SCHEMA_TARGET_VERSION);
 
         $importOnUpdate = false;
         $this_hash = null;
