@@ -12,6 +12,7 @@ use Fisharebest\Webtrees\Webtrees;
 use Illuminate\Support\Collection;
 
 require_once __DIR__ . '/CustomMarkdownFactory.php';
+require_once __DIR__ . '/LinkEnhancerUtils.php';
 require_once __DIR__ . '/LinkEnhancerWtHb.php';
 require_once __DIR__ . '/LinkEnhancerModule.php';
 require_once __DIR__ . '/Schema/Migration0.php';
