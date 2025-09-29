@@ -224,6 +224,7 @@ function processLinks(linkElement) {
 
     function processLink(link) {
         const href = link.getAttribute("href");
+        if (!(typeof href === 'string' || href instanceof String)) return;
         const [base, hash] = href.split("#@");
 
         if (!hash) return;
