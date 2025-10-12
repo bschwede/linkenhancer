@@ -27,30 +27,29 @@ declare(strict_types=1);
 namespace Schwendinger\Webtrees\Module\LinkEnhancer;
 
 use Schwendinger\Webtrees\Module\LinkEnhancer\CustomMarkdownFactory;
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerWtHb;
 use Fisharebest\Localization\Translation;
+use Fisharebest\Webtrees\FlashMessages;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Registry;
+use Fisharebest\Webtrees\Session;
+use Fisharebest\Webtrees\Validator;
 use Fisharebest\Webtrees\View;
+use Fisharebest\Webtrees\Http\RequestHandlers\HomePage;
+use Fisharebest\Webtrees\Http\RequestHandlers\TreePage;
 use Fisharebest\Webtrees\Module\AbstractModule;
+use Fisharebest\Webtrees\Module\ModuleConfigInterface;
+use Fisharebest\Webtrees\Module\ModuleConfigTrait;
 use Fisharebest\Webtrees\Module\ModuleCustomInterface;
 use Fisharebest\Webtrees\Module\ModuleCustomTrait;
 use Fisharebest\Webtrees\Module\ModuleGlobalInterface;
 use Fisharebest\Webtrees\Module\ModuleGlobalTrait;
-use Fisharebest\Webtrees\Module\ModuleConfigInterface;
-use Fisharebest\Webtrees\Module\ModuleConfigTrait;
-use Fisharebest\Webtrees\Http\RequestHandlers\TreePage;
-use Fisharebest\Webtrees\Http\RequestHandlers\HomePage;
-use Fisharebest\Webtrees\Validator;
-use Fisharebest\Webtrees\FlashMessages;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Illuminate\Database\Capsule\Manager as DB;
 use Fisharebest\Webtrees\Schema\MigrationInterface;
-use Schwendinger\Webtrees\Module\LinkEnhancer\Schema\SeedHelpTable;
-use Fisharebest\Webtrees\Session;
 use Fisharebest\Webtrees\Services\TreeService;
-use Psr\Http\Message\StreamInterface;
-use Fisharebest\Webtrees\GedcomFilters\GedcomEncodingFilter;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Illuminate\Database\Capsule\Manager as DB;
 use Exception;
 use PDOException;
 
@@ -101,6 +100,10 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     
     public const HELP_TABLE = 'route_help_map';
 
+    public const HELP_CSV = __DIR__ . DIRECTORY_SEPARATOR . 'Schema' . DIRECTORY_SEPARATOR . 'SeedHelpTable.csv';
+
+    public const HELP_SCHEMA_TARGET_VERSION = 1;
+
     protected const DEFAULT_PREFERENCES = [
         self::PREF_HOME_LINK_TYPE        => '1', //int triple-state, 0=off, 1=tree, 2=my-page
         self::PREF_HOME_LINK_JSON        => '', // string; json object { '*': stylerules-string, 'theme': stylerules-string}
@@ -119,6 +122,19 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         self::PREF_MD_IMG_TITLE_STDCLASS => self::STDCLASS_MD_IMG_TITLE, //string
     ];
 
+    protected LinkEnhancerWtHb $wthb;
+
+    public function __construct()
+    {
+        $std_url = $this->getPref(self::PREF_WTHB_STD_LINK, self::STDLINK_WTHB);
+        $wiki_url = rtrim($this->getPref(self::PREF_GENWIKI_LINK, self::STDLINK_GENWIKI), '/') . '/';
+
+        $this->wthb = new LinkEnhancerWtHb(
+            self::HELP_TABLE, 
+            $std_url,
+            $wiki_url
+        );
+    }    
   
     /**
      * How should this module be identified in the control panel, etc.?
@@ -205,90 +221,17 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
 
     /**
-     * load csv data from stream into array needed to populate route_help_map table
-     *
-     * @param $stream
-     * @param string $separator  character between data fields
-     *
-     * @return array<string>
-     */
-    public function loadCsvStream($stream, string $separator = ";") :array
-    {
-        $data = [];
-
-        $header = fgetcsv($stream, null, $separator);
-
-        while (($row = fgetcsv($stream, null, $separator)) !== false) {
-            $data[] = array_combine($header, $row);
-        }
-
-        return $data;
-    }
-
-
-    /**
-     * import shipped csv route mapping
-     */
-    public function importDeliveredCsv(): void {
-        $csvfile = __DIR__ . DIRECTORY_SEPARATOR . 'Schema/SeedHelpTable.csv';
-        try {
-            $result = $this->importCsv2HelpTable($csvfile);
-            FlashMessages::addMessage(
-                I18N::translate('Routes imported (Total: %s / skipped: %s)', $result['total'], $result['skipped']),
-                'success'
-            );
-        } catch (Exception $ex) {
-            FlashMessages::addMessage(
-                $ex->getMessage(),
-                'danger'
-            );
-        }            
-    }
-
-
-    /**
-     * import csv data from file or stream and feed it to the seeder
-     */
-    public function importCsv2HelpTable(string|StreamInterface $file, string $separator = ';', bool $truncate = true, string $encoding = '')  {
-        $result = [ 'total' => 0, 'skipped' => 0 ];
-        $data = [];
-        if (gettype($file) == 'string') {
-            if (file_exists($file)) {
-                $stream = fopen($file, 'r');
-                $data = $this->loadCsvStream($stream, $separator);
-                fclose($stream);
-            } else {
-                return $result;
-            }
-        } else {
-            // similar to the implementation in:
-            // - app/Services/TreeService.php
-            // - resources/views/admin/trees-import.phtml
-            $stream = $file->detach();
-            stream_filter_append($stream, GedcomEncodingFilter::class, STREAM_FILTER_READ, ['src_encoding' => $encoding]);
-            $data = $this->loadCsvStream($stream,$separator);
-        }
-
-        $seeder = new SeedHelpTable($data, $truncate);
-        $seeder->run();
-        $result = ['total' => $seeder->cntRowsTotal, 'skipped' => $seeder->cntRowsSkipped];
-
-        return $result;
-    }
-
-
-    /**
      * Called for all *enabled* modules.
      */
     public function boot(): void
     {
-        $this->updateSchema('\Schwendinger\Webtrees\Module\LinkEnhancer\Schema', 'SCHEMA_VERSION', 1);
+        $this->updateSchema('\Schwendinger\Webtrees\Module\LinkEnhancer\Schema', 'SCHEMA_VERSION', self::HELP_SCHEMA_TARGET_VERSION);
 
         $importOnUpdate = false;
         $this_hash = null;
         $cfg_wthb_update = boolval($this->getPref(self::PREF_WTHB_UPDATE));
         if ($cfg_wthb_update) {
-            $csvfile = __DIR__ . "/Schema/SeedHelpTable.csv";
+            $csvfile = self::HELP_CSV;
             if (file_exists($csvfile)) {
                 $this_hash = hash_file('sha256', $csvfile);
                 $cfg_wthb_lasthash = $this->getPref(self::PREF_WTHB_LASTHASH);
@@ -296,7 +239,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             }            
         }
 
-        if ((int) ($this->getHelpTableCount()['total'] ?? 0) === 0 || $importOnUpdate) {
+        if ((int) ($this->wthb->getHelpTableCount()['total'] ?? 0) === 0 || $importOnUpdate) {
             $this->importDeliveredCsv();
             if ($this_hash) {
                 $this->setPref(self::PREF_WTHB_LASTHASH, $this_hash);
@@ -310,217 +253,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             Registry::markdownFactory(new CustomMarkdownFactory($this));
         }
     }
-
-    /**
-     * Query route to help mapping table for total count of rows and count of mapped rows (where an url is set)
-     *
-     * @return array
-     */
-    public function getHelpTableCount():array {
-        $totalCnt = 0;
-        $mappedCnt = 0;
-        if (DB::schema()->hasTable(self::HELP_TABLE)) {
-            try {
-                $totalCnt  = DB::table(self::HELP_TABLE)->count();
-                $mappedCnt = DB::table(self::HELP_TABLE)
-                    ->whereNotNull('url')
-                    ->where('url', '!=', '')
-                    ->count();
-            } catch (Exception $e) {}
-        }
-
-        return [ 'total' => (int) $totalCnt, 'assigned' => (int) $mappedCnt];
-    }
-
-    /**
-     * Query route to help mapping table for matching entries
-     *
-     * @param array|null $activeroute
-     *
-     * @return mixed
-     */
-    public function getContextHelp(array|null $activeroute = null): mixed  {
-        $std_url = $this->getPref(self::PREF_WTHB_STD_LINK, self::STDLINK_WTHB);
-        if (!DB::schema()->hasTable(self::HELP_TABLE)) {
-            FlashMessages::addMessage(
-                I18N::translate('Table for context help is missing - fallback to standard url'),
-                'info'
-            );
-            return $std_url;
-        }
-        $url = $std_url;
-        $wiki_url = rtrim($this->getPref(self::PREF_GENWIKI_LINK, self::STDLINK_GENWIKI), '/') . '/';
-        $activeroute ??= $this->getActiveRoute();
-        
-        if ($activeroute) {
-            // custom module?
-            $module = str_starts_with($activeroute['path'],"/" . "module/" ) && ($activeroute['attr']['module'] ?? false)
-                ? $activeroute['attr']['module']
-                : '';
-
-            // WHERE url is not null AND
-            // (
-            //      (path = route[path] AND handler = route[handler]) 
-            //   OR (path = route[path] AND handler = module)         #if route.path ^=/module/
-            //   OR (handler = module)                                #if route.path ^=/module/
-            //   OR (category=generic AND extras=route[extras])       #last try by Auth-Level
-            // )
-            $result = DB::table(self::HELP_TABLE)
-                ->whereNotNull('url')
-                ->where('url', '!=', '')
-                ->where(function($query) use ($module, $activeroute) {
-                    $query
-                        ->where('path', '=', $activeroute['path'])
-                        ->where('handler', '=', $activeroute['handler'])
-                        ->when($module != '', function($query2) use ($module, $activeroute) {
-                            $query2
-                                ->orWhere('path', '=', $activeroute['path'])
-                                ->where('handler', '=', $module)
-                                ->orWhere('handler', '=', $module);
-                        })
-                        ->when(($activeroute['extras'] ?? false), function($query3) use ($activeroute) {
-                            $query3
-                                ->orWhere('category', '=', 'generic')
-                                ->where('extras', '=', $activeroute['extras']);
-                        });
-                })
-                ->orderBy('order')
-                ->get()
-                ->map(function ($obj) use ($std_url, $wiki_url): mixed { // complete url by appending prefix to url path - also external url are possible
-                    $first_url = trim($obj->url);
-                    $obj->url = $first_url == '' ? $std_url : (preg_match('/^https?:\/\//', $first_url) ? $first_url : $wiki_url . ltrim($first_url, '/'));
-                    return $obj;
-                });
-                        
-            if (!$result->isEmpty()) {
-                return $result;
-            }
-        }
-
-        return $url;
-    }
-
-    /**
-     * returns informations for active route of current request; needed for context help
-     *
-     * @param ServerRequestInterface|null $request
-     *
-     * @return array
-     */    
-    public function getActiveRoute(ServerRequestInterface|null $request = null) : array {
-        $request ??= Registry::container()->get(ServerRequestInterface::class);
-
-        $route = $request->getAttribute('route');
-        if ($route) {
-            $extras = is_array($route->extras) && isset($route->extras['middleware']) ? implode('|', $route->extras['middleware']) : '';
-            return [
-                'path'    => $route->path,
-                'handler' => $route->name,
-                'method'  => implode('|', $route->allows),
-                'extras'  => $extras,
-                'attr'    => $route->attributes
-            ];
-
-        }
-        return [];
-    }
-
-
-    /**
-     * import in webtrees registered routes into table route_help_map
-     *
-     * @return array  count of rows in total and skipped
-     */
-    public function importRoutes(): array
-    {
-        $router = Registry::routeFactory()->routeMap();
-        $existingRoutes = $router->getRoutes();
-        $data = [];
-
-        foreach ($existingRoutes as $route) {
-            $extras = is_array($route->extras) && isset($route->extras['middleware']) ? implode('|', $route->extras['middleware']) : '';
-            $data[] = [
-                'path' => $route->path,
-                'handler' => $route->name,
-                'method' => implode('|', $route->allows),
-                'extras' => $extras,
-                'attr' => $route->attributes
-            ];            
-        }
-
-        $result = [ 'total' => 0, 'skipped' => 0 ];
-        $seeder = new SeedHelpTable($data, false);
-        $seeder->run();
-        $result = ['total' => $seeder->cntRowsTotal, 'skipped' => $seeder->cntRowsSkipped];        
-        return $result;
-    }
-
-
-    /**
-     * Get a module setting. Return a user or Module default if the setting is not set.
-     * extends getPreference
-     *
-     * @param string $setting_name
-     * @param string $default
-     *
-     * @return string
-     */
-    public function getPref(string $setting_name, string $default = ''): string
-    {
-        $result = $this->getPreference($setting_name, $default);
-        return trim(isset($result) && $result != '' ? $result : self::DEFAULT_PREFERENCES[$setting_name] ?? '');
-    }
-
-    /**
-     * Set a module setting.
-     *
-     * Since module settings are NOT NULL, setting a value to NULL will cause
-     * it to be deleted.
-     *
-     * extends/wraps setPreference
-     * 
-     * @param string $setting_name
-     * @param string $setting_value
-     *
-     * @return void
-     */
-    public function setPref(string $setting_name, string $setting_value): void {
-        //allow user to blank a setting, also if we have a DEFAULT_PREFERENCE
-        $setting_value = ((self::DEFAULT_PREFERENCES[$setting_name] ?? false) && !$setting_value ? ' ': $setting_value);
-        $this->setPreference($setting_name, $setting_value);
-    }
-
-    /**
-     * Wrapper for init javascript when document is ready
-     * 
-     * @param string $initJs
-     *
-     * @return string
-     */
-    public function getInitJavascript(string $initJs): string
-    {
-        return $initJs ? "<script>document.addEventListener('DOMContentLoaded', function(event) { " . $initJs . "});</script>" : '';
-    }
-
-    /**
-     * Wrapper for iife javascript statements, the innerJs is embedded in try-catch with eval in order to intercept also SyntaxErrors
-     * caused by user configuration. So there is no impact to other components.
-     * 
-     * @param string $innerJs            javascript code to be wrapped in iife
-     * @param string $iife_paramnames    parameter definition for iife
-     * @param string $iife_paramvalues   values that are passed in to the innerJs
-     * @param string $errorhint          additional error message, e.g. component name
-     * @return string
-     */
-    public function getIifeJavascript(string $innerJs, string $iife_paramnames = '', string $iife_paramvalues = '', string $errorhint = ''): string
-    {
-        if (!$innerJs) return '';
-        
-        $iife = "(({$iife_paramnames}) => {" . $innerJs . "})({$iife_paramvalues})";       
-        $iife = json_encode($iife);
-        $errorhint = json_encode($errorhint);
-        return "<script>try{eval({$iife});} catch (e){console.error('LE-Mod Error: check parameter', {$errorhint}, e);}</script>";
-    }    
+ 
 
     /**
      * Raw content, to be added at the end of the <head> element.
@@ -552,7 +285,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         $theme = Session::get('theme');
         $palette = Session::get('palette', '');
         
-        $activeRouteInfo = $this->getActiveRoute($request);
+        $activeRouteInfo = $this->wthb->getActiveRoute($request);
         if ($cfg_js_debug_console) {
             $initJs .= "console.debug('LE-Mod theme:', '$theme'" . ($palette ? ", 'palette=$palette'" : '') . ");";
             $initJs .= "console.debug('LE-Mod active route:', " . json_encode($activeRouteInfo) .");";
@@ -562,12 +295,12 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         if ($cfg_wthb_active) {
             $jsfile = $this->resourcesFolder() . 'js/bundle-wthb-link.min.js';
             if (file_exists($jsfile)) {
-                $help = $this->getContextHelp($activeRouteInfo);
+                $help = $this->wthb->getContextHelp($activeRouteInfo);
                 if ($cfg_js_debug_console) {
                     $initJs .= "console.debug('LE-Mod help:', " . json_encode($help) . ");";
                 }
 
-                $help_url = gettype($help) == 'string' ? $help : $help->first()->url;
+                $help_url = gettype(value: $help) == 'string' ? $help : $help->first()->url;
                 
                 // link to Webtrees Manual in GenWiki or external link?
                 $wiki_url = $this->getPref(self::PREF_GENWIKI_LINK, self::STDLINK_GENWIKI);
@@ -582,7 +315,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                     'iswthb'       => $iswthb,
                     'dotranslate'  => intval($this->getPref(self::PREF_WTHB_TRANSLATE)), // 0=off, 1=user defined, 2=on
                 ];
-                $includeRes .= $this->getIifeJavascript(
+                $includeRes .= Utils::getIifeJavascript(
                     file_get_contents($jsfile),
                     "options",
                     json_encode($options),
@@ -603,7 +336,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             || (str_starts_with($activeRouteInfo['path'], '/module') && str_starts_with($action, 'admin'))
         ) {
                 if ($cfg_wthb_active) {
-                    return $includeRes . $this->getInitJavascript($initJs);
+                    return $includeRes . Utils::getInitJavascript($initJs);
                 }
                 return ''; # other stuff is of no use in admin backend
         }
@@ -614,7 +347,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         // === include on all pages
         // --- I18N for JS MDE and enhanced links
         if ($cfg_link_active || $cfg_mde_active) {
-            $includeRes .= "<script>window.I18N = " . $this->getJsonI18N() . "; </script>";
+            $includeRes .= "<script>window.I18N = " . Utils::getJsonI18N() . "; </script>";
         }
         // --- Home Link
         if ($cfg_home_active && $tree != null) {
@@ -708,7 +441,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             }
         }
 
-        return $includeRes . $this->getInitJavascript($initJs);
+        return $includeRes . Utils::getInitJavascript($initJs);
     }
 
     /**
@@ -766,7 +499,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     }    
 
     /**
-     * Download context help mapping table as CSV
+     * import in webtrees registered routes into help table
      *
      * @param ServerRequestInterface $request
      * @return ResponseInterface
@@ -774,7 +507,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public function getAdminImportRoutesAction(ServerRequestInterface $request): ResponseInterface
     {
         try {
-            $result = $this->importRoutes();
+            $result = $this->wthb->importRoutesAction($request);
             FlashMessages::addMessage(
                 I18N::translate('Routes imported (Total: %s / skipped: %s)', $result['total'], $result['skipped']),
                 'success'
@@ -788,19 +521,6 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         return redirect($this->getConfigLink());
     }
 
-    private function getSeparator(ServerRequestInterface $request) :string {
-        //$sepsallowed = [';', ',', '|', ':', '\\t'];
-        $separator = trim(Validator::parsedBody($request)->string('csv-separator'));
-        $separator = $separator == '\\t' ? "\t" : $separator;
-        if (strlen($separator) === 0) {
-            throw new Exception(I18N::translate('Separator is not set.'));
-        }
-        if (strlen($separator) > 1) {
-            throw new Exception(I18N::translate('For the separator is only a single character allowed.'));
-        }
-        return $separator;
-    }
-
     /**
      * Download context help mapping table as CSV
      *
@@ -810,38 +530,8 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public function postAdminCsvExportAction(ServerRequestInterface $request): ResponseInterface
     {
         $filename = "wthb-route-mapping-export.csv";
-        $headers = [
-            'Content-Type' => 'text/csv; charset=utf-8',
-            'Content-Disposition' => 'attachment; filename="' . addcslashes($filename, '"') . '"',
-        ];
-
         try {
-            $separator = $this->getSeparator($request);
-            if (!DB::schema()->hasTable(self::HELP_TABLE)) {
-                throw new Exception(I18N::translate('Table for context help is missing - nothing to do.'));
-            }
-
-            $data = DB::table(self::HELP_TABLE)->get();
-
-            if (count($data) == 0) {
-                throw new Exception(I18N::translate('No data available for export.'));
-            }
-
-            ob_start();
-            $file = fopen('php://output', 'w');
-            $columns = array_keys(get_object_vars($data->first()));
-            fputcsv($file, $columns, $separator, "\"", "\\", "\n");
-            foreach ($data as $datarow) {
-                $row = [];
-                foreach ($columns as $column) {
-                    $row[] = $datarow->$column;
-                }
-                fputcsv($file, $row, $separator, "\"", "\\", "\n");
-            }
-            fclose($file);
-            $csv = ob_get_clean();
-
-            return response($csv, 200, $headers);
+            return $this->wthb->exportCsvAction($filename, $request);
 
         } catch (Exception $ex) {
             FlashMessages::addMessage(
@@ -852,35 +542,16 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         }
     }
 
+
+    /**
+     * import context help mapping from CSV into help table
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
     public function postAdminCsvImportAction(ServerRequestInterface $request): ResponseInterface {
-        $encodings = ['' => ''] + Registry::encodingFactory()->list();
-        $encoding = Validator::parsedBody($request)->isInArrayKeys($encodings)->string('encoding');
-
         try {
-            if (!DB::schema()->hasTable(self::HELP_TABLE)) {
-                throw new Exception(I18N::translate('Table for context help is missing - nothing to do.'));
-            }
-
-            $separator = $this->getSeparator($request);
-
-            $truncate = Validator::parsedBody($request)->boolean('table-truncate', false);
-
-            $csv_file = $request->getUploadedFiles()['csv-file'] ?? null;
-            if ($csv_file === null || $csv_file->getError() === UPLOAD_ERR_NO_FILE) {
-                throw new Exception(I18N::translate('No CSV file was received.'));
-            }
-            if ($csv_file->getError() !== UPLOAD_ERR_OK) {
-                throw new FileUploadException($csv_file);
-            }
-            //app/Services/TreeService.php
-            $stream = $csv_file->getStream();
-            //$stream = $stream->detach();
-
-            $result = $this->importCsv2HelpTable($stream, $separator, $truncate, $encoding);
-            FlashMessages::addMessage(
-                I18N::translate('Routes imported (Total: %s / skipped: %s)', $result['total'], $result['skipped']),
-                'success'
-            );
+            $this->wthb->importCsvAction($request);
         } catch (Exception $ex) {
             FlashMessages::addMessage(
                 /*I18N: webtrees.pot */ I18N::translate('Import failed') . '<hr><samp dir="ltr">' . $ex->getMessage() . '</samp>',
@@ -890,6 +561,86 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         return redirect($this->getConfigLink());   
     }
 
+
+    /**
+     * Save the user preferences in the database
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    public function postAdminAction(ServerRequestInterface $request): ResponseInterface
+    {
+        if (Validator::parsedBody($request)->string('save') === '1') {
+
+            $preferences = array_keys(self::DEFAULT_PREFERENCES);
+            foreach ($preferences as $preference) {
+                $this->setPref($preference, trim(Validator::parsedBody($request)->string($preference)));
+            }
+
+            FlashMessages::addMessage(/*I18N: webtrees.pot */ I18N::translate(
+                'The preferences for the module “%s” have been updated.',
+                $this->title()
+            ), 'success');
+        }
+        return redirect($this->getConfigLink());
+    }
+
+
+    /**
+     * import shipped csv route mapping
+     */
+    protected function importDeliveredCsv(): void
+    {
+        try {
+            $result = $this->wthb->importCsv(self::HELP_CSV);
+            FlashMessages::addMessage(
+                I18N::translate('Routes imported (Total: %s / skipped: %s)', $result['total'], $result['skipped']),
+                'success'
+            );
+        } catch (Exception $ex) {
+            FlashMessages::addMessage(
+                $ex->getMessage(),
+                'danger'
+            );
+        }
+    }
+
+
+    /**
+     * Get a module setting. Return a user or Module default if the setting is not set.
+     * extends getPreference
+     *
+     * @param string $setting_name
+     * @param string $default
+     *
+     * @return string
+     */
+    public function getPref(string $setting_name, string $default = ''): string
+    {
+        $result = $this->getPreference($setting_name, $default);
+        return trim(isset($result) && $result != '' ? $result : self::DEFAULT_PREFERENCES[$setting_name] ?? '');
+    }
+
+
+    /**
+     * Set a module setting.
+     *
+     * Since module settings are NOT NULL, setting a value to NULL will cause
+     * it to be deleted.
+     *
+     * extends/wraps setPreference
+     * 
+     * @param string $setting_name
+     * @param string $setting_value
+     *
+     * @return void
+     */
+    public function setPref(string $setting_name, string $setting_value): void
+    {
+        //allow user to blank a setting, also if we have a DEFAULT_PREFERENCE
+        $setting_value = ((self::DEFAULT_PREFERENCES[$setting_name] ?? false) && !$setting_value ? ' ' : $setting_value);
+        $this->setPreference($setting_name, $setting_value);
+    }
 
 
     /**
@@ -936,7 +687,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         ]);
         
 
-        $response['tablerows'] = $this->getHelpTableCount();
+        $response['tablerows'] = $this->wthb->getHelpTableCount();
 
 
         $tree_service = Registry::container()->get(TreeService::class);
@@ -964,146 +715,10 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         return $response;
     }
 
-    /**
-     * Save the user preferences in the database
-     *
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
-    public function postAdminAction(ServerRequestInterface $request): ResponseInterface
-    {
-        if (Validator::parsedBody($request)->string('save') === '1') {
-
-            $preferences = array_keys(self::DEFAULT_PREFERENCES);
-            foreach ($preferences as $preference) {
-                $this->setPref($preference, trim(Validator::parsedBody($request)->string($preference)));
-            }
-
-            FlashMessages::addMessage(/*I18N: webtrees.pot */I18N::translate(
-                'The preferences for the module “%s” have been updated.',
-                $this->title()
-            ), 'success');
-        }
-        return redirect($this->getConfigLink());
-    }
-
-
-    /**
-     * wrap I18N strings needed by javascript routines in a json object
-     *
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
-    public function getJsonI18N() : string {
-        return json_encode([
-            // MDE
-            'bold'             => /*I18N: JS MDE */ I18N::translate('bold'),
-            'italic'           => /*I18N: JS MDE */ I18N::translate('italic'),
-            'format as code'   => /*I18N: JS MDE */ I18N::translate('format as code'),
-            'Level 1 heading'  => /*I18N: JS MDE */ I18N::translate('Level %s heading', '1'),
-            'Bulleted list'    => /*I18N: JS MDE */ I18N::translate('Bulleted list'),
-            'Numbered list'    => /*I18N: JS MDE */ I18N::translate('Numbered list'),
-            'Insert link'      => /*I18N: JS MDE */ I18N::translate('Insert link'),
-            'Insert image'     => /*I18N: JS MDE */ I18N::translate('Insert image'),
-            'hr'               => /*I18N: JS MDE */ I18N::translate('Horizontal rule'),
-            'Undo'             => /*I18N: JS MDE */ I18N::translate('Undo'),
-            'Redo'             => /*I18N: JS MDE */ I18N::translate('Redo'),
-            'Help'             => /*I18N: webtrees.pot */ I18N::translate('Help'),
-            'Link destination' => /*I18N: JS MDE */ I18N::translate('Link destination'),
-            'Insert table'     => /*I18N: JS MDE */ I18N::translate('Insert table'),
-            'queryTableCnR'    => /*I18N: JS MDE */ I18N::translate('How many columns and rows should the table have (input: [number] [number])?'),
-            // enhanced links 
-            'cross reference'  => /*I18N: JS enhanced link */ I18N::translate('cross reference'),
-            'oofb'             => /*I18N: JS enhanced link, %s name of location */ I18N::translate('Online Local heritage book of %s at CompGen', '%s'),
-            'gov'              => /*I18N: JS enhanced link */ I18N::translate('Historic Geo Information System (GOV)'),
-            'gedbas'           => /*I18N: JS enhanced link */ I18N::translate('GEDBAS (Genealogical Database - collected personal data)'),
-            'www'              => /*I18N: JS enhanced link */ I18N::translate('wer-wir-waren.at'),
-            'ewp'              => /*I18N: JS enhanced link */ I18N::translate('Residents database - Family research in West Prussia'),
-            'Interactive tree' => /*I18N: webtrees.pot */ I18N::translate('Interactive tree'),
-            'syntax error'     => /*I18N: JS enhanced link */ I18N::translate('Syntax error'),
-            'wt-help1'         => /*I18N: JS enhanced link wt1 - %s=rectypes*/ I18N::translate('standard link to note (available record types: %s) with XREF in active tree', '%s'),
-            'wt-help2'         => /*I18N: JS enhanced link wt2 */ I18N::translate('link to record type individual with XREF from "othertree" and also link to'),
-            'osm-help1'        => /*I18N: JS enhanced link osm1 */ I18N::translate('zoom/lat/lon for locating map'),
-            'osm-help2'        => /*I18N: JS enhanced link osm2 */ I18N::translate('same as before with additional marker'),
-            'osm-help3'        => /*I18N: JS enhanced link osm3 */ I18N::translate('show also node/way/relation, see also'),
-            'osm-help4'        => /*I18N: JS enhanced link osm4 */ I18N::translate('show also node/way/relation - alternative notation'),
-            'ofb-help1'        => /*I18N: JS enhanced link ofb1 */ I18N::translate('link to Online Local heritage book at CompGen with given uid'),
-            'wp-help1'         => /*I18N: JS enhanced link wp1 */ I18N::translate('open the article in the german wikipedia'),
-            'wp-help2'         => /*I18N: JS enhanced link wp2 */ I18N::translate('open the english version of the article'),
-            'wp-help3'         => /*I18N: JS enhanced link wp3 */ I18N::translate('you can address every subdomain instance of wikipedia.org'),
-            'gedbas-help1'     => /*I18N: JS enhanced link gedbas1 */ I18N::translate('open person record with given number'),
-            'gedbas-help2'     => /*I18N: JS enhanced link gedbas2 */ I18N::translate('open person record with UID'),
-        ]);
-    }
-
-   /**
-     * Markdown examples for help screen
-     *
-     * @param ServerRequestInterface $request
-     * @return array
-     */
-    public function getMarkdownHelpExamples(ServerRequestInterface $request) : array {
-        $base_url = Validator::attributes($request)->string('base_url');
-        $public_url = $base_url . '/public/apple-touch-icon.png';
-
-        $tablemarkup = "<table>\n  "
-            . "<tr>\n    <th class=\"left\">Title 1</th>\n    <th class=\"center\">Title 2</th>\n    <th class=\"right\">Title 3</th>\n  </tr>\n  <tr>\n    "
-            . "<td class=\"left\">Text 1</td>\n    <td class=\"center\">Text 2</td>\n    <td class=\"right\">Text 3</td>\n  </tr>\n</table>";
-        $mdsyntax = [
-            [
-                'md' => '*' . I18N::translate('italic') . '*',
-                'html' => '<em>' . I18N::translate('italic') . '</em>'
-            ],
-            [
-                'md' => '**' . I18N::translate('bold') . '**',
-                'html' => '<strong>' . I18N::translate('bold') . '</strong>'
-            ],
-            [
-                'md' => '# ' . I18N::translate('Level %s heading', '1'),
-                'html' => '<h1>' . I18N::translate('Level %s heading', '1') . '</h1>'
-            ],
-            [
-                'md' => '## ' . I18N::translate('Level %s heading', '2') . "\n\n"
-                         . I18N::translate('and so on until level %s', '6'),
-                'html' => '<h2>' . I18N::translate('Level %s heading', '2') . '</h2>'
-            ],
-            [
-                'md' => '`' . I18N::translate('format as code') . '`',
-                'html' => '<code>' . I18N::translate('format as code') . '</code>'
-            ],
-            [
-                'md' => str_repeat('- ' . I18N::translate('Bulleted list') . "\n", 2),
-                'html' => "<ul>\n" . str_repeat('  <li>' . I18N::translate('Bulleted list') . "</li>\n", 2) . '</ul>'
-            ],
-            [
-                'md' => str_repeat('1. ' . I18N::translate('Numbered list') . "\n", 2),
-                'html' => "<ol>\n" . str_repeat('  <li>' . I18N::translate('Numbered list') . "</li>\n", 2) . '</ol>'
-            ],
-            [
-                'md' => '[' . I18N::translate('Insert link') . '](#anchor)',
-                'html' => '<a href="#anchor">' . I18N::translate('Insert link') . '</a>'
-            ],
-            [
-                'md' => '![' . I18N::translate('Insert image') . '](webtrees.png)',
-                'html' => '<img src="webtrees.png" alt="' . I18N::translate('Insert image') . '" />',
-                'out' => '<img src="' . $public_url . '" width="100">'
-            ],
-            [
-                'md' => I18N::translate('Horizontal rule') . "\n\n---",
-                'html' => I18N::translate('Horizontal rule') . "\n<hr>"
-            ],
-            [
-                'md' => I18N::translate('Insert table') . "\n\n|Title 1  | Title 2 |  Title 3|\n|:----    |  :---:  |     ---:|\n|Text 1   |  Text2  |    Text3|\n",
-                'html' => $tablemarkup,
-                'out' => '<div class="md-example">' . $tablemarkup . '</div>'
-            ],
-        ];
-
-        return $mdsyntax;
-    }
 
     /**
      * Serve help page.
+     * Addressed by MDE command bar help icon (see tiny-mde-wt.js; url passed via window.LEhelp in headContent)
      *
      * @param ServerRequestInterface $request
      *
@@ -1118,7 +733,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         $text  = view($this->name() . '::help-md', [
             'link_active'       => boolval($this->getPref(self::PREF_LINKSPP_ACTIVE)),
             'mdimg_active'      => boolval($this->getPref(self::PREF_MD_IMG_ACTIVE)),
-            'mdsyntax'          => $this->getMarkdownHelpExamples($request),
+            'mdsyntax'          => Utils::getMarkdownHelpExamples(Validator::attributes($request)->string('base_url')),
             'mdimg_css_class1'  => $this->getPref(self::PREF_MD_IMG_STDCLASS),
             'mdimg_css_class2'  => $this->getPref(self::PREF_MD_IMG_TITLE_STDCLASS)
         ]);

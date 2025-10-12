@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-21 16:49+0200\n"
+"POT-Creation-Date: 2025-10-07 20:55+0200\n"
 "PO-Revision-Date: 2025-07-16 17:33+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -16,6 +16,183 @@ msgstr ""
 "X-Poedit-SearchPath-0: CustomMarkdownFactory.php\n"
 "X-Poedit-SearchPath-1: LinkEnhancerModule.php\n"
 "X-Poedit-SearchPath-2: module.php\n"
+
+#. I18N: JS MDE
+#: LinkEnhancerUtils.php:74 LinkEnhancerUtils.php:132 LinkEnhancerUtils.php:133
+msgid "bold"
+msgstr ""
+
+#. I18N: JS MDE
+#: LinkEnhancerUtils.php:75 LinkEnhancerUtils.php:128 LinkEnhancerUtils.php:129
+msgid "italic"
+msgstr ""
+
+#. I18N: JS MDE
+#: LinkEnhancerUtils.php:76 LinkEnhancerUtils.php:145 LinkEnhancerUtils.php:146
+msgid "format as code"
+msgstr ""
+
+#. I18N: JS MDE
+#: LinkEnhancerUtils.php:77 LinkEnhancerUtils.php:136 LinkEnhancerUtils.php:137
+#: LinkEnhancerUtils.php:140 LinkEnhancerUtils.php:142
+#, php-format
+msgid "Level %s heading"
+msgstr ""
+
+#. I18N: JS MDE
+#: LinkEnhancerUtils.php:78 LinkEnhancerUtils.php:149 LinkEnhancerUtils.php:150
+msgid "Bulleted list"
+msgstr ""
+
+#. I18N: JS MDE
+#: LinkEnhancerUtils.php:79 LinkEnhancerUtils.php:153 LinkEnhancerUtils.php:154
+msgid "Numbered list"
+msgstr ""
+
+#. I18N: JS MDE
+#: LinkEnhancerUtils.php:80 LinkEnhancerUtils.php:157 LinkEnhancerUtils.php:158
+msgid "Insert link"
+msgstr ""
+
+#. I18N: JS MDE
+#: LinkEnhancerUtils.php:81 LinkEnhancerUtils.php:161 LinkEnhancerUtils.php:162
+msgid "Insert image"
+msgstr ""
+
+#. I18N: JS MDE
+#: LinkEnhancerUtils.php:82 LinkEnhancerUtils.php:166 LinkEnhancerUtils.php:167
+msgid "Horizontal rule"
+msgstr ""
+
+#. I18N: JS MDE
+#: LinkEnhancerUtils.php:83
+msgid "Undo"
+msgstr ""
+
+#. I18N: JS MDE
+#: LinkEnhancerUtils.php:84
+msgid "Redo"
+msgstr ""
+
+#. I18N: JS MDE
+#: LinkEnhancerUtils.php:86
+msgid "Link destination"
+msgstr ""
+
+#. I18N: JS MDE
+#: LinkEnhancerUtils.php:87 LinkEnhancerUtils.php:170
+msgid "Insert table"
+msgstr ""
+
+#. I18N: JS MDE
+#: LinkEnhancerUtils.php:88
+msgid ""
+"How many columns and rows should the table have (input: [number] [number])?"
+msgstr ""
+
+#. I18N: JS enhanced link
+#: LinkEnhancerUtils.php:90
+msgid "cross reference"
+msgstr ""
+
+#. I18N: JS enhanced link, %s name of location
+#: LinkEnhancerUtils.php:91
+#, php-format
+msgid "Online Local heritage book of %s at CompGen"
+msgstr ""
+
+#. I18N: JS enhanced link
+#: LinkEnhancerUtils.php:92
+msgid "Historic Geo Information System (GOV)"
+msgstr ""
+
+#. I18N: JS enhanced link
+#: LinkEnhancerUtils.php:93
+msgid "GEDBAS (Genealogical Database - collected personal data)"
+msgstr ""
+
+#. I18N: JS enhanced link
+#: LinkEnhancerUtils.php:94
+msgid "wer-wir-waren.at"
+msgstr ""
+
+#. I18N: JS enhanced link
+#: LinkEnhancerUtils.php:95
+msgid "Residents database - Family research in West Prussia"
+msgstr ""
+
+#. I18N: JS enhanced link
+#: LinkEnhancerUtils.php:97
+msgid "Syntax error"
+msgstr ""
+
+#. I18N: JS enhanced link wt1 - %s=rectypes
+#: LinkEnhancerUtils.php:98
+#, php-format
+msgid ""
+"standard link to note (available record types: %s) with XREF in active tree"
+msgstr ""
+
+#. I18N: JS enhanced link wt2
+#: LinkEnhancerUtils.php:99
+msgid ""
+"link to record type individual with XREF from \"othertree\" and also link to"
+msgstr ""
+
+#. I18N: JS enhanced link osm1
+#: LinkEnhancerUtils.php:100
+msgid "zoom/lat/lon for locating map"
+msgstr ""
+
+#. I18N: JS enhanced link osm2
+#: LinkEnhancerUtils.php:101
+msgid "same as before with additional marker"
+msgstr ""
+
+#. I18N: JS enhanced link osm3
+#: LinkEnhancerUtils.php:102
+msgid "show also node/way/relation, see also"
+msgstr ""
+
+#. I18N: JS enhanced link osm4
+#: LinkEnhancerUtils.php:103
+msgid "show also node/way/relation - alternative notation"
+msgstr ""
+
+#. I18N: JS enhanced link ofb1
+#: LinkEnhancerUtils.php:104
+msgid "link to Online Local heritage book at CompGen with given uid"
+msgstr ""
+
+#. I18N: JS enhanced link wp1
+#: LinkEnhancerUtils.php:105
+msgid "open the article in the german wikipedia"
+msgstr ""
+
+#. I18N: JS enhanced link wp2
+#: LinkEnhancerUtils.php:106
+msgid "open the english version of the article"
+msgstr ""
+
+#. I18N: JS enhanced link wp3
+#: LinkEnhancerUtils.php:107
+msgid "you can address every subdomain instance of wikipedia.org"
+msgstr ""
+
+#. I18N: JS enhanced link gedbas1
+#: LinkEnhancerUtils.php:108
+msgid "open person record with given number"
+msgstr ""
+
+#. I18N: JS enhanced link gedbas2
+#: LinkEnhancerUtils.php:109
+msgid "open person record with UID"
+msgstr ""
+
+#: LinkEnhancerUtils.php:141
+#, php-format
+msgid "and so on until level %s"
+msgstr ""
 
 #. I18N: MD img error precondition
 #: CustomMarkdownFactory.php:92
@@ -195,7 +372,7 @@ msgid "picture with defined height, width and additional css class"
 msgstr ""
 
 #. I18N: wthb link user setting title
-#: resources/views/wthb-modal.phtml:11 LinkEnhancerModule.php:582
+#: resources/views/wthb-modal.phtml:11 LinkEnhancerModule.php:313
 msgid "Webtrees manual link - user setting"
 msgstr ""
 
@@ -217,7 +394,7 @@ msgid "This setting can be adjusted at any time."
 msgstr ""
 
 #. I18N: wthb link user setting epilogue 2
-#: resources/views/wthb-modal.phtml:35 LinkEnhancerModule.php:581
+#: resources/views/wthb-modal.phtml:35 LinkEnhancerModule.php:312
 msgid ""
 "The link to the setting dialog is displayed when you hover the mouse cursor "
 "over the help link for a few seconds."
@@ -342,7 +519,7 @@ msgid ""
 msgstr ""
 
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:249 LinkEnhancerModule.php:579
+#: resources/views/settings.phtml:249 LinkEnhancerModule.php:310
 msgid "Webtrees manual"
 msgstr ""
 
@@ -472,234 +649,48 @@ msgstr ""
 msgid "JSON is invalid"
 msgstr ""
 
+#: LinkEnhancerWtHb.php:203
+msgid "Table for context help is missing - fallback to standard url"
+msgstr ""
+
+#: LinkEnhancerWtHb.php:269 LinkEnhancerWtHb.php:302
+msgid "Table for context help is missing - nothing to do."
+msgstr ""
+
+#: LinkEnhancerWtHb.php:275
+msgid "No data available for export."
+msgstr ""
+
+#: LinkEnhancerWtHb.php:311
+msgid "No CSV file was received."
+msgstr ""
+
+#: LinkEnhancerWtHb.php:322 LinkEnhancerModule.php:512
+#: LinkEnhancerModule.php:597
+#, php-format
+msgid "Routes imported (Total: %s / skipped: %s)"
+msgstr ""
+
+#: LinkEnhancerWtHb.php:333
+msgid "Separator is not set."
+msgstr ""
+
+#: LinkEnhancerWtHb.php:336
+msgid "For the separator is only a single character allowed."
+msgstr ""
+
 #. I18N: Module title
-#: LinkEnhancerModule.php:130
+#: LinkEnhancerModule.php:146
 msgid "Link-Enhancer"
 msgstr ""
 
 #. I18N: Module description
-#: LinkEnhancerModule.php:140
+#: LinkEnhancerModule.php:156
 msgid ""
 "Cross-references to Gedcom datasets, Markdown editor, context-sensitive link "
 "to the GenWiki webtrees manual"
 msgstr ""
 
-#: LinkEnhancerModule.php:237 LinkEnhancerModule.php:777
-#: LinkEnhancerModule.php:879
-#, php-format
-msgid "Routes imported (Total: %s / skipped: %s)"
-msgstr ""
-
-#: LinkEnhancerModule.php:346
-msgid "Table for context help is missing - fallback to standard url"
-msgstr ""
-
-#: LinkEnhancerModule.php:640
+#: LinkEnhancerModule.php:371
 msgid "Home link - JSON with CSS rules seems to be invalid."
-msgstr ""
-
-#: LinkEnhancerModule.php:794
-msgid "Separator is not set."
-msgstr ""
-
-#: LinkEnhancerModule.php:797
-msgid "For the separator is only a single character allowed."
-msgstr ""
-
-#: LinkEnhancerModule.php:819 LinkEnhancerModule.php:859
-msgid "Table for context help is missing - nothing to do."
-msgstr ""
-
-#: LinkEnhancerModule.php:825
-msgid "No data available for export."
-msgstr ""
-
-#: LinkEnhancerModule.php:868
-msgid "No CSV file was received."
-msgstr ""
-
-#. I18N: JS MDE
-#: LinkEnhancerModule.php:998 LinkEnhancerModule.php:1056
-#: LinkEnhancerModule.php:1057
-msgid "bold"
-msgstr ""
-
-#. I18N: JS MDE
-#: LinkEnhancerModule.php:999 LinkEnhancerModule.php:1052
-#: LinkEnhancerModule.php:1053
-msgid "italic"
-msgstr ""
-
-#. I18N: JS MDE
-#: LinkEnhancerModule.php:1000 LinkEnhancerModule.php:1069
-#: LinkEnhancerModule.php:1070
-msgid "format as code"
-msgstr ""
-
-#. I18N: JS MDE
-#: LinkEnhancerModule.php:1001 LinkEnhancerModule.php:1060
-#: LinkEnhancerModule.php:1061 LinkEnhancerModule.php:1064
-#: LinkEnhancerModule.php:1066
-#, php-format
-msgid "Level %s heading"
-msgstr ""
-
-#. I18N: JS MDE
-#: LinkEnhancerModule.php:1002 LinkEnhancerModule.php:1073
-#: LinkEnhancerModule.php:1074
-msgid "Bulleted list"
-msgstr ""
-
-#. I18N: JS MDE
-#: LinkEnhancerModule.php:1003 LinkEnhancerModule.php:1077
-#: LinkEnhancerModule.php:1078
-msgid "Numbered list"
-msgstr ""
-
-#. I18N: JS MDE
-#: LinkEnhancerModule.php:1004 LinkEnhancerModule.php:1081
-#: LinkEnhancerModule.php:1082
-msgid "Insert link"
-msgstr ""
-
-#. I18N: JS MDE
-#: LinkEnhancerModule.php:1005 LinkEnhancerModule.php:1085
-#: LinkEnhancerModule.php:1086
-msgid "Insert image"
-msgstr ""
-
-#. I18N: JS MDE
-#: LinkEnhancerModule.php:1006 LinkEnhancerModule.php:1090
-#: LinkEnhancerModule.php:1091
-msgid "Horizontal rule"
-msgstr ""
-
-#. I18N: JS MDE
-#: LinkEnhancerModule.php:1007
-msgid "Undo"
-msgstr ""
-
-#. I18N: JS MDE
-#: LinkEnhancerModule.php:1008
-msgid "Redo"
-msgstr ""
-
-#. I18N: JS MDE
-#: LinkEnhancerModule.php:1010
-msgid "Link destination"
-msgstr ""
-
-#. I18N: JS MDE
-#: LinkEnhancerModule.php:1011 LinkEnhancerModule.php:1094
-msgid "Insert table"
-msgstr ""
-
-#. I18N: JS MDE
-#: LinkEnhancerModule.php:1012
-msgid ""
-"How many columns and rows should the table have (input: [number] [number])?"
-msgstr ""
-
-#. I18N: JS enhanced link
-#: LinkEnhancerModule.php:1014
-msgid "cross reference"
-msgstr ""
-
-#. I18N: JS enhanced link, %s name of location
-#: LinkEnhancerModule.php:1015
-#, php-format
-msgid "Online Local heritage book of %s at CompGen"
-msgstr ""
-
-#. I18N: JS enhanced link
-#: LinkEnhancerModule.php:1016
-msgid "Historic Geo Information System (GOV)"
-msgstr ""
-
-#. I18N: JS enhanced link
-#: LinkEnhancerModule.php:1017
-msgid "GEDBAS (Genealogical Database - collected personal data)"
-msgstr ""
-
-#. I18N: JS enhanced link
-#: LinkEnhancerModule.php:1018
-msgid "wer-wir-waren.at"
-msgstr ""
-
-#. I18N: JS enhanced link
-#: LinkEnhancerModule.php:1019
-msgid "Residents database - Family research in West Prussia"
-msgstr ""
-
-#. I18N: JS enhanced link
-#: LinkEnhancerModule.php:1021
-msgid "Syntax error"
-msgstr ""
-
-#. I18N: JS enhanced link wt1 - %s=rectypes
-#: LinkEnhancerModule.php:1022
-#, php-format
-msgid ""
-"standard link to note (available record types: %s) with XREF in active tree"
-msgstr ""
-
-#. I18N: JS enhanced link wt2
-#: LinkEnhancerModule.php:1023
-msgid ""
-"link to record type individual with XREF from \"othertree\" and also link to"
-msgstr ""
-
-#. I18N: JS enhanced link osm1
-#: LinkEnhancerModule.php:1024
-msgid "zoom/lat/lon for locating map"
-msgstr ""
-
-#. I18N: JS enhanced link osm2
-#: LinkEnhancerModule.php:1025
-msgid "same as before with additional marker"
-msgstr ""
-
-#. I18N: JS enhanced link osm3
-#: LinkEnhancerModule.php:1026
-msgid "show also node/way/relation, see also"
-msgstr ""
-
-#. I18N: JS enhanced link osm4
-#: LinkEnhancerModule.php:1027
-msgid "show also node/way/relation - alternative notation"
-msgstr ""
-
-#. I18N: JS enhanced link ofb1
-#: LinkEnhancerModule.php:1028
-msgid "link to Online Local heritage book at CompGen with given uid"
-msgstr ""
-
-#. I18N: JS enhanced link wp1
-#: LinkEnhancerModule.php:1029
-msgid "open the article in the german wikipedia"
-msgstr ""
-
-#. I18N: JS enhanced link wp2
-#: LinkEnhancerModule.php:1030
-msgid "open the english version of the article"
-msgstr ""
-
-#. I18N: JS enhanced link wp3
-#: LinkEnhancerModule.php:1031
-msgid "you can address every subdomain instance of wikipedia.org"
-msgstr ""
-
-#. I18N: JS enhanced link gedbas1
-#: LinkEnhancerModule.php:1032
-msgid "open person record with given number"
-msgstr ""
-
-#. I18N: JS enhanced link gedbas2
-#: LinkEnhancerModule.php:1033
-msgid "open person record with UID"
-msgstr ""
-
-#: LinkEnhancerModule.php:1065
-#, php-format
-msgid "and so on until level %s"
 msgstr ""

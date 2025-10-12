@@ -11,12 +11,6 @@ namespace Schwendinger\Webtrees\Module\LinkEnhancer;
 use Fisharebest\Webtrees\Webtrees;
 use Illuminate\Support\Collection;
 
-require_once __DIR__ . '/CustomMarkdownFactory.php';
-require_once __DIR__ . '/LinkEnhancerModule.php';
-require_once __DIR__ . '/Schema/Migration0.php';
-require_once __DIR__ . '/Schema/SeedHelpTable.php';
-
-
 //+++ taken from https://github.com/vesta-webtrees-2-custom-modules/vesta_classic_laf/blob/master/module.php
 //webtrees major version switch
 if (defined("WT_MODULES_DIR")) {
@@ -49,7 +43,6 @@ Collection::make($filenames)
 
 $vesta_installed = class_exists("Cissee\WebtreesExt\AbstractModule", false);
 if ($vesta_installed) {
-    require_once __DIR__ . '/LinkEnhancerModuleExt.php';
     return new LinkEnhancerModuleExt();
 } else {
     return new LinkEnhancerModule();
