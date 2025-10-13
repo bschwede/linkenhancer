@@ -138,20 +138,21 @@ function createMDECommandbar(editor) {
         ]
     });
     editor.e.parentNode.insertBefore(barDiv, editor.e);
-
+    
     return cmdBar;
 }
 
-function installMDE(cfg) {
-    linkSupport = (typeof cfg == 'object' && cfg !== null ? Object.assign(getLinkSupportCfg(), cfg) : getLinkSupportCfg());
-    document.querySelectorAll("textarea[id$='NOTE'], textarea[id$='NOTE-CONC']").forEach((elem) => {
+function insertMDE() {
+    document.querySelectorAll("textarea[id$='NOTE'], textarea[id$='NOTE-CONC'], textarea[id$='note']").forEach((elem) => {
+        let edId = `md-${elem.id}`;      
+        if (document.querySelector(`#${edId}`)) return;
+
         let editor = new TinyMDE.Editor({ element: elem });
-        let edId = `md-${elem.id}`;
         let txtId = `txt-${elem.id}`;
+
         editor.e.id = edId;
 
         wrap(editor.e); //#2
-        //editor.e.classList.add('form-control');
 
         // Workaround - input help/OSK
         const oskElem = document.querySelector(`.wt-osk-trigger[data-wt-id="${elem.id}"]`)
@@ -164,9 +165,33 @@ function installMDE(cfg) {
             oskElem.insertAdjacentElement('afterend', txtNode);
         }
         setupDynamicLineNumbers(editor.e);
-        
+
         createMDECommandbar(editor);
+    });    
+}
+
+function installMDE(cfg) {
+    linkSupport = (typeof cfg == 'object' && cfg !== null ? Object.assign(getLinkSupportCfg(), cfg) : getLinkSupportCfg());
+
+    insertMDE();
+
+    const observer = new MutationObserver((mutationsList) => {
+        for (const mutation of mutationsList) {
+            if (mutation.type === 'childList') {
+                mutation.addedNodes.forEach(node => {
+                    if (node.nodeType === Node.ELEMENT_NODE) {
+                        if (node.tagName === 'TEXTAREA') {
+                            insertMDE();
+                        }
+                    }
+                    if (node.querySelectorAll) {
+                        if (node.querySelectorAll("textarea")) insertMDE();
+                    }
+                });
+            }
+        }
     });
+    observer.observe(document, { childList: true, subtree: true });
 }
 
 export { installMDE };
