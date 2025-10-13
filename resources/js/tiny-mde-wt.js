@@ -70,15 +70,12 @@ function setupDynamicLineNumbers(editorEl) {
 }
 
 
-function createMDECommandbar(editor) {
+function createMDECommandbar(editor, showHelp) {
     const barDiv = document.createElement("div");
-    const cmdBar = new TinyMDE.CommandBar({
-        element: barDiv,
-        editor: editor,
-        commands: [
-            { name: 'bold', title: I18N['bold']},
-            { name: 'italic', title: I18N['italic']},
-            { name: 'code', title: I18N['format as code']},
+    let barCommands = [
+            { name: 'bold', title: I18N['bold'] },
+            { name: 'italic', title: I18N['italic'] },
+            { name: 'code', title: I18N['format as code'] },
             '|',
             { name: "h1", title: I18N['Level 1 heading'] },
             { name: "ul", title: I18N['Bulleted list'] },
@@ -93,8 +90,8 @@ function createMDECommandbar(editor) {
                     editor.wrapSelection('[', `](${dest})`);
                 }
             },
-            { 
-                name: 'insertImage', 
+            {
+                name: 'insertImage',
                 title: I18N['Insert image'],
                 action: editor => {
                     let dest = linkSupport.src ? "#@id=@@" : '';
@@ -117,7 +114,7 @@ function createMDECommandbar(editor) {
                         rows = m[2];
                     }
                     rows = rows < 2 ? 2 : rows;
-                    for (let i=0; i <= rows; i++) { // one more for second row with dashes
+                    for (let i = 0; i <= rows; i++) { // one more for second row with dashes
                         markup += getTabRow(cols, (i == 1 ? '-' : ' ').repeat(3)) + '\n';
                     }
                     editor.paste(markup);
@@ -129,29 +126,38 @@ function createMDECommandbar(editor) {
             '|',
             { name: 'undo', title: I18N['Undo'] },
             { name: 'redo', title: I18N['Redo'] },
+        ];
+    if (showHelp) {
+        barCommands.push(
             '|',
             {
                 name: 'modHelp',
                 title: I18N['Help'],
                 innerHTML: `<a href="#" data-bs-backdrop="static" data-bs-toggle="modal" data-bs-target="#wt-ajax-modal" data-wt-href="${LEhelp}"><b style="padding:0 3px;">?</b></a>`,
-            },
-        ]
+            }
+        );
+    }
+    const cmdBar = new TinyMDE.CommandBar({
+        element: barDiv,
+        editor: editor,
+        commands: barCommands
     });
     editor.e.parentNode.insertBefore(barDiv, editor.e);
-
+    
     return cmdBar;
 }
 
-function installMDE(cfg) {
-    linkSupport = (typeof cfg == 'object' && cfg !== null ? Object.assign(getLinkSupportCfg(), cfg) : getLinkSupportCfg());
-    document.querySelectorAll("textarea[id$='NOTE'], textarea[id$='NOTE-CONC']").forEach((elem) => {
+function insertMDE() {
+    document.querySelectorAll("textarea[id$='NOTE'], textarea[id$='NOTE-CONC'], textarea[id$='note']").forEach((elem) => {
+        let edId = `md-${elem.id}`;      
+        if (document.querySelector(`#${edId}`)) return;
+
         let editor = new TinyMDE.Editor({ element: elem });
-        let edId = `md-${elem.id}`;
         let txtId = `txt-${elem.id}`;
+
         editor.e.id = edId;
 
         wrap(editor.e); //#2
-        //editor.e.classList.add('form-control');
 
         // Workaround - input help/OSK
         const oskElem = document.querySelector(`.wt-osk-trigger[data-wt-id="${elem.id}"]`)
@@ -164,9 +170,33 @@ function installMDE(cfg) {
             oskElem.insertAdjacentElement('afterend', txtNode);
         }
         setupDynamicLineNumbers(editor.e);
-        
-        createMDECommandbar(editor);
+
+        createMDECommandbar(editor, (elem.closest('#wt-ajax-modal') === null)); // no help if mde is in modal dialog
+    });    
+}
+
+function installMDE(cfg) {
+    linkSupport = (typeof cfg == 'object' && cfg !== null ? Object.assign(getLinkSupportCfg(), cfg) : getLinkSupportCfg());
+
+    insertMDE();
+
+    const observer = new MutationObserver((mutationsList) => {
+        for (const mutation of mutationsList) {
+            if (mutation.type === 'childList') {
+                mutation.addedNodes.forEach(node => {
+                    if (node.nodeType === Node.ELEMENT_NODE) {
+                        if (node.tagName === 'TEXTAREA') {
+                            insertMDE();
+                        }
+                    }
+                    if (node.querySelectorAll) {
+                        if (node.querySelectorAll("textarea")) insertMDE();
+                    }
+                });
+            }
+        }
     });
+    observer.observe(document, { childList: true, subtree: true });
 }
 
 export { installMDE };
