@@ -26,9 +26,9 @@ declare(strict_types=1);
 
 namespace Schwendinger\Webtrees\Module\LinkEnhancer;
 
-use Schwendinger\Webtrees\Module\LinkEnhancer\CustomMarkdownFactory;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Factories\CustomMarkdownFactory;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
-use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerWtHb;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Services\WthbService;
 use Fisharebest\Localization\Translation;
 use Fisharebest\Webtrees\FlashMessages;
 use Fisharebest\Webtrees\I18N;
@@ -122,14 +122,14 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         self::PREF_MD_IMG_TITLE_STDCLASS => self::STDCLASS_MD_IMG_TITLE, //string
     ];
 
-    protected LinkEnhancerWtHb $wthb;
+    protected WthbService $wthb;
 
     public function __construct()
     {
         $std_url = $this->getPref(self::PREF_WTHB_STD_LINK, self::STDLINK_WTHB);
         $wiki_url = rtrim($this->getPref(self::PREF_GENWIKI_LINK, self::STDLINK_GENWIKI), '/') . '/';
 
-        $this->wthb = new LinkEnhancerWtHb(
+        $this->wthb = new WthbService(
             self::HELP_TABLE, 
             $std_url,
             $wiki_url

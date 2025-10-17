@@ -22,7 +22,7 @@
  */
 declare(strict_types=1);
 
-namespace Schwendinger\Webtrees\Module\LinkEnhancer;
+namespace Schwendinger\Webtrees\Module\LinkEnhancer\Factories;
 
 use Fisharebest\Webtrees\Webtrees;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
