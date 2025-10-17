@@ -16,13 +16,13 @@ function getLECfg() {
     "wp": {
         name: 'Wikipedia',
         url: (id, title) => {
-            let parts = id.split('/', 2);
-            if (parts.length != 2) {
+            let parts = id.split('/');
+            if (parts.length < 2) {
                 title = title + " - " + I18N['syntax error'] + "!";
                 return { url: '', title };
             }
             let subdomain = parts[0];
-            let article = parts[1];
+            let article = parts.slice(1).join('/');
             title = `${title} - ` + decodeURIComponent(article);
             return { url: `https://${subdomain}.wikipedia.org/wiki/${article}`, title };
         },

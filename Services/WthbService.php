@@ -24,7 +24,7 @@
 
 declare(strict_types=1);
 
-namespace Schwendinger\Webtrees\Module\LinkEnhancer;
+namespace Schwendinger\Webtrees\Module\LinkEnhancer\Services;
 
 use Schwendinger\Webtrees\Module\LinkEnhancer\Schema\SeedHelpTable;
 use Fisharebest\Webtrees\FlashMessages;
@@ -41,7 +41,7 @@ use Fisharebest\Webtrees\Exceptions\FileUploadException;
 
 
 
-class LinkEnhancerWtHb { // stuff related to webtrees manual link handling
+class WthbService { // stuff related to webtrees manual link handling
     protected string $help_table;
     protected string $std_url;
     protected string $wiki_url;
