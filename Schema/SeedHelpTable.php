@@ -32,7 +32,7 @@ use Fisharebest\Webtrees\Schema\SeedInterface;
  */
 class SeedHelpTable implements SeedInterface
 {
-    private const array HEADER = ['path', 'handler', 'method', 'extras', 'category', 'order', 'url'];
+    private const array HEADER = ['path', 'handler', 'method', 'extras', 'subcontext', 'category', 'order', 'url'];
 
     private array $data = [];
     private bool $truncate;
@@ -62,6 +62,7 @@ class SeedHelpTable implements SeedInterface
         $row['handler'] ??= '';
         $row['method'] ??= '';
         $row['extras'] ??= '';
+        $row['subcontext'] ??= '';
         $row['url'] ??= '';
        
         $handler = $row['handler'] ?? null;
@@ -124,6 +125,7 @@ class SeedHelpTable implements SeedInterface
                         'handler'    => $row['handler'],
                         'method'     => $row['method'],
                         'extras'     => $row['extras'],
+                        'subcontext' => $row['subcontext'],
                     ], $updateValues);
                     $this->cntRowsProcessed++;
                 } else {
