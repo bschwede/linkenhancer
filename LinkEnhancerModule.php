@@ -102,7 +102,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
     public const HELP_CSV = __DIR__ . DIRECTORY_SEPARATOR . 'Schema' . DIRECTORY_SEPARATOR . 'SeedHelpTable.csv';
 
-    public const HELP_SCHEMA_TARGET_VERSION = 1;
+    public const HELP_SCHEMA_TARGET_VERSION = 1; //2
 
     protected const DEFAULT_PREFERENCES = [
         self::PREF_HOME_LINK_TYPE        => '1', //int triple-state, 0=off, 1=tree, 2=my-page
@@ -304,15 +304,18 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                 
                 // link to Webtrees Manual in GenWiki or external link?
                 $wiki_url = $this->getPref(self::PREF_GENWIKI_LINK, self::STDLINK_GENWIKI);
-                $iswthb = str_starts_with($help_url, $wiki_url);
+                //$iswthb = str_starts_with($help_url, $wiki_url);
                 
                 $options = [
-                    'help_title'   => ($iswthb ? I18N::translate('Webtrees manual') : /*I18N: webtrees.pot */ I18N::translate('Help')),
+                    'I18N' => [
+                        'help_title_wthb'   => I18N::translate('Webtrees manual'),
+                        'help_title_ext'    => /*I18N: webtrees.pot */ I18N::translate('Help'),
+                        'help_tooltip' => /*I18N: wthb link user setting epilogue 2 */ I18N::translate('The link to the setting dialog is displayed when you hover the mouse cursor over the help link for a few seconds.'),
+                        'cfg_tooltip' => /*I18N: wthb link user setting title */ I18N::translate('Webtrees manual link - user setting'),
+                    ],
                     'help_url'     => e($help_url),
-                    'help_tooltip' => /*I18N: wthb link user setting epilogue 2 */ I18N::translate('The link to the setting dialog is displayed when you hover the mouse cursor over the help link for a few seconds.'),
-                    'cfg_tooltip'  => /*I18N: wthb link user setting title */ I18N::translate('Webtrees manual link - user setting'),
                     'faicon'       => boolval($this->getPref(self::PREF_WTHB_FAICON)),
-                    'iswthb'       => $iswthb,
+                    'wiki_url'     => $wiki_url,
                     'dotranslate'  => intval($this->getPref(self::PREF_WTHB_TRANSLATE)), // 0=off, 1=user defined, 2=on
                 ];
                 $includeRes .= Utils::getIifeJavascript(

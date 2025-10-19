@@ -2,13 +2,16 @@
 //<script>
 //((options) => {
     const cfg = Object.assign({
-        help_title: 'Webtrees manual', //i18n for link displayname
+        I18N: {
+            help_title_wthb: 'Webtrees manual', //link displayname
+            help_title_ext: 'Help',
+            help_tooltip: '', // tooltip with info about settings link; the I18N object is not included on admin page
+            cfg_tooltip: '', // tooltip user setting link
+        },
         help_url: '#',
         faicon: false, // prepend symbol to help link
-        iswthb: true,  // is link external or a webtrees manual link?
+        wiki_url: 'https://wiki.genealogy.net/',  // is link external or a webtrees manual link?
         dotranslate: 0, //0=off, 1=user defined, 2=on
-        help_tooltip: '', // i18n for tooltip with info about settings link; the I18N object is not included on admin page
-        cfg_tooltip: '', // i18n for tooltip user setting link
     }, options);
 
     const googleTranslate = "https://translate.google.com/translate?sl=de&tl=%LANG%&u=%URL%";
@@ -38,7 +41,9 @@
         }
     };
 
-
+    const isWthbLink = (url) => {
+        return (!(typeof url === 'string' || url instanceof String)) ? false : url.startsWith(cfg.wiki_url);
+    }
 
     const toggleModal = (show = true, id = 'wthb-modal') => {
         if (show) {
@@ -56,7 +61,8 @@
         if (!topmenu) return;
         let fahtml = cfg.faicon ? '<i class="fa-solid fa-circle-question"></i> ' : '';
         // difference in styling between front- and backend: style="display: inline-block;" is missing on admin page
-        topmenu.insertAdjacentHTML('afterbegin', `<li class="nav-item menu-wthb"><a id="wthb-link" class="nav-link" style="display: inline-block;" target="_blank" href="${cfg.help_url}">${fahtml}${cfg.help_title}</a></li>`);
+        let help_title = isWthbLink(cfg.help_url) ? cfg.I18N.help_title_wthb : cfg.I18N.help_title_ext;
+        topmenu.insertAdjacentHTML('afterbegin', `<li class="nav-item menu-wthb"><a id="wthb-link" class="nav-link" style="display: inline-block;" target="_blank" href="${cfg.help_url}">${fahtml}${help_title}</a></li>`);
     };
 
     const insertWthbLinkCallback = function (mutationsList, observer) {
@@ -84,11 +90,11 @@
         cfg.lang = $("html").attr("lang") ?? 'de';
 
         // only for webtrees manual links and i
-        if (cfg.lang?.substr(0, 2).toLowerCase() == 'de' || !cfg.iswthb) return;
+        if (cfg.lang?.substr(0, 2).toLowerCase() == 'de') return;
 
         let wthblink = $("#wthb-link");
         $(wthblink).on('click', (e) => { // help link handler
-            if (!cfg.iswthb || !cfg.dotranslate) return; // open url directly
+            if (!isWthbLink($(wthblink).attr('href')) || !cfg.dotranslate) return; // open url directly
 
             if (cfg.dotranslate === 1) { // user defined behaviour
                 // open settings dialog if no setting available
@@ -111,12 +117,12 @@
             e.preventDefault();
         });
         if (cfg.dotranslate !== 1) return; // no user setting 
-        if (cfg.help_tooltip) $(wthblink).attr('title', cfg.help_tooltip);
+        if (cfg.I18N.help_tooltip) $(wthblink).attr('title', cfg.I18N.help_tooltip);
 
         let wthbcfg = $('<a id="wthb-link-cfg" href="#"><i class="fa-solid fa-wrench fa-fw"></i>&nbsp;</a>')
             .hide()
             .on('click', () => toggleModal(true));
-        if (cfg.cfg_tooltip) $(wthbcfg).attr('title', cfg.cfg_tooltip);
+        if (cfg.I18N.cfg_tooltip) $(wthbcfg).attr('title', cfg.I18N.cfg_tooltip);
 
         // show/hide user settings link beside help link
         let timer = null;
