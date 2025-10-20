@@ -207,6 +207,10 @@ class WthbService { // stuff related to webtrees manual link handling
         }
         $url = $std_url;
         $activeroute ??= $this->getActiveRoute();
+        $sql = "";
+        $result = null;
+        $subcontext = [];
+
 
         if ($activeroute) {
             // custom module?
@@ -221,26 +225,30 @@ class WthbService { // stuff related to webtrees manual link handling
             //   OR (handler = module)                                #if route.path ^=/module/
             //   OR (category=generic AND extras=route[extras])       #last try by Auth-Level
             // )
-            $result = DB::table($this->help_table)
+            $query = DB::table($this->help_table)
                 ->whereNotNull('url')
                 ->where('url', '!=', '')
-                ->where(function ($query) use ($module, $activeroute) {
-                    $query
+                ->where(function ($query2) use ($module, $activeroute) {
+                    $query2
                         ->where('path', '=', $activeroute['path'])
                         ->where('handler', '=', $activeroute['handler'])
-                        ->when($module != '', function ($query2) use ($module, $activeroute) {
-                            $query2
+                        ->when($module != '', function ($query3) use ($module, $activeroute) {
+                            $query3
                                 ->orWhere('path', '=', $activeroute['path'])
                                 ->where('handler', '=', $module)
                                 ->orWhere('handler', '=', $module);
                         })
-                        ->when(($activeroute['extras'] ?? false), function ($query3) use ($activeroute) {
-                            $query3
+                        ->when(($activeroute['extras'] ?? false), function ($query4) use ($activeroute) {
+                            $query4
                                 ->orWhere('category', '=', 'generic')
                                 ->where('extras', '=', $activeroute['extras']);
                         });
                 })
-                ->orderBy('order')
+                ->orderBy('order');
+            
+            $sql = $query->toRawSql();
+            
+            $result = $query
                 ->get()
                 ->map(function ($obj) use ($std_url, $wiki_url): mixed { // complete url by appending prefix to url path - also external url are possible
                     $first_url = trim($obj->url);
@@ -248,12 +256,30 @@ class WthbService { // stuff related to webtrees manual link handling
                     return $obj;
                 });
 
-            if (!$result->isEmpty()) {
-                return $result;
+            if ($result->isNotEmpty()) {
+                $firsturl = $result->firstWhere('subcontext', '=', "");
+                $url = $firsturl ? $firsturl->url : $url;
+
+                $subcontext = $result
+                    ->filter(function($row) {
+                        return $row->subcontext != '';
+                    })
+                    ->map(function($row){
+                        return [
+                            'ctx' => $row->subcontext,
+                            'url' => $row->url,
+                        ];
+                    })
+                    ->toArray();
             }
         }
 
-        return $url;
+        return [
+            'sql'        => $sql,
+            'result'     => $result,
+            'help_url'   => $url,
+            'subcontext' => $subcontext,
+        ];
     }
 
     public function exportCsvAction(string $filename, ServerRequestInterface $request): ResponseInterface

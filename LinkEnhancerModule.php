@@ -297,10 +297,12 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             if (file_exists($jsfile)) {
                 $help = $this->wthb->getContextHelp($activeRouteInfo);
                 if ($cfg_js_debug_console) {
-                    $initJs .= "console.debug('LE-Mod help:', " . json_encode($help) . ");";
+                    $initJs .= "console.debug('LE-Mod help rows:', " . json_encode($help['result']) . ");";
+                    $initJs .= "console.debug('LE-Mod help sql:', " . json_encode($help['sql']) . ");";
+                    $initJs .= "console.debug('LE-Mod help subcontext:', " . json_encode($help['subcontext']) . ");";
                 }
 
-                $help_url = gettype(value: $help) == 'string' ? $help : $help->first()->url;
+                $help_url = $help['help_url']; //gettype(value: $help) == 'string' ? $help : $help->first()->url;
                 
                 // link to Webtrees Manual in GenWiki or external link?
                 $wiki_url = $this->getPref(self::PREF_GENWIKI_LINK, self::STDLINK_GENWIKI);
@@ -317,6 +319,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                     'faicon'       => boolval($this->getPref(self::PREF_WTHB_FAICON)),
                     'wiki_url'     => $wiki_url,
                     'dotranslate'  => intval($this->getPref(self::PREF_WTHB_TRANSLATE)), // 0=off, 1=user defined, 2=on
+                    'subcontext'   => json_encode($help['subcontext']),
                 ];
                 $includeRes .= Utils::getIifeJavascript(
                     file_get_contents($jsfile),
