@@ -30,15 +30,18 @@ use Fisharebest\Webtrees\I18N;
 
 class LinkEnhancerUtils { // misc helper functions
     /**
-     * Wrapper for init javascript when document is ready
+     * Wrapper for init javascript with try-catch-wrapper
      * 
-     * @param string $initJs
-     *
+     * @param string $docReadyJs  execute on document ready
+     * @param string $initJs      execute directly
      * @return string
      */
-    public static function getInitJavascript(string $initJs): string
+    public static function getJavascriptWrapper(string $docReadyJs, string $initJs): string
     {
-        return $initJs ? "<script>document.addEventListener('DOMContentLoaded', function(event) { " . $initJs . "});</script>" : '';
+        $js = '';
+        $js .= $initJs ? "try {{$initJs}} catch(e){console.error('LE-Mod Init Error:', e);}" : '';
+        $js .= $docReadyJs ? "document.addEventListener('DOMContentLoaded', function(event) {try {{$docReadyJs}} catch(e){console.error('LE-Mod doc ready Init Error:', e);}});" : '';
+        return $js ? "<script>$js</script>" : '';
     }
 
     /**

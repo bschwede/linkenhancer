@@ -280,15 +280,16 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         //ressources to include
         $bundleShortcuts = [];
         $includeRes = '';
-        $initJs = ''; // init on document ready
+        $docReadyJs = ''; // init on document ready
+        $initJs = '';
 
         $theme = Session::get('theme');
         $palette = Session::get('palette', '');
         
         $activeRouteInfo = $this->wthb->getActiveRoute($request);
         if ($cfg_js_debug_console) {
-            $initJs .= "console.debug('LE-Mod theme:', '$theme'" . ($palette ? ", 'palette=$palette'" : '') . ");";
-            $initJs .= "console.debug('LE-Mod active route:', " . json_encode($activeRouteInfo) .");";
+            $docReadyJs .= "console.debug('LE-Mod theme:', '$theme'" . ($palette ? ", 'palette=$palette'" : '') . ");";
+            $docReadyJs .= "console.debug('LE-Mod active route:', " . json_encode($activeRouteInfo) .");";
         }
 
         // --- Webtrees Handbuch Link
@@ -297,9 +298,9 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             if (file_exists($jsfile)) {
                 $help = $this->wthb->getContextHelp($activeRouteInfo);
                 if ($cfg_js_debug_console) {
-                    $initJs .= "console.debug('LE-Mod help rows:', " . json_encode($help['result']) . ");";
-                    $initJs .= "console.debug('LE-Mod help sql:', " . json_encode($help['sql']) . ");";
-                    $initJs .= "console.debug('LE-Mod help subcontext:', " . json_encode($help['subcontext']) . ");";
+                    $docReadyJs .= "console.debug('LE-Mod help rows:', " . json_encode($help['result']) . ");";
+                    $docReadyJs .= "console.debug('LE-Mod help sql:', " . json_encode($help['sql']) . ");";
+                    $docReadyJs .= "console.debug('LE-Mod help subcontext:', " . json_encode($help['subcontext']) . ");";
                 }
 
                 $help_url = $help['help_url']; //gettype(value: $help) == 'string' ? $help : $help->first()->url;
@@ -342,7 +343,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             || (str_starts_with($activeRouteInfo['path'], '/module') && str_starts_with($action, 'admin'))
         ) {
                 if ($cfg_wthb_active) {
-                    return $includeRes . Utils::getInitJavascript($initJs);
+                    return $includeRes . Utils::getJavascriptWrapper($docReadyJs, $initJs);
                 }
                 return ''; # other stuff is of no use in admin backend
         }
@@ -359,7 +360,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         if ($cfg_home_active && $tree != null) {
             $params = [ 'tree' => $tree->name()];
             $url = $cfg_home_type == 1 ? route(TreePage::class, $params) : route(HomePage::class, $params);
-            $initJs .= '$(".wt-site-title").wrapInner(`<a class="' . self::STDCLASS_HOME_LINK .'" href="' . e($url) . '"></a>`);';
+            $docReadyJs .= '$(".wt-site-title").wrapInner(`<a class="' . self::STDCLASS_HOME_LINK .'" href="' . e($url) . '"></a>`);';
 
             $cfg_home_link_json = trim($this->getPref(self::PREF_HOME_LINK_JSON));
             if ($cfg_home_link_json) {
@@ -370,7 +371,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                     if ($stylerules) {
                         $includeRes .= "<style>{$stylerules}</style>";
                     } elseif ($cfg_js_debug_console) {
-                        $initJs .= "console.debug('LE-Mod home link: JSON contains no matching style rule for current theme');";
+                        $docReadyJs .= "console.debug('LE-Mod home link: JSON contains no matching style rule for current theme');";
                     }
                 } else {
                     FlashMessages::addMessage(
@@ -385,7 +386,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         if ($cfg_link_active) {
             $bundleShortcuts[] = 'le';
             $lecfg = $this->getPref(self::PREF_LINKSPP_JS);
-            $initJs .= "LinkEnhMod.initLE($lecfg);";
+            $docReadyJs .= "LinkEnhMod.initLE($lecfg);";
         }
 
         // === include selectively
@@ -415,14 +416,14 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                     'AddUnlinkedPage'
                 ])) {
                     $bundleShortcuts[] = 'mde';
-                    $initJs .= 'window.LEhelp = "' . e(route('module', ['module' => $this->name(), 'action' => 'help'])) . '";';
+                    $docReadyJs .= 'window.LEhelp = "' . e(route('module', ['module' => $this->name(), 'action' => 'help'])) . '";';
                     
                     $linkSupport = [];
                     if (! $cfg_link_active) $linkSupport[] = "href:0";
                     if (! $cfg_img_active) $linkSupport[] = "src:0";
                     $linkCfg = implode(',', $linkSupport);
                     $linkCfg = $linkCfg ? '{' . $linkCfg . '}' : '';
-                    $initJs .= "LinkEnhMod.installMDE($linkCfg);";
+                    $docReadyJs .= "LinkEnhMod.installMDE($linkCfg);";
                 }
             }
         }
@@ -447,7 +448,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             }
         }
 
-        return $includeRes . Utils::getInitJavascript($initJs);
+        return $includeRes . Utils::getJavascriptWrapper($docReadyJs, $initJs);
     }
 
     /**
