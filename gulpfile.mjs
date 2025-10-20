@@ -23,6 +23,7 @@ import autoprefixer from "autoprefixer";
 import cssnano from "cssnano";
 import postcssUrl from 'postcss-url';
 
+import { glob } from 'glob';
 import path from "path";
 
 import { deleteAsync as del } from "del";
@@ -73,7 +74,7 @@ const jsPipe = (inputFile, outputInfix, format ='iife') =>
         .pipe(size({ showFiles: true }));
 
 const jsExtractLeConfig = async () => {
-    const srcfile = "./resources/js/linkenhancer.js";
+    const srcfile = "./resources/js/index-le.js";
     const dstfile = "./resources/js/bundle-le-config.js";
     if (! await fileExists(srcfile)) {
         log.error(`${srcfile} not exists`);
@@ -92,11 +93,21 @@ const jsExtractLeConfig = async () => {
     }   
 }
 
-const jsMde = () => jsPipe("./resources/js/tiny-mde-wt.js", 'mde');
-const jsMdeLe = () => jsPipe("./resources/js/index-le-mde.js", 'le-mde');
-const jsLe = () => jsPipe("./resources/js/linkenhancer.js", 'le');
+const jsIndex = async () => {
+    const files = await glob('./resources/js/index-*.js');
+    files.forEach(filename => {
+        // Extract file name, e.g. index-abc.js becomes abc
+        const baseName = path.basename(filename, '.js'); // e.g. "index-abc"
+        const infix = baseName.split('index-')[1];  // here "abc"
+        //log(`${filename} / ${baseName} / ${infix}`);
+
+        jsPipe(filename, infix);
+    });
+
+}
+
 const jsWTHBLink = () => jsPipe("./resources/js/wthb-link.js", 'wthb-link', 'cjs');
-const jscripts = gulp.series(jsMde, jsMdeLe, jsLe, jsExtractLeConfig, jsWTHBLink);
+const jscripts = gulp.series(jsIndex, jsExtractLeConfig, jsWTHBLink);
 
 //--- CSS
 const cssPipe = (inputFile, outputInfix) => 
@@ -112,13 +123,13 @@ const cssPipe = (inputFile, outputInfix) =>
         .pipe(gulp.dest("./resources/css"))
         .pipe(size({ showFiles: true }));
 
-const cssMde = () => cssPipe(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/tiny-mde-wt.css"], 'mde');
-const cssMdeLe = () => cssPipe(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/tiny-mde-wt.css", "./resources/css/linkenhancer.css"], 'le-mde');
-const cssLe = () => cssPipe(["./resources/css/linkenhancer.css"], 'le');
+const cssMde = () => cssPipe(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/index-mde.css"], 'mde');
+const cssMdeLe = () => cssPipe(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/index-mde.css", "./resources/css/index-le.css"], 'le-mde');
+const cssLe = () => cssPipe(["./resources/css/index-le.css"], 'le');
 const cssImg = () => cssPipe(["./resources/css/md-img.css"], 'img');
-const cssImgLe = () => cssPipe(["./resources/css/linkenhancer.css", "./resources/css/md-img.css"], 'img-le');
-const cssImgMde = () => cssPipe(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/tiny-mde-wt.css", "./resources/css/md-img.css"], 'img-mde');
-const cssImgMdeLe = () => cssPipe(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/tiny-mde-wt.css", "./resources/css/linkenhancer.css", "./resources/css/md-img.css"], 'img-le-mde');
+const cssImgLe = () => cssPipe(["./resources/css/index-le.css", "./resources/css/md-img.css"], 'img-le');
+const cssImgMde = () => cssPipe(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/index-mde.css", "./resources/css/md-img.css"], 'img-mde');
+const cssImgMdeLe = () => cssPipe(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/index-mde.css", "./resources/css/index-le.css", "./resources/css/md-img.css"], 'img-le-mde');
 const css = gulp.series(cssMde, cssMdeLe, cssLe, cssImg, cssImgLe, cssImgMde, cssImgMdeLe);
 
 
