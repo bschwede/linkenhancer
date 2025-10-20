@@ -106,8 +106,7 @@ const jsIndex = async () => {
 
 }
 
-const jsWTHBLink = () => jsPipe("./resources/js/wthb-link.js", 'wthb-link', 'cjs');
-const jscripts = gulp.series(jsIndex, jsExtractLeConfig, jsWTHBLink);
+const jscripts = gulp.series(jsIndex, jsExtractLeConfig);
 
 //--- CSS
 const cssPipe = (inputFile, outputInfix) => 

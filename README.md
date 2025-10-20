@@ -77,7 +77,7 @@ After a lot of theory: How does it looks like in webtrees?! In the upper part of
 ![Note with enhanced links - edit and view](resources/img/screenshot_note-enh-links-edit-and-view.png)
 
 
-**Additional external targets** can be configured by providing a custom JavaScript object on the admin page of this module. Here two example entries from [predefined targets](resources/js/linkenhancer.js) to illustrate the principle:
+**Additional external targets** can be configured by providing a custom JavaScript object on the admin page of this module. Here two example entries from [predefined targets](resources/js/index-le.js) to illustrate the principle:
 ```javascript
 {
   "fsft": {

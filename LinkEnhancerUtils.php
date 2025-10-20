@@ -44,26 +44,6 @@ class LinkEnhancerUtils { // misc helper functions
         return $js ? "<script>$js</script>" : '';
     }
 
-    /**
-     * Wrapper for iife javascript statements, the innerJs is embedded in try-catch with eval in order to intercept also SyntaxErrors
-     * caused by user configuration. So there is no impact to other components.
-     * 
-     * @param string $innerJs            javascript code to be wrapped in iife
-     * @param string $iife_paramnames    parameter definition for iife
-     * @param string $iife_paramvalues   values that are passed in to the innerJs
-     * @param string $errorhint          additional error message, e.g. component name
-     * @return string
-     */
-    public static function getIifeJavascript(string $innerJs, string $iife_paramnames = '', string $iife_paramvalues = '', string $errorhint = ''): string
-    {
-        if (!$innerJs)
-            return '';
-
-        $iife = "(({$iife_paramnames}) => {" . $innerJs . "})({$iife_paramvalues})";
-        $iife = json_encode($iife);
-        $errorhint = json_encode($errorhint);
-        return "<script>try{eval({$iife});} catch (e){console.error('LE-Mod Error: check parameter', {$errorhint}, e);}</script>";
-    }
 
     /**
      * wrap I18N strings needed by javascript routines in a json object
