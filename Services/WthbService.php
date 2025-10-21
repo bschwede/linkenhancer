@@ -191,10 +191,11 @@ class WthbService { // stuff related to webtrees manual link handling
      * Query route to help mapping table for matching entries
      *
      * @param array|null $activeroute
+     * @param bool $withSubcontext     also query for subcontext topic rows
      *
      * @return mixed
      */
-    public function getContextHelp(array|null $activeroute = null): mixed
+    public function getContextHelp(array|null $activeroute = null, bool $withSubcontext = true): mixed
     {
         $std_url = $this->std_url;
         $wiki_url = $this->wiki_url;
@@ -228,7 +229,10 @@ class WthbService { // stuff related to webtrees manual link handling
             $query = DB::table($this->help_table)
                 ->whereNotNull('url')
                 ->where('url', '!=', '')
-                ->where(function ($query2) use ($module, $activeroute) {
+                ->when(!$withSubcontext, function ($query1) {
+                    $query1->where('subcontext', '=', '');
+                })
+                ->where(function ($query2) use ($module, $activeroute, $withSubcontext) {
                     $query2
                         ->where('path', '=', $activeroute['path'])
                         ->where('handler', '=', $activeroute['handler'])
@@ -242,6 +246,11 @@ class WthbService { // stuff related to webtrees manual link handling
                             $query4
                                 ->orWhere('category', '=', 'generic')
                                 ->where('extras', '=', $activeroute['extras']);
+                        })
+                        ->when($withSubcontext, function ($query5)  {
+                            $query5
+                                ->orWhere('category', '=', 'generic')
+                                ->where('subcontext', '!=', '');
                         });
                 })
                 ->orderBy('order');
@@ -260,17 +269,19 @@ class WthbService { // stuff related to webtrees manual link handling
                 $firsturl = $result->firstWhere('subcontext', '=', "");
                 $url = $firsturl ? $firsturl->url : $url;
 
-                $subcontext = $result
-                    ->filter(function($row) {
-                        return $row->subcontext != '';
-                    })
-                    ->map(function($row){
-                        return [
-                            'ctx' => $row->subcontext,
-                            'url' => $row->url,
-                        ];
-                    })
-                    ->toArray();
+                if ($withSubcontext) {
+                    $subcontext = $result
+                        ->filter(function($row) {
+                            return $row->subcontext != '';
+                        })
+                        ->map(function($row){
+                            return [
+                                'ctx' => $row->subcontext,
+                                'url' => $row->url,
+                            ];
+                        })
+                        ->toArray();
+                }
             }
         }
 
