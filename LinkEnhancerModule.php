@@ -77,6 +77,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public const PREF_HOME_LINK_JSON = 'HOME_LINK_JS'; // string; javascript object { '*': stylerules-string, 'theme': stylerules-string}
     public const EXAMPLE_HOME_LINK_JSON = '{ "*": ".homelink { color: #039; }",  "colors_nocturnal": ".homelink { color: antiquewhite; }" }';
     public const PREF_WTHB_ACTIVE = 'WTHB_LINK_ACTIVE'; // link to GenWiki "Webtrees Handbuch"
+    public const PREF_WTHB_SUBCONTEXT = 'WTHB_SUBCONTEXT'; // support subcontext topics
     public const PREF_WTHB_FAICON = 'WTHB_FAICON'; // prepend fa icon to help link
     public const PREF_WTHB_UPDATE = 'WTHB_UPDATE'; // auto refresh table on module update
     public const PREF_WTHB_LASTHASH = 'WTHB_LASTHASH'; // last csv hash used for import
@@ -108,6 +109,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         self::PREF_HOME_LINK_TYPE        => '1', //int triple-state, 0=off, 1=tree, 2=my-page
         self::PREF_HOME_LINK_JSON        => '', // string; json object { '*': stylerules-string, 'theme': stylerules-string}
         self::PREF_WTHB_ACTIVE           => '1', //bool
+        self::PREF_WTHB_SUBCONTEXT       => '1', //bool
         self::PREF_WTHB_FAICON           => '1', //bool
         self::PREF_WTHB_UPDATE           => '1', //bool
         self::PREF_JS_DEBUG_CONSOLE      => '0', //bool
@@ -296,11 +298,12 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         if ($cfg_wthb_active) {
             $bundleShortcuts[] = 'wthb';
 
-            $help = $this->wthb->getContextHelp($activeRouteInfo);
+            $withSubcontext = boolval($this->getPref(self::PREF_WTHB_SUBCONTEXT));
+            $help = $this->wthb->getContextHelp($activeRouteInfo, $withSubcontext);
             if ($cfg_js_debug_console) {
                 $docReadyJs .= "console.debug('LE-Mod help rows:', " . json_encode($help['result']) . ");";
                 $docReadyJs .= "console.debug('LE-Mod help sql:', " . json_encode($help['sql']) . ");";
-                $docReadyJs .= "console.debug('LE-Mod help subcontext:', " . json_encode($help['subcontext']) . ");";
+                if ($withSubcontext) $docReadyJs .= "console.debug('LE-Mod help subcontext:', " . json_encode($help['subcontext']) . ");";
             }
 
             $help_url = $help['help_url']; //gettype(value: $help) == 'string' ? $help : $help->first()->url;
@@ -320,7 +323,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                 'faicon'       => boolval($this->getPref(self::PREF_WTHB_FAICON)),
                 'wiki_url'     => $wiki_url,
                 'dotranslate'  => intval($this->getPref(self::PREF_WTHB_TRANSLATE)), // 0=off, 1=user defined, 2=on
-                'subcontext'   => $help['subcontext'],
+                'subcontext'   => $withSubcontext ? $help['subcontext'] : [],
             ];
 
             $initJs .= "LinkEnhMod.initWthb(" . json_encode($options) . ");";
