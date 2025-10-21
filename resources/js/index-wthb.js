@@ -88,10 +88,7 @@ const insertWthbLinkCallback = function (mutationsList, observer) {
 };
 
 const insertWthbSubcontextLinks = (contexts) => {
-    if (!Array.isArray(contexts) || contexts.length === 0) {
-        console.log('subcontext: parameter scheint leer');
-        return;
-    }
+    if (!Array.isArray(contexts) || contexts.length === 0) return;
     
     popovers = [];
 
@@ -170,7 +167,7 @@ const insertWthbSubcontextLinks = (contexts) => {
 
 const setWthbLinkClickHandler = (wthblink) => {
     $(wthblink).on('click', (e) => { // help link handler
-        if (!isWthbLink($(wthblink).attr('href')) || !WthbCfg.dotranslate) return; // open url directly
+        if (WthbCfg.lang?.substr(0, 2).toLowerCase() == 'de' || !isWthbLink($(wthblink).attr('href')) || !WthbCfg.dotranslate) return; // open url directly
 
         if (WthbCfg.dotranslate === 1) { // user defined behaviour
             // open settings dialog if no setting available
