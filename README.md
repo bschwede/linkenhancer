@@ -184,6 +184,7 @@ The mapping of routes to help articles in the manual is stored in the database t
 * `handler` **!!**: usually corresponds to the php class name of the code that handles the request
 * `method` **!!**: web request method (GET, POST, HEAD)<br>Only GET routes are generally relevant for assignment to manual sections.
 * `extras` **!!**: php class name of access level (Fisharebest\Webtrees\Http\Middleware\Auth*)
+* `subcontext` **!!**: CSS selector string or JSON object string to address a component/subcontext topic on the given page
 * `category`: string value for better grouping data rows; only value 'generic' has a special meaning
 * `order` **!!**: arbitrary numerical sort key, matching data rows are sorted in ascending order
   standard value is 10
@@ -208,6 +209,15 @@ A special case is the `path` which starts with `/module/{module}/{action}`. It i
 Fallback rules for access levels are matched by `category='generic'` and the specific Auth classname in `extras`.
 
 If nothing else applies, the link points to the startpage of the manual.
+
+If activated, `subcontext` topics on a page can be provided with an additional help link. You can set a CCS selector string or a JSON object string with the following properties: 
+
+- `p`: position of popover, optional (default is top, other values=left, right, bottom)
+- `f`: css selector/filter string (only necessary if you want the popover to be positioned differently.) OR
+- `e`: javascript expression string
+
+
+This is useful, if there are components on the page that require more detailed information than offered by the help link in the top menu (e.g. for custom module functions on the individuals page). This help link is displayed in a popover (because an additional link does not always work in bootstrap tabs, accordeon headers or menu titles).
 
 On the **admin page** of this module it is possible to import routes registered in webtrees on demand. This make it easier to cover individual custom module configurations.
 Further more you can import and export data in csv format in order to make changes more convenient. You can define the separator and for import the character encoding (on export it is always utf-8).   You can see at a glance how many data rows are stored in the table and how many of them have an url assigned.
