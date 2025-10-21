@@ -1,428 +1,444 @@
-id;path;handler;method;extras;category;order;url
-1;/admin;Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren
-2;/admin/check-now;Fisharebest\Webtrees\Http\RequestHandlers\CheckForNewVersionNow;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-3;/admin/broadcast/{to};Fisharebest\Webtrees\Http\RequestHandlers\BroadcastPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-4;/admin/broadcast/{to};Fisharebest\Webtrees\Http\RequestHandlers\BroadcastAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-5;/admin/clean;Fisharebest\Webtrees\Http\RequestHandlers\CleanDataFolder;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Webseite#Datenordner_bereinigen
-6;/admin/delete-path;Fisharebest\Webtrees\Http\RequestHandlers\DeletePath;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-7;/admin/email;Fisharebest\Webtrees\Http\RequestHandlers\EmailPreferencesPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Webseite#E-Mail-Versand
-8;/admin/email;Fisharebest\Webtrees\Http\RequestHandlers\EmailPreferencesAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-9;/admin/fix-level-0-media;Fisharebest\Webtrees\Http\RequestHandlers\FixLevel0MediaPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Multimedia#Medienobjekte_mit_Tatsachen_und_Ereignissen_verkn.C3.BCpfen
-10;/admin/fix-level-0-media;Fisharebest\Webtrees\Http\RequestHandlers\FixLevel0MediaAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-11;/admin/fix-level-0-media-data;Fisharebest\Webtrees\Http\RequestHandlers\FixLevel0MediaData;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-12;/admin/information;Fisharebest\Webtrees\Http\RequestHandlers\PhpInformation;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Webseite#Server_Information
-13;/admin/logs;Fisharebest\Webtrees\Http\RequestHandlers\SiteLogsPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Webseite#Webseitenprotokolle
-14;/admin/logs;Fisharebest\Webtrees\Http\RequestHandlers\SiteLogsAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-15;/admin/logs-data;Fisharebest\Webtrees\Http\RequestHandlers\SiteLogsData;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Webseite#Webseitenprotokolle
-16;/admin/logs-delete;Fisharebest\Webtrees\Http\RequestHandlers\SiteLogsDelete;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-17;/admin/logs-download;Fisharebest\Webtrees\Http\RequestHandlers\SiteLogsDownload;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Webseite#Webseitenprotokolle
-18;/admin/masquerade/{user_id};Fisharebest\Webtrees\Http\RequestHandlers\Masquerade;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-19;/admin/media;Fisharebest\Webtrees\Http\RequestHandlers\ManageMediaPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Multimedia#Medien_verwalten
-20;/admin/media;Fisharebest\Webtrees\Http\RequestHandlers\ManageMediaAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-21;/admin/media-data;Fisharebest\Webtrees\Http\RequestHandlers\ManageMediaData;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-22;/admin/media-upload;Fisharebest\Webtrees\Http\RequestHandlers\UploadMediaPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Multimedia#Mediendateien_hochladen
-23;/admin/media-upload;Fisharebest\Webtrees\Http\RequestHandlers\UploadMediaAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-24;/admin/media-file;Fisharebest\Webtrees\Http\RequestHandlers\AdminMediaFileDownload;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-25;/admin/media-thumbnail;Fisharebest\Webtrees\Http\RequestHandlers\AdminMediaFileThumbnail;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-26;/admin/trees/create;Fisharebest\Webtrees\Http\RequestHandlers\CreateTreePage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Stammbäume#Einen_Stammbaum_erstellen
-27;/admin/trees/create;Fisharebest\Webtrees\Http\RequestHandlers\CreateTreeAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-28;/admin/trees/default/{tree};Fisharebest\Webtrees\Http\RequestHandlers\SelectDefaultTree;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-29;/admin/trees/delete/{tree};Fisharebest\Webtrees\Http\RequestHandlers\DeleteTreeAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-30;/admin/users-cleanup;Fisharebest\Webtrees\Http\RequestHandlers\UsersCleanupPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Benutzer#Inaktive_Benutzer_l.C3.B6schen
-31;/admin/users-cleanup;Fisharebest\Webtrees\Http\RequestHandlers\UsersCleanupAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-32;/admin/map-data-add{/parent_id};Fisharebest\Webtrees\Http\RequestHandlers\MapDataAdd;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Geografische_Daten
-33;/admin/map-data-delete/{location_id};Fisharebest\Webtrees\Http\RequestHandlers\MapDataDelete;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-34;/admin/map-data-delete-unused;Fisharebest\Webtrees\Http\RequestHandlers\MapDataDeleteUnused;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-35;/admin/map-data-edit/{location_id};Fisharebest\Webtrees\Http\RequestHandlers\MapDataEdit;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Geografische_Daten
-36;/admin/map-data-csv{/parent_id};Fisharebest\Webtrees\Http\RequestHandlers\MapDataExportCSV;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Geografische_Daten
-37;/admin/map-data-geojson{/parent_id};Fisharebest\Webtrees\Http\RequestHandlers\MapDataExportGeoJson;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Geografische_Daten
-38;/admin/locations-import;Fisharebest\Webtrees\Http\RequestHandlers\MapDataImportPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Geografische_Daten
-39;/admin/locations-import;Fisharebest\Webtrees\Http\RequestHandlers\MapDataImportAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-40;/admin/map-data{/parent_id};Fisharebest\Webtrees\Http\RequestHandlers\MapDataList;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Geografische_Daten
-41;/admin/map-data-update;Fisharebest\Webtrees\Http\RequestHandlers\MapDataSave;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-42;/admin/module-delete-settings;Fisharebest\Webtrees\Http\RequestHandlers\ModuleDeleteSettings;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-43;/admin/modules;Fisharebest\Webtrees\Http\RequestHandlers\ModulesAllPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Alle_Module
-44;/admin/modules;Fisharebest\Webtrees\Http\RequestHandlers\ModulesAllAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-45;/admin/analytics;Fisharebest\Webtrees\Http\RequestHandlers\ModulesAnalyticsPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Bl.C3.B6cke
-46;/admin/analytics;Fisharebest\Webtrees\Http\RequestHandlers\ModulesAnalyticsAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-47;/admin/blocks;Fisharebest\Webtrees\Http\RequestHandlers\ModulesBlocksPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Bl.C3.B6cke
-48;/admin/blocks;Fisharebest\Webtrees\Http\RequestHandlers\ModulesBlocksAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-49;/admin/charts;Fisharebest\Webtrees\Http\RequestHandlers\ModulesChartsPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Diagramme
-50;/admin/charts;Fisharebest\Webtrees\Http\RequestHandlers\ModulesChartsAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-51;/admin/data-fixes;Fisharebest\Webtrees\Http\RequestHandlers\ModulesDataFixesPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Datenkorrekturen
-52;/admin/data-fixes;Fisharebest\Webtrees\Http\RequestHandlers\ModulesDataFixesAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-53;/admin/footers;Fisharebest\Webtrees\Http\RequestHandlers\ModulesFootersPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Fu.C3.9Fzeilen
-54;/admin/footers;Fisharebest\Webtrees\Http\RequestHandlers\ModulesFootersAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-55;/admin/historic-events;Fisharebest\Webtrees\Http\RequestHandlers\ModulesHistoricEventsPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Historische_Ereignisse
-56;/admin/historic-events;Fisharebest\Webtrees\Http\RequestHandlers\ModulesHistoricEventsAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-57;/admin/lists;Fisharebest\Webtrees\Http\RequestHandlers\ModulesListsPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Listen
-58;/admin/lists;Fisharebest\Webtrees\Http\RequestHandlers\ModulesListsAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-59;/admin/map-autocomplete;Fisharebest\Webtrees\Http\RequestHandlers\ModulesMapAutocompletePage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Automatisch_vervollst.C3.A4ndigen
-60;/admin/map-autocomplete;Fisharebest\Webtrees\Http\RequestHandlers\ModulesMapAutocompleteAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-61;/admin/map-links;Fisharebest\Webtrees\Http\RequestHandlers\ModulesMapLinksPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Kartenlinks
-62;/admin/map-links;Fisharebest\Webtrees\Http\RequestHandlers\ModulesMapLinksAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-63;/admin/map-providers;Fisharebest\Webtrees\Http\RequestHandlers\ModulesMapProvidersPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Kartenanbieter
-64;/admin/map-providers;Fisharebest\Webtrees\Http\RequestHandlers\ModulesMapProvidersAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-65;/admin/map-searches;Fisharebest\Webtrees\Http\RequestHandlers\ModulesMapGeoLocationsPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Geolokalisierung
-66;/admin/map-searches;Fisharebest\Webtrees\Http\RequestHandlers\ModulesMapGeoLocationsAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-67;/admin/menus;Fisharebest\Webtrees\Http\RequestHandlers\ModulesMenusPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Men.C3.BCs
-68;/admin/menus;Fisharebest\Webtrees\Http\RequestHandlers\ModulesMenusAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-69;/admin/languages;Fisharebest\Webtrees\Http\RequestHandlers\ModulesLanguagesPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Sprachen-Module
-70;/admin/languages;Fisharebest\Webtrees\Http\RequestHandlers\ModulesLanguagesAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-71;/admin/reports;Fisharebest\Webtrees\Http\RequestHandlers\ModulesReportsPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Berichte
-72;/admin/reports;Fisharebest\Webtrees\Http\RequestHandlers\ModulesReportsAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-73;/admin/shares;Fisharebest\Webtrees\Http\RequestHandlers\ModulesSharesPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Geteiltes
-74;/admin/shares;Fisharebest\Webtrees\Http\RequestHandlers\ModulesSharesAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-75;/admin/sidebars;Fisharebest\Webtrees\Http\RequestHandlers\ModulesSidebarsPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Navigationsleisten
-76;/admin/sidebars;Fisharebest\Webtrees\Http\RequestHandlers\ModulesSidebarsAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-77;/admin/tabs;Fisharebest\Webtrees\Http\RequestHandlers\ModulesTabsPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Reiter
-78;/admin/tabs;Fisharebest\Webtrees\Http\RequestHandlers\ModulesTabsAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-79;/admin/themes;Fisharebest\Webtrees\Http\RequestHandlers\ModulesThemesPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Themen
-80;/admin/themes;Fisharebest\Webtrees\Http\RequestHandlers\ModulesThemesAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-81;/admin/upgrade;Fisharebest\Webtrees\Http\RequestHandlers\UpgradeWizardPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Webmaster#Automatisches_Upgrade
-82;/admin/upgrade-confirm;Fisharebest\Webtrees\Http\RequestHandlers\UpgradeWizardConfirm;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-83;/admin/upgrade-action;Fisharebest\Webtrees\Http\RequestHandlers\UpgradeWizardStep;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-84;/admin/admin-users;Fisharebest\Webtrees\Http\RequestHandlers\UserListPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Benutzer#Benutzerverwaltung
-85;/admin/admin-users-data;Fisharebest\Webtrees\Http\RequestHandlers\UserListData;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-86;/admin/admin-users-create;Fisharebest\Webtrees\Http\RequestHandlers\UserAddPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Benutzer#Einen_Benutzer_hinzuf.C3.BCgen
-87;/admin/admin-users-create;Fisharebest\Webtrees\Http\RequestHandlers\UserAddAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-88;/admin/admin-users-edit;Fisharebest\Webtrees\Http\RequestHandlers\UserEditPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Benutzer#Bearbeiten
-89;/admin/admin-users-edit;Fisharebest\Webtrees\Http\RequestHandlers\UserEditAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-90;/admin/site-preferences;Fisharebest\Webtrees\Http\RequestHandlers\SitePreferencesPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Webseite#Einstellungen_Webseite
-91;/admin/site-preferences;Fisharebest\Webtrees\Http\RequestHandlers\SitePreferencesAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-92;/admin/site-registration;Fisharebest\Webtrees\Http\RequestHandlers\SiteRegistrationPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Webseite#Anmeldung_und_Registrierung
-93;/admin/site-registration;Fisharebest\Webtrees\Http\RequestHandlers\SiteRegistrationAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-94;/admin/tags;Fisharebest\Webtrees\Http\RequestHandlers\SiteTagsPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Webseite#GEDCOM-Kennzeichen
-95;/admin/tags;Fisharebest\Webtrees\Http\RequestHandlers\SiteTagsAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-96;/admin/trees/default-blocks;Fisharebest\Webtrees\Http\RequestHandlers\TreePageDefaultEdit;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Stammbäume#Standardbl.C3.B6cke_f.C3.BCr_neue_Stammb.C3.A4ume_festlegen
-97;/admin/trees/default-blocks;Fisharebest\Webtrees\Http\RequestHandlers\TreePageDefaultUpdate;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-98;/admin/trees/merge;Fisharebest\Webtrees\Http\RequestHandlers\MergeTreesPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Stammbäume#Stammb.C3.A4ume_zusammenf.C3.BChren
-99;/admin/trees/merge;Fisharebest\Webtrees\Http\RequestHandlers\MergeTreesAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-100;/admin/trees/sync;Fisharebest\Webtrees\Http\RequestHandlers\SynchronizeTrees;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-101;/admin/users/delete/{user_id};Fisharebest\Webtrees\Http\RequestHandlers\DeleteUser;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-102;/admin/user-page-default-edit;Fisharebest\Webtrees\Http\RequestHandlers\UserPageDefaultEdit;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Benutzer#Standardbl.C3.B6cke_f.C3.BCr_neue_Benutzer_festlegen
-103;/admin/user-page-default-update;Fisharebest\Webtrees\Http\RequestHandlers\UserPageDefaultUpdate;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;standard;10;
-104;/admin/trees/manage/{tree};Fisharebest\Webtrees\Http\RequestHandlers\ManageTrees;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#Stammb.C3.A4ume_verwalten
-105;/tree/{tree}/changes-log;Fisharebest\Webtrees\Http\RequestHandlers\PendingChangesLogPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#.C3.84nderungsprotokoll
-106;/tree/{tree}/changes-log;Fisharebest\Webtrees\Http\RequestHandlers\PendingChangesLogAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;
-107;/tree/{tree}/changes-data;Fisharebest\Webtrees\Http\RequestHandlers\PendingChangesLogData;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#.C3.84nderungsprotokoll
-108;/tree/{tree}/changes-delete;Fisharebest\Webtrees\Http\RequestHandlers\PendingChangesLogDelete;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;
-109;/tree/{tree}/changes-download;Fisharebest\Webtrees\Http\RequestHandlers\PendingChangesLogDownload;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#.C3.84nderungsprotokoll
-110;/tree/{tree}/check;Fisharebest\Webtrees\Http\RequestHandlers\CheckTree;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#Fehlersuche
-111;/tree/{tree}/data-fix;Fisharebest\Webtrees\Http\RequestHandlers\DataFixChoose;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#Datenkorrekturen
-112;/tree/{tree}/data-fix;Fisharebest\Webtrees\Http\RequestHandlers\DataFixSelect;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;
-113;/tree/{tree}/data-fix/{data_fix};Fisharebest\Webtrees\Http\RequestHandlers\DataFixPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#Datenkorrekturen
-114;/tree/{tree}/data-fix/{data_fix}/update;Fisharebest\Webtrees\Http\RequestHandlers\DataFixUpdate;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;
-115;/tree/{tree}/data-fix/{data_fix}/update-all;Fisharebest\Webtrees\Http\RequestHandlers\DataFixUpdateAll;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;
-116;/tree/{tree}/data-fix/{data_fix}/data;Fisharebest\Webtrees\Http\RequestHandlers\DataFixData;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#Datenkorrekturen
-117;/tree/{tree}/data-fix/{data_fix}/preview;Fisharebest\Webtrees\Http\RequestHandlers\DataFixPreview;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#Datenkorrekturen
-118;/tree/{tree}/duplicates;Fisharebest\Webtrees\Http\RequestHandlers\FindDuplicateRecords;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#Finde_Duplikate
-119;/tree/{tree}/export;Fisharebest\Webtrees\Http\RequestHandlers\ExportGedcomPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#Export
-120;/tree/{tree}/export-client;Fisharebest\Webtrees\Http\RequestHandlers\ExportGedcomClient;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;
-121;/tree/{tree}/export-server;Fisharebest\Webtrees\Http\RequestHandlers\ExportGedcomServer;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;
-122;/tree/{tree}/import;Fisharebest\Webtrees\Http\RequestHandlers\ImportGedcomPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#Import
-123;/tree/{tree}/import;Fisharebest\Webtrees\Http\RequestHandlers\ImportGedcomAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;
-124;/tree/{tree}/merge-step1;Fisharebest\Webtrees\Http\RequestHandlers\MergeRecordsPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#Datens.C3.A4tze_zusammenf.C3.BCgen
-125;/tree/{tree}/merge-step1;Fisharebest\Webtrees\Http\RequestHandlers\MergeRecordsAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;
-126;/tree/{tree}/merge-step2;Fisharebest\Webtrees\Http\RequestHandlers\MergeFactsPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#Datens.C3.A4tze_zusammenf.C3.BCgen
-127;/tree/{tree}/merge-step2;Fisharebest\Webtrees\Http\RequestHandlers\MergeFactsAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;
-128;/tree/{tree}/preferences;Fisharebest\Webtrees\Http\RequestHandlers\TreePreferencesPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#Einstellungen
-129;/tree/{tree}/preferences;Fisharebest\Webtrees\Http\RequestHandlers\TreePreferencesAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;
-130;/tree/{tree}/renumber;Fisharebest\Webtrees\Http\RequestHandlers\RenumberTreePage;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#Neu_nummerieren
-131;/tree/{tree}/renumber;Fisharebest\Webtrees\Http\RequestHandlers\RenumberTreeAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;
-132;/tree/{tree}/tree-page-edit;Fisharebest\Webtrees\Http\RequestHandlers\TreePageEdit;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Stammbäume#Standardbl.C3.B6cke_f.C3.BCr_neue_Stammb.C3.A4ume_festlegen
-133;/tree/{tree}/load;Fisharebest\Webtrees\Http\RequestHandlers\GedcomLoad;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;
-134;/tree/{tree}/tree-page-update;Fisharebest\Webtrees\Http\RequestHandlers\TreePageUpdate;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;
-135;/tree/{tree}/tree-page-block-edit/{block_id};Fisharebest\Webtrees\Http\RequestHandlers\TreePageBlockEdit;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Stammbäume#Standardbl.C3.B6cke_f.C3.BCr_neue_Stammb.C3.A4ume_festlegen
-136;/tree/{tree}/tree-page-block-update/{block_id};Fisharebest\Webtrees\Http\RequestHandlers\TreePageBlockUpdate;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;
-137;/tree/{tree}/privacy;Fisharebest\Webtrees\Http\RequestHandlers\TreePrivacyPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#Datenschutz
-138;/tree/{tree}/privacy;Fisharebest\Webtrees\Http\RequestHandlers\TreePrivacyAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;
-139;/tree/{tree}/unconnected;Fisharebest\Webtrees\Http\RequestHandlers\UnconnectedPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#Finde_unverbundene_Personen
-140;/tree/{tree}/unconnected;Fisharebest\Webtrees\Http\RequestHandlers\UnconnectedAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;standard;10;
-141;/tree/{tree}/accept;Fisharebest\Webtrees\Http\RequestHandlers\PendingChangesAcceptTree;POST;Fisharebest\Webtrees\Http\Middleware\AuthModerator;standard;10;
-142;/tree/{tree}/accept/{xref};Fisharebest\Webtrees\Http\RequestHandlers\PendingChangesAcceptRecord;POST;Fisharebest\Webtrees\Http\Middleware\AuthModerator;standard;10;
-143;/tree/{tree}/accept/{xref}/{change};Fisharebest\Webtrees\Http\RequestHandlers\PendingChangesAcceptChange;POST;Fisharebest\Webtrees\Http\Middleware\AuthModerator;standard;10;
-144;/tree/{tree}/pending;Fisharebest\Webtrees\Http\RequestHandlers\PendingChanges;GET;Fisharebest\Webtrees\Http\Middleware\AuthModerator;standard;10;Webtrees_Handbuch/Anleitung_für_Moderatoren#Ausstehende_.C3.84nderungen
-145;/tree/{tree}/reject;Fisharebest\Webtrees\Http\RequestHandlers\PendingChangesRejectTree;POST;Fisharebest\Webtrees\Http\Middleware\AuthModerator;standard;10;
-146;/tree/{tree}/reject/{xref};Fisharebest\Webtrees\Http\RequestHandlers\PendingChangesRejectRecord;POST;Fisharebest\Webtrees\Http\Middleware\AuthModerator;standard;10;
-147;/tree/{tree}/reject/{xref}/{change};Fisharebest\Webtrees\Http\RequestHandlers\PendingChangesRejectChange;POST;Fisharebest\Webtrees\Http\Middleware\AuthModerator;standard;10;
-148;/tree/{tree}/autocomplete/citation;Fisharebest\Webtrees\Http\RequestHandlers\AutoCompleteCitation;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-149;/tree/{tree}/autocomplete/folder;Fisharebest\Webtrees\Http\RequestHandlers\AutoCompleteFolder;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-150;/tree/{tree}/add-child-to-family/{xref};Fisharebest\Webtrees\Http\RequestHandlers\AddChildToFamilyAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-151;/tree/{tree}/add-fact/{xref};Fisharebest\Webtrees\Http\RequestHandlers\SelectNewFact;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-152;/tree/{tree}/add-media-file/{xref};Fisharebest\Webtrees\Http\RequestHandlers\AddMediaFileModal;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Medien-Datens.C3.A4tze
-153;/tree/{tree}/add-media-file/{xref};Fisharebest\Webtrees\Http\RequestHandlers\AddMediaFileAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-154;/tree/{tree}/add-spouse-to-family/{xref};Fisharebest\Webtrees\Http\RequestHandlers\AddSpouseToFamilyAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-155;/tree/{tree}/change-family-members;Fisharebest\Webtrees\Http\RequestHandlers\ChangeFamilyMembersPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-156;/tree/{tree}/change-family-members;Fisharebest\Webtrees\Http\RequestHandlers\ChangeFamilyMembersAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-157;/tree/{tree}/create-media-object;Fisharebest\Webtrees\Http\RequestHandlers\CreateMediaObjectModal;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Medien-Datens.C3.A4tze
-158;/tree/{tree}/create-media-object;Fisharebest\Webtrees\Http\RequestHandlers\CreateMediaObjectAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-159;/tree/{tree}/create-media-from-file;Fisharebest\Webtrees\Http\RequestHandlers\CreateMediaObjectFromFile;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-160;/tree/{tree}/copy/{xref}/{fact_id};Fisharebest\Webtrees\Http\RequestHandlers\CopyFact;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-161;/tree/{tree}/create-note-object;Fisharebest\Webtrees\Http\RequestHandlers\CreateNoteModal;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Notizen-Datens.C3.A4tze
-162;/tree/{tree}/create-note-object;Fisharebest\Webtrees\Http\RequestHandlers\CreateNoteAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-163;/tree/{tree}/create-repository;Fisharebest\Webtrees\Http\RequestHandlers\CreateRepositoryModal;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Archive-Datens.C3.A4tze
-164;/tree/{tree}/create-repository;Fisharebest\Webtrees\Http\RequestHandlers\CreateRepositoryAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-165;/tree/{tree}/create-source;Fisharebest\Webtrees\Http\RequestHandlers\CreateSourceModal;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Quellen-Datens.C3.A4tze
-166;/tree/{tree}/create-source;Fisharebest\Webtrees\Http\RequestHandlers\CreateSourceAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-167;/tree/{tree}/create-submitter;Fisharebest\Webtrees\Http\RequestHandlers\CreateSubmitterModal;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#HEAD-_und_SUBN-Datens.C3.A4tze
-168;/tree/{tree}/create-submitter;Fisharebest\Webtrees\Http\RequestHandlers\CreateSubmitterAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-169;/tree/{tree}/create-submission;Fisharebest\Webtrees\Http\RequestHandlers\CreateSubmissionModal;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#HEAD-_und_SUBN-Datens.C3.A4tze
-170;/tree/{tree}/create-submission;Fisharebest\Webtrees\Http\RequestHandlers\CreateSubmissionAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-171;/tree/{tree}/delete/{xref};Fisharebest\Webtrees\Http\RequestHandlers\DeleteRecord;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-172;/tree/{tree}/delete/{xref}/{fact_id};Fisharebest\Webtrees\Http\RequestHandlers\DeleteFact;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-173;/tree/{tree}/update-fact/{xref}{/fact_id};Fisharebest\Webtrees\Http\RequestHandlers\EditFactAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-174;/tree/{tree}/edit-media-file/{xref}/{fact_id};Fisharebest\Webtrees\Http\RequestHandlers\EditMediaFileModal;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Medien-Datens.C3.A4tze
-175;/tree/{tree}/edit-media-file/{xref}/{fact_id};Fisharebest\Webtrees\Http\RequestHandlers\EditMediaFileAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-176;/tree/{tree}/edit-note-object/{xref};Fisharebest\Webtrees\Http\RequestHandlers\EditNotePage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Notizen-Datens.C3.A4tze
-177;/tree/{tree}/edit-note-object/{xref};Fisharebest\Webtrees\Http\RequestHandlers\EditNoteAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-178;/tree/{tree}/edit-raw/{xref}/{fact_id};Fisharebest\Webtrees\Http\RequestHandlers\EditRawFactPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Bearbeiten_der_GEDCOM-Rohdaten
-179;/tree/{tree}/edit-raw/{xref}/{fact_id};Fisharebest\Webtrees\Http\RequestHandlers\EditRawFactAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-180;/tree/{tree}/edit-raw/{xref};Fisharebest\Webtrees\Http\RequestHandlers\EditRawRecordPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Bearbeiten_der_GEDCOM-Rohdaten
-181;/tree/{tree}/edit-raw/{xref};Fisharebest\Webtrees\Http\RequestHandlers\EditRawRecordAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-182;/tree/{tree}/link-media-to-family/{xref};Fisharebest\Webtrees\Http\RequestHandlers\LinkMediaToFamilyModal;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-183;/tree/{tree}/link-media-to-individual/{xref};Fisharebest\Webtrees\Http\RequestHandlers\LinkMediaToIndividualModal;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-184;/tree/{tree}/link-media-to-source/{xref};Fisharebest\Webtrees\Http\RequestHandlers\LinkMediaToSourceModal;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-185;/tree/{tree}/link-media-to-record/{xref};Fisharebest\Webtrees\Http\RequestHandlers\LinkMediaToRecordAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-186;/tree/{tree}/edit-record/{xref};Fisharebest\Webtrees\Http\RequestHandlers\EditRecordPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-187;/tree/{tree}/update-record/{xref};Fisharebest\Webtrees\Http\RequestHandlers\EditRecordAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-188;/tree/{tree}/paste-fact/{xref};Fisharebest\Webtrees\Http\RequestHandlers\PasteFact;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-189;/tree/{tree}/reorder-children/{xref};Fisharebest\Webtrees\Http\RequestHandlers\ReorderChildrenPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Familien-Datens.C3.A4tze
-190;/tree/{tree}/reorder-children/{xref};Fisharebest\Webtrees\Http\RequestHandlers\ReorderChildrenAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-191;/tree/{tree}/reorder-media/{xref};Fisharebest\Webtrees\Http\RequestHandlers\ReorderMediaPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-192;/tree/{tree}/reorder-media/{xref};Fisharebest\Webtrees\Http\RequestHandlers\ReorderMediaAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-193;/tree/{tree}/reorder-media-files/{xref};Fisharebest\Webtrees\Http\RequestHandlers\ReorderMediaFilesPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-194;/tree/{tree}/reorder-media-files/{xref};Fisharebest\Webtrees\Http\RequestHandlers\ReorderMediaFilesAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-195;/tree/{tree}/reorder-names/{xref};Fisharebest\Webtrees\Http\RequestHandlers\ReorderNamesPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-196;/tree/{tree}/reorder-names/{xref};Fisharebest\Webtrees\Http\RequestHandlers\ReorderNamesAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-197;/tree/{tree}/reorder-spouses/{xref};Fisharebest\Webtrees\Http\RequestHandlers\ReorderFamiliesPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Familien-Datens.C3.A4tze
-198;/tree/{tree}/reorder-spouses/{xref};Fisharebest\Webtrees\Http\RequestHandlers\ReorderFamiliesAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-199;/tree/{tree}/search-replace;Fisharebest\Webtrees\Http\RequestHandlers\SearchReplacePage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Suchen-Men.C3.BC
-200;/tree/{tree}/search-replace;Fisharebest\Webtrees\Http\RequestHandlers\SearchReplaceAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-201;/tree/{tree}/add-child-to-individual/{xref};Fisharebest\Webtrees\Http\RequestHandlers\AddChildToIndividualAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-202;/tree/{tree}/add-parent-to-individual/{xref};Fisharebest\Webtrees\Http\RequestHandlers\AddParentToIndividualAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-203;/tree/{tree}/add-spouse-to-individual/{xref};Fisharebest\Webtrees\Http\RequestHandlers\AddSpouseToIndividualAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-204;/tree/{tree}/add-unlinked-individual;Fisharebest\Webtrees\Http\RequestHandlers\AddUnlinkedAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-205;/tree/{tree}/link-child-to-family/{xref};Fisharebest\Webtrees\Http\RequestHandlers\LinkChildToFamilyPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Familien-Datens.C3.A4tze
-206;/tree/{tree}/link-child-to-family/{xref};Fisharebest\Webtrees\Http\RequestHandlers\LinkChildToFamilyAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-207;/tree/{tree}/link-spouse-to-individual/{xref};Fisharebest\Webtrees\Http\RequestHandlers\LinkSpouseToIndividualPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Familien-Datens.C3.A4tze
-208;/tree/{tree}/link-spouse-to-individual/{xref};Fisharebest\Webtrees\Http\RequestHandlers\LinkSpouseToIndividualAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-209;/tree/{tree}/message-select;Fisharebest\Webtrees\Http\RequestHandlers\MessageSelect;POST;Fisharebest\Webtrees\Http\Middleware\AuthLoggedIn;standard;10;
-210;/tree/{tree}/message-compose;Fisharebest\Webtrees\Http\RequestHandlers\MessagePage;GET;Fisharebest\Webtrees\Http\Middleware\AuthLoggedIn;standard;10;
-211;/tree/{tree}/message-send;Fisharebest\Webtrees\Http\RequestHandlers\MessageAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthLoggedIn;standard;10;
-212;/tree/{tree}/my-page;Fisharebest\Webtrees\Http\RequestHandlers\UserPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthLoggedIn;standard;10;Webtrees_Handbuch/Anleitung_für_Mitglieder#Meine_Seiten
-213;/tree/{tree}/my-page-block;Fisharebest\Webtrees\Http\RequestHandlers\UserPageBlock;GET;Fisharebest\Webtrees\Http\Middleware\AuthLoggedIn;standard;10;Webtrees_Handbuch/Anleitung_für_Mitglieder#Meine_Seiten
-214;/tree/{tree}/my-page-edit;Fisharebest\Webtrees\Http\RequestHandlers\UserPageEdit;GET;Fisharebest\Webtrees\Http\Middleware\AuthLoggedIn;standard;10;Webtrees_Handbuch/Anleitung_für_Mitglieder#Meine_Seiten
-215;/tree/{tree}/my-page-edit;Fisharebest\Webtrees\Http\RequestHandlers\UserPageUpdate;POST;Fisharebest\Webtrees\Http\Middleware\AuthLoggedIn;standard;10;
-216;/tree/{tree}/my-page-block-edit/{block_id};Fisharebest\Webtrees\Http\RequestHandlers\UserPageBlockEdit;GET;Fisharebest\Webtrees\Http\Middleware\AuthLoggedIn;standard;10;Webtrees_Handbuch/Anleitung_für_Mitglieder#Meine_Seiten
-217;/tree/{tree}/my-page-block-edit/{block_id};Fisharebest\Webtrees\Http\RequestHandlers\UserPageBlockUpdate;POST;Fisharebest\Webtrees\Http\Middleware\AuthLoggedIn;standard;10;
-218;/my-account{/tree};Fisharebest\Webtrees\Http\RequestHandlers\AccountEdit;GET;Fisharebest\Webtrees\Http\Middleware\AuthLoggedIn;standard;10;Webtrees_Handbuch/Anleitung_für_Mitglieder#Mein_Konto
-219;/my-account{/tree};Fisharebest\Webtrees\Http\RequestHandlers\AccountUpdate;POST;Fisharebest\Webtrees\Http\Middleware\AuthLoggedIn;standard;10;
-220;/my-account-delete;Fisharebest\Webtrees\Http\RequestHandlers\AccountDelete;POST;Fisharebest\Webtrees\Http\Middleware\AuthLoggedIn;standard;10;
-221;/empty-clipboard;Fisharebest\Webtrees\Http\RequestHandlers\EmptyClipboard;POST;Fisharebest\Webtrees\Http\Middleware\AuthLoggedIn;standard;10;
-222;/login{/tree};Fisharebest\Webtrees\Http\RequestHandlers\LoginPage;GET;;standard;10;Webtrees_Handbuch/Anleitung_für_Besucher#Anmelden
-223;/login{/tree};Fisharebest\Webtrees\Http\RequestHandlers\LoginAction;POST;;standard;10;
-224;/password-request{/tree};Fisharebest\Webtrees\Http\RequestHandlers\PasswordRequestPage;GET;;standard;10;
-225;/password-request{/tree};Fisharebest\Webtrees\Http\RequestHandlers\PasswordRequestAction;POST;;standard;10;
-226;/register{/tree};Fisharebest\Webtrees\Http\RequestHandlers\RegisterPage;GET;;standard;10;Webtrees_Handbuch/Anleitung_für_Besucher#Anmelden
-227;/register{/tree};Fisharebest\Webtrees\Http\RequestHandlers\RegisterAction;POST;;standard;10;
-228;/password-reset/{token}{/tree};Fisharebest\Webtrees\Http\RequestHandlers\PasswordResetPage;GET;;standard;10;
-229;/password-reset/{token}{/tree};Fisharebest\Webtrees\Http\RequestHandlers\PasswordResetAction;POST;;standard;10;
-230;/verify/{username}/{token}{/tree};Fisharebest\Webtrees\Http\RequestHandlers\VerifyEmail;GET;;standard;10;
-231;/tree/{tree};Fisharebest\Webtrees\Http\RequestHandlers\TreePage;GET;;standard;10;Webtrees_Handbuch/Anleitung_für_Besucher
-232;/tree/{tree}/autocomplete/surname;Fisharebest\Webtrees\Http\RequestHandlers\AutoCompleteSurname;GET;;standard;10;
-233;/tree/{tree}/calendar/{view};Fisharebest\Webtrees\Http\RequestHandlers\CalendarPage;GET;;standard;10;Webtrees_Handbuch/Anleitung_für_Besucher#Kalender
-234;/tree/{tree}/calendar/{view};Fisharebest\Webtrees\Http\RequestHandlers\CalendarAction;POST;;standard;10;
-235;/tree/{tree}/calendar-events/{view};Fisharebest\Webtrees\Http\RequestHandlers\CalendarEvents;GET;;standard;10;Webtrees_Handbuch/Anleitung_für_Besucher#Kalender
-236;/tree/{tree}/contact;Fisharebest\Webtrees\Http\RequestHandlers\ContactPage;GET;;standard;10;
-237;/tree/{tree}/contact;Fisharebest\Webtrees\Http\RequestHandlers\ContactAction;POST;;standard;10;
-238;/tree/{tree}/family/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\FamilyPage;GET;;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Familien-Datens.C3.A4tze
-239;/tree/{tree}/header/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\HeaderPage;GET;;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#HEAD-_und_SUBN-Datens.C3.A4tze
-240;/tree/{tree}/individual/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\IndividualPage;GET;;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Personen-Datens.C3.A4tze
-241;/tree/{tree}/media-thumbnail;Fisharebest\Webtrees\Http\RequestHandlers\MediaFileThumbnail;GET;;standard;10;
-242;/tree/{tree}/media-download;Fisharebest\Webtrees\Http\RequestHandlers\MediaFileDownload;GET;;standard;10;
-243;/tree/{tree}/media/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\MediaPage;GET;;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Medien-Datens.C3.A4tze
-244;/tree/{tree}/note/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\NotePage;GET;;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Notizen-Datens.C3.A4tze
-245;/tree/{tree}/shared-note/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\SharedNotePage;GET;;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Notizen-Datens.C3.A4tze
-246;/tree/{tree}/repository/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\RepositoryPage;GET;;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Archive-Datens.C3.A4tze
-247;/tree/{tree}/report;Fisharebest\Webtrees\Http\RequestHandlers\ReportListPage;GET;;standard;10;Webtrees_Handbuch/Anleitung_für_Besucher#Berichte
-248;/tree/{tree}/report;Fisharebest\Webtrees\Http\RequestHandlers\ReportListAction;POST;;standard;10;
-249;/tree/{tree}/report/{report};Fisharebest\Webtrees\Http\RequestHandlers\ReportSetupPage;GET;;standard;10;Webtrees_Handbuch/Anleitung_für_Besucher#Berichte
-250;/tree/{tree}/report/{report};Fisharebest\Webtrees\Http\RequestHandlers\ReportSetupAction;POST;;standard;10;
-251;/tree/{tree}/report-run/{report};Fisharebest\Webtrees\Http\RequestHandlers\ReportGenerate;GET;;standard;10;Webtrees_Handbuch/Anleitung_für_Besucher#Berichte
-252;/tree/{tree}/search-advanced;Fisharebest\Webtrees\Http\RequestHandlers\SearchAdvancedPage;GET;;standard;10;Webtrees_Handbuch/Anleitung_für_Besucher#Suchen
-253;/tree/{tree}/search-advanced;Fisharebest\Webtrees\Http\RequestHandlers\SearchAdvancedAction;POST;;standard;10;
-254;/tree/{tree}/search-general;Fisharebest\Webtrees\Http\RequestHandlers\SearchGeneralPage;GET;;standard;10;Webtrees_Handbuch/Anleitung_für_Besucher#Suchen
-255;/tree/{tree}/search-general;Fisharebest\Webtrees\Http\RequestHandlers\SearchGeneralAction;POST;;standard;10;
-256;/tree/{tree}/search-phonetic;Fisharebest\Webtrees\Http\RequestHandlers\SearchPhoneticPage;GET;;standard;10;Webtrees_Handbuch/Anleitung_für_Besucher#Suchen
-257;/tree/{tree}/search-phonetic;Fisharebest\Webtrees\Http\RequestHandlers\SearchPhoneticAction;POST;;standard;10;
-258;/tree/{tree}/search-quick;Fisharebest\Webtrees\Http\RequestHandlers\SearchQuickAction;POST;;standard;10;
-259;/tree/{tree}/source/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\SourcePage;GET;;standard;10;Webtrees_Handbuch/Anleitung_für_Besucher#Quellen
-260;/tree/{tree}/submission/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\SubmissionPage;GET;;standard;10;
-261;/tree/{tree}/submitter/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\SubmitterPage;GET;;standard;10;
-262;/tree/{tree}/tom-select-family;Fisharebest\Webtrees\Http\RequestHandlers\TomSelectFamily;GET;;standard;10;
-263;/tree/{tree}/tom-select-individual;Fisharebest\Webtrees\Http\RequestHandlers\TomSelectIndividual;GET;;standard;10;
-264;/tree/{tree}/tom-select-location;Fisharebest\Webtrees\Http\RequestHandlers\TomSelectLocation;GET;;standard;10;
-265;/tree/{tree}/tom-select-media;Fisharebest\Webtrees\Http\RequestHandlers\TomSelectMediaObject;GET;;standard;10;
-266;/tree/{tree}/tom-select-note;Fisharebest\Webtrees\Http\RequestHandlers\TomSelectNote;GET;;standard;10;
-267;/tree/{tree}/tom-select-shared-note;Fisharebest\Webtrees\Http\RequestHandlers\TomSelectSharedNote;GET;;standard;10;
-268;/tree/{tree}/tom-select-place;Fisharebest\Webtrees\Http\RequestHandlers\TomSelectPlace;GET;;standard;10;
-269;/tree/{tree}/tom-select-source;Fisharebest\Webtrees\Http\RequestHandlers\TomSelectSource;GET;;standard;10;
-270;/tree/{tree}/tom-select-submission;Fisharebest\Webtrees\Http\RequestHandlers\TomSelectSubmission;GET;;standard;10;
-271;/tree/{tree}/tom-select-submitter;Fisharebest\Webtrees\Http\RequestHandlers\TomSelectSubmitter;GET;;standard;10;
-272;/tree/{tree}/tom-select-repository;Fisharebest\Webtrees\Http\RequestHandlers\TomSelectRepository;GET;;standard;10;
-273;/tree/{tree}/tree-page-block;Fisharebest\Webtrees\Http\RequestHandlers\TreePageBlock;GET;;standard;10;
-274;/tree/{tree}/…;example;GET;;standard;10;
-275;/module/{module}/{action}/{tree};Fisharebest\Webtrees\Http\RequestHandlers\ModuleAction;GET|POST;;standard;10;
-276;/module/{module}/{action};Fisharebest\Webtrees\Http\RequestHandlers\ModuleAction;GET|POST;;standard;10;
-277;/module/{module}/{action}{/tree};module;GET;;standard;10;
-278;/help/{topic};Fisharebest\Webtrees\Http\RequestHandlers\HelpText;GET;;standard;10;
-279;/language/{language};Fisharebest\Webtrees\Http\RequestHandlers\SelectLanguage;POST;;standard;10;
-280;/logout;Fisharebest\Webtrees\Http\RequestHandlers\Logout;POST;;standard;10;
-281;/ping;Fisharebest\Webtrees\Http\RequestHandlers\Ping;GET|HEAD;;standard;10;
-282;/theme/{theme};Fisharebest\Webtrees\Http\RequestHandlers\SelectTheme;POST;;standard;10;
-283;/;Fisharebest\Webtrees\Http\RequestHandlers\HomePage;GET;;standard;10;
-284;/ads.txt;Fisharebest\Webtrees\Http\RequestHandlers\AdsTxt;GET;;standard;10;
-285;/app-ads.txt;Fisharebest\Webtrees\Http\RequestHandlers\AppAdsTxt;GET;;standard;10;
-286;/apple-touch-icon.png;Fisharebest\Webtrees\Http\RequestHandlers\AppleTouchIconPng;GET;;standard;10;
-287;/browserconfig.xml;Fisharebest\Webtrees\Http\RequestHandlers\BrowserconfigXml;GET;;standard;10;
-288;/favicon.ico;Fisharebest\Webtrees\Http\RequestHandlers\FaviconIco;GET;;standard;10;
-289;/robots.txt;Fisharebest\Webtrees\Http\RequestHandlers\RobotsTxt;GET;;standard;10;
-290;/webmanifest.json;Fisharebest\Webtrees\Http\RequestHandlers\WebmanifestJson;GET;;standard;10;
-291;/tree/{tree}/ancestors-{style}-{generations}/{xref};Fisharebest\Webtrees\Module\AncestorsChartModule;GET|POST;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
-292;/tree/{tree}/branches{/surname};Fisharebest\Webtrees\Module\BranchesListModule;GET|POST;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Listen
-293;/tree/{tree}/compact/{xref};Fisharebest\Webtrees\Module\CompactTreeChartModule;GET|POST;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
-294;/tree/{tree}/descendants-{style}-{generations}/{xref};Fisharebest\Webtrees\Module\DescendancyChartModule;GET|POST;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
-295;/tree/{tree}/family-book-{book_size}-{generations}-{spouses}/{xref};Fisharebest\Webtrees\Module\FamilyBookChartModule;GET|POST;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
-296;/tree/{tree}/family-list;Fisharebest\Webtrees\Module\FamilyListModule;GET;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Listen
-297;/tree/{tree}/fan-chart-{style}-{generations}-{width}/{xref};Fisharebest\Webtrees\Module\FanChartModule;GET|POST;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
-298;/tree/{tree}/hourglass-{generations}-{spouses}/{xref};Fisharebest\Webtrees\Module\HourglassChartModule;GET|POST;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
-299;/tree/{tree}/individual-list;Fisharebest\Webtrees\Module\IndividualListModule;GET;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Listen
-329;/tree/{tree}/lifespans;Fisharebest\Webtrees\Module\LifespansChartModule;GET|POST;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
-330;/tree/{tree}/media-list;Fisharebest\Webtrees\Module\MediaListModule;GET|POST;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Listen
-331;/tree/{tree}/note-list;Fisharebest\Webtrees\Module\NoteListModule;GET;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Listen
-332;/tree/{tree}/pedigree-map-{generations}/{xref};Fisharebest\Webtrees\Module\PedigreeMapModule;GET|POST;;standard module;10;
-333;/tree/{tree}/pedigree-{style}-{generations}/{xref};Fisharebest\Webtrees\Module\PedigreeChartModule;GET|POST;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
-334;/tree/{tree}/place-list{/place_id};Fisharebest\Webtrees\Module\PlaceHierarchyListModule;GET;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Listen
-335;/tree/{tree}/relationships-{ancestors}-{recursion}/{xref}{/xref2};Fisharebest\Webtrees\Module\RelationshipsChartModule;GET|POST;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
-336;/tree/{tree}/repository-list;Fisharebest\Webtrees\Module\RepositoryListModule;GET;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Listen
-337;/tree/{tree}/anniversary-ics/{xref}/{fact_id};Fisharebest\Webtrees\Module\ShareAnniversaryModule;GET;;standard module;10;
-338;/tree/{tree}/source-list;Fisharebest\Webtrees\Module\SourceListModule;GET;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Listen
-339;/tree/{tree}/submitter-list;Fisharebest\Webtrees\Module\SubmitterListModule;GET;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Listen
-340;/tree/{tree}/timeline-{scale};Fisharebest\Webtrees\Module\TimelineChartModule;GET|POST;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
-341;/admin/gov-data;Cissee\Webtrees\Module\Gov4Webtrees\Http\RequestHandlers\GovDataList;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;custom module;10;
-342;/admin/gov-data/{gov_id};Cissee\Webtrees\Module\Gov4Webtrees\Http\RequestHandlers\GovData;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;custom module;10;
-343;/admin/gov-data-edit/{type}/{key};Cissee\Webtrees\Module\Gov4Webtrees\Http\RequestHandlers\GovDataEdit;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;custom module;10;
-344;/admin/gov-data-update;Cissee\Webtrees\Module\Gov4Webtrees\Http\RequestHandlers\GovDataSave;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;custom module;10;
-345;/admin/gov-data-delete/{type}/{key};Cissee\Webtrees\Module\Gov4Webtrees\Http\RequestHandlers\GovDataDelete;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;custom module;10;
-346;/tree/{tree}/tom-select-source-with-suggestions;Cissee\Webtrees\Module\ResearchSuggestions\TomSelectSourceWithSuggestions;GET;;custom module;10;
-347;/tree/{tree}/record/{xref}{/slug};Cissee\WebtreesExt\GedcomRecordPageTempReplacement;GET;;custom module;10;
-348;/tree/{tree}/edit-main/{xref};Cissee\WebtreesExt\Http\RequestHandlers\EditMainFieldsPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;custom module;10;
-349;/tree/{tree}/edit-main/{xref};Cissee\WebtreesExt\Http\RequestHandlers\EditMainFieldsAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;custom module;10;
-350;/tree/{tree}/config-gedcom-field/{tag}/{indent};Cissee\WebtreesExt\Http\RequestHandlers\ConfigGedcomField;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;custom module;10;
-351;/tree/{tree}/config-gedcom-field-action;Cissee\WebtreesExt\Http\RequestHandlers\ConfigGedcomFieldAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;custom module;10;
-352;/tree/{tree}/add-fact/{xref}/{fact};Cissee\WebtreesExt\Http\RequestHandlers\AddNewFactExt;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;custom module;10;
-353;/tree/{tree}/edit-fact/{xref}/{fact_id};Cissee\WebtreesExt\Http\RequestHandlers\EditFactPageExt;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;custom module;10;
-354;/tree/{tree}/add-child-to-family/{xref}/{sex};Cissee\WebtreesExt\Http\RequestHandlers\AddChildToFamilyPageExt;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;custom module;10;
-355;/tree/{tree}/add-child-to-individual/{xref};Cissee\WebtreesExt\Http\RequestHandlers\AddChildToIndividualPageExt;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;custom module;10;
-356;/tree/{tree}/add-parent-to-individual/{xref}/{sex};Cissee\WebtreesExt\Http\RequestHandlers\AddParentToIndividualPageExt;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;custom module;10;
-357;/tree/{tree}/add-spouse-to-family/{xref}/{sex};Cissee\WebtreesExt\Http\RequestHandlers\AddSpouseToFamilyPageExt;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;custom module;10;
-358;/tree/{tree}/add-spouse-to-individual/{xref};Cissee\WebtreesExt\Http\RequestHandlers\AddSpouseToIndividualPageExt;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;custom module;10;
-359;/tree/{tree}/add-unlinked-individual;Cissee\WebtreesExt\Http\RequestHandlers\AddUnlinkedPageExt;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;custom module;10;
-360;/tree/{tree}/vesta-pedigree-map-{generations}/{xref};Cissee\Webtrees\Module\PPM\PlacesAndPedigreeMapModuleExtended;GET|POST;;custom module;10;Webtrees_Handbuch/Anleitung_für_Besucher/Diagramme_Vergleichstabelle
-361;/tree/{tree}/vesta-place-list;Cissee\WebtreesExt\Http\Controllers\GenericPlaceHierarchyController;GET;;custom module;10;
-362;/tree/{tree}/vesta-relationships-{ancestors}-{recursion}/{xref}{/xref2};Cissee\Webtrees\Module\ExtendedRelationships\ExtendedRelationshipModule;GET|POST;;custom module;10;Webtrees_Handbuch/Anleitung_für_Besucher/Diagramme_Vergleichstabelle
-363;/tree/{tree}/individual-patriarchs-list;Cissee\Webtrees\Module\ExtendedRelationships\ExtendedIndividualListRequestHandler;GET;;custom module;10;
-364;/tree/{tree}/vesta-pedigree-{kind}-{style}-{generations}/{xref};Cissee\Webtrees\Module\ExtendedRelationships\ExtendedPedigreeChartModule;GET|POST;;custom module;10;Webtrees_Handbuch/Anleitung_für_Besucher/Diagramme_Vergleichstabelle
-365;/tree/{tree}/vesta-lca-{style}/{xref}{/xref2};Cissee\Webtrees\Module\ExtendedRelationships\LCAChartModule;GET|POST;;custom module;10;Webtrees_Handbuch/Anleitung_für_Besucher/Diagramme_Vergleichstabelle
-366;/tree/{tree}/autocomplete/place;Cissee\WebtreesExt\Http\RequestHandlers\AutoCompletePlaceExt;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;custom module;10;
-367;/tree/{tree}/sharedPlace/{xref}{/slug};Cissee\WebtreesExt\Http\RequestHandlers\SharedPlacePage;GET;;custom module;10;
-368;/tree/{tree}/shared-place-list;Cissee\Webtrees\Module\SharedPlaces\SharedPlacesModule;GET;;custom module;10;
-369;/tree/{tree}/create-location;Cissee\WebtreesExt\Http\RequestHandlers\CreateSharedPlaceModal;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;custom module;10;
-370;/tree/{tree}/create-location;Cissee\WebtreesExt\Http\RequestHandlers\CreateSharedPlaceAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;custom module;10;
-371;/tree/{tree}/tom-select-shared-place;Cissee\WebtreesExt\Http\RequestHandlers\TomSelectSharedPlace;GET;;custom module;10;
-375;/ancestry.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectAncestryPhp;GET;;standard redirect;10;
-376;/branches.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectBranchesPhp;GET;;standard redirect;10;
-377;/calendar.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectCalendarPhp;GET;;standard redirect;10;
-378;/compact.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectCompactPhp;GET;;standard redirect;10;
-379;/compact.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectDescendencyPhp;GET;;standard redirect;10;
-380;/family.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectFamilyPhp;GET;;standard redirect;10;
-382;/familybook.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectFamilyBookPhp;GET;;standard redirect;10;
-381;/famlist.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectFamListPhp;GET;;standard redirect;10;
-383;/fanchart.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectFanChartPhp;GET;;standard redirect;10;
-384;/gedrecord.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectGedRecordPhp;GET;;standard redirect;10;
-385;/hourglass.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectHourGlassPhp;GET;;standard redirect;10;
-386;/indilist.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectIndiListPhp;GET;;standard redirect;10;
-387;/individual.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectIndividualPhp;GET;;standard redirect;10;
-388;/lifespan.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectLifeSpanPhp;GET;;standard redirect;10;
-389;/medialist.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectMediaListPhp;GET;;standard redirect;10;
-390;/mediaviewer.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectMediaViewerPhp;GET;;standard redirect;10;
-391;/module.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectModulePhp;GET;;standard redirect;10;
-372;/module/{module}/{action};_vesta_classic_look_and_feel_;GET;;custom module;20;https://github.com/vesta-webtrees-2-custom-modules/vesta_classic_laf
-374;/module/{module}/{action};module-no-tree;GET|POST;;standard;10;
-373;/module/{module}/{action}/{tree};module-tree;GET|POST;;standard;10;
-392;/note.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectNotePhp;GET;;standard redirect;10;
-393;/notelist.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectNoteListPhp;GET;;standard redirect;10;
-394;/pedigree.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectPedigreePhp;GET;;standard redirect;10;
-395;/placelist.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectPlaceListPhp;GET;;standard redirect;10;
-396;/relationship.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectRelationshipPhp;GET;;standard redirect;10;
-398;/repolist.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectRepoListPhp;GET;;standard redirect;10;
-399;/reportengine.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectReportEnginePhp;GET;;standard redirect;10;
-397;/repository.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectRepositoryPhp;GET;;standard redirect;10;
-401;/source.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectSourcePhp;GET;;standard redirect;10;
-400;/sourcelist.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectSourceListPhp;GET;;standard redirect;10;
-402;/statistics.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectStatisticsPhp;GET;;standard redirect;10;
-403;/timeline.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectTimeLinePhp;GET;;standard redirect;10;
-407;/tree/{tree}/add-child-to-family/{xref}/{sex};Fisharebest\Webtrees\Http\RequestHandlers\AddChildToFamilyPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-408;/tree/{tree}/add-child-to-individual/{xref};Fisharebest\Webtrees\Http\RequestHandlers\AddChildToIndividualPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-405;/tree/{tree}/add-fact/{xref}/{fact};Fisharebest\Webtrees\Http\RequestHandlers\AddNewFact;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-409;/tree/{tree}/add-parent-to-individual/{xref}/{sex};Fisharebest\Webtrees\Http\RequestHandlers\AddParentToIndividualPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-410;/tree/{tree}/add-spouse-to-family/{xref}/{sex};Fisharebest\Webtrees\Http\RequestHandlers\AddSpouseToFamilyPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-411;/tree/{tree}/add-spouse-to-individual/{xref};Fisharebest\Webtrees\Http\RequestHandlers\AddSpouseToIndividualPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-412;/tree/{tree}/add-unlinked-individual;Fisharebest\Webtrees\Http\RequestHandlers\AddUnlinkedPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-413;/tree/{tree}/autocomplete/place;Fisharebest\Webtrees\Http\RequestHandlers\AutoCompletePlace;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-406;/tree/{tree}/edit-fact/{xref}/{fact_id};Fisharebest\Webtrees\Http\RequestHandlers\EditFactPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;standard;10;
-404;/tree/{tree}/record/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\GedcomRecordPage;GET;;standard;10;
-415;/tree/{tree}/shared-place-list;Fisharebest\Webtrees\Module\LocationListModule;GET;;standard module;10;
-414;/tree/{tree}/sharedPlace/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\LocationPage;GET;;standard;10;
-416;/tree/{tree}/duplicatesMTV;HuHwt\WebtreesMods\Http\RequestHandlers\FindDuplicateRecordsMTV;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;custom module;10;
-417;/tree/{tree}/mult-treeview;HuHwt\WebtreesMods\Http\RequestHandlers\MultTreeViewRH;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;custom module;10;
-418;/tree/{tree}/treeXTV;HuHwt\WebtreesMods\InteractiveTreeXT\InteractiveTreeXTmod;GET|POST;;custom module;10;Webtrees_Handbuch/Anleitung_f%C3%BCr_Webmaster/Erweiterungsmodule/Treeview-Extended
-419;/tree/{tree}/LINaction;HuHwt\WebtreesMods\LINchart\LINaction;GET;;custom module;10;Webtrees_Handbuch/Anleitung_f%C3%BCr_Webmaster/Erweiterungsmodule/TAM_und_Lineage
-420;/tree/{tree}/treeMTV;HuHwt\WebtreesMods\Module\InteractiveTree\InteractiveTreeModMTV;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;custom module;10;
-421;/module_update_page;Jefferson49\Webtrees\Module\CustomModuleManager\RequestHandlers\CustomModuleUpdatePage;GET|POST;;custom module;10;
-422;/module_info_modal;Jefferson49\Webtrees\Module\CustomModuleManager\RequestHandlers\ModuleInformationModal;GET|POST;;custom module;10;
-423;/module_upgrade_wizard_page;Jefferson49\Webtrees\Module\CustomModuleManager\RequestHandlers\ModuleUpgradeWizardPage;GET|POST;;custom module;10;
-424;/module_upgrade_wizard_step;Jefferson49\Webtrees\Module\CustomModuleManager\RequestHandlers\ModuleUpgradeWizardStep;GET|POST;;custom module;10;
-425;;;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;generic;20;Webtrees_Handbuch/Anleitung_für_Administratoren
-426;;;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;generic;20;Webtrees_Handbuch/Anleitung_für_Verwalter
-427;;;GET;Fisharebest\Webtrees\Http\Middleware\AuthModerator;generic;20;Webtrees_Handbuch/Anleitung_für_Moderatoren
-428;;;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;generic;20;Webtrees_Handbuch/Anleitung_für_Bearbeiter
-429;;;GET;Fisharebest\Webtrees\Http\Middleware\AuthLoggedIn;generic;20;Webtrees_Handbuch/Anleitung_für_Mitglieder
-430;;;GET;;generic;20;Webtrees_Handbuch/Anleitung_für_Besucher
-431;/module/{module}/{action}/{tree};statistics_chart;GET;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher/Diagramme_Vergleichstabelle
-432;/module/{module}/{action}/{tree};tree;GET;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher/Diagramme_Vergleichstabelle
-433;/tree/{tree}/CCE;HuHwt\WebtreesMods\ClippingsCartEnhanced\ClippingsCartEnhancedModule;GET|POST;;custom module;10;Webtrees_Handbuch/Anleitung_f%C3%BCr_Webmaster/Erweiterungsmodule/Sammelbeh%C3%A4lter
-434;/tree/{tree};HuHwt\WebtreesMods\ClippingsCartEnhanced\ClippingsCartEnhanced;GET;;custom module;10;Webtrees_Handbuch/Anleitung_f%C3%BCr_Webmaster/Erweiterungsmodule/Sammelbeh%C3%A4lter
-435;/tree/{tree}/TAMaction;HuHwt\WebtreesMods\TAMchart\TAMaction;GET;;custom module;10;Webtrees_Handbuch/Anleitung_f%C3%BCr_Webmaster/Erweiterungsmodule/TAM_und_Lineage
-436;/tree/{tree}/TSM;HuHwt\WebtreesMods\TaggingServiceManager\TaggingServiceManagerModule;GET|POST;;custom module;10;Webtrees_Handbuch/Anleitung_f%C3%BCr_Webmaster/Erweiterungsmodule/Tagging-Service-Manager
-437;/tree/{tree}/TSM/create-tag-object;HuHwt\WebtreesMods\TaggingServiceManager\Http\RequestHandlers\TSMCreateNoteModal;GET;;custom module;10;Webtrees_Handbuch/Anleitung_f%C3%BCr_Webmaster/Erweiterungsmodule/Tagging-Service-Manager
-438;/tree/{tree}/TSM/create-tag-object;HuHwt\WebtreesMods\TaggingServiceManager\Http\RequestHandlers\TSMCreateNoteAction;POST;;custom module;10;Webtrees_Handbuch/Anleitung_f%C3%BCr_Webmaster/Erweiterungsmodule/Tagging-Service-Manager
-439;/tree/{tree}/TSM/choose-active-tagM;HuHwt\WebtreesMods\TaggingServiceManager\Http\RequestHandlers\TSMchooseATagModal;GET;;custom module;10;Webtrees_Handbuch/Anleitung_f%C3%BCr_Webmaster/Erweiterungsmodule/Tagging-Service-Manager
-440;/tree/{tree}/TSM/choose-active-tagA;HuHwt\WebtreesMods\TaggingServiceManager\Http\RequestHandlers\TSMchooseATagAction;POST;;custom module;10;Webtrees_Handbuch/Anleitung_f%C3%BCr_Webmaster/Erweiterungsmodule/Tagging-Service-Manager
-441;/tree/{tree}/calendar/{view};Fisharebest\Webtrees\Http\RequestHandlers\CalendarPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthNotRobot;standard;10;Webtrees_Handbuch/Anleitung_für_Besucher#Kalender
-442;/tree/{tree}/calendar/{view};Fisharebest\Webtrees\Http\RequestHandlers\CalendarAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthNotRobot;standard;10;
-443;/tree/{tree}/calendar-events/{view};Fisharebest\Webtrees\Http\RequestHandlers\CalendarEvents;GET;Fisharebest\Webtrees\Http\Middleware\AuthNotRobot;standard;10;Webtrees_Handbuch/Anleitung_für_Besucher#Kalender
-444;/tree/{tree}/ancestors-{style}-{generations}/{xref};Fisharebest\Webtrees\Module\AncestorsChartModule;GET|POST;Fisharebest\Webtrees\Http\Middleware\AuthNotRobot;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
-445;/tree/{tree}/branches{/surname};Fisharebest\Webtrees\Module\BranchesListModule;GET|POST;Fisharebest\Webtrees\Http\Middleware\AuthNotRobot;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
-446;/tree/{tree}/compact/{xref};Fisharebest\Webtrees\Module\CompactTreeChartModule;GET|POST;Fisharebest\Webtrees\Http\Middleware\AuthNotRobot;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
-447;/tree/{tree}/descendants-{style}-{generations}/{xref};Fisharebest\Webtrees\Module\DescendancyChartModule;GET|POST;Fisharebest\Webtrees\Http\Middleware\AuthNotRobot;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
-448;/tree/{tree}/family-book-{book_size}-{generations}-{spouses}/{xref};Fisharebest\Webtrees\Module\FamilyBookChartModule;GET|POST;Fisharebest\Webtrees\Http\Middleware\AuthNotRobot;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
-449;/tree/{tree}/fan-chart-{style}-{generations}-{width}/{xref};Fisharebest\Webtrees\Module\FanChartModule;GET|POST;Fisharebest\Webtrees\Http\Middleware\AuthNotRobot;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
-450;/tree/{tree}/hourglass-{generations}-{spouses}/{xref};Fisharebest\Webtrees\Module\HourglassChartModule;GET|POST;Fisharebest\Webtrees\Http\Middleware\AuthNotRobot;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
-451;/tree/{tree}/lifespans;Fisharebest\Webtrees\Module\LifespansChartModule;GET|POST;Fisharebest\Webtrees\Http\Middleware\AuthNotRobot;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
-452;/tree/{tree}/pedigree-map-{generations}/{xref};Fisharebest\Webtrees\Module\PedigreeMapModule;GET|POST;Fisharebest\Webtrees\Http\Middleware\AuthNotRobot;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
-453;/tree/{tree}/pedigree-{style}-{generations}/{xref};Fisharebest\Webtrees\Module\PedigreeChartModule;GET|POST;Fisharebest\Webtrees\Http\Middleware\AuthNotRobot;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
-454;/tree/{tree}/relationships-{ancestors}-{recursion}/{xref}{/xref2};Fisharebest\Webtrees\Module\RelationshipsChartModule;GET|POST;Fisharebest\Webtrees\Http\Middleware\AuthNotRobot;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
-455;/tree/{tree}/timeline-{scale};Fisharebest\Webtrees\Module\TimelineChartModule;GET|POST;Fisharebest\Webtrees\Http\Middleware\AuthNotRobot;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
-456;;_linkenhancer_;GET;;custom module;20;https://github.com/bschwede/linkenhancer
+id;path;handler;method;extras;subcontext;category;order;url
+1;/admin;Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren
+2;/admin/check-now;Fisharebest\Webtrees\Http\RequestHandlers\CheckForNewVersionNow;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+3;/admin/broadcast/{to};Fisharebest\Webtrees\Http\RequestHandlers\BroadcastPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+4;/admin/broadcast/{to};Fisharebest\Webtrees\Http\RequestHandlers\BroadcastAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+5;/admin/clean;Fisharebest\Webtrees\Http\RequestHandlers\CleanDataFolder;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Webseite#Datenordner_bereinigen
+6;/admin/delete-path;Fisharebest\Webtrees\Http\RequestHandlers\DeletePath;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+7;/admin/email;Fisharebest\Webtrees\Http\RequestHandlers\EmailPreferencesPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Webseite#E-Mail-Versand
+8;/admin/email;Fisharebest\Webtrees\Http\RequestHandlers\EmailPreferencesAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+9;/admin/fix-level-0-media;Fisharebest\Webtrees\Http\RequestHandlers\FixLevel0MediaPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Multimedia#Medienobjekte_mit_Tatsachen_und_Ereignissen_verkn.C3.BCpfen
+10;/admin/fix-level-0-media;Fisharebest\Webtrees\Http\RequestHandlers\FixLevel0MediaAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+11;/admin/fix-level-0-media-data;Fisharebest\Webtrees\Http\RequestHandlers\FixLevel0MediaData;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+12;/admin/information;Fisharebest\Webtrees\Http\RequestHandlers\PhpInformation;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Webseite#Server_Information
+13;/admin/logs;Fisharebest\Webtrees\Http\RequestHandlers\SiteLogsPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Webseite#Webseitenprotokolle
+14;/admin/logs;Fisharebest\Webtrees\Http\RequestHandlers\SiteLogsAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+15;/admin/logs-data;Fisharebest\Webtrees\Http\RequestHandlers\SiteLogsData;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Webseite#Webseitenprotokolle
+16;/admin/logs-delete;Fisharebest\Webtrees\Http\RequestHandlers\SiteLogsDelete;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+17;/admin/logs-download;Fisharebest\Webtrees\Http\RequestHandlers\SiteLogsDownload;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Webseite#Webseitenprotokolle
+18;/admin/masquerade/{user_id};Fisharebest\Webtrees\Http\RequestHandlers\Masquerade;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+19;/admin/media;Fisharebest\Webtrees\Http\RequestHandlers\ManageMediaPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Multimedia#Medien_verwalten
+20;/admin/media;Fisharebest\Webtrees\Http\RequestHandlers\ManageMediaAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+21;/admin/media-data;Fisharebest\Webtrees\Http\RequestHandlers\ManageMediaData;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+22;/admin/media-upload;Fisharebest\Webtrees\Http\RequestHandlers\UploadMediaPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Multimedia#Mediendateien_hochladen
+23;/admin/media-upload;Fisharebest\Webtrees\Http\RequestHandlers\UploadMediaAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+24;/admin/media-file;Fisharebest\Webtrees\Http\RequestHandlers\AdminMediaFileDownload;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+25;/admin/media-thumbnail;Fisharebest\Webtrees\Http\RequestHandlers\AdminMediaFileThumbnail;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+26;/admin/trees/create;Fisharebest\Webtrees\Http\RequestHandlers\CreateTreePage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Stammbäume#Einen_Stammbaum_erstellen
+27;/admin/trees/create;Fisharebest\Webtrees\Http\RequestHandlers\CreateTreeAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+28;/admin/trees/default/{tree};Fisharebest\Webtrees\Http\RequestHandlers\SelectDefaultTree;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+29;/admin/trees/delete/{tree};Fisharebest\Webtrees\Http\RequestHandlers\DeleteTreeAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+30;/admin/users-cleanup;Fisharebest\Webtrees\Http\RequestHandlers\UsersCleanupPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Benutzer#Inaktive_Benutzer_l.C3.B6schen
+31;/admin/users-cleanup;Fisharebest\Webtrees\Http\RequestHandlers\UsersCleanupAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+32;/admin/map-data-add{/parent_id};Fisharebest\Webtrees\Http\RequestHandlers\MapDataAdd;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Geografische_Daten
+33;/admin/map-data-delete/{location_id};Fisharebest\Webtrees\Http\RequestHandlers\MapDataDelete;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+34;/admin/map-data-delete-unused;Fisharebest\Webtrees\Http\RequestHandlers\MapDataDeleteUnused;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+35;/admin/map-data-edit/{location_id};Fisharebest\Webtrees\Http\RequestHandlers\MapDataEdit;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Geografische_Daten
+36;/admin/map-data-csv{/parent_id};Fisharebest\Webtrees\Http\RequestHandlers\MapDataExportCSV;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Geografische_Daten
+37;/admin/map-data-geojson{/parent_id};Fisharebest\Webtrees\Http\RequestHandlers\MapDataExportGeoJson;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Geografische_Daten
+38;/admin/locations-import;Fisharebest\Webtrees\Http\RequestHandlers\MapDataImportPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Geografische_Daten
+39;/admin/locations-import;Fisharebest\Webtrees\Http\RequestHandlers\MapDataImportAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+40;/admin/map-data{/parent_id};Fisharebest\Webtrees\Http\RequestHandlers\MapDataList;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Geografische_Daten
+41;/admin/map-data-update;Fisharebest\Webtrees\Http\RequestHandlers\MapDataSave;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+42;/admin/module-delete-settings;Fisharebest\Webtrees\Http\RequestHandlers\ModuleDeleteSettings;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+43;/admin/modules;Fisharebest\Webtrees\Http\RequestHandlers\ModulesAllPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Alle_Module
+44;/admin/modules;Fisharebest\Webtrees\Http\RequestHandlers\ModulesAllAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+45;/admin/analytics;Fisharebest\Webtrees\Http\RequestHandlers\ModulesAnalyticsPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Bl.C3.B6cke
+46;/admin/analytics;Fisharebest\Webtrees\Http\RequestHandlers\ModulesAnalyticsAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+47;/admin/blocks;Fisharebest\Webtrees\Http\RequestHandlers\ModulesBlocksPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Bl.C3.B6cke
+48;/admin/blocks;Fisharebest\Webtrees\Http\RequestHandlers\ModulesBlocksAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+49;/admin/charts;Fisharebest\Webtrees\Http\RequestHandlers\ModulesChartsPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Diagramme
+50;/admin/charts;Fisharebest\Webtrees\Http\RequestHandlers\ModulesChartsAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+51;/admin/data-fixes;Fisharebest\Webtrees\Http\RequestHandlers\ModulesDataFixesPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Datenkorrekturen
+52;/admin/data-fixes;Fisharebest\Webtrees\Http\RequestHandlers\ModulesDataFixesAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+53;/admin/footers;Fisharebest\Webtrees\Http\RequestHandlers\ModulesFootersPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Fu.C3.9Fzeilen
+54;/admin/footers;Fisharebest\Webtrees\Http\RequestHandlers\ModulesFootersAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+55;/admin/historic-events;Fisharebest\Webtrees\Http\RequestHandlers\ModulesHistoricEventsPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Historische_Ereignisse
+56;/admin/historic-events;Fisharebest\Webtrees\Http\RequestHandlers\ModulesHistoricEventsAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+57;/admin/lists;Fisharebest\Webtrees\Http\RequestHandlers\ModulesListsPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Listen
+58;/admin/lists;Fisharebest\Webtrees\Http\RequestHandlers\ModulesListsAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+59;/admin/map-autocomplete;Fisharebest\Webtrees\Http\RequestHandlers\ModulesMapAutocompletePage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Automatisch_vervollst.C3.A4ndigen
+60;/admin/map-autocomplete;Fisharebest\Webtrees\Http\RequestHandlers\ModulesMapAutocompleteAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+61;/admin/map-links;Fisharebest\Webtrees\Http\RequestHandlers\ModulesMapLinksPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Kartenlinks
+62;/admin/map-links;Fisharebest\Webtrees\Http\RequestHandlers\ModulesMapLinksAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+63;/admin/map-providers;Fisharebest\Webtrees\Http\RequestHandlers\ModulesMapProvidersPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Kartenanbieter
+64;/admin/map-providers;Fisharebest\Webtrees\Http\RequestHandlers\ModulesMapProvidersAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+65;/admin/map-searches;Fisharebest\Webtrees\Http\RequestHandlers\ModulesMapGeoLocationsPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Geolokalisierung
+66;/admin/map-searches;Fisharebest\Webtrees\Http\RequestHandlers\ModulesMapGeoLocationsAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+67;/admin/menus;Fisharebest\Webtrees\Http\RequestHandlers\ModulesMenusPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Men.C3.BCs
+68;/admin/menus;Fisharebest\Webtrees\Http\RequestHandlers\ModulesMenusAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+69;/admin/languages;Fisharebest\Webtrees\Http\RequestHandlers\ModulesLanguagesPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Sprachen-Module
+70;/admin/languages;Fisharebest\Webtrees\Http\RequestHandlers\ModulesLanguagesAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+71;/admin/reports;Fisharebest\Webtrees\Http\RequestHandlers\ModulesReportsPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Berichte
+72;/admin/reports;Fisharebest\Webtrees\Http\RequestHandlers\ModulesReportsAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+73;/admin/shares;Fisharebest\Webtrees\Http\RequestHandlers\ModulesSharesPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Geteiltes
+74;/admin/shares;Fisharebest\Webtrees\Http\RequestHandlers\ModulesSharesAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+75;/admin/sidebars;Fisharebest\Webtrees\Http\RequestHandlers\ModulesSidebarsPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Navigationsleisten
+76;/admin/sidebars;Fisharebest\Webtrees\Http\RequestHandlers\ModulesSidebarsAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+77;/admin/tabs;Fisharebest\Webtrees\Http\RequestHandlers\ModulesTabsPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Reiter
+78;/admin/tabs;Fisharebest\Webtrees\Http\RequestHandlers\ModulesTabsAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+79;/admin/themes;Fisharebest\Webtrees\Http\RequestHandlers\ModulesThemesPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Themen
+80;/admin/themes;Fisharebest\Webtrees\Http\RequestHandlers\ModulesThemesAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+81;/admin/upgrade;Fisharebest\Webtrees\Http\RequestHandlers\UpgradeWizardPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Webmaster#Automatisches_Upgrade
+82;/admin/upgrade-confirm;Fisharebest\Webtrees\Http\RequestHandlers\UpgradeWizardConfirm;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+83;/admin/upgrade-action;Fisharebest\Webtrees\Http\RequestHandlers\UpgradeWizardStep;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+84;/admin/admin-users;Fisharebest\Webtrees\Http\RequestHandlers\UserListPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Benutzer#Benutzerverwaltung
+85;/admin/admin-users-data;Fisharebest\Webtrees\Http\RequestHandlers\UserListData;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+86;/admin/admin-users-create;Fisharebest\Webtrees\Http\RequestHandlers\UserAddPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Benutzer#Einen_Benutzer_hinzuf.C3.BCgen
+87;/admin/admin-users-create;Fisharebest\Webtrees\Http\RequestHandlers\UserAddAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+88;/admin/admin-users-edit;Fisharebest\Webtrees\Http\RequestHandlers\UserEditPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Benutzer#Bearbeiten
+89;/admin/admin-users-edit;Fisharebest\Webtrees\Http\RequestHandlers\UserEditAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+90;/admin/site-preferences;Fisharebest\Webtrees\Http\RequestHandlers\SitePreferencesPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Webseite#Einstellungen_Webseite
+91;/admin/site-preferences;Fisharebest\Webtrees\Http\RequestHandlers\SitePreferencesAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+92;/admin/site-registration;Fisharebest\Webtrees\Http\RequestHandlers\SiteRegistrationPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Webseite#Anmeldung_und_Registrierung
+93;/admin/site-registration;Fisharebest\Webtrees\Http\RequestHandlers\SiteRegistrationAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+94;/admin/tags;Fisharebest\Webtrees\Http\RequestHandlers\SiteTagsPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Webseite#GEDCOM-Kennzeichen
+95;/admin/tags;Fisharebest\Webtrees\Http\RequestHandlers\SiteTagsAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+96;/admin/trees/default-blocks;Fisharebest\Webtrees\Http\RequestHandlers\TreePageDefaultEdit;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Stammbäume#Standardbl.C3.B6cke_f.C3.BCr_neue_Stammb.C3.A4ume_festlegen
+97;/admin/trees/default-blocks;Fisharebest\Webtrees\Http\RequestHandlers\TreePageDefaultUpdate;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+98;/admin/trees/merge;Fisharebest\Webtrees\Http\RequestHandlers\MergeTreesPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Stammbäume#Stammb.C3.A4ume_zusammenf.C3.BChren
+99;/admin/trees/merge;Fisharebest\Webtrees\Http\RequestHandlers\MergeTreesAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+100;/admin/trees/sync;Fisharebest\Webtrees\Http\RequestHandlers\SynchronizeTrees;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+101;/admin/users/delete/{user_id};Fisharebest\Webtrees\Http\RequestHandlers\DeleteUser;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+102;/admin/user-page-default-edit;Fisharebest\Webtrees\Http\RequestHandlers\UserPageDefaultEdit;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Benutzer#Standardbl.C3.B6cke_f.C3.BCr_neue_Benutzer_festlegen
+103;/admin/user-page-default-update;Fisharebest\Webtrees\Http\RequestHandlers\UserPageDefaultUpdate;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;standard;10;
+104;/admin/trees/manage/{tree};Fisharebest\Webtrees\Http\RequestHandlers\ManageTrees;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#Stammb.C3.A4ume_verwalten
+105;/tree/{tree}/changes-log;Fisharebest\Webtrees\Http\RequestHandlers\PendingChangesLogPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#.C3.84nderungsprotokoll
+106;/tree/{tree}/changes-log;Fisharebest\Webtrees\Http\RequestHandlers\PendingChangesLogAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;
+107;/tree/{tree}/changes-data;Fisharebest\Webtrees\Http\RequestHandlers\PendingChangesLogData;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#.C3.84nderungsprotokoll
+108;/tree/{tree}/changes-delete;Fisharebest\Webtrees\Http\RequestHandlers\PendingChangesLogDelete;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;
+109;/tree/{tree}/changes-download;Fisharebest\Webtrees\Http\RequestHandlers\PendingChangesLogDownload;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#.C3.84nderungsprotokoll
+110;/tree/{tree}/check;Fisharebest\Webtrees\Http\RequestHandlers\CheckTree;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#Fehlersuche
+111;/tree/{tree}/data-fix;Fisharebest\Webtrees\Http\RequestHandlers\DataFixChoose;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#Datenkorrekturen
+112;/tree/{tree}/data-fix;Fisharebest\Webtrees\Http\RequestHandlers\DataFixSelect;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;
+113;/tree/{tree}/data-fix/{data_fix};Fisharebest\Webtrees\Http\RequestHandlers\DataFixPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#Datenkorrekturen
+114;/tree/{tree}/data-fix/{data_fix}/update;Fisharebest\Webtrees\Http\RequestHandlers\DataFixUpdate;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;
+115;/tree/{tree}/data-fix/{data_fix}/update-all;Fisharebest\Webtrees\Http\RequestHandlers\DataFixUpdateAll;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;
+116;/tree/{tree}/data-fix/{data_fix}/data;Fisharebest\Webtrees\Http\RequestHandlers\DataFixData;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#Datenkorrekturen
+117;/tree/{tree}/data-fix/{data_fix}/preview;Fisharebest\Webtrees\Http\RequestHandlers\DataFixPreview;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#Datenkorrekturen
+118;/tree/{tree}/duplicates;Fisharebest\Webtrees\Http\RequestHandlers\FindDuplicateRecords;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#Finde_Duplikate
+119;/tree/{tree}/export;Fisharebest\Webtrees\Http\RequestHandlers\ExportGedcomPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#Export
+120;/tree/{tree}/export-client;Fisharebest\Webtrees\Http\RequestHandlers\ExportGedcomClient;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;
+121;/tree/{tree}/export-server;Fisharebest\Webtrees\Http\RequestHandlers\ExportGedcomServer;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;
+122;/tree/{tree}/import;Fisharebest\Webtrees\Http\RequestHandlers\ImportGedcomPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#Import
+123;/tree/{tree}/import;Fisharebest\Webtrees\Http\RequestHandlers\ImportGedcomAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;
+124;/tree/{tree}/merge-step1;Fisharebest\Webtrees\Http\RequestHandlers\MergeRecordsPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#Datens.C3.A4tze_zusammenf.C3.BCgen
+125;/tree/{tree}/merge-step1;Fisharebest\Webtrees\Http\RequestHandlers\MergeRecordsAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;
+126;/tree/{tree}/merge-step2;Fisharebest\Webtrees\Http\RequestHandlers\MergeFactsPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#Datens.C3.A4tze_zusammenf.C3.BCgen
+127;/tree/{tree}/merge-step2;Fisharebest\Webtrees\Http\RequestHandlers\MergeFactsAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;
+128;/tree/{tree}/preferences;Fisharebest\Webtrees\Http\RequestHandlers\TreePreferencesPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#Einstellungen
+129;/tree/{tree}/preferences;Fisharebest\Webtrees\Http\RequestHandlers\TreePreferencesAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;
+130;/tree/{tree}/renumber;Fisharebest\Webtrees\Http\RequestHandlers\RenumberTreePage;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#Neu_nummerieren
+131;/tree/{tree}/renumber;Fisharebest\Webtrees\Http\RequestHandlers\RenumberTreeAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;
+132;/tree/{tree}/tree-page-edit;Fisharebest\Webtrees\Http\RequestHandlers\TreePageEdit;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Stammbäume#Standardbl.C3.B6cke_f.C3.BCr_neue_Stammb.C3.A4ume_festlegen
+133;/tree/{tree}/load;Fisharebest\Webtrees\Http\RequestHandlers\GedcomLoad;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;
+134;/tree/{tree}/tree-page-update;Fisharebest\Webtrees\Http\RequestHandlers\TreePageUpdate;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;
+135;/tree/{tree}/tree-page-block-edit/{block_id};Fisharebest\Webtrees\Http\RequestHandlers\TreePageBlockEdit;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;Webtrees_Handbuch/Anleitung_für_Administratoren/Stammbäume#Standardbl.C3.B6cke_f.C3.BCr_neue_Stammb.C3.A4ume_festlegen
+136;/tree/{tree}/tree-page-block-update/{block_id};Fisharebest\Webtrees\Http\RequestHandlers\TreePageBlockUpdate;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;
+137;/tree/{tree}/privacy;Fisharebest\Webtrees\Http\RequestHandlers\TreePrivacyPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#Datenschutz
+138;/tree/{tree}/privacy;Fisharebest\Webtrees\Http\RequestHandlers\TreePrivacyAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;
+139;/tree/{tree}/unconnected;Fisharebest\Webtrees\Http\RequestHandlers\UnconnectedPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#Finde_unverbundene_Personen
+140;/tree/{tree}/unconnected;Fisharebest\Webtrees\Http\RequestHandlers\UnconnectedAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;
+141;/tree/{tree}/accept;Fisharebest\Webtrees\Http\RequestHandlers\PendingChangesAcceptTree;POST;Fisharebest\Webtrees\Http\Middleware\AuthModerator;;standard;10;
+142;/tree/{tree}/accept/{xref};Fisharebest\Webtrees\Http\RequestHandlers\PendingChangesAcceptRecord;POST;Fisharebest\Webtrees\Http\Middleware\AuthModerator;;standard;10;
+143;/tree/{tree}/accept/{xref}/{change};Fisharebest\Webtrees\Http\RequestHandlers\PendingChangesAcceptChange;POST;Fisharebest\Webtrees\Http\Middleware\AuthModerator;;standard;10;
+144;/tree/{tree}/pending;Fisharebest\Webtrees\Http\RequestHandlers\PendingChanges;GET;Fisharebest\Webtrees\Http\Middleware\AuthModerator;;standard;10;Webtrees_Handbuch/Anleitung_für_Moderatoren#Ausstehende_.C3.84nderungen
+145;/tree/{tree}/reject;Fisharebest\Webtrees\Http\RequestHandlers\PendingChangesRejectTree;POST;Fisharebest\Webtrees\Http\Middleware\AuthModerator;;standard;10;
+146;/tree/{tree}/reject/{xref};Fisharebest\Webtrees\Http\RequestHandlers\PendingChangesRejectRecord;POST;Fisharebest\Webtrees\Http\Middleware\AuthModerator;;standard;10;
+147;/tree/{tree}/reject/{xref}/{change};Fisharebest\Webtrees\Http\RequestHandlers\PendingChangesRejectChange;POST;Fisharebest\Webtrees\Http\Middleware\AuthModerator;;standard;10;
+148;/tree/{tree}/autocomplete/citation;Fisharebest\Webtrees\Http\RequestHandlers\AutoCompleteCitation;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+149;/tree/{tree}/autocomplete/folder;Fisharebest\Webtrees\Http\RequestHandlers\AutoCompleteFolder;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+150;/tree/{tree}/add-child-to-family/{xref};Fisharebest\Webtrees\Http\RequestHandlers\AddChildToFamilyAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+151;/tree/{tree}/add-fact/{xref};Fisharebest\Webtrees\Http\RequestHandlers\SelectNewFact;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+152;/tree/{tree}/add-media-file/{xref};Fisharebest\Webtrees\Http\RequestHandlers\AddMediaFileModal;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Medien-Datens.C3.A4tze
+153;/tree/{tree}/add-media-file/{xref};Fisharebest\Webtrees\Http\RequestHandlers\AddMediaFileAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+154;/tree/{tree}/add-spouse-to-family/{xref};Fisharebest\Webtrees\Http\RequestHandlers\AddSpouseToFamilyAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+155;/tree/{tree}/change-family-members;Fisharebest\Webtrees\Http\RequestHandlers\ChangeFamilyMembersPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+156;/tree/{tree}/change-family-members;Fisharebest\Webtrees\Http\RequestHandlers\ChangeFamilyMembersAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+157;/tree/{tree}/create-media-object;Fisharebest\Webtrees\Http\RequestHandlers\CreateMediaObjectModal;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Medien-Datens.C3.A4tze
+158;/tree/{tree}/create-media-object;Fisharebest\Webtrees\Http\RequestHandlers\CreateMediaObjectAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+159;/tree/{tree}/create-media-from-file;Fisharebest\Webtrees\Http\RequestHandlers\CreateMediaObjectFromFile;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+160;/tree/{tree}/copy/{xref}/{fact_id};Fisharebest\Webtrees\Http\RequestHandlers\CopyFact;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+161;/tree/{tree}/create-note-object;Fisharebest\Webtrees\Http\RequestHandlers\CreateNoteModal;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Notizen-Datens.C3.A4tze
+162;/tree/{tree}/create-note-object;Fisharebest\Webtrees\Http\RequestHandlers\CreateNoteAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+163;/tree/{tree}/create-repository;Fisharebest\Webtrees\Http\RequestHandlers\CreateRepositoryModal;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Archive-Datens.C3.A4tze
+164;/tree/{tree}/create-repository;Fisharebest\Webtrees\Http\RequestHandlers\CreateRepositoryAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+165;/tree/{tree}/create-source;Fisharebest\Webtrees\Http\RequestHandlers\CreateSourceModal;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Quellen-Datens.C3.A4tze
+166;/tree/{tree}/create-source;Fisharebest\Webtrees\Http\RequestHandlers\CreateSourceAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+167;/tree/{tree}/create-submitter;Fisharebest\Webtrees\Http\RequestHandlers\CreateSubmitterModal;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#HEAD-_und_SUBN-Datens.C3.A4tze
+168;/tree/{tree}/create-submitter;Fisharebest\Webtrees\Http\RequestHandlers\CreateSubmitterAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+169;/tree/{tree}/create-submission;Fisharebest\Webtrees\Http\RequestHandlers\CreateSubmissionModal;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#HEAD-_und_SUBN-Datens.C3.A4tze
+170;/tree/{tree}/create-submission;Fisharebest\Webtrees\Http\RequestHandlers\CreateSubmissionAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+171;/tree/{tree}/delete/{xref};Fisharebest\Webtrees\Http\RequestHandlers\DeleteRecord;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+172;/tree/{tree}/delete/{xref}/{fact_id};Fisharebest\Webtrees\Http\RequestHandlers\DeleteFact;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+173;/tree/{tree}/update-fact/{xref}{/fact_id};Fisharebest\Webtrees\Http\RequestHandlers\EditFactAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+174;/tree/{tree}/edit-media-file/{xref}/{fact_id};Fisharebest\Webtrees\Http\RequestHandlers\EditMediaFileModal;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Medien-Datens.C3.A4tze
+175;/tree/{tree}/edit-media-file/{xref}/{fact_id};Fisharebest\Webtrees\Http\RequestHandlers\EditMediaFileAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+176;/tree/{tree}/edit-note-object/{xref};Fisharebest\Webtrees\Http\RequestHandlers\EditNotePage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Notizen-Datens.C3.A4tze
+177;/tree/{tree}/edit-note-object/{xref};Fisharebest\Webtrees\Http\RequestHandlers\EditNoteAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+178;/tree/{tree}/edit-raw/{xref}/{fact_id};Fisharebest\Webtrees\Http\RequestHandlers\EditRawFactPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Bearbeiten_der_GEDCOM-Rohdaten
+179;/tree/{tree}/edit-raw/{xref}/{fact_id};Fisharebest\Webtrees\Http\RequestHandlers\EditRawFactAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+180;/tree/{tree}/edit-raw/{xref};Fisharebest\Webtrees\Http\RequestHandlers\EditRawRecordPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Bearbeiten_der_GEDCOM-Rohdaten
+181;/tree/{tree}/edit-raw/{xref};Fisharebest\Webtrees\Http\RequestHandlers\EditRawRecordAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+182;/tree/{tree}/link-media-to-family/{xref};Fisharebest\Webtrees\Http\RequestHandlers\LinkMediaToFamilyModal;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+183;/tree/{tree}/link-media-to-individual/{xref};Fisharebest\Webtrees\Http\RequestHandlers\LinkMediaToIndividualModal;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+184;/tree/{tree}/link-media-to-source/{xref};Fisharebest\Webtrees\Http\RequestHandlers\LinkMediaToSourceModal;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+185;/tree/{tree}/link-media-to-record/{xref};Fisharebest\Webtrees\Http\RequestHandlers\LinkMediaToRecordAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+186;/tree/{tree}/edit-record/{xref};Fisharebest\Webtrees\Http\RequestHandlers\EditRecordPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+187;/tree/{tree}/update-record/{xref};Fisharebest\Webtrees\Http\RequestHandlers\EditRecordAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+188;/tree/{tree}/paste-fact/{xref};Fisharebest\Webtrees\Http\RequestHandlers\PasteFact;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+189;/tree/{tree}/reorder-children/{xref};Fisharebest\Webtrees\Http\RequestHandlers\ReorderChildrenPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Familien-Datens.C3.A4tze
+190;/tree/{tree}/reorder-children/{xref};Fisharebest\Webtrees\Http\RequestHandlers\ReorderChildrenAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+191;/tree/{tree}/reorder-media/{xref};Fisharebest\Webtrees\Http\RequestHandlers\ReorderMediaPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+192;/tree/{tree}/reorder-media/{xref};Fisharebest\Webtrees\Http\RequestHandlers\ReorderMediaAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+193;/tree/{tree}/reorder-media-files/{xref};Fisharebest\Webtrees\Http\RequestHandlers\ReorderMediaFilesPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+194;/tree/{tree}/reorder-media-files/{xref};Fisharebest\Webtrees\Http\RequestHandlers\ReorderMediaFilesAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+195;/tree/{tree}/reorder-names/{xref};Fisharebest\Webtrees\Http\RequestHandlers\ReorderNamesPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+196;/tree/{tree}/reorder-names/{xref};Fisharebest\Webtrees\Http\RequestHandlers\ReorderNamesAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+197;/tree/{tree}/reorder-spouses/{xref};Fisharebest\Webtrees\Http\RequestHandlers\ReorderFamiliesPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Familien-Datens.C3.A4tze
+198;/tree/{tree}/reorder-spouses/{xref};Fisharebest\Webtrees\Http\RequestHandlers\ReorderFamiliesAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+199;/tree/{tree}/search-replace;Fisharebest\Webtrees\Http\RequestHandlers\SearchReplacePage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Suchen-Men.C3.BC
+200;/tree/{tree}/search-replace;Fisharebest\Webtrees\Http\RequestHandlers\SearchReplaceAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+201;/tree/{tree}/add-child-to-individual/{xref};Fisharebest\Webtrees\Http\RequestHandlers\AddChildToIndividualAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+202;/tree/{tree}/add-parent-to-individual/{xref};Fisharebest\Webtrees\Http\RequestHandlers\AddParentToIndividualAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+203;/tree/{tree}/add-spouse-to-individual/{xref};Fisharebest\Webtrees\Http\RequestHandlers\AddSpouseToIndividualAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+204;/tree/{tree}/add-unlinked-individual;Fisharebest\Webtrees\Http\RequestHandlers\AddUnlinkedAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+205;/tree/{tree}/link-child-to-family/{xref};Fisharebest\Webtrees\Http\RequestHandlers\LinkChildToFamilyPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Familien-Datens.C3.A4tze
+206;/tree/{tree}/link-child-to-family/{xref};Fisharebest\Webtrees\Http\RequestHandlers\LinkChildToFamilyAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+207;/tree/{tree}/link-spouse-to-individual/{xref};Fisharebest\Webtrees\Http\RequestHandlers\LinkSpouseToIndividualPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Familien-Datens.C3.A4tze
+208;/tree/{tree}/link-spouse-to-individual/{xref};Fisharebest\Webtrees\Http\RequestHandlers\LinkSpouseToIndividualAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+209;/tree/{tree}/message-select;Fisharebest\Webtrees\Http\RequestHandlers\MessageSelect;POST;Fisharebest\Webtrees\Http\Middleware\AuthLoggedIn;;standard;10;
+210;/tree/{tree}/message-compose;Fisharebest\Webtrees\Http\RequestHandlers\MessagePage;GET;Fisharebest\Webtrees\Http\Middleware\AuthLoggedIn;;standard;10;
+211;/tree/{tree}/message-send;Fisharebest\Webtrees\Http\RequestHandlers\MessageAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthLoggedIn;;standard;10;
+212;/tree/{tree}/my-page;Fisharebest\Webtrees\Http\RequestHandlers\UserPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthLoggedIn;;standard;10;Webtrees_Handbuch/Anleitung_für_Mitglieder#Meine_Seiten
+213;/tree/{tree}/my-page-block;Fisharebest\Webtrees\Http\RequestHandlers\UserPageBlock;GET;Fisharebest\Webtrees\Http\Middleware\AuthLoggedIn;;standard;10;Webtrees_Handbuch/Anleitung_für_Mitglieder#Meine_Seiten
+214;/tree/{tree}/my-page-edit;Fisharebest\Webtrees\Http\RequestHandlers\UserPageEdit;GET;Fisharebest\Webtrees\Http\Middleware\AuthLoggedIn;;standard;10;Webtrees_Handbuch/Anleitung_für_Mitglieder#Meine_Seiten
+215;/tree/{tree}/my-page-edit;Fisharebest\Webtrees\Http\RequestHandlers\UserPageUpdate;POST;Fisharebest\Webtrees\Http\Middleware\AuthLoggedIn;;standard;10;
+216;/tree/{tree}/my-page-block-edit/{block_id};Fisharebest\Webtrees\Http\RequestHandlers\UserPageBlockEdit;GET;Fisharebest\Webtrees\Http\Middleware\AuthLoggedIn;;standard;10;Webtrees_Handbuch/Anleitung_für_Mitglieder#Meine_Seiten
+217;/tree/{tree}/my-page-block-edit/{block_id};Fisharebest\Webtrees\Http\RequestHandlers\UserPageBlockUpdate;POST;Fisharebest\Webtrees\Http\Middleware\AuthLoggedIn;;standard;10;
+218;/my-account{/tree};Fisharebest\Webtrees\Http\RequestHandlers\AccountEdit;GET;Fisharebest\Webtrees\Http\Middleware\AuthLoggedIn;;standard;10;Webtrees_Handbuch/Anleitung_für_Mitglieder#Mein_Konto
+219;/my-account{/tree};Fisharebest\Webtrees\Http\RequestHandlers\AccountUpdate;POST;Fisharebest\Webtrees\Http\Middleware\AuthLoggedIn;;standard;10;
+220;/my-account-delete;Fisharebest\Webtrees\Http\RequestHandlers\AccountDelete;POST;Fisharebest\Webtrees\Http\Middleware\AuthLoggedIn;;standard;10;
+221;/empty-clipboard;Fisharebest\Webtrees\Http\RequestHandlers\EmptyClipboard;POST;Fisharebest\Webtrees\Http\Middleware\AuthLoggedIn;;standard;10;
+222;/login{/tree};Fisharebest\Webtrees\Http\RequestHandlers\LoginPage;GET;;;standard;10;Webtrees_Handbuch/Anleitung_für_Besucher#Anmelden
+223;/login{/tree};Fisharebest\Webtrees\Http\RequestHandlers\LoginAction;POST;;;standard;10;
+224;/password-request{/tree};Fisharebest\Webtrees\Http\RequestHandlers\PasswordRequestPage;GET;;;standard;10;
+225;/password-request{/tree};Fisharebest\Webtrees\Http\RequestHandlers\PasswordRequestAction;POST;;;standard;10;
+226;/register{/tree};Fisharebest\Webtrees\Http\RequestHandlers\RegisterPage;GET;;;standard;10;Webtrees_Handbuch/Anleitung_für_Besucher#Anmelden
+227;/register{/tree};Fisharebest\Webtrees\Http\RequestHandlers\RegisterAction;POST;;;standard;10;
+228;/password-reset/{token}{/tree};Fisharebest\Webtrees\Http\RequestHandlers\PasswordResetPage;GET;;;standard;10;
+229;/password-reset/{token}{/tree};Fisharebest\Webtrees\Http\RequestHandlers\PasswordResetAction;POST;;;standard;10;
+230;/verify/{username}/{token}{/tree};Fisharebest\Webtrees\Http\RequestHandlers\VerifyEmail;GET;;;standard;10;
+231;/tree/{tree};Fisharebest\Webtrees\Http\RequestHandlers\TreePage;GET;;;standard;10;Webtrees_Handbuch/Anleitung_für_Besucher
+232;/tree/{tree}/autocomplete/surname;Fisharebest\Webtrees\Http\RequestHandlers\AutoCompleteSurname;GET;;;standard;10;
+233;/tree/{tree}/calendar/{view};Fisharebest\Webtrees\Http\RequestHandlers\CalendarPage;GET;;;standard;10;Webtrees_Handbuch/Anleitung_für_Besucher#Kalender
+234;/tree/{tree}/calendar/{view};Fisharebest\Webtrees\Http\RequestHandlers\CalendarAction;POST;;;standard;10;
+235;/tree/{tree}/calendar-events/{view};Fisharebest\Webtrees\Http\RequestHandlers\CalendarEvents;GET;;;standard;10;Webtrees_Handbuch/Anleitung_für_Besucher#Kalender
+236;/tree/{tree}/contact;Fisharebest\Webtrees\Http\RequestHandlers\ContactPage;GET;;;standard;10;
+237;/tree/{tree}/contact;Fisharebest\Webtrees\Http\RequestHandlers\ContactAction;POST;;;standard;10;
+238;/tree/{tree}/family/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\FamilyPage;GET;;;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Familien-Datens.C3.A4tze
+239;/tree/{tree}/header/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\HeaderPage;GET;;;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#HEAD-_und_SUBN-Datens.C3.A4tze
+240;/tree/{tree}/individual/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\IndividualPage;GET;;;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Personen-Datens.C3.A4tze
+241;/tree/{tree}/media-thumbnail;Fisharebest\Webtrees\Http\RequestHandlers\MediaFileThumbnail;GET;;;standard;10;
+242;/tree/{tree}/media-download;Fisharebest\Webtrees\Http\RequestHandlers\MediaFileDownload;GET;;;standard;10;
+243;/tree/{tree}/media/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\MediaPage;GET;;;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Medien-Datens.C3.A4tze
+244;/tree/{tree}/note/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\NotePage;GET;;;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Notizen-Datens.C3.A4tze
+245;/tree/{tree}/shared-note/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\SharedNotePage;GET;;;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Notizen-Datens.C3.A4tze
+246;/tree/{tree}/repository/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\RepositoryPage;GET;;;standard;10;Webtrees_Handbuch/Anleitung_für_Bearbeiter#Archive-Datens.C3.A4tze
+247;/tree/{tree}/report;Fisharebest\Webtrees\Http\RequestHandlers\ReportListPage;GET;;;standard;10;Webtrees_Handbuch/Anleitung_für_Besucher#Berichte
+248;/tree/{tree}/report;Fisharebest\Webtrees\Http\RequestHandlers\ReportListAction;POST;;;standard;10;
+249;/tree/{tree}/report/{report};Fisharebest\Webtrees\Http\RequestHandlers\ReportSetupPage;GET;;;standard;10;Webtrees_Handbuch/Anleitung_für_Besucher#Berichte
+250;/tree/{tree}/report/{report};Fisharebest\Webtrees\Http\RequestHandlers\ReportSetupAction;POST;;;standard;10;
+251;/tree/{tree}/report-run/{report};Fisharebest\Webtrees\Http\RequestHandlers\ReportGenerate;GET;;;standard;10;Webtrees_Handbuch/Anleitung_für_Besucher#Berichte
+252;/tree/{tree}/search-advanced;Fisharebest\Webtrees\Http\RequestHandlers\SearchAdvancedPage;GET;;;standard;10;Webtrees_Handbuch/Anleitung_für_Besucher#Suchen
+253;/tree/{tree}/search-advanced;Fisharebest\Webtrees\Http\RequestHandlers\SearchAdvancedAction;POST;;;standard;10;
+254;/tree/{tree}/search-general;Fisharebest\Webtrees\Http\RequestHandlers\SearchGeneralPage;GET;;;standard;10;Webtrees_Handbuch/Anleitung_für_Besucher#Suchen
+255;/tree/{tree}/search-general;Fisharebest\Webtrees\Http\RequestHandlers\SearchGeneralAction;POST;;;standard;10;
+256;/tree/{tree}/search-phonetic;Fisharebest\Webtrees\Http\RequestHandlers\SearchPhoneticPage;GET;;;standard;10;Webtrees_Handbuch/Anleitung_für_Besucher#Suchen
+257;/tree/{tree}/search-phonetic;Fisharebest\Webtrees\Http\RequestHandlers\SearchPhoneticAction;POST;;;standard;10;
+258;/tree/{tree}/search-quick;Fisharebest\Webtrees\Http\RequestHandlers\SearchQuickAction;POST;;;standard;10;
+259;/tree/{tree}/source/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\SourcePage;GET;;;standard;10;Webtrees_Handbuch/Anleitung_für_Besucher#Quellen
+260;/tree/{tree}/submission/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\SubmissionPage;GET;;;standard;10;
+261;/tree/{tree}/submitter/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\SubmitterPage;GET;;;standard;10;
+262;/tree/{tree}/tom-select-family;Fisharebest\Webtrees\Http\RequestHandlers\TomSelectFamily;GET;;;standard;10;
+263;/tree/{tree}/tom-select-individual;Fisharebest\Webtrees\Http\RequestHandlers\TomSelectIndividual;GET;;;standard;10;
+264;/tree/{tree}/tom-select-location;Fisharebest\Webtrees\Http\RequestHandlers\TomSelectLocation;GET;;;standard;10;
+265;/tree/{tree}/tom-select-media;Fisharebest\Webtrees\Http\RequestHandlers\TomSelectMediaObject;GET;;;standard;10;
+266;/tree/{tree}/tom-select-note;Fisharebest\Webtrees\Http\RequestHandlers\TomSelectNote;GET;;;standard;10;
+267;/tree/{tree}/tom-select-shared-note;Fisharebest\Webtrees\Http\RequestHandlers\TomSelectSharedNote;GET;;;standard;10;
+268;/tree/{tree}/tom-select-place;Fisharebest\Webtrees\Http\RequestHandlers\TomSelectPlace;GET;;;standard;10;
+269;/tree/{tree}/tom-select-source;Fisharebest\Webtrees\Http\RequestHandlers\TomSelectSource;GET;;;standard;10;
+270;/tree/{tree}/tom-select-submission;Fisharebest\Webtrees\Http\RequestHandlers\TomSelectSubmission;GET;;;standard;10;
+271;/tree/{tree}/tom-select-submitter;Fisharebest\Webtrees\Http\RequestHandlers\TomSelectSubmitter;GET;;;standard;10;
+272;/tree/{tree}/tom-select-repository;Fisharebest\Webtrees\Http\RequestHandlers\TomSelectRepository;GET;;;standard;10;
+273;/tree/{tree}/tree-page-block;Fisharebest\Webtrees\Http\RequestHandlers\TreePageBlock;GET;;;standard;10;
+274;/tree/{tree}/…;example;GET;;;standard;10;
+275;/module/{module}/{action}/{tree};Fisharebest\Webtrees\Http\RequestHandlers\ModuleAction;GET|POST;;;standard;10;
+276;/module/{module}/{action};Fisharebest\Webtrees\Http\RequestHandlers\ModuleAction;GET|POST;;;standard;10;
+277;/module/{module}/{action}{/tree};module;GET;;;standard;10;
+278;/help/{topic};Fisharebest\Webtrees\Http\RequestHandlers\HelpText;GET;;;standard;10;
+279;/language/{language};Fisharebest\Webtrees\Http\RequestHandlers\SelectLanguage;POST;;;standard;10;
+280;/logout;Fisharebest\Webtrees\Http\RequestHandlers\Logout;POST;;;standard;10;
+281;/ping;Fisharebest\Webtrees\Http\RequestHandlers\Ping;GET|HEAD;;;standard;10;
+282;/theme/{theme};Fisharebest\Webtrees\Http\RequestHandlers\SelectTheme;POST;;;standard;10;
+283;/;Fisharebest\Webtrees\Http\RequestHandlers\HomePage;GET;;;standard;10;
+284;/ads.txt;Fisharebest\Webtrees\Http\RequestHandlers\AdsTxt;GET;;;standard;10;
+285;/app-ads.txt;Fisharebest\Webtrees\Http\RequestHandlers\AppAdsTxt;GET;;;standard;10;
+286;/apple-touch-icon.png;Fisharebest\Webtrees\Http\RequestHandlers\AppleTouchIconPng;GET;;;standard;10;
+287;/browserconfig.xml;Fisharebest\Webtrees\Http\RequestHandlers\BrowserconfigXml;GET;;;standard;10;
+288;/favicon.ico;Fisharebest\Webtrees\Http\RequestHandlers\FaviconIco;GET;;;standard;10;
+289;/robots.txt;Fisharebest\Webtrees\Http\RequestHandlers\RobotsTxt;GET;;;standard;10;
+290;/webmanifest.json;Fisharebest\Webtrees\Http\RequestHandlers\WebmanifestJson;GET;;;standard;10;
+291;/tree/{tree}/ancestors-{style}-{generations}/{xref};Fisharebest\Webtrees\Module\AncestorsChartModule;GET|POST;;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
+292;/tree/{tree}/branches{/surname};Fisharebest\Webtrees\Module\BranchesListModule;GET|POST;;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Listen
+293;/tree/{tree}/compact/{xref};Fisharebest\Webtrees\Module\CompactTreeChartModule;GET|POST;;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
+294;/tree/{tree}/descendants-{style}-{generations}/{xref};Fisharebest\Webtrees\Module\DescendancyChartModule;GET|POST;;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
+295;/tree/{tree}/family-book-{book_size}-{generations}-{spouses}/{xref};Fisharebest\Webtrees\Module\FamilyBookChartModule;GET|POST;;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
+296;/tree/{tree}/family-list;Fisharebest\Webtrees\Module\FamilyListModule;GET;;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Listen
+297;/tree/{tree}/fan-chart-{style}-{generations}-{width}/{xref};Fisharebest\Webtrees\Module\FanChartModule;GET|POST;;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
+298;/tree/{tree}/hourglass-{generations}-{spouses}/{xref};Fisharebest\Webtrees\Module\HourglassChartModule;GET|POST;;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
+299;/tree/{tree}/individual-list;Fisharebest\Webtrees\Module\IndividualListModule;GET;;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Listen
+329;/tree/{tree}/lifespans;Fisharebest\Webtrees\Module\LifespansChartModule;GET|POST;;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
+330;/tree/{tree}/media-list;Fisharebest\Webtrees\Module\MediaListModule;GET|POST;;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Listen
+331;/tree/{tree}/note-list;Fisharebest\Webtrees\Module\NoteListModule;GET;;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Listen
+332;/tree/{tree}/pedigree-map-{generations}/{xref};Fisharebest\Webtrees\Module\PedigreeMapModule;GET|POST;;;standard module;10;
+333;/tree/{tree}/pedigree-{style}-{generations}/{xref};Fisharebest\Webtrees\Module\PedigreeChartModule;GET|POST;;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
+334;/tree/{tree}/place-list{/place_id};Fisharebest\Webtrees\Module\PlaceHierarchyListModule;GET;;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Listen
+335;/tree/{tree}/relationships-{ancestors}-{recursion}/{xref}{/xref2};Fisharebest\Webtrees\Module\RelationshipsChartModule;GET|POST;;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
+336;/tree/{tree}/repository-list;Fisharebest\Webtrees\Module\RepositoryListModule;GET;;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Listen
+337;/tree/{tree}/anniversary-ics/{xref}/{fact_id};Fisharebest\Webtrees\Module\ShareAnniversaryModule;GET;;;standard module;10;
+338;/tree/{tree}/source-list;Fisharebest\Webtrees\Module\SourceListModule;GET;;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Listen
+339;/tree/{tree}/submitter-list;Fisharebest\Webtrees\Module\SubmitterListModule;GET;;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Listen
+340;/tree/{tree}/timeline-{scale};Fisharebest\Webtrees\Module\TimelineChartModule;GET|POST;;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
+341;/admin/gov-data;Cissee\Webtrees\Module\Gov4Webtrees\Http\RequestHandlers\GovDataList;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;custom module;10;
+342;/admin/gov-data/{gov_id};Cissee\Webtrees\Module\Gov4Webtrees\Http\RequestHandlers\GovData;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;custom module;10;
+343;/admin/gov-data-edit/{type}/{key};Cissee\Webtrees\Module\Gov4Webtrees\Http\RequestHandlers\GovDataEdit;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;custom module;10;
+344;/admin/gov-data-update;Cissee\Webtrees\Module\Gov4Webtrees\Http\RequestHandlers\GovDataSave;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;custom module;10;
+345;/admin/gov-data-delete/{type}/{key};Cissee\Webtrees\Module\Gov4Webtrees\Http\RequestHandlers\GovDataDelete;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;custom module;10;
+346;/tree/{tree}/tom-select-source-with-suggestions;Cissee\Webtrees\Module\ResearchSuggestions\TomSelectSourceWithSuggestions;GET;;;custom module;10;
+347;/tree/{tree}/record/{xref}{/slug};Cissee\WebtreesExt\GedcomRecordPageTempReplacement;GET;;;custom module;10;
+348;/tree/{tree}/edit-main/{xref};Cissee\WebtreesExt\Http\RequestHandlers\EditMainFieldsPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;custom module;10;
+349;/tree/{tree}/edit-main/{xref};Cissee\WebtreesExt\Http\RequestHandlers\EditMainFieldsAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;custom module;10;
+350;/tree/{tree}/config-gedcom-field/{tag}/{indent};Cissee\WebtreesExt\Http\RequestHandlers\ConfigGedcomField;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;custom module;10;
+351;/tree/{tree}/config-gedcom-field-action;Cissee\WebtreesExt\Http\RequestHandlers\ConfigGedcomFieldAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;custom module;10;
+352;/tree/{tree}/add-fact/{xref}/{fact};Cissee\WebtreesExt\Http\RequestHandlers\AddNewFactExt;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;custom module;10;
+353;/tree/{tree}/edit-fact/{xref}/{fact_id};Cissee\WebtreesExt\Http\RequestHandlers\EditFactPageExt;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;custom module;10;
+354;/tree/{tree}/add-child-to-family/{xref}/{sex};Cissee\WebtreesExt\Http\RequestHandlers\AddChildToFamilyPageExt;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;custom module;10;
+355;/tree/{tree}/add-child-to-individual/{xref};Cissee\WebtreesExt\Http\RequestHandlers\AddChildToIndividualPageExt;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;custom module;10;
+356;/tree/{tree}/add-parent-to-individual/{xref}/{sex};Cissee\WebtreesExt\Http\RequestHandlers\AddParentToIndividualPageExt;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;custom module;10;
+357;/tree/{tree}/add-spouse-to-family/{xref}/{sex};Cissee\WebtreesExt\Http\RequestHandlers\AddSpouseToFamilyPageExt;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;custom module;10;
+358;/tree/{tree}/add-spouse-to-individual/{xref};Cissee\WebtreesExt\Http\RequestHandlers\AddSpouseToIndividualPageExt;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;custom module;10;
+359;/tree/{tree}/add-unlinked-individual;Cissee\WebtreesExt\Http\RequestHandlers\AddUnlinkedPageExt;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;custom module;10;
+360;/tree/{tree}/vesta-pedigree-map-{generations}/{xref};Cissee\Webtrees\Module\PPM\PlacesAndPedigreeMapModuleExtended;GET|POST;;;custom module;10;Webtrees_Handbuch/Anleitung_für_Besucher/Diagramme_Vergleichstabelle
+361;/tree/{tree}/vesta-place-list;Cissee\WebtreesExt\Http\Controllers\GenericPlaceHierarchyController;GET;;;custom module;10;
+362;/tree/{tree}/vesta-relationships-{ancestors}-{recursion}/{xref}{/xref2};Cissee\Webtrees\Module\ExtendedRelationships\ExtendedRelationshipModule;GET|POST;;;custom module;10;Webtrees_Handbuch/Anleitung_für_Besucher/Diagramme_Vergleichstabelle
+363;/tree/{tree}/individual-patriarchs-list;Cissee\Webtrees\Module\ExtendedRelationships\ExtendedIndividualListRequestHandler;GET;;;custom module;10;
+364;/tree/{tree}/vesta-pedigree-{kind}-{style}-{generations}/{xref};Cissee\Webtrees\Module\ExtendedRelationships\ExtendedPedigreeChartModule;GET|POST;;;custom module;10;Webtrees_Handbuch/Anleitung_für_Besucher/Diagramme_Vergleichstabelle
+365;/tree/{tree}/vesta-lca-{style}/{xref}{/xref2};Cissee\Webtrees\Module\ExtendedRelationships\LCAChartModule;GET|POST;;;custom module;10;Webtrees_Handbuch/Anleitung_für_Besucher/Diagramme_Vergleichstabelle
+366;/tree/{tree}/autocomplete/place;Cissee\WebtreesExt\Http\RequestHandlers\AutoCompletePlaceExt;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;custom module;10;
+367;/tree/{tree}/sharedPlace/{xref}{/slug};Cissee\WebtreesExt\Http\RequestHandlers\SharedPlacePage;GET;;;custom module;10;
+368;/tree/{tree}/shared-place-list;Cissee\Webtrees\Module\SharedPlaces\SharedPlacesModule;GET;;;custom module;10;
+369;/tree/{tree}/create-location;Cissee\WebtreesExt\Http\RequestHandlers\CreateSharedPlaceModal;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;custom module;10;
+370;/tree/{tree}/create-location;Cissee\WebtreesExt\Http\RequestHandlers\CreateSharedPlaceAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;custom module;10;
+371;/tree/{tree}/tom-select-shared-place;Cissee\WebtreesExt\Http\RequestHandlers\TomSelectSharedPlace;GET;;;custom module;10;
+375;/ancestry.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectAncestryPhp;GET;;;standard redirect;10;
+376;/branches.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectBranchesPhp;GET;;;standard redirect;10;
+377;/calendar.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectCalendarPhp;GET;;;standard redirect;10;
+378;/compact.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectCompactPhp;GET;;;standard redirect;10;
+379;/compact.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectDescendencyPhp;GET;;;standard redirect;10;
+380;/family.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectFamilyPhp;GET;;;standard redirect;10;
+382;/familybook.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectFamilyBookPhp;GET;;;standard redirect;10;
+381;/famlist.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectFamListPhp;GET;;;standard redirect;10;
+383;/fanchart.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectFanChartPhp;GET;;;standard redirect;10;
+384;/gedrecord.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectGedRecordPhp;GET;;;standard redirect;10;
+385;/hourglass.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectHourGlassPhp;GET;;;standard redirect;10;
+386;/indilist.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectIndiListPhp;GET;;;standard redirect;10;
+387;/individual.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectIndividualPhp;GET;;;standard redirect;10;
+388;/lifespan.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectLifeSpanPhp;GET;;;standard redirect;10;
+389;/medialist.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectMediaListPhp;GET;;;standard redirect;10;
+390;/mediaviewer.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectMediaViewerPhp;GET;;;standard redirect;10;
+391;/module.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectModulePhp;GET;;;standard redirect;10;
+372;/module/{module}/{action};_vesta_classic_look_and_feel_;GET;;;custom module;20;https://github.com/vesta-webtrees-2-custom-modules/vesta_classic_laf
+374;/module/{module}/{action};module-no-tree;GET|POST;;;standard;10;
+373;/module/{module}/{action}/{tree};module-tree;GET|POST;;;standard;10;
+392;/note.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectNotePhp;GET;;;standard redirect;10;
+393;/notelist.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectNoteListPhp;GET;;;standard redirect;10;
+394;/pedigree.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectPedigreePhp;GET;;;standard redirect;10;
+395;/placelist.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectPlaceListPhp;GET;;;standard redirect;10;
+396;/relationship.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectRelationshipPhp;GET;;;standard redirect;10;
+398;/repolist.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectRepoListPhp;GET;;;standard redirect;10;
+399;/reportengine.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectReportEnginePhp;GET;;;standard redirect;10;
+397;/repository.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectRepositoryPhp;GET;;;standard redirect;10;
+401;/source.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectSourcePhp;GET;;;standard redirect;10;
+400;/sourcelist.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectSourceListPhp;GET;;;standard redirect;10;
+402;/statistics.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectStatisticsPhp;GET;;;standard redirect;10;
+403;/timeline.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectTimeLinePhp;GET;;;standard redirect;10;
+407;/tree/{tree}/add-child-to-family/{xref}/{sex};Fisharebest\Webtrees\Http\RequestHandlers\AddChildToFamilyPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+408;/tree/{tree}/add-child-to-individual/{xref};Fisharebest\Webtrees\Http\RequestHandlers\AddChildToIndividualPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+405;/tree/{tree}/add-fact/{xref}/{fact};Fisharebest\Webtrees\Http\RequestHandlers\AddNewFact;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+409;/tree/{tree}/add-parent-to-individual/{xref}/{sex};Fisharebest\Webtrees\Http\RequestHandlers\AddParentToIndividualPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+410;/tree/{tree}/add-spouse-to-family/{xref}/{sex};Fisharebest\Webtrees\Http\RequestHandlers\AddSpouseToFamilyPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+411;/tree/{tree}/add-spouse-to-individual/{xref};Fisharebest\Webtrees\Http\RequestHandlers\AddSpouseToIndividualPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+412;/tree/{tree}/add-unlinked-individual;Fisharebest\Webtrees\Http\RequestHandlers\AddUnlinkedPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+413;/tree/{tree}/autocomplete/place;Fisharebest\Webtrees\Http\RequestHandlers\AutoCompletePlace;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+406;/tree/{tree}/edit-fact/{xref}/{fact_id};Fisharebest\Webtrees\Http\RequestHandlers\EditFactPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
+404;/tree/{tree}/record/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\GedcomRecordPage;GET;;;standard;10;
+415;/tree/{tree}/shared-place-list;Fisharebest\Webtrees\Module\LocationListModule;GET;;;standard module;10;
+414;/tree/{tree}/sharedPlace/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\LocationPage;GET;;;standard;10;
+416;/tree/{tree}/duplicatesMTV;HuHwt\WebtreesMods\Http\RequestHandlers\FindDuplicateRecordsMTV;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;;custom module;10;
+417;/tree/{tree}/mult-treeview;HuHwt\WebtreesMods\Http\RequestHandlers\MultTreeViewRH;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;;custom module;10;
+418;/tree/{tree}/treeXTV;HuHwt\WebtreesMods\InteractiveTreeXT\InteractiveTreeXTmod;GET|POST;;;custom module;10;Webtrees_Handbuch/Anleitung_f%C3%BCr_Webmaster/Erweiterungsmodule/Treeview-Extended
+419;/tree/{tree}/LINaction;HuHwt\WebtreesMods\LINchart\LINaction;GET;;;custom module;10;Webtrees_Handbuch/Anleitung_f%C3%BCr_Webmaster/Erweiterungsmodule/TAM_und_Lineage
+420;/tree/{tree}/treeMTV;HuHwt\WebtreesMods\Module\InteractiveTree\InteractiveTreeModMTV;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;;custom module;10;
+421;/module_update_page;Jefferson49\Webtrees\Module\CustomModuleManager\RequestHandlers\CustomModuleUpdatePage;GET|POST;;;custom module;10;
+422;/module_info_modal;Jefferson49\Webtrees\Module\CustomModuleManager\RequestHandlers\ModuleInformationModal;GET|POST;;;custom module;10;
+423;/module_upgrade_wizard_page;Jefferson49\Webtrees\Module\CustomModuleManager\RequestHandlers\ModuleUpgradeWizardPage;GET|POST;;;custom module;10;
+424;/module_upgrade_wizard_step;Jefferson49\Webtrees\Module\CustomModuleManager\RequestHandlers\ModuleUpgradeWizardStep;GET|POST;;;custom module;10;
+425;;;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;generic;20;Webtrees_Handbuch/Anleitung_für_Administratoren
+426;;;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;;generic;20;Webtrees_Handbuch/Anleitung_für_Verwalter
+427;;;GET;Fisharebest\Webtrees\Http\Middleware\AuthModerator;;generic;20;Webtrees_Handbuch/Anleitung_für_Moderatoren
+428;;;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;generic;20;Webtrees_Handbuch/Anleitung_für_Bearbeiter
+429;;;GET;Fisharebest\Webtrees\Http\Middleware\AuthLoggedIn;;generic;20;Webtrees_Handbuch/Anleitung_für_Mitglieder
+430;;;GET;;;generic;20;Webtrees_Handbuch/Anleitung_für_Besucher
+431;/module/{module}/{action}/{tree};statistics_chart;GET;;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher/Diagramme_Vergleichstabelle
+432;/module/{module}/{action}/{tree};tree;GET;;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher/Diagramme_Vergleichstabelle
+433;/tree/{tree}/CCE;HuHwt\WebtreesMods\ClippingsCartEnhanced\ClippingsCartEnhancedModule;GET|POST;;;custom module;10;Webtrees_Handbuch/Anleitung_f%C3%BCr_Webmaster/Erweiterungsmodule/Sammelbeh%C3%A4lter
+434;/tree/{tree};HuHwt\WebtreesMods\ClippingsCartEnhanced\ClippingsCartEnhanced;GET;;;custom module;10;Webtrees_Handbuch/Anleitung_f%C3%BCr_Webmaster/Erweiterungsmodule/Sammelbeh%C3%A4lter
+435;/tree/{tree}/TAMaction;HuHwt\WebtreesMods\TAMchart\TAMaction;GET;;;custom module;10;Webtrees_Handbuch/Anleitung_f%C3%BCr_Webmaster/Erweiterungsmodule/TAM_und_Lineage
+436;/tree/{tree}/TSM;HuHwt\WebtreesMods\TaggingServiceManager\TaggingServiceManagerModule;GET|POST;;;custom module;10;Webtrees_Handbuch/Anleitung_f%C3%BCr_Webmaster/Erweiterungsmodule/Tagging-Service-Manager
+437;/tree/{tree}/TSM/create-tag-object;HuHwt\WebtreesMods\TaggingServiceManager\Http\RequestHandlers\TSMCreateNoteModal;GET;;;custom module;10;Webtrees_Handbuch/Anleitung_f%C3%BCr_Webmaster/Erweiterungsmodule/Tagging-Service-Manager
+438;/tree/{tree}/TSM/create-tag-object;HuHwt\WebtreesMods\TaggingServiceManager\Http\RequestHandlers\TSMCreateNoteAction;POST;;;custom module;10;Webtrees_Handbuch/Anleitung_f%C3%BCr_Webmaster/Erweiterungsmodule/Tagging-Service-Manager
+439;/tree/{tree}/TSM/choose-active-tagM;HuHwt\WebtreesMods\TaggingServiceManager\Http\RequestHandlers\TSMchooseATagModal;GET;;;custom module;10;Webtrees_Handbuch/Anleitung_f%C3%BCr_Webmaster/Erweiterungsmodule/Tagging-Service-Manager
+440;/tree/{tree}/TSM/choose-active-tagA;HuHwt\WebtreesMods\TaggingServiceManager\Http\RequestHandlers\TSMchooseATagAction;POST;;;custom module;10;Webtrees_Handbuch/Anleitung_f%C3%BCr_Webmaster/Erweiterungsmodule/Tagging-Service-Manager
+441;/tree/{tree}/calendar/{view};Fisharebest\Webtrees\Http\RequestHandlers\CalendarPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthNotRobot;;standard;10;Webtrees_Handbuch/Anleitung_für_Besucher#Kalender
+442;/tree/{tree}/calendar/{view};Fisharebest\Webtrees\Http\RequestHandlers\CalendarAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthNotRobot;;standard;10;
+443;/tree/{tree}/calendar-events/{view};Fisharebest\Webtrees\Http\RequestHandlers\CalendarEvents;GET;Fisharebest\Webtrees\Http\Middleware\AuthNotRobot;;standard;10;Webtrees_Handbuch/Anleitung_für_Besucher#Kalender
+444;/tree/{tree}/ancestors-{style}-{generations}/{xref};Fisharebest\Webtrees\Module\AncestorsChartModule;GET|POST;Fisharebest\Webtrees\Http\Middleware\AuthNotRobot;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
+445;/tree/{tree}/branches{/surname};Fisharebest\Webtrees\Module\BranchesListModule;GET|POST;Fisharebest\Webtrees\Http\Middleware\AuthNotRobot;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
+446;/tree/{tree}/compact/{xref};Fisharebest\Webtrees\Module\CompactTreeChartModule;GET|POST;Fisharebest\Webtrees\Http\Middleware\AuthNotRobot;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
+447;/tree/{tree}/descendants-{style}-{generations}/{xref};Fisharebest\Webtrees\Module\DescendancyChartModule;GET|POST;Fisharebest\Webtrees\Http\Middleware\AuthNotRobot;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
+448;/tree/{tree}/family-book-{book_size}-{generations}-{spouses}/{xref};Fisharebest\Webtrees\Module\FamilyBookChartModule;GET|POST;Fisharebest\Webtrees\Http\Middleware\AuthNotRobot;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
+449;/tree/{tree}/fan-chart-{style}-{generations}-{width}/{xref};Fisharebest\Webtrees\Module\FanChartModule;GET|POST;Fisharebest\Webtrees\Http\Middleware\AuthNotRobot;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
+450;/tree/{tree}/hourglass-{generations}-{spouses}/{xref};Fisharebest\Webtrees\Module\HourglassChartModule;GET|POST;Fisharebest\Webtrees\Http\Middleware\AuthNotRobot;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
+451;/tree/{tree}/lifespans;Fisharebest\Webtrees\Module\LifespansChartModule;GET|POST;Fisharebest\Webtrees\Http\Middleware\AuthNotRobot;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
+452;/tree/{tree}/pedigree-map-{generations}/{xref};Fisharebest\Webtrees\Module\PedigreeMapModule;GET|POST;Fisharebest\Webtrees\Http\Middleware\AuthNotRobot;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
+453;/tree/{tree}/pedigree-{style}-{generations}/{xref};Fisharebest\Webtrees\Module\PedigreeChartModule;GET|POST;Fisharebest\Webtrees\Http\Middleware\AuthNotRobot;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
+454;/tree/{tree}/relationships-{ancestors}-{recursion}/{xref}{/xref2};Fisharebest\Webtrees\Module\RelationshipsChartModule;GET|POST;Fisharebest\Webtrees\Http\Middleware\AuthNotRobot;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
+455;/tree/{tree}/timeline-{scale};Fisharebest\Webtrees\Module\TimelineChartModule;GET|POST;Fisharebest\Webtrees\Http\Middleware\AuthNotRobot;;standard module;10;Webtrees_Handbuch/Anleitung_für_Besucher#Diagramme
+456;;_linkenhancer_;GET;;;custom module;20;https://github.com/bschwede/linkenhancer
+457;/tree/{tree}/individual/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\IndividualPage;GET;;"a[href^=""#_vesta_relatives_""]";custom module;30;https://github.com/vesta-webtrees-2-custom-modules/vesta_relatives
+458;/tree/{tree}/individual/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\IndividualPage;GET;;"a[href^=""#_huhwt-xtv_""]";custom module;30;Webtrees_Handbuch/Anleitung_für_Webmaster/Erweiterungsmodule/Treeview-Extended
+459;/tree/{tree}/individual/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\IndividualPage;GET;;"a[href^=""#_hh_extended_family_""]";custom module;30;Webtrees_Handbuch/Anleitung_f%C3%BCr_Webmaster/Erweiterungsmodule/Gro%C3%9Ffamilie
+460;/tree/{tree}/individual/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\IndividualPage;GET;;#sidebar-header-_mitalteli-show-xref_ > button;custom module;30;https://github.com/elysch/webtrees-mitalteli-show-xref/
+461;/tree/{tree}/individual/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\IndividualPage;GET;;#sidebar-header-_jc-fancy-research-links_ > button;custom module;30;https://justcarmen.nl/modules-webtrees-2/fancy-research-links/ 
+462;/tree/{tree}/individual/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\IndividualPage;GET;;"a[href^=""#_vesta_places_and_pedigree_map_""]";custom module;30;https://github.com/vesta-webtrees-2-custom-modules/vesta_places_and_pedigree_map
+463;/tree/{tree}/individual/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\IndividualPage;GET;;"a[href^=""#_vesta_personal_facts_""]";custom module;30;https://github.com/vesta-webtrees-2-custom-modules/vesta_personal_facts
+464;/admin;Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;"{""e"":""$('h2')[0]""}";standard;30;Webtrees_Handbuch/Anleitung_f%C3%BCr_Administratoren/Webseite
+465;/admin;Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;"{""e"":""$('h2')[1]""}";standard;30;Webtrees_Handbuch/Anleitung_f%C3%BCr_Administratoren/Stammb%C3%A4ume
+466;/admin;Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;"{""e"":""$('h2')[2]""}";standard;30;Webtrees_Handbuch/Anleitung_f%C3%BCr_Administratoren/Benutzer
+467;/admin;Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;"{""e"":""$('h2')[3]""}";standard;30;Webtrees_Handbuch/Anleitung_f%C3%BCr_Administratoren/Module
+468;/admin;Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;"{""e"":""$('h2')[4]""}";standard;30;Webtrees_Handbuch/Anleitung_f%C3%BCr_Administratoren/Multimedia
+469;/admin;Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;"{""e"":""$('h2')[5]""}";standard;30;Webtrees_Handbuch/Anleitung_f%C3%BCr_Administratoren/Landkarte
+470;/tree/{tree};Fisharebest\Webtrees\Http\RequestHandlers\TreePage;GET;;div.wt-block-_vesta_extended_relationships_ > div.card-header;custom module;30;https://github.com/vesta-webtrees-2-custom-modules/vesta_extended_relationships
+471;;;GET;;li.nav-item.menu-clippings.CCE_Menue > a;custom module;35;Webtrees_Handbuch/Anleitung_für_Webmaster/Erweiterungsmodule/Sammelbehälter
+472;;;GET;;"{""e"": ""Array.from(document.querySelectorAll('li.nav-item.menu-clippings > a')).find(a => a.textContent.includes('⚶'))""}";generic;35;https://github.com/vesta-webtrees-2-custom-modules/vesta_clippings_cart
