@@ -103,7 +103,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
     public const HELP_CSV = __DIR__ . DIRECTORY_SEPARATOR . 'Schema' . DIRECTORY_SEPARATOR . 'SeedHelpTable.csv';
 
-    public const HELP_SCHEMA_TARGET_VERSION = 1; //2
+    public const HELP_SCHEMA_TARGET_VERSION = 2;
 
     protected const DEFAULT_PREFERENCES = [
         self::PREF_HOME_LINK_TYPE        => '1', //int triple-state, 0=off, 1=tree, 2=my-page
