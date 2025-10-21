@@ -278,7 +278,7 @@ class WthbService { // stuff related to webtrees manual link handling
             'sql'        => $sql,
             'result'     => $result,
             'help_url'   => $url,
-            'subcontext' => $subcontext,
+            'subcontext' => array_values($subcontext), // important for json_encode - ensure zero-based array numbering, otherwise it's encoded as object and not as array
         ];
     }
 
