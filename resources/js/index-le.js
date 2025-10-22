@@ -1,3 +1,4 @@
+// Enhanced links (XREF and external targets) in notes
 function getLECfg() {
     let cfg = //+++ code-snippet begin next line - used for display in admin settings page
 { // link targets

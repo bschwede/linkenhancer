@@ -77,6 +77,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public const PREF_HOME_LINK_JSON = 'HOME_LINK_JS'; // string; javascript object { '*': stylerules-string, 'theme': stylerules-string}
     public const EXAMPLE_HOME_LINK_JSON = '{ "*": ".homelink { color: #039; }",  "colors_nocturnal": ".homelink { color: antiquewhite; }" }';
     public const PREF_WTHB_ACTIVE = 'WTHB_LINK_ACTIVE'; // link to GenWiki "Webtrees Handbuch"
+    public const PREF_WTHB_SUBCONTEXT = 'WTHB_SUBCONTEXT'; // support subcontext topics
     public const PREF_WTHB_FAICON = 'WTHB_FAICON'; // prepend fa icon to help link
     public const PREF_WTHB_UPDATE = 'WTHB_UPDATE'; // auto refresh table on module update
     public const PREF_WTHB_LASTHASH = 'WTHB_LASTHASH'; // last csv hash used for import
@@ -102,12 +103,13 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
     public const HELP_CSV = __DIR__ . DIRECTORY_SEPARATOR . 'Schema' . DIRECTORY_SEPARATOR . 'SeedHelpTable.csv';
 
-    public const HELP_SCHEMA_TARGET_VERSION = 1;
+    public const HELP_SCHEMA_TARGET_VERSION = 2;
 
     protected const DEFAULT_PREFERENCES = [
         self::PREF_HOME_LINK_TYPE        => '1', //int triple-state, 0=off, 1=tree, 2=my-page
         self::PREF_HOME_LINK_JSON        => '', // string; json object { '*': stylerules-string, 'theme': stylerules-string}
         self::PREF_WTHB_ACTIVE           => '1', //bool
+        self::PREF_WTHB_SUBCONTEXT       => '1', //bool
         self::PREF_WTHB_FAICON           => '1', //bool
         self::PREF_WTHB_UPDATE           => '1', //bool
         self::PREF_JS_DEBUG_CONSOLE      => '0', //bool
@@ -280,50 +282,51 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         //ressources to include
         $bundleShortcuts = [];
         $includeRes = '';
-        $initJs = ''; // init on document ready
+        $docReadyJs = ''; // init on document ready
+        $initJs = '';
 
         $theme = Session::get('theme');
         $palette = Session::get('palette', '');
         
         $activeRouteInfo = $this->wthb->getActiveRoute($request);
         if ($cfg_js_debug_console) {
-            $initJs .= "console.debug('LE-Mod theme:', '$theme'" . ($palette ? ", 'palette=$palette'" : '') . ");";
-            $initJs .= "console.debug('LE-Mod active route:', " . json_encode($activeRouteInfo) .");";
+            $docReadyJs .= "console.debug('LE-Mod theme:', '$theme'" . ($palette ? ", 'palette=$palette'" : '') . ");";
+            $docReadyJs .= "console.debug('LE-Mod active route:', " . json_encode($activeRouteInfo) .");";
         }
 
         // --- Webtrees Handbuch Link
         if ($cfg_wthb_active) {
-            $jsfile = $this->resourcesFolder() . 'js/bundle-wthb-link.min.js';
-            if (file_exists($jsfile)) {
-                $help = $this->wthb->getContextHelp($activeRouteInfo);
-                if ($cfg_js_debug_console) {
-                    $initJs .= "console.debug('LE-Mod help:', " . json_encode($help) . ");";
-                }
+            $bundleShortcuts[] = 'wthb';
 
-                $help_url = gettype(value: $help) == 'string' ? $help : $help->first()->url;
-                
-                // link to Webtrees Manual in GenWiki or external link?
-                $wiki_url = $this->getPref(self::PREF_GENWIKI_LINK, self::STDLINK_GENWIKI);
-                $iswthb = str_starts_with($help_url, $wiki_url);
-                
-                $options = [
-                    'help_title'   => ($iswthb ? I18N::translate('Webtrees manual') : /*I18N: webtrees.pot */ I18N::translate('Help')),
-                    'help_url'     => e($help_url),
-                    'help_tooltip' => /*I18N: wthb link user setting epilogue 2 */ I18N::translate('The link to the setting dialog is displayed when you hover the mouse cursor over the help link for a few seconds.'),
-                    'cfg_tooltip'  => /*I18N: wthb link user setting title */ I18N::translate('Webtrees manual link - user setting'),
-                    'faicon'       => boolval($this->getPref(self::PREF_WTHB_FAICON)),
-                    'iswthb'       => $iswthb,
-                    'dotranslate'  => intval($this->getPref(self::PREF_WTHB_TRANSLATE)), // 0=off, 1=user defined, 2=on
-                ];
-                $includeRes .= Utils::getIifeJavascript(
-                    file_get_contents($jsfile),
-                    "options",
-                    json_encode($options),
-                    "wthb-link"
-                );                
-            } else {
-                // TODO error flash?
+            $withSubcontext = boolval($this->getPref(self::PREF_WTHB_SUBCONTEXT));
+            $help = $this->wthb->getContextHelp($activeRouteInfo, $withSubcontext);
+            if ($cfg_js_debug_console) {
+                $docReadyJs .= "console.debug('LE-Mod help rows:', " . json_encode($help['result']) . ");";
+                $docReadyJs .= "console.debug('LE-Mod help sql:', " . json_encode($help['sql']) . ");";
+                if ($withSubcontext) $docReadyJs .= "console.debug('LE-Mod help subcontext:', " . json_encode($help['subcontext']) . ");";
             }
+
+            $help_url = $help['help_url']; //gettype(value: $help) == 'string' ? $help : $help->first()->url;
+            
+            // link to Webtrees Manual in GenWiki or external link?
+            $wiki_url = $this->getPref(self::PREF_GENWIKI_LINK, self::STDLINK_GENWIKI);
+            //$iswthb = str_starts_with($help_url, $wiki_url);
+            
+            $options = [
+                'I18N' => [
+                    'help_title_wthb'   => I18N::translate('Webtrees manual'),
+                    'help_title_ext'    => /*I18N: webtrees.pot */ I18N::translate('Help'),
+                    'help_tooltip' => /*I18N: wthb link user setting epilogue 2 */ I18N::translate('The link to the setting dialog is displayed when you hover the mouse cursor over the help link for a few seconds.'),
+                    'cfg_tooltip' => /*I18N: wthb link user setting title */ I18N::translate('Webtrees manual link - user setting'),
+                ],
+                'help_url'     => $help_url,
+                'faicon'       => boolval($this->getPref(self::PREF_WTHB_FAICON)),
+                'wiki_url'     => $wiki_url,
+                'dotranslate'  => intval($this->getPref(self::PREF_WTHB_TRANSLATE)), // 0=off, 1=user defined, 2=on
+                'subcontext'   => $withSubcontext ? $help['subcontext'] : [],
+            ];
+
+            $initJs .= "LinkEnhMod.initWthb(" . json_encode($options) . ");";
         }        
 
         // === admin backend - only if patch P002 for administration.phtml was applied; default: headContent of custom modules is not called on the admin backend
@@ -336,7 +339,8 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             || (str_starts_with($activeRouteInfo['path'], '/module') && str_starts_with($action, 'admin'))
         ) {
                 if ($cfg_wthb_active) {
-                    return $includeRes . Utils::getInitJavascript($initJs);
+                    $includeRes .= '<script src="' . $this->assetUrl("js/bundle-wthb.min.js") . '"></script>';
+                    return $includeRes . Utils::getJavascriptWrapper($docReadyJs, $initJs);
                 }
                 return ''; # other stuff is of no use in admin backend
         }
@@ -353,7 +357,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         if ($cfg_home_active && $tree != null) {
             $params = [ 'tree' => $tree->name()];
             $url = $cfg_home_type == 1 ? route(TreePage::class, $params) : route(HomePage::class, $params);
-            $initJs .= '$(".wt-site-title").wrapInner(`<a class="' . self::STDCLASS_HOME_LINK .'" href="' . e($url) . '"></a>`);';
+            $docReadyJs .= '$(".wt-site-title").wrapInner(`<a class="' . self::STDCLASS_HOME_LINK .'" href="' . e($url) . '"></a>`);';
 
             $cfg_home_link_json = trim($this->getPref(self::PREF_HOME_LINK_JSON));
             if ($cfg_home_link_json) {
@@ -364,7 +368,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                     if ($stylerules) {
                         $includeRes .= "<style>{$stylerules}</style>";
                     } elseif ($cfg_js_debug_console) {
-                        $initJs .= "console.debug('LE-Mod home link: JSON contains no matching style rule for current theme');";
+                        $docReadyJs .= "console.debug('LE-Mod home link: JSON contains no matching style rule for current theme');";
                     }
                 } else {
                     FlashMessages::addMessage(
@@ -379,7 +383,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         if ($cfg_link_active) {
             $bundleShortcuts[] = 'le';
             $lecfg = $this->getPref(self::PREF_LINKSPP_JS);
-            $initJs .= "LinkEnhMod.initLE($lecfg);";
+            $docReadyJs .= "LinkEnhMod.initLE($lecfg);";
         }
 
         // === include selectively
@@ -409,14 +413,14 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                     'AddUnlinkedPage'
                 ])) {
                     $bundleShortcuts[] = 'mde';
-                    $initJs .= 'window.LEhelp = "' . e(route('module', ['module' => $this->name(), 'action' => 'help'])) . '";';
+                    $docReadyJs .= 'window.LEhelp = "' . e(route('module', ['module' => $this->name(), 'action' => 'help'])) . '";';
                     
                     $linkSupport = [];
                     if (! $cfg_link_active) $linkSupport[] = "href:0";
                     if (! $cfg_img_active) $linkSupport[] = "src:0";
                     $linkCfg = implode(',', $linkSupport);
                     $linkCfg = $linkCfg ? '{' . $linkCfg . '}' : '';
-                    $initJs .= "LinkEnhMod.installMDE($linkCfg);";
+                    $docReadyJs .= "LinkEnhMod.installMDE($linkCfg);";
                 }
             }
         }
@@ -424,24 +428,32 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         
         if ($bundleShortcuts) {
             asort($bundleShortcuts);
-            $infix = implode("-",$bundleShortcuts);
-            $assetFile = $this->resourcesFolder() . "css/bundle-{$infix}.min.css";
-            if (file_exists($assetFile)) {
-                if (filesize($assetFile) > 500) {
-                    $includeRes .= '<link rel="stylesheet" type="text/css" href="' . $this->assetUrl("css/bundle-{$infix}.min.css") . '">';
-                } else {
-                    $includeRes .= '<style>' . file_get_contents($assetFile) . '</style>';
+            $bundleShortcutsCss = array_filter($bundleShortcuts, function ($var) {
+                return $var !== 'wthb'; }); // wthb support - only js
+            $bundleShortcutsJs = array_filter($bundleShortcuts, function ($var) {
+                return $var !== 'img'; }); // markdown image support - only css
+
+            // CSS
+            if ($bundleShortcutsCss) {
+                $infix = implode("-",$bundleShortcutsCss);
+                $assetFile = $this->resourcesFolder() . "css/bundle-{$infix}.min.css";
+                if (file_exists($assetFile)) {
+                    if (filesize($assetFile) > 500) {
+                        $includeRes .= '<link rel="stylesheet" type="text/css" href="' . $this->assetUrl("css/bundle-{$infix}.min.css") . '">';
+                    } else {
+                        $includeRes .= '<style>' . file_get_contents($assetFile) . '</style>';
+                    }
                 }
             }
             
-            $bundleShortcuts = array_filter($bundleShortcuts, function($var) { return $var !== 'img'; });
-            if ($bundleShortcuts) { // markdown image support - only css
-                $infix = implode("-", $bundleShortcuts);
+            // Javascript
+            if ($bundleShortcutsJs) {
+                $infix = implode("-", $bundleShortcutsJs);
                 $includeRes .= '<script src="' . $this->assetUrl("js/bundle-{$infix}.min.js") . '"></script>';
             }
         }
 
-        return $includeRes . Utils::getInitJavascript($initJs);
+        return $includeRes . Utils::getJavascriptWrapper($docReadyJs, $initJs);
     }
 
     /**

@@ -31,7 +31,7 @@ The main purpose of this module is to make [**links to data records**](#enhanced
 Additionally there are some goodies more or less related with links:
 
 - The note textarea can be a [**visual markdown editor**](#mde) with **markdown help**.
-- A [**context sensitive help link**](#wthb) to the [german webtrees manual](https://wiki.genealogy.net/Webtrees_Handbuch) can be activated in the small menu at the top of the page.
+- A [**context sensitive help link**](#wthb) to the [german webtrees manual](https://wiki.genealogy.net/Webtrees_Handbuch) can be activated in the small menu at the top of the page. It's also possible to activate them for subcontext topics.
 - The [**site title can be a link**](#homelink) to the tree homepage or the user my page.
 - A few minor [**patches**](#patches), that can applied by bash script (not necessary for this module).
 
@@ -77,7 +77,7 @@ After a lot of theory: How does it looks like in webtrees?! In the upper part of
 ![Note with enhanced links - edit and view](resources/img/screenshot_note-enh-links-edit-and-view.png)
 
 
-**Additional external targets** can be configured by providing a custom JavaScript object on the admin page of this module. Here two example entries from [predefined targets](resources/js/linkenhancer.js) to illustrate the principle:
+**Additional external targets** can be configured by providing a custom JavaScript object on the admin page of this module. Here two example entries from [predefined targets](resources/js/index-le.js) to illustrate the principle:
 ```javascript
 {
   "fsft": {
@@ -184,6 +184,7 @@ The mapping of routes to help articles in the manual is stored in the database t
 * `handler` **!!**: usually corresponds to the php class name of the code that handles the request
 * `method` **!!**: web request method (GET, POST, HEAD)<br>Only GET routes are generally relevant for assignment to manual sections.
 * `extras` **!!**: php class name of access level (Fisharebest\Webtrees\Http\Middleware\Auth*)
+* `subcontext` **!!**: CSS selector string or JSON object string to address a component/subcontext topic on the given page
 * `category`: string value for better grouping data rows; only value 'generic' has a special meaning
 * `order` **!!**: arbitrary numerical sort key, matching data rows are sorted in ascending order
   standard value is 10
@@ -207,7 +208,17 @@ A special case is the `path` which starts with `/module/{module}/{action}`. It i
 
 Fallback rules for access levels are matched by `category='generic'` and the specific Auth classname in `extras`.
 
-If nothing else applies, the link points to the startpage of the manual.
+In ascending order the first rule where `subcontext = ''` is selected for the top menu link. If nothing else applies, the link points to the startpage of the manual.
+
+If activated, `subcontext` topics on a page can be provided with an additional help link. You can set a CCS selector string or a JSON object string with the following properties: 
+
+- `p`: position of popover, optional (default is top, other possible values: left, right, bottom)
+- `f`: css selector/filter string (only necessary if you want the popover to be positioned differently) OR
+- `e`: javascript expression string
+
+
+This is useful, if there are components on the page that require more detailed information than offered by the help link in the top menu (e.g. for custom module functions on the individuals page). This help link is displayed in a popover (because an additional link does not always work in bootstrap tabs, accordeon headers or menu titles).
+Set `category='generic'` for rules that should apply to more than one page.
 
 On the **admin page** of this module it is possible to import routes registered in webtrees on demand. This make it easier to cover individual custom module configurations.
 Further more you can import and export data in csv format in order to make changes more convenient. You can define the separator and for import the character encoding (on export it is always utf-8).   You can see at a glance how many data rows are stored in the table and how many of them have an url assigned.

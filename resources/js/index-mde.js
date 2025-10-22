@@ -1,3 +1,4 @@
+// Markdown editor
 import TinyMDE from 'tiny-markdown-editor';
 
 function getLinkSupportCfg() {
