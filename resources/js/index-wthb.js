@@ -206,6 +206,9 @@ const initWthb = (options) => {
         insertWthbSubcontextLinks(WthbCfg.subcontext);
 
         let wthblink = window.jQuery("#wthb-link");
+        if ($(wthblink).length === 0) { // not all pages have a top menu (e.g. note edit page)
+            return;
+        }
         // get language
         WthbCfg.lang = $("html").attr("lang") ?? 'de';
         
