@@ -111,6 +111,7 @@ const setWthbUserSetting = (name, value, asnumber=false) => {
         updateFilterCount(visitems, allitems)
     });
     $(".wthbtoc a").each((idx, elem) => { $(elem).attr('href', 'https://wiki.genealogy.net' + $(elem).attr('href')).attr('target', '_blank'); });
+    //TODO translation if wanted
     
     let tocselect = $("#wthbtocheads");
     let tocheads = $(".wthbtoc h2");
