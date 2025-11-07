@@ -401,23 +401,8 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             }
 
             if ($cfg_mde_active) {
-                // --- TinyMDE -- only nessary on edit pages
-                $route = Validator::attributes($request)->route();
-                $routename = basename(strtr($route->name ?? '/', ['\\' => '/']));
-        
-                if (in_array($routename, [
-                    'EditFactPage',
-                    'EditMainFieldsPage',
-                    'EditNotePage',
-                    'EditRecordPage',
-                    'AddChildToFamilyPage',
-                    'AddChildToIndividualPage',
-                    'AddNewFact',
-                    'AddParentToIndividualPage',
-                    'AddSpouseToFamilyPage',
-                    'AddSpouseToIndividualPage',
-                    'AddUnlinkedPage'
-                ])) {
+                // --- TinyMDE -- only nessary on edit pages        
+                if ($this->isEditPage($request)) {
                     $bundleShortcuts[] = 'mde';
                     $docReadyJs .= 'window.LEhelp = "' . e(route('module', ['module' => $this->name(), 'action' => 'helpmd'])) . '";';
                     
@@ -448,26 +433,45 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         $cfg_wthb_tocnsearch = boolval($this->getPref(self::PREF_WTHB_TOCNSEARCH));
 
         $html = '';
-        
-        if ($cfg_mde_active) {
-            $request = Registry::container()->get(ServerRequestInterface::class);
-            $route = Validator::attributes($request)->route();
-            
-            if (strstr($route->name, 'EditNotePage')) {
-                //fix - should be included in resources/views/edit/shared-note.phtml
-                $html .= view('modals/ajax');
-            }
-            
-        }
+        $needajax = false;
+
         if ($cfg_wthb_active) {
             $html .= view($this->name() . '::wthb-modal');
-            if ($cfg_wthb_tocnsearch) {
-                $html .= view($this->name() . '::ajax');
-            }
+            $needajax = $cfg_wthb_tocnsearch;
+        }
+        if ($needajax || $cfg_mde_active && $this->isEditPage()) {
+            $html .= view($this->name() . '::ajax');
         }
         return $html;
     }
 
+    /**
+     * is it a request for an edit page (markdown editor is not useful on other pages)
+     *
+     * @param ServerRequestInterface $request
+     * @return bool
+     */
+    public function isEditPage(ServerRequestInterface|null $request = null) : bool {
+        if (!$request) {
+            $request = Registry::container()->get(ServerRequestInterface::class);
+        }
+        $route = Validator::attributes($request)->route();
+        $routename = basename(strtr($route->name ?? '/', ['\\' => '/']));
+        
+        return in_array($routename, [
+            'EditFactPage',
+            'EditMainFieldsPage',
+            'EditNotePage',
+            'EditRecordPage',
+            'AddChildToFamilyPage',
+            'AddChildToIndividualPage',
+            'AddNewFact',
+            'AddParentToIndividualPage',
+            'AddSpouseToFamilyPage',
+            'AddSpouseToIndividualPage',
+            'AddUnlinkedPage'
+        ]);
+    }
 
     private function getIncludeWebressourceString(array $bundleShortcuts): string
     {
