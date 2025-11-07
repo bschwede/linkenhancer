@@ -7,11 +7,13 @@ const getWthbCfg = () => {
             help_tooltip: '', // tooltip with info about settings link; the I18N object is not included on admin page
             cfg_tooltip: '', // tooltip user setting link
         },
-        help_url: '#',
-        faicon: false, // prepend symbol to help link
+        help_url: '#', // help url for top menu link
+        faicon: false, // prepend symbol to top menu help link
         wiki_url: 'https://wiki.genealogy.net/',  // is link external or a webtrees manual link?
         dotranslate: 0, //0=off, 1=user defined, 2=on
         subcontext: [],
+        modal_url: '', // url to action handler for wthb toc data and search engine form
+        tocnsearch: true, // toggle for showing wthb help modal
     };
 }
 
@@ -202,40 +204,50 @@ const initWthb = (options) => {
     //
     document.addEventListener('DOMContentLoaded', () => {
         insertWthbSubcontextLinks(WthbCfg.subcontext);
+
+        let wthblink = window.jQuery("#wthb-link");
         // get language
         WthbCfg.lang = $("html").attr("lang") ?? 'de';
+        
+        let popcontent = '';
+        let wthbcfg = false;
+        if (WthbCfg.tocnsearch) {
+            popcontent += `<p><a class="wthbpopover" href="#" data-bs-backdrop="static" data-bs-toggle="modal" data-bs-target="#le-ajax-modal" data-wt-href="${WthbCfg.modal_url}"><b style="padding:0 3px;">Fulltext search and TOC</b></a></p>`;
+        }
+        if (WthbCfg.lang?.substr(0, 2).toLowerCase() != 'de') {
+            popcontent += `<p><a class="wthbpopover" id="wthb-link-cfg" href="#"><i class="fa-solid fa-wrench fa-fw"></i>&nbsp;${WthbCfg.I18N.cfg_tooltip}</a></p>`;
+            wthbcfg = true;
+        }
+
+        if (popcontent !== '') {
+            let wthbpopover = new window.bootstrap.Popover(wthblink, {
+                html: true,
+                container: 'body',
+                sanitize: false,
+                placement: 'bottom',
+                trigger: 'focus hover',   // remains as long as the element is focused
+                delay: { "show": 100, "hide": 2000 },
+                content: popcontent,
+                title: 'Hallo Welt',
+            });
+            wthbpopover._element.addEventListener('shown.bs.popover', () => {
+                if (wthbcfg) {
+                    let wthbcfg = $("#wthb-link-cfg").on('click', () => toggleModal(true));
+                    if (WthbCfg.I18N.cfg_tooltip) $(wthbcfg).attr('title', WthbCfg.I18N.cfg_tooltip);
+                }
+                $('a.wthbpopover').each((idx, elem) => {
+                    console.log('popover a', elem);
+                    $(elem).on('click', () => wthbpopover.hide());
+                });
+            });
+        }
 
         // translation settings only needed for non german language
         if (WthbCfg.lang?.substr(0, 2).toLowerCase() == 'de') return;
 
-        let wthblink = $("#wthb-link");
         setWthbLinkClickHandler(wthblink);
 
         if (WthbCfg.dotranslate !== 1) return; // no user setting 
-        if (WthbCfg.I18N.help_tooltip) $(wthblink).attr('title', WthbCfg.I18N.help_tooltip);
-
-        let wthbcfg = $('<a id="wthb-link-cfg" href="#"><i class="fa-solid fa-wrench fa-fw"></i>&nbsp;</a>')
-            .hide()
-            .on('click', () => toggleModal(true));
-        if (WthbCfg.I18N.cfg_tooltip) $(wthbcfg).attr('title', WthbCfg.I18N.cfg_tooltip);
-
-        // show/hide user settings link beside help link
-        let timer = null;
-        $(wthblink)
-            .parent()
-            .hover(
-                function () {
-                    timer = setTimeout(() => {
-                        $(wthbcfg).show();
-                    }, 2000);
-                },
-                function () {
-                    clearTimeout(timer);
-                    $(wthbcfg).hide();
-                }
-            );
-
-        $(wthblink).before(wthbcfg);
 
         $('#wthb-modal').on('show.bs.modal', (e) => {
             $("#wthb-epilogue").hide(); // standard - should be only visible if user has not yet made decission for translation, because the dialog is opened automatically

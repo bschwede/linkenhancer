@@ -78,6 +78,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public const EXAMPLE_HOME_LINK_JSON = '{ "*": ".homelink { color: #039; }",  "colors_nocturnal": ".homelink { color: antiquewhite; }" }';
     public const PREF_WTHB_ACTIVE = 'WTHB_LINK_ACTIVE'; // link to GenWiki "Webtrees Handbuch"
     public const PREF_WTHB_SUBCONTEXT = 'WTHB_SUBCONTEXT'; // support subcontext topics
+    public const PREF_WTHB_TOCNSEARCH = 'WTHB_TOCNSEARCH'; // support webtrees manual full text search and toc
     public const PREF_WTHB_FAICON = 'WTHB_FAICON'; // prepend fa icon to help link
     public const PREF_WTHB_UPDATE = 'WTHB_UPDATE'; // auto refresh table on module update
     public const PREF_WTHB_LASTHASH = 'WTHB_LASTHASH'; // last csv hash used for import
@@ -98,6 +99,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public const STDCLASS_MD_IMG_TITLE = 'md-img-title';
     public const STDLINK_GENWIKI = 'https://wiki.genealogy.net/';
     public const STDLINK_WTHB = 'https://wiki.genealogy.net/Webtrees_Handbuch';
+    public const STDLINK_WTHB_TOC = 'https://wiki.genealogy.net/Webtrees_Handbuch/Verzeichnisse/Inhaltsverzeichnis';
     
     public const HELP_TABLE = 'route_help_map';
 
@@ -110,6 +112,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         self::PREF_HOME_LINK_JSON        => '', // string; json object { '*': stylerules-string, 'theme': stylerules-string}
         self::PREF_WTHB_ACTIVE           => '1', //bool
         self::PREF_WTHB_SUBCONTEXT       => '1', //bool
+        self::PREF_WTHB_TOCNSEARCH       => '1', //bool
         self::PREF_WTHB_FAICON           => '1', //bool
         self::PREF_WTHB_UPDATE           => '1', //bool
         self::PREF_JS_DEBUG_CONSOLE      => '0', //bool
@@ -272,6 +275,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         $cfg_mde_active = boolval($this->getPref(self::PREF_MDE_ACTIVE));
         $cfg_link_active = boolval($this->getPref(self::PREF_LINKSPP_ACTIVE));
         $cfg_img_active = boolval($this->getPref(self::PREF_MD_IMG_ACTIVE));
+
         
 
         if (!$cfg_home_active && !$cfg_wthb_active && ! $cfg_mde_active && !$cfg_link_active) {
@@ -324,6 +328,8 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                 'wiki_url'     => $wiki_url,
                 'dotranslate'  => intval($this->getPref(self::PREF_WTHB_TRANSLATE)), // 0=off, 1=user defined, 2=on
                 'subcontext'   => $withSubcontext ? $help['subcontext'] : [],
+                'modal_url'    => route('module', ['module' => $this->name(), 'action' => 'helpwthb']),
+                'tocnsearch'   => boolval($this->getPref(self::PREF_WTHB_TOCNSEARCH)),
             ];
 
             $initJs .= "LinkEnhMod.initWthb(" . json_encode($options) . ");";
@@ -339,7 +345,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             || (str_starts_with($activeRouteInfo['path'], '/module') && str_starts_with($action, 'admin'))
         ) {
                 if ($cfg_wthb_active) {
-                    $includeRes .= '<script src="' . $this->assetUrl("js/bundle-wthb.min.js") . '"></script>';
+                    $includeRes .= $this->getIncludeWebressourceString(['wthb']);
                     return $includeRes . Utils::getJavascriptWrapper($docReadyJs, $initJs);
                 }
                 return ''; # other stuff is of no use in admin backend
@@ -413,7 +419,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                     'AddUnlinkedPage'
                 ])) {
                     $bundleShortcuts[] = 'mde';
-                    $docReadyJs .= 'window.LEhelp = "' . e(route('module', ['module' => $this->name(), 'action' => 'help'])) . '";';
+                    $docReadyJs .= 'window.LEhelp = "' . e(route('module', ['module' => $this->name(), 'action' => 'helpmd'])) . '";';
                     
                     $linkSupport = [];
                     if (! $cfg_link_active) $linkSupport[] = "href:0";
@@ -425,33 +431,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             }
         }
         
-        
-        if ($bundleShortcuts) {
-            asort($bundleShortcuts);
-            $bundleShortcutsCss = array_filter($bundleShortcuts, function ($var) {
-                return $var !== 'wthb'; }); // wthb support - only js
-            $bundleShortcutsJs = array_filter($bundleShortcuts, function ($var) {
-                return $var !== 'img'; }); // markdown image support - only css
-
-            // CSS
-            if ($bundleShortcutsCss) {
-                $infix = implode("-",$bundleShortcutsCss);
-                $assetFile = $this->resourcesFolder() . "css/bundle-{$infix}.min.css";
-                if (file_exists($assetFile)) {
-                    if (filesize($assetFile) > 500) {
-                        $includeRes .= '<link rel="stylesheet" type="text/css" href="' . $this->assetUrl("css/bundle-{$infix}.min.css") . '">';
-                    } else {
-                        $includeRes .= '<style>' . file_get_contents($assetFile) . '</style>';
-                    }
-                }
-            }
-            
-            // Javascript
-            if ($bundleShortcutsJs) {
-                $infix = implode("-", $bundleShortcutsJs);
-                $includeRes .= '<script src="' . $this->assetUrl("js/bundle-{$infix}.min.js") . '"></script>';
-            }
-        }
+        $includeRes .= $this->getIncludeWebressourceString($bundleShortcuts);
 
         return $includeRes . Utils::getJavascriptWrapper($docReadyJs, $initJs);
     }
@@ -465,6 +445,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public function bodyContent(): string {
         $cfg_mde_active = boolval($this->getPref(self::PREF_MDE_ACTIVE));
         $cfg_wthb_active = boolval($this->getPref(self::PREF_WTHB_ACTIVE));
+        $cfg_wthb_tocnsearch = boolval($this->getPref(self::PREF_WTHB_TOCNSEARCH));
 
         $html = '';
         
@@ -480,11 +461,45 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         }
         if ($cfg_wthb_active) {
             $html .= view($this->name() . '::wthb-modal');
+            if ($cfg_wthb_tocnsearch) {
+                $html .= view($this->name() . '::ajax');
+            }
         }
-        
         return $html;
-    }    
+    }
 
+
+    private function getIncludeWebressourceString(array $bundleShortcuts): string
+    {
+        if (!$bundleShortcuts) {
+            return '';
+        }
+        $includeRes = '';
+        asort($bundleShortcuts);
+        $bundleShortcutsCss = $bundleShortcuts; //array_filter($bundleShortcuts, function ($var) { return $var !== 'wthb'; }); // wthb support - only js
+        $bundleShortcutsJs = array_filter($bundleShortcuts, fn($var) => $var !== 'img'); // markdown image support - only css
+
+        // CSS
+        if ($bundleShortcutsCss) {
+            $infix = implode("-", $bundleShortcutsCss);
+            $assetFile = $this->resourcesFolder() . "css/bundle-{$infix}.min.css";
+            if (file_exists($assetFile)) {
+                if (filesize($assetFile) > 500) {
+                    $includeRes .= '<link rel="stylesheet" type="text/css" href="' . $this->assetUrl("css/bundle-{$infix}.min.css") . '">';
+                } else {
+                    $includeRes .= '<style>' . file_get_contents($assetFile) . '</style>';
+                }
+            }
+        }
+
+        // Javascript
+        if ($bundleShortcutsJs) {
+            $infix = implode("-", $bundleShortcutsJs);
+            $includeRes .= '<script src="' . $this->assetUrl("js/bundle-{$infix}.min.js") . '"></script>';
+        }
+        return $includeRes;
+    }
+    
     /**
      * Open control panel page with options
      *
@@ -736,7 +751,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
      *
      * @return ResponseInterface
      */
-    public function getHelpAction(ServerRequestInterface $request): ResponseInterface {
+    public function getHelpMdAction(ServerRequestInterface $request): ResponseInterface {
         // resources/views/edit/shared-note.phtml doesn't include < ?= view('modals/ajax') ? >
         // see also app/Http/RequestHandlers/HelpText.php
         //$topic = $request->getAttribute('topic');
@@ -756,6 +771,46 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         ]);
 
         return response($html);        
+    }
+
+    /**
+     * Serve help page for webtrees manual full text search and table of contents
+     * Addressed by top menu WTHB-Link (see XXX.js; url passed via window.LEhelp in headContent)
+     *
+     * @param ServerRequestInterface $request
+     *
+     * @return ResponseInterface
+     */
+    public function getHelpWthbAction(ServerRequestInterface $request): ResponseInterface
+    {           
+        $title = /*I18N: webtrees.pot */ I18N::translate('Help') . ' - ' . I18N::translate('Webtrees manual');
+        $tochtml = view($this->name() . '::help-wthb-toc');
+        $text = view($this->name() . '::help-wthb', [
+            'toc_url'  => self::STDLINK_WTHB_TOC,
+            'toc_html' => $tochtml,
+            'search'   => $this->getSearchEngines(),
+        ]);
+
+        $html = view('modals/help', [
+            'title' => $title,
+            'text' => $text,
+        ]);
+
+        return response($html);
+    }
+
+
+    private function getSearchEngines() : array
+    {
+        // key   = Displayname without whitespaces, in lower case prepended with 'icon-' it's the css class name for background icon to be displayed
+        // value = search engine url, append search terms uriencoded
+        return [
+            'Startpage'  => 'https://www.startpage.com/do/search?query=site:wiki.genealogy.net+"Webtrees%20Handbuch"+AND+',
+            'Ecosia'     => 'https://www.ecosia.org/search?q=site%3Agenealogy.net%20%22webtrees%20handbuch%22%20AND%20',
+            'Perplexity' => 'https://www.perplexity.ai/search/?q=site:wiki.genealogy.net%20inurl:%22Webtrees%20Handbuch%22+',
+            'DuckDuckGo' => 'https://duckduckgo.com/?q=site:wiki.genealogy.net+inurl:"Webtrees%20Handbuch"+',
+            'Google'     => 'https://www.google.com/search?q=site:wiki.genealogy.net+"webtrees+Handbuch"+AND+',
+        ];
     }
 
     //same as Database::getSchema, but use module settings instead of site settings (Issue #3 in personal_facts_with_hooks)
