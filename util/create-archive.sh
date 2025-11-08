@@ -21,6 +21,8 @@ util/wt-patch/patch.log
 util/create-archive.sh
 util/update-po-files.sh
 resources/img
+resources/views/*.phtml.~*
+util/wthb-toc
 EOT
 
 cd "$SRCDIR" || exit 1
