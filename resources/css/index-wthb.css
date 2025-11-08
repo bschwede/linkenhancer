@@ -37,3 +37,7 @@ p:has(+ .wthbtoc), #wthbtocfiltercnt { color: gray; font-size: 0.8em;}
     background-image:
     url("./icons/startpage_32x32.png");
 }
+.icon-compgen { /* redundant for admin backend - also in index-le.css */
+    background-image:
+    url("./icons/compgen_32x32.png");
+}
