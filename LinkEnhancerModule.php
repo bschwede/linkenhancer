@@ -320,8 +320,8 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                 'I18N' => [
                     'help_title_wthb'   => I18N::translate('Webtrees manual'),
                     'help_title_ext'    => /*I18N: webtrees.pot */ I18N::translate('Help'),
-                    'help_tooltip' => /*I18N: wthb link user setting epilogue 2 */ I18N::translate('The link to the setting dialog is displayed when you hover the mouse cursor over the help link for a few seconds.'),
-                    'cfg_tooltip' => /*I18N: wthb link user setting title */ I18N::translate('Webtrees manual link - user setting'),
+                    'cfg_title'         => /*I18N: wthb link user setting title */ I18N::translate('Webtrees manual link - user setting'),
+                    'searchntoc'        => I18N::translate("Full text search") . ' / ' . I18N::translate('Table of contents'),
                 ],
                 'help_url'     => $help_url,
                 'faicon'       => boolval($this->getPref(self::PREF_WTHB_FAICON)),

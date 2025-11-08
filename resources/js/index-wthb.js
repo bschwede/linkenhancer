@@ -4,8 +4,8 @@ const getWthbCfg = () => {
         I18N: {
             help_title_wthb: 'Webtrees manual', //link displayname
             help_title_ext: 'Help',
-            help_tooltip: '', // tooltip with info about settings link; the I18N object is not included on admin page
-            cfg_tooltip: '', // tooltip user setting link
+            cfg_title: '', // tooltip user setting link
+            searchntoc: 'Full text search / Table of contents', // title of submenu item of topmenu wthb-link
         },
         help_url: '#', // help url for top menu link
         faicon: false, // prepend symbol to top menu help link
@@ -212,13 +212,14 @@ const initWthb = (options) => {
         // get language
         WthbCfg.lang = $("html").attr("lang") ?? 'de';
         
+        // topmenu link "submenu"
         let popcontent = '';
         let wthbcfg = false;
         if (WthbCfg.tocnsearch) {
-            popcontent += `<p><a class="wthbpopover" href="#" data-bs-backdrop="static" data-bs-toggle="modal" data-bs-target="#le-ajax-modal" data-wt-href="${WthbCfg.modal_url}"><b style="padding:0 3px;">Fulltext search and TOC</b></a></p>`;
+            popcontent += `<p><a class="wthbpopover" href="#" data-bs-backdrop="static" data-bs-toggle="modal" data-bs-target="#le-ajax-modal" data-wt-href="${WthbCfg.modal_url}">${WthbCfg.I18N.searchntoc}</a></p>`;
         }
         if (WthbCfg.lang?.substr(0, 2).toLowerCase() != 'de') {
-            popcontent += `<p><a class="wthbpopover" id="wthb-link-cfg" href="#"><i class="fa-solid fa-wrench fa-fw"></i>&nbsp;${WthbCfg.I18N.cfg_tooltip}</a></p>`;
+            popcontent += `<p><a class="wthbpopover" id="wthb-link-cfg" href="#"><i class="fa-solid fa-wrench fa-fw"></i>&nbsp;${WthbCfg.I18N.cfg_title}</a></p>`;
             wthbcfg = true;
         }
 
@@ -229,17 +230,16 @@ const initWthb = (options) => {
                 sanitize: false,
                 placement: 'bottom',
                 trigger: 'focus hover',   // remains as long as the element is focused
-                delay: { "show": 100, "hide": 2000 },
+                delay: { "show": 100, "hide": 3000 },
                 content: popcontent,
-                title: 'Hallo Welt',
+                title: WthbCfg.I18N.help_title_wthb,
             });
             wthbpopover._element.addEventListener('shown.bs.popover', () => {
                 if (wthbcfg) {
                     let wthbcfg = $("#wthb-link-cfg").on('click', () => toggleModal(true));
-                    if (WthbCfg.I18N.cfg_tooltip) $(wthbcfg).attr('title', WthbCfg.I18N.cfg_tooltip);
+                    if (WthbCfg.I18N.cfg_title) $(wthbcfg).attr('title', WthbCfg.I18N.cfg_title);
                 }
                 $('a.wthbpopover').each((idx, elem) => {
-                    console.log('popover a', elem);
                     $(elem).on('click', () => wthbpopover.hide());
                 });
             });
