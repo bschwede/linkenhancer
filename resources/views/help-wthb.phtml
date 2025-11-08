@@ -10,26 +10,26 @@ use Fisharebest\Webtrees\I18N;
  * @var mixed                 $search
  */
 
-$options = ['-1' => '-- Suchmaschine wählen --'];
+$options = ['-1' => '-- ' . I18N::translate('Select search engine') . ' --'];
 foreach ($search as $key => $value) {
     $options[$key] = $key;
 }
 
 $searchselect = view('components/select', [
-    'class' => '',
-    'id' => 'wthbsearch',
-    'name' => 'wthbsearch',
+    'class'    => '',
+    'id'       => 'wthbsearch',
+    'name'     => 'wthbsearch',
     'selected' => '-1',
-    'options' => $options,
+    'options'  => $options,
 ]);
 
 
 $tocselect = view('components/select', [
-    'class' => '',
-    'id'    => 'wthbtocheads',
-    'name'  => 'wthbtocheads',
+    'class'    => '',
+    'id'       => 'wthbtocheads',
+    'name'     => 'wthbtocheads',
     'selected' => '-1',
-    'options' => [ '-1' => '-- ' . I18N::translate("Goto section") . ' --' ]
+    'options'  => [ '-1' => '-- ' . I18N::translate("Goto section") . ' --' ]
 ]);
 
 ?>
@@ -49,7 +49,7 @@ $tocselect = view('components/select', [
 </div>
 
 
-<h4 class="helpsection"><a target="_blank" href="<?= e($toc_url) ?>"><?= I18N::translate('Table of contents') ?></a> <span class="linkicon icon-compgen"></span></h4>
+<h4 class="helpsection"><a class="gwlink" target="_blank" href="<?= e($toc_url) ?>"><?= I18N::translate('Table of contents') ?></a> <span class="linkicon icon-compgen"></span></h4>
 <?php if ($toc_html) : ?>
 <p><?= $tocselect ?></p>
 <p><input class="form-control" id="wthbtocfilter" type="text" placeholder="<?= e(/*I18N: webtrees.pot */I18N::translate('Search filters')) ?>"> <em><span id="wthbtocfiltercnt"></span></em></p>
@@ -57,137 +57,9 @@ $tocselect = view('components/select', [
 <?= $toc_html ?>
 
 <script>
-  ((searchengines)=>{
-const getWthbUserSetting = (name, asnumber=false) => {
-    let usersetting = localStorage.getItem(name);
-    if (usersetting !== undefined && usersetting !== null) {
-        if (asnumber) {
-            let cast_usersetting = Number(usersetting);
-            usersetting = cast_usersetting === NaN ? undefined : cast_usersetting;
-        }
-        return usersetting;
-    } else {
-        return undefined;
-    }
-};
-const setWthbUserSetting = (name, value, asnumber=false) => {
-    if (value === undefined) {
-        localStorage.removeItem(name);
-        return;
-    }
-    if (asnumber) {
-        let cast_usersetting = Number(value);
-        value = cast_usersetting === NaN ? undefined : cast_usersetting; 
-    }
-    if (value !== undefined) {
-        localStorage.setItem(name, value);
-    }
-};
-
-
-
-    const updateFilterCount = (visitems, allitems) => $("#wthbtocfiltercnt").text((visitems != allitems ? `${visitems} / ${allitems}` : allitems));
-    
-    // table of contents
-    let tocitems = $("span.item");
-    updateFilterCount($(tocitems).length, $(tocitems).length)
-    let sbox = $("#wthbtocfilter");
-    $(sbox).on('input', () => {
-        let stext = $(sbox).val().toLowerCase();
-        let allitems = 0;
-        let visitems = 0;
-
-        if (stext) {
-            $(tocitems).each((idx, elem)=>{
-                allitems++;
-                let text = $(elem).text().toLowerCase();
-                if (text.indexOf(stext) === -1) { $(elem).hide(); } else { $(elem).show(); visitems++; }
-            });
-        } else {
-            $(tocitems).show();
-            allitems = $(tocitems).length;
-            visitems = allitems;
-        }
-        updateFilterCount(visitems, allitems)
-    });
-    $(".wthbtoc a").each((idx, elem) => { $(elem).attr('href', 'https://wiki.genealogy.net' + $(elem).attr('href')).attr('target', '_blank'); });
-    //TODO translation if wanted
-    
-    let tocselect = $("#wthbtocheads");
-    let tocheads = $(".wthbtoc h2");
-    $(tocheads).each((idx, elem) => {
-            $(tocselect).append($('<option>', {
-            value: idx,
-            text: $(elem).text()
-        }));
-    });
-    $(tocselect).on('change', function() { 
-        let idx = parseInt(this.value);
-        if (!isNaN(idx) && idx < $(tocheads).length) {
-            $(tocheads).get(idx).scrollIntoView();
-            $(tocselect).prop("selectedIndex", 0);
-        }
-    });
-    
-    $().ready(()=> $(tocheads).get(0).scrollIntoView());
-    
-    // full text search
-    const setSEngineIcon = (value) => {
-        let iconspan = $('#sengineicon');
-        $(iconspan).attr('class', function(i, c){
-            return c.replace(/(^|\s)icon-\S+/g, '');
-        });
-        if (value !== -1) {
-            $(iconspan).addClass('icon-' + String(value).toLowerCase());
-        }
-    }
-    
-    let searchfilter = $('#wthbsearchfilter');
-    let sengine = $('#wthbsearch');
-    $(sengine).prop("selectedIndex", 0);
-    let lastsengine = getWthbUserSetting('LEmod_wthb_sengine');
-    console.log('lastengine=', lastsengine);
-    if (lastsengine !== undefined) {
-        $(sengine).val(lastsengine);
-        setSEngineIcon(lastsengine);
-    }
-
-    const submitSearch = () => {
-        let text = $(searchfilter).val();
-        let engine = $(sengine).val();
-        if (!text) {
-            $(searchfilter).focus();
-            return;
-        }
-        if (engine == -1) {
-            $(sengine).focus();
-            return
-        }
-        console.log(engine);
-        let url = searchengines[engine] ?? '';
-        if (!url) return
-        
-        window.open(url + encodeURIComponent(text), '_blank');
-    }
-
-    $(searchfilter).keypress(function (e) {
-        let keycode = (e.keyCode ? e.keyCode : e.which);
-        if (keycode === 13) {
-            submitSearch();
-        }
-    });
-    $(sengine).on('change', function() { 
-        setSEngineIcon(this.value);
-        if (this.value !== -1) {
-            setWthbUserSetting('LEmod_wthb_sengine', String(this.value));
-            submitSearch();
-        }
-    });
-    $('#wthbsearchsubmit').on('click', () => submitSearch());
-
-  })(<?= json_encode($search) ?>);
+  LinkEnhMod.initWthbHelp(<?= json_encode($search) ?>);
 </script>
 <?php else : ?>
 <p><?= I18N::translate("A local copy of the table of contents does not appear to be available. Please visit the website directly.") ?></p>
-<p style="text-align: center;"><a target="_blank" href="<?= e($toc_url) ?>"><?= $toc_url ?></a></p>
+<p style="text-align: center;"><a class="gwlink" target="_blank" href="<?= e($toc_url) ?>"><?= $toc_url ?></a></p>
 <?php endif ?>

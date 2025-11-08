@@ -23,28 +23,32 @@ let popovers = [];
 
 const googleTranslate = "https://translate.google.com/translate?sl=de&tl=%LANG%&u=%URL%";
 
-const wthb_user_setting = 'LEmod_wthb_translate';
+const wthb_user_setting_translate = 'LEmod_wthb_translate';
+const wthb_user_setting_sengine   = 'LEmod_wthb_sengine';
 
-const getWthbUserSetting = () => {
-    let usersetting = localStorage.getItem(wthb_user_setting);
+const getWthbUserSetting = (name, asnumber = false) => {
+    let usersetting = localStorage.getItem(name);
     if (usersetting !== undefined && usersetting !== null) {
-        let cast_usersetting = Number(usersetting);
-        usersetting = cast_usersetting === NaN ? undefined : cast_usersetting;
+        if (asnumber) {
+            let cast_usersetting = Number(usersetting);
+            usersetting = cast_usersetting === NaN ? undefined : cast_usersetting;
+        }
         return usersetting;
     } else {
         return undefined;
     }
 };
-const setWthbUserSetting = (value) => {
+const setWthbUserSetting = (name, value, asnumber = false) => {
     if (value === undefined) {
-        localStorage.removeItem(wthb_user_setting);
+        localStorage.removeItem(name);
         return;
     }
-    
-    let cast_usersetting = Number(value);
-    value = cast_usersetting === NaN ? undefined : cast_usersetting; 
+    if (asnumber) {
+        let cast_usersetting = Number(value);
+        value = cast_usersetting === NaN ? undefined : cast_usersetting;
+    }
     if (value !== undefined) {
-        localStorage.setItem(wthb_user_setting, value);
+        localStorage.setItem(name, value);
     }
 };
 
@@ -173,7 +177,7 @@ const setWthbLinkClickHandler = (wthblink) => {
 
         if (WthbCfg.dotranslate === 1) { // user defined behaviour
             // open settings dialog if no setting available
-            let doTranslateUser = getWthbUserSetting();
+            let doTranslateUser = getWthbUserSetting(wthb_user_setting_translate, true);
             switch (doTranslateUser) {
                 case undefined:
                     toggleModal(true);
@@ -257,7 +261,7 @@ const initWthb = (options) => {
 
             // set radio buttons
             $('input[name=wthb-translate]').prop('checked', false) //clear first
-            let setting = getWthbUserSetting();
+            let setting = getWthbUserSetting(wthb_user_setting_translate, true);
             if (setting !== undefined) {
                 try {
                     $(`#wthb-translate-${setting}`).prop('checked', true);
@@ -268,11 +272,114 @@ const initWthb = (options) => {
             const doClickHelplink = $("#wthb-epilogue").is(":visible");
             let doTranslateUser = $('input[name=wthb-translate]:checked').val();
             //TODO validate?!
-            setWthbUserSetting(doTranslateUser);
+            setWthbUserSetting(wthb_user_setting_translate, doTranslateUser, true);
             toggleModal(false);
             if (doClickHelplink) $("#wthb-link").click();
         });
     });
 }
 
-export { initWthb };
+const initWthbHelp = (searchengines) => {
+    const updateFilterCount = (visitems, allitems) => $("#wthbtocfiltercnt").text((visitems != allitems ? `${visitems} / ${allitems}` : allitems));
+
+    // table of contents
+    let tocitems = $("span.item");
+    updateFilterCount($(tocitems).length, $(tocitems).length)
+    let sbox = $("#wthbtocfilter");
+    $(sbox).on('input', () => {
+        let stext = $(sbox).val().toLowerCase();
+        let allitems = 0;
+        let visitems = 0;
+
+        if (stext) {
+            $(tocitems).each((idx, elem) => {
+                allitems++;
+                let text = $(elem).text().toLowerCase();
+                if (text.indexOf(stext) === -1) { $(elem).hide(); } else { $(elem).show(); visitems++; }
+            });
+        } else {
+            $(tocitems).show();
+            allitems = $(tocitems).length;
+            visitems = allitems;
+        }
+        updateFilterCount(visitems, allitems)
+    });
+    $(".wthbtoc a").each((idx, elem) => { 
+        $(elem).attr('href', 'https://wiki.genealogy.net' + $(elem).attr('href')).attr('target', '_blank'); 
+        setWthbLinkClickHandler(elem);
+    });
+    $("a.gwlink").each(((idx, elem) => setWthbLinkClickHandler(elem)));
+
+    let tocselect = $("#wthbtocheads");
+    let tocheads = $(".wthbtoc h2");
+    $(tocheads).each((idx, elem) => {
+        $(tocselect).append($('<option>', {
+            value: idx,
+            text: $(elem).text()
+        }));
+    });
+    $(tocselect).on('change', function () {
+        let idx = parseInt(this.value);
+        if (!isNaN(idx) && idx < $(tocheads).length) {
+            $(tocheads).get(idx).scrollIntoView();
+            $(tocselect).prop("selectedIndex", 0);
+        }
+    });
+
+    $().ready(() => $(tocheads).get(0).scrollIntoView());
+
+    // full text search
+    const setSEngineIcon = (value) => {
+        let iconspan = $('#sengineicon');
+        $(iconspan).attr('class', function (i, c) {
+            return c.replace(/(^|\s)icon-\S+/g, '');
+        });
+        if (value !== -1) {
+            $(iconspan).addClass('icon-' + String(value).toLowerCase());
+        }
+    }
+
+    let searchfilter = $('#wthbsearchfilter');
+    let sengine = $('#wthbsearch');
+    $(sengine).prop("selectedIndex", 0);
+    let lastsengine = getWthbUserSetting(wthb_user_setting_sengine);
+    if (lastsengine !== undefined) {
+        $(sengine).val(lastsengine);
+        setSEngineIcon(lastsengine);
+    }
+
+    const submitSearch = () => {
+        let text = $(searchfilter).val();
+        let engine = $(sengine).val();
+        if (!text) {
+            $(searchfilter).focus();
+            return;
+        }
+        if (engine == -1) {
+            $(sengine).focus();
+            return
+        }
+        let url = searchengines[engine] ?? '';
+        if (!url) return
+
+        window.open(url + encodeURIComponent(text), '_blank');
+    }
+
+    $(searchfilter).keypress(function (e) {
+        let keycode = (e.keyCode ? e.keyCode : e.which);
+        if (keycode === 13) {
+            submitSearch();
+        }
+    });
+    $(sengine).on('change', function () {
+        setSEngineIcon(this.value);
+        if (this.value !== -1) {
+            setWthbUserSetting(wthb_user_setting_sengine, String(this.value));
+            submitSearch();
+        }
+    });
+    $('#wthbsearchsubmit').on('click', () => submitSearch());
+
+}
+
+export { initWthb, initWthbHelp };
