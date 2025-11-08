@@ -292,7 +292,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         $theme = Session::get('theme');
         $palette = Session::get('palette', '');
         
-        $activeRouteInfo = $this->wthb->getActiveRoute($request);
+        $activeRouteInfo = Utils::getActiveRoute($request);
         if ($cfg_js_debug_console) {
             $docReadyJs .= "console.debug('LE-Mod theme:', '$theme'" . ($palette ? ", 'palette=$palette'" : '') . ");";
             $docReadyJs .= "console.debug('LE-Mod active route:', " . json_encode($activeRouteInfo) .");";
@@ -314,7 +314,6 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             
             // link to Webtrees Manual in GenWiki or external link?
             $wiki_url = $this->getPref(self::PREF_GENWIKI_LINK, self::STDLINK_GENWIKI);
-            //$iswthb = str_starts_with($help_url, $wiki_url);
             
             $options = [
                 'I18N' => [
@@ -337,13 +336,8 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
         // === admin backend - only if patch P002 for administration.phtml was applied; default: headContent of custom modules is not called on the admin backend
         // TODO - is it possible to determine the underlying page layout or should the info for backend pages be stored in DB?!
-        $action = strtolower(($request->getAttribute('action') ?? ''));
-
-        if (str_starts_with($activeRouteInfo['path'], '/admin') 
-            || str_contains($activeRouteInfo['extras'], 'AuthAdministrator')
-            || (str_contains($activeRouteInfo['extras'], 'AuthManager') && !str_contains($activeRouteInfo['path'], '/tree-page-'))
-            || (str_starts_with($activeRouteInfo['path'], '/module') && str_starts_with($action, 'admin'))
-        ) {
+        if (Utils::isAdminPage($request))
+        {
                 if ($cfg_wthb_active) {
                     $includeRes .= $this->getIncludeWebressourceString(['wthb']);
                     return $includeRes . Utils::getJavascriptWrapper($docReadyJs, $initJs);
@@ -402,7 +396,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
             if ($cfg_mde_active) {
                 // --- TinyMDE -- only nessary on edit pages        
-                if ($this->isEditPage($request)) {
+                if (Utils::isEditPage($request)) {
                     $bundleShortcuts[] = 'mde';
                     $docReadyJs .= 'window.LEhelp = "' . e(route('module', ['module' => $this->name(), 'action' => 'helpmd'])) . '";';
                     
@@ -439,39 +433,12 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             $html .= view($this->name() . '::wthb-modal');
             $needajax = $cfg_wthb_tocnsearch;
         }
-        if ($needajax || $cfg_mde_active && $this->isEditPage()) {
+        if ($needajax || $cfg_mde_active && Utils::isEditPage()) { // markdown editor is not useful on other pages
             $html .= view($this->name() . '::ajax');
         }
         return $html;
     }
 
-    /**
-     * is it a request for an edit page (markdown editor is not useful on other pages)
-     *
-     * @param ServerRequestInterface $request
-     * @return bool
-     */
-    public function isEditPage(ServerRequestInterface|null $request = null) : bool {
-        if (!$request) {
-            $request = Registry::container()->get(ServerRequestInterface::class);
-        }
-        $route = Validator::attributes($request)->route();
-        $routename = basename(strtr($route->name ?? '/', ['\\' => '/']));
-        
-        return in_array($routename, [
-            'EditFactPage',
-            'EditMainFieldsPage',
-            'EditNotePage',
-            'EditRecordPage',
-            'AddChildToFamilyPage',
-            'AddChildToIndividualPage',
-            'AddNewFact',
-            'AddParentToIndividualPage',
-            'AddSpouseToFamilyPage',
-            'AddSpouseToIndividualPage',
-            'AddUnlinkedPage'
-        ]);
-    }
 
     private function getIncludeWebressourceString(array $bundleShortcuts): string
     {

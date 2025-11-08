@@ -26,6 +26,7 @@ declare(strict_types=1);
 
 namespace Schwendinger\Webtrees\Module\LinkEnhancer\Services;
 
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Schema\SeedHelpTable;
 use Fisharebest\Webtrees\FlashMessages;
 use Fisharebest\Webtrees\I18N;
@@ -129,32 +130,6 @@ class WthbService { // stuff related to webtrees manual link handling
         return ['total' => (int) $totalCnt, 'assigned' => (int) $mappedCnt];
     }
 
-    /**
-     * returns informations for active route of current request; needed for context help
-     *
-     * @param ServerRequestInterface|null $request
-     *
-     * @return array
-     */
-    public function getActiveRoute(ServerRequestInterface|null $request = null): array
-    {
-        $request ??= Registry::container()->get(ServerRequestInterface::class);
-
-        $route = $request->getAttribute('route');
-        if ($route) {
-            $extras = is_array($route->extras) && isset($route->extras['middleware']) ? implode('|', $route->extras['middleware']) : '';
-            return [
-                'path' => $route->path,
-                'handler' => $route->name,
-                'method' => implode('|', $route->allows),
-                'extras' => $extras,
-                'attr' => $route->attributes
-            ];
-
-        }
-        return [];
-    }
-
 
     /**
      * import in webtrees registered routes into table route_help_map
@@ -207,7 +182,7 @@ class WthbService { // stuff related to webtrees manual link handling
             return $std_url;
         }
         $url = $std_url;
-        $activeroute ??= $this->getActiveRoute();
+        $activeroute ??= Utils::getActiveRoute();
         $sql = "";
         $result = null;
         $subcontext = [];
