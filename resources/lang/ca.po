@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-21 21:08+0200\n"
-"PO-Revision-Date: 2025-10-21 21:13+0200\n"
+"POT-Creation-Date: 2025-11-08 14:18+0100\n"
+"PO-Revision-Date: 2025-11-08 14:25+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ca\n"
@@ -33,8 +33,8 @@ msgstr "No hi ha dades disponibles per a l'exportació."
 msgid "No CSV file was received."
 msgstr "No s'ha trobat cap arxiu CSV."
 
-#: Services/WthbService.php:359 LinkEnhancerModule.php:524
-#: LinkEnhancerModule.php:609
+#: Services/WthbService.php:359 LinkEnhancerModule.php:543
+#: LinkEnhancerModule.php:628
 #, php-format
 msgid "Routes imported (Total: %s / skipped: %s)"
 msgstr "Rutes importades (Total: %s / omeses %s)"
@@ -434,8 +434,32 @@ msgstr "text alternatiu per a la imatge a la carpeta pública"
 msgid "picture with defined height, width and additional css class"
 msgstr "imatge amb alçada, amplada i classe CSS addicional definides"
 
+#: resources/views/help-wthb.phtml:13
+msgid "Select search engine"
+msgstr "Selecciona el motor de cerca"
+
+#: resources/views/help-wthb.phtml:32
+msgid "Goto section"
+msgstr "Ves a la secció"
+
+#: resources/views/help-wthb.phtml:36 LinkEnhancerModule.php:324
+msgid "Full text search"
+msgstr "Cerca de text complet"
+
+#: resources/views/help-wthb.phtml:52 LinkEnhancerModule.php:324
+msgid "Table of contents"
+msgstr "Índex"
+
+#: resources/views/help-wthb.phtml:63
+msgid ""
+"A local copy of the table of contents does not appear to be available. "
+"Please visit the website directly."
+msgstr ""
+"Sembla que no hi ha disponible una còpia local de l'índex. Visiteu "
+"directament el lloc web."
+
 #. I18N: wthb link user setting title
-#: resources/views/wthb-modal.phtml:11 LinkEnhancerModule.php:320
+#: resources/views/wthb-modal.phtml:11 LinkEnhancerModule.php:323
 msgid "Webtrees manual link - user setting"
 msgstr "Enllaç manual de Webtrees - configuració d'usuari"
 
@@ -458,15 +482,6 @@ msgstr ""
 #: resources/views/wthb-modal.phtml:33
 msgid "This setting can be adjusted at any time."
 msgstr "Aquesta configuració es pot ajustar en qualsevol moment."
-
-#. I18N: wthb link user setting epilogue 2
-#: resources/views/wthb-modal.phtml:35 LinkEnhancerModule.php:319
-msgid ""
-"The link to the setting dialog is displayed when you hover the mouse cursor "
-"over the help link for a few seconds."
-msgstr ""
-"L'enllaç de configuració apareix quan mantens el cursor sobre l'ajuda uns "
-"segons."
 
 #. I18N: Settings - prologue sentence 1
 #: resources/views/settings.phtml:36
@@ -608,7 +623,8 @@ msgstr ""
 "fons fent referència com a dades: URL."
 
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:249 LinkEnhancerModule.php:317
+#: resources/views/settings.phtml:249 LinkEnhancerModule.php:321
+#: LinkEnhancerModule.php:790
 msgid "Webtrees manual"
 msgstr "Manual Webtrees"
 
@@ -752,12 +768,12 @@ msgid "JSON is invalid"
 msgstr "JSON no és vàlid"
 
 #. I18N: Module title
-#: LinkEnhancerModule.php:148
+#: LinkEnhancerModule.php:151
 msgid "Link-Enhancer"
 msgstr "Millorador d'enllaços"
 
 #. I18N: Module description
-#: LinkEnhancerModule.php:158
+#: LinkEnhancerModule.php:161
 msgid ""
 "Cross-references to Gedcom datasets, Markdown editor, context-sensitive link "
 "to the GenWiki webtrees manual"
@@ -765,9 +781,16 @@ msgstr ""
 "Referències als conjunts de dades GEDCOM, amb l'editor Markdown, a enllaços "
 "contextuals  al manual GenWiki webtrees"
 
-#: LinkEnhancerModule.php:375
+#: LinkEnhancerModule.php:381
 msgid "Home link - JSON with CSS rules seems to be invalid."
 msgstr "L'enllaç d'inici JSON amb regles CSS, sembla no ser vàlid."
+
+#~ msgid ""
+#~ "The link to the setting dialog is displayed when you hover the mouse "
+#~ "cursor over the help link for a few seconds."
+#~ msgstr ""
+#~ "L'enllaç de configuració apareix quan mantens el cursor sobre l'ajuda uns "
+#~ "segons."
 
 #~ msgid "The link function is controlled via the anchor part of the URI."
 #~ msgstr ""

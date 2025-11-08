@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-21 21:08+0200\n"
-"PO-Revision-Date: 2025-10-21 21:10+0200\n"
+"POT-Creation-Date: 2025-11-08 14:18+0100\n"
+"PO-Revision-Date: 2025-11-08 14:21+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: de\n"
@@ -34,8 +34,8 @@ msgstr "Keine Daten für den Export vorhanden."
 msgid "No CSV file was received."
 msgstr "Keine CSV Datei wurde empfangen."
 
-#: Services/WthbService.php:359 LinkEnhancerModule.php:524
-#: LinkEnhancerModule.php:609
+#: Services/WthbService.php:359 LinkEnhancerModule.php:543
+#: LinkEnhancerModule.php:628
 #, php-format
 msgid "Routes imported (Total: %s / skipped: %s)"
 msgstr "Routen wurden importiert (Gesamt: %s / übersprungen: %s)"
@@ -441,8 +441,32 @@ msgstr "alternativer Text für Bild im Public-Ordner"
 msgid "picture with defined height, width and additional css class"
 msgstr "Bild mit Angaben zu Höhe, Breite und zusätzlicher CSS Klasse"
 
+#: resources/views/help-wthb.phtml:13
+msgid "Select search engine"
+msgstr "Suchmaschine auswählen"
+
+#: resources/views/help-wthb.phtml:32
+msgid "Goto section"
+msgstr "Gehe zu Abschnitt"
+
+#: resources/views/help-wthb.phtml:36 LinkEnhancerModule.php:324
+msgid "Full text search"
+msgstr "Volltext-Suche"
+
+#: resources/views/help-wthb.phtml:52 LinkEnhancerModule.php:324
+msgid "Table of contents"
+msgstr "Inhaltsverzeichnis"
+
+#: resources/views/help-wthb.phtml:63
+msgid ""
+"A local copy of the table of contents does not appear to be available. "
+"Please visit the website directly."
+msgstr ""
+"Eine Kopie des Inhaltsverzeichnises scheint nicht verfügbar zu sein. Bitte "
+"die Webseite direkt aufrufen. "
+
 #. I18N: wthb link user setting title
-#: resources/views/wthb-modal.phtml:11 LinkEnhancerModule.php:320
+#: resources/views/wthb-modal.phtml:11 LinkEnhancerModule.php:323
 msgid "Webtrees manual link - user setting"
 msgstr "Webtrees Handbuch Link - Benutzereinstellungen"
 
@@ -464,15 +488,6 @@ msgstr "Webtrees Handbuch URL mit Google Translate öffnen?"
 #: resources/views/wthb-modal.phtml:33
 msgid "This setting can be adjusted at any time."
 msgstr "Diese Einstellung kann jederzeit angepasst werden."
-
-#. I18N: wthb link user setting epilogue 2
-#: resources/views/wthb-modal.phtml:35 LinkEnhancerModule.php:319
-msgid ""
-"The link to the setting dialog is displayed when you hover the mouse cursor "
-"over the help link for a few seconds."
-msgstr ""
-"Der Link zum Einstellungsdialog wird angezeigt, wenn der Mauszeiger einige "
-"Sekunden lang über den Hilfe-Link verbleibt."
 
 #. I18N: Settings - prologue sentence 1
 #: resources/views/settings.phtml:36
@@ -614,7 +629,8 @@ msgstr ""
 "benötigt - empfehlenswert ist die Referenzierung als data: URL."
 
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:249 LinkEnhancerModule.php:317
+#: resources/views/settings.phtml:249 LinkEnhancerModule.php:321
+#: LinkEnhancerModule.php:790
 msgid "Webtrees manual"
 msgstr "Webtrees Handbuch"
 
@@ -757,12 +773,12 @@ msgid "JSON is invalid"
 msgstr "JSON ist ungültig"
 
 #. I18N: Module title
-#: LinkEnhancerModule.php:148
+#: LinkEnhancerModule.php:151
 msgid "Link-Enhancer"
 msgstr "Link-Enhancer"
 
 #. I18N: Module description
-#: LinkEnhancerModule.php:158
+#: LinkEnhancerModule.php:161
 msgid ""
 "Cross-references to Gedcom datasets, Markdown editor, context-sensitive link "
 "to the GenWiki webtrees manual"
@@ -770,9 +786,16 @@ msgstr ""
 "Querverweise zu Gedcom-Datensätzen, Markdown-Editor, kontextabhängiger Link "
 "zum GenWiki Webtrees Handbuch"
 
-#: LinkEnhancerModule.php:375
+#: LinkEnhancerModule.php:381
 msgid "Home link - JSON with CSS rules seems to be invalid."
 msgstr "Home-Link - JSON mit CSS-Regeln scheint ungültig zu sein."
+
+#~ msgid ""
+#~ "The link to the setting dialog is displayed when you hover the mouse "
+#~ "cursor over the help link for a few seconds."
+#~ msgstr ""
+#~ "Der Link zum Einstellungsdialog wird angezeigt, wenn der Mauszeiger "
+#~ "einige Sekunden lang über den Hilfe-Link verbleibt."
 
 #~ msgid "The link function is controlled via the anchor part of the URI."
 #~ msgstr ""
