@@ -1,6 +1,6 @@
 /* Webtrees manual link */
 /*- full text search and table of contents: GenWiki TOC */
-.wthbtoc { clear:both;}
+.wthbtoc { clear:both; height:50vh; overflow:scroll;}
 .wthbtoc dl { margin-top: 0.2em; margin-bottom: 0.5em; }
 .wthbtoc dd { margin-left: 1.6em; display:block;}
 .wthbtoc h2 { border-bottom: 1px solid gray; font-size:1.2em; margin-top:0.4em; margin-right:0.1em;}
