@@ -5,7 +5,7 @@ const getWthbCfg = () => {
             help_title_wthb: 'Webtrees manual', //link displayname
             help_title_ext: 'Help',
             cfg_title: '', // tooltip user setting link
-            searchntoc: 'Full text search / Table of contents', // title of submenu item of topmenu wthb-link
+            searchntoc: 'Full-text search / Table of contents', // title of submenu item of topmenu wthb-link
         },
         help_url: '#', // help url for top menu link
         faicon: false, // prepend symbol to top menu help link
@@ -328,7 +328,7 @@ const initWthbHelp = (searchengines) => {
 
     $().ready(() => $(tocheads).get(0).scrollIntoView());
 
-    // full text search
+    // full-text search
     const setSEngineIcon = (value) => {
         let iconspan = $('#sengineicon');
         $(iconspan).attr('class', function (i, c) {
