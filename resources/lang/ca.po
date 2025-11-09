@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-09 17:54+0100\n"
-"PO-Revision-Date: 2025-11-08 14:25+0100\n"
+"POT-Creation-Date: 2025-11-09 18:11+0100\n"
+"PO-Revision-Date: 2025-11-09 18:12+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ca\n"
@@ -442,8 +442,8 @@ msgstr "Selecciona el motor de cerca"
 msgid "Goto section"
 msgstr "Ves a la secció"
 
-#: resources/views/help-wthb.phtml:36
-#, fuzzy
+#: resources/views/help-wthb.phtml:36 resources/views/settings.phtml:295
+#: LinkEnhancerModule.php:323
 msgid "Full-text search"
 msgstr "Cerca de text complet"
 
@@ -638,10 +638,6 @@ msgstr "Anteposar una icona a l'enllaç d'ajuda"
 msgid "Help link for subcontext topics"
 msgstr "Enllaç d'ajuda per a temes de subcontext"
 
-#: resources/views/settings.phtml:295 LinkEnhancerModule.php:323
-msgid "Full text search"
-msgstr "Cerca de text complet"
-
 #: resources/views/settings.phtml:313
 msgid "Data table"
 msgstr "Tabla de dades"
@@ -790,6 +786,9 @@ msgstr ""
 #: LinkEnhancerModule.php:375
 msgid "Home link - JSON with CSS rules seems to be invalid."
 msgstr "L'enllaç d'inici JSON amb regles CSS, sembla no ser vàlid."
+
+#~ msgid "Full text search"
+#~ msgstr "Cerca de text complet"
 
 #~ msgid ""
 #~ "The link to the setting dialog is displayed when you hover the mouse "

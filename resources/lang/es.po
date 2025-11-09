@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-09 17:54+0100\n"
-"PO-Revision-Date: 2025-11-08 14:23+0100\n"
+"POT-Creation-Date: 2025-11-09 18:11+0100\n"
+"PO-Revision-Date: 2025-11-09 18:13+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es\n"
@@ -443,8 +443,8 @@ msgstr "Seleccionar motor de búsqueda"
 msgid "Goto section"
 msgstr "Ir a la sección"
 
-#: resources/views/help-wthb.phtml:36
-#, fuzzy
+#: resources/views/help-wthb.phtml:36 resources/views/settings.phtml:295
+#: LinkEnhancerModule.php:323
 msgid "Full-text search"
 msgstr "Búsqueda de texto completo"
 
@@ -637,10 +637,6 @@ msgstr "Anteponer un icono al enlace de ayuda"
 msgid "Help link for subcontext topics"
 msgstr "Enlace de ayuda para temas secundarios"
 
-#: resources/views/settings.phtml:295 LinkEnhancerModule.php:323
-msgid "Full text search"
-msgstr "Búsqueda de texto completo"
-
 #: resources/views/settings.phtml:313
 msgid "Data table"
 msgstr "Tabla de datos"
@@ -789,6 +785,9 @@ msgstr ""
 #: LinkEnhancerModule.php:375
 msgid "Home link - JSON with CSS rules seems to be invalid."
 msgstr "El enlace de inicio JSON con reglas CSS, parece no ser válido."
+
+#~ msgid "Full text search"
+#~ msgstr "Búsqueda de texto completo"
 
 #~ msgid ""
 #~ "The link to the setting dialog is displayed when you hover the mouse "

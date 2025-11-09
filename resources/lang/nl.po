@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-09 17:54+0100\n"
-"PO-Revision-Date: 2025-11-08 14:26+0100\n"
+"POT-Creation-Date: 2025-11-09 18:11+0100\n"
+"PO-Revision-Date: 2025-11-09 18:12+0100\n"
 "Last-Translator: TheDutchJewel <thedutchjewel@gmail.com>\n"
 "Language-Team: TheDutchJewel\n"
 "Language: nl\n"
@@ -440,8 +440,8 @@ msgstr "Zoekmachine selecteren"
 msgid "Goto section"
 msgstr "Ga naar sectie"
 
-#: resources/views/help-wthb.phtml:36
-#, fuzzy
+#: resources/views/help-wthb.phtml:36 resources/views/settings.phtml:295
+#: LinkEnhancerModule.php:323
 msgid "Full-text search"
 msgstr "Volledige tekst zoeken"
 
@@ -633,10 +633,6 @@ msgstr "Voeg een pictogram toe vóór de helplink"
 msgid "Help link for subcontext topics"
 msgstr "Help link voor subcontext onderwerpen"
 
-#: resources/views/settings.phtml:295 LinkEnhancerModule.php:323
-msgid "Full text search"
-msgstr "Volledige tekst zoeken"
-
 #: resources/views/settings.phtml:313
 msgid "Data table"
 msgstr "Gegevenstabel"
@@ -785,6 +781,9 @@ msgstr ""
 #: LinkEnhancerModule.php:375
 msgid "Home link - JSON with CSS rules seems to be invalid."
 msgstr "Startpagina-link - JSON met CSS-regels lijkt ongeldig te zijn."
+
+#~ msgid "Full text search"
+#~ msgstr "Volledige tekst zoeken"
 
 #~ msgid ""
 #~ "The link to the setting dialog is displayed when you hover the mouse "

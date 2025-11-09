@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-09 17:54+0100\n"
-"PO-Revision-Date: 2025-11-08 14:21+0100\n"
+"POT-Creation-Date: 2025-11-09 18:11+0100\n"
+"PO-Revision-Date: 2025-11-09 18:12+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: de\n"
@@ -449,8 +449,8 @@ msgstr "Suchmaschine auswählen"
 msgid "Goto section"
 msgstr "Gehe zu Abschnitt"
 
-#: resources/views/help-wthb.phtml:36
-#, fuzzy
+#: resources/views/help-wthb.phtml:36 resources/views/settings.phtml:295
+#: LinkEnhancerModule.php:323
 msgid "Full-text search"
 msgstr "Volltext-Suche"
 
@@ -464,8 +464,8 @@ msgid ""
 "A local copy of the table of contents does not appear to be available. "
 "Please visit the website directly."
 msgstr ""
-"Eine Kopie des Inhaltsverzeichnises scheint nicht verfügbar zu sein. Bitte "
-"die Webseite direkt aufrufen. "
+"Eine Kopie des Inhaltsverzeichnisses scheint nicht verfügbar zu sein. Bitte "
+"die Webseite direkt aufrufen."
 
 #. I18N: wthb link user setting title
 #: resources/views/wthb-modal.phtml:11 LinkEnhancerModule.php:322
@@ -644,10 +644,6 @@ msgstr "Symbol vor dem Hilfe-Link anzeigen"
 msgid "Help link for subcontext topics"
 msgstr "Hilfe-Link für Unterthemen"
 
-#: resources/views/settings.phtml:295 LinkEnhancerModule.php:323
-msgid "Full text search"
-msgstr "Volltext-Suche"
-
 #: resources/views/settings.phtml:313
 msgid "Data table"
 msgstr "Daten-Tabelle"
@@ -795,6 +791,9 @@ msgstr ""
 #: LinkEnhancerModule.php:375
 msgid "Home link - JSON with CSS rules seems to be invalid."
 msgstr "Home-Link - JSON mit CSS-Regeln scheint ungültig zu sein."
+
+#~ msgid "Full text search"
+#~ msgstr "Volltext-Suche"
 
 #~ msgid ""
 #~ "The link to the setting dialog is displayed when you hover the mouse "
