@@ -27,6 +27,9 @@ declare(strict_types=1);
 namespace Schwendinger\Webtrees\Module\LinkEnhancer;
 
 use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\Registry;
+use Fisharebest\Webtrees\Validator;
+use Psr\Http\Message\ServerRequestInterface;
 
 class LinkEnhancerUtils { // misc helper functions
     /**
@@ -157,5 +160,84 @@ class LinkEnhancerUtils { // misc helper functions
         ];
 
         return $mdsyntax;
-    }    
+    }
+
+
+    /**
+     * returns informations for active route of current request; needed for context help
+     *
+     * @param ServerRequestInterface|null $request
+     *
+     * @return array
+     */
+    public static function getActiveRoute(ServerRequestInterface|null $request = null): array
+    {
+        $request ??= Registry::container()->get(ServerRequestInterface::class);
+
+        $route = $request->getAttribute('route');
+        if ($route) {
+            $extras = is_array($route->extras) && isset($route->extras['middleware']) ? implode('|', $route->extras['middleware']) : '';
+            return [
+                'path' => $route->path,
+                'handler' => $route->name,
+                'method' => implode('|', $route->allows),
+                'extras' => $extras,
+                'attr' => $route->attributes
+            ];
+
+        }
+        return [];
+    }
+
+
+    /**
+     * is it a request for an edit page
+     *
+     * @param ServerRequestInterface $request
+     * @return bool
+     */
+    public static function isEditPage(ServerRequestInterface|null $request = null): bool
+    {
+        if (!$request) {
+            $request = Registry::container()->get(ServerRequestInterface::class);
+        }
+        $route = Validator::attributes($request)->route();
+        $routename = basename(strtr($route->name ?? '/', ['\\' => '/']));
+
+        return in_array($routename, [
+            'EditFactPage',
+            'EditMainFieldsPage',
+            'EditNotePage',
+            'EditRecordPage',
+            'AddChildToFamilyPage',
+            'AddChildToIndividualPage',
+            'AddNewFact',
+            'AddParentToIndividualPage',
+            'AddSpouseToFamilyPage',
+            'AddSpouseToIndividualPage',
+            'AddUnlinkedPage'
+        ]);
+    } 
+
+
+    /**
+     * is it a request for an admin backend page
+     *
+     * @param ServerRequestInterface $request
+     * @return bool
+     */
+    public static function isAdminPage(ServerRequestInterface|null $request = null): bool
+    {
+        if (!$request) {
+            $request = Registry::container()->get(ServerRequestInterface::class);
+        }
+        $activeRouteInfo = self::getActiveRoute($request);
+        $action = strtolower(($request->getAttribute('action') ?? ''));
+
+        return (str_starts_with($activeRouteInfo['path'], '/admin') 
+            || str_contains($activeRouteInfo['extras'], 'AuthAdministrator')
+            || (str_contains($activeRouteInfo['extras'], 'AuthManager') && !str_contains($activeRouteInfo['path'], '/tree-page-'))
+            || (str_starts_with($activeRouteInfo['path'], '/module') && str_starts_with($action, 'admin')));
+    }     
+
 }

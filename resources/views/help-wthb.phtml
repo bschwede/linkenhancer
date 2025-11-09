@@ -1,0 +1,65 @@
+<?php
+
+declare(strict_types=1);
+
+use Fisharebest\Webtrees\I18N;
+
+/**
+ * @var string                $toc_html
+ * @var string                $toc_url
+ * @var mixed                 $search
+ */
+
+$options = ['-1' => '-- ' . I18N::translate('Select search engine') . ' --'];
+foreach ($search as $key => $value) {
+    $options[$key] = $key;
+}
+
+$searchselect = view('components/select', [
+    'class'    => '',
+    'id'       => 'wthbsearch',
+    'name'     => 'wthbsearch',
+    'selected' => '-1',
+    'options'  => $options,
+]);
+
+
+$tocselect = view('components/select', [
+    'class'    => '',
+    'id'       => 'wthbtocheads',
+    'name'     => 'wthbtocheads',
+    'selected' => '-1',
+    'options'  => [ '-1' => '-- ' . I18N::translate("Goto section") . ' --' ]
+]);
+
+?>
+<h4 class="helpsection"><?= I18N::translate("Full-text search") ?> <span id="sengineicon" class="linkicon"></span></h4>
+<div class="col-sm-12">
+    <div class="row">
+        <div class="col-sm-4">
+            <input class="form-control" id="wthbsearchfilter" type="text" placeholder="<?= e(/*I18N: webtrees.pot */ I18N::translate('Search filters')) ?>">
+        </div>
+        <div class="col-sm-4">
+            <?= $searchselect ?>
+        </div>
+        <div class="col-sm-4">
+            <a id="wthbsearchsubmit" class="btn btn-secondary" href="#"><?= view('icons/search') ?> <?= /*I18N: webtrees.pot */ I18N::translate('Search') ?></a>
+        </div>
+    </div>
+</div>
+
+
+<h4 class="helpsection"><a class="gwlink" target="_blank" href="<?= e($toc_url) ?>"><?= I18N::translate('Table of contents') ?></a> <span class="linkicon icon-compgen"></span></h4>
+<?php if ($toc_html) : ?>
+<p><?= $tocselect ?></p>
+<p><input class="form-control" id="wthbtocfilter" type="text" placeholder="<?= e(/*I18N: webtrees.pot */I18N::translate('Search filters')) ?>"> <em><span id="wthbtocfiltercnt"></span></em></p>
+
+<?= $toc_html ?>
+
+<script>
+  LinkEnhMod.initWthbHelp(<?= json_encode($search) ?>);
+</script>
+<?php else : ?>
+<p><?= I18N::translate("A local copy of the table of contents does not appear to be available. Please visit the website directly.") ?></p>
+<p style="text-align: center;"><a class="gwlink" target="_blank" href="<?= e($toc_url) ?>"><?= $toc_url ?></a></p>
+<?php endif ?>

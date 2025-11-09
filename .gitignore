@@ -4,3 +4,5 @@ resources/css/bundle-*
 resources/lang/*.mo
 dist/*
 *.hash
+util/wthb-toc
+resources/views/*.phtml.~*

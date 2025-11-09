@@ -288,7 +288,27 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
                 </div>
             </fieldset>
 
-            <!-- -->
+            <!-- full-text search and toc --><?php $prefId = LinkEnhancerModule::PREF_WTHB_TOCNSEARCH; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                        <?= I18N::translate("Full-text search") . ' / ' . I18N::translate('Table of contents') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value">
+                        <?= view('components/radios-inline', [
+                            'id' => $prefId,
+                            'name' => $prefId,
+                            'options' => [
+                                I18N::translate('no'),
+                                /*I18N: webtrees.pot */ I18N::translate('yes')
+                            ],
+                            'selected' => (int) $prefs[$prefId]
+                        ]) ?>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- wthb mapping data table -->
             <div class="col-sm-3 col-form-label wt-page-options-label">
                 <?= I18N::translate('Data table') ?>
             </div>

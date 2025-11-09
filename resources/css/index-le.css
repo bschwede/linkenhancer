@@ -31,7 +31,7 @@ h2 .linkicon {
     background-image:
     url("./icons/dornbirn_30x30.png");
 }
-.icon-compgen {
+.icon-compgen { /* also in index-wthb.css */
     background-image:
     url("./icons/compgen_32x32.png");
 }

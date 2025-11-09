@@ -1,0 +1,43 @@
+/* Webtrees manual link */
+/*- full text search and table of contents: GenWiki TOC */
+.wthbtoc { clear:both; height:50vh; overflow:scroll;}
+.wthbtoc dl { margin-top: 0.2em; margin-bottom: 0.5em; }
+.wthbtoc dd { margin-left: 1.6em; display:block;}
+.wthbtoc h2 { border-bottom: 1px solid gray; font-size:1.2em; margin-top:0.4em; margin-right:0.1em;}
+p:has(> #wthbtocfilter) { float: left; padding-right: 3.0em; }
+p:has(+ .wthbtoc), #wthbtocfiltercnt { color: gray; font-size: 0.8em;}
+.helpsection { border-bottom: 2px solid gray; margin-top:1.0em; margin-bottom: 0.7em;}
+.helpsection:nth-child(n+2) { margin-top: 1.8em; }
+.helpsection .linkicon { /* .linkicon is also defined in index-le.css - redundant definition just in case le component is not active */
+    background-repeat: no-repeat !important;
+    display: unset !important; 
+    background-size: 25px 25px !important;
+    padding: 0 13px !important;
+    margin-left: 0.3em;
+}
+
+/* search engine icons */
+.icon-google {
+    background-image:
+    url("./icons/google_32x32.ico");
+}
+.icon-duckduckgo {
+    background-image:
+    url("./icons/duckduckgo_30x30.png");
+}
+.icon-ecosia {
+    background-image:
+    url("./icons/ecosia_30x30.png");
+}
+.icon-perplexity {
+    background-image:
+    url("./icons/perplexity_30x30.png");
+}
+.icon-startpage {
+    background-image:
+    url("./icons/startpage_32x32.png");
+}
+.icon-compgen { /* redundant for admin backend - also in index-le.css */
+    background-image:
+    url("./icons/compgen_32x32.png");
+}

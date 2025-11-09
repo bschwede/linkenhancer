@@ -134,7 +134,7 @@ function createMDECommandbar(editor, showHelp) {
             {
                 name: 'modHelp',
                 title: I18N['Help'],
-                innerHTML: `<a href="#" data-bs-backdrop="static" data-bs-toggle="modal" data-bs-target="#wt-ajax-modal" data-wt-href="${LEhelp}"><b style="padding:0 3px;">?</b></a>`,
+                innerHTML: `<a href="#" data-bs-backdrop="static" data-bs-toggle="modal" data-bs-target="#le-ajax-modal" data-wt-href="${LEhelp}"><b style="padding:0 3px;">?</b></a>`,
             }
         );
     }
