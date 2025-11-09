@@ -31,7 +31,7 @@ The main purpose of this module is to make [**links to data records**](#enhanced
 Additionally there are some goodies more or less related with links:
 
 - The note textarea can be a [**visual markdown editor**](#mde) with **markdown help**.
-- A [**context sensitive help link**](#wthb) to the [german webtrees manual](https://wiki.genealogy.net/Webtrees_Handbuch) can be activated in the small menu at the top of the page. It's also possible to activate them for subcontext topics.
+- [**Context sensitive help links**](#wthb) to the [german webtrees manual](https://wiki.genealogy.net/Webtrees_Handbuch) can be activated in the small menu at the top of the page and for subcontext topics on the page. Furthermore, full-text search is supported and it is possible to browse the table of contents.
 - The [**site title can be a link**](#homelink) to the tree homepage or the user my page.
 - A few minor [**patches**](#patches), that can applied by bash script (not necessary for this module).
 
@@ -114,9 +114,9 @@ After a lot of theory: How does it looks like in webtrees?! In the upper part of
 
 Now some **explanation** for the used properties in the code snippet above (as a reminder, how the syntax of a base enhanced link looks like: `#@param-key=param-value`):
 * *key* = is the above mentioned short name or query parameter key (param-key)
-* *name* = title or label to be displayed as link title;
+* *name* = title or label to be displayed as link title;\
   standard: the placeholder `$ID` will be replaced by the given id (param-value)
-* *url* = service url to be called
+* *url* = service url to be called\
   standard: the parameter value / given record id (param-value) will be appended to the end of the url
   It can also be a function provided, that accepts as parameter (id, title) and returns an object `{ url, title }`. This returned title will be set instead of the name-property.
 * *cname* = [CSS](https://en.wikipedia.org/wiki/CSS) class name(s) whitespace separated
@@ -124,11 +124,11 @@ Now some **explanation** for the used properties in the code snippet above (as a
 
 `I18N` is an JavaScript object passed through from this module. 
 
-Any CSS rules required are best added via the [“CSS and JS” module](https://wiki.genealogy.net/Webtrees_Handbuch/Anleitung_f%C3%BCr_Administratoren/Module#CSS_und_JS). Only the definition of the icon (size 30 x 30 pixels is sufficient) as a background image is actually needed - referencing as data: URL (see also: [mdn web docs - data: URLs](https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Schemes/data)).
+Any CSS rules required are best added via the [“CSS and JS” module](https://wiki.genealogy.net/Webtrees_Handbuch/Anleitung_f%C3%BCr_Administratoren/Module#CSS_und_JS). Only the definition of the icon (size 30 x 30 pixels is sufficient) as a background image is actually needed - referencing as data: URL (see also: [mdn web docs - data: URLs](https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Schemes/data)).\
 For example: `.icon-whatever { background-image: url(...) }`
 
 
-**Note:** If Webtrees provides better support for UID, referencing via UID will probably also be implemented in this module, as this will make links more fail-safe.
+**Note:** When Webtrees provides better support for UID, referencing via UID will probably also be implemented in this module, as this will make links more fail-safe.
 See also:
 - Forum post [Feature Request: Improved support for UID / _UID](https://www.webtrees.net/index.php/forum/9-request-for-new-feature/39942-feature-request-improved-support-for-uid-uid)
 - PR [UID References in notes and text #5145](https://github.com/fisharebest/webtrees/pull/5145)
@@ -170,14 +170,21 @@ Besides syntax higlighting it ships with an icon bar for common format commands,
 
 <a name="wthb"></a>
 ### German webtrees manual
-A context sensitive link to the [german webtrees manual](https://wiki.genealogy.net/Webtrees_Handbuch) can be added by javascript to the small navigation menu (if this feature is also desired in the admin backend, patch P002 would need to be applied or at least the custom module [vesta_common](https://github.com/vesta-webtrees-2-custom-modules/vesta_common/tree/master) would need to be installed).
+A **context sensitive help link** to the [german webtrees manual](https://wiki.genealogy.net/Webtrees_Handbuch) can be added to the small navigation menu. Context links are also available for components on pages provided by custom extensions (e.g. on the individuals page, the start page or items in the main menu) – these can be identified by the i symbols in a circle.
+![WTHB subcontext help](resources/img/screenshot_wthb-subcontext.png)
 
-If the webtrees page is displayed in a language other than German, it is possible to open the webtrees manual URL via a translation service ([Google Translate](https://translate.google.com/)). This can be enabled or disabled as a site setting or delegated to the visitor to decide.
+If this feature is also required in the admin backend, patch P002 must be applied or at least the custom module [vesta_common](https://github.com/vesta-webtrees-2-custom-modules/vesta_common/tree/master) must be installed
+
+If the webtrees page is displayed in a language other than german, it is possible to **open the webtrees manual URL via a translation service** ([Google Translate](https://translate.google.com/)). This can be enabled or disabled as a site setting or delegated to the visitor to decide.
 ![WTHB user setting](resources/img/screenshot_wthb-user-setting.png)
-The link to the setting dialog is displayed when you hover the mouse cursor over the help link for a few seconds.
+The settings dialogue can be accessed via the popover of the help link in the top menu. When this option is enabled, you will also find a link to a dialogue box that displays a **full-text search** in the german webtrees manual (using various search engines) and the **table of contents**.
+![WTHB full-text search and toc](resources/img/screenshot_wthb-help.png)
 
 
-The mapping of routes to help articles in the manual is stored in the database table `route_help_map`. The table has the following headers (the headers required in a CSV file for import are marked with !!):
+The **mapping of routes to help articles** in the manual is stored in the database table `route_help_map`. This module comes with predefined mapping rules. If there is something missing or you find an issue, don't hesitate to share it. I'll include it in the next release. 
+
+**Technical background information** follows now.\
+The table has the following headers (the headers required in a CSV file for import are marked with !!):
 
 * `id`: automatic key - not relevant, the data field is only used to make it easier to identify the data record during editing.
 * `path` **!!**: route path - corresponds to the path of webtres pretty urls
@@ -226,7 +233,7 @@ Further more you can import and export data in csv format in order to make chang
 
 In case of discrepancies the context help can be more easily adjusted by activating the option "Output of debug information on the JS console". This provides you with information on the active route and, if applicable, data table entries found for matching routing to help topics.
 
-This module comes with predefined mapping rules. If there is something missing or you find an issue, don't hesitate to share it. I'll include it in the next release.
+This module comes with a local copy of the german webtrees manual **table of contents**. An automatic update is not implemented so far. If you wish to update it without updating this module, you can use the utility script [update-wthb-toc.sh](util/update-wthb-toc.sh).
 
 
 <a name="homelink"></a>
@@ -288,8 +295,10 @@ and build-in themes and some other custom modules.
 
 <a name="installation"></a>
 ## Installation
-To manually install the module, perform the following steps:
+- Install and use [Custom Module Manager](https://github.com/Jefferson49/CustomModuleManager) for an easy and convenient installation of webtrees custom modules.
+- Open the Custom Module Manager view in webtrees, select "linkenhancer", and click on the "Install Module" button.
 
+**Manual installation**:
 1. Download the [latest release](https://github.com/bschwede/linkenhancer/releases/latest) of the module.
 2. Upload the downloaded file to your web server.
 3. Unzip the package into your ``modules_v4`` directory.
@@ -297,7 +306,7 @@ To manually install the module, perform the following steps:
 
 If everything was successful, you should see a subdirectory ``linkenhancer`` with the unpacked content in the ``modules_v4`` directory.
 
-During the initial installation, the following problem may occur: "PDO error - There is no active transaction" - for more details see [known issues](./issues?q=label%3A"known-issue").
+During the initial installation, the following problem may occur: "PDO error - There is no active transaction" - for more details see [known issues](https://github.com/bschwede/linkenhancer/issues?q=label%3A"known-issue").
 
 <a name="contributing"></a>
 ## Contributing
