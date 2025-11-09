@@ -78,7 +78,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public const EXAMPLE_HOME_LINK_JSON = '{ "*": ".homelink { color: #039; }",  "colors_nocturnal": ".homelink { color: antiquewhite; }" }';
     public const PREF_WTHB_ACTIVE = 'WTHB_LINK_ACTIVE'; // link to GenWiki "Webtrees Handbuch"
     public const PREF_WTHB_SUBCONTEXT = 'WTHB_SUBCONTEXT'; // support subcontext topics
-    public const PREF_WTHB_TOCNSEARCH = 'WTHB_TOCNSEARCH'; // support webtrees manual full text search and toc
+    public const PREF_WTHB_TOCNSEARCH = 'WTHB_TOCNSEARCH'; // support webtrees manual full-text search and toc
     public const PREF_WTHB_FAICON = 'WTHB_FAICON'; // prepend fa icon to help link
     public const PREF_WTHB_UPDATE = 'WTHB_UPDATE'; // auto refresh table on module update
     public const PREF_WTHB_LASTHASH = 'WTHB_LASTHASH'; // last csv hash used for import
@@ -320,7 +320,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                     'help_title_wthb'   => I18N::translate('Webtrees manual'),
                     'help_title_ext'    => /*I18N: webtrees.pot */ I18N::translate('Help'),
                     'cfg_title'         => /*I18N: wthb link user setting title */ I18N::translate('Webtrees manual link - user setting'),
-                    'searchntoc'        => I18N::translate("Full text search") . ' / ' . I18N::translate('Table of contents'),
+                    'searchntoc'        => I18N::translate("Full-text search") . ' / ' . I18N::translate('Table of contents'),
                 ],
                 'help_url'     => $help_url,
                 'faicon'       => boolval($this->getPref(self::PREF_WTHB_FAICON)),
@@ -745,7 +745,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     }
 
     /**
-     * Serve help page for webtrees manual full text search and table of contents
+     * Serve help page for webtrees manual full-text search and table of contents
      * Addressed by top menu WTHB-Link (see XXX.js; url passed via window.LEhelp in headContent)
      *
      * @param ServerRequestInterface $request
