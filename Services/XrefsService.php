@@ -39,15 +39,15 @@ use Fisharebest\Webtrees\Tree;
 use Illuminate\Database\Query\Builder;
 
 
-enum RecType {
-    case Individual;
-    case Family;
-    case Note;
-    case Source;
-    case Repository;
-    case Media;
-    case Location;
-    case Html;
+enum RecType : string { // enum name = class name, value = table name
+    case Individual = 'individuals';
+    case Family = 'families';
+    case Note = 'other';
+    case Source = 'sources';
+    case Repository = 'other '; //enum need unique values, so we add whitespaces
+    case Media = 'media';
+    case Location = 'other  '; //enum need unique values, so we add whitespaces
+    case Html = 'html';
 }
 
 class XrefsService { // stuff related with handling cross references
@@ -69,12 +69,13 @@ class XrefsService { // stuff related with handling cross references
                 break;
 
             default:
-                [ $table, $type ] = $this->getRecTypeQueryParameter($rectype);
+                $table = trim($rectype->value);
                 $prefix = $table[0];
                 
                 $query = DB::table($table);
                 if ($table == 'other') {
-                    $query->where('o_type', '=', $type);
+                    $type_classname = $rectype->name;
+                    $query->where('o_type', '=', $type_classname::RECORD_TYPE);
                 }
                 
                 $fieldname = $prefix . '_gedcom';
@@ -86,8 +87,7 @@ class XrefsService { // stuff related with handling cross references
                             ->orWhere($fieldname, DB::regexOperator(), `[1-9] NOTE .+@{$xref}@`)
                             ->orWhere($fieldname, DB::regexOperator(), `[1-9] NOTE @{$xref}@.+`)
                             ->orWhere($fieldname, DB::regexOperator(), `[1-9] CON[CT] .*@{$xref}@`)
-                            ->orWhere($fieldname, DB::regexOperator(), `[1-9] TEXT .*@{$xref}@`)
-                            ->orWhere($fieldname, DB::regexOperator(), `[1-9] _TODO .*@{$xref}@`);
+                            ->orWhere($fieldname, DB::regexOperator(), `[1-9] TEXT .*@{$xref}@`);
                     });
 
 
@@ -101,17 +101,4 @@ class XrefsService { // stuff related with handling cross references
         return $query;
     }
 
-    private function getRecTypeQueryParameter(RecType $rectype): array {
-        
-        return match ($rectype) { // table, type (only for 'other')
-            RecType::Individual => [ 'individuals', '' ],
-            RecType::Family     => [ 'families',    '' ],
-            RecType::Note       => [ 'other',       Note::RECORD_TYPE ],
-            RecType::Source     => [ 'sources',     '' ],
-            RecType::Repository => [ 'other',       Repository::RECORD_TYPE ],
-            RecType::Media      => [ 'media',       '' ],
-            RecType::Location   => [ 'other',       Location::RECORD_TYPE ],
-            default             => [ '', '']
-        };
-    }
 }

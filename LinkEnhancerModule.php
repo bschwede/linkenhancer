@@ -776,8 +776,11 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         // key   = Displayname without whitespaces, in lower case prepended with 'icon-' it's the css class name for background icon to be displayed
         // value = search engine url, append search terms uriencoded
         return [
+            'GenWiki'    => 'https://wiki.genealogy.net/index.php?title=Spezial%3ASuche&profile=advanced&fulltext=1&ns0=1&ns6=1&search=%22Webtrees+Handbuch%22+',
             'Startpage'  => 'https://www.startpage.com/do/search?query=site:wiki.genealogy.net+"Webtrees%20Handbuch"+AND+',
             'Ecosia'     => 'https://www.ecosia.org/search?q=site%3Agenealogy.net%20%22webtrees%20handbuch%22%20AND%20',
+            'mojeek'     => 'https://www.mojeek.com/search?q=inurl%3Agenealogy.net+%22Webtrees+Handbuch%22+',
+            'Qwant'      => 'https://www.qwant.com/?t=web&q=site%3Awiki.genealogy.net+%22Webtrees+Handbuch%22+AND+',
             'Perplexity' => 'https://www.perplexity.ai/search/?q=site:wiki.genealogy.net%20inurl:%22Webtrees%20Handbuch%22+',
             'DuckDuckGo' => 'https://duckduckgo.com/?q=site:wiki.genealogy.net+inurl:"Webtrees%20Handbuch"+',
             'Google'     => 'https://www.google.com/search?q=site:wiki.genealogy.net+"webtrees+Handbuch"+AND+',
