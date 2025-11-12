@@ -41,3 +41,11 @@ p:has(+ .wthbtoc), #wthbtocfiltercnt { color: gray; font-size: 0.8em;}
     background-image:
     url("./icons/compgen_32x32.png");
 }
+.icon-mojeek {
+    background-image:
+    url("./icons/mojeek_32x32.png");
+}
+.icon-qwant {
+    background-image:
+    url("./icons/qwant_30x30.png");
+}

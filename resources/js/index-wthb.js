@@ -335,7 +335,8 @@ const initWthbHelp = (searchengines) => {
             return c.replace(/(^|\s)icon-\S+/g, '');
         });
         if (value !== -1) {
-            $(iconspan).addClass('icon-' + String(value).toLowerCase());
+            let suffix = String(value).toLowerCase();
+            $(iconspan).addClass('icon-' + (suffix === 'genwiki' ? 'compgen' : suffix));
         }
     }
 
