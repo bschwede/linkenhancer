@@ -31,6 +31,8 @@ import { deleteAsync as del } from "del";
 import * as fs from 'node:fs/promises';
 
 import child_process from "node:child_process";
+import { globSync } from 'glob';
+import merge from 'merge-stream';
 //import readline from "node:readline/promises";
 //import process from "process";
 
@@ -93,18 +95,26 @@ const jsExtractLeConfig = async () => {
     }   
 }
 
-const jsIndex = async () => {
-    const files = await glob('./resources/js/index-*.js');
-    files.forEach(filename => {
-        // Extract file name, e.g. index-abc.js becomes abc
-        const baseName = path.basename(filename, '.js'); // e.g. "index-abc"
-        const infix = baseName.split('index-')[1];  // here "abc"
-        //log(`${filename} / ${baseName} / ${infix}`);
+const jsIndex = () => {
+    const files = globSync('./resources/js/index-*.js');
 
-        jsPipe(filename, infix);
+    if (files.length === 0) {
+        log('jsIndex: keine Dateien gefunden – übersprungen');
+        // Leeren, sofort endenden Stream zurückgeben:
+        return merge(); // merge() ohne Argumente endet sofort
+    }
+
+    const streams = files.map((filename) => {
+        const infix = path.basename(filename, '.js').replace(/^index-/, '');
+        const s = jsPipe(filename, infix);
+        s.on('error', (err) => {
+            log.error(`jsIndex: Fehler in Pipeline "${infix}":`, err);
+        });
+        return s;
     });
 
-}
+    return merge(...streams); // <-- EIN Stream als Fertig‑Signal
+};
 
 const jscripts = gulp.parallel(jsIndex, jsExtractLeConfig);
 
