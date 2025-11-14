@@ -43,8 +43,8 @@ fi
 echo "Test content of $APIHTMLFILE..."
 grep -q "<div class=\"wthbtoc\">" "$APIHTMLFILE" || { echo "!div-tag with class wthbtoc not found"; exit 2; }
 HTMLSIZE="$(wc -c "$APIHTMLFILE" | cut -d ' ' -f1)"
-[ "$HTMLSIZE" -lt 150000 ] && { echo "!File size seems too be to small"; exit 2; }
-[ "$HTMLSIZE" -gt 600000 ] && { echo "!File size seems too be to big"; exit 2; }
+[ "$HTMLSIZE" -lt 150000 ] && { echo "!File size seems to be too small"; exit 2; }
+[ "$HTMLSIZE" -gt 600000 ] && { echo "!File size seems to be too big"; exit 2; }
 grep -q "<script" "$APIHTMLFILE" && { echo "!text contains script-tags - please check"; exit 2; }
 echo "OK"
 
