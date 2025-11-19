@@ -36,14 +36,14 @@ $tocselect = view('components/select', [
 <h4 class="helpsection"><?= I18N::translate("Full-text search") ?> <span id="sengineicon" class="linkicon"></span></h4>
 <div class="col-sm-12">
     <div class="row">
-        <div class="col-sm-4">
+        <div class="col-sm-4 pb-2">
             <input class="form-control" id="wthbsearchfilter" type="text" placeholder="<?= e(/*I18N: webtrees.pot */ I18N::translate('Search filters')) ?>">
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-4 pb-3">
             <?= $searchselect ?>
         </div>
         <div class="col-sm-4">
-            <a id="wthbsearchsubmit" class="btn btn-secondary" href="#"><?= view('icons/search') ?> <?= /*I18N: webtrees.pot */ I18N::translate('Search') ?></a>
+            <button type="button" id="wthbsearchsubmit" class="btn btn-secondary"><?= view('icons/search') ?> <?= /*I18N: webtrees.pot */ I18N::translate('Search') ?></button>
         </div>
     </div>
 </div>
