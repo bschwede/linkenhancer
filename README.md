@@ -147,7 +147,8 @@ On the subject of markdown see also:
 
 <a name="mdimg"></a>
 #### Markdown Image Support
-This feature allows you to easily embed images from GEDCOM media records or from the public directory into notes.
+![note with links](resources/img/screenshot_note-with-links-and-img.png)
+This feature allows you to easily embed images from GEDCOM media records (first image) or from the public directory into notes.
 If restriction rules apply to the record, instead of the image, a message is displayed.
 
 **Syntax:**
@@ -164,12 +165,17 @@ Images of gedcom media records reside behind the media firewall. Therefore, this
 #### Markdown editor
 You can also enable a visual **markdown editor** for note textareas. Under the hood the project “TinyMDE - A tiny, dependency-free embeddable HTML/JavaScript Markdown editor” is used - see also: <https://github.com/jefago/tiny-markdown-editor>
 
+![Markdown editor](resources/img/screenshot_tinymde-sharednote.png)
+
 Besides syntax higlighting it ships with an icon bar for common format commands, a help popup and line numbering.
+
+![Markdown Help](resources/img/screenshot_markdown-help.png)
 
 **Note:** Unfortunately, the on-screen keyboard does NOT work as before with the previous text input field. The selected characters end up as an intermediate step in the small text field below the Markdown editor and then must be copied manually to the desired position.
 
 <a name="wthb"></a>
 ### German webtrees manual
+![small menu with help link](resources/img/screenshot_small-menu-wthb-link.png)
 A **context sensitive help link** to the [german webtrees manual](https://wiki.genealogy.net/Webtrees_Handbuch) can be added to the small navigation menu. Context links are also available for components on pages provided by custom extensions (e.g. on the individuals page, the start page or items in the main menu) – these can be identified by the i symbols in a circle.
 ![WTHB subcontext help](resources/img/screenshot_wthb-subcontext.png)
 
@@ -217,7 +223,7 @@ Fallback rules for access levels are matched by `category='generic'` and the spe
 
 In ascending order the first rule where `subcontext = ''` is selected for the top menu link. If nothing else applies, the link points to the startpage of the manual.
 
-If activated, `subcontext` topics on a page can be provided with an additional help link. You can set a CCS selector string or a JSON object string with the following properties: 
+If activated, `subcontext` topics on a page can be provided with an additional help link. You can set a CSS selector string or a JSON object string with the following properties: 
 
 - `p`: position of popover, optional (default is top, other possible values: left, right, bottom)
 - `f`: css selector/filter string (only necessary if you want the popover to be positioned differently) OR
@@ -238,6 +244,10 @@ This module comes with a local copy of the german webtrees manual **table of con
 
 <a name="homelink"></a>
 ### Home link
+The site title can be a link to the tree homepage or the user my page.
+
+![site title as link](resources/img/screenshot_sitetitle-as-link.png)
+
 Dynamic CSS styles can be applied to match the current theme, ensuring that the display contrasts well. Of course it is not limited to the home link use case.
 
 On the admin page of this module you can configure a [JSON](https://en.wikipedia.org/wiki/JSON) object to achieve this:
