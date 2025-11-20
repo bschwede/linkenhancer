@@ -21,6 +21,8 @@ let WthbCfg = getWthbCfg();
 
 let popovers = [];
 
+const is_touch_device = ('ontouchstart' in window) || (window.DocumentTouch && document instanceof DocumentTouch);
+
 const googleTranslate = "https://translate.google.com/translate?sl=de&tl=%LANG%&u=%URL%";
 
 const wthb_user_setting_translate = 'LEmod_wthb_translate';
@@ -93,6 +95,34 @@ const insertWthbLinkCallback = function (mutationsList, observer) {
     }
 };
 
+const onShownBsPopoverHideTimeout = (el, timersec = 5000) => {
+    // Automatic fading after timersec seconds
+    if (el.hideTimeout) clearTimeout(el.hideTimeout);
+    el.hideTimeout = setTimeout(() => {
+        el.hide();
+    }, timersec);
+}
+const onHideBsPopoverHideTimout =  (el) => {
+    // Delete timer if closed manually
+    if (el.hideTimeout) {
+        clearTimeout(el.hideTimeout);
+        el.hideTimeout = null;
+    }
+}
+
+const newPopover = (el, options) => new window.bootstrap.Popover(
+        el,
+        Object.assign({
+            html: true,
+            container: 'body',
+            sanitize: false,
+            placement: 'bottom',
+            trigger: is_touch_device ? 'click' : 'focus hover',   // remains as long as the element is focused
+            delay: { "show": 100, "hide": 3000 },
+        }, options)
+    );
+
+
 const insertWthbSubcontextLinks = (contexts) => {
     if (!Array.isArray(contexts) || contexts.length === 0) return;
     
@@ -131,15 +161,10 @@ const insertWthbSubcontextLinks = (contexts) => {
         let helptitle = getHelpTitle(url);
         let wthblink = jQuery(`<a href="${url}" target="_blank" class="stretched-link d-inline-block p-1 text-decoration-none"><i class="fa-solid fa-circle-question"></i> ${helptitle}</a>`);
         setWthbLinkClickHandler(wthblink);
-        popovers.push(new window.bootstrap.Popover(poptrigger, { // poptrigger.popover() doesn`t work
-            html: true,
-            container: 'body',
-            sanitize: false,
+        popovers.push(newPopover(poptrigger, {
             placement: pos,
-            trigger: 'focus hover',   // remains as long as the element is focused
-            delay: { "show": 100, "hide": 2000 },
-            content: wthblink,
-        }));
+            content: wthblink
+        })); // poptrigger.popover() doesn`t work
     });
 
     popovers.forEach(el => {
@@ -154,18 +179,12 @@ const insertWthbSubcontextLinks = (contexts) => {
 
         el._element.addEventListener('shown.bs.popover', () => {
             // Automatic fading after 5 seconds
-            if (el.hideTimeout) clearTimeout(el.hideTimeout);
-            el.hideTimeout = setTimeout(() => {
-                el.hide();
-            }, 5000);
+            onShownBsPopoverHideTimeout(el);
         });
 
         el._element.addEventListener('hide.bs.popover', () => {
             // Delete timer if closed manually
-            if (el.hideTimeout) {
-                clearTimeout(el.hideTimeout);
-                el.hideTimeout = null;
-            }
+            onHideBsPopoverHideTimout(el);
         });
     }); 
     
@@ -228,15 +247,18 @@ const initWthb = (options) => {
         }
 
         if (popcontent !== '') {
-            let wthbpopover = new window.bootstrap.Popover(wthblink, {
-                html: true,
-                container: 'body',
-                sanitize: false,
-                placement: 'bottom',
-                trigger: 'focus hover',   // remains as long as the element is focused
-                delay: { "show": 100, "hide": 3000 },
+            let poptrigger = wthblink;
+            if (is_touch_device) {
+                poptrigger = jQuery('<span>', {
+                    class: 'popover-trigger',
+                    text: 'ⓘ',
+                });
+                wthblink.after(poptrigger);
+            }
+
+            let wthbpopover = newPopover(poptrigger, {
                 content: popcontent,
-                title: WthbCfg.I18N.help_title_wthb,
+                title: WthbCfg.I18N.help_title_wthb
             });
             wthbpopover._element.addEventListener('shown.bs.popover', () => {
                 if (wthbcfg) {
@@ -246,7 +268,16 @@ const initWthb = (options) => {
                 $('a.wthbpopover').each((idx, elem) => {
                     $(elem).on('click', () => wthbpopover.hide());
                 });
+                if (is_touch_device) {
+                    // Automatic fading after 5 seconds
+                    onShownBsPopoverHideTimeout(wthbpopover);
+                }
             });
+            if (is_touch_device) {
+                wthbpopover._element.addEventListener('hide.bs.popover', () => {
+                    onHideBsPopoverHideTimout(wthbpopover);
+                });
+            }
         }
 
         // translation settings only needed for non german language

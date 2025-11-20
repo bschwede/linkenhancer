@@ -1,4 +1,12 @@
 /* Webtrees manual link */
+.menu-wthb .popover-trigger {
+    padding: 0 0.3em 0 0;
+}
+
+@media screen and (max-width: 600px) { /* wrap top menu items */
+    .wt-user-menu {flex-wrap: wrap; }
+}
+
 /*- full text search and table of contents: GenWiki TOC */
 .wthbtoc { clear:both; height:50vh; overflow:scroll;}
 .wthbtoc dl { margin-top: 0.2em; margin-bottom: 0.5em; }
