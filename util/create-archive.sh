@@ -20,8 +20,11 @@ util/wt-patch/src/*/replacements.sed
 util/wt-patch/patch.log
 util/create-archive.sh
 util/update-po-files.sh
+resources/*/index-*.*
 resources/img
+resources/css/icons
 resources/views/*.phtml.~*
+resources/lang/*.po*
 util/wthb-toc
 EOT
 

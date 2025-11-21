@@ -139,14 +139,14 @@ const cssMdeLeWthb = () => cssPipe(["./node_modules/tiny-markdown-editor/dist/ti
 const cssLe = () => cssPipe(["./resources/css/index-le.css"], 'le');
 const cssLeWthb = () => cssPipe(["./resources/css/index-le.css", "./resources/css/index-wthb.css"], 'le-wthb');
 const cssWthb = () => cssPipe(["./resources/css/index-wthb.css"], 'wthb');
-const cssImg = () => cssPipe(["./resources/css/md-img.css"], 'img');
-const cssImgLe = () => cssPipe(["./resources/css/index-le.css", "./resources/css/md-img.css"], 'img-le');
-const cssImgLeWthb = () => cssPipe(["./resources/css/index-le.css", "./resources/css/md-img.css", "./resources/css/index-wthb.css"], 'img-le-wthb');
-const cssImgWthb = () => cssPipe(["./resources/css/md-img.css", "./resources/css/index-wthb.css"], 'img-wthb');
-const cssImgMde = () => cssPipe(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/index-mde.css", "./resources/css/md-img.css"], 'img-mde');
-const cssImgMdeWthb = () => cssPipe(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/index-mde.css", "./resources/css/md-img.css", "./resources/css/index-wthb.css"], 'img-mde-wthb');
-const cssImgMdeLe = () => cssPipe(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/index-mde.css", "./resources/css/index-le.css", "./resources/css/md-img.css"], 'img-le-mde');
-const cssImgMdeLeWthb = () => cssPipe(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/index-mde.css", "./resources/css/index-le.css", "./resources/css/md-img.css", "./resources/css/index-wthb.css"], 'img-le-mde-wthb');
+const cssImg = () => cssPipe(["./resources/css/index-img.css"], 'img');
+const cssImgLe = () => cssPipe(["./resources/css/index-le.css", "./resources/css/index-img.css"], 'img-le');
+const cssImgLeWthb = () => cssPipe(["./resources/css/index-le.css", "./resources/css/index-img.css", "./resources/css/index-wthb.css"], 'img-le-wthb');
+const cssImgWthb = () => cssPipe(["./resources/css/index-img.css", "./resources/css/index-wthb.css"], 'img-wthb');
+const cssImgMde = () => cssPipe(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/index-mde.css", "./resources/css/index-img.css"], 'img-mde');
+const cssImgMdeWthb = () => cssPipe(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/index-mde.css", "./resources/css/index-img.css", "./resources/css/index-wthb.css"], 'img-mde-wthb');
+const cssImgMdeLe = () => cssPipe(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/index-mde.css", "./resources/css/index-le.css", "./resources/css/index-img.css"], 'img-le-mde');
+const cssImgMdeLeWthb = () => cssPipe(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/index-mde.css", "./resources/css/index-le.css", "./resources/css/index-img.css", "./resources/css/index-wthb.css"], 'img-le-mde-wthb');
 const css = gulp.parallel(
     cssMde, cssMdeLe, cssLe, cssImg, cssImgLe, cssImgMde, cssImgMdeLe, cssImgMdeLeWthb, 
     cssWthb, cssLeWthb, cssImgWthb, cssImgLeWthb, cssMdeLeWthb, cssMdeWthb, cssImgMdeWthb
