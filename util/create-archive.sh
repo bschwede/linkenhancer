@@ -10,6 +10,7 @@ VER=$(cat "$SRCDIR/latest-version.txt")
 
 exclude_file=$(mktemp)
 cat << EOT > "$exclude_file"
+.vscode
 node_modules
 dist
 .git*
