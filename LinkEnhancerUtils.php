@@ -231,13 +231,20 @@ class LinkEnhancerUtils { // misc helper functions
         if (!$request) {
             $request = Registry::container()->get(ServerRequestInterface::class);
         }
-        $activeRouteInfo = self::getActiveRoute($request);
-        $action = strtolower(($request->getAttribute('action') ?? ''));
 
-        return (str_starts_with($activeRouteInfo['path'], '/admin') 
+        $activeRouteInfo = self::getActiveRoute($request);
+
+        if (is_array($activeRouteInfo)
+            && array_key_exists('path', $activeRouteInfo) 
+            && array_key_exists('extras', $activeRouteInfo)
+        ) {
+            $action = strtolower(($request->getAttribute('action') ?? ''));
+            return (str_starts_with($activeRouteInfo['path'], '/admin') 
             || str_contains($activeRouteInfo['extras'], 'AuthAdministrator')
             || (str_contains($activeRouteInfo['extras'], 'AuthManager') && !str_contains($activeRouteInfo['path'], '/tree-page-'))
             || (str_starts_with($activeRouteInfo['path'], '/module') && str_starts_with($action, 'admin')));
+        }
+        return false;
     }     
 
 }
