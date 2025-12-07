@@ -167,7 +167,7 @@ You can also enable a visual **markdown editor** for note textareas. Under the h
 
 ![Markdown editor](resources/img/screenshot_tinymde-sharednote.png)
 
-Besides syntax higlighting it ships with an icon bar for common format commands, a help popup and line numbering.
+Besides syntax highlighting it ships with an icon bar for common format commands, a help popup and line numbering.
 
 ![Markdown Help](resources/img/screenshot_markdown-help.png)
 
@@ -176,6 +176,7 @@ Besides syntax higlighting it ships with an icon bar for common format commands,
 <a name="wthb"></a>
 ### German webtrees manual
 ![small menu with help link](resources/img/screenshot_small-menu-wthb-link.png)
+
 A **context sensitive help link** to the [german webtrees manual](https://wiki.genealogy.net/Webtrees_Handbuch) can be added to the small navigation menu. Context links are also available for components on pages provided by custom extensions (e.g. on the individuals page, the start page or items in the main menu) – these can be identified by the i symbols in a circle.
 ![WTHB subcontext help](resources/img/screenshot_wthb-subcontext.png)
 
