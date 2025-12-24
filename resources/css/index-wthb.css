@@ -57,3 +57,9 @@ p:has(+ .wthbtoc), #wthbtocfiltercnt { color: gray; font-size: 0.8em;}
     background-image:
     url("./icons/qwant_30x30.png");
 }
+
+/* #30 fix display order with GVExport - defined in mde + wthb */
+#le-ajax-modal, #wthb-modal {
+  display:none;
+  z-index:1060; /* div.modal-backdrop has z-index:1050 */
+}

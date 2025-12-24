@@ -59,3 +59,9 @@
 .md-example .left { text-align:left;}
 .md-example .center { text-align:center;}
 .md-example .right { text-align:right;}
+
+/* #30 fix display order with GVExport - defined in mde + wthb */
+#le-ajax-modal, #wthb-modal {
+  display:none;
+  z-index:1060; /* div.modal-backdrop has z-index:1050 */
+}
