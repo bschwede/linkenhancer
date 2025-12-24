@@ -335,9 +335,14 @@ const initWthbHelp = (searchengines) => {
         }
         updateFilterCount(visitems, allitems)
     });
+    let wikiurl = WthbCfg.wiki_url ?? 'https://wiki.genealogy.net';
+    wikiurl = wikiurl + (wikiurl.match(/\/$/) ? '' : '/');
     $(".wthbtoc a").each((idx, elem) => { 
-        $(elem).attr('href', 'https://wiki.genealogy.net' + $(elem).attr('href')).attr('target', '_blank'); 
-        setWthbLinkClickHandler(elem);
+        let href = $(elem).attr('href') ?? '';
+        if (! href.match(/^https?:\/\//)) {
+            $(elem).attr('href', wikiurl + href.replace(/^\/+/, '')).attr('target', '_blank');
+            setWthbLinkClickHandler(elem);
+        }
     });
     $("a.gwlink").each(((idx, elem) => setWthbLinkClickHandler(elem)));
 
