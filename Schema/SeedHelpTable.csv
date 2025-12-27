@@ -440,5 +440,10 @@ id;path;handler;method;extras;subcontext;category;order;url
 468;/admin;Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;"{""e"":""$('h2')[4]""}";standard;30;Webtrees_Handbuch/Anleitung_f%C3%BCr_Administratoren/Multimedia
 469;/admin;Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;"{""e"":""$('h2')[5]""}";standard;30;Webtrees_Handbuch/Anleitung_f%C3%BCr_Administratoren/Landkarte
 470;/tree/{tree};Fisharebest\Webtrees\Http\RequestHandlers\TreePage;GET;;div.wt-block-_vesta_extended_relationships_ > div.card-header;custom module;30;https://github.com/vesta-webtrees-2-custom-modules/vesta_extended_relationships
-471;;;GET;;li.nav-item.menu-clippings.CCE_Menue > a;custom module;35;Webtrees_Handbuch/Anleitung_für_Webmaster/Erweiterungsmodule/Sammelbehälter
+471;;;GET;;li.nav-item.menu-clippings.CCE_Menue > a;generic;35;Webtrees_Handbuch/Anleitung_für_Webmaster/Erweiterungsmodule/Sammelbehälter
 472;;;GET;;"{""e"":""Array.from(document.querySelectorAll('li.nav-item.menu-clippings > a')).find(a => a.nextElementSibling.querySelector('a[href*=\"vesta_clippings_cart\"]') !== null)""}";generic;35;https://github.com/vesta-webtrees-2-custom-modules/vesta_clippings_cart
+473;;_news-menu_;GET;;;custom module;20;https://github.com/Tywed/news-menu
+474;;_huhwt-cce_;GET;;;custom module;20;Webtrees_Handbuch/Anleitung_für_Webmaster/Erweiterungsmodule/Sammelbehälter
+475;;_vesta_clippings_cart_;GET;;;custom module;20;https://github.com/vesta-webtrees-2-custom-modules/vesta_clippings_cart
+476;;_huhwt-xtv_;GET;;;custom module;20;Webtrees_Handbuch/Anleitung_für_Webmaster/Erweiterungsmodule/Treeview-Extended
+477;;_GVExport_;GET;;;custom module;20;Webtrees_Handbuch/Anleitung_für_Webmaster/Erweiterungsmodule/GVExport
