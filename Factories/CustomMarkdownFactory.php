@@ -47,8 +47,24 @@ use League\CommonMark\Extension\Footnote\FootnoteExtension;
 use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
 use League\CommonMark\Extension\Table\TableExtension;
 
-
+/**
+ * Create a markdown converter.
+ */
 class CustomMarkdownFactory extends MarkdownFactory {
+
+    protected const array CONFIG_MARKDOWN_EXT = [
+        ...self::CONFIG_MARKDOWN,
+        'footnote' => [
+            'backref_class' => 'footnote-backref',
+            'backref_symbol' => '↩',
+            'container_add_hr' => true,
+            'container_class' => 'footnotes',
+            'ref_class' => 'footnote-ref',
+            'ref_id_prefix' => 'fnref:',
+            'footnote_class' => 'footnote',
+            'footnote_id_prefix' => 'fn:',
+        ],
+    ];
 
     private null|Tree $tree;
 
@@ -217,22 +233,10 @@ class CustomMarkdownFactory extends MarkdownFactory {
         return $html;
     }
 
-    public function markdown(string $markdown, Tree|null $tree = null): string
+    private function createEnvironment(Tree|null $tree = null, array|null $config = null): Environment
     {
-        $config = [
-            ...static::CONFIG_MARKDOWN,
-            'footnote' => [
-                'backref_class' => 'footnote-backref',
-                'backref_symbol' => '↩',
-                'container_add_hr' => true,
-                'container_class' => 'footnotes',
-                'ref_class' => 'footnote-ref',
-                'ref_id_prefix' => 'fnref:',
-                'footnote_class' => 'footnote',
-                'footnote_id_prefix' => 'fn:',
-            ],
-        ];
-
+        $config ??= static::CONFIG_MARKDOWN;
+        
         // code copy from parent::markdown
         $environment = new Environment($config); //static::CONFIG_MARKDOWN);
         $environment->addExtension(new CommonMarkCoreExtension());
@@ -245,7 +249,20 @@ class CustomMarkdownFactory extends MarkdownFactory {
         if ($tree instanceof Tree) {
             $environment->addExtension(new XrefExtension($tree));
         }
-        
+
+        return $environment;
+    }
+
+    /**
+     * @param string    $markdown
+     * @param Tree|null $tree
+     *
+     * @return string
+     */
+    public function markdown(string $markdown, Tree|null $tree = null): string
+    {
+        $environment = $this->createEnvironment($tree, static::CONFIG_MARKDOWN_EXT);
+
         //++ Additional extensions
         $environment->addExtension(new StrikethroughExtension()); // fisharebest/webtrees#5113
         $environment->addExtension(new DescriptionListExtension());

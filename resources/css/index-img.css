@@ -7,3 +7,25 @@
   display: block;
   padding-top: 5px;
 }
+
+/* CommonMark Extensions */
+.footnotes {
+  font-size: 0.8em;
+  color: gray;
+  margin-top: 3.0em;
+  margin-bottom: 2.0em;
+}
+.footnotes > hr {
+  max-width: 500px;
+  min-width: 350px;
+  width: 33%;
+}
+
+.footnote > ol {
+	padding-left: 1.5rem;
+}
+.footnote > p {
+	margin-bottom: 0.5rem;
+}
+
+/* TODO maybe blockquote needs another format */
