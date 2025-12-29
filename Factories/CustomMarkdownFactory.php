@@ -24,18 +24,29 @@ declare(strict_types=1);
 
 namespace Schwendinger\Webtrees\Module\LinkEnhancer\Factories;
 
-use Fisharebest\Webtrees\Webtrees;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
-use Fisharebest\Webtrees\Tree;
-use Fisharebest\Webtrees\I18N;
-use Fisharebest\Webtrees\Factories\MarkdownFactory;
-use Fisharebest\Webtrees\Validator;
-use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Auth;
+use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Media;
 use Fisharebest\Webtrees\MediaFile;
-use Psr\Http\Message\ServerRequestInterface;
+use Fisharebest\Webtrees\Registry;
+use Fisharebest\Webtrees\Tree;
+use Fisharebest\Webtrees\Validator;
+use Fisharebest\Webtrees\Webtrees;
+use Fisharebest\Webtrees\CommonMark\CensusTableExtension;
+use Fisharebest\Webtrees\CommonMark\XrefExtension;
+use Fisharebest\Webtrees\Factories\MarkdownFactory;
 use Fisharebest\Webtrees\Http\Exceptions\HttpAccessDeniedException;
+use Psr\Http\Message\ServerRequestInterface;
+use League\CommonMark\MarkdownConverter;
+use League\CommonMark\Environment\Environment;
+use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
+use League\CommonMark\Extension\DescriptionList\DescriptionListExtension;
+use League\CommonMark\Extension\Footnote\FootnoteExtension;
+//use League\CommonMark\Extension\Highlight\HighlightExtension; //v2.8.0
+use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
+use League\CommonMark\Extension\Table\TableExtension;
+
 
 class CustomMarkdownFactory extends MarkdownFactory {
 
@@ -45,9 +56,15 @@ class CustomMarkdownFactory extends MarkdownFactory {
 
     private LinkEnhancerModule $module;
 
+    private array $img_stdclassnames;
+
+    private string $img_titleclassnames;
+
 
     public function __construct($module) {
         $this->module = $module;
+        $this->img_stdclassnames = explode(' ', $this->module->getPref($this->module::PREF_MD_IMG_STDCLASS));
+        $this->img_titleclassnames = $this->module->getPref($this->module::PREF_MD_IMG_TITLE_STDCLASS);
     }
 
     /**
@@ -82,10 +99,8 @@ class CustomMarkdownFactory extends MarkdownFactory {
                 parse_str($hashvalue, $params);
 
                 $classnames = isset($params['cname']) ? explode(' ',urldecode($params['cname'])) : [];
-                $stdclassnames = explode(' ', $this->module->getPref($this->module::PREF_MD_IMG_STDCLASS));
-                $classnames = array_merge($classnames, $stdclassnames);
+                $classnames = array_merge($classnames, $this->img_stdclassnames);
                 $classnames = implode(' ', array_unique($classnames));
-                $titleclassnames = $this->module->getPref($this->module::PREF_MD_IMG_TITLE_STDCLASS);
 
                 if (!isset($params['id']) && !isset($params['public'])) {
                     return view($this->module->name() . '::error-img-svg', [
@@ -127,7 +142,7 @@ class CustomMarkdownFactory extends MarkdownFactory {
                                     'classnames'      => $classnames,
                                     'width'           => $width,
                                     'height'          => $height,
-                                    'titleclassnames' => $titleclassnames,
+                                    'titleclassnames' => $this->img_titleclassnames,
                                 ]);
                             } else {
                                 return view($this->module->name() . '::error-img-svg', [
@@ -190,7 +205,7 @@ class CustomMarkdownFactory extends MarkdownFactory {
                         'title'           => $title,
                         'width'           => $width,
                         'height'          => $height,
-                        'titleclassnames' => $titleclassnames,
+                        'titleclassnames' => $this->img_titleclassnames,
                     ]);
                 }
 
@@ -204,8 +219,48 @@ class CustomMarkdownFactory extends MarkdownFactory {
 
     public function markdown(string $markdown, Tree|null $tree = null): string
     {
-        $html = parent::markdown($markdown, $tree);
+        $config = [
+            ...static::CONFIG_MARKDOWN,
+            'footnote' => [
+                'backref_class' => 'footnote-backref',
+                'backref_symbol' => '↩',
+                'container_add_hr' => true,
+                'container_class' => 'footnotes',
+                'ref_class' => 'footnote-ref',
+                'ref_id_prefix' => 'fnref:',
+                'footnote_class' => 'footnote',
+                'footnote_id_prefix' => 'fn:',
+            ],
+        ];
+
+        // code copy from parent::markdown
+        $environment = new Environment($config); //static::CONFIG_MARKDOWN);
+        $environment->addExtension(new CommonMarkCoreExtension());
+        $environment->addExtension(new TableExtension());
+
+        // Convert webtrees 1.x style census tables to commonmark format.
+        $environment->addExtension(new CensusTableExtension());
+
+        // Optionally create links to other records.
+        if ($tree instanceof Tree) {
+            $environment->addExtension(new XrefExtension($tree));
+        }
         
+        //++ Additional extensions
+        $environment->addExtension(new StrikethroughExtension()); // fisharebest/webtrees#5113
+        $environment->addExtension(new DescriptionListExtension());
+        //$environment->addExtension(new HighlightExtension()); //v2.8.0
+        $environment->addExtension(new FootnoteExtension());
+        //++
+
+        $converter = new MarkDownConverter($environment);
+
+        $html = $converter->convert($markdown)->getContent();
+
+        // The markdown convert adds newlines, but not in a documented way.  Safest to ignore them.
+        $html =  strtr($html, ["\n" => '']); //return
+
+        //++ 
         $html = $this->handleEnhancedImageSrc($html, $tree);
 
         return $html;
