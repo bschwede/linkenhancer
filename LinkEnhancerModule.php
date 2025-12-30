@@ -392,6 +392,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             if ($cfg_img_active) {
                 // markdown image support
                 $bundleShortcuts[] = 'img';
+                $docReadyJs .= "LinkEnhMod.initMd();";
             }
 
             if ($cfg_mde_active) {
@@ -448,7 +449,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         $includeRes = '';
         asort($bundleShortcuts);
         $bundleShortcutsCss = $bundleShortcuts; //array_filter($bundleShortcuts, function ($var) { return $var !== 'wthb'; }); // wthb support - only js
-        $bundleShortcutsJs = array_filter($bundleShortcuts, fn($var) => $var !== 'img'); // markdown image support - only css
+        $bundleShortcutsJs = $bundleShortcuts; //array_filter($bundleShortcuts, fn($var) => $var !== 'img'); // markdown image support - only css
 
         // CSS
         if ($bundleShortcutsCss) {
