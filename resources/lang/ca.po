@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-09 18:11+0100\n"
-"PO-Revision-Date: 2025-11-09 18:12+0100\n"
+"POT-Creation-Date: 2025-12-29 13:54+0100\n"
+"PO-Revision-Date: 2025-12-31 00:18+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ca\n"
@@ -21,29 +21,29 @@ msgstr ""
 msgid "Table for context help is missing - fallback to standard url"
 msgstr "Falta la taula d'ajuda contextual - es torna a la URL estàndard"
 
-#: Services/WthbService.php:281 Services/WthbService.php:314
+#: Services/WthbService.php:286 Services/WthbService.php:319
 msgid "Table for context help is missing - nothing to do."
 msgstr "Falta la taula d'ajuda contextual - no es pot fer res."
 
-#: Services/WthbService.php:287
+#: Services/WthbService.php:292
 msgid "No data available for export."
 msgstr "No hi ha dades disponibles per a l'exportació."
 
-#: Services/WthbService.php:323
+#: Services/WthbService.php:328
 msgid "No CSV file was received."
 msgstr "No s'ha trobat cap arxiu CSV."
 
-#: Services/WthbService.php:334 LinkEnhancerModule.php:510
+#: Services/WthbService.php:339 LinkEnhancerModule.php:510
 #: LinkEnhancerModule.php:595
 #, php-format
 msgid "Routes imported (Total: %s / skipped: %s)"
 msgstr "Rutes importades (Total: %s / omeses %s)"
 
-#: Services/WthbService.php:345
+#: Services/WthbService.php:350
 msgid "Separator is not set."
 msgstr "El separador no està configurat."
 
-#: Services/WthbService.php:348
+#: Services/WthbService.php:353
 msgid "For the separator is only a single character allowed."
 msgstr "Per delimitar el separador només es permet un únic caràcter."
 
@@ -228,7 +228,7 @@ msgid "and so on until level %s"
 msgstr "i així successivament fins al nivell %s"
 
 #. I18N: MD img error precondition
-#: Factories/CustomMarkdownFactory.php:92
+#: CommonMark/LeImageRenderer.php:127
 msgid ""
 "Neither a media object nor a file from the public directory was specified."
 msgstr ""
@@ -236,7 +236,7 @@ msgstr ""
 "públic."
 
 #. I18N: MD img error precondition
-#: Factories/CustomMarkdownFactory.php:98
+#: CommonMark/LeImageRenderer.php:133
 msgid ""
 "Only one media object OR one file from the public directory can be specified."
 msgstr ""
@@ -244,23 +244,28 @@ msgstr ""
 "públic."
 
 #. I18N: MD img error crossreference
-#: Factories/CustomMarkdownFactory.php:134
+#: CommonMark/LeImageRenderer.php:169
 msgid "There is no image file available for display."
 msgstr "No hi ha cap arxiu d'imatge disponible per mostrar."
 
+#. I18N: MD img error public folder
+#: CommonMark/LeImageRenderer.php:191
+msgid "The public folder does not exist."
+msgstr "La carpeta pública no existeix."
+
 #. I18N: MD img error public file, %s the relative filename
-#: Factories/CustomMarkdownFactory.php:165
+#: CommonMark/LeImageRenderer.php:200
 #, php-format
 msgid "File ‘%s’ does not exist in the public folder"
 msgstr "El fitxer '%s' no existeix a la carpeta pública"
 
 #. I18N: MD img error public file
-#: Factories/CustomMarkdownFactory.php:172
+#: CommonMark/LeImageRenderer.php:207
 msgid "Only files within the public folder are supported"
 msgstr "Només s'admeten arxius dins de la carpeta pública"
 
 #. I18N: MD img error public file, %s1=rel. filename, %s2=mimetype
-#: Factories/CustomMarkdownFactory.php:180
+#: CommonMark/LeImageRenderer.php:215
 #, php-format
 msgid "File ‘%s’ in the public folder is not an image but '%s'"
 msgstr "L'arxiu «%s» de la carpeta pública no és una imatge, sinó «%s»."

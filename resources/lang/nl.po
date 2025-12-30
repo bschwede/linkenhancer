@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-09 18:11+0100\n"
-"PO-Revision-Date: 2025-11-09 18:12+0100\n"
+"POT-Creation-Date: 2025-12-29 13:54+0100\n"
+"PO-Revision-Date: 2025-12-31 00:17+0100\n"
 "Last-Translator: TheDutchJewel <thedutchjewel@gmail.com>\n"
 "Language-Team: TheDutchJewel\n"
 "Language: nl\n"
@@ -21,29 +21,29 @@ msgstr ""
 msgid "Table for context help is missing - fallback to standard url"
 msgstr "Tabel voor contextuele hulp ontbreekt - terugvallen op standaard-URL"
 
-#: Services/WthbService.php:281 Services/WthbService.php:314
+#: Services/WthbService.php:286 Services/WthbService.php:319
 msgid "Table for context help is missing - nothing to do."
 msgstr "Tabel voor contextuele hulp ontbreekt - niets te doen."
 
-#: Services/WthbService.php:287
+#: Services/WthbService.php:292
 msgid "No data available for export."
 msgstr "Geen gegevens beschikbaar voor export."
 
-#: Services/WthbService.php:323
+#: Services/WthbService.php:328
 msgid "No CSV file was received."
 msgstr "Geen CSV-bestand ontvangen."
 
-#: Services/WthbService.php:334 LinkEnhancerModule.php:510
+#: Services/WthbService.php:339 LinkEnhancerModule.php:510
 #: LinkEnhancerModule.php:595
 #, php-format
 msgid "Routes imported (Total: %s / skipped: %s)"
 msgstr "Geïmporteerde routes (Totaal: %s / overgeslagen: %s)"
 
-#: Services/WthbService.php:345
+#: Services/WthbService.php:350
 msgid "Separator is not set."
 msgstr "Scheidingsteken is niet ingesteld."
 
-#: Services/WthbService.php:348
+#: Services/WthbService.php:353
 msgid "For the separator is only a single character allowed."
 msgstr "Voor het scheidingsteken is slechts één teken toegestaan."
 
@@ -228,13 +228,13 @@ msgid "and so on until level %s"
 msgstr "enzovoort tot niveau %s"
 
 #. I18N: MD img error precondition
-#: Factories/CustomMarkdownFactory.php:92
+#: CommonMark/LeImageRenderer.php:127
 msgid ""
 "Neither a media object nor a file from the public directory was specified."
 msgstr "Er is geen media-object of bestand uit de openbare map opgegeven."
 
 #. I18N: MD img error precondition
-#: Factories/CustomMarkdownFactory.php:98
+#: CommonMark/LeImageRenderer.php:133
 msgid ""
 "Only one media object OR one file from the public directory can be specified."
 msgstr ""
@@ -242,23 +242,28 @@ msgstr ""
 "opgegeven."
 
 #. I18N: MD img error crossreference
-#: Factories/CustomMarkdownFactory.php:134
+#: CommonMark/LeImageRenderer.php:169
 msgid "There is no image file available for display."
 msgstr "Er is geen afbeeldingsbestand beschikbaar om weer te geven."
 
+#. I18N: MD img error public folder
+#: CommonMark/LeImageRenderer.php:191
+msgid "The public folder does not exist."
+msgstr "De openbare map bestaat niet."
+
 #. I18N: MD img error public file, %s the relative filename
-#: Factories/CustomMarkdownFactory.php:165
+#: CommonMark/LeImageRenderer.php:200
 #, php-format
 msgid "File ‘%s’ does not exist in the public folder"
 msgstr "Bestand ‘%s’ bestaat niet in de openbare map"
 
 #. I18N: MD img error public file
-#: Factories/CustomMarkdownFactory.php:172
+#: CommonMark/LeImageRenderer.php:207
 msgid "Only files within the public folder are supported"
 msgstr "Alleen bestanden in de openbare map worden ondersteund"
 
 #. I18N: MD img error public file, %s1=rel. filename, %s2=mimetype
-#: Factories/CustomMarkdownFactory.php:180
+#: CommonMark/LeImageRenderer.php:215
 #, php-format
 msgid "File ‘%s’ in the public folder is not an image but '%s'"
 msgstr "Het bestand ‘%s’ in de openbare map is geen afbeelding, maar ‘%s’."

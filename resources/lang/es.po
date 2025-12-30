@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-09 18:11+0100\n"
-"PO-Revision-Date: 2025-11-09 18:13+0100\n"
+"POT-Creation-Date: 2025-12-29 13:54+0100\n"
+"PO-Revision-Date: 2025-12-31 00:18+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es\n"
@@ -21,29 +21,29 @@ msgstr ""
 msgid "Table for context help is missing - fallback to standard url"
 msgstr "Falta la tabla de ayuda contextual - se vuelve a la URL estándar"
 
-#: Services/WthbService.php:281 Services/WthbService.php:314
+#: Services/WthbService.php:286 Services/WthbService.php:319
 msgid "Table for context help is missing - nothing to do."
 msgstr "Falta la tabla de ayuda contextual - no se puede hacer nada."
 
-#: Services/WthbService.php:287
+#: Services/WthbService.php:292
 msgid "No data available for export."
 msgstr "No hay datos disponibles para la exportación."
 
-#: Services/WthbService.php:323
+#: Services/WthbService.php:328
 msgid "No CSV file was received."
 msgstr "No se ha encontrado ningún archivo CSV."
 
-#: Services/WthbService.php:334 LinkEnhancerModule.php:510
+#: Services/WthbService.php:339 LinkEnhancerModule.php:510
 #: LinkEnhancerModule.php:595
 #, php-format
 msgid "Routes imported (Total: %s / skipped: %s)"
 msgstr "Rutas importadas (Total: %s / omitidas %s)"
 
-#: Services/WthbService.php:345
+#: Services/WthbService.php:350
 msgid "Separator is not set."
 msgstr "El separador no está configurado"
 
-#: Services/WthbService.php:348
+#: Services/WthbService.php:353
 msgid "For the separator is only a single character allowed."
 msgstr "Para delimitar el separador solamente se permite un único carácter."
 
@@ -228,7 +228,7 @@ msgid "and so on until level %s"
 msgstr "y así sucesivamente hasta el nivel %s"
 
 #. I18N: MD img error precondition
-#: Factories/CustomMarkdownFactory.php:92
+#: CommonMark/LeImageRenderer.php:127
 msgid ""
 "Neither a media object nor a file from the public directory was specified."
 msgstr ""
@@ -236,7 +236,7 @@ msgstr ""
 "público."
 
 #. I18N: MD img error precondition
-#: Factories/CustomMarkdownFactory.php:98
+#: CommonMark/LeImageRenderer.php:133
 msgid ""
 "Only one media object OR one file from the public directory can be specified."
 msgstr ""
@@ -244,23 +244,28 @@ msgstr ""
 "público."
 
 #. I18N: MD img error crossreference
-#: Factories/CustomMarkdownFactory.php:134
+#: CommonMark/LeImageRenderer.php:169
 msgid "There is no image file available for display."
 msgstr "No hay ningún archivo de imagen disponible para mostrar."
 
+#. I18N: MD img error public folder
+#: CommonMark/LeImageRenderer.php:191
+msgid "The public folder does not exist."
+msgstr "La carpeta pública no existe."
+
 #. I18N: MD img error public file, %s the relative filename
-#: Factories/CustomMarkdownFactory.php:165
+#: CommonMark/LeImageRenderer.php:200
 #, php-format
 msgid "File ‘%s’ does not exist in the public folder"
 msgstr "El fichero “%s” no existe en la carpeta pública"
 
 #. I18N: MD img error public file
-#: Factories/CustomMarkdownFactory.php:172
+#: CommonMark/LeImageRenderer.php:207
 msgid "Only files within the public folder are supported"
 msgstr "Sólo se admiten archivos dentro de la carpeta pública"
 
 #. I18N: MD img error public file, %s1=rel. filename, %s2=mimetype
-#: Factories/CustomMarkdownFactory.php:180
+#: CommonMark/LeImageRenderer.php:215
 #, php-format
 msgid "File ‘%s’ in the public folder is not an image but '%s'"
 msgstr "El archivo «%s» de la carpeta pública no es una imagen, sino «%s»."

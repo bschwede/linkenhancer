@@ -188,7 +188,7 @@ final class LeImageRenderer implements NodeRendererInterface, XmlNodeRendererInt
             $public_basedir = realpath(Webtrees::ROOT_DIR . 'public');
             if (!$public_basedir) { //(!file_exists($public_file))
                 return view($this->module->name() . '::error-img-svg', [
-                    'text' => "public-Ordner existiert nicht",
+                    'text' => /*I18N: MD img error public folder */ I18N::translate("The public folder does not exist."),
                     'classnames' => $classnames,
                 ]);
             }
