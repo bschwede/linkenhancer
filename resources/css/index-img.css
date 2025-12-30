@@ -21,11 +21,43 @@
   width: 33%;
 }
 
-.footnote > ol {
+.footnotes > ol {
 	padding-left: 1.5rem;
+  column-width: 30em;
 }
 .footnote > p {
 	margin-bottom: 0.5rem;
 }
+.footnotes > ol li {
+  page-break-inside: avoid;
+  break-inside: avoid-column;
+}
+.footnotes > ol li:target, sup[id^="fnref_"]:target {
+  background-color: #f5f7a6;
+}
+.footnote-ref {
+  padding:0 0.2em;
+}
+.footnote-ref::before {
+  content: "[";
+}
+.footnote-ref::after {
+  content: "]";
+}
 
-/* TODO maybe blockquote needs another format */
+.footnote-backref {
+  visibility: hidden;
+  padding: 0 0.5em;
+}
+
+.footnote:hover .footnote-backref {
+  visibility: visible;
+}
+
+
+blockquote {
+  padding-left: 1.0em;
+  margin-left: 0.5em !important;
+  border-left: 3px solid gray;
+  font-style: italic;
+}
