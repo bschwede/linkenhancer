@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 13:54+0100\n"
-"PO-Revision-Date: 2025-12-31 00:17+0100\n"
+"POT-Creation-Date: 2025-12-31 20:37+0100\n"
+"PO-Revision-Date: 2025-12-31 20:38+0100\n"
 "Last-Translator: TheDutchJewel <thedutchjewel@gmail.com>\n"
 "Language-Team: TheDutchJewel\n"
 "Language: nl\n"
@@ -33,8 +33,8 @@ msgstr "Geen gegevens beschikbaar voor export."
 msgid "No CSV file was received."
 msgstr "Geen CSV-bestand ontvangen."
 
-#: Services/WthbService.php:339 LinkEnhancerModule.php:510
-#: LinkEnhancerModule.php:595
+#: Services/WthbService.php:339 LinkEnhancerModule.php:511
+#: LinkEnhancerModule.php:596
 #, php-format
 msgid "Routes imported (Total: %s / skipped: %s)"
 msgstr "Geïmporteerde routes (Totaal: %s / overgeslagen: %s)"
@@ -48,117 +48,127 @@ msgid "For the separator is only a single character allowed."
 msgstr "Voor het scheidingsteken is slechts één teken toegestaan."
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:60 LinkEnhancerUtils.php:118 LinkEnhancerUtils.php:119
+#: LinkEnhancerUtils.php:60 LinkEnhancerUtils.php:120 LinkEnhancerUtils.php:121
 msgid "bold"
 msgstr "vet"
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:61 LinkEnhancerUtils.php:114 LinkEnhancerUtils.php:115
+#: LinkEnhancerUtils.php:61 LinkEnhancerUtils.php:116 LinkEnhancerUtils.php:117
 msgid "italic"
 msgstr "cursief"
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:62 LinkEnhancerUtils.php:131 LinkEnhancerUtils.php:132
+#: LinkEnhancerUtils.php:62 LinkEnhancerUtils.php:128 LinkEnhancerUtils.php:129
+msgid "strikethrough"
+msgstr "doorgestreept"
+
+#. I18N: JS MDE
+#: LinkEnhancerUtils.php:63 LinkEnhancerUtils.php:124 LinkEnhancerUtils.php:125
 msgid "format as code"
 msgstr "opmaak als code"
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:63 LinkEnhancerUtils.php:122 LinkEnhancerUtils.php:123
-#: LinkEnhancerUtils.php:126 LinkEnhancerUtils.php:128
+#: LinkEnhancerUtils.php:64 LinkEnhancerUtils.php:132 LinkEnhancerUtils.php:133
+#: LinkEnhancerUtils.php:136 LinkEnhancerUtils.php:138
 #, php-format
 msgid "Level %s heading"
 msgstr "Niveau %s koptekst"
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:64 LinkEnhancerUtils.php:135 LinkEnhancerUtils.php:136
+#: LinkEnhancerUtils.php:65 LinkEnhancerUtils.php:141 LinkEnhancerUtils.php:142
 msgid "Bulleted list"
 msgstr "Opsommingstekenslijst"
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:65 LinkEnhancerUtils.php:139 LinkEnhancerUtils.php:140
+#: LinkEnhancerUtils.php:66 LinkEnhancerUtils.php:145 LinkEnhancerUtils.php:146
 msgid "Numbered list"
 msgstr "Genummerde lijst"
 
+#. I18N: JS MDE blockquote
+#: LinkEnhancerUtils.php:67 LinkEnhancerUtils.php:173 LinkEnhancerUtils.php:174
+msgid "quote"
+msgstr "citaat"
+
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:66 LinkEnhancerUtils.php:143 LinkEnhancerUtils.php:144
+#: LinkEnhancerUtils.php:68 LinkEnhancerUtils.php:155 LinkEnhancerUtils.php:156
 msgid "Insert link"
 msgstr "Link invoegen"
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:67 LinkEnhancerUtils.php:147 LinkEnhancerUtils.php:148
+#: LinkEnhancerUtils.php:69 LinkEnhancerUtils.php:159 LinkEnhancerUtils.php:160
 msgid "Insert image"
 msgstr "Afbeelding invoegen"
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:68 LinkEnhancerUtils.php:152 LinkEnhancerUtils.php:153
+#: LinkEnhancerUtils.php:70 LinkEnhancerUtils.php:164 LinkEnhancerUtils.php:165
 msgid "Horizontal rule"
 msgstr "Horizontale regel"
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:69
+#: LinkEnhancerUtils.php:71
 msgid "Undo"
 msgstr "Ongedaan maken"
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:70
+#: LinkEnhancerUtils.php:72
 msgid "Redo"
 msgstr "Opnieuw doen"
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:72
+#: LinkEnhancerUtils.php:74
 msgid "Link destination"
 msgstr "Linkbestemming"
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:73 LinkEnhancerUtils.php:156
+#: LinkEnhancerUtils.php:75 LinkEnhancerUtils.php:168
 msgid "Insert table"
 msgstr "Tabel invoegen"
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:74
+#: LinkEnhancerUtils.php:76
 msgid ""
 "How many columns and rows should the table have (input: [number] [number])?"
 msgstr ""
 "Hoeveel kolommen en rijen moet de tabel hebben (invoer: [getal] [getal])?"
 
 #. I18N: JS enhanced link
-#: LinkEnhancerUtils.php:76
+#: LinkEnhancerUtils.php:78
 msgid "cross reference"
 msgstr "kruisverwijzing"
 
 #. I18N: JS enhanced link, %s name of location
-#: LinkEnhancerUtils.php:77
+#: LinkEnhancerUtils.php:79
 #, php-format
 msgid "Online Local heritage book of %s at CompGen"
 msgstr "Online-lokaalerfgoedboek van %s bij CompGen"
 
 #. I18N: JS enhanced link
-#: LinkEnhancerUtils.php:78
+#: LinkEnhancerUtils.php:80
 msgid "Historic Geo Information System (GOV)"
 msgstr "Historisch geo-informatiesysteem (GOV)"
 
 #. I18N: JS enhanced link
-#: LinkEnhancerUtils.php:79
+#: LinkEnhancerUtils.php:81
 msgid "GEDBAS (Genealogical Database - collected personal data)"
 msgstr "GEDBAS (Genealogische database - verzamelde persoonsgegevens)"
 
 #. I18N: JS enhanced link
-#: LinkEnhancerUtils.php:80
+#: LinkEnhancerUtils.php:82
 msgid "wer-wir-waren.at"
 msgstr "wer-wir-waren.at"
 
 #. I18N: JS enhanced link
-#: LinkEnhancerUtils.php:81
+#: LinkEnhancerUtils.php:83
 msgid "Residents database - Family research in West Prussia"
 msgstr "Inwonersdatabase- Familieonderzoek in West-Pruisen"
 
 #. I18N: JS enhanced link
-#: LinkEnhancerUtils.php:83
+#: LinkEnhancerUtils.php:85
 msgid "Syntax error"
 msgstr "Syntaxfout"
 
 #. I18N: JS enhanced link wt1 - %s=rectypes
-#: LinkEnhancerUtils.php:84
+#: LinkEnhancerUtils.php:86
 #, php-format
 msgid ""
 "standard link to note (available record types: %s) with XREF in active tree"
@@ -167,65 +177,77 @@ msgstr ""
 "stamboom"
 
 #. I18N: JS enhanced link wt2
-#: LinkEnhancerUtils.php:85
+#: LinkEnhancerUtils.php:87
 msgid ""
 "link to record type individual with XREF from \"othertree\" and also link to"
 msgstr "link naar recordtype persoon met XREF uit “othertree” en ook link naar"
 
 #. I18N: JS enhanced link osm1
-#: LinkEnhancerUtils.php:86
+#: LinkEnhancerUtils.php:88
 msgid "zoom/lat/lon for locating map"
 msgstr "zoom/lat/lon voor lokaliseren kaart"
 
 #. I18N: JS enhanced link osm2
-#: LinkEnhancerUtils.php:87
+#: LinkEnhancerUtils.php:89
 msgid "same as before with additional marker"
 msgstr "hetzelfde als voorheen, met extra markering"
 
 #. I18N: JS enhanced link osm3
-#: LinkEnhancerUtils.php:88
+#: LinkEnhancerUtils.php:90
 msgid "show also node/way/relation, see also"
 msgstr "toon ook knooppunt/weg/relatie, zie ook"
 
 #. I18N: JS enhanced link osm4
-#: LinkEnhancerUtils.php:89
+#: LinkEnhancerUtils.php:91
 msgid "show also node/way/relation - alternative notation"
 msgstr "toon ook knooppunt/weg/relatie - alternatieve notatie"
 
 #. I18N: JS enhanced link ofb1
-#: LinkEnhancerUtils.php:90
+#: LinkEnhancerUtils.php:92
 msgid "link to Online Local heritage book at CompGen with given uid"
 msgstr "link naar online-lokaalerfgoedboek bij CompGen met opgegeven uid"
 
 #. I18N: JS enhanced link wp1
-#: LinkEnhancerUtils.php:91
+#: LinkEnhancerUtils.php:93
 msgid "open the article in the german wikipedia"
 msgstr "open het artikel in de Duitse wikipedia"
 
 #. I18N: JS enhanced link wp2
-#: LinkEnhancerUtils.php:92
+#: LinkEnhancerUtils.php:94
 msgid "open the english version of the article"
 msgstr "open de Engelse versie van het artikel"
 
 #. I18N: JS enhanced link wp3
-#: LinkEnhancerUtils.php:93
+#: LinkEnhancerUtils.php:95
 msgid "you can address every subdomain instance of wikipedia.org"
 msgstr "u kunt elke subdomeininstantie van wikipedia.org aanspreken"
 
 #. I18N: JS enhanced link gedbas1
-#: LinkEnhancerUtils.php:94
+#: LinkEnhancerUtils.php:96
 msgid "open person record with given number"
 msgstr "open persoonsrecord met opgegeven nummer"
 
 #. I18N: JS enhanced link gedbas2
-#: LinkEnhancerUtils.php:95
+#: LinkEnhancerUtils.php:97
 msgid "open person record with UID"
 msgstr "open persoonrecord met UID"
 
-#: LinkEnhancerUtils.php:127
+#: LinkEnhancerUtils.php:137
 #, php-format
 msgid "and so on until level %s"
 msgstr "enzovoort tot niveau %s"
+
+#: LinkEnhancerUtils.php:149 LinkEnhancerUtils.php:151
+msgid "Term"
+msgstr "Term"
+
+#: LinkEnhancerUtils.php:177 LinkEnhancerUtils.php:178
+msgid "Text with a footnote reference"
+msgstr "Tekst met een voetnootverwijzing"
+
+#: LinkEnhancerUtils.php:177 LinkEnhancerUtils.php:178
+msgid "Footnote text"
+msgstr "Voetnoottekst"
 
 #. I18N: MD img error precondition
 #: CommonMark/LeImageRenderer.php:127
@@ -626,7 +648,7 @@ msgstr ""
 
 #. I18N: Settings - section title
 #: resources/views/settings.phtml:249 LinkEnhancerModule.php:320
-#: LinkEnhancerModule.php:757
+#: LinkEnhancerModule.php:758
 msgid "Webtrees manual"
 msgstr "Webtreeshandleiding"
 

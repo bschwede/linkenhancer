@@ -727,12 +727,12 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         // resources/views/edit/shared-note.phtml doesn't include < ?= view('modals/ajax') ? >
         // see also app/Http/RequestHandlers/HelpText.php
         //$topic = $request->getAttribute('topic');
-
+        $mdimg_active = boolval($this->getPref(self::PREF_MD_IMG_ACTIVE));
         $title = /*I18N: webtrees.pot */ I18N::translate('Help') . ' - Markdown';
         $text  = view($this->name() . '::help-md', [
             'link_active'       => boolval($this->getPref(self::PREF_LINKSPP_ACTIVE)),
-            'mdimg_active'      => boolval($this->getPref(self::PREF_MD_IMG_ACTIVE)),
-            'mdsyntax'          => Utils::getMarkdownHelpExamples(Validator::attributes($request)->string('base_url')),
+            'mdimg_active'      => $mdimg_active,
+            'mdsyntax'          => Utils::getMarkdownHelpExamples(Validator::attributes($request)->string('base_url'), $mdimg_active),
             'mdimg_css_class1'  => $this->getPref(self::PREF_MD_IMG_STDCLASS),
             'mdimg_css_class2'  => $this->getPref(self::PREF_MD_IMG_TITLE_STDCLASS)
         ]);
