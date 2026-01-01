@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-09 18:11+0100\n"
-"PO-Revision-Date: 2025-11-09 18:12+0100\n"
+"POT-Creation-Date: 2026-01-01 13:36+0100\n"
+"PO-Revision-Date: 2026-01-01 13:39+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ca\n"
@@ -21,145 +21,155 @@ msgstr ""
 msgid "Table for context help is missing - fallback to standard url"
 msgstr "Falta la taula d'ajuda contextual - es torna a la URL estàndard"
 
-#: Services/WthbService.php:281 Services/WthbService.php:314
+#: Services/WthbService.php:286 Services/WthbService.php:319
 msgid "Table for context help is missing - nothing to do."
 msgstr "Falta la taula d'ajuda contextual - no es pot fer res."
 
-#: Services/WthbService.php:287
+#: Services/WthbService.php:292
 msgid "No data available for export."
 msgstr "No hi ha dades disponibles per a l'exportació."
 
-#: Services/WthbService.php:323
+#: Services/WthbService.php:328
 msgid "No CSV file was received."
 msgstr "No s'ha trobat cap arxiu CSV."
 
-#: Services/WthbService.php:334 LinkEnhancerModule.php:510
-#: LinkEnhancerModule.php:595
+#: Services/WthbService.php:339 LinkEnhancerModule.php:521
+#: LinkEnhancerModule.php:606
 #, php-format
 msgid "Routes imported (Total: %s / skipped: %s)"
 msgstr "Rutes importades (Total: %s / omeses %s)"
 
-#: Services/WthbService.php:345
+#: Services/WthbService.php:350
 msgid "Separator is not set."
 msgstr "El separador no està configurat."
 
-#: Services/WthbService.php:348
+#: Services/WthbService.php:353
 msgid "For the separator is only a single character allowed."
 msgstr "Per delimitar el separador només es permet un únic caràcter."
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:60 LinkEnhancerUtils.php:118 LinkEnhancerUtils.php:119
+#: LinkEnhancerUtils.php:60 LinkEnhancerUtils.php:120 LinkEnhancerUtils.php:121
 msgid "bold"
 msgstr "en negreta"
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:61 LinkEnhancerUtils.php:114 LinkEnhancerUtils.php:115
+#: LinkEnhancerUtils.php:61 LinkEnhancerUtils.php:116 LinkEnhancerUtils.php:117
 msgid "italic"
 msgstr "itálica"
 
 #. I18N: JS MDE
 #: LinkEnhancerUtils.php:62 LinkEnhancerUtils.php:131 LinkEnhancerUtils.php:132
+msgid "strikethrough"
+msgstr "supressió de text"
+
+#. I18N: JS MDE
+#: LinkEnhancerUtils.php:63 LinkEnhancerUtils.php:124 LinkEnhancerUtils.php:125
 msgid "format as code"
 msgstr "format de codi"
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:63 LinkEnhancerUtils.php:122 LinkEnhancerUtils.php:123
-#: LinkEnhancerUtils.php:126 LinkEnhancerUtils.php:128
+#: LinkEnhancerUtils.php:64 LinkEnhancerUtils.php:138 LinkEnhancerUtils.php:139
+#: LinkEnhancerUtils.php:142 LinkEnhancerUtils.php:144
 #, php-format
 msgid "Level %s heading"
 msgstr "Nivell %s per a l'encapçalament"
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:64 LinkEnhancerUtils.php:135 LinkEnhancerUtils.php:136
+#: LinkEnhancerUtils.php:65 LinkEnhancerUtils.php:147 LinkEnhancerUtils.php:148
 msgid "Bulleted list"
 msgstr "Llistat amb vinyetes"
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:65 LinkEnhancerUtils.php:139 LinkEnhancerUtils.php:140
+#: LinkEnhancerUtils.php:66 LinkEnhancerUtils.php:151 LinkEnhancerUtils.php:152
 msgid "Numbered list"
 msgstr "Llista numerada"
 
+#. I18N: JS MDE blockquote
+#: LinkEnhancerUtils.php:67 LinkEnhancerUtils.php:189 LinkEnhancerUtils.php:190
+msgid "quote"
+msgstr "cita"
+
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:66 LinkEnhancerUtils.php:143 LinkEnhancerUtils.php:144
+#: LinkEnhancerUtils.php:68 LinkEnhancerUtils.php:171 LinkEnhancerUtils.php:172
 msgid "Insert link"
 msgstr "Inserir enllaç"
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:67 LinkEnhancerUtils.php:147 LinkEnhancerUtils.php:148
+#: LinkEnhancerUtils.php:69 LinkEnhancerUtils.php:175 LinkEnhancerUtils.php:176
 msgid "Insert image"
 msgstr "Inserir imatge"
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:68 LinkEnhancerUtils.php:152 LinkEnhancerUtils.php:153
+#: LinkEnhancerUtils.php:70 LinkEnhancerUtils.php:180 LinkEnhancerUtils.php:181
 msgid "Horizontal rule"
 msgstr "Línea Horitzontal"
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:69
+#: LinkEnhancerUtils.php:71
 msgid "Undo"
 msgstr "Desfer"
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:70
+#: LinkEnhancerUtils.php:72
 msgid "Redo"
 msgstr "Refer"
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:72
+#: LinkEnhancerUtils.php:74
 msgid "Link destination"
 msgstr "enllaç de destinació"
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:73 LinkEnhancerUtils.php:156
+#: LinkEnhancerUtils.php:75 LinkEnhancerUtils.php:184
 msgid "Insert table"
 msgstr "Inserir tabla"
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:74
+#: LinkEnhancerUtils.php:76
 msgid ""
 "How many columns and rows should the table have (input: [number] [number])?"
 msgstr ""
 "Quantes columnes i files ha de tenir la taula (entrada: [número] [número])?"
 
 #. I18N: JS enhanced link
-#: LinkEnhancerUtils.php:76
+#: LinkEnhancerUtils.php:78
 msgid "cross reference"
 msgstr "referència"
 
 #. I18N: JS enhanced link, %s name of location
-#: LinkEnhancerUtils.php:77
+#: LinkEnhancerUtils.php:79
 #, php-format
 msgid "Online Local heritage book of %s at CompGen"
 msgstr "Llibre de família en línia de %s en CompuGen"
 
 #. I18N: JS enhanced link
-#: LinkEnhancerUtils.php:78
+#: LinkEnhancerUtils.php:80
 msgid "Historic Geo Information System (GOV)"
 msgstr "Sistema de Geoinformació Històrica (GOV)"
 
 #. I18N: JS enhanced link
-#: LinkEnhancerUtils.php:79
+#: LinkEnhancerUtils.php:81
 msgid "GEDBAS (Genealogical Database - collected personal data)"
 msgstr "GEDBAS (Base de dades genealògiques - dades personals recollides)"
 
 #. I18N: JS enhanced link
-#: LinkEnhancerUtils.php:80
+#: LinkEnhancerUtils.php:82
 msgid "wer-wir-waren.at"
 msgstr "wer-wir-waren.at"
 
 #. I18N: JS enhanced link
-#: LinkEnhancerUtils.php:81
+#: LinkEnhancerUtils.php:83
 msgid "Residents database - Family research in West Prussia"
 msgstr ""
 "Base de dades de residents - Investigació familiar a Prússia occidental"
 
 #. I18N: JS enhanced link
-#: LinkEnhancerUtils.php:83
+#: LinkEnhancerUtils.php:85
 msgid "Syntax error"
 msgstr "Error sintàctic"
 
 #. I18N: JS enhanced link wt1 - %s=rectypes
-#: LinkEnhancerUtils.php:84
+#: LinkEnhancerUtils.php:86
 #, php-format
 msgid ""
 "standard link to note (available record types: %s) with XREF in active tree"
@@ -167,68 +177,80 @@ msgstr ""
 "Enllaç a nota (tipus de registre disponibles: %s) amb XREF a l'arbre actiu"
 
 #. I18N: JS enhanced link wt2
-#: LinkEnhancerUtils.php:85
+#: LinkEnhancerUtils.php:87
 msgid ""
 "link to record type individual with XREF from \"othertree\" and also link to"
 msgstr "enllaç al registre individual amb XREF de \"othertree\""
 
 #. I18N: JS enhanced link osm1
-#: LinkEnhancerUtils.php:86
+#: LinkEnhancerUtils.php:88
 msgid "zoom/lat/lon for locating map"
 msgstr "Latitud/longitud i zum per ubicar al mapa"
 
 #. I18N: JS enhanced link osm2
-#: LinkEnhancerUtils.php:87
+#: LinkEnhancerUtils.php:89
 msgid "same as before with additional marker"
 msgstr "el mateix que abans amb un marcador addicional"
 
 #. I18N: JS enhanced link osm3
-#: LinkEnhancerUtils.php:88
+#: LinkEnhancerUtils.php:90
 msgid "show also node/way/relation, see also"
 msgstr "mostrar també node/via/relació"
 
 #. I18N: JS enhanced link osm4
-#: LinkEnhancerUtils.php:89
+#: LinkEnhancerUtils.php:91
 msgid "show also node/way/relation - alternative notation"
 msgstr "mostrar també node/via/relació - sistema alternatiu"
 
 #. I18N: JS enhanced link ofb1
-#: LinkEnhancerUtils.php:90
+#: LinkEnhancerUtils.php:92
 msgid "link to Online Local heritage book at CompGen with given uid"
 msgstr "enllaç al llibre de família a CompGen amb l'UID proporcionat"
 
 #. I18N: JS enhanced link wp1
-#: LinkEnhancerUtils.php:91
+#: LinkEnhancerUtils.php:93
 msgid "open the article in the german wikipedia"
 msgstr "obrir l'article a la Wikipedia alemanya"
 
 #. I18N: JS enhanced link wp2
-#: LinkEnhancerUtils.php:92
+#: LinkEnhancerUtils.php:94
 msgid "open the english version of the article"
 msgstr "obrir l'article en la versió anglesa"
 
 #. I18N: JS enhanced link wp3
-#: LinkEnhancerUtils.php:93
+#: LinkEnhancerUtils.php:95
 msgid "you can address every subdomain instance of wikipedia.org"
 msgstr "pot dirigir-se a cada subdomini de wikipedia.org"
 
 #. I18N: JS enhanced link gedbas1
-#: LinkEnhancerUtils.php:94
+#: LinkEnhancerUtils.php:96
 msgid "open person record with given number"
 msgstr "obrir fitxa d'una persona amb un número determinat"
 
 #. I18N: JS enhanced link gedbas2
-#: LinkEnhancerUtils.php:95
+#: LinkEnhancerUtils.php:97
 msgid "open person record with UID"
 msgstr "obrir fitxa d'una persona amb l'identificador UID"
 
-#: LinkEnhancerUtils.php:127
+#: LinkEnhancerUtils.php:143
 #, php-format
 msgid "and so on until level %s"
 msgstr "i així successivament fins al nivell %s"
 
+#: LinkEnhancerUtils.php:158 LinkEnhancerUtils.php:160
+msgid "Term"
+msgstr "Tèrmin"
+
+#: LinkEnhancerUtils.php:164 LinkEnhancerUtils.php:165
+msgid "Text with a footnote reference"
+msgstr "Text amb una referència a peu de pàgina"
+
+#: LinkEnhancerUtils.php:164 LinkEnhancerUtils.php:165
+msgid "Footnote text"
+msgstr "Text de la nota a peu de pàgina"
+
 #. I18N: MD img error precondition
-#: Factories/CustomMarkdownFactory.php:92
+#: CommonMark/LeImageRenderer.php:127
 msgid ""
 "Neither a media object nor a file from the public directory was specified."
 msgstr ""
@@ -236,7 +258,7 @@ msgstr ""
 "públic."
 
 #. I18N: MD img error precondition
-#: Factories/CustomMarkdownFactory.php:98
+#: CommonMark/LeImageRenderer.php:133
 msgid ""
 "Only one media object OR one file from the public directory can be specified."
 msgstr ""
@@ -244,23 +266,28 @@ msgstr ""
 "públic."
 
 #. I18N: MD img error crossreference
-#: Factories/CustomMarkdownFactory.php:134
+#: CommonMark/LeImageRenderer.php:169
 msgid "There is no image file available for display."
 msgstr "No hi ha cap arxiu d'imatge disponible per mostrar."
 
+#. I18N: MD img error public folder
+#: CommonMark/LeImageRenderer.php:191
+msgid "The public folder does not exist."
+msgstr "La carpeta pública no existeix."
+
 #. I18N: MD img error public file, %s the relative filename
-#: Factories/CustomMarkdownFactory.php:165
+#: CommonMark/LeImageRenderer.php:200
 #, php-format
 msgid "File ‘%s’ does not exist in the public folder"
 msgstr "El fitxer '%s' no existeix a la carpeta pública"
 
 #. I18N: MD img error public file
-#: Factories/CustomMarkdownFactory.php:172
+#: CommonMark/LeImageRenderer.php:207
 msgid "Only files within the public folder are supported"
 msgstr "Només s'admeten arxius dins de la carpeta pública"
 
 #. I18N: MD img error public file, %s1=rel. filename, %s2=mimetype
-#: Factories/CustomMarkdownFactory.php:180
+#: CommonMark/LeImageRenderer.php:215
 #, php-format
 msgid "File ‘%s’ in the public folder is not an image but '%s'"
 msgstr "L'arxiu «%s» de la carpeta pública no és una imatge, sinó «%s»."
@@ -274,7 +301,7 @@ msgstr ""
 
 #: resources/views/help-md.phtml:19 resources/views/help-md.phtml:51
 #: resources/views/help-md.phtml:61 resources/views/settings.phtml:41
-#: resources/views/settings.phtml:218
+#: resources/views/settings.phtml:199
 msgid "See also"
 msgstr "Veure també"
 
@@ -292,7 +319,7 @@ msgstr "Resultat renderitzat"
 msgid "For more depth of detail"
 msgstr "Per a més detalls"
 
-#: resources/views/help-md.phtml:59 resources/views/settings.phtml:111
+#: resources/views/help-md.phtml:59 resources/views/settings.phtml:249
 msgid "Markdown editor for note textareas"
 msgstr "Editor Markdown per a àrees de text de notes"
 
@@ -320,7 +347,7 @@ msgstr ""
 
 #. I18N: help md - section title
 #. I18N: Settings - section title
-#: resources/views/help-md.phtml:69 resources/views/settings.phtml:206
+#: resources/views/help-md.phtml:69 resources/views/settings.phtml:187
 msgid "Enhanced Link Support"
 msgstr "Suport d'enllaços millorat"
 
@@ -373,8 +400,7 @@ msgstr ""
 "Només apareixen quan es fa clic a l'enllaç."
 
 #. I18N: help md - section title
-#. I18N: Settings - section title
-#: resources/views/help-md.phtml:82 resources/views/settings.phtml:228
+#: resources/views/help-md.phtml:82
 msgid "Markdown Image Support"
 msgstr "Suport d'imatges Markdown"
 
@@ -407,7 +433,7 @@ msgstr ""
 "La visualització pot personalitzar-se com es desitja utilitzant les següents "
 "classes CSS estàndard o classe CSS addicionals."
 
-#: resources/views/help-md.phtml:89 resources/views/settings.phtml:232
+#: resources/views/help-md.phtml:89 resources/views/settings.phtml:230
 msgid "Markdown image container standard css class"
 msgstr "Classe CSS estàndard de contenidor d'imatges Markdown"
 
@@ -415,7 +441,7 @@ msgstr "Classe CSS estàndard de contenidor d'imatges Markdown"
 msgid "not defined"
 msgstr "sense definir"
 
-#: resources/views/help-md.phtml:92 resources/views/settings.phtml:240
+#: resources/views/help-md.phtml:92 resources/views/settings.phtml:238
 msgid "Markdown image title container standard css class"
 msgstr "Classe CSS estàndard per al contenidor del títol d'imatge a Markdown"
 
@@ -442,13 +468,13 @@ msgstr "Selecciona el motor de cerca"
 msgid "Goto section"
 msgstr "Ves a la secció"
 
-#: resources/views/help-wthb.phtml:36 resources/views/settings.phtml:295
-#: LinkEnhancerModule.php:323
+#: resources/views/help-wthb.phtml:36 resources/views/settings.phtml:330
+#: LinkEnhancerModule.php:329
 msgid "Full-text search"
 msgstr "Cerca de text complet"
 
-#: resources/views/help-wthb.phtml:52 resources/views/settings.phtml:295
-#: LinkEnhancerModule.php:323
+#: resources/views/help-wthb.phtml:52 resources/views/settings.phtml:330
+#: LinkEnhancerModule.php:329
 msgid "Table of contents"
 msgstr "Índex"
 
@@ -461,7 +487,7 @@ msgstr ""
 "directament el lloc web."
 
 #. I18N: wthb link user setting title
-#: resources/views/wthb-modal.phtml:11 LinkEnhancerModule.php:322
+#: resources/views/wthb-modal.phtml:11 LinkEnhancerModule.php:328
 msgid "Webtrees manual link - user setting"
 msgstr "Enllaç manual de Webtrees - configuració d'usuari"
 
@@ -475,7 +501,7 @@ msgstr ""
 "servei de traducció."
 
 #. I18N: wthb link setting option
-#: resources/views/wthb-modal.phtml:21 resources/views/settings.phtml:427
+#: resources/views/wthb-modal.phtml:21 resources/views/settings.phtml:462
 msgid "Open webtrees manual URL with Google Translate?"
 msgstr ""
 "Trieu si voleu obrir la pàgina d’ajuda directament o a través d’un traductor."
@@ -530,9 +556,10 @@ msgstr ""
 "Aquesta funció s'implementa mitjançant JavaScript i només afecta els "
 "enllaços de les notes i als blocs de l'àrea del client."
 
-#: resources/views/settings.phtml:78
-msgid "Activate markdown image tweak?"
-msgstr "Activar l'ajust d'imatge Markdown?"
+#. I18N: Settings - section title
+#: resources/views/settings.phtml:78 resources/views/settings.phtml:209
+msgid "Markdown enhancements"
+msgstr "Millores de markdown"
 
 #. I18N: MD img - sentence 1
 #: resources/views/settings.phtml:88
@@ -547,12 +574,12 @@ msgstr ""
 "Condició prèvia: La preferència de l'arbre '%s' ha d'estar establerta a "
 "Markown."
 
-#: resources/views/settings.phtml:130
+#: resources/views/settings.phtml:111
 msgid "Show Help Link"
 msgstr "Mostrar enllaç d'ajuda"
 
 #. I18N:
-#: resources/views/settings.phtml:144
+#: resources/views/settings.phtml:125
 msgid ""
 "A context-sensitive link to the German webtrees manual can be added by "
 "javascript to the small navigation menu."
@@ -561,7 +588,7 @@ msgstr ""
 "Javascrip al petit menú de navegació."
 
 #. I18N:
-#: resources/views/settings.phtml:145
+#: resources/views/settings.phtml:126
 msgid ""
 "If this feature is also desired in the admin backend, patch P002 would need "
 "to be applied or at least the custom module vesta_common would need to be "
@@ -571,35 +598,35 @@ msgstr ""
 "aplicar el parxís P002 o, almenys, instal·lar el mòdul personalitzat "
 "Vesta_common."
 
-#: resources/views/settings.phtml:156
+#: resources/views/settings.phtml:137
 msgid "Site title as home link"
 msgstr "Títol del lloc web com a enllaç d'inici"
 
 #. I18N: home link
-#: resources/views/settings.phtml:164
+#: resources/views/settings.phtml:145
 msgid "home page of the current tree"
 msgstr "Pàgina d'inici de l'arbre actual"
 
 #. I18N: home link
-#: resources/views/settings.phtml:165
+#: resources/views/settings.phtml:146
 msgid "my page of the registered user"
 msgstr "la meva pàgina d'usuari registrat"
 
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:180
+#: resources/views/settings.phtml:161
 msgid "More options"
 msgstr "Més opcions"
 
-#: resources/views/settings.phtml:187
+#: resources/views/settings.phtml:168
 msgid "Output of debug information on the JS console"
 msgstr "Sortida d'informació de depuració a la consola JS"
 
-#: resources/views/settings.phtml:210
+#: resources/views/settings.phtml:191
 msgid "JavaScript for additional link targets"
 msgstr "JavaScrip per a enllaços addicionals"
 
 #. I18N: Enhanced Links js
-#: resources/views/settings.phtml:215
+#: resources/views/settings.phtml:196
 msgid ""
 "The JavaScript object overwrites and supplements the predefined settings, "
 "which are taken from the following code excerpt and can also serve as a "
@@ -610,13 +637,13 @@ msgstr ""
 "punt de referència per als ajustos."
 
 #. I18N: Enhanced Links js
-#: resources/views/settings.phtml:217
+#: resources/views/settings.phtml:198
 msgid "Any CSS rules required are best added via the “CSS and JS” module."
 msgstr ""
 "Les regles CSS necessàries s'afegeixen millor a través del mòdul «CCS i JS."
 
 #. I18N: Enhanced Links js
-#: resources/views/settings.phtml:218
+#: resources/views/settings.phtml:199
 msgid ""
 "Only the definition of the icon as a background image is actually needed - "
 "referencing as data: URL."
@@ -624,26 +651,34 @@ msgstr ""
 "En realitat, només es necessita la definició de la icona com a imatge de "
 "fons fent referència com a dades: URL."
 
+#: resources/views/settings.phtml:215
+msgid "Activate markdown image tweak?"
+msgstr "Activar l'ajust d'imatge Markdown?"
+
+#: resources/views/settings.phtml:268
+msgid "Markdown extensions"
+msgstr "Extensions de markdown"
+
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:249 LinkEnhancerModule.php:320
-#: LinkEnhancerModule.php:757
+#: resources/views/settings.phtml:284 LinkEnhancerModule.php:326
+#: LinkEnhancerModule.php:769
 msgid "Webtrees manual"
 msgstr "Manual Webtrees"
 
-#: resources/views/settings.phtml:255
+#: resources/views/settings.phtml:290
 msgid "Precede the help link with an icon"
 msgstr "Anteposar una icona a l'enllaç d'ajuda"
 
-#: resources/views/settings.phtml:275
+#: resources/views/settings.phtml:310
 msgid "Help link for subcontext topics"
 msgstr "Enllaç d'ajuda per a temes de subcontext"
 
-#: resources/views/settings.phtml:313
+#: resources/views/settings.phtml:348
 msgid "Data table"
 msgstr "Tabla de dades"
 
 #. I18N: WTHB Link table
-#: resources/views/settings.phtml:317
+#: resources/views/settings.phtml:352
 msgid ""
 "The context is established by assigning the routes used in webtrees to the "
 "corresponding sections in the manual."
@@ -652,64 +687,64 @@ msgstr ""
 "les seccions corresponents del manual."
 
 #. I18N: WTHB Link table
-#: resources/views/settings.phtml:319
+#: resources/views/settings.phtml:354
 msgid "The data is stored in the database table"
 msgstr "Les dades s'emmagatzemen a la tabla de la base de dades"
 
 #. I18N: WTHB Link table rows
-#: resources/views/settings.phtml:321
+#: resources/views/settings.phtml:356
 msgid "Data rows"
 msgstr "Línia de dades"
 
 #. I18N: WTHB Link table rows assigned/total
-#: resources/views/settings.phtml:322
+#: resources/views/settings.phtml:357
 #, php-format
 msgid "%s of %s assigned"
 msgstr "%s de %s assignats"
 
-#: resources/views/settings.phtml:328
+#: resources/views/settings.phtml:363
 msgid "Import registered routes"
 msgstr "Importar rutes registrades"
 
-#: resources/views/settings.phtml:330
+#: resources/views/settings.phtml:365
 msgid "truncate table before import routes or csv file"
 msgstr "retallar tabla abans d'importar rutes o arxiu CSV"
 
-#: resources/views/settings.phtml:332
+#: resources/views/settings.phtml:367
 msgid "Table truncate"
 msgstr "Retallar tabla"
 
-#: resources/views/settings.phtml:336
+#: resources/views/settings.phtml:371
 msgid "Reset routes to delivery status"
 msgstr "Restablir rutes al format de lliurament"
 
-#: resources/views/settings.phtml:343
+#: resources/views/settings.phtml:378
 msgid "CSV-Import"
 msgstr "Importar CSV"
 
-#: resources/views/settings.phtml:347
+#: resources/views/settings.phtml:382
 msgid "Separator"
 msgstr "Separador"
 
-#: resources/views/settings.phtml:352
+#: resources/views/settings.phtml:387
 msgid "CSV-Export"
 msgstr "Exportar CSV"
 
-#: resources/views/settings.phtml:359
+#: resources/views/settings.phtml:394
 msgid "CSV import file"
 msgstr "Arxiu CSV d'importació"
 
-#: resources/views/settings.phtml:381
+#: resources/views/settings.phtml:416
 msgid "Automatically refresh data table when module is updated"
 msgstr ""
 "Actualitzar automàticament la taula de dades quan s'actualitza el mòdul"
 
-#: resources/views/settings.phtml:399
+#: resources/views/settings.phtml:434
 msgid "Link to GenWiki"
 msgstr "Enllaç a GenWiki"
 
 #. I18N: WTHB Link
-#: resources/views/settings.phtml:405
+#: resources/views/settings.phtml:440
 msgid ""
 "This is the base link that is combined with the relative context links from "
 "the database table."
@@ -717,33 +752,33 @@ msgstr ""
 "Aquest és l'enllaç que es combina amb els enllaços contextuals relatius de "
 "la tabla de base de dades."
 
-#: resources/views/settings.phtml:412
+#: resources/views/settings.phtml:447
 msgid "Standard Link to webtrees manual"
 msgstr "Enllaç al manual de webtrees"
 
 #. I18N: WTHB Link
-#: resources/views/settings.phtml:418
+#: resources/views/settings.phtml:453
 msgid "This fallback link is used, when no specific context link was defined."
 msgstr ""
 "Aquest enllaç alternatiu s'utilitza quan no s'ha definit cap enllaç "
 "contextual específic."
 
 #. I18N: wthb translate
-#: resources/views/settings.phtml:435
+#: resources/views/settings.phtml:470
 msgid "user defined"
 msgstr "sense definir"
 
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:446
+#: resources/views/settings.phtml:481
 msgid "Home link"
 msgstr "Enllaç d'inici"
 
-#: resources/views/settings.phtml:450
+#: resources/views/settings.phtml:485
 msgid "JSON for home link styling"
 msgstr "JSON per dissenyar els enllaços d'inici"
 
 #. I18N: Home link js
-#: resources/views/settings.phtml:456
+#: resources/views/settings.phtml:491
 msgid ""
 "JSON object that can be used to dynamically apply CSS styles for the home "
 "link that match the current theme."
@@ -752,30 +787,30 @@ msgstr ""
 "d'inici que coincideixin amb el tema actual."
 
 #. I18N: Home link js
-#: resources/views/settings.phtml:458
+#: resources/views/settings.phtml:493
 msgid "Standard CSS class name"
 msgstr "Nom de la classe CSS estàndard"
 
 #. I18N: Home link js
-#: resources/views/settings.phtml:460
+#: resources/views/settings.phtml:495
 msgid "Example"
 msgstr "Exemple"
 
-#: resources/views/settings.phtml:495
+#: resources/views/settings.phtml:530
 msgid "Javascript is invalid"
 msgstr "JavaScript no és vàlid"
 
-#: resources/views/settings.phtml:506
+#: resources/views/settings.phtml:541
 msgid "JSON is invalid"
 msgstr "JSON no és vàlid"
 
 #. I18N: Module title
-#: LinkEnhancerModule.php:151
+#: LinkEnhancerModule.php:156
 msgid "Link-Enhancer"
 msgstr "Millorador d'enllaços"
 
 #. I18N: Module description
-#: LinkEnhancerModule.php:161
+#: LinkEnhancerModule.php:166
 msgid ""
 "Cross-references to Gedcom datasets, Markdown editor, context-sensitive link "
 "to the GenWiki webtrees manual"
@@ -783,7 +818,7 @@ msgstr ""
 "Referències als conjunts de dades GEDCOM, amb l'editor Markdown, a enllaços "
 "contextuals  al manual GenWiki webtrees"
 
-#: LinkEnhancerModule.php:375
+#: LinkEnhancerModule.php:381
 msgid "Home link - JSON with CSS rules seems to be invalid."
 msgstr "L'enllaç d'inici JSON amb regles CSS, sembla no ser vàlid."
 

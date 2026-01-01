@@ -7,3 +7,60 @@
   display: block;
   padding-top: 5px;
 }
+
+/* CommonMark Extensions */
+.footnotes {
+  font-size: 0.8em;
+  color: gray;
+  margin-top: 3.0em;
+}
+.footnotes > hr {
+  max-width: 500px;
+  min-width: 350px;
+  width: 33%;
+}
+
+.footnotes > ol {
+	padding-left: 1.5rem;
+  column-width: 30em;
+  margin-bottom: unset;
+}
+.footnotes > ol li {
+  margin-right: 1em;
+}
+.footnote > p {
+	margin-bottom: 0.5rem;
+}
+.footnotes > ol li {
+  page-break-inside: avoid;
+  break-inside: avoid-column;
+}
+.footnotes > ol li:target, sup[id^="fnref_"]:target { /* prefix defined in Factories/CustomMarkdownFactory.php */
+  background-color: #f5f7a6;
+}
+.footnote-ref {
+  padding:0 0.2em;
+}
+.footnote-ref::before {
+  content: "[";
+}
+.footnote-ref::after {
+  content: "]";
+}
+
+.footnote-backref {
+  visibility: hidden;
+  padding: 0 0.5em;
+}
+
+.footnote:hover .footnote-backref {
+  visibility: visible;
+}
+
+/* no extension - overwrite webtrees definition */
+blockquote {
+  padding-left: 1.0em;
+  margin-left: 0.5em !important;
+  border-left: 3px solid silver;
+  font-style: italic;
+}

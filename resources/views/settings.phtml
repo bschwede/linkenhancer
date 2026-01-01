@@ -71,11 +71,11 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
                 </div>
             </fieldset>
 
-            <!-- md img active --><?php $prefId = LinkEnhancerModule::PREF_MD_IMG_ACTIVE; ?>
+            <!-- md active --><?php $prefId = LinkEnhancerModule::PREF_MD_ACTIVE; ?>
             <fieldset class="form-group mb-3">
                 <div class="row">
                     <legend class="col-form-label col-sm-3 wt-page-options-label">
-                        [2] <?= I18N::translate('Activate markdown image tweak?') ?>
+                        [2] <?= I18N::translate('Markdown enhancements') ?>
                     </legend>
                     <div class="col-sm-9 wt-page-options-value">
                         <?= view('components/radios-inline', [
@@ -87,7 +87,7 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
                         <div class="form-text">
                             <p><?= /*I18N: MD img - sentence 1 */ I18N::translate('Only works in notes that are formatted with Markdown.') ?>
                             </p>
-                            <p style="color: gray;">[2] + [3] <strong><?= /*I18N: MDE */ I18N::translate("Precondition: Tree preference '%s' need to be set to markdown.", /*I18N: webtrees.pot */ I18N::translate('Format text and notes')) ?></strong>
+                            <p style="color: gray;"><strong><?= /*I18N: MDE */ I18N::translate("Precondition: Tree preference '%s' need to be set to markdown.", /*I18N: webtrees.pot */ I18N::translate('Format text and notes')) ?></strong>
                             <table style="color: gray;">
                               <thead><tr>
                                 <th style="background-color: lightgreen; min-width:150px; text-align: center;">markdown</th>
@@ -103,31 +103,12 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
                     </div>
                 </div>
             </fieldset>
-
-            <!-- mde active --><?php $prefId = LinkEnhancerModule::PREF_MDE_ACTIVE; ?>
-            <fieldset class="form-group mb-3">
-                <div class="row">
-                    <legend class="col-form-label col-sm-3 wt-page-options-label">
-                        [3] <?= I18N::translate('Markdown editor for note textareas') ?>
-                    </legend>
-                    <div class="col-sm-9 wt-page-options-value">
-                        <?= view('components/radios-inline', [
-                            'id' => $prefId,
-                            'name' => $prefId,
-                            'options' => [I18N::translate('no'), I18N::translate('yes')],
-                            'selected' => (int) $prefs[$prefId]
-                        ]) ?>
-                        <div class="form-text">
-                        </div>
-                    </div>
-                </div>
-            </fieldset>
            
             <!-- show wthb-link --><?php $prefId = LinkEnhancerModule::PREF_WTHB_ACTIVE; ?>
             <fieldset class="form-group mb-3">
                 <div class="row">
                     <legend class="col-form-label col-sm-3 wt-page-options-label">
-                        [4] <?= I18N::translate('Show Help Link') ?>
+                        [3] <?= I18N::translate('Show Help Link') ?>
                     </legend>
                     <div class="col-sm-9 wt-page-options-value">
                         <?= view('components/radios-inline', [
@@ -153,7 +134,7 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
             <fieldset class="form-group mb-3">
                 <div class="row">
                     <legend class="col-form-label col-sm-3 wt-page-options-label">
-                        [5] <?= I18N::translate('Site title as home link') ?>
+                        [4] <?= I18N::translate('Site title as home link') ?>
                     </legend>
                     <div class="col-sm-9 wt-page-options-value">
                         <?= view('components/radios-inline', [
@@ -225,9 +206,26 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
         </div>
 
 
-        <h4 style="border-bottom:1px solid lightgray; margin-top: 1.2em;">[2] <?= /*I18N: Settings - section title */I18N::translate('Markdown Image Support') ?></h4>
+        <h4 style="border-bottom:1px solid lightgray; margin-top: 1.2em;">[2] <?= /*I18N: Settings - section title */I18N::translate('Markdown enhancements') ?></h4>
         <div class="row">
-            <!-- md img stdclass --><?php $prefId = LinkEnhancerModule::PREF_MD_IMG_STDCLASS; ?>
+            <!-- md img active --><?php $prefId = LinkEnhancerModule::PREF_MD_IMG_ACTIVE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                        <?= I18N::translate('Activate markdown image tweak?') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value">
+                        <?= view('components/radios-inline', [
+                            'id' => $prefId,
+                            'name' => $prefId,
+                            'options' => [I18N::translate('no'), I18N::translate('yes')],
+                            'selected' => (int) $prefs[$prefId]
+                        ]) ?>
+                    </div>
+                </div>
+            </fieldset>
+
+        <!-- md img stdclass --><?php $prefId = LinkEnhancerModule::PREF_MD_IMG_STDCLASS; ?>
             <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
                 <?= I18N::translate('Markdown image container standard css class') ?>
             </label>
@@ -244,9 +242,50 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
                        value="<?= e($prefs[$prefId]) ?>">
             </div>
 
+            <hr class="subdiv" />
+
+            <!-- mde active --><?php $prefId = LinkEnhancerModule::PREF_MDE_ACTIVE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                        <?= I18N::translate('Markdown editor for note textareas') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value">
+                        <?= view('components/radios-inline', [
+                            'id' => $prefId,
+                            'name' => $prefId,
+                            'options' => [I18N::translate('no'), I18N::translate('yes')],
+                            'selected' => (int) $prefs[$prefId]
+                        ]) ?>
+                        <div class="form-text">
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <hr class="subdiv" />
+
+            <!-- md extensions active --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_ACTIVE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                        <?= I18N::translate('Markdown extensions') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value">
+                        <?= view('components/radios-inline', [
+                            'id' => $prefId,
+                            'name' => $prefId,
+                            'options' => [I18N::translate('no'), I18N::translate('yes')],
+                            'selected' => (int) $prefs[$prefId]
+                        ]) ?>
+                        <div class="form-text">
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
         </div>        
 
-        <h4 style="border-bottom:1px solid lightgray; margin-top: 1.2em;">[4] <?= /*I18N: Settings - section title */ I18N::translate('Webtrees manual') ?></h4>
+        <h4 style="border-bottom:1px solid lightgray; margin-top: 1.2em;">[3] <?= /*I18N: Settings - section title */ I18N::translate('Webtrees manual') ?></h4>
         <div class="row">
             <!-- prepend faicon to wthb-link --><?php $prefId = LinkEnhancerModule::PREF_WTHB_FAICON; ?>
             <fieldset class="form-group mb-3">
@@ -443,7 +482,7 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
         </div>
 
 
-        <h4 style="border-bottom:1px solid lightgray; margin-top: 1.2em;">[5] <?= /*I18N: Settings - section title */ I18N::translate('Home link') ?></h4>
+        <h4 style="border-bottom:1px solid lightgray; margin-top: 1.2em;">[4] <?= /*I18N: Settings - section title */ I18N::translate('Home link') ?></h4>
         <div class="row">
             <!-- home link --><?php $prefId = LinkEnhancerModule::PREF_HOME_LINK_JSON; ?>
             <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
@@ -522,6 +561,11 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
 .error {
     color: #d00;
     font-weight: bold;
+}
+.subdiv {
+  width: 96%;
+  margin: 0.5em 2% 0.5em 2% !important;
+  border: 1px silver solid !important;
 }
 </style>
 <?php View::endpush() ?>

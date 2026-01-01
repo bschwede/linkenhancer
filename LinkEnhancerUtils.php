@@ -59,10 +59,12 @@ class LinkEnhancerUtils { // misc helper functions
             // MDE
             'bold' => /*I18N: JS MDE */ I18N::translate('bold'),
             'italic' => /*I18N: JS MDE */ I18N::translate('italic'),
+            'strikethrough' => /*I18N: JS MDE */ I18N::translate('strikethrough'),
             'format as code' => /*I18N: JS MDE */ I18N::translate('format as code'),
             'Level 1 heading' => /*I18N: JS MDE */ I18N::translate('Level %s heading', '1'),
             'Bulleted list' => /*I18N: JS MDE */ I18N::translate('Bulleted list'),
             'Numbered list' => /*I18N: JS MDE */ I18N::translate('Numbered list'),
+            'quote' => /*I18N: JS MDE blockquote */ I18N::translate('quote'),
             'Insert link' => /*I18N: JS MDE */ I18N::translate('Insert link'),
             'Insert image' => /*I18N: JS MDE */ I18N::translate('Insert image'),
             'hr' => /*I18N: JS MDE */ I18N::translate('Horizontal rule'),
@@ -102,7 +104,7 @@ class LinkEnhancerUtils { // misc helper functions
      * @param string $base_url
      * @return array
      */
-    public static function getMarkdownHelpExamples(string $base_url): array
+    public static function getMarkdownHelpExamples(string $base_url, bool $mdext_active = false): array
     {
         $public_url = $base_url . '/public/apple-touch-icon.png';
 
@@ -119,6 +121,20 @@ class LinkEnhancerUtils { // misc helper functions
                 'html' => '<strong>' . I18N::translate('bold') . '</strong>'
             ],
             [
+                'md' => '`' . I18N::translate('format as code') . '`',
+                'html' => '<code>' . I18N::translate('format as code') . '</code>'
+            ]
+        ];
+        if ($mdext_active) {
+            array_push($mdsyntax,
+                [
+                    'md' => '~~' . I18N::translate('strikethrough') . '~~',
+                    'html' => '<del>' . I18N::translate('strikethrough') . '</del>'
+                ],
+            );
+        }
+        array_push($mdsyntax,
+            [
                 'md' => '# ' . I18N::translate('Level %s heading', '1'),
                 'html' => '<h1>' . I18N::translate('Level %s heading', '1') . '</h1>'
             ],
@@ -128,17 +144,29 @@ class LinkEnhancerUtils { // misc helper functions
                 'html' => '<h2>' . I18N::translate('Level %s heading', '2') . '</h2>'
             ],
             [
-                'md' => '`' . I18N::translate('format as code') . '`',
-                'html' => '<code>' . I18N::translate('format as code') . '</code>'
-            ],
-            [
                 'md' => str_repeat('- ' . I18N::translate('Bulleted list') . "\n", 2),
                 'html' => "<ul>\n" . str_repeat('  <li>' . I18N::translate('Bulleted list') . "</li>\n", 2) . '</ul>'
             ],
             [
                 'md' => str_repeat('1. ' . I18N::translate('Numbered list') . "\n", 2),
                 'html' => "<ol>\n" . str_repeat('  <li>' . I18N::translate('Numbered list') . "</li>\n", 2) . '</ol>'
-            ],
+            ]
+        );
+        if ($mdext_active) {
+            array_push($mdsyntax,
+                [
+                    'md' => I18N::translate('Term') . "\n: "
+                        . /*I18N: webtrees.pot */I18N::translate('Definition'),
+                    'html' => "<dl>\n  <dt>" . I18N::translate('Term') . "</dt>\n  <dd>" 
+                        . /*I18N: webtrees.pot */I18N::translate('Definition') . "</dd>\n</dl>"
+                ],
+                [
+                    'md' => I18N::translate('Text with a footnote reference') . "[^note1]\n\n[^note1]: " . I18N::translate('Footnote text'),
+                    'html' => "<p>" . I18N::translate('Text with a footnote reference') . "<sup id=\"fnref_note1__\"><a class=\"footnote-ref\" href=\"#\">1</a></sup></p>\n\n<div class=\"footnotes\"><hr>\n<ol>\n  <li id=\"fn_note1__\" class=\"footnote\"><p>" . I18N::translate('Footnote text') . " <a class=\"footnote-backref\" href=\"#\">↩</a></p></li>\n</ol></div>"
+                ]
+            );
+        }
+        array_push($mdsyntax,
             [
                 'md' => '[' . I18N::translate('Insert link') . '](#anchor)',
                 'html' => '<a href="#anchor">' . I18N::translate('Insert link') . '</a>'
@@ -157,8 +185,11 @@ class LinkEnhancerUtils { // misc helper functions
                 'html' => $tablemarkup,
                 'out' => '<div class="md-example">' . $tablemarkup . '</div>'
             ],
-        ];
-
+            [
+                'md' => '> ' . I18N::translate('quote'),
+                'html' => '<blockquote>' . I18N::translate('quote') . "</blockquote>"
+            ]
+        );
         return $mdsyntax;
     }
 
