@@ -86,13 +86,16 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public const PREF_WTHB_TRANSLATE = 'WTHB_TRANSLATE'; // use translation service for webtrees manual pages
     public const PREF_JS_DEBUG_CONSOLE = 'JS_DEBUG_CONSOLE'; // console.debug with active route info; 0=off, 1=on
     public const PREF_GENWIKI_LINK = 'GENWIKI_LINK'; // base link to GenWiki
-    public const PREF_MDE_ACTIVE = 'MDE_ACTIVE'; // enable markdown editor for note textareas
+    
     public const PREF_LINKSPP_ACTIVE = 'LINKSPP_ACTIVE'; // enable links++
     public const PREF_LINKSPP_JS = 'LINKSPP_JS'; // Javascript
 
+    public const PREF_MD_ACTIVE = 'MD_ACTIVE'; // enable markdown enhancements
     public const PREF_MD_IMG_ACTIVE = 'MD_IMG_ACTIVE'; // enable enhanced markdown img syntax
     public const PREF_MD_IMG_STDCLASS = 'MD_IMG_STDCLASS'; // standard classname(s) for div wrapping img- and link-tag    
     public const PREF_MD_IMG_TITLE_STDCLASS = 'MD_IMG_TITLE_STDCLASS'; // standard classname(s) for picture subtitle
+    public const PREF_MDE_ACTIVE = 'MDE_ACTIVE'; // enable markdown editor for note textareas
+    public const PREF_MD_EXT_ACTIVE = 'MD_EXT_ACTIVE'; // enable markdown extensions
 
     public const STDCLASS_HOME_LINK = 'homelink';
     public const STDCLASS_MD_IMG = 'md-img';
@@ -119,12 +122,14 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         self::PREF_WTHB_STD_LINK         => self::STDLINK_WTHB, //string
         self::PREF_GENWIKI_LINK          => self::STDLINK_GENWIKI, //string
         self::PREF_WTHB_TRANSLATE        => '1', //int triple-state. 0=off, 1=user defined, 2=on
-        self::PREF_MDE_ACTIVE            => '1', //bool
         self::PREF_LINKSPP_ACTIVE        => '1', //bool
         self::PREF_LINKSPP_JS            => '',  //string
+        self::PREF_MD_ACTIVE             => '1', //bool
         self::PREF_MD_IMG_ACTIVE         => '1', //bool
         self::PREF_MD_IMG_STDCLASS       => self::STDCLASS_MD_IMG, //string
         self::PREF_MD_IMG_TITLE_STDCLASS => self::STDCLASS_MD_IMG_TITLE, //string
+        self::PREF_MDE_ACTIVE            => '1', //bool
+        self::PREF_MD_EXT_ACTIVE         => '1', //bool
     ];
 
     protected WthbService $wthb;
@@ -254,7 +259,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         // Register a namespace for our views.
         View::registerNamespace($this->name(), $this->resourcesFolder() . 'views/');
 
-        if (boolval($this->getPref(self::PREF_MD_IMG_ACTIVE))) {
+        if (boolval($this->getPref(self::PREF_MD_ACTIVE))) {
             Registry::markdownFactory(new CustomMarkdownFactory($this));
         }
     }
@@ -270,18 +275,20 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     {
         $cfg_home_type = intval($this->getPref(self::PREF_HOME_LINK_TYPE)); // 0=off, 1=Home, 2=My-Page
         $cfg_home_active = boolval($cfg_home_type);
-        $cfg_wthb_active = boolval($this->getPref(self::PREF_WTHB_ACTIVE));
-        $cfg_js_debug_console = boolval($this->getPref(self::PREF_JS_DEBUG_CONSOLE));
-        $cfg_mde_active = boolval($this->getPref(self::PREF_MDE_ACTIVE));
+        $cfg_wthb_active = boolval($this->getPref(self::PREF_WTHB_ACTIVE));     
         $cfg_link_active = boolval($this->getPref(self::PREF_LINKSPP_ACTIVE));
-        $cfg_img_active = boolval($this->getPref(self::PREF_MD_IMG_ACTIVE));
+        $cfg_md_active = boolval($this->getPref(self::PREF_MD_ACTIVE));
 
-        
-
-        if (!$cfg_home_active && !$cfg_wthb_active && ! $cfg_mde_active && !$cfg_link_active) {
+        if (!$cfg_home_active && !$cfg_wthb_active && ! $cfg_md_active && !$cfg_link_active) {
             return '';
         }
-        
+
+        $cfg_md_editor_active = $cfg_md_active ? boolval($this->getPref(self::PREF_MDE_ACTIVE)) : false;
+        $cfg_md_img_active = $cfg_md_active ? boolval($this->getPref(self::PREF_MD_IMG_ACTIVE)) : false;
+        $cfg_md_ext_active = $cfg_md_active ? boolval($this->getPref(self::PREF_MD_EXT_ACTIVE)) : false;
+        $cfg_js_debug_console = boolval($this->getPref(self::PREF_JS_DEBUG_CONSOLE));
+
+
         $request = Registry::container()->get(ServerRequestInterface::class);
         //ressources to include
         $bundleShortcuts = [];
@@ -350,7 +357,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
         // === include on all pages
         // --- I18N for JS MDE and enhanced links
-        if ($cfg_link_active || $cfg_mde_active) {
+        if ($cfg_link_active || $cfg_md_editor_active) {
             $includeRes .= "<script>window.I18N = " . Utils::getJsonI18N() . "; </script>";
         }
         // --- Home Link
@@ -388,22 +395,23 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
         // === include selectively
         // --- markdown support
-        if ($tree != null && $tree->getPreference('FORMAT_TEXT') == 'markdown') {
-            if ($cfg_img_active) {
+        if ($cfg_md_active && $tree != null && $tree->getPreference('FORMAT_TEXT') == 'markdown') {
+            if ($cfg_md_img_active || $cfg_md_ext_active) {
                 // markdown image support
                 $bundleShortcuts[] = 'img';
                 $docReadyJs .= "LinkEnhMod.initMd();";
             }
 
-            if ($cfg_mde_active) {
+            if ($cfg_md_editor_active) {
                 // --- TinyMDE -- only nessary on edit pages        
                 if (Utils::isEditPage($request)) {
                     $bundleShortcuts[] = 'mde';
                     $docReadyJs .= 'window.LEhelp = "' . e(route('module', ['module' => $this->name(), 'action' => 'helpmd'])) . '";';
-                    
+
                     $linkSupport = [];
                     if (! $cfg_link_active) $linkSupport[] = "href:0";
-                    if (! $cfg_img_active) $linkSupport[] = "src:0";
+                    if (! $cfg_md_img_active) $linkSupport[] = "src:0";
+                    if (! $cfg_md_ext_active) $linkSupport[] = "ext:0";
                     $linkCfg = implode(',', $linkSupport);
                     $linkCfg = $linkCfg ? '{' . $linkCfg . '}' : '';
                     $docReadyJs .= "LinkEnhMod.installMDE($linkCfg);";
@@ -423,7 +431,8 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
      * @return string
      */
     public function bodyContent(): string {
-        $cfg_mde_active = boolval($this->getPref(self::PREF_MDE_ACTIVE));
+        $cfg_md_active = boolval($this->getPref(self::PREF_MD_ACTIVE));
+        $cfg_md_editor_active = $cfg_md_active ? boolval($this->getPref(self::PREF_MDE_ACTIVE)) : false;
         $cfg_wthb_active = boolval($this->getPref(self::PREF_WTHB_ACTIVE));
         $cfg_wthb_tocnsearch = boolval($this->getPref(self::PREF_WTHB_TOCNSEARCH));
 
@@ -434,7 +443,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             $html .= view($this->name() . '::wthb-modal');
             $needajax = $cfg_wthb_tocnsearch;
         }
-        if ($needajax || $cfg_mde_active && Utils::isEditPage()) { // markdown editor is not useful on other pages
+        if ($needajax || ($cfg_md_editor_active && Utils::isEditPage())) { // markdown editor is not useful on other pages
             $html .= view($this->name() . '::ajax');
         }
         return $html;
@@ -727,12 +736,13 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         // resources/views/edit/shared-note.phtml doesn't include < ?= view('modals/ajax') ? >
         // see also app/Http/RequestHandlers/HelpText.php
         //$topic = $request->getAttribute('topic');
-        $mdimg_active = boolval($this->getPref(self::PREF_MD_IMG_ACTIVE));
+        $cfg_md_img_active = boolval($this->getPref(self::PREF_MD_IMG_ACTIVE));
+        $cfg_md_ext_active = boolval($this->getPref(self::PREF_MD_EXT_ACTIVE));
         $title = /*I18N: webtrees.pot */ I18N::translate('Help') . ' - Markdown';
         $text  = view($this->name() . '::help-md', [
             'link_active'       => boolval($this->getPref(self::PREF_LINKSPP_ACTIVE)),
-            'mdimg_active'      => $mdimg_active,
-            'mdsyntax'          => Utils::getMarkdownHelpExamples(Validator::attributes($request)->string('base_url'), $mdimg_active),
+            'mdimg_active'      => $cfg_md_img_active,
+            'mdsyntax'          => Utils::getMarkdownHelpExamples(Validator::attributes($request)->string('base_url'), $cfg_md_ext_active),
             'mdimg_css_class1'  => $this->getPref(self::PREF_MD_IMG_STDCLASS),
             'mdimg_css_class2'  => $this->getPref(self::PREF_MD_IMG_TITLE_STDCLASS)
         ]);

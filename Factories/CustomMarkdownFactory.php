@@ -103,15 +103,19 @@ class CustomMarkdownFactory extends MarkdownFactory {
     {
         $environment = $this->createEnvironment($tree, static::CONFIG_MARKDOWN_EXT);
 
-        //++ Additional extensions
-        $environment->addExtension(new StrikethroughExtension()); // fisharebest/webtrees#5113
-        $environment->addExtension(new DescriptionListExtension());
-        //$environment->addExtension(new HighlightExtension()); //v2.8.0
-        $environment->addExtension(new FootnoteExtension());
-        // maybe also https://commonmark.thephpleague.com/2.x/extensions/table-of-contents/ ?!
-        //++
+        if (boolval($this->module->getPref(LinkEnhancerModule::PREF_MD_EXT_ACTIVE))) {
+            //++ Additional extensions
+            $environment->addExtension(new StrikethroughExtension()); // fisharebest/webtrees#5113
+            $environment->addExtension(new DescriptionListExtension());
+            //$environment->addExtension(new HighlightExtension()); //v2.8.0
+            $environment->addExtension(new FootnoteExtension());
+            // maybe also https://commonmark.thephpleague.com/2.x/extensions/table-of-contents/ ?!
+            //++
+        }
 
-        $environment->addRenderer(Image::class, new LeImageRenderer($this->module, $tree), 10);        
+        if (boolval($this->module->getPref(LinkEnhancerModule::PREF_MD_IMG_ACTIVE))) {
+            $environment->addRenderer(Image::class, new LeImageRenderer($this->module, $tree), 10);
+        }
 
         $converter = new MarkDownConverter($environment);
 

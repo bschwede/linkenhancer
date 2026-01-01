@@ -4,14 +4,15 @@ import TinyMDE from 'tiny-markdown-editor';
 function getLinkSupportCfg() {
     return {
         href: true,
-        src: true
+        src: true,
+        ext: true
     }
 }
 
 let linkSupport = getLinkSupportCfg();
 
 
-const customGrammar = {
+const customExtensionGrammar = {
     footnote: { // should be a block rule
         regexp: /^\[\^([^\]]+)\]:/,
         replacement: '<span class="TMMark TMMark_TMLink">[^</span><span class="TMLink TMFootnoteLabel">$1</span><span class="TMMark TMMark_TMLink">]:</span>'
@@ -87,7 +88,7 @@ function createMDECommandbar(editor, showHelp) {
     let barCommands = [
         { name: 'bold', title: I18N['bold'] },
         { name: 'italic', title: I18N['italic'] },
-        (linkSupport.src ? { name: "strikethrough", title: I18N['strikethrough'] } : {}),
+        (linkSupport.ext ? { name: "strikethrough", title: I18N['strikethrough'] } : {}),
         { name: 'code', title: I18N['format as code'] },
         '|',
         { name: "h1", title: I18N['Level 1 heading'] },
@@ -166,7 +167,7 @@ function insertMDE() {
         let edId = `md-${elem.id}`;      
         if (document.querySelector(`#${edId}`)) return;
 
-        let editor = new TinyMDE.Editor({ element: elem, customInlineGrammar: (linkSupport.src ? customGrammar : {}) });
+        let editor = new TinyMDE.Editor({ element: elem, customInlineGrammar: (linkSupport.ext ? customExtensionGrammar : {}) });
         let txtId = `txt-${elem.id}`;
 
         editor.e.id = edId;
