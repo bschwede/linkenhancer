@@ -54,7 +54,7 @@ class CustomMarkdownFactory extends MarkdownFactory {
             'container_add_hr' => true,
             'container_class' => 'footnotes',
             'ref_class' => 'footnote-ref',
-            'ref_id_prefix' => 'fnref_',     // also used in resources/js/index-img.js
+            'ref_id_prefix' => 'fnref_',     // also used in resources/js/index-img.js and resources/css/index-img.css
             'footnote_class' => 'footnote',
             'footnote_id_prefix' => 'fn_',   // also used in resources/js/index-img.js
         ],

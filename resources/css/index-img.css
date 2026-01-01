@@ -35,7 +35,7 @@
   page-break-inside: avoid;
   break-inside: avoid-column;
 }
-.footnotes > ol li:target, sup[id^="fnref_"]:target {
+.footnotes > ol li:target, sup[id^="fnref_"]:target { /* prefix defined in Factories/CustomMarkdownFactory.php */
   background-color: #f5f7a6;
 }
 .footnote-ref {
@@ -57,7 +57,7 @@
   visibility: visible;
 }
 
-
+/* no extension - overwrite webtrees definition */
 blockquote {
   padding-left: 1.0em;
   margin-left: 0.5em !important;
