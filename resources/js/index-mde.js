@@ -11,6 +11,17 @@ function getLinkSupportCfg() {
 let linkSupport = getLinkSupportCfg();
 
 
+const customGrammar = {
+    footnote: { // should be a block rule
+        regexp: /^\[\^([^\]]+)\]:/,
+        replacement: '<span class="TMMark TMMark_TMLink">[^</span><span class="TMLink TMFootnoteLabel">$1</span><span class="TMMark TMMark_TMLink">]:</span>'
+    },
+    footnoteref: {
+        regexp: /^\[\^([^\]]+)\](?<!:)/,
+        replacement: '<span class="TMMark TMMark_TMLink">[^</span><span class="TMLink TMFootnoteRefLabel">$1</span><span class="TMMark TMMark_TMLink">]</span>'
+    },
+};
+
 //https://stackoverflow.com/questions/6838104/pure-javascript-method-to-wrap-content-in-a-div
 const wrap = (toWrap, wrapper) => {
     wrapper = wrapper || document.createElement('div');
@@ -74,60 +85,62 @@ function setupDynamicLineNumbers(editorEl) {
 function createMDECommandbar(editor, showHelp) {
     const barDiv = document.createElement("div");
     let barCommands = [
-            { name: 'bold', title: I18N['bold'] },
-            { name: 'italic', title: I18N['italic'] },
-            { name: 'code', title: I18N['format as code'] },
-            '|',
-            { name: "h1", title: I18N['Level 1 heading'] },
-            { name: "ul", title: I18N['Bulleted list'] },
-            { name: "ol", title: I18N['Numbered list'] },
-            '|',
-            {
-                name: 'insertLink',
-                title: I18N['Insert link'],
-                action: editor => {
-                    let dest = window.prompt(I18N['Link destination']);
-                    if (!dest && linkSupport.href) dest = "#@wt=i@@";
-                    editor.wrapSelection('[', `](${dest})`);
+        { name: 'bold', title: I18N['bold'] },
+        { name: 'italic', title: I18N['italic'] },
+        (linkSupport.src ? { name: "strikethrough", title: I18N['strikethrough'] } : {}),
+        { name: 'code', title: I18N['format as code'] },
+        '|',
+        { name: "h1", title: I18N['Level 1 heading'] },
+        { name: "ul", title: I18N['Bulleted list'] },
+        { name: "ol", title: I18N['Numbered list'] },
+        { name: "blockquote", title: I18N['quote'] },
+        '|',
+        {
+            name: 'insertLink',
+            title: I18N['Insert link'],
+            action: editor => {
+                let dest = window.prompt(I18N['Link destination']);
+                if (!dest && linkSupport.href) dest = "#@wt=i@@";
+                editor.wrapSelection('[', `](${dest})`);
+            }
+        },
+        {
+            name: 'insertImage',
+            title: I18N['Insert image'],
+            action: editor => {
+                let dest = linkSupport.src ? "#@id=@@" : '';
+                editor.wrapSelection('![', `](${dest})`);
+            }
+        },
+        {
+            name: 'insertTable',
+            title: I18N['Insert table'],
+            action: editor => {
+                const getTabRow = (cols, cellvalue) => ['', Array.from({ length: cols }, () => cellvalue).join('|'), ''].join('|');
+                let colsNrows = window.prompt(I18N['queryTableCnR']);
+                if (!colsNrows) return;
+                let cols = 3;
+                let rows = 2;
+                let markup = '';
+                let m = colsNrows.trim().match(/^(\d+)[, ]+(\d+)/)
+                if (m) {
+                    cols = m[1];
+                    rows = m[2];
                 }
-            },
-            {
-                name: 'insertImage',
-                title: I18N['Insert image'],
-                action: editor => {
-                    let dest = linkSupport.src ? "#@id=@@" : '';
-                    editor.wrapSelection('![', `](${dest})`);
+                rows = rows < 2 ? 2 : rows;
+                for (let i = 0; i <= rows; i++) { // one more for second row with dashes
+                    markup += getTabRow(cols, (i == 1 ? '-' : ' ').repeat(3)) + '\n';
                 }
+                editor.paste(markup);
             },
-            {
-                name: 'insertTable',
-                title: I18N['Insert table'],
-                action: editor => {
-                    const getTabRow = (cols, cellvalue) => ['', Array.from({ length: cols }, () => cellvalue).join('|'), ''].join('|');
-                    let colsNrows = window.prompt(I18N['queryTableCnR']);
-                    if (!colsNrows) return;
-                    let cols = 3;
-                    let rows = 2;
-                    let markup = '';
-                    let m = colsNrows.trim().match(/^(\d+)[, ]+(\d+)/)
-                    if (m) {
-                        cols = m[1];
-                        rows = m[2];
-                    }
-                    rows = rows < 2 ? 2 : rows;
-                    for (let i = 0; i <= rows; i++) { // one more for second row with dashes
-                        markup += getTabRow(cols, (i == 1 ? '-' : ' ').repeat(3)) + '\n';
-                    }
-                    editor.paste(markup);
-                },
-                innerHTML: '<b>T</b>'
-            },
+            innerHTML: '<b>T</b>'
+        },
 
-            { name: 'hr', title: I18N['hr'] },
-            '|',
-            { name: 'undo', title: I18N['Undo'] },
-            { name: 'redo', title: I18N['Redo'] },
-        ];
+        { name: 'hr', title: I18N['hr'] },
+        '|',
+        { name: 'undo', title: I18N['Undo'] },
+        { name: 'redo', title: I18N['Redo'] },
+    ];
     if (showHelp) {
         barCommands.push(
             '|',
@@ -153,7 +166,7 @@ function insertMDE() {
         let edId = `md-${elem.id}`;      
         if (document.querySelector(`#${edId}`)) return;
 
-        let editor = new TinyMDE.Editor({ element: elem });
+        let editor = new TinyMDE.Editor({ element: elem, customInlineGrammar: (linkSupport.src ? customGrammar : {}) });
         let txtId = `txt-${elem.id}`;
 
         editor.e.id = edId;
