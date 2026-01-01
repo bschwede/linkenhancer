@@ -33,6 +33,11 @@ Combined emphasis with **asterisks and *underscores***.
 
 Strikethrough uses two tildes. ~~Scratch this.~~
 
+`code`
+
+> Blockquote
+> next line
+
 1. First ordered list item
 2. Another item
 
@@ -62,7 +67,7 @@ Here is an image
 
 ![alt text](https://dev.webtrees.net/demo-stable/public/apple-touch-icon.png "webtrees")
 
-Link Enhancer:
+## Link Enhancer
 ![param test](#cname=test&id=@M968@)
 
 non existent:
@@ -75,3 +80,16 @@ File from public folder:
 ![public file](#@public=DonaldDuck.jpg&h=200 "Title")
 
 ![public file](#@public=../apple-touch-icon.png&h=200 "outside the public folder")
+
+### MD extensions
+
+#### Definition List
+Term 1
+: Definition
+Term 2
+: Definition
+
+#### Footnotes
+Nulla lorem libero, ullamcorper et venenatis vitae, tincidunt id nisi. Aenean id dolor eget quam tincidunt varius. Donec sit amet sem in turpis viverra semper. Cras viverra tempus pretium. Suspendisse nec vulputate tortor, vel ultricies mi. Vestibulum sodales quam quam, sit amet pulvinar dui facilisis quis. Phasellus dictum elit sed suscipit imperdiet. Nullam eu felis vel erat ultricies interdum. Curabitur vestibulum viverra felis, nec sodales nisl pharetra eget.[^note1]
+
+[^note1]: This is a footnote.
