@@ -1,7 +1,7 @@
 /* Markdown editor */
 .TinyMDE div[class^="TM"] {
   position: relative;
-  transition: padding-left 0.2s ease;
+  /*transition: padding-left 0.2s ease; / * causes the cursor to jump when a new line is created  */
   padding-left: calc(var(--line-num-width, 2em) + 10px);
 }
 .TMHR:before { 
@@ -42,6 +42,34 @@
   max-height: 500px;
   overflow: scroll; 
   resize: vertical;
+}
+
+.TMBlockquote {
+  border-left: unset;
+  font-style: italic;
+  margin-left: unset;
+  padding-left: calc(var(--line-num-width) + 15px) !important;
+}
+.TMBlockquote::before {
+  font-style: normal;
+}
+
+.TMFootnoteRefLabel, .TMFootnoteLabel {
+  color: #64005e;
+  text-decoration-color: #64005e;
+}
+.TMFootnoteRefLabel {
+  font-style: italic;
+}
+.TMFootnoteLabel {
+  font-weight: bold;
+}
+.TMImage {
+  text-decoration-color: #f2993b;
+}
+.TMImageDestination {
+  text-decoration: underline;
+  color: #f2993b;
 }
 
 /* help */
