@@ -212,7 +212,7 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
             <fieldset class="form-group mb-3">
                 <div class="row">
                     <legend class="col-form-label col-sm-3 wt-page-options-label">
-                        <strong><?= I18N::translate('Activate markdown image tweak?') ?></strong>
+                        <?= I18N::translate('Activate markdown image tweak?') ?>
                     </legend>
                     <div class="col-sm-9 wt-page-options-value">
                         <?= view('components/radios-inline', [
@@ -242,11 +242,13 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
                        value="<?= e($prefs[$prefId]) ?>">
             </div>
 
+            <hr class="subdiv" />
+
             <!-- mde active --><?php $prefId = LinkEnhancerModule::PREF_MDE_ACTIVE; ?>
             <fieldset class="form-group mb-3">
                 <div class="row">
                     <legend class="col-form-label col-sm-3 wt-page-options-label">
-                        <strong><?= I18N::translate('Markdown editor for note textareas') ?></strong>
+                        <?= I18N::translate('Markdown editor for note textareas') ?>
                     </legend>
                     <div class="col-sm-9 wt-page-options-value">
                         <?= view('components/radios-inline', [
@@ -261,11 +263,13 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
                 </div>
             </fieldset>
 
+            <hr class="subdiv" />
+
             <!-- md extensions active --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_ACTIVE; ?>
             <fieldset class="form-group mb-3">
                 <div class="row">
                     <legend class="col-form-label col-sm-3 wt-page-options-label">
-                        <strong><?= I18N::translate('Markdown extensions') ?></strong>
+                        <?= I18N::translate('Markdown extensions') ?>
                     </legend>
                     <div class="col-sm-9 wt-page-options-value">
                         <?= view('components/radios-inline', [
@@ -557,6 +561,11 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
 .error {
     color: #d00;
     font-weight: bold;
+}
+.subdiv {
+  width: 96%;
+  margin: 0.5em 2% 0.5em 2% !important;
+  border: 1px silver solid !important;
 }
 </style>
 <?php View::endpush() ?>
