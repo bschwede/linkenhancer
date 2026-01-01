@@ -31,6 +31,7 @@ The main purpose of this module is to make [**links to data records**](#enhanced
 Additionally there are some goodies more or less related with links:
 
 - The note textarea can be a [**visual markdown editor**](#mde) with **markdown help**.
+- Enabling further [**markdown extensions**](#mdext).
 - [**Context sensitive help links**](#wthb) to the [german webtrees manual](https://wiki.genealogy.net/Webtrees_Handbuch) can be activated in the small menu at the top of the page and for subcontext topics on the page. Furthermore, full-text search is supported and it is possible to browse the table of contents.
 - The [**site title can be a link**](#homelink) to the tree homepage or the user my page.
 - A few minor [**patches**](#patches), that can applied by bash script (not necessary for this module).
@@ -172,6 +173,14 @@ Besides syntax highlighting it ships with an icon bar for common format commands
 ![Markdown Help](resources/img/screenshot_markdown-help.png)
 
 **Note:** Unfortunately, the on-screen keyboard does NOT work as before with the previous text input field. The selected characters end up as an intermediate step in the small text field below the Markdown editor and then must be copied manually to the desired position.
+
+<a name="mdext"></a>
+#### Markdown Extensions
+The package [League\CommonMarkdown](https://commonmark.thephpleague.com/) used for processing Markdown texts offers several useful extensions that can be activated optionally:
+- [Strikethrough](https://commonmark.thephpleague.com/2.x/extensions/strikethrough/) - see also fisharebest/webtrees#5113
+- [Description Lists](https://commonmark.thephpleague.com/2.x/extensions/description-lists/)
+- [Footnotes](https://commonmark.thephpleague.com/2.x/extensions/footnotes/)
+
 
 <a name="wthb"></a>
 ### German webtrees manual
