@@ -130,9 +130,11 @@ function getLECfg() {
     return cfg;
 }
 let LEcfg = getLECfg();
+let thisXref = '';
 
-function initLE(cfg) {
+function initLE(cfg, xref = '') {
     LEcfg = (typeof cfg == 'object' && cfg !== null ? Object.assign(getLECfg(), cfg) : getLECfg());
+    thisXref = (xref === null || xref === undefined ? '' : String(xref).toUpperCase());
     observeDomLinks();
 }
 
@@ -178,6 +180,27 @@ function getLErecTypes(asString) {
     }
     return rectypes;
 }
+
+function changeTagName(element, newTag) {
+    const replacement = document.createElement(newTag);
+
+    // move child nodes
+    while (element.firstChild) {
+        replacement.appendChild(element.firstChild);
+    }
+
+    // clone attributes
+    for (let i = 0; i < element.attributes.length; i++) {
+        const attr = element.attributes[i].cloneNode();
+        replacement.attributes.setNamedItem(attr);
+    }
+
+    // replace old element in DOM
+    element.parentNode.replaceChild(replacement, element);
+
+    return replacement;
+}
+
 function processLinks(linkElement) {
     const rectypes = getLErecTypes();
     const separator = { 'default': { 'path': '%2F', 'option': '&' }, 'pretty': { 'path': '/', 'option': '?' } };
@@ -213,14 +236,14 @@ function processLinks(linkElement) {
     function parseCrossReferenceLink(href) {
         const match = href.match(new RegExp("^([" + Object.keys(rectypes).join('') + "])@([^@]+)@(.*)", 'i'));
         if (!match) {
-            console.warn(`wt-Querverweis - Syntaxfehler in ${href}`);
+            console.warn('LE-Mod xrefs: wt cross-reference - syntax error in' ,href);
             return {};
         }
         let [, type, xref, param] = match;
         let dia = (/ dia/i.test(param));
         param = param.replace(/ dia/i, '');
 
-        return { type: type.toLowerCase(), xref, newtree: param, dia };
+        return { type: type.toLowerCase(), xref: xref.toUpperCase(), newtree: param, dia };
     }
 
     function processLink(link) {
@@ -247,16 +270,20 @@ function processLinks(linkElement) {
                     return;
                 }
                 let url = baseurl;
+                let thisXrefShown = false;
                 if (newtree) {
                     url = url.replace(`/tree/${tree}`.replaceAll('/', separator[urlmode].path),
                         `/tree/${newtree}`.replaceAll('/', separator[urlmode].path));
+                } else if(thisXref === xref) {
+                    link = changeTagName(link, 'strong');
+                    thisXrefShown = true;
                 }
                 let urlxref = url + separator[urlmode].path + rectypes[type] + separator[urlmode].path + xref;
                 let nextLink = getNextLink(link, lastLink);
                 lastLink = setLink(nextLink, lastLink, urlxref, LEcfg[key].name + ` - ${xref}`, LEcfg[key].cname);
                 lastLink.classList.add('icon-wt-xref');
 
-                if (type == 'i' && dia) {
+                if (type == 'i' && dia && !thisXrefShown) {
                     let diaurl = url.replace("/tree/".replaceAll('/', separator[urlmode].path), "/module/tree/Chart/".replaceAll('/', separator[urlmode].path)) + separator[urlmode].option + "xref=" + xref;
                     nextLink = getNextLink(link, lastLink);
                     lastLink = setLink(nextLink, lastLink, diaurl, `${diatitle} - ${xref}`, 'icon-wt-dia');//'menu-chart-tree');
@@ -294,7 +321,7 @@ function observeDomLinks() {
                 mutation.addedNodes.forEach(node => {
                     if (node.nodeType === Node.ELEMENT_NODE) {
                         if (node.tagName === 'A') {
-                            console.log(node);
+                            //console.log(node);
                             processLinks(node);
                         }
 

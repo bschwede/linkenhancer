@@ -389,8 +389,10 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         // --- Link++
         if ($cfg_link_active) {
             $bundleShortcuts[] = 'le';
-            $lecfg = $this->getPref(self::PREF_LINKSPP_JS);
-            $docReadyJs .= "LinkEnhMod.initLE($lecfg);";
+            $lecfg = trim($this->getPref(self::PREF_LINKSPP_JS));
+            $lecfg = $lecfg != '' ? $lecfg : '{}';
+            $xref = Validator::attributes($request)->isXref()->string('xref', '');
+            $docReadyJs .= "LinkEnhMod.initLE($lecfg, '$xref');";
         }
 
         // === include selectively
