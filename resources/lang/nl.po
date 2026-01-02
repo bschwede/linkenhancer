@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-01 13:36+0100\n"
-"PO-Revision-Date: 2026-01-01 13:38+0100\n"
+"PO-Revision-Date: 2026-01-02 11:09+0100\n"
 "Last-Translator: TheDutchJewel <thedutchjewel@gmail.com>\n"
 "Language-Team: TheDutchJewel\n"
 "Language: nl\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.8\n"
 "X-Poedit-Basepath: ../..\n"
 "X-Poedit-SearchPath-0: CustomMarkdownFactory.php\n"
 "X-Poedit-SearchPath-1: LinkEnhancerModule.php\n"
@@ -115,6 +115,11 @@ msgid "Redo"
 msgstr "Opnieuw doen"
 
 #. I18N: JS MDE
+#: LinkEnhancerUtils.php:73 LinkEnhancerModule.php:327
+msgid "Help"
+msgstr "Help"
+
+#. I18N: JS MDE
 #: LinkEnhancerUtils.php:74
 msgid "Link destination"
 msgstr "Linkbestemming"
@@ -161,6 +166,11 @@ msgstr "wer-wir-waren.at"
 #: LinkEnhancerUtils.php:83
 msgid "Residents database - Family research in West Prussia"
 msgstr "Inwonersdatabase- Familieonderzoek in West-Pruisen"
+
+#. I18N: JS enhanced link
+#: LinkEnhancerUtils.php:84
+msgid "Interactive tree"
+msgstr "Interactieve boom"
 
 #. I18N: JS enhanced link
 #: LinkEnhancerUtils.php:85
@@ -241,6 +251,10 @@ msgstr "enzovoort tot niveau %s"
 msgid "Term"
 msgstr "Term"
 
+#: LinkEnhancerUtils.php:159 LinkEnhancerUtils.php:161
+msgid "Definition"
+msgstr "Definitie"
+
 #: LinkEnhancerUtils.php:164 LinkEnhancerUtils.php:165
 msgid "Text with a footnote reference"
 msgstr "Tekst met een voetnootverwijzing"
@@ -268,6 +282,12 @@ msgstr ""
 msgid "There is no image file available for display."
 msgstr "Er is geen afbeeldingsbestand beschikbaar om weer te geven."
 
+#: CommonMark/LeImageRenderer.php:175
+msgid ""
+"This media object does not exist or you do not have permission to view it."
+msgstr ""
+"Dit media-object bestaat niet of u hebt geen toestemming om het te bekijken."
+
 #. I18N: MD img error public folder
 #: CommonMark/LeImageRenderer.php:191
 msgid "The public folder does not exist."
@@ -289,6 +309,16 @@ msgstr "Alleen bestanden in de openbare map worden ondersteund"
 #, php-format
 msgid "File ‘%s’ in the public folder is not an image but '%s'"
 msgstr "Het bestand ‘%s’ in de openbare map is geen afbeelding, maar ‘%s’."
+
+#: resources/views/help-md.phtml:17
+msgid ""
+"Markdown is a simple system of formatting, used on websites such as "
+"Wikipedia. It uses unobtrusive punctuation characters to create headings and "
+"sub-headings, bold and italic text, lists, tables, etc."
+msgstr ""
+"Markdown is een eenvoudig opmaaksysteem dat wordt gebruikt op websites zoals "
+"Wikipedia. Het maakt gebruik van onopvallende leestekens om koppen en "
+"subkoppen, vetgedrukte en cursieve tekst, lijsten, tabellen enz. te maken."
 
 #: resources/views/help-md.phtml:18
 msgid ""
@@ -471,6 +501,14 @@ msgstr "Ga naar sectie"
 msgid "Full-text search"
 msgstr "Volledige tekst zoeken"
 
+#: resources/views/help-wthb.phtml:40 resources/views/help-wthb.phtml:55
+msgid "Search filters"
+msgstr "Zoekfilters"
+
+#: resources/views/help-wthb.phtml:46
+msgid "Search"
+msgstr "Zoeken"
+
 #: resources/views/help-wthb.phtml:52 resources/views/settings.phtml:330
 #: LinkEnhancerModule.php:329
 msgid "Table of contents"
@@ -489,6 +527,10 @@ msgstr ""
 msgid "Webtrees manual link - user setting"
 msgstr "Webtreeshandleiding-link - gebruikersinstelling"
 
+#: resources/views/wthb-modal.phtml:13
+msgid "close"
+msgstr "sluiten"
+
 #. I18N: wthb link user setting prologue
 #: resources/views/wthb-modal.phtml:17
 msgid ""
@@ -502,10 +544,34 @@ msgstr ""
 msgid "Open webtrees manual URL with Google Translate?"
 msgstr "Open webtreeshandleiding-URL met Google Translate?"
 
+#: resources/views/wthb-modal.phtml:27 resources/views/settings.phtml:63
+#: resources/views/settings.phtml:84 resources/views/settings.phtml:118
+#: resources/views/settings.phtml:144 resources/views/settings.phtml:175
+#: resources/views/settings.phtml:221 resources/views/settings.phtml:255
+#: resources/views/settings.phtml:274 resources/views/settings.phtml:297
+#: resources/views/settings.phtml:317 resources/views/settings.phtml:337
+#: resources/views/settings.phtml:423 resources/views/settings.phtml:469
+msgid "no"
+msgstr "nee"
+
+#: resources/views/wthb-modal.phtml:27 resources/views/settings.phtml:63
+#: resources/views/settings.phtml:84 resources/views/settings.phtml:119
+#: resources/views/settings.phtml:176 resources/views/settings.phtml:221
+#: resources/views/settings.phtml:255 resources/views/settings.phtml:274
+#: resources/views/settings.phtml:298 resources/views/settings.phtml:318
+#: resources/views/settings.phtml:338 resources/views/settings.phtml:424
+#: resources/views/settings.phtml:471
+msgid "yes"
+msgstr "ja"
+
 #. I18N: wthb link user setting epilogue 1
 #: resources/views/wthb-modal.phtml:33
 msgid "This setting can be adjusted at any time."
 msgstr "Deze instelling kan op elk moment worden aangepast."
+
+#: resources/views/settings.phtml:30
+msgid "Control panel"
+msgstr "Controlepaneel"
 
 #. I18N: Settings - prologue sentence 1
 #: resources/views/settings.phtml:36
@@ -564,6 +630,11 @@ msgstr "Werkt alleen in notities die zijn opgemaakt met Markdown."
 
 #. I18N: MDE
 #: resources/views/settings.phtml:90
+msgid "Format text and notes"
+msgstr "Tekst en notities opmaken"
+
+#. I18N: MDE
+#: resources/views/settings.phtml:90
 #, php-format
 msgid "Precondition: Tree preference '%s' need to be set to markdown."
 msgstr "Voorwaarde: De boomvoorkeur ‘%s’ moet worden ingesteld op markdown."
@@ -579,7 +650,7 @@ msgid ""
 "javascript to the small navigation menu."
 msgstr ""
 "Een contextgevoelige link naar de Duitse webtrees-handleiding kan met "
-"javascript worden toegevoegd aan het kleine navigatiemenu."
+"JavaScript worden toegevoegd aan het kleine navigatiemenu."
 
 #. I18N:
 #: resources/views/settings.phtml:126
@@ -588,13 +659,13 @@ msgid ""
 "to be applied or at least the custom module vesta_common would need to be "
 "installed."
 msgstr ""
-"Als deze functie ook gewenst is in de admin-backend, moet patch P002 worden "
-"toegepast of moet ten minste de aangepaste module vesta_common worden "
+"Als deze functie ook gewenst is in de beheerdersback-end, moet patch P002 "
+"worden toegepast of moet ten minste de aangepaste module vesta_common worden "
 "geïnstalleerd."
 
 #: resources/views/settings.phtml:137
 msgid "Site title as home link"
-msgstr "Sitetitel als startpagina-link"
+msgstr "Websitetitel als startpagina-link"
 
 #. I18N: home link
 #: resources/views/settings.phtml:145
@@ -605,6 +676,10 @@ msgstr "startpagina van de huidige stamboom"
 #: resources/views/settings.phtml:146
 msgid "my page of the registered user"
 msgstr "mijn pagina van de geregistreerde gebruiker"
+
+#: resources/views/settings.phtml:157 resources/views/settings.phtml:503
+msgid "save"
+msgstr "opslaan"
 
 #. I18N: Settings - section title
 #: resources/views/settings.phtml:161
@@ -618,6 +693,10 @@ msgstr "Uitvoer van debug-informatie op de JS-console"
 #: resources/views/settings.phtml:191
 msgid "JavaScript for additional link targets"
 msgstr "JavaScript voor extra linkdoelen"
+
+#: resources/views/settings.phtml:191 resources/views/settings.phtml:485
+msgid "optional"
+msgstr "optioneel"
 
 #. I18N: Enhanced Links js
 #: resources/views/settings.phtml:196
@@ -729,6 +808,14 @@ msgstr "CSV-export"
 msgid "CSV import file"
 msgstr "CSV-importbestand"
 
+#: resources/views/settings.phtml:403
+msgid "Character encoding"
+msgstr "Tekencodering"
+
+#: resources/views/settings.phtml:407
+msgid "automatic"
+msgstr "automatisch"
+
 #: resources/views/settings.phtml:416
 msgid "Automatically refresh data table when module is updated"
 msgstr ""
@@ -816,6 +903,19 @@ msgstr ""
 #: LinkEnhancerModule.php:381
 msgid "Home link - JSON with CSS rules seems to be invalid."
 msgstr "Startpagina-link - JSON met CSS-regels lijkt ongeldig te zijn."
+
+#: LinkEnhancerModule.php:547
+msgid "Export failed"
+msgstr "Exporteren is mislukt"
+
+#: LinkEnhancerModule.php:566
+msgid "Import failed"
+msgstr "Importeren is mislukt"
+
+#: LinkEnhancerModule.php:590
+#, php-format
+msgid "The preferences for the module “%s” have been updated."
+msgstr "De voorkeuren voor de module “%s” zijn bijgewerkt."
 
 #~ msgid "Full text search"
 #~ msgstr "Volledige tekst zoeken"
