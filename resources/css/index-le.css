@@ -15,6 +15,7 @@ h2 .linkicon {
     padding: 0 10px !important;
 }
 
+/* webtrees cross-references */
 .icon-wt-xref {
     text-decoration: underline dotted;
 }
@@ -22,11 +23,13 @@ h2 .linkicon {
     text-decoration: underline dotted;
     color: red;
 }
+strong.icon-wt-xref { background-color: lightyellow; } /* xref of actually displayed gedcom record */
 .icon-wt-dia {
     background-image:
     url("./icons/wt-dia.png");
 }
 
+/* external targets */
 .icon-www {
     background-image:
     url("./icons/dornbirn_30x30.png");
