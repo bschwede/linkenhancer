@@ -417,13 +417,12 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                     $bundleShortcuts[] = 'mde';
                     $docReadyJs .= 'window.LEhelp = "' . e(route('module', ['module' => $this->name(), 'action' => 'helpmd'])) . '";';
 
-                    $linkSupport = [];
-                    if (! $cfg_link_active) $linkSupport[] = "href:0";
-                    if (! $cfg_md_img_active) $linkSupport[] = "src:0";
-                    if (! $cfg_md_ext_active) $linkSupport[] = "ext:0";
-                    $linkCfg = implode(',', $linkSupport);
-                    $linkCfg = $linkCfg ? '{' . $linkCfg . '}' : '';
-                    $docReadyJs .= "LinkEnhMod.installMDE($linkCfg);";
+                    $options = [
+                        'href' => $cfg_link_active,
+                        'src' => $cfg_md_img_active,
+                        'ext' => $cfg_md_ext_active,
+                    ];                    
+                    $docReadyJs .= "LinkEnhMod.installMDE(" . json_encode($options) . ");";
                 }
             }
         }
