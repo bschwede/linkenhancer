@@ -124,7 +124,12 @@ function getLECfg() {
             { n: I18N['osm-help3'] + ' <a href="https://wiki.openstreetmap.org/wiki/DE:Browsing">OSM-Wiki</a>', e: '16/50.11185/8.09636/way/60367151' },
             { n: I18N['osm-help4'], e: '13/50.09906/8.04660/?relation=403139' },
         ]
-    }
+    },
+    "wit": {
+        name: 'WikiTree - $ID',
+        url: 'https://www.wikitree.com/wiki/',
+        cname: 'icon-wit'
+    },    
 }
 //--- code-snippet end
     return cfg;

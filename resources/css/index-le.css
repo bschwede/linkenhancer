@@ -50,6 +50,10 @@ strong.icon-wt-xref { background-color: lightyellow; } /* xref of actually displ
     background-image:
     url("./icons/osm_30x30.png");
 }
+.icon-wit {
+    background-image:
+    url("./icons/wikitree_32x32.png");
+}
 /* display faulty links */
 .icon-error {
     color: red;

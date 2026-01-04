@@ -51,6 +51,7 @@ Included are the following **predefined external targets** (the parameter keys a
 - [Residents database - Family research in West Prussia](https://westpreussen.de/pages/forschungsergebnisse/einwohnerdatenbank/einwohner.php) *(ewp)*
 - OpenStreetMap *(osm)*
 - [Wer-wir-waren.at](https://www.wer-wir-waren.at/) (*www*) - a service of the [Vorarlberger Landesmuseumsverein](https://vlmv.at/)
+- [WikiTree](https://www.wikitree.com/)
 - [CompGen](https://www.compgen.de/) services:
   - [GenWiki](https://wiki.genealogy.net/) *(gw)*
   - [Online Local heritage books](https://ofb.genealogy.net/?lang=en) *(ofb)*
