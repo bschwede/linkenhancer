@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-04 06:20+0100\n"
-"PO-Revision-Date: 2026-01-04 06:23+0100\n"
+"POT-Creation-Date: 2026-01-04 18:56+0100\n"
+"PO-Revision-Date: 2026-01-04 18:58+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es\n"
@@ -33,8 +33,8 @@ msgstr "No hay datos disponibles para la exportación."
 msgid "No CSV file was received."
 msgstr "No se ha encontrado ningún archivo CSV."
 
-#: Services/WthbService.php:339 LinkEnhancerModule.php:522
-#: LinkEnhancerModule.php:607
+#: Services/WthbService.php:339 LinkEnhancerModule.php:529
+#: LinkEnhancerModule.php:614
 #, php-format
 msgid "Routes imported (Total: %s / skipped: %s)"
 msgstr "Rutas importadas (Total: %s / omitidas %s)"
@@ -306,7 +306,7 @@ msgstr ""
 
 #: resources/views/help-md.phtml:19 resources/views/help-md.phtml:51
 #: resources/views/help-md.phtml:61 resources/views/settings.phtml:41
-#: resources/views/settings.phtml:199
+#: resources/views/settings.phtml:219
 msgid "See also"
 msgstr "Ver también"
 
@@ -324,7 +324,7 @@ msgstr "Resultado renderizado"
 msgid "For more depth of detail"
 msgstr "Para más detalles"
 
-#: resources/views/help-md.phtml:59 resources/views/settings.phtml:251
+#: resources/views/help-md.phtml:59 resources/views/settings.phtml:271
 msgid "Markdown editor for note textareas"
 msgstr "Editor Markdown para áreas de texto de notas"
 
@@ -439,7 +439,7 @@ msgstr ""
 "La visualización puede personalizarse como se desee utilizando las "
 "siguientes clases CSS estándar o clase CSS adicionales."
 
-#: resources/views/help-md.phtml:89 resources/views/settings.phtml:230
+#: resources/views/help-md.phtml:89 resources/views/settings.phtml:250
 msgid "Markdown image container standard css class"
 msgstr "Clase CSS estándar de contenedor de imágenes Markdown"
 
@@ -447,7 +447,7 @@ msgstr "Clase CSS estándar de contenedor de imágenes Markdown"
 msgid "not defined"
 msgstr "sin definir"
 
-#: resources/views/help-md.phtml:92 resources/views/settings.phtml:238
+#: resources/views/help-md.phtml:92 resources/views/settings.phtml:258
 msgid "Markdown image title container standard css class"
 msgstr "Clase CSS estándar para el contenedor del título de imagen en Markdown"
 
@@ -474,13 +474,13 @@ msgstr "Seleccionar motor de búsqueda"
 msgid "Goto section"
 msgstr "Ir a la sección"
 
-#: resources/views/help-wthb.phtml:36 resources/views/settings.phtml:334
-#: LinkEnhancerModule.php:330
+#: resources/views/help-wthb.phtml:36 resources/views/settings.phtml:354
+#: LinkEnhancerModule.php:332
 msgid "Full-text search"
 msgstr "Búsqueda de texto completo"
 
-#: resources/views/help-wthb.phtml:52 resources/views/settings.phtml:334
-#: LinkEnhancerModule.php:330
+#: resources/views/help-wthb.phtml:52 resources/views/settings.phtml:354
+#: LinkEnhancerModule.php:332
 msgid "Table of contents"
 msgstr "Índice"
 
@@ -493,7 +493,7 @@ msgstr ""
 "el sitio web."
 
 #. I18N: wthb link user setting title
-#: resources/views/wthb-modal.phtml:11 LinkEnhancerModule.php:329
+#: resources/views/wthb-modal.phtml:11 LinkEnhancerModule.php:331
 msgid "Webtrees manual link - user setting"
 msgstr "Enlace manual de Webtrees - configuración del usuario"
 
@@ -506,7 +506,7 @@ msgstr ""
 "Seleccione si desea acceder a la página de ayuda directamente o a través."
 
 #. I18N: wthb link setting option
-#: resources/views/wthb-modal.phtml:21 resources/views/settings.phtml:466
+#: resources/views/wthb-modal.phtml:21 resources/views/settings.phtml:486
 msgid "Open webtrees manual URL with Google Translate?"
 msgstr "¿Abrir la URL del manual de webtrees con Google Translate?"
 
@@ -561,7 +561,7 @@ msgstr ""
 "enlaces de las notas y a los bloques del área del cliente."
 
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:78 resources/views/settings.phtml:209
+#: resources/views/settings.phtml:78 resources/views/settings.phtml:229
 msgid "Markdown enhancements"
 msgstr "Mejoras en Markdown"
 
@@ -625,12 +625,17 @@ msgstr "Más opciones"
 msgid "Output of debug information on the JS console"
 msgstr "Salida de información de depuración en la consola JS"
 
-#: resources/views/settings.phtml:191
+#. I18N: see also fancy-research-links
+#: resources/views/settings.phtml:193
+msgid "Open links in a new tab"
+msgstr "Abrir enlaces en una nueva pestaña"
+
+#: resources/views/settings.phtml:211
 msgid "JavaScript for additional link targets"
 msgstr "JavaScrip para enlaces adicionales"
 
 #. I18N: Enhanced Links js
-#: resources/views/settings.phtml:196
+#: resources/views/settings.phtml:216
 msgid ""
 "The JavaScript object overwrites and supplements the predefined settings, "
 "which are taken from the following code excerpt and can also serve as a "
@@ -641,13 +646,13 @@ msgstr ""
 "como punto de referencia para los ajustes."
 
 #. I18N: Enhanced Links js
-#: resources/views/settings.phtml:198
+#: resources/views/settings.phtml:218
 msgid "Any CSS rules required are best added via the “CSS and JS” module."
 msgstr ""
 "las reglas CSS necesarias se añaden mejor a través del módulo «CCS y JS»."
 
 #. I18N: Enhanced Links js
-#: resources/views/settings.phtml:199
+#: resources/views/settings.phtml:219
 msgid ""
 "Only the definition of the icon as a background image is actually needed - "
 "referencing as data: URL."
@@ -655,34 +660,34 @@ msgstr ""
 "En realidad, solamente se necesita la definición del icono como imagen de "
 "fondo haciendo referencia como datos: URL."
 
-#: resources/views/settings.phtml:215
+#: resources/views/settings.phtml:235
 msgid "Activate markdown image tweak?"
 msgstr "¿Activar el ajuste de imagen Markdown?"
 
-#: resources/views/settings.phtml:272
+#: resources/views/settings.phtml:292
 msgid "Markdown extensions"
 msgstr "Extensiones de Markdown"
 
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:288 LinkEnhancerModule.php:327
-#: LinkEnhancerModule.php:770
+#: resources/views/settings.phtml:308 LinkEnhancerModule.php:329
+#: LinkEnhancerModule.php:777
 msgid "Webtrees manual"
 msgstr "Manual Webtrees"
 
-#: resources/views/settings.phtml:294
+#: resources/views/settings.phtml:314
 msgid "Precede the help link with an icon"
 msgstr "Anteponer un icono al enlace de ayuda"
 
-#: resources/views/settings.phtml:314
+#: resources/views/settings.phtml:334
 msgid "Help link for subcontext topics"
 msgstr "Enlace de ayuda para temas secundarios"
 
-#: resources/views/settings.phtml:352
+#: resources/views/settings.phtml:372
 msgid "Data table"
 msgstr "Tabla de datos"
 
 #. I18N: WTHB Link table
-#: resources/views/settings.phtml:356
+#: resources/views/settings.phtml:376
 msgid ""
 "The context is established by assigning the routes used in webtrees to the "
 "corresponding sections in the manual."
@@ -691,64 +696,64 @@ msgstr ""
 "lassecciones correspondientes del manual."
 
 #. I18N: WTHB Link table
-#: resources/views/settings.phtml:358
+#: resources/views/settings.phtml:378
 msgid "The data is stored in the database table"
 msgstr "Los datos se almacenan en la tabla de la base de datos"
 
 #. I18N: WTHB Link table rows
-#: resources/views/settings.phtml:360
+#: resources/views/settings.phtml:380
 msgid "Data rows"
 msgstr "Línea de datos"
 
 #. I18N: WTHB Link table rows assigned/total
-#: resources/views/settings.phtml:361
+#: resources/views/settings.phtml:381
 #, php-format
 msgid "%s of %s assigned"
 msgstr "%s de %s asignados"
 
-#: resources/views/settings.phtml:367
+#: resources/views/settings.phtml:387
 msgid "Import registered routes"
 msgstr "Importar rutas registradas"
 
-#: resources/views/settings.phtml:369
+#: resources/views/settings.phtml:389
 msgid "truncate table before import routes or csv file"
 msgstr "recortar tabla antes de importar rutas o archivo CSV"
 
-#: resources/views/settings.phtml:371
+#: resources/views/settings.phtml:391
 msgid "Table truncate"
 msgstr "Recortar tabla"
 
-#: resources/views/settings.phtml:375
+#: resources/views/settings.phtml:395
 msgid "Reset routes to delivery status"
 msgstr "Restablecer rutas al formato de entrega"
 
-#: resources/views/settings.phtml:382
+#: resources/views/settings.phtml:402
 msgid "CSV-Import"
 msgstr "Importar CSV"
 
-#: resources/views/settings.phtml:386
+#: resources/views/settings.phtml:406
 msgid "Separator"
 msgstr "Separador"
 
-#: resources/views/settings.phtml:391
+#: resources/views/settings.phtml:411
 msgid "CSV-Export"
 msgstr "Exportar CSV"
 
-#: resources/views/settings.phtml:398
+#: resources/views/settings.phtml:418
 msgid "CSV import file"
 msgstr "Archivo CSV de importación"
 
-#: resources/views/settings.phtml:420
+#: resources/views/settings.phtml:440
 msgid "Automatically refresh data table when module is updated"
 msgstr ""
 "Actualizar automáticamente la tabla de datos cuando se actualiza el módulo"
 
-#: resources/views/settings.phtml:438
+#: resources/views/settings.phtml:458
 msgid "Link to GenWiki"
 msgstr "enlace a GenWiki"
 
 #. I18N: WTHB Link
-#: resources/views/settings.phtml:444
+#: resources/views/settings.phtml:464
 msgid ""
 "This is the base link that is combined with the relative context links from "
 "the database table."
@@ -756,33 +761,33 @@ msgstr ""
 "Este es el enlace que se combina con los enlaces contextuales relativos de "
 "la tabla de base de datos."
 
-#: resources/views/settings.phtml:451
+#: resources/views/settings.phtml:471
 msgid "Standard Link to webtrees manual"
 msgstr "Enlace al manual de webtrees"
 
 #. I18N: WTHB Link
-#: resources/views/settings.phtml:457
+#: resources/views/settings.phtml:477
 msgid "This fallback link is used, when no specific context link was defined."
 msgstr ""
 "Este enlace alternativo se utiliza cuando no se ha definido ningún enlace "
 "contextual específico."
 
 #. I18N: wthb translate
-#: resources/views/settings.phtml:474
+#: resources/views/settings.phtml:494
 msgid "user defined"
 msgstr "sin definir"
 
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:485
+#: resources/views/settings.phtml:505
 msgid "Home link"
 msgstr "Enlace de inicio"
 
-#: resources/views/settings.phtml:489
+#: resources/views/settings.phtml:509
 msgid "JSON for home link styling"
 msgstr "JSON para diseñar los enlaces de inicio"
 
 #. I18N: Home link js
-#: resources/views/settings.phtml:495
+#: resources/views/settings.phtml:515
 msgid ""
 "JSON object that can be used to dynamically apply CSS styles for the home "
 "link that match the current theme."
@@ -791,30 +796,30 @@ msgstr ""
 "de inicio que coincidan con el tema actual."
 
 #. I18N: Home link js
-#: resources/views/settings.phtml:497
+#: resources/views/settings.phtml:517
 msgid "Standard CSS class name"
 msgstr "Nombre de la clase CSS estándar"
 
 #. I18N: Home link js
-#: resources/views/settings.phtml:499
+#: resources/views/settings.phtml:519
 msgid "Example"
 msgstr "Ejemplo"
 
-#: resources/views/settings.phtml:534
+#: resources/views/settings.phtml:554
 msgid "Javascript is invalid"
 msgstr "JavaScript no es válido"
 
-#: resources/views/settings.phtml:545
+#: resources/views/settings.phtml:565
 msgid "JSON is invalid"
 msgstr "JSON no es válido"
 
 #. I18N: Module title
-#: LinkEnhancerModule.php:156
+#: LinkEnhancerModule.php:158
 msgid "Link-Enhancer"
 msgstr "Mejorador de enlaces"
 
 #. I18N: Module description
-#: LinkEnhancerModule.php:166
+#: LinkEnhancerModule.php:168
 msgid ""
 "Cross-references to Gedcom datasets, Markdown editor, context-sensitive link "
 "to the GenWiki webtrees manual"
@@ -822,7 +827,7 @@ msgstr ""
 "Referencias a los conjuntos de datos GEDCOM, con el editor Markdown, a "
 "enlaces contextuales al manual GenWiki webtrees"
 
-#: LinkEnhancerModule.php:382
+#: LinkEnhancerModule.php:384
 msgid "Home link - JSON with CSS rules seems to be invalid."
 msgstr "El enlace de inicio JSON con reglas CSS, parece no ser válido."
 

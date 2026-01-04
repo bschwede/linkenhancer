@@ -186,6 +186,26 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
 
         <h4 style="border-bottom:1px solid lightgray; margin-top: 1.2em;">[1] <?= /*I18N: Settings - section title */I18N::translate('Enhanced Link Support') ?></h4>
         <div class="row">
+            <!-- links++ open in new tab --><?php $prefId = LinkEnhancerModule::PREF_LINKSPP_OPEN_IN_NEW_TAB; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                        <?= /*I18N: see also fancy-research-links */ I18N::translate('Open links in a new tab') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value">
+                        <?= view('components/radios-inline', [
+                            'id' => $prefId,
+                            'name' => $prefId,
+                            'options' => [
+                                I18N::translate('no'),
+                                /*I18N: webtrees.pot */ I18N::translate('yes')
+                            ],
+                            'selected' => (int) $prefs[$prefId]
+                        ]) ?>
+                    </div>
+                </div>
+            </fieldset>
+
             <!-- links++ javascript --><?php $prefId = LinkEnhancerModule::PREF_LINKSPP_JS; ?>
             <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
                 <?= I18N::translate('JavaScript for additional link targets') . ' (' . /*I18N: webtrees.pot */I18N::translate('optional') . ')' ?>

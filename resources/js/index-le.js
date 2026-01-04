@@ -134,12 +134,21 @@ function getLECfg() {
 //--- code-snippet end
     return cfg;
 }
-let LEcfg = getLECfg();
-let thisXref = '';
 
-function initLE(cfg, xref = '') {
+const getLEOptions = () => {
+    return {
+        thisXref: '',
+        openInNewTab: true,
+    }
+}
+let LEcfg = getLECfg();
+let LEoptions = getLEOptions();
+
+
+function initLE(cfg, options) {
     LEcfg = (typeof cfg == 'object' && cfg !== null ? Object.assign(getLECfg(), cfg) : getLECfg());
-    thisXref = (xref === null || xref === undefined ? '' : String(xref).toUpperCase());
+    LEoptions = (typeof options == 'object' && options !== null ? Object.assign(getLEOptions(), options) : getLEOptions());
+    LEoptions.thisXref = String(LEoptions.thisXref).toUpperCase();
     observeDomLinks();
 }
 
@@ -220,7 +229,9 @@ function processLinks(linkElement) {
     function setLink(link, lastlink, href, title, classname) {
         if (href) {
             link.setAttribute("href", href);
-            link.setAttribute("target", '_blank');
+            if (LEoptions.openInNewTab) {
+                link.setAttribute("target", '_blank');
+            }
         } else { // assume syntax error
             link.onclick = (e) => { alert(link.title ?? I18N['syntax error'] + "!"); e.preventDefault(); }
             link.classList.add('icon-error');
@@ -281,7 +292,7 @@ function processLinks(linkElement) {
                 if (newtree) {
                     url = url.replace(`/tree/${tree}`.replaceAll('/', separator[urlmode].path),
                         `/tree/${newtree}`.replaceAll('/', separator[urlmode].path));
-                } else if(thisXref === xref) {
+                } else if (LEoptions.thisXref === xref) {
                     link = changeTagName(link, 'strong');
                     thisXrefShown = true;
                 }
