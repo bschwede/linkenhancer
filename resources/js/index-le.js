@@ -218,6 +218,7 @@ function processLinks(linkElement) {
             link.setAttribute("target", '_blank');
         } else { // assume syntax error
             link.onclick = (e) => { alert(link.title ?? I18N['syntax error'] + "!"); e.preventDefault(); }
+            link.classList.add('icon-error');
         }
         if (title) {
             link.setAttribute("title", title);
@@ -255,6 +256,7 @@ function processLinks(linkElement) {
 
         const params = new URLSearchParams(hash);
         const matchingKeys = Object.keys(LEcfg).filter(key => params.has(key));
+        const unknownKeys = Array.from(params.keys()).filter(key => !matchingKeys.includes(key));
 
         let lastLink = null;
         matchingKeys.forEach(key => {
@@ -266,7 +268,7 @@ function processLinks(linkElement) {
                 if (!type || !xref) {
                     let nextLink = getNextLink(link, lastLink);
                     lastLink = setLink(nextLink, lastLink, '', LEcfg[key].name + " - " + I18N['syntax error'] + "!", LEcfg[key].cname);
-                    lastLink.classList.add('icon-wt-xref-error');
+                    lastLink.classList.add('icon-wt-xref');
                     return;
                 }
                 let url = baseurl;
@@ -301,6 +303,10 @@ function processLinks(linkElement) {
                 lastLink = setLink(nextLink, lastLink, url, title, LEcfg[key].cname);
             }
         });
+        if (unknownKeys.length > 0) {
+            let nextLink = getNextLink(link, lastLink);
+            lastLink = setLink(nextLink, lastLink, '', I18N['param error'] + ": " + unknownKeys.sort().join(', '));
+        }
     }
 
     // Alle a-Tags durchlaufen

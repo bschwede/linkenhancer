@@ -19,10 +19,6 @@ h2 .linkicon {
 .icon-wt-xref {
     text-decoration: underline dotted;
 }
-.icon-wt-xref-error {
-    text-decoration: underline dotted;
-    color: red;
-}
 strong.icon-wt-xref { background-color: lightyellow; } /* xref of actually displayed gedcom record */
 .icon-wt-dia {
     background-image:
@@ -53,4 +49,14 @@ strong.icon-wt-xref { background-color: lightyellow; } /* xref of actually displ
 .icon-osm {
     background-image:
     url("./icons/osm_30x30.png");
+}
+/* display faulty links */
+.icon-error {
+    color: red;
+}
+.icon-error::before {
+    content: "❌";
+    padding-right: 0.2em;
+    margin-left: 0.1em;
+    cursor: pointer;
 }
