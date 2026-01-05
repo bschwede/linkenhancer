@@ -83,6 +83,7 @@ class LinkEnhancerUtils { // misc helper functions
             'ewp' => /*I18N: JS enhanced link */ I18N::translate('Residents database - Family research in West Prussia'),
             'Interactive tree' => /*I18N: webtrees.pot */ I18N::translate('Interactive tree'),
             'syntax error' => /*I18N: JS enhanced link */ I18N::translate('Syntax error'),
+            'param error' => /*I18N: JS enhanced link */ I18N::translate('Unknown parameter keys'),
             'wt-help1' => /*I18N: JS enhanced link wt1 - %s=rectypes*/ I18N::translate('standard link to note (available record types: %s) with XREF in active tree', '%s'),
             'wt-help2' => /*I18N: JS enhanced link wt2 */ I18N::translate('link to record type individual with XREF from "othertree" and also link to'),
             'osm-help1' => /*I18N: JS enhanced link osm1 */ I18N::translate('zoom/lat/lon for locating map'),

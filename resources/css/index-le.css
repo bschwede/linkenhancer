@@ -15,18 +15,17 @@ h2 .linkicon {
     padding: 0 10px !important;
 }
 
+/* webtrees cross-references */
 .icon-wt-xref {
     text-decoration: underline dotted;
 }
-.icon-wt-xref-error {
-    text-decoration: underline dotted;
-    color: red;
-}
+strong.icon-wt-xref { background-color: lightyellow; } /* xref of actually displayed gedcom record */
 .icon-wt-dia {
     background-image:
     url("./icons/wt-dia.png");
 }
 
+/* external targets */
 .icon-www {
     background-image:
     url("./icons/dornbirn_30x30.png");
@@ -50,4 +49,18 @@ h2 .linkicon {
 .icon-osm {
     background-image:
     url("./icons/osm_30x30.png");
+}
+.icon-wit {
+    background-image:
+    url("./icons/wikitree_32x32.png");
+}
+/* display faulty links */
+.icon-error {
+    color: red;
+}
+.icon-error::before {
+    content: "❌";
+    padding-right: 0.2em;
+    margin-left: 0.1em;
+    cursor: pointer;
 }

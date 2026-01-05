@@ -1,7 +1,7 @@
 // Markdown editor
 import TinyMDE from 'tiny-markdown-editor';
 
-function getLinkSupportCfg() {
+function getMdeCfg() {
     return {
         href: true,
         src: true,
@@ -9,7 +9,7 @@ function getLinkSupportCfg() {
     }
 }
 
-let linkSupport = getLinkSupportCfg();
+let MdeCfg = getMdeCfg();
 
 
 const customExtensionGrammar = {
@@ -88,7 +88,7 @@ function createMDECommandbar(editor, showHelp) {
     let barCommands = [
         { name: 'bold', title: I18N['bold'] },
         { name: 'italic', title: I18N['italic'] },
-        (linkSupport.ext ? { name: "strikethrough", title: I18N['strikethrough'] } : {}),
+        (MdeCfg.ext ? { name: "strikethrough", title: I18N['strikethrough'] } : {}),
         { name: 'code', title: I18N['format as code'] },
         '|',
         { name: "h1", title: I18N['Level 1 heading'] },
@@ -101,7 +101,7 @@ function createMDECommandbar(editor, showHelp) {
             title: I18N['Insert link'],
             action: editor => {
                 let dest = window.prompt(I18N['Link destination']);
-                if (!dest && linkSupport.href) dest = "#@wt=i@@";
+                if (!dest && MdeCfg.href) dest = "#@wt=i@@";
                 editor.wrapSelection('[', `](${dest})`);
             }
         },
@@ -109,7 +109,7 @@ function createMDECommandbar(editor, showHelp) {
             name: 'insertImage',
             title: I18N['Insert image'],
             action: editor => {
-                let dest = linkSupport.src ? "#@id=@@" : '';
+                let dest = MdeCfg.src ? "#@id=@@" : '';
                 editor.wrapSelection('![', `](${dest})`);
             }
         },
@@ -167,7 +167,7 @@ function insertMDE() {
         let edId = `md-${elem.id}`;      
         if (document.querySelector(`#${edId}`)) return;
 
-        let editor = new TinyMDE.Editor({ element: elem, customInlineGrammar: (linkSupport.ext ? customExtensionGrammar : {}) });
+        let editor = new TinyMDE.Editor({ element: elem, customInlineGrammar: (MdeCfg.ext ? customExtensionGrammar : {}) });
         let txtId = `txt-${elem.id}`;
 
         editor.e.id = edId;
@@ -191,7 +191,7 @@ function insertMDE() {
 }
 
 function installMDE(cfg) {
-    linkSupport = (typeof cfg == 'object' && cfg !== null ? Object.assign(getLinkSupportCfg(), cfg) : getLinkSupportCfg());
+    MdeCfg = (typeof cfg == 'object' && cfg !== null ? Object.assign(getMdeCfg(), cfg) : getMdeCfg());
 
     insertMDE();
 

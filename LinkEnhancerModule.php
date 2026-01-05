@@ -89,6 +89,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     
     public const PREF_LINKSPP_ACTIVE = 'LINKSPP_ACTIVE'; // enable links++
     public const PREF_LINKSPP_JS = 'LINKSPP_JS'; // Javascript
+    public const PREF_LINKSPP_OPEN_IN_NEW_TAB = 'LINKSPP_OPEN_IN_NEW_TAB'; // enable open link in new browser tab
 
     public const PREF_MD_ACTIVE = 'MD_ACTIVE'; // enable markdown enhancements
     public const PREF_MD_IMG_ACTIVE = 'MD_IMG_ACTIVE'; // enable enhanced markdown img syntax
@@ -111,25 +112,26 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public const HELP_SCHEMA_TARGET_VERSION = 2;
 
     protected const DEFAULT_PREFERENCES = [
-        self::PREF_HOME_LINK_TYPE        => '1', //int triple-state, 0=off, 1=tree, 2=my-page
-        self::PREF_HOME_LINK_JSON        => '', // string; json object { '*': stylerules-string, 'theme': stylerules-string}
-        self::PREF_WTHB_ACTIVE           => '1', //bool
-        self::PREF_WTHB_SUBCONTEXT       => '1', //bool
-        self::PREF_WTHB_TOCNSEARCH       => '1', //bool
-        self::PREF_WTHB_FAICON           => '1', //bool
-        self::PREF_WTHB_UPDATE           => '1', //bool
-        self::PREF_JS_DEBUG_CONSOLE      => '0', //bool
-        self::PREF_WTHB_STD_LINK         => self::STDLINK_WTHB, //string
-        self::PREF_GENWIKI_LINK          => self::STDLINK_GENWIKI, //string
-        self::PREF_WTHB_TRANSLATE        => '1', //int triple-state. 0=off, 1=user defined, 2=on
-        self::PREF_LINKSPP_ACTIVE        => '1', //bool
-        self::PREF_LINKSPP_JS            => '',  //string
-        self::PREF_MD_ACTIVE             => '1', //bool
-        self::PREF_MD_IMG_ACTIVE         => '1', //bool
-        self::PREF_MD_IMG_STDCLASS       => self::STDCLASS_MD_IMG, //string
-        self::PREF_MD_IMG_TITLE_STDCLASS => self::STDCLASS_MD_IMG_TITLE, //string
-        self::PREF_MDE_ACTIVE            => '1', //bool
-        self::PREF_MD_EXT_ACTIVE         => '1', //bool
+        self::PREF_HOME_LINK_TYPE          => '1', //int triple-state, 0=off, 1=tree, 2=my-page
+        self::PREF_HOME_LINK_JSON          => '', // string; json object { '*': stylerules-string, 'theme': stylerules-string}
+        self::PREF_WTHB_ACTIVE             => '1', //bool
+        self::PREF_WTHB_SUBCONTEXT         => '1', //bool
+        self::PREF_WTHB_TOCNSEARCH         => '1', //bool
+        self::PREF_WTHB_FAICON             => '1', //bool
+        self::PREF_WTHB_UPDATE             => '1', //bool
+        self::PREF_JS_DEBUG_CONSOLE        => '0', //bool
+        self::PREF_WTHB_STD_LINK           => self::STDLINK_WTHB, //string
+        self::PREF_GENWIKI_LINK            => self::STDLINK_GENWIKI, //string
+        self::PREF_WTHB_TRANSLATE          => '1', //int triple-state. 0=off, 1=user defined, 2=on
+        self::PREF_LINKSPP_ACTIVE          => '1', //bool
+        self::PREF_LINKSPP_JS              => '',  //string
+        self::PREF_LINKSPP_OPEN_IN_NEW_TAB => '1', //bool
+        self::PREF_MD_ACTIVE               => '1', //bool
+        self::PREF_MD_IMG_ACTIVE           => '1', //bool
+        self::PREF_MD_IMG_STDCLASS         => self::STDCLASS_MD_IMG, //string
+        self::PREF_MD_IMG_TITLE_STDCLASS   => self::STDCLASS_MD_IMG_TITLE, //string
+        self::PREF_MDE_ACTIVE              => '1', //bool
+        self::PREF_MD_EXT_ACTIVE           => '1', //bool
     ];
 
     protected WthbService $wthb;
@@ -389,8 +391,15 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         // --- Link++
         if ($cfg_link_active) {
             $bundleShortcuts[] = 'le';
-            $lecfg = $this->getPref(self::PREF_LINKSPP_JS);
-            $docReadyJs .= "LinkEnhMod.initLE($lecfg);";
+
+            $lecfg = trim($this->getPref(self::PREF_LINKSPP_JS));
+            $lecfg = $lecfg != '' ? $lecfg : '{}';
+
+            $options = [
+                'thisXref'     => Validator::attributes($request)->isXref()->string('xref', ''),
+                'openInNewTab' => boolval($this->getPref(self::PREF_LINKSPP_OPEN_IN_NEW_TAB)),
+            ];
+            $docReadyJs .= "LinkEnhMod.initLE($lecfg, " . json_encode($options) . ");";
         }
 
         // === include selectively
@@ -408,13 +417,12 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                     $bundleShortcuts[] = 'mde';
                     $docReadyJs .= 'window.LEhelp = "' . e(route('module', ['module' => $this->name(), 'action' => 'helpmd'])) . '";';
 
-                    $linkSupport = [];
-                    if (! $cfg_link_active) $linkSupport[] = "href:0";
-                    if (! $cfg_md_img_active) $linkSupport[] = "src:0";
-                    if (! $cfg_md_ext_active) $linkSupport[] = "ext:0";
-                    $linkCfg = implode(',', $linkSupport);
-                    $linkCfg = $linkCfg ? '{' . $linkCfg . '}' : '';
-                    $docReadyJs .= "LinkEnhMod.installMDE($linkCfg);";
+                    $options = [
+                        'href' => $cfg_link_active,
+                        'src' => $cfg_md_img_active,
+                        'ext' => $cfg_md_ext_active,
+                    ];                    
+                    $docReadyJs .= "LinkEnhMod.installMDE(" . json_encode($options) . ");";
                 }
             }
         }
