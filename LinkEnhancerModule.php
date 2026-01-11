@@ -29,6 +29,7 @@ namespace Schwendinger\Webtrees\Module\LinkEnhancer;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Factories\CustomMarkdownFactory;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\WthbService;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoXrefAction;;
 use Fisharebest\Localization\Translation;
 use Fisharebest\Webtrees\FlashMessages;
 use Fisharebest\Webtrees\I18N;
@@ -50,6 +51,8 @@ use Fisharebest\Webtrees\Services\TreeService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Illuminate\Database\Capsule\Manager as DB;
+use Aura\Router\Map;
+
 use Exception;
 use PDOException;
 
@@ -270,6 +273,13 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
         if (boolval($this->getPref(self::PREF_MD_ACTIVE))) {
             Registry::markdownFactory(new CustomMarkdownFactory($this));
+        }
+
+        $router = Registry::routeFactory()->routeMap();
+        if (boolval($this->getPref(self::PREF_LINKSPP_ACTIVE))) {
+            $router->attach('', '/tree/{tree}', static function (Map $router) {
+                $router->get(GotoXrefAction::class, '/goto-xref/{xref}');
+            });
         }
     }
  

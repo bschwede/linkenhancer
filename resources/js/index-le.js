@@ -11,7 +11,8 @@ function getLECfg() {
         name: 'webtrees ' + I18N['cross reference'],
         help: [ 
             {n: I18N['wt-help1'].replace(/%s/, getLErecTypes(1)), e:'n@XREF@'}, 
-            {n: I18N['wt-help2'] + ' ' + I18N['Interactive tree'], e: 'i@XREF@othertree+dia' }
+            {n: I18N['wt-help2'] + ' ' + I18N['Interactive tree'], e: 'i@XREF@othertree+dia' },
+            {n: I18N['wt-help3'], e: '@XREF@' }
         ]
     },
     "wp": {
@@ -251,7 +252,7 @@ function processLinks(linkElement) {
     }
 
     function parseCrossReferenceLink(href) {
-        const match = href.match(new RegExp("^([" + Object.keys(rectypes).join('') + "])@([^@]+)@(.*)", 'i'));
+        const match = href.match(new RegExp("^([" + Object.keys(rectypes).join('') + "])?@([^@]+)@(.*)", 'i'));
         if (!match) {
             console.warn('LE-Mod xrefs: wt cross-reference - syntax error in' ,href);
             return {};
@@ -260,7 +261,7 @@ function processLinks(linkElement) {
         let dia = (/ dia/i.test(param));
         param = param.replace(/ dia/i, '');
 
-        return { type: type.toLowerCase(), xref: xref.toUpperCase(), newtree: param, dia };
+        return { type: (type ? type.toLowerCase() : ''), xref: xref.toUpperCase(), newtree: param, dia };
     }
 
     function processLink(link) {
@@ -281,7 +282,7 @@ function processLinks(linkElement) {
 
             if (key == 'wt') {
                 const { type, xref, newtree, dia } = parseCrossReferenceLink(option);
-                if (!type || !xref) {
+                if ((!type && type !== '') || !xref) {
                     let nextLink = getNextLink(link, lastLink);
                     lastLink = setLink(nextLink, lastLink, '', LEcfg[key].name + " - " + I18N['syntax error'] + "!", LEcfg[key].cname);
                     lastLink.classList.add('icon-wt-xref');
@@ -296,7 +297,7 @@ function processLinks(linkElement) {
                     link = changeTagName(link, 'strong');
                     thisXrefShown = true;
                 }
-                let urlxref = url + separator[urlmode].path + rectypes[type] + separator[urlmode].path + xref;
+                let urlxref = url + separator[urlmode].path + (type !== '' ? rectypes[type] : 'goto-xref') + separator[urlmode].path + xref;
                 let nextLink = getNextLink(link, lastLink);
                 lastLink = setLink(nextLink, lastLink, urlxref, LEcfg[key].name + ` - ${xref}`, LEcfg[key].cname);
                 lastLink.classList.add('icon-wt-xref');
