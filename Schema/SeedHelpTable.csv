@@ -336,11 +336,11 @@ id;path;handler;method;extras;subcontext;category;order;url
 364;/tree/{tree}/vesta-pedigree-{kind}-{style}-{generations}/{xref};Cissee\Webtrees\Module\ExtendedRelationships\ExtendedPedigreeChartModule;GET|POST;;;custom module;10;Webtrees_Handbuch/Anleitung_für_Besucher/Diagramme_Vergleichstabelle
 365;/tree/{tree}/vesta-lca-{style}/{xref}{/xref2};Cissee\Webtrees\Module\ExtendedRelationships\LCAChartModule;GET|POST;;;custom module;10;Webtrees_Handbuch/Anleitung_für_Besucher/Diagramme_Vergleichstabelle
 366;/tree/{tree}/autocomplete/place;Cissee\WebtreesExt\Http\RequestHandlers\AutoCompletePlaceExt;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;custom module;10;
-367;/tree/{tree}/sharedPlace/{xref}{/slug};Cissee\WebtreesExt\Http\RequestHandlers\SharedPlacePage;GET;;;custom module;10;
-368;/tree/{tree}/shared-place-list;Cissee\Webtrees\Module\SharedPlaces\SharedPlacesModule;GET;;;custom module;10;
+367;/tree/{tree}/sharedPlace/{xref}{/slug};Cissee\WebtreesExt\Http\RequestHandlers\SharedPlacePage;GET;;;custom module;10;Webtrees_Handbuch/Genealogischer_Prozess#Gemeinsame_Orte
+368;/tree/{tree}/shared-place-list;Cissee\Webtrees\Module\SharedPlaces\SharedPlacesModule;GET;;;custom module;10;Webtrees_Handbuch/Genealogischer_Prozess#Gemeinsame_Orte
 369;/tree/{tree}/create-location;Cissee\WebtreesExt\Http\RequestHandlers\CreateSharedPlaceModal;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;custom module;10;
 370;/tree/{tree}/create-location;Cissee\WebtreesExt\Http\RequestHandlers\CreateSharedPlaceAction;POST;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;custom module;10;
-371;/tree/{tree}/tom-select-shared-place;Cissee\WebtreesExt\Http\RequestHandlers\TomSelectSharedPlace;GET;;;custom module;10;
+371;/tree/{tree}/tom-select-shared-place;Cissee\WebtreesExt\Http\RequestHandlers\TomSelectSharedPlace;GET;;;custom module;10;Webtrees_Handbuch/Genealogischer_Prozess#Gemeinsame_Orte
 375;/ancestry.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectAncestryPhp;GET;;;standard redirect;10;
 376;/branches.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectBranchesPhp;GET;;;standard redirect;10;
 377;/calendar.php;Fisharebest\Webtrees\Http\RequestHandlers\RedirectCalendarPhp;GET;;;standard redirect;10;
@@ -383,17 +383,17 @@ id;path;handler;method;extras;subcontext;category;order;url
 413;/tree/{tree}/autocomplete/place;Fisharebest\Webtrees\Http\RequestHandlers\AutoCompletePlace;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
 406;/tree/{tree}/edit-fact/{xref}/{fact_id};Fisharebest\Webtrees\Http\RequestHandlers\EditFactPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthEditor;;standard;10;
 404;/tree/{tree}/record/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\GedcomRecordPage;GET;;;standard;10;
-415;/tree/{tree}/shared-place-list;Fisharebest\Webtrees\Module\LocationListModule;GET;;;standard module;10;
-414;/tree/{tree}/sharedPlace/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\LocationPage;GET;;;standard;10;
+415;/tree/{tree}/shared-place-list;Fisharebest\Webtrees\Module\LocationListModule;GET;;;standard module;10;Webtrees_Handbuch/Genealogischer_Prozess#Gemeinsame_Orte
+414;/tree/{tree}/sharedPlace/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\LocationPage;GET;;;standard;10;Webtrees_Handbuch/Genealogischer_Prozess#Gemeinsame_Orte
 416;/tree/{tree}/duplicatesMTV;HuHwt\WebtreesMods\Http\RequestHandlers\FindDuplicateRecordsMTV;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;;custom module;10;
 417;/tree/{tree}/mult-treeview;HuHwt\WebtreesMods\Http\RequestHandlers\MultTreeViewRH;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;;custom module;10;
 418;/tree/{tree}/treeXTV;HuHwt\WebtreesMods\InteractiveTreeXT\InteractiveTreeXTmod;GET|POST;;;custom module;10;Webtrees_Handbuch/Anleitung_f%C3%BCr_Webmaster/Erweiterungsmodule/Treeview-Extended
 419;/tree/{tree}/LINaction;HuHwt\WebtreesMods\LINchart\LINaction;GET;;;custom module;10;Webtrees_Handbuch/Anleitung_f%C3%BCr_Webmaster/Erweiterungsmodule/TAM_und_Lineage
 420;/tree/{tree}/treeMTV;HuHwt\WebtreesMods\Module\InteractiveTree\InteractiveTreeModMTV;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;;custom module;10;
-421;/module_update_page;Jefferson49\Webtrees\Module\CustomModuleManager\RequestHandlers\CustomModuleUpdatePage;GET|POST;;;custom module;10;
-422;/module_info_modal;Jefferson49\Webtrees\Module\CustomModuleManager\RequestHandlers\ModuleInformationModal;GET|POST;;;custom module;10;
-423;/module_upgrade_wizard_page;Jefferson49\Webtrees\Module\CustomModuleManager\RequestHandlers\ModuleUpgradeWizardPage;GET|POST;;;custom module;10;
-424;/module_upgrade_wizard_step;Jefferson49\Webtrees\Module\CustomModuleManager\RequestHandlers\ModuleUpgradeWizardStep;GET|POST;;;custom module;10;
+421;/module_update_page;Jefferson49\Webtrees\Module\CustomModuleManager\RequestHandlers\CustomModuleUpdatePage;GET|POST;;;custom module;10;https://github.com/Jefferson49/CustomModuleManager
+422;/module_info_modal;Jefferson49\Webtrees\Module\CustomModuleManager\RequestHandlers\ModuleInformationModal;GET|POST;;;custom module;10;https://github.com/Jefferson49/CustomModuleManager
+423;/module_upgrade_wizard_page;Jefferson49\Webtrees\Module\CustomModuleManager\RequestHandlers\ModuleUpgradeWizardPage;GET|POST;;;custom module;10;https://github.com/Jefferson49/CustomModuleManager
+424;/module_upgrade_wizard_step;Jefferson49\Webtrees\Module\CustomModuleManager\RequestHandlers\ModuleUpgradeWizardStep;GET|POST;;;custom module;10;https://github.com/Jefferson49/CustomModuleManager
 425;;;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;;generic;20;Webtrees_Handbuch/Anleitung_für_Administratoren
 426;;;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;;generic;20;Webtrees_Handbuch/Anleitung_für_Verwalter
 427;;;GET;Fisharebest\Webtrees\Http\Middleware\AuthModerator;;generic;20;Webtrees_Handbuch/Anleitung_für_Moderatoren
@@ -447,3 +447,12 @@ id;path;handler;method;extras;subcontext;category;order;url
 475;;_vesta_clippings_cart_;GET;;;custom module;20;https://github.com/vesta-webtrees-2-custom-modules/vesta_clippings_cart
 476;;_huhwt-xtv_;GET;;;custom module;20;Webtrees_Handbuch/Anleitung_für_Webmaster/Erweiterungsmodule/Treeview-Extended
 477;;_GVExport_;GET;;;custom module;20;Webtrees_Handbuch/Anleitung_für_Webmaster/Erweiterungsmodule/GVExport
+478;/ExtendedImportExportSelection;Jefferson49\Webtrees\Module\ExtendedImportExport\SelectionPage;;;;custom module;10;https://github.com/Jefferson49/ExtendedImportExport
+479;/ExtendedGedcomImport;Jefferson49\Webtrees\Module\ExtendedImportExport\ImportGedcomPage;;;;custom module;10;https://github.com/Jefferson49/ExtendedImportExport
+480;/ExtendedGedcomExport;Jefferson49\Webtrees\Module\ExtendedImportExport\ExportGedcomPage;;;;custom module;10;https://github.com/Jefferson49/ExtendedImportExport
+481;/ExtendedGedcomConvert;Jefferson49\Webtrees\Module\ExtendedImportExport\ConvertGedcomPage;;;;custom module;10;https://github.com/Jefferson49/ExtendedImportExport
+482;;_custom_module_manager_;GET;;;custom module;20;https://github.com/Jefferson49/CustomModuleManager
+483;;custom-css-js;GET;;;standard module;20;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#CSS_und_JS
+484;;Jefferson49\Webtrees\Module\RepositoryHierarchyNamespace\RepositoryHierarchy;GET|POST;;;custom module;20;https://github.com/Jefferson49/RepositoryHierarchy
+485;;_repository_hierarchy_;GET;;;custom module;20;https://github.com/Jefferson49/RepositoryHierarchy
+486;;clippings;GET;;;standard module;20;Webtrees_Handbuch/Anleitung_für_Mitglieder#Sammelbeh.C3.A4lter

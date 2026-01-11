@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-04 18:56+0100\n"
-"PO-Revision-Date: 2026-01-04 18:58+0100\n"
+"POT-Creation-Date: 2026-01-11 10:12+0100\n"
+"PO-Revision-Date: 2026-01-11 10:22+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es\n"
@@ -17,33 +17,71 @@ msgstr ""
 "X-Poedit-SearchPath-1: LinkEnhancerModule.php\n"
 "X-Poedit-SearchPath-2: module.php\n"
 
-#: Services/WthbService.php:179
+#. I18N: Settings - section title
+#: Services/WthbService.php:104 Services/WthbService.php:137
+#: Services/WthbService.php:266 resources/views/settings.phtml:308
+#: LinkEnhancerModule.php:336 LinkEnhancerModule.php:768
+msgid "Webtrees manual"
+msgstr "Manual Webtrees"
+
+#: Services/WthbService.php:104
+msgid "Error occurred"
+msgstr "Se ha producido un error"
+
+#. I18N: csv import
+#: Services/WthbService.php:117
+msgid "empty rows"
+msgstr "filas vacías"
+
+#. I18N: csv import
+#: Services/WthbService.php:118
+msgid "rows whose number of fields differs from the header row"
+msgstr "filas cuyo número de campos difiere del de la fila de encabezado"
+
+#. I18N: data import with seeder
+#: Services/WthbService.php:119
+msgid "rows in which at least one required field is not set"
+msgstr "filas en las que al menos un campo obligatorio no está configurado"
+
+#. I18N: data import with seeder
+#: Services/WthbService.php:120
+msgid "rows in which the maximum field value length has been exceeded"
+msgstr "filas en las que se ha superado la longitud máxima del valor del campo"
+
+#: Services/WthbService.php:137
+msgid "Routes imported"
+msgstr "Las rutas se importaron"
+
+#. I18N: wthb import skipped rows
+#: Services/WthbService.php:141
+msgid "Skipped"
+msgstr "Omitido"
+
+#: Services/WthbService.php:153 resources/views/settings.phtml:402
+msgid "CSV-Import"
+msgstr "Importar CSV"
+
+#: Services/WthbService.php:266
 msgid "Table for context help is missing - fallback to standard url"
 msgstr "Falta la tabla de ayuda contextual - se vuelve a la URL estándar"
 
-#: Services/WthbService.php:286 Services/WthbService.php:319
+#: Services/WthbService.php:382 Services/WthbService.php:415
 msgid "Table for context help is missing - nothing to do."
 msgstr "Falta la tabla de ayuda contextual - no se puede hacer nada."
 
-#: Services/WthbService.php:292
+#: Services/WthbService.php:388
 msgid "No data available for export."
 msgstr "No hay datos disponibles para la exportación."
 
-#: Services/WthbService.php:328
+#: Services/WthbService.php:424
 msgid "No CSV file was received."
 msgstr "No se ha encontrado ningún archivo CSV."
 
-#: Services/WthbService.php:339 LinkEnhancerModule.php:529
-#: LinkEnhancerModule.php:614
-#, php-format
-msgid "Routes imported (Total: %s / skipped: %s)"
-msgstr "Rutas importadas (Total: %s / omitidas %s)"
-
-#: Services/WthbService.php:350
+#: Services/WthbService.php:442
 msgid "Separator is not set."
 msgstr "El separador no está configurado"
 
-#: Services/WthbService.php:353
+#: Services/WthbService.php:445
 msgid "For the separator is only a single character allowed."
 msgstr "Para delimitar el separador solamente se permite un único carácter."
 
@@ -475,12 +513,12 @@ msgid "Goto section"
 msgstr "Ir a la sección"
 
 #: resources/views/help-wthb.phtml:36 resources/views/settings.phtml:354
-#: LinkEnhancerModule.php:332
+#: LinkEnhancerModule.php:339
 msgid "Full-text search"
 msgstr "Búsqueda de texto completo"
 
 #: resources/views/help-wthb.phtml:52 resources/views/settings.phtml:354
-#: LinkEnhancerModule.php:332
+#: LinkEnhancerModule.php:339
 msgid "Table of contents"
 msgstr "Índice"
 
@@ -493,7 +531,7 @@ msgstr ""
 "el sitio web."
 
 #. I18N: wthb link user setting title
-#: resources/views/wthb-modal.phtml:11 LinkEnhancerModule.php:331
+#: resources/views/wthb-modal.phtml:11 LinkEnhancerModule.php:338
 msgid "Webtrees manual link - user setting"
 msgstr "Enlace manual de Webtrees - configuración del usuario"
 
@@ -668,12 +706,6 @@ msgstr "¿Activar el ajuste de imagen Markdown?"
 msgid "Markdown extensions"
 msgstr "Extensiones de Markdown"
 
-#. I18N: Settings - section title
-#: resources/views/settings.phtml:308 LinkEnhancerModule.php:329
-#: LinkEnhancerModule.php:777
-msgid "Webtrees manual"
-msgstr "Manual Webtrees"
-
 #: resources/views/settings.phtml:314
 msgid "Precede the help link with an icon"
 msgstr "Anteponer un icono al enlace de ayuda"
@@ -711,7 +743,7 @@ msgstr "Línea de datos"
 msgid "%s of %s assigned"
 msgstr "%s de %s asignados"
 
-#: resources/views/settings.phtml:387
+#: resources/views/settings.phtml:387 LinkEnhancerModule.php:532
 msgid "Import registered routes"
 msgstr "Importar rutas registradas"
 
@@ -726,10 +758,6 @@ msgstr "Recortar tabla"
 #: resources/views/settings.phtml:395
 msgid "Reset routes to delivery status"
 msgstr "Restablecer rutas al formato de entrega"
-
-#: resources/views/settings.phtml:402
-msgid "CSV-Import"
-msgstr "Importar CSV"
 
 #: resources/views/settings.phtml:406
 msgid "Separator"
@@ -827,9 +855,13 @@ msgstr ""
 "Referencias a los conjuntos de datos GEDCOM, con el editor Markdown, a "
 "enlaces contextuales al manual GenWiki webtrees"
 
-#: LinkEnhancerModule.php:384
+#: LinkEnhancerModule.php:391
 msgid "Home link - JSON with CSS rules seems to be invalid."
 msgstr "El enlace de inicio JSON con reglas CSS, parece no ser válido."
+
+#, php-format
+#~ msgid "Routes imported (Total: %s / skipped: %s)"
+#~ msgstr "Rutas importadas (Total: %s / omitidas %s)"
 
 #~ msgid "Full text search"
 #~ msgstr "Búsqueda de texto completo"

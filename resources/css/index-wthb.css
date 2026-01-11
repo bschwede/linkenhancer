@@ -63,3 +63,26 @@ p:has(+ .wthbtoc), #wthbtocfiltercnt { color: gray; font-size: 0.8em;}
   display:none;
   z-index:1060; /* div.modal-backdrop has z-index:1050 */
 }
+
+/* import flash message */
+.wthb-import-flash {
+  text-align: left;
+}
+.wthb-import-flash dl {
+    font-size: 0.8em;
+}
+.import-warn {
+  text-align: left;
+  overflow: scroll;
+  max-height: 6.0em;
+  font-size: 0.8em;
+}
+.skipped-rownums {
+  display: block;
+  overflow: scroll;
+  text-wrap: auto;
+  font-size: small;
+  color: cadetblue;
+  font-weight: bold;
+  max-height: 3.0em;
+}

@@ -239,24 +239,31 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     {
         $this->updateSchema('\Schwendinger\Webtrees\Module\LinkEnhancer\Schema', 'SCHEMA_VERSION', self::HELP_SCHEMA_TARGET_VERSION);
 
-        $importOnUpdate = false;
-        $this_hash = null;
-        $cfg_wthb_update = boolval($this->getPref(self::PREF_WTHB_UPDATE));
-        if ($cfg_wthb_update) {
-            $csvfile = self::HELP_CSV;
-            if (file_exists($csvfile)) {
-                $this_hash = hash_file('sha256', $csvfile);
-                $cfg_wthb_lasthash = $this->getPref(self::PREF_WTHB_LASTHASH);
-                $importOnUpdate = $this_hash != $cfg_wthb_lasthash;
-            }            
-        }
+        // check for csv updates once a day and if schema was updated
+        Registry::cache()->file()->remember(
+            $this->name() . '-check-wthb-csvupdate-' . self::HELP_SCHEMA_TARGET_VERSION,
+            function () {
+                $importOnUpdate = false;
+                $this_hash = null;
+                $cfg_wthb_update = boolval($this->getPref(self::PREF_WTHB_UPDATE));
+                if ($cfg_wthb_update) {
+                    $csvfile = self::HELP_CSV;
+                    if (file_exists($csvfile)) {
+                        $this_hash = hash_file('sha256', $csvfile);
+                        $cfg_wthb_lasthash = $this->getPref(self::PREF_WTHB_LASTHASH);
+                        $importOnUpdate = $this_hash != $cfg_wthb_lasthash;
+                    }
+                }
 
-        if ((int) ($this->wthb->getHelpTableCount()['total'] ?? 0) === 0 || $importOnUpdate) {
-            $this->importDeliveredCsv();
-            if ($this_hash) {
-                $this->setPref(self::PREF_WTHB_LASTHASH, $this_hash);
-            }
-        }
+                if ((int) ($this->wthb->getHelpTableCount()['total'] ?? 0) === 0 || $importOnUpdate) {
+                    $this->importDeliveredCsv();
+                    if ($this_hash) {
+                        $this->setPref(self::PREF_WTHB_LASTHASH, $this_hash);
+                    }
+                }
+            },
+            86400
+        );
 
         // Register a namespace for our views.
         View::registerNamespace($this->name(), $this->resourcesFolder() . 'views/');
@@ -522,18 +529,14 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
      */
     public function getAdminImportRoutesAction(ServerRequestInterface $request): ResponseInterface
     {
+        $title = I18N::translate('Import registered routes');
         try {
             $result = $this->wthb->importRoutesAction($request);
-            FlashMessages::addMessage(
-                I18N::translate('Routes imported (Total: %s / skipped: %s)', $result['total'], $result['skipped']),
-                'success'
-            );          
+            $this->wthb->setImportFlashOk($title, $result);
         } catch (Exception $ex) {
-            FlashMessages::addMessage(
-                $ex->getMessage(),
-                'danger'
-            );
+            $this->wthb->setImportFlashError($title, $ex->getMessage());
         }
+        
         return redirect($this->getConfigLink());
     }
 
@@ -607,18 +610,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
      */
     protected function importDeliveredCsv(): void
     {
-        try {
-            $result = $this->wthb->importCsv(self::HELP_CSV);
-            FlashMessages::addMessage(
-                I18N::translate('Routes imported (Total: %s / skipped: %s)', $result['total'], $result['skipped']),
-                'success'
-            );
-        } catch (Exception $ex) {
-            FlashMessages::addMessage(
-                $ex->getMessage(),
-                'danger'
-            );
-        }
+        $result = $this->wthb->importCsvFlash(self::HELP_CSV);
     }
 
 
@@ -786,7 +778,10 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             'text' => $text,
         ]);
 
-        return response($html);
+        return response($html)
+            ->withHeader('Cache-Control', 'public, max-age=86400, immutable')
+            ->withHeader('Expires', gmdate('D, d M Y H:i:s', time() + 86400) . ' GMT') // force caching for Firefox
+            ->withHeader('ETag', md5($html));
     }
 
 
