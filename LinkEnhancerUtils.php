@@ -86,6 +86,7 @@ class LinkEnhancerUtils { // misc helper functions
             'param error' => /*I18N: JS enhanced link */ I18N::translate('Unknown parameter keys'),
             'wt-help1' => /*I18N: JS enhanced link wt1 - %s=rectypes*/ I18N::translate('standard link to note (available record types: %s) with XREF in active tree', '%s'),
             'wt-help2' => /*I18N: JS enhanced link wt2 */ I18N::translate('link to record type individual with XREF from "othertree" and also link to'),
+            'wt-help3' => /*I18N: JS enhanced link wt3 */ I18N::translate('link to record without given record type - access via redirect url'),
             'osm-help1' => /*I18N: JS enhanced link osm1 */ I18N::translate('zoom/lat/lon for locating map'),
             'osm-help2' => /*I18N: JS enhanced link osm2 */ I18N::translate('same as before with additional marker'),
             'osm-help3' => /*I18N: JS enhanced link osm3 */ I18N::translate('show also node/way/relation, see also'),

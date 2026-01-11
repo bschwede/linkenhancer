@@ -70,6 +70,7 @@ Included are the following **predefined external targets** (the parameter keys a
     - n=note
     - l=sharedPlace
   - `wt=i@XREF@othertree+dia` - link to record type individual with XREF from tree "othertree" and also link to Interactive tree of this person
+  - `wt=@XREF@` - simplified standard link without given record type - access to record page via redirect url
 * **HTML**: The same applies to html links: `<a href="#@wt=i@I1@">Link display title</a>`
   So this is also useable in cooperation with the name badge function of the [“⚶ Vesta Classic Look & Feel” module](https://github.com/vesta-webtrees-2-custom-modules/vesta_classic_laf) in the HTML snippet field: `<a href="#@fsft=<ref/>"></a>` for linking to a record in the Family Search Family Tree.
 

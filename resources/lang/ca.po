@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-11 10:12+0100\n"
-"PO-Revision-Date: 2026-01-11 10:24+0100\n"
+"POT-Creation-Date: 2026-01-11 21:02+0100\n"
+"PO-Revision-Date: 2026-01-11 21:04+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ca\n"
@@ -20,7 +20,7 @@ msgstr ""
 #. I18N: Settings - section title
 #: Services/WthbService.php:104 Services/WthbService.php:137
 #: Services/WthbService.php:266 resources/views/settings.phtml:308
-#: LinkEnhancerModule.php:336 LinkEnhancerModule.php:768
+#: LinkEnhancerModule.php:346 LinkEnhancerModule.php:778
 msgid "Webtrees manual"
 msgstr "Manual Webtrees"
 
@@ -86,59 +86,59 @@ msgid "For the separator is only a single character allowed."
 msgstr "Per delimitar el separador només es permet un únic caràcter."
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:60 LinkEnhancerUtils.php:121 LinkEnhancerUtils.php:122
+#: LinkEnhancerUtils.php:60 LinkEnhancerUtils.php:122 LinkEnhancerUtils.php:123
 msgid "bold"
 msgstr "en negreta"
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:61 LinkEnhancerUtils.php:117 LinkEnhancerUtils.php:118
+#: LinkEnhancerUtils.php:61 LinkEnhancerUtils.php:118 LinkEnhancerUtils.php:119
 msgid "italic"
 msgstr "itálica"
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:62 LinkEnhancerUtils.php:132 LinkEnhancerUtils.php:133
+#: LinkEnhancerUtils.php:62 LinkEnhancerUtils.php:133 LinkEnhancerUtils.php:134
 msgid "strikethrough"
 msgstr "supressió de text"
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:63 LinkEnhancerUtils.php:125 LinkEnhancerUtils.php:126
+#: LinkEnhancerUtils.php:63 LinkEnhancerUtils.php:126 LinkEnhancerUtils.php:127
 msgid "format as code"
 msgstr "format de codi"
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:64 LinkEnhancerUtils.php:139 LinkEnhancerUtils.php:140
-#: LinkEnhancerUtils.php:143 LinkEnhancerUtils.php:145
+#: LinkEnhancerUtils.php:64 LinkEnhancerUtils.php:140 LinkEnhancerUtils.php:141
+#: LinkEnhancerUtils.php:144 LinkEnhancerUtils.php:146
 #, php-format
 msgid "Level %s heading"
 msgstr "Nivell %s per a l'encapçalament"
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:65 LinkEnhancerUtils.php:148 LinkEnhancerUtils.php:149
+#: LinkEnhancerUtils.php:65 LinkEnhancerUtils.php:149 LinkEnhancerUtils.php:150
 msgid "Bulleted list"
 msgstr "Llistat amb vinyetes"
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:66 LinkEnhancerUtils.php:152 LinkEnhancerUtils.php:153
+#: LinkEnhancerUtils.php:66 LinkEnhancerUtils.php:153 LinkEnhancerUtils.php:154
 msgid "Numbered list"
 msgstr "Llista numerada"
 
 #. I18N: JS MDE blockquote
-#: LinkEnhancerUtils.php:67 LinkEnhancerUtils.php:190 LinkEnhancerUtils.php:191
+#: LinkEnhancerUtils.php:67 LinkEnhancerUtils.php:191 LinkEnhancerUtils.php:192
 msgid "quote"
 msgstr "cita"
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:68 LinkEnhancerUtils.php:172 LinkEnhancerUtils.php:173
+#: LinkEnhancerUtils.php:68 LinkEnhancerUtils.php:173 LinkEnhancerUtils.php:174
 msgid "Insert link"
 msgstr "Inserir enllaç"
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:69 LinkEnhancerUtils.php:176 LinkEnhancerUtils.php:177
+#: LinkEnhancerUtils.php:69 LinkEnhancerUtils.php:177 LinkEnhancerUtils.php:178
 msgid "Insert image"
 msgstr "Inserir imatge"
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:70 LinkEnhancerUtils.php:181 LinkEnhancerUtils.php:182
+#: LinkEnhancerUtils.php:70 LinkEnhancerUtils.php:182 LinkEnhancerUtils.php:183
 msgid "Horizontal rule"
 msgstr "Línea Horitzontal"
 
@@ -158,7 +158,7 @@ msgid "Link destination"
 msgstr "enllaç de destinació"
 
 #. I18N: JS MDE
-#: LinkEnhancerUtils.php:75 LinkEnhancerUtils.php:185
+#: LinkEnhancerUtils.php:75 LinkEnhancerUtils.php:186
 msgid "Insert table"
 msgstr "Inserir tabla"
 
@@ -225,70 +225,77 @@ msgid ""
 "link to record type individual with XREF from \"othertree\" and also link to"
 msgstr "enllaç al registre individual amb XREF de \"othertree\""
 
-#. I18N: JS enhanced link osm1
+#. I18N: JS enhanced link wt3
 #: LinkEnhancerUtils.php:89
+msgid "link to record without given record type - access via redirect url"
+msgstr ""
+"Enllaç a l'enregistrament sense el tipus d'enregistrament especificat - "
+"accés mitjançant URL de redirecció"
+
+#. I18N: JS enhanced link osm1
+#: LinkEnhancerUtils.php:90
 msgid "zoom/lat/lon for locating map"
 msgstr "Latitud/longitud i zum per ubicar al mapa"
 
 #. I18N: JS enhanced link osm2
-#: LinkEnhancerUtils.php:90
+#: LinkEnhancerUtils.php:91
 msgid "same as before with additional marker"
 msgstr "el mateix que abans amb un marcador addicional"
 
 #. I18N: JS enhanced link osm3
-#: LinkEnhancerUtils.php:91
+#: LinkEnhancerUtils.php:92
 msgid "show also node/way/relation, see also"
 msgstr "mostrar també node/via/relació"
 
 #. I18N: JS enhanced link osm4
-#: LinkEnhancerUtils.php:92
+#: LinkEnhancerUtils.php:93
 msgid "show also node/way/relation - alternative notation"
 msgstr "mostrar també node/via/relació - sistema alternatiu"
 
 #. I18N: JS enhanced link ofb1
-#: LinkEnhancerUtils.php:93
+#: LinkEnhancerUtils.php:94
 msgid "link to Online Local heritage book at CompGen with given uid"
 msgstr "enllaç al llibre de família a CompGen amb l'UID proporcionat"
 
 #. I18N: JS enhanced link wp1
-#: LinkEnhancerUtils.php:94
+#: LinkEnhancerUtils.php:95
 msgid "open the article in the german wikipedia"
 msgstr "obrir l'article a la Wikipedia alemanya"
 
 #. I18N: JS enhanced link wp2
-#: LinkEnhancerUtils.php:95
+#: LinkEnhancerUtils.php:96
 msgid "open the english version of the article"
 msgstr "obrir l'article en la versió anglesa"
 
 #. I18N: JS enhanced link wp3
-#: LinkEnhancerUtils.php:96
+#: LinkEnhancerUtils.php:97
 msgid "you can address every subdomain instance of wikipedia.org"
 msgstr "pot dirigir-se a cada subdomini de wikipedia.org"
 
 #. I18N: JS enhanced link gedbas1
-#: LinkEnhancerUtils.php:97
+#: LinkEnhancerUtils.php:98
 msgid "open person record with given number"
 msgstr "obrir fitxa d'una persona amb un número determinat"
 
 #. I18N: JS enhanced link gedbas2
-#: LinkEnhancerUtils.php:98
+#: LinkEnhancerUtils.php:99
 msgid "open person record with UID"
 msgstr "obrir fitxa d'una persona amb l'identificador UID"
 
-#: LinkEnhancerUtils.php:144
+#: LinkEnhancerUtils.php:145
 #, php-format
 msgid "and so on until level %s"
 msgstr "i així successivament fins al nivell %s"
 
-#: LinkEnhancerUtils.php:159 LinkEnhancerUtils.php:161
+#: LinkEnhancerUtils.php:160 LinkEnhancerUtils.php:162
 msgid "Term"
 msgstr "Tèrmin"
 
-#: LinkEnhancerUtils.php:165 LinkEnhancerUtils.php:166
+#: LinkEnhancerUtils.php:166 LinkEnhancerUtils.php:167
 msgid "Text with a footnote reference"
 msgstr "Text amb una referència a peu de pàgina"
 
-#: LinkEnhancerUtils.php:165 LinkEnhancerUtils.php:166
+#: LinkEnhancerUtils.php:166 LinkEnhancerUtils.php:167
 msgid "Footnote text"
 msgstr "Text de la nota a peu de pàgina"
 
@@ -512,12 +519,12 @@ msgid "Goto section"
 msgstr "Ves a la secció"
 
 #: resources/views/help-wthb.phtml:36 resources/views/settings.phtml:354
-#: LinkEnhancerModule.php:339
+#: LinkEnhancerModule.php:349
 msgid "Full-text search"
 msgstr "Cerca de text complet"
 
 #: resources/views/help-wthb.phtml:52 resources/views/settings.phtml:354
-#: LinkEnhancerModule.php:339
+#: LinkEnhancerModule.php:349
 msgid "Table of contents"
 msgstr "Índex"
 
@@ -530,7 +537,7 @@ msgstr ""
 "directament el lloc web."
 
 #. I18N: wthb link user setting title
-#: resources/views/wthb-modal.phtml:11 LinkEnhancerModule.php:338
+#: resources/views/wthb-modal.phtml:11 LinkEnhancerModule.php:348
 msgid "Webtrees manual link - user setting"
 msgstr "Enllaç manual de Webtrees - configuració d'usuari"
 
@@ -744,7 +751,7 @@ msgstr "Línia de dades"
 msgid "%s of %s assigned"
 msgstr "%s de %s assignats"
 
-#: resources/views/settings.phtml:387 LinkEnhancerModule.php:532
+#: resources/views/settings.phtml:387 LinkEnhancerModule.php:542
 msgid "Import registered routes"
 msgstr "Importar rutes registrades"
 
@@ -843,12 +850,12 @@ msgid "JSON is invalid"
 msgstr "JSON no és vàlid"
 
 #. I18N: Module title
-#: LinkEnhancerModule.php:158
+#: LinkEnhancerModule.php:161
 msgid "Link-Enhancer"
 msgstr "Millorador d'enllaços"
 
 #. I18N: Module description
-#: LinkEnhancerModule.php:168
+#: LinkEnhancerModule.php:171
 msgid ""
 "Cross-references to Gedcom datasets, Markdown editor, context-sensitive link "
 "to the GenWiki webtrees manual"
@@ -856,7 +863,7 @@ msgstr ""
 "Referències als conjunts de dades GEDCOM, amb l'editor Markdown, a enllaços "
 "contextuals  al manual GenWiki webtrees"
 
-#: LinkEnhancerModule.php:391
+#: LinkEnhancerModule.php:401
 msgid "Home link - JSON with CSS rules seems to be invalid."
 msgstr "L'enllaç d'inici JSON amb regles CSS, sembla no ser vàlid."
 
