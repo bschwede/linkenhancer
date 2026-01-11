@@ -522,18 +522,14 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
      */
     public function getAdminImportRoutesAction(ServerRequestInterface $request): ResponseInterface
     {
+        $title = I18N::translate('Import registered routes');
         try {
             $result = $this->wthb->importRoutesAction($request);
-            FlashMessages::addMessage(
-                I18N::translate('Routes imported (Total: %s / skipped: %s)', $result['total'], $result['skipped']),
-                'success'
-            );          
+            $this->wthb->setImportFlashOk($title, $result);
         } catch (Exception $ex) {
-            FlashMessages::addMessage(
-                $ex->getMessage(),
-                'danger'
-            );
+            $this->wthb->setImportFlashError($title, $ex->getMessage());
         }
+        
         return redirect($this->getConfigLink());
     }
 
@@ -607,18 +603,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
      */
     protected function importDeliveredCsv(): void
     {
-        try {
-            $result = $this->wthb->importCsv(self::HELP_CSV);
-            FlashMessages::addMessage(
-                I18N::translate('Routes imported (Total: %s / skipped: %s)', $result['total'], $result['skipped']),
-                'success'
-            );
-        } catch (Exception $ex) {
-            FlashMessages::addMessage(
-                $ex->getMessage(),
-                'danger'
-            );
-        }
+        $result = $this->wthb->importCsvFlash(self::HELP_CSV);
     }
 
 

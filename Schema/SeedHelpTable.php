@@ -32,28 +32,48 @@ use Fisharebest\Webtrees\Schema\SeedInterface;
  */
 class SeedHelpTable implements SeedInterface
 {
-    private const array HEADER = ['path', 'handler', 'method', 'extras', 'subcontext', 'category', 'order', 'url'];
+    private const array HEADER = [
+    //  fieldname    => max length of string; getting info from schema is not directly supported
+        'path'       => 100,
+        'handler'    => 150,
+        'method'     => 20,
+        'extras'     => 60,
+        'subcontext' => 250,
+        'category'   => 60,
+        'order'      => null, //integer
+        'url'        => 250
+    ];
 
     private array $data = [];
     private bool $truncate;
 
     public int $cntRowsTotal;
-    public int $cntRowsSkipped;
     public int $cntRowsProcessed;
+    public array $skippedRows;
     
 
     public function __construct(array $data, bool $truncate = true) {
         $this->data = $data;
         $this->truncate = $truncate;
         $this->cntRowsTotal     = count($this->data);
-        $this->cntRowsSkipped   = 0;
         $this->cntRowsProcessed = 0;
+        $this->skippedRows      = [];
     }
 
 
-    public function skipRow(array $row): bool
+    public function skipRow(array $row, string &$skipreason = ''): bool
     {
-        return (bool) (($row['path'] ?? '') . ($row['handler'] ?? '') . ($row['method'] ?? '') . ($row['extras'] ?? '')) == '';
+        if ((bool) (($row['path'] ?? '') . ($row['handler'] ?? '') . ($row['method'] ?? '') . ($row['extras'] ?? '')) == '') {
+            $skipreason = 'reqvalsempty';
+            return true;
+        }
+        foreach (self::HEADER as $key => $maxlen) {
+            if (is_int($maxlen) && isset($row[$key]) && is_string($row[$key]) && strlen($row[$key]) > $maxlen) {
+                $skipreason = 'valuelength';
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -108,10 +128,12 @@ class SeedHelpTable implements SeedInterface
 
 
         if ($this->cntRowsTotal != 0) {
+            $rownum = 1;
             foreach ($this->data as $row) {
                 $this->setRowDefaults($row);
+                $skipreason = '';
 
-                if (!$this->skipRow($row)) {
+                if (!$this->skipRow($row, $skipreason)) {
                     $updateValues = [];
                     foreach (['category', 'order', 'url'] as $attr) {
                         if ($row[$attr]) {
@@ -129,8 +151,13 @@ class SeedHelpTable implements SeedInterface
                     ], $updateValues);
                     $this->cntRowsProcessed++;
                 } else {
-                    $this->cntRowsSkipped++;
+                    $key = 'skipped_' . $skipreason;
+                    if (!isset($this->skippedRows[$key])) {
+                        $this->skippedRows[$key] = [];
+                    }
+                    $this->skippedRows[$key][] = $rownum;
                 }
+                $rownum++;
             }
         }
     

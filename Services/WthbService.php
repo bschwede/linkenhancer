@@ -62,31 +62,116 @@ class WthbService { // stuff related to webtrees manual link handling
      *
      * @return array<string>
      */
-    private function loadCsvStream($stream, string $separator = ";"): array
+    private function loadCsvStream($stream, string $separator = ";", array &$result = []): array
     {
         $data = [];
 
         $header = fgetcsv($stream, null, $separator);
+        $hdrcnt = count($header);
+        
+        $err_empty = [];
+        $err_fieldcnt = [];
+
+        $linenum = 2;
+        $rowtotal = 0;
 
         while (($row = fgetcsv($stream, null, $separator)) !== false) {
-            $data[] = array_combine($header, $row);
+            $rowcnt = count($row);
+            if ($rowcnt === $hdrcnt) {
+                $data[] = array_combine($header, $row);
+            } elseif ($rowcnt == 1 && ($row[0] == null || trim($row[0]) == '')) {
+                // empty line
+                $err_empty[] = $linenum;
+            } else {
+                // fieldcnt mismatch
+                $err_fieldcnt[] = $linenum;
+            }
+            $linenum++;
+            $rowtotal++;
         }
+        $result['total'] = $rowtotal;
+        $result['skipped_empty'] = $err_empty;
+        $result['skipped_fieldcnt'] = $err_fieldcnt;
 
         return $data;
     }
 
+    /**
+     * set flash message if an error occured while importing routes (wthb)
+     */
+    public function setImportFlashError(string $title, string $msg) {
+        FlashMessages::addMessage(
+            '<div class="import-flash"><strong>' . I18N::translate('Webtrees manual') . '</strong>: ' . $title . ' - ' . I18N::translate('Error occurred')
+            . "<br/><code>$msg</code></div>",
+            'danger'
+        );
+    }
+
+    /**
+     * set flash message for successfully or partially importing routes (wthb)
+     */
+    public function setImportFlashOk(string $title, array $result) {
+        $skippedcnt = 0;
+
+        $warnings = [
+            'skipped_empty'        => /*I18N: csv import */I18N::translate('empty rows'),
+            'skipped_fieldcnt'     => /*I18N: csv import */I18N::translate('rows whose number of fields differs from the header row'),
+            'skipped_reqvalsempty' => /*I18N: data import with seeder */I18N::translate('rows in which at least one required field is not set') . ' (path, handler, method, extras)',
+            'skipped_valuelength'  => /*I18N: data import with seeder */ I18N::translate('rows in which the maximum field value length has been exceeded'),
+        ];
+        $warnmsg = '';
+
+        foreach ($warnings as $key => $value) {
+            if (isset($result[$key])) {
+                $cnt = count($result[$key]);
+                if ($cnt > 0) {
+                    $skippedcnt += $cnt;
+                    $rownums = (is_array($result[$key]) ? '<br/><span class="skipped-rownums">' . implode(', ', $result[$key]) . '</span>': '');
+                    $warnmsg .= "<li>$value: $cnt $rownums</li>";
+                }
+            }
+        }
+
+        $result['total'] = (!isset($result['total']) && isset($result['total_seeder']) ? $result['total_seeder'] : $result['total'] ?? 0);
+
+        $message = '<strong>' . I18N::translate('Webtrees manual') . '</strong>: ' . $title . ' - ' . I18N::translate('Routes imported') 
+            . '<dl><dt>' . /*I18N: webtrees.pot */I18N::translate('Total') . ':</dt><dd>' . $result['total'] . '</dd></dl>';
+        $status = 'success';
+        if ($skippedcnt > 0) {
+            $message .= '<dl style="color:red;"><dt>' . /*I18N: wthb import skipped rows */I18N::translate('Skipped') . ':</dt><dd>' . $skippedcnt . '</dd></dl>';
+            $message .= "<ul class=\"import-warn\">$warnmsg</ul>";
+            $status = 'warning';
+        }
+
+        FlashMessages::addMessage('<div class="wthb-import-flash">' . $message . '</div>', $status);
+    }
+
+    /**
+     * wrapper function with try-catch and flash message for import csv data from file or stream and feed it to the seeder
+     */    
+    public function importCsvFlash(string|StreamInterface $file, string $separator = ';', bool $truncate = true, string $encoding = '') {
+        $title = I18N::translate('CSV-Import');
+        try {
+            $result = $this->importCsv($file, $separator, $truncate, $encoding);
+        } catch (Exception $ex) {
+            $this->setImportFlashError($title, $ex->getMessage());
+            return;
+        }
+
+        $this->setImportFlashOk($title, $result);
+    }
 
     /**
      * import csv data from file or stream and feed it to the seeder
      */
     public function importCsv(string|StreamInterface $file, string $separator = ';', bool $truncate = true, string $encoding = '')
     {
-        $result = ['total' => 0, 'skipped' => 0];
+        $result = ['total' => 0, 'total_seeder' => 0, 'skipped_seeder' => 0];
         $data = [];
         if (gettype($file) == 'string') {
             if (file_exists($file)) {
                 $stream = fopen($file, 'r');
-                $data = $this->loadCsvStream($stream, $separator);
+                $data = $this->loadCsvStream($stream, $separator, $result);
                 fclose($stream);
             } else {
                 return $result;
@@ -102,9 +187,8 @@ class WthbService { // stuff related to webtrees manual link handling
 
         $seeder = new SeedHelpTable($data, $truncate);
         $seeder->run();
-        $result = ['total' => $seeder->cntRowsTotal, 'skipped' => $seeder->cntRowsSkipped];
-
-        return $result;
+        $result['total_seeder']   = $seeder->cntRowsTotal;
+        return array_merge($result, $seeder->skippedRows);
     }
 
     /**
@@ -155,11 +239,11 @@ class WthbService { // stuff related to webtrees manual link handling
 
         $truncate = Validator::parsedBody($request)->boolean('table-truncate', false);
 
-        $result = ['total' => 0, 'skipped' => 0];
+        $result = ['total' => 0];
         $seeder = new SeedHelpTable($data, $truncate);
         $seeder->run();
-        $result = ['total' => $seeder->cntRowsTotal, 'skipped' => $seeder->cntRowsSkipped];
-        return $result;
+        $result['total_seeder']   = $seeder->cntRowsTotal;
+        return array_merge($result, $seeder->skippedRows);
     }
 
     /**
@@ -202,6 +286,8 @@ class WthbService { // stuff related to webtrees manual link handling
             // WHERE url is not null AND
             // (
             //      (path = route[path] AND handler = route[handler]) 
+            //   OR (path = route[path] AND handler = '')
+            //   OR (path = '' AND handler = route[handler])
             //   OR (path = route[path] AND handler = module)         #if route.path ^=/module/
             //   OR (handler = module)                                #if route.path ^=/module/
             //   OR (category=generic AND extras=route[extras])       #last try by Auth-Level
@@ -215,6 +301,10 @@ class WthbService { // stuff related to webtrees manual link handling
                 ->where(function ($query2) use ($module, $activeroute, $withSubcontext) {
                     $query2
                         ->where('path', '=', $activeroute['path'])
+                        ->where('handler', '=', $activeroute['handler'])
+                        ->orWhere('path', '=', $activeroute['path'])
+                        ->where('handler', '=', '')
+                        ->orWhere('path', '=', '')
                         ->where('handler', '=', $activeroute['handler'])
                         ->when($module != '', function ($query3) use ($module, $activeroute) {
                             $query3
@@ -334,11 +424,7 @@ class WthbService { // stuff related to webtrees manual link handling
         $stream = $csv_file->getStream();
         //$stream = $stream->detach();
 
-        $result = $this->importCsv($stream, $separator, $truncate, $encoding);
-        FlashMessages::addMessage(
-            I18N::translate('Routes imported (Total: %s / skipped: %s)', $result['total'], $result['skipped']),
-            'success'
-        );
+        $result = $this->importCsvFlash($stream, $separator, $truncate, $encoding);
     }
 
     private function getSeparator(ServerRequestInterface $request): string
