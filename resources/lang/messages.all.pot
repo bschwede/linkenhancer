@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-04 18:56+0100\n"
+"POT-Creation-Date: 2026-01-11 10:12+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,33 +17,76 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: Services/WthbService.php:179
+#. I18N: Settings - section title
+#: Services/WthbService.php:104 Services/WthbService.php:137
+#: Services/WthbService.php:266 resources/views/settings.phtml:308
+#: LinkEnhancerModule.php:336 LinkEnhancerModule.php:768
+msgid "Webtrees manual"
+msgstr ""
+
+#: Services/WthbService.php:104
+msgid "Error occurred"
+msgstr ""
+
+#. I18N: csv import
+#: Services/WthbService.php:117
+msgid "empty rows"
+msgstr ""
+
+#. I18N: csv import
+#: Services/WthbService.php:118
+msgid "rows whose number of fields differs from the header row"
+msgstr ""
+
+#. I18N: data import with seeder
+#: Services/WthbService.php:119
+msgid "rows in which at least one required field is not set"
+msgstr ""
+
+#. I18N: data import with seeder
+#: Services/WthbService.php:120
+msgid "rows in which the maximum field value length has been exceeded"
+msgstr ""
+
+#: Services/WthbService.php:137
+msgid "Routes imported"
+msgstr ""
+
+#. I18N: webtrees.pot
+#: Services/WthbService.php:138
+msgid "Total"
+msgstr ""
+
+#. I18N: wthb import skipped rows
+#: Services/WthbService.php:141
+msgid "Skipped"
+msgstr ""
+
+#: Services/WthbService.php:153 resources/views/settings.phtml:402
+msgid "CSV-Import"
+msgstr ""
+
+#: Services/WthbService.php:266
 msgid "Table for context help is missing - fallback to standard url"
 msgstr ""
 
-#: Services/WthbService.php:286 Services/WthbService.php:319
+#: Services/WthbService.php:382 Services/WthbService.php:415
 msgid "Table for context help is missing - nothing to do."
 msgstr ""
 
-#: Services/WthbService.php:292
+#: Services/WthbService.php:388
 msgid "No data available for export."
 msgstr ""
 
-#: Services/WthbService.php:328
+#: Services/WthbService.php:424
 msgid "No CSV file was received."
 msgstr ""
 
-#: Services/WthbService.php:339 LinkEnhancerModule.php:529
-#: LinkEnhancerModule.php:614
-#, php-format
-msgid "Routes imported (Total: %s / skipped: %s)"
-msgstr ""
-
-#: Services/WthbService.php:350
+#: Services/WthbService.php:442
 msgid "Separator is not set."
 msgstr ""
 
-#: Services/WthbService.php:353
+#: Services/WthbService.php:445
 msgid "For the separator is only a single character allowed."
 msgstr ""
 
@@ -115,8 +158,8 @@ msgid "Redo"
 msgstr ""
 
 #. I18N: webtrees.pot
-#: LinkEnhancerUtils.php:73 LinkEnhancerModule.php:330
-#: LinkEnhancerModule.php:750 LinkEnhancerModule.php:777
+#: LinkEnhancerUtils.php:73 LinkEnhancerModule.php:337
+#: LinkEnhancerModule.php:741 LinkEnhancerModule.php:768
 msgid "Help"
 msgstr ""
 
@@ -471,7 +514,7 @@ msgid "Goto section"
 msgstr ""
 
 #: resources/views/help-wthb.phtml:36 resources/views/settings.phtml:354
-#: LinkEnhancerModule.php:332
+#: LinkEnhancerModule.php:339
 msgid "Full-text search"
 msgstr ""
 
@@ -486,7 +529,7 @@ msgid "Search"
 msgstr ""
 
 #: resources/views/help-wthb.phtml:52 resources/views/settings.phtml:354
-#: LinkEnhancerModule.php:332
+#: LinkEnhancerModule.php:339
 msgid "Table of contents"
 msgstr ""
 
@@ -497,7 +540,7 @@ msgid ""
 msgstr ""
 
 #. I18N: wthb link user setting title
-#: resources/views/wthb-modal.phtml:11 LinkEnhancerModule.php:331
+#: resources/views/wthb-modal.phtml:11 LinkEnhancerModule.php:338
 msgid "Webtrees manual link - user setting"
 msgstr ""
 
@@ -699,12 +742,6 @@ msgstr ""
 msgid "Markdown extensions"
 msgstr ""
 
-#. I18N: Settings - section title
-#: resources/views/settings.phtml:308 LinkEnhancerModule.php:329
-#: LinkEnhancerModule.php:777
-msgid "Webtrees manual"
-msgstr ""
-
 #: resources/views/settings.phtml:314
 msgid "Precede the help link with an icon"
 msgstr ""
@@ -740,7 +777,7 @@ msgstr ""
 msgid "%s of %s assigned"
 msgstr ""
 
-#: resources/views/settings.phtml:387
+#: resources/views/settings.phtml:387 LinkEnhancerModule.php:532
 msgid "Import registered routes"
 msgstr ""
 
@@ -754,10 +791,6 @@ msgstr ""
 
 #: resources/views/settings.phtml:395
 msgid "Reset routes to delivery status"
-msgstr ""
-
-#: resources/views/settings.phtml:402
-msgid "CSV-Import"
 msgstr ""
 
 #: resources/views/settings.phtml:406
@@ -857,22 +890,22 @@ msgid ""
 "to the GenWiki webtrees manual"
 msgstr ""
 
-#: LinkEnhancerModule.php:384
+#: LinkEnhancerModule.php:391
 msgid "Home link - JSON with CSS rules seems to be invalid."
 msgstr ""
 
 #. I18N: webtrees.pot
-#: LinkEnhancerModule.php:555
+#: LinkEnhancerModule.php:557
 msgid "Export failed"
 msgstr ""
 
 #. I18N: webtrees.pot
-#: LinkEnhancerModule.php:574
+#: LinkEnhancerModule.php:576
 msgid "Import failed"
 msgstr ""
 
 #. I18N: webtrees.pot
-#: LinkEnhancerModule.php:598
+#: LinkEnhancerModule.php:600
 #, php-format
 msgid "The preferences for the module “%s” have been updated."
 msgstr ""

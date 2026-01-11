@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-04 18:56+0100\n"
-"PO-Revision-Date: 2026-01-04 18:57+0100\n"
+"POT-Creation-Date: 2026-01-11 10:12+0100\n"
+"PO-Revision-Date: 2026-01-11 10:20+0100\n"
 "Last-Translator: TheDutchJewel <thedutchjewel@gmail.com>\n"
 "Language-Team: TheDutchJewel\n"
 "Language: nl\n"
@@ -17,33 +17,71 @@ msgstr ""
 "X-Poedit-SearchPath-1: LinkEnhancerModule.php\n"
 "X-Poedit-SearchPath-2: module.php\n"
 
-#: Services/WthbService.php:179
+#. I18N: Settings - section title
+#: Services/WthbService.php:104 Services/WthbService.php:137
+#: Services/WthbService.php:266 resources/views/settings.phtml:308
+#: LinkEnhancerModule.php:336 LinkEnhancerModule.php:768
+msgid "Webtrees manual"
+msgstr "Webtreeshandleiding"
+
+#: Services/WthbService.php:104
+msgid "Error occurred"
+msgstr "Er is een fout opgetreden"
+
+#. I18N: csv import
+#: Services/WthbService.php:117
+msgid "empty rows"
+msgstr "lege rijen"
+
+#. I18N: csv import
+#: Services/WthbService.php:118
+msgid "rows whose number of fields differs from the header row"
+msgstr "rijen waarvan het aantal velden verschilt van de koprij"
+
+#. I18N: data import with seeder
+#: Services/WthbService.php:119
+msgid "rows in which at least one required field is not set"
+msgstr "rijen waarin ten minste één verplicht veld niet is ingevuld"
+
+#. I18N: data import with seeder
+#: Services/WthbService.php:120
+msgid "rows in which the maximum field value length has been exceeded"
+msgstr "rijen waarin de maximale veldlengte is overschreden"
+
+#: Services/WthbService.php:137
+msgid "Routes imported"
+msgstr "De routes zijn geïmporteerd"
+
+#. I18N: wthb import skipped rows
+#: Services/WthbService.php:141
+msgid "Skipped"
+msgstr "Overgeslagen"
+
+#: Services/WthbService.php:153 resources/views/settings.phtml:402
+msgid "CSV-Import"
+msgstr "CSV-import"
+
+#: Services/WthbService.php:266
 msgid "Table for context help is missing - fallback to standard url"
 msgstr "Tabel voor contextuele hulp ontbreekt - terugvallen op standaard-URL"
 
-#: Services/WthbService.php:286 Services/WthbService.php:319
+#: Services/WthbService.php:382 Services/WthbService.php:415
 msgid "Table for context help is missing - nothing to do."
 msgstr "Tabel voor contextuele hulp ontbreekt - niets te doen."
 
-#: Services/WthbService.php:292
+#: Services/WthbService.php:388
 msgid "No data available for export."
 msgstr "Geen gegevens beschikbaar voor export."
 
-#: Services/WthbService.php:328
+#: Services/WthbService.php:424
 msgid "No CSV file was received."
 msgstr "Geen CSV-bestand ontvangen."
 
-#: Services/WthbService.php:339 LinkEnhancerModule.php:529
-#: LinkEnhancerModule.php:614
-#, php-format
-msgid "Routes imported (Total: %s / skipped: %s)"
-msgstr "Geïmporteerde routes (Totaal: %s / overgeslagen: %s)"
-
-#: Services/WthbService.php:350
+#: Services/WthbService.php:442
 msgid "Separator is not set."
 msgstr "Scheidingsteken is niet ingesteld."
 
-#: Services/WthbService.php:353
+#: Services/WthbService.php:445
 msgid "For the separator is only a single character allowed."
 msgstr "Voor het scheidingsteken is slechts één teken toegestaan."
 
@@ -170,7 +208,7 @@ msgstr "Syntaxfout"
 #. I18N: JS enhanced link
 #: LinkEnhancerUtils.php:86
 msgid "Unknown parameter keys"
-msgstr ""
+msgstr "Onbekende parametertoetsen"
 
 #. I18N: JS enhanced link wt1 - %s=rectypes
 #: LinkEnhancerUtils.php:87
@@ -472,12 +510,12 @@ msgid "Goto section"
 msgstr "Ga naar sectie"
 
 #: resources/views/help-wthb.phtml:36 resources/views/settings.phtml:354
-#: LinkEnhancerModule.php:332
+#: LinkEnhancerModule.php:339
 msgid "Full-text search"
 msgstr "Volledige tekst zoeken"
 
 #: resources/views/help-wthb.phtml:52 resources/views/settings.phtml:354
-#: LinkEnhancerModule.php:332
+#: LinkEnhancerModule.php:339
 msgid "Table of contents"
 msgstr "Inhoudsopgave"
 
@@ -490,7 +528,7 @@ msgstr ""
 "rechtstreeks naar de website."
 
 #. I18N: wthb link user setting title
-#: resources/views/wthb-modal.phtml:11 LinkEnhancerModule.php:331
+#: resources/views/wthb-modal.phtml:11 LinkEnhancerModule.php:338
 msgid "Webtrees manual link - user setting"
 msgstr "Webtreeshandleiding-link - gebruikersinstelling"
 
@@ -664,12 +702,6 @@ msgstr "Markdown-afbeeldingsaanpassing activeren?"
 msgid "Markdown extensions"
 msgstr "Markdown-uitbreidingen"
 
-#. I18N: Settings - section title
-#: resources/views/settings.phtml:308 LinkEnhancerModule.php:329
-#: LinkEnhancerModule.php:777
-msgid "Webtrees manual"
-msgstr "Webtreeshandleiding"
-
 #: resources/views/settings.phtml:314
 msgid "Precede the help link with an icon"
 msgstr "Voeg een pictogram toe vóór de helplink"
@@ -707,7 +739,7 @@ msgstr "Gegevensrijen"
 msgid "%s of %s assigned"
 msgstr "%s van %s toegewezen"
 
-#: resources/views/settings.phtml:387
+#: resources/views/settings.phtml:387 LinkEnhancerModule.php:532
 msgid "Import registered routes"
 msgstr "Geregistreerde routes importeren"
 
@@ -722,10 +754,6 @@ msgstr "Tabel afkappen"
 #: resources/views/settings.phtml:395
 msgid "Reset routes to delivery status"
 msgstr "Routes terugzetten naar leveringsstatus"
-
-#: resources/views/settings.phtml:402
-msgid "CSV-Import"
-msgstr "CSV-import"
 
 #: resources/views/settings.phtml:406
 msgid "Separator"
@@ -823,9 +851,13 @@ msgstr ""
 "Kruisverwijzingen naar Gedcom-gegevenssets, Markdown-editor, "
 "contextgevoelige link naar de GenWiki-webtreeshandleiding"
 
-#: LinkEnhancerModule.php:384
+#: LinkEnhancerModule.php:391
 msgid "Home link - JSON with CSS rules seems to be invalid."
 msgstr "Startpagina-link - JSON met CSS-regels lijkt ongeldig te zijn."
+
+#, php-format
+#~ msgid "Routes imported (Total: %s / skipped: %s)"
+#~ msgstr "Geïmporteerde routes (Totaal: %s / overgeslagen: %s)"
 
 #~ msgid "Help"
 #~ msgstr "Help"
