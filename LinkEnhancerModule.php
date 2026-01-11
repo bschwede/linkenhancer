@@ -771,7 +771,10 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             'text' => $text,
         ]);
 
-        return response($html);
+        return response($html)
+            ->withHeader('Cache-Control', 'public, max-age=86400, immutable')
+            ->withHeader('Expires', gmdate('D, d M Y H:i:s', time() + 86400) . ' GMT') // force caching for Firefox
+            ->withHeader('ETag', md5($html));
     }
 
 
