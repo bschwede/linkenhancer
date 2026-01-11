@@ -290,16 +290,18 @@ function processLinks(linkElement) {
                 }
                 let url = baseurl;
                 let thisXrefShown = false;
+                let xrefsuffix = '';
                 if (newtree) {
                     url = url.replace(`/tree/${tree}`.replaceAll('/', separator[urlmode].path),
                         `/tree/${newtree}`.replaceAll('/', separator[urlmode].path));
+                    xrefsuffix = ` @ ${newtree}`;
                 } else if (LEoptions.thisXref === xref) {
                     link = changeTagName(link, 'strong');
                     thisXrefShown = true;
                 }
                 let urlxref = url + separator[urlmode].path + (type !== '' ? rectypes[type] : 'goto-xref') + separator[urlmode].path + xref;
                 let nextLink = getNextLink(link, lastLink);
-                lastLink = setLink(nextLink, lastLink, urlxref, LEcfg[key].name + ` - ${xref}`, LEcfg[key].cname);
+                lastLink = setLink(nextLink, lastLink, urlxref, LEcfg[key].name + ` - ${xref}${xrefsuffix}`, LEcfg[key].cname);
                 lastLink.classList.add('icon-wt-xref');
 
                 if (type == 'i' && dia && !thisXrefShown) {
