@@ -239,24 +239,31 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     {
         $this->updateSchema('\Schwendinger\Webtrees\Module\LinkEnhancer\Schema', 'SCHEMA_VERSION', self::HELP_SCHEMA_TARGET_VERSION);
 
-        $importOnUpdate = false;
-        $this_hash = null;
-        $cfg_wthb_update = boolval($this->getPref(self::PREF_WTHB_UPDATE));
-        if ($cfg_wthb_update) {
-            $csvfile = self::HELP_CSV;
-            if (file_exists($csvfile)) {
-                $this_hash = hash_file('sha256', $csvfile);
-                $cfg_wthb_lasthash = $this->getPref(self::PREF_WTHB_LASTHASH);
-                $importOnUpdate = $this_hash != $cfg_wthb_lasthash;
-            }            
-        }
+        // check for csv updates once a day and if schema was updated
+        Registry::cache()->file()->remember(
+            $this->name() . '-check-wthb-csvupdate-' . self::HELP_SCHEMA_TARGET_VERSION,
+            function () {
+                $importOnUpdate = false;
+                $this_hash = null;
+                $cfg_wthb_update = boolval($this->getPref(self::PREF_WTHB_UPDATE));
+                if ($cfg_wthb_update) {
+                    $csvfile = self::HELP_CSV;
+                    if (file_exists($csvfile)) {
+                        $this_hash = hash_file('sha256', $csvfile);
+                        $cfg_wthb_lasthash = $this->getPref(self::PREF_WTHB_LASTHASH);
+                        $importOnUpdate = $this_hash != $cfg_wthb_lasthash;
+                    }
+                }
 
-        if ((int) ($this->wthb->getHelpTableCount()['total'] ?? 0) === 0 || $importOnUpdate) {
-            $this->importDeliveredCsv();
-            if ($this_hash) {
-                $this->setPref(self::PREF_WTHB_LASTHASH, $this_hash);
-            }
-        }
+                if ((int) ($this->wthb->getHelpTableCount()['total'] ?? 0) === 0 || $importOnUpdate) {
+                    $this->importDeliveredCsv();
+                    if ($this_hash) {
+                        $this->setPref(self::PREF_WTHB_LASTHASH, $this_hash);
+                    }
+                }
+            },
+            86400
+        );
 
         // Register a namespace for our views.
         View::registerNamespace($this->name(), $this->resourcesFolder() . 'views/');
