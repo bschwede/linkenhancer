@@ -259,9 +259,15 @@ class WthbService { // stuff related to webtrees manual link handling
         $std_url = $this->std_url;
         $wiki_url = $this->wiki_url;
         if (!DB::schema()->hasTable($this->help_table)) {
-            FlashMessages::addMessage(
-                I18N::translate('Table for context help is missing - fallback to standard url'),
-                'info'
+            Registry::cache()->file()->remember(
+                '_linkenhancer_-wthb-flash-missing-table',
+                function () {
+                    FlashMessages::addMessage(
+                        '<strong>' . I18N::translate('Webtrees manual') . '</strong>: ' . I18N::translate('Table for context help is missing - fallback to standard url'),
+                        'warning'
+                    );
+                },
+                3600
             );
             return $std_url;
         }
