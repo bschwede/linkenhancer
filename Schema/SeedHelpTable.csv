@@ -111,7 +111,7 @@ id;path;handler;method;extras;subcontext;category;order;url
 110;/tree/{tree}/check;Fisharebest\Webtrees\Http\RequestHandlers\CheckTree;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#Fehlersuche
 111;/tree/{tree}/data-fix;Fisharebest\Webtrees\Http\RequestHandlers\DataFixChoose;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#Datenkorrekturen
 112;/tree/{tree}/data-fix;Fisharebest\Webtrees\Http\RequestHandlers\DataFixSelect;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;
-113;/tree/{tree}/data-fix/{data_fix};Fisharebest\Webtrees\Http\RequestHandlers\DataFixPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#Datenkorrekturen
+113;/tree/{tree}/data-fix/{data_fix};Fisharebest\Webtrees\Http\RequestHandlers\DataFixPage;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;20;Webtrees_Handbuch/Anleitung_für_Verwalter#Datenkorrekturen
 114;/tree/{tree}/data-fix/{data_fix}/update;Fisharebest\Webtrees\Http\RequestHandlers\DataFixUpdate;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;
 115;/tree/{tree}/data-fix/{data_fix}/update-all;Fisharebest\Webtrees\Http\RequestHandlers\DataFixUpdateAll;POST;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;
 116;/tree/{tree}/data-fix/{data_fix}/data;Fisharebest\Webtrees\Http\RequestHandlers\DataFixData;GET;Fisharebest\Webtrees\Http\Middleware\AuthManager;;standard;10;Webtrees_Handbuch/Anleitung_für_Verwalter#Datenkorrekturen
@@ -454,5 +454,8 @@ id;path;handler;method;extras;subcontext;category;order;url
 482;;_custom_module_manager_;GET;;;custom module;20;https://github.com/Jefferson49/CustomModuleManager
 483;;custom-css-js;GET;;;standard module;20;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#CSS_und_JS
 484;;Jefferson49\Webtrees\Module\RepositoryHierarchyNamespace\RepositoryHierarchy;GET|POST;;;custom module;20;https://github.com/Jefferson49/RepositoryHierarchy
-485;;_repository_hierarchy_;GET;;;custom module;20;https://github.com/Jefferson49/RepositoryHierarchy
+485;;_repository_hierarchy_;GET;;;custom module;15;https://github.com/Jefferson49/RepositoryHierarchy
 486;;clippings;GET;;;standard module;20;Webtrees_Handbuch/Anleitung_für_Mitglieder#Sammelbeh.C3.A4lter
+487;;_vesta_shared_places_;GET;;;custom module;15;https://github.com/vesta-webtrees-2-custom-modules/vesta_shared_places
+488;;_extended_import_export_;GET;;;custom module;15;https://github.com/Jefferson49/ExtendedImportExport
+489;/tree/{tree}/goto-xref/{xref};Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoXrefAction;GET;;;custom module;10;https://github.com/bschwede/linkenhancer

@@ -285,9 +285,13 @@ class WthbService { // stuff related to webtrees manual link handling
             && array_key_exists('attr', $activeroute)
         ) {
             // custom module?
-            $module = str_starts_with($activeroute['path'], "/" . "module/") && ($activeroute['attr']['module'] ?? false)
+            $module = str_starts_with($activeroute['path'], "/" . "module/")
+                && ($activeroute['attr']['module'] ?? false)
                 ? $activeroute['attr']['module']
-                : '';
+                : (str_starts_with($activeroute['path'], '/' . 'tree/{tree}/data-fix/{data_fix}')
+                    && ($activeroute['attr']['data_fix'] ?? false)
+                    ? $activeroute['attr']['data_fix']
+                    : '');
 
             // WHERE url is not null AND
             // (

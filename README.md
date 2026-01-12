@@ -229,7 +229,11 @@ In order to get a first class match with the current route those four fields hav
 
 Normally, it is only necessary to assign GET routes to an article. We also have a few redirect routes and ajax helper routes (which provide data for form controls) that can be ignored.
 
-A special case is the `path` which starts with `/module/{module}/{action}`. It is handled by the [ModuleAction class](https://github.com/fisharebest/webtrees/blob/main/app/Http/RequestHandlers/ModuleAction.php), that has a proxy function for custom module admin pages. For mapping such a route to a specific custom module help article the `handler` is set to the routes attribut value for module (e.g. `_vesta_classic_look_and_feel_`). For a more generic rule, `path` can also be empty.
+Special cases are the `path`s beginning with `/module/{module}/{action}` or `/tree/{tree}/data-fix/{data_fix}`: they are handled by an integrated proxy class that addresses the custom module by a route attribute:
+- [ModuleAction class](https://github.com/fisharebest/webtrees/blob/main/app/Http/RequestHandlers/ModuleAction.php): attribute `module`
+- [DataFixPage class](https://github.com/fisharebest/webtrees/blob/main/app/Http/RequestHandlers/DataFixPage.php): attribute `data_fix`
+
+For mapping such a route to a specific custom module help article the `handler` is set to the above mentioned routes attribut value (e.g. `_vesta_classic_look_and_feel_`). For a more generic rule, `path` can also be empty (then one rule can be used for both cases).
 
 Fallback rules for access levels are matched by `category='generic'` and the specific Auth classname in `extras`.
 
