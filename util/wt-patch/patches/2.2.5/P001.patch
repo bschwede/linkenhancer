@@ -1,0 +1,82 @@
+diff -urwB a/fact.phtml b/fact.phtml
+--- a/resources/views/fact.phtml	2026-01-13 19:18:34.743380210 +0100
++++ b/resources/views/fact.phtml	2026-01-13 20:06:20.219889755 +0100
+@@ -15,10 +15,10 @@
+ use Fisharebest\Webtrees\Module\ModuleChartInterface;
+ use Fisharebest\Webtrees\Module\ModuleInterface;
+ use Fisharebest\Webtrees\Module\RelationshipsChartModule;
+-use Fisharebest\Webtrees\Note;
+ use Fisharebest\Webtrees\Registry;
+ use Fisharebest\Webtrees\Services\ModuleService;
+ use Fisharebest\Webtrees\Services\RelationshipService;
++use Fisharebest\Webtrees\Http\RequestHandlers\EditNotePage;
+ 
+ /**
+  * @var Fact         $fact
+@@ -71,14 +71,32 @@
+     $type  = '';
+ }
+ 
+-if ($fact->target() instanceof Note) {
+-    $label = '<a href="' . e($fact->target()->url()) . '">' . $label . '</a>';
+-}
+-
+ ?>
+ <tr class="<?= implode(' ', $styles) ?>">
+     <th scope="row">
+-        <div class="wt-fact-label ut"><?= $label?></div>
++        <div class="wt-fact-label ut">
++            <?php // shared note label as link to record
++            if (str_ends_with($tag, 'NOTE') && preg_match('/^@(' . Gedcom::REGEX_XREF . ')@$/', $value, $match)): ?>
++                <?php $note = Registry::noteFactory()->make($match[1], $tree);
++
++                if ($note !== null && $note->canShow()): ?>
++                    <a href="<?= e($note->url()); ?>"><?= $label ?></a>
++        
++                    <?php if (Auth::isEditor($tree)): ?>
++                        <a class="btn btn-link"
++                            href="<?= e(route(EditNotePage::class, ['xref' => $note->xref(), 'tree' => $tree->name()])) ?>"
++                            title="<?= $label . ' - ' . I18N::translate('Edit') ?>">
++                            <?= view('icons/edit') ?>
++                            <span class="visually-hidden">
++                                <?= I18N::translate('Edit') ?>
++                            </span>
++                        </a>
++                    <?php endif ?>
++                <?php endif ?>
++            <?php else: ?>
++                <?= $label ?>
++            <?php endif ?>
++        </div>
+ 
+         <?php if ($id !== 'histo' && $id !== 'asso' && $fact->canEdit() && !in_array($tag, ['HUSB', 'WIFE', 'CHIL', 'FAMC', 'FAMS'], true)) : ?>
+             <?= view('fact-edit-links', ['fact' => $fact, 'url' => $record->url()]) ?>
+diff -urwB a/tab.phtml b/tab.phtml
+--- a/resources/views/modules/notes/tab.phtml	2026-01-13 19:18:35.022379714 +0100
++++ b/resources/views/modules/notes/tab.phtml	2025-09-26 19:14:35.609169681 +0200
+@@ -11,6 +11,8 @@
+ use Fisharebest\Webtrees\Note;
+ use Fisharebest\Webtrees\Registry;
+ use Illuminate\Support\Collection;
++use Fisharebest\Webtrees\Http\RequestHandlers\EditNotePage;
++use Fisharebest\Webtrees\Auth;
+ 
+ /**
+  * @var bool                 $can_edit
+@@ -65,6 +67,16 @@
+                                                 <?= I18N::translate('Shared note') ?>
+                                                 <?= view('icons/note') ?>
+                                             </a>
++                                            <?php if (Auth::isEditor($note->tree())): ?>
++                                                <a class="btn btn-link"
++                                                    href="<?= e(route(EditNotePage::class, ['xref' => $note->xref(), 'tree' => $note->tree()->name()])) ?>"
++                                                    title="<?= I18N::translate('Shared note') . ' - ' . I18N::translate('Edit') ?>">
++                                                    <?= view('icons/edit') ?>
++                                                    <span class="visually-hidden">
++                                                        <?= I18N::translate('Edit') ?>
++                                                    </span>
++                                                </a>
++                                            <?php endif ?>
+                                             <?= (new SubmitterText(''))->value($note->getNote(), $individual->tree()) ?>
+                                         <?php endif ?>
+                                     <?php else : ?>
