@@ -107,7 +107,10 @@ class CustomMarkdownFactory extends MarkdownFactory {
             //++ Additional extensions
             $environment->addExtension(new StrikethroughExtension()); // fisharebest/webtrees#5113
             $environment->addExtension(new DescriptionListExtension());
-            //$environment->addExtension(new HighlightExtension()); //v2.8.0
+            // HighlightExtension is available with CommonMark v2.8.0 in webtrees 2.2.5
+            if ($this->module->canActivateHighlightExtension()) {
+                $environment->addExtension(new \League\CommonMark\Extension\Highlight\HighlightExtension());
+            }
             $environment->addExtension(new FootnoteExtension());
             // maybe also https://commonmark.thephpleague.com/2.x/extensions/table-of-contents/ ?!
             //++

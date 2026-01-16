@@ -61,6 +61,7 @@ class LinkEnhancerUtils { // misc helper functions
             'italic' => /*I18N: JS MDE */ I18N::translate('italic'),
             'strikethrough' => /*I18N: JS MDE */ I18N::translate('strikethrough'),
             'format as code' => /*I18N: JS MDE */ I18N::translate('format as code'),
+            'highlight' => /*I18N: JS MDE */ I18N::translate('highlight'),
             'Level 1 heading' => /*I18N: JS MDE */ I18N::translate('Level %s heading', '1'),
             'Bulleted list' => /*I18N: JS MDE */ I18N::translate('Bulleted list'),
             'Numbered list' => /*I18N: JS MDE */ I18N::translate('Numbered list'),
@@ -106,7 +107,7 @@ class LinkEnhancerUtils { // misc helper functions
      * @param string $base_url
      * @return array
      */
-    public static function getMarkdownHelpExamples(string $base_url, bool $mdext_active = false): array
+    public static function getMarkdownHelpExamples(string $base_url, bool $mdext_active = false, bool $mdext_highlight_active = false): array
     {
         $public_url = $base_url . '/public/apple-touch-icon.png';
 
@@ -132,6 +133,15 @@ class LinkEnhancerUtils { // misc helper functions
                 [
                     'md' => '~~' . I18N::translate('strikethrough') . '~~',
                     'html' => '<del>' . I18N::translate('strikethrough') . '</del>'
+                ],
+            );
+        }
+        if ($mdext_highlight_active) {
+            array_push(
+                $mdsyntax,
+                [
+                    'md' => '==' . I18N::translate('highlight') . '==',
+                    'html' => '<mark>' . I18N::translate('highlight') . '</mark>'
                 ],
             );
         }

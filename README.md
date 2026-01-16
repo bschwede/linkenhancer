@@ -182,6 +182,10 @@ The package [League\CommonMarkdown](https://commonmark.thephpleague.com/) used f
 - [Strikethrough](https://commonmark.thephpleague.com/2.x/extensions/strikethrough/) - see also fisharebest/webtrees#5113
 - [Description Lists](https://commonmark.thephpleague.com/2.x/extensions/description-lists/)
 - [Footnotes](https://commonmark.thephpleague.com/2.x/extensions/footnotes/)
+- [Highlight](https://commonmark.thephpleague.com/2.x/extensions/highlight/) (available with CommonMark v2.8.0 / webtrees v2.2.5)
+
+**Warning**: Please keep in mind when using this extensions, you are deviating from the standard/smallest common markdown dialect set (CommonMark).
+If the library used to render markdown in HTML needs to be changed for any reason, there is a possibility that the markup used here will not be supported (see also [#32](https://github.com/bschwede/linkenhancer/issues/32#issuecomment-3761130124)).
 
 
 <a name="wthb"></a>
