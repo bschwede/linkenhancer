@@ -1,0 +1,24 @@
+diff -urwB a/administration.phtml b/administration.phtml
+--- a/resources/views/layouts/administration.phtml	2026-01-13 19:18:54.194345789 +0100
++++ b/resources/views/layouts/administration.phtml	2025-08-16 22:22:44.533940367 +0200
+@@ -37,7 +37,9 @@
+ 
+         <?= View::stack('styles') ?>
+ 
+-        <?= Registry::container()->get(ModuleService::class)->findByInterface(ModuleGlobalInterface::class)->map(static fn (ModuleGlobalInterface $module): string => $module instanceof ModuleCustomInterface || $module instanceof CustomCssJsModule ? '' : $module->headContent())->implode('') ?>
++        <?= Registry::container()->get(ModuleService::class)->findByInterface(ModuleGlobalInterface::class)->map(static function (ModuleGlobalInterface $module): string {
++    return $module instanceof ModuleCustomInterface && !preg_match('/LinkEnhancerModule/i', get_class($module)) || $module instanceof CustomCssJsModule ? '' : $module->headContent();
++        })->implode('') /* =-Fix-P002-= */?>
+     </head>
+     <body class="container-lg wt-global wt-control-panel">
+         <header>
+@@ -86,6 +88,8 @@
+ 
+         <?= View::stack('javascript') ?>
+ 
+-        <?= Registry::container()->get(ModuleService::class)->findByInterface(ModuleGlobalInterface::class)->map(static fn (ModuleGlobalInterface $module): string => $module instanceof ModuleCustomInterface || $module instanceof CustomCssJsModule ? '' : $module->bodyContent())->implode('') ?>
++        <?= Registry::container()->get(ModuleService::class)->findByInterface(ModuleGlobalInterface::class)->map(static function (ModuleGlobalInterface $module): string {
++    return $module instanceof ModuleCustomInterface && !preg_match('/LinkEnhancerModule/i', get_class($module)) || $module instanceof CustomCssJsModule ? '' : $module->bodyContent();
++        })->implode('') /* =-Fix-P002-= */ ?>
+     </body>
+ </html>

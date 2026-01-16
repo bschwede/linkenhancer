@@ -80,7 +80,7 @@ if ($tag === 'MARR') {
                 <?php $note = Registry::noteFactory()->make($match[1], $tree);
 
                 if ($note !== null && $note->canShow()): ?>
-                    <a href="<?= e($note->url()); ?>"><?= $label ?> <?= view('icons/note') ?></a>
+                    <a href="<?= e($note->url()); ?>"><?= $label ?></a>
         
                     <?php if (Auth::isEditor($tree)): ?>
                         <a class="btn btn-link"

@@ -296,7 +296,7 @@ function processLinks(linkElement) {
                         `/tree/${newtree}`.replaceAll('/', separator[urlmode].path));
                     xrefsuffix = ` @ ${newtree}`;
                 } else if (LEoptions.thisXref === xref) {
-                    link = changeTagName(link, 'strong');
+                    link = changeTagName(link, 'mark');
                     thisXrefShown = true;
                 }
                 let urlxref = url + separator[urlmode].path + (type !== '' ? rectypes[type] : 'goto-xref') + separator[urlmode].path + xref;

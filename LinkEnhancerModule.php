@@ -435,9 +435,10 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                     $docReadyJs .= 'window.LEhelp = "' . e(route('module', ['module' => $this->name(), 'action' => 'helpmd'])) . '";';
 
                     $options = [
-                        'href' => $cfg_link_active,
-                        'src' => $cfg_md_img_active,
-                        'ext' => $cfg_md_ext_active,
+                        'href'     => $cfg_link_active,
+                        'src'      => $cfg_md_img_active,
+                        'ext'      => $cfg_md_ext_active,
+                        'ext_mark' => $this->canActivateHighlightExtension(),
                     ];                    
                     $docReadyJs .= "LinkEnhMod.installMDE(" . json_encode($options) . ");";
                 }
@@ -624,6 +625,12 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     }
 
 
+    public function canActivateHighlightExtension(): bool {
+        return (boolval($this->getPref(self::PREF_MD_EXT_ACTIVE)) 
+            && class_exists('\\League\\CommonMark\\Extension\\Highlight\\HighlightExtension', true));
+    }
+
+
     /**
      * Get a module setting. Return a user or Module default if the setting is not set.
      * extends getPreference
@@ -752,7 +759,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         $text  = view($this->name() . '::help-md', [
             'link_active'       => boolval($this->getPref(self::PREF_LINKSPP_ACTIVE)),
             'mdimg_active'      => $cfg_md_img_active,
-            'mdsyntax'          => Utils::getMarkdownHelpExamples(Validator::attributes($request)->string('base_url'), $cfg_md_ext_active),
+            'mdsyntax'          => Utils::getMarkdownHelpExamples(Validator::attributes($request)->string('base_url'), $cfg_md_ext_active, $this->canActivateHighlightExtension()),
             'mdimg_css_class1'  => $this->getPref(self::PREF_MD_IMG_STDCLASS),
             'mdimg_css_class2'  => $this->getPref(self::PREF_MD_IMG_TITLE_STDCLASS)
         ]);

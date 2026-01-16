@@ -19,7 +19,7 @@ h2 .linkicon {
 .icon-wt-xref {
     text-decoration: underline dotted;
 }
-strong.icon-wt-xref { background-color: lightyellow; } /* xref of actually displayed gedcom record */
+mark.icon-wt-xref { font-weight: bold; } /* xref of actually displayed gedcom record */
 .icon-wt-dia {
     background-image:
     url("./icons/wt-dia.png");

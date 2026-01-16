@@ -72,6 +72,11 @@
   color: #f2993b;
 }
 
+.TMHighlight { /* like css vor mark */
+  background-color: var(--bs-highlight-bg);
+  padding: .1875em;
+}
+
 /* help */
 .helpsection {
   margin-top: 50px !important;
