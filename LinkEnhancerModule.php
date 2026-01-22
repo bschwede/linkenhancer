@@ -37,6 +37,7 @@ use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Session;
 use Fisharebest\Webtrees\Validator;
 use Fisharebest\Webtrees\View;
+use Fisharebest\Webtrees\Webtrees;
 use Fisharebest\Webtrees\Http\RequestHandlers\HomePage;
 use Fisharebest\Webtrees\Http\RequestHandlers\TreePage;
 use Fisharebest\Webtrees\Module\AbstractModule;
@@ -439,6 +440,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                         'src'      => $cfg_md_img_active,
                         'ext'      => $cfg_md_ext_active,
                         'ext_mark' => $this->canActivateHighlightExtension(),
+                        'todo'     => version_compare(Webtrees::VERSION, '2.2.5', '>='),
                     ];                    
                     $docReadyJs .= "LinkEnhMod.installMDE(" . json_encode($options) . ");";
                 }

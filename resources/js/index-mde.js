@@ -7,6 +7,7 @@ function getMdeCfg() {
         src: true,
         ext: true,
         ext_mark: true,
+        todo: true, // with wt 2.2.5 _TODO text fields also support markdown
     }
 }
 
@@ -193,7 +194,8 @@ function createMDECommandbar(editor, showHelp) {
 }
 
 function insertMDE() {
-    document.querySelectorAll("textarea[id$='NOTE'], textarea[id$='NOTE-CONC'], textarea[id$='note']").forEach((elem) => {
+    let textareaSelector = "textarea[id$='NOTE'], textarea[id$='NOTE-CONC'], textarea[id$='note']" + (MdeCfg.todo ? ', textarea[id$="_TODO"]' : '');
+    document.querySelectorAll(textareaSelector).forEach((elem) => {
         let edId = `md-${elem.id}`;      
         if (document.querySelector(`#${edId}`)) return;
 
