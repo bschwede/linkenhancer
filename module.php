@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Schwendinger\Webtrees\Module\LinkEnhancer;
 
 use Fisharebest\Webtrees\Webtrees;
+use Illuminate\Database\Capsule\Manager as DB;
 use Illuminate\Support\Collection;
 
 //+++ taken from https://github.com/vesta-webtrees-2-custom-modules/vesta_classic_laf/blob/master/module.php
@@ -41,9 +42,17 @@ Collection::make($filenames)
     });
 //---
 
-$vesta_installed = class_exists("Cissee\WebtreesExt\AbstractModule", false);
+$vesta_installed = class_exists("Cissee\WebtreesExt\AbstractModule", true);
 if ($vesta_installed) {
-    return new LinkEnhancerModuleExt();
-} else {
-    return new LinkEnhancerModule();
+    $vesta_active = (bool) (
+        (string) (
+            DB::table('module')
+                ->where('module_name', '=', '_vesta_common_')
+                ->value('status') ?? 'disabled'
+        ) === 'enabled'
+    );
+    if ($vesta_active) {
+        return new LinkEnhancerModuleExt(true);
+    }
 }
+return new LinkEnhancerModule();

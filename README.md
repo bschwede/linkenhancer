@@ -195,7 +195,7 @@ If the library used to render markdown in HTML needs to be changed for any reaso
 A **context sensitive help link** to the [german webtrees manual](https://wiki.genealogy.net/Webtrees_Handbuch) can be added to the small navigation menu. Context links are also available for components on pages provided by custom extensions (e.g. on the individuals page, the start page or items in the main menu) – these can be identified by the i symbols in a circle.
 ![WTHB subcontext help](resources/img/screenshot_wthb-subcontext.png)
 
-If this feature is also required in the admin backend, patch P002 must be applied or at least the custom module [vesta_common](https://github.com/vesta-webtrees-2-custom-modules/vesta_common/tree/master) must be installed
+To ensure that this function is also available in the admin backend a modified version of [views/layouts/administration.phtml](https://github.com/fisharebest/webtrees/blob/main/resources/views/layouts/administration.phtml) must be registered. This module attempts to use the custom module [vesta_common](https://github.com/vesta-webtrees-2-custom-modules/vesta_common/tree/master) (if installed and enabled) or its own version of the view layout file. Alternatively, patch P002 could also be applied.
 
 If the webtrees page is displayed in a language other than german, it is possible to **open the webtrees manual URL via a translation service** ([Google Translate](https://translate.google.com/)). This can be enabled or disabled as a site setting or delegated to the visitor to decide.
 ![WTHB user setting](resources/img/screenshot_wthb-user-setting.png)

@@ -88,6 +88,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public const PREF_WTHB_LASTHASH = 'WTHB_LASTHASH'; // last csv hash used for import
     public const PREF_WTHB_STD_LINK = 'WTHB_STD_LINK'; // standard link to GenWiki "Webtrees Handbuch"
     public const PREF_WTHB_TRANSLATE = 'WTHB_TRANSLATE'; // use translation service for webtrees manual pages
+    public const PREF_WTHB_ADMINVIEWPATCH = 'WTHB_ADMINVIEWPATCH'; // register admin layout view
     public const PREF_JS_DEBUG_CONSOLE = 'JS_DEBUG_CONSOLE'; // console.debug with active route info; 0=off, 1=on
     public const PREF_GENWIKI_LINK = 'GENWIKI_LINK'; // base link to GenWiki
     
@@ -123,6 +124,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         self::PREF_WTHB_TOCNSEARCH         => [ 'type' => 'bool',   'default' => '1' ],
         self::PREF_WTHB_FAICON             => [ 'type' => 'bool',   'default' => '1' ],
         self::PREF_WTHB_UPDATE             => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_WTHB_ADMINVIEWPATCH     => [ 'type' => 'bool',   'default' => '1' ],
         self::PREF_JS_DEBUG_CONSOLE        => [ 'type' => 'bool',   'default' => '0' ],
         self::PREF_WTHB_STD_LINK           => [ 'type' => 'string', 'default' => self::STDLINK_WTHB ], // url
         self::PREF_GENWIKI_LINK            => [ 'type' => 'string', 'default' => self::STDLINK_GENWIKI ], // url
@@ -142,7 +144,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
     protected WthbService $wthb;
 
-    public function __construct()
+    public function __construct(public readonly bool $vesta_common_enabled = false)
     {
         $this->setName('_' . self::CUSTOM_MODULE . '_'); // need to be initialized before getPref is called; normally set in app/Services/ModuleService.php: $module->setName('_' . basename(dirname($filename)) . '_'); but in this case this is too late
 
@@ -275,6 +277,13 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
         // Register a namespace for our views.
         View::registerNamespace($this->name(), $this->resourcesFolder() . 'views/');
+
+        if ($this->getPref(self::PREF_WTHB_ACTIVE, true) 
+            && $this->getPref(self::PREF_WTHB_ADMINVIEWPATCH, true)
+            && !$this->vesta_common_enabled) {
+            // register patched administration layout if vesta common is not available
+            View::registerCustomView('::layouts/administration', $this->name() . '::patched/layouts/administration');
+        }
 
         if ($this->getPref(self::PREF_MD_ACTIVE, true)) {
             Registry::markdownFactory(new CustomMarkdownFactory($this));
@@ -610,7 +619,12 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
             $preferences = array_keys(self::PREFERENCES_SCHEMA);
             foreach ($preferences as $preference) {
-                $this->setPref($preference, trim(Validator::parsedBody($request)->string($preference)));
+                try {
+                    $value = trim(Validator::parsedBody($request)->string($preference));
+                    $this->setPref($preference, $value);
+                } catch (Exception $ex) { //Fisharebest\Webtrees\Http\Exceptions\HttpBadRequestException
+                    //TODO maybe compose warning flash message for preferences not found in request?!
+                }
             }
 
             FlashMessages::addMessage(/*I18N: webtrees.pot */ I18N::translate(
@@ -773,6 +787,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             'trees_w_text' => $trees_w_text
         ];
 
+        $response['vesta_common_enabled'] = $this->vesta_common_enabled;
 
         return $response;
     }
