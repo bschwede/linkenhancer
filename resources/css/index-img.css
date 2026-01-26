@@ -57,6 +57,55 @@
   visibility: visible;
 }
 
+/* heading / toc */
+.heading-permalink {
+    font-size: .8em;
+    vertical-align: super;
+    text-decoration: none;
+    color: transparent;
+}
+
+h1:hover .heading-permalink,
+h2:hover .heading-permalink,
+h3:hover .heading-permalink,
+h4:hover .heading-permalink,
+h5:hover .heading-permalink,
+h6:hover .heading-permalink,
+.heading-permalink:hover {
+    text-decoration: none;
+    color: #777;
+}
+
+/* flat inline toc */
+ul.md-toc {
+    list-style: none;  /* Entfernt Bullets vollständig */
+    margin: 0;
+    padding: 0;
+    display: flex;     /* Oder: display: inline-flex; für flexibles Inline-Layout */
+    flex-direction: row;
+}
+ul.md-toc::before {
+  content: "[";
+}
+ul.md-toc::after {
+  content: "]";
+}
+ul.md-toc li {
+    display: inline;   /* Oder: display: inline-block; für bessere Kontrolle */
+    margin: 0 5px;     /* Abstand zwischen Items */
+}
+
+ul.md-toc li::after {
+    content: " | ";    /* Pipe mit Leerzeichen für bessere Lesbarkeit */
+    color: #ccc;       /* Optional: Farbe anpassen */
+    padding-left: 5px;
+}
+
+ul.md-toc li:last-child::after {
+    content: "";       /* Kein Pipe beim letzten Element */
+}
+
+
 /* no extension - overwrite webtrees definition */
 blockquote {
   padding-left: 1.0em;

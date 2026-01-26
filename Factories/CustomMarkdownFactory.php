@@ -36,9 +36,11 @@ use League\CommonMark\Extension\CommonMark\Node\Inline\Image;
 use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
 use League\CommonMark\Extension\DescriptionList\DescriptionListExtension;
 use League\CommonMark\Extension\Footnote\FootnoteExtension;
+use League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkExtension;
 //use League\CommonMark\Extension\Highlight\HighlightExtension; //v2.8.0
 use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
 use League\CommonMark\Extension\Table\TableExtension;
+use League\CommonMark\Extension\TableOfContents\TableOfContentsExtension;
 
 
 /**
@@ -58,6 +60,28 @@ class CustomMarkdownFactory extends MarkdownFactory {
             'footnote_class' => 'footnote',
             'footnote_id_prefix' => 'fn_',   // also used in resources/js/index-img.js
         ],
+        'table_of_contents' => [ // see https://commonmark.thephpleague.com/2.x/extensions/table-of-contents/
+            'html_class' => 'md-toc',
+            'position' => 'placeholder',
+            'style' => 'bullet',
+            'min_heading_level' => 1,
+            'max_heading_level' => 6,
+            'normalize' => 'flat', //'relative',
+            'placeholder' => '[_TOC_]',
+        ],
+        'heading_permalink' => [ // used by toc-ext -  see https://commonmark.thephpleague.com/2.x/extensions/heading-permalinks/
+            'html_class' => 'heading-permalink',
+            'id_prefix' => 'mdnote',
+            'apply_id_to_heading' => false,
+            'heading_class' => '',
+            'fragment_prefix' => 'mdnote',
+            'insert' => 'after',
+            'min_heading_level' => 1,
+            'max_heading_level' => 6,
+            'title' => 'Permalink',
+            'symbol' => '#',
+            'aria_hidden' => true,
+        ],        
     ];
 
     private LinkEnhancerModule $module;
@@ -113,6 +137,9 @@ class CustomMarkdownFactory extends MarkdownFactory {
             }
             $environment->addExtension(new FootnoteExtension());
             // maybe also https://commonmark.thephpleague.com/2.x/extensions/table-of-contents/ ?!
+
+            $environment->addExtension(new HeadingPermalinkExtension());
+            $environment->addExtension(new TableOfContentsExtension());
             //++
         }
 

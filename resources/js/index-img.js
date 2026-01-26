@@ -33,6 +33,7 @@ const initMd = () => {
     // footnotes - prefixes declared for CommonMark FootnoteExtension in Factories/CustomMarkdownFactory.php
     uniqueRefs('fn_');
     uniqueRefs('fnref_');
+    uniqueRefs('mdnote-');
 }
 
 export { initMd };
