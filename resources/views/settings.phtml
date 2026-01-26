@@ -17,19 +17,22 @@ use Fisharebest\Webtrees\View;
  * @var array<string>           $links                  links for: csvexport
  * @var array<int>              $tablerows              [total, assigned]
  * @var array                   $mdcfg                  [int total, int activated, array<string> trees_wo_md]
+ * @var bool                    $vesta_common_enabled
  */
 
 $trees_w_md = join('</li><li>', $mdcfg['trees_w_md']);
-$trees_w_md = $trees_w_md ?  "<ol><li>{$trees_w_md}</li></ol>" : '';
+$trees_w_md_cnt = count($mdcfg['trees_w_md']);
+$trees_w_md = $trees_w_md ?  "<ol class=\"treelist\"><li>{$trees_w_md}</li></ol>" : '';
 
 $trees_w_text = join('</li><li>', $mdcfg['trees_w_text']);
-$trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
+$trees_w_text_cnt = count($mdcfg['trees_w_text']);
+$trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li></ol>" : '';
 ?>
 
 <?= view('components/breadcrumbs', [
         'links' => [route(ControlPanel::class) => /*I18N: webtrees.pot */I18N::translate('Control panel'), $title]]) ?>
 
-<h1><?= e($title) ?></h1>
+<h1 id="top"><?= e($title) ?></h1>
 <p><?= e($description) ?></p>
 
 <p class="text-muted">
@@ -54,7 +57,7 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
             <fieldset class="form-group mb-3">
                 <div class="row">
                     <legend class="col-form-label col-sm-3 wt-page-options-label">[1]
-                        <?= I18N::translate('Activate enhanced links?') ?>
+                        <a href="#section1"><?= I18N::translate('Activate enhanced links?') ?></a>
                     </legend>
                     <div class="col-sm-9 wt-page-options-value">
                         <?= view('components/radios-inline', [
@@ -75,7 +78,7 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
             <fieldset class="form-group mb-3">
                 <div class="row">
                     <legend class="col-form-label col-sm-3 wt-page-options-label">
-                        [2] <?= I18N::translate('Markdown enhancements') ?>
+                        [2] <a href="#section2"><?= I18N::translate('Markdown enhancements') ?></a>
                     </legend>
                     <div class="col-sm-9 wt-page-options-value">
                         <?= view('components/radios-inline', [
@@ -90,8 +93,8 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
                             <p style="color: gray;"><strong><?= /*I18N: MDE */ I18N::translate("Precondition: Tree preference '%s' need to be set to markdown.", /*I18N: webtrees.pot */ I18N::translate('Format text and notes')) ?></strong>
                             <table style="color: gray;">
                               <thead><tr>
-                                <th style="background-color: lightgreen; min-width:150px; text-align: center;">markdown</th>
-                                <th style="background-color: rgba(236, 74, 34, 0.52); min-width:150px; text-align: center;">text</th>
+                                <th style="background-color: lightgreen; min-width:150px; text-align: center;">markdown <small>(<?= $trees_w_md_cnt ?>)</small></th>
+                                <th style="background-color: rgba(236, 74, 34, 0.52); min-width:150px; text-align: center;">text <small>(<?= $trees_w_text_cnt ?>)</small></th>
                               </tr></thead>
                               <tbody><tr>
                                 <td><?= $trees_w_md ?></td>
@@ -108,7 +111,7 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
             <fieldset class="form-group mb-3">
                 <div class="row">
                     <legend class="col-form-label col-sm-3 wt-page-options-label">
-                        [3] <?= I18N::translate('Show Help Link') ?>
+                        [3] <a href="#section3"><?= I18N::translate('Show Help Link') ?></a>
                     </legend>
                     <div class="col-sm-9 wt-page-options-value">
                         <?= view('components/radios-inline', [
@@ -134,7 +137,7 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
             <fieldset class="form-group mb-3">
                 <div class="row">
                     <legend class="col-form-label col-sm-3 wt-page-options-label">
-                        [4] <?= I18N::translate('Site title as home link') ?>
+                        [4] <a href="#section4"><?= I18N::translate('Site title as home link') ?></a>
                     </legend>
                     <div class="col-sm-9 wt-page-options-value">
                         <?= view('components/radios-inline', [
@@ -157,7 +160,7 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
             <?= /*I18N: webtrees.pot */ I18N::translate('save') ?>
         </button>
 
-        <hr/>
+        <hr class="div" />
         <h3><?= /*I18N: Settings - section title */ I18N::translate('More options') ?></h3>
 
         <div class="row">
@@ -184,7 +187,7 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
             </fieldset>
         </div>
 
-        <h4 style="border-bottom:1px solid lightgray; margin-top: 1.2em;">[1] <?= /*I18N: Settings - section title */I18N::translate('Enhanced Link Support') ?></h4>
+        <h4 class="subdiv">[1] <a name="section1" href="#top"><?= /*I18N: Settings - section title */I18N::translate('Enhanced Link Support') ?></a></h4>
         <div class="row">
             <!-- links++ open in new tab --><?php $prefId = LinkEnhancerModule::PREF_LINKSPP_OPEN_IN_NEW_TAB; ?>
             <fieldset class="form-group mb-3">
@@ -226,7 +229,7 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
         </div>
 
 
-        <h4 style="border-bottom:1px solid lightgray; margin-top: 1.2em;">[2] <?= /*I18N: Settings - section title */I18N::translate('Markdown enhancements') ?></h4>
+        <h4 class="subdiv">[2] <a name="section2" href="#top"><?= /*I18N: Settings - section title */I18N::translate('Markdown enhancements') ?></a></h4>
         <div class="row">
             <!-- md img active --><?php $prefId = LinkEnhancerModule::PREF_MD_IMG_ACTIVE; ?>
             <fieldset class="form-group mb-3">
@@ -246,7 +249,7 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
             </fieldset>
 
         <!-- md img stdclass --><?php $prefId = LinkEnhancerModule::PREF_MD_IMG_STDCLASS; ?>
-            <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
+            <label class="col-sm-3 col-form-label wt-page-options-label sub" for="<?= $prefId ?>">
                 <?= I18N::translate('Markdown image container standard css class') ?>
             </label>
             <div class="col-sm-9 wt-page-options-value">
@@ -254,7 +257,7 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
             </div>
 
             <!-- md img title stdclass --><?php $prefId = LinkEnhancerModule::PREF_MD_IMG_TITLE_STDCLASS; ?>
-            <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
+            <label class="col-sm-3 col-form-label wt-page-options-label sub" for="<?= $prefId ?>">
                 <?= I18N::translate('Markdown image title container standard css class') ?>
             </label>
             <div class="col-sm-9 wt-page-options-value">
@@ -305,7 +308,7 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
             </fieldset>
         </div>        
 
-        <h4 style="border-bottom:1px solid lightgray; margin-top: 1.2em;">[3] <?= /*I18N: Settings - section title */ I18N::translate('Webtrees manual') ?></h4>
+        <h4 class="subdiv">[3] <a name="section3" href="#top"><?= /*I18N: Settings - section title */ I18N::translate('Webtrees manual') ?></a></h4>
         <div class="row">
             <!-- prepend faicon to wthb-link --><?php $prefId = LinkEnhancerModule::PREF_WTHB_FAICON; ?>
             <fieldset class="form-group mb-3">
@@ -366,6 +369,80 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
                     </div>
                 </div>
             </fieldset>
+
+            <!-- translate wthb-link --><?php $prefId = LinkEnhancerModule::PREF_WTHB_TRANSLATE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                        <?= /*I18N: wthb link setting option */ I18N::translate('Open webtrees manual URL with Google Translate?') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value">
+                        <?= view('components/radios-inline', [
+                            'id' => $prefId,
+                            'name' => $prefId,
+                            'options' => [
+                                /*I18N: webtrees.pot */ I18N::translate('no'),
+                                /*I18N: wthb translate */ I18N::translate('user defined'),
+                                /*I18N: webtrees.pot */ I18N::translate('yes')
+                            ],
+                            'selected' => (int) $prefs[$prefId]
+                        ]) ?>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- fallback admin view patch --><?php $prefId = LinkEnhancerModule::PREF_WTHB_ADMINVIEWPATCH; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                        <?= I18N::translate('Fallback patch for admin layout view') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value">
+                        <?= view('components/radios-inline', [
+                            'id' => $prefId,
+                            'name' => $prefId,
+                            'options' => [
+                                I18N::translate('no'),
+                                /*I18N: webtrees.pot */ I18N::translate('yes')
+                            ],
+                            'selected' => (int) $prefs[$prefId]
+                        ]) ?>
+                        <div class="form-text">
+                        <p>vesta_common <?= ($vesta_common_enabled ? "✅" : "❌") ?></p>
+                        </div>                    
+                    </div>
+                </div>
+            </fieldset>
+
+            <hr class="subdiv" />
+            
+            <!-- genwiki std link --><?php $prefId = LinkEnhancerModule::PREF_GENWIKI_LINK; ?>
+            <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
+                <?= I18N::translate('Link to GenWiki') ?>
+            </label>
+            <div class="col-sm-9 wt-page-options-value">
+                <input class="form-control" id="<?= $prefId ?>" name="<?= $prefId ?>" type="text"
+                    value="<?= e($prefs[$prefId]) ?>">
+                <div class="form-text">
+                    <p><?= /*I18N: WTHB Link */ I18N::translate('This is the base link that is combined with the relative context links from the database table.') ?>
+                    </p>
+                </div>
+            </div>
+        
+            <!-- wthb std link --><?php $prefId = LinkEnhancerModule::PREF_WTHB_STD_LINK; ?>
+            <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
+                <?= I18N::translate('Standard Link to webtrees manual') ?>
+            </label>
+            <div class="col-sm-9 wt-page-options-value">
+                <input class="form-control" id="<?= $prefId ?>" name="<?= $prefId ?>" type="text"
+                    value="<?= e($prefs[$prefId]) ?>">
+                <div class="form-text">
+                    <p><?= /*I18N: WTHB Link */ I18N::translate('This fallback link is used, when no specific context link was defined.') ?>
+                    </p>
+                </div>
+            </div>
+
+            <hr class="subdiv" />
 
             <!-- wthb mapping data table -->
             <div class="col-sm-3 col-form-label wt-page-options-label">
@@ -436,7 +513,7 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
             <!-- auto update to wthb-link --><?php $prefId = LinkEnhancerModule::PREF_WTHB_UPDATE; ?>
             <fieldset class="form-group mb-3">
                 <div class="row">
-                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
                         <?= I18N::translate('Automatically refresh data table when module is updated') ?>
                     </legend>
                     <div class="col-sm-9 wt-page-options-value">
@@ -452,57 +529,10 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
                     </div>
                 </div>
             </fieldset>
-            
-            <!-- genwiki std link --><?php $prefId = LinkEnhancerModule::PREF_GENWIKI_LINK; ?>
-            <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
-                <?= I18N::translate('Link to GenWiki') ?>
-            </label>
-            <div class="col-sm-9 wt-page-options-value">
-                <input class="form-control" id="<?= $prefId ?>" name="<?= $prefId ?>" type="text"
-                    value="<?= e($prefs[$prefId]) ?>">
-                <div class="form-text">
-                    <p><?= /*I18N: WTHB Link */ I18N::translate('This is the base link that is combined with the relative context links from the database table.') ?>
-                    </p>
-                </div>
-            </div>
-        
-            <!-- wthb std link --><?php $prefId = LinkEnhancerModule::PREF_WTHB_STD_LINK; ?>
-            <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
-                <?= I18N::translate('Standard Link to webtrees manual') ?>
-            </label>
-            <div class="col-sm-9 wt-page-options-value">
-                <input class="form-control" id="<?= $prefId ?>" name="<?= $prefId ?>" type="text"
-                    value="<?= e($prefs[$prefId]) ?>">
-                <div class="form-text">
-                    <p><?= /*I18N: WTHB Link */ I18N::translate('This fallback link is used, when no specific context link was defined.') ?>
-                    </p>
-                </div>
-            </div>
-
-            <!-- translate wthb-link --><?php $prefId = LinkEnhancerModule::PREF_WTHB_TRANSLATE; ?>
-            <fieldset class="form-group mb-3">
-                <div class="row">
-                    <legend class="col-form-label col-sm-3 wt-page-options-label">
-                        <?= /*I18N: wthb link setting option */ I18N::translate('Open webtrees manual URL with Google Translate?') ?>
-                    </legend>
-                    <div class="col-sm-9 wt-page-options-value">
-                        <?= view('components/radios-inline', [
-                            'id' => $prefId,
-                            'name' => $prefId,
-                            'options' => [
-                                /*I18N: webtrees.pot */ I18N::translate('no'),
-                                /*I18N: wthb translate */ I18N::translate('user defined'),
-                                /*I18N: webtrees.pot */ I18N::translate('yes')
-                            ],
-                            'selected' => (int) $prefs[$prefId]
-                        ]) ?>
-                    </div>
-                </div>
-            </fieldset>
         </div>
 
 
-        <h4 style="border-bottom:1px solid lightgray; margin-top: 1.2em;">[4] <?= /*I18N: Settings - section title */ I18N::translate('Home link') ?></h4>
+        <h4 class="subdiv">[4] <a name="section4" href="#top"><?= /*I18N: Settings - section title */ I18N::translate('Home link') ?></a></h4>
         <div class="row">
             <!-- home link --><?php $prefId = LinkEnhancerModule::PREF_HOME_LINK_JSON; ?>
             <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
@@ -573,6 +603,19 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
         }
         return true;
     }
+
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', event => {
+            event.preventDefault();
+            let id = link.hash.substring(1);
+            let elem = (id === 'top' ? document.documentElement : document.querySelector(`[id="${id}"], [name="${id}"]`));
+            if (elem) {
+                elem.scrollIntoView({ behavior: 'smooth' });
+            }
+            return false;
+        });
+    });
+
 </script>
 <?php View::endpush() ?>
 
@@ -582,10 +625,28 @@ $trees_w_text = $trees_w_text ? "<ol><li>{$trees_w_text}</li></ol>" : '';
     color: #d00;
     font-weight: bold;
 }
-.subdiv {
+hr.div {
+    border-top: 2px solid black;
+}
+hr.subdiv {
   width: 96%;
   margin: 0.5em 2% 0.5em 2% !important;
   border: 1px silver solid !important;
+}
+h4.subdiv {
+  border-bottom:1px solid black;
+  margin-top: 1.2em;
+}
+.sub {
+  padding-left: 3.0em !important;
+  font-size: 0.9em;
+}
+.linkenhancer {
+  padding-bottom:60vh;
+}
+.treelist {
+  max-height: 6.0em;
+  overflow: auto;
 }
 </style>
 <?php View::endpush() ?>
