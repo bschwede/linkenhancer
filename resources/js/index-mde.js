@@ -5,28 +5,42 @@ function getMdeCfg() {
     return {
         href: true,
         src: true,
-        ext: true,
-        ext_mark: true,
+        ext: true,        // extension master switch
+        ext_mark: true,   // highlight extension
+        ext_fn: true,     // footnote extension
+        ext_strike: true, // striketrough extension
         todo: true, // with wt 2.2.5 _TODO text fields also support markdown
     }
 }
 
 let MdeCfg = getMdeCfg();
 
-
-const customExtensionGrammar = {
-    footnote: { // should be a block rule
-        regexp: /^\[\^([^\]]+)\]:/,
-        replacement: '<span class="TMMark TMMark_TMLink">[^</span><span class="TMLink TMFootnoteLabel">$1</span><span class="TMMark TMMark_TMLink">]:</span>'
-    },
-    footnoteref: {
-        regexp: /^\[\^([^\]]+)\](?<!:)/,
-        replacement: '<span class="TMMark TMMark_TMLink">[^</span><span class="TMLink TMFootnoteRefLabel">$1</span><span class="TMMark TMMark_TMLink">]</span>'
-    },
-    highlight: {
-        regexp: /^(==)([^=]+)(==)/,
-        replacement: '<span class="TMMark">$1</span><span class="TMHighlight">$2</span><span class="TMMark">$3</span>'
+const getCustomExtensionGrammar= () => {
+    // HINT striketrough is natively supported by tiny-mde - so syntax highlighting is still available if extension is disabled
+    let grammar = {};
+    if (MdeCfg.ext) {
+        if (MdeCfg.ext_fn) {
+            grammar = Object.assign(grammar, {
+                footnote: { // should be a block rule
+                    regexp: /^\[\^([^\]]+)\]:/,
+                    replacement: '<span class="TMMark TMMark_TMLink">[^</span><span class="TMLink TMFootnoteLabel">$1</span><span class="TMMark TMMark_TMLink">]:</span>'
+                },
+                footnoteref: {
+                    regexp: /^\[\^([^\]]+)\](?<!:)/,
+                    replacement: '<span class="TMMark TMMark_TMLink">[^</span><span class="TMLink TMFootnoteRefLabel">$1</span><span class="TMMark TMMark_TMLink">]</span>'
+                }
+            });
+        }
+        if (MdeCfg.ext_mark) {
+            grammar = Object.assign(grammar, {
+                highlight: {
+                    regexp: /^(==)([^=]+)(==)/,
+                    replacement: '<span class="TMMark">$1</span><span class="TMHighlight">$2</span><span class="TMMark">$3</span>'
+                }
+            });
+        }
     }
+    return grammar;
 };
 
 //https://stackoverflow.com/questions/6838104/pure-javascript-method-to-wrap-content-in-a-div
@@ -99,11 +113,11 @@ function createMDECommandbar(editor, showHelp) {
     let barCommands = [
         { name: 'bold', title: I18N['bold'] },
         { name: 'italic', title: I18N['italic'] },
-        (MdeCfg.ext ? { name: "strikethrough", title: I18N['strikethrough'] } : {}),
+        (MdeCfg.ext && MdeCfg.ext_strike ? { name: "strikethrough", title: I18N['strikethrough'] } : {}),
         { name: 'code', title: I18N['format as code'] },
     ];
 
-    if (MdeCfg.ext_mark) { // HighlightExtension is shipped with CommonMark 2.8.0 and available in webtrees 2.2.5
+    if (MdeCfg.ext && MdeCfg.ext_mark) { // HighlightExtension is shipped with CommonMark 2.8.0 and available in webtrees 2.2.5
         barCommands.push(
             {
                 name: 'highlight',
@@ -199,7 +213,7 @@ function insertMDE() {
         let edId = `md-${elem.id}`;      
         if (document.querySelector(`#${edId}`)) return;
 
-        let editor = new TinyMDE.Editor({ element: elem, customInlineGrammar: (MdeCfg.ext ? omitObjectKey(customExtensionGrammar, [(MdeCfg.ext_mark ? null : 'highlight')]) : {}) });
+        let editor = new TinyMDE.Editor({ element: elem, customInlineGrammar: getCustomExtensionGrammar() });
         let txtId = `txt-${elem.id}`;
 
         editor.e.id = edId;

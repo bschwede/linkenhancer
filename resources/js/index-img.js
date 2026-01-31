@@ -33,6 +33,7 @@ const initMd = () => {
     // footnotes - prefixes declared for CommonMark FootnoteExtension in Factories/CustomMarkdownFactory.php
     uniqueRefs('fn_');
     uniqueRefs('fnref_');
+    // table of contents / heading permalink - prefix declared for CommonMark HeadingPermalinkExtension in Factories/CustomMarkdownFactory.php
     uniqueRefs('mdnote-');
 }
 

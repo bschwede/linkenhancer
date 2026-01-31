@@ -5,9 +5,12 @@ declare(strict_types=1);
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\DB;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Factories\CustomMarkdownFactory;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Factories\ExtensionSettingOption;
 use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\View;
+use Fisharebest\Webtrees\Webtrees;
 
 /**
  * @var string                  $title                  title of this custom module
@@ -19,6 +22,27 @@ use Fisharebest\Webtrees\View;
  * @var array                   $mdcfg                  [int total, int activated, array<string> trees_wo_md]
  * @var bool                    $vesta_common_enabled
  */
+
+function prefixKeysToValues(array $data, string $separator = ': '): array
+{
+    foreach ($data as $key => &$value) {
+        $value = $key . $separator . $value;
+    }
+    unset($value);
+    return $data;
+}
+
+function insertNoYesInlineRadiobuttons(string $id, string $value): string {
+    return view('components/radios-inline', [
+        'id' => $id,
+        'name' => $id,
+        'options' => [
+            /*I18N: webtrees.pot */ I18N::translate('no'),
+            /*I18N: webtrees.pot */ I18N::translate('yes')
+        ],
+        'selected' => (int) $value
+    ]);
+}
 
 $trees_w_md = join('</li><li>', $mdcfg['trees_w_md']);
 $trees_w_md_cnt = count($mdcfg['trees_w_md']);
@@ -59,13 +83,8 @@ $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li>
                     <legend class="col-form-label col-sm-3 wt-page-options-label">[1]
                         <a href="#section1"><?= I18N::translate('Activate enhanced links?') ?></a>
                     </legend>
-                    <div class="col-sm-9 wt-page-options-value">
-                        <?= view('components/radios-inline', [
-                            'id' => $prefId,
-                            'name' => $prefId,
-                            'options' => [I18N::translate('no'), I18N::translate('yes')],
-                            'selected' => (int) $prefs[$prefId]
-                        ]) ?>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
                         <div class="form-text">
                             <p><?= /*I18N: Enhanced Links */ I18N::translate('This function is implemented via Javascript and only affects links in notes and HTML blocks on the client side.') ?>
                             </p>
@@ -80,13 +99,8 @@ $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li>
                     <legend class="col-form-label col-sm-3 wt-page-options-label">
                         [2] <a href="#section2"><?= I18N::translate('Markdown enhancements') ?></a>
                     </legend>
-                    <div class="col-sm-9 wt-page-options-value">
-                        <?= view('components/radios-inline', [
-                            'id' => $prefId,
-                            'name' => $prefId,
-                            'options' => [I18N::translate('no'), I18N::translate('yes')],
-                            'selected' => (int) $prefs[$prefId]
-                        ]) ?>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
                         <div class="form-text">
                             <p><?= /*I18N: MD img - sentence 1 */ I18N::translate('Only works in notes that are formatted with Markdown.') ?>
                             </p>
@@ -113,20 +127,11 @@ $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li>
                     <legend class="col-form-label col-sm-3 wt-page-options-label">
                         [3] <a href="#section3"><?= I18N::translate('Show Help Link') ?></a>
                     </legend>
-                    <div class="col-sm-9 wt-page-options-value">
-                        <?= view('components/radios-inline', [
-                            'id' => $prefId,
-                            'name' => $prefId,
-                            'options' => [
-                                I18N::translate('no'),
-                                /*I18N: webtrees.pot */ I18N::translate('yes')
-                            ],
-                            'selected' => (int) $prefs[$prefId]
-                        ]) ?>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
                         <div class="form-text">
                             <p>
-                                <?= /*I18N: */ I18N::translate("A context-sensitive link to the German webtrees manual can be added by javascript to the small navigation menu.") ?>
-                                <?= /*I18N: */ I18N::translate("If this feature is also desired in the admin backend, patch P002 would need to be applied or at least the custom module vesta_common would need to be installed."); ?>
+                                <?= /*I18N: */ I18N::translate("Context sensitive help links to the german webtrees manual can be activated in the small menu at the top of the page and for subcontext topics on the page.") ?>
                             </p>
                         </div>
                     </div>
@@ -139,7 +144,7 @@ $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li>
                     <legend class="col-form-label col-sm-3 wt-page-options-label">
                         [4] <a href="#section4"><?= I18N::translate('Site title as home link') ?></a>
                     </legend>
-                    <div class="col-sm-9 wt-page-options-value">
+                    <div class="col-sm-9 wt-page-options-value mt-2">
                         <?= view('components/radios-inline', [
                             'id' => $prefId,
                             'name' => $prefId,
@@ -170,16 +175,8 @@ $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li>
                     <legend class="col-form-label col-sm-3 wt-page-options-label">
                         <?= I18N::translate('Output of debug information on the JS console') ?>
                     </legend>
-                    <div class="col-sm-9 wt-page-options-value">
-                        <?= view('components/radios-inline', [
-                            'id' => $prefId,
-                            'name' => $prefId,
-                            'options' => [
-                                /*I18N: webtrees.pot */ I18N::translate('no'),
-                                /*I18N: webtrees.pot */ I18N::translate('yes')
-                            ],
-                            'selected' => (int) $prefs[$prefId]
-                        ]) ?>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
                         <div class="form-text">
                         </div>
                     </div>
@@ -188,6 +185,7 @@ $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li>
         </div>
 
         <h4 class="subdiv">[1] <a name="section1" href="#top"><?= /*I18N: Settings - section title */I18N::translate('Enhanced Link Support') ?></a></h4>
+<section id="options1">
         <div class="row">
             <!-- links++ open in new tab --><?php $prefId = LinkEnhancerModule::PREF_LINKSPP_OPEN_IN_NEW_TAB; ?>
             <fieldset class="form-group mb-3">
@@ -195,16 +193,8 @@ $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li>
                     <legend class="col-form-label col-sm-3 wt-page-options-label">
                         <?= /*I18N: see also fancy-research-links */ I18N::translate('Open links in a new tab') ?>
                     </legend>
-                    <div class="col-sm-9 wt-page-options-value">
-                        <?= view('components/radios-inline', [
-                            'id' => $prefId,
-                            'name' => $prefId,
-                            'options' => [
-                                I18N::translate('no'),
-                                /*I18N: webtrees.pot */ I18N::translate('yes')
-                            ],
-                            'selected' => (int) $prefs[$prefId]
-                        ]) ?>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
                     </div>
                 </div>
             </fieldset>
@@ -213,7 +203,7 @@ $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li>
             <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
                 <?= I18N::translate('JavaScript for additional link targets') . ' (' . /*I18N: webtrees.pot */I18N::translate('optional') . ')' ?>
             </label>
-            <div class="col-sm-9 wt-page-options-value">
+            <div class="col-sm-9 wt-page-options-value mt-1">
                 <textarea id="<?= $prefId ?>" name="<?= $prefId ?>" class="form-control font-monospace" dir="ltr" rows="5"><?= e($prefs[$prefId]) ?></textarea>
                 <div class="form-text">
                     <p><?= /*I18N: Enhanced Links js */ I18N::translate('The JavaScript object overwrites and supplements the predefined settings, which are taken from the following code excerpt and can also serve as a reference point for adjustments.') ?></p>
@@ -227,43 +217,55 @@ $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li>
             </div>
 
         </div>
-
+</section>
 
         <h4 class="subdiv">[2] <a name="section2" href="#top"><?= /*I18N: Settings - section title */I18N::translate('Markdown enhancements') ?></a></h4>
+<section id="options2">
         <div class="row">
             <!-- md img active --><?php $prefId = LinkEnhancerModule::PREF_MD_IMG_ACTIVE; ?>
-            <fieldset class="form-group mb-3">
+            <fieldset class="form-group mb-1">
                 <div class="row">
                     <legend class="col-form-label col-sm-3 wt-page-options-label">
                         <?= I18N::translate('Activate markdown image tweak?') ?>
                     </legend>
-                    <div class="col-sm-9 wt-page-options-value">
-                        <?= view('components/radios-inline', [
-                            'id' => $prefId,
-                            'name' => $prefId,
-                            'options' => [I18N::translate('no'), I18N::translate('yes')],
-                            'selected' => (int) $prefs[$prefId]
-                        ]) ?>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
                     </div>
                 </div>
+
+<section id="options2_1">
+                <div class="row">
+                    <div class="col-sm-3 col-form-label wt-page-options-label">
+                        <?= I18N::translate('CSS class name(s)') ?>
+                    </div>
+
+                </div>                
+                <div class="row">
+                    <!-- md img stdclass --><?php $prefId = LinkEnhancerModule::PREF_MD_IMG_STDCLASS; ?>
+                    <label class="col-sm-3 col-form-label wt-page-options-label sub" for="<?= $prefId ?>">
+                        <?= I18N::translate('Markdown image container') ?>
+                    </label>
+                    <div class="col-sm-3 wt-page-options-value mt-2">
+                        <input class="form-control" id="<?= $prefId ?>" name="<?= $prefId ?>" type="text" value="<?= e($prefs[$prefId]) ?>">
+                    </div>
+                    <div class="col-sm-6 mt-2 form-text">
+                        <?= I18N::translate('Example') ?>:&nbsp;&nbsp; <code>md-img</code>
+                    </div>
+
+                    <!-- md img title stdclass --><?php $prefId = LinkEnhancerModule::PREF_MD_IMG_TITLE_STDCLASS; ?>
+                    <label class="col-sm-3 col-form-label wt-page-options-label sub" for="<?= $prefId ?>">
+                        <?= I18N::translate('Markdown image title container') ?>
+                    </label>
+                    <div class="col-sm-3 wt-page-options-value mt-2">
+                        <input class="form-control" id="<?= $prefId ?>" name="<?= $prefId ?>" type="text"
+                            value="<?= e($prefs[$prefId]) ?>">
+                    </div>
+                    <div class="col-sm-6 mt-2 form-text">
+                        <?= I18N::translate('Example') ?>:&nbsp;&nbsp; <code>md-img-title</code>
+                    </div>
+                </div>
+</section>
             </fieldset>
-
-        <!-- md img stdclass --><?php $prefId = LinkEnhancerModule::PREF_MD_IMG_STDCLASS; ?>
-            <label class="col-sm-3 col-form-label wt-page-options-label sub" for="<?= $prefId ?>">
-                <?= I18N::translate('Markdown image container standard css class') ?>
-            </label>
-            <div class="col-sm-9 wt-page-options-value">
-                <input class="form-control" id="<?= $prefId ?>" name="<?= $prefId ?>" type="text" value="<?= e($prefs[$prefId]) ?>">
-            </div>
-
-            <!-- md img title stdclass --><?php $prefId = LinkEnhancerModule::PREF_MD_IMG_TITLE_STDCLASS; ?>
-            <label class="col-sm-3 col-form-label wt-page-options-label sub" for="<?= $prefId ?>">
-                <?= I18N::translate('Markdown image title container standard css class') ?>
-            </label>
-            <div class="col-sm-9 wt-page-options-value">
-                <input class="form-control" id="<?= $prefId ?>" name="<?= $prefId ?>" type="text"
-                       value="<?= e($prefs[$prefId]) ?>">
-            </div>
 
             <hr class="subdiv" />
 
@@ -273,13 +275,8 @@ $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li>
                     <legend class="col-form-label col-sm-3 wt-page-options-label">
                         <?= I18N::translate('Markdown editor for note textareas') ?>
                     </legend>
-                    <div class="col-sm-9 wt-page-options-value">
-                        <?= view('components/radios-inline', [
-                            'id' => $prefId,
-                            'name' => $prefId,
-                            'options' => [I18N::translate('no'), I18N::translate('yes')],
-                            'selected' => (int) $prefs[$prefId]
-                        ]) ?>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
                         <div class="form-text">
                         </div>
                     </div>
@@ -289,26 +286,229 @@ $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li>
             <hr class="subdiv" />
 
             <!-- md extensions active --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_ACTIVE; ?>
-            <fieldset class="form-group mb-3">
+            <fieldset class="form-group mb-4">
                 <div class="row">
                     <legend class="col-form-label col-sm-3 wt-page-options-label">
                         <?= I18N::translate('Markdown extensions') ?>
                     </legend>
-                    <div class="col-sm-9 wt-page-options-value">
-                        <?= view('components/radios-inline', [
-                            'id' => $prefId,
-                            'name' => $prefId,
-                            'options' => [I18N::translate('no'), I18N::translate('yes')],
-                            'selected' => (int) $prefs[$prefId]
-                        ]) ?>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                        <div class="alert-warning mt-2 mb-2">
+                            <p class="alert-title">
+                                <svg class="octicon octicon-alert me-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>
+                                <?= I18N::translate('Warning'); ?>
+                            </p>
+                            <p class="form-text">
+                            <?= I18N::translate('Please keep in mind when using this extensions, you are deviating from the smallest common markdown dialect set.'); ?>
+                            <?= I18N::translate('If the library used to render markdown in HTML needs to be changed for any reason, there is a possibility that not all of the extended markup used here will be supported.'); ?>
+                            </p>
+                        </div>
+                        <div class="form-text">
+                            <?= I18N::translate('See also') ?>: 
+                            <a href="https://github.com/bschwede/linkenhancer/issues/32#issuecomment-3761130124">#32</a> | 
+                            <a href="https://commonmark.thephpleague.com/2.x/extensions/overview/">https://commonmark.thephpleague.com/2.x/extensions/overview/</a>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+<section id="options2_2">
+            <!-- md extension - striketrough --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_STRIKE_ACTIVE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
+                        <?= I18N::translate('Strikethrough') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
                         <div class="form-text">
                         </div>
                     </div>
                 </div>
             </fieldset>
-        </div>        
+
+            <!-- md extension - definition list --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_DL_ACTIVE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
+                        <?= I18N::translate('Description list') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                        <div class="form-text">
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <?php if (version_compare(Webtrees::VERSION, '2.2.5', '>=')): ?>
+            <!-- md extension - highlight >= wt2.2.5 --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_MARK_ACTIVE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
+                        <?= I18N::translate('Highlight') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                        <div class="form-text">
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <?php endif; ?>
+
+            <!-- md extension - footnotes --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_FN_ACTIVE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
+                        <?= I18N::translate('Footnotes') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                        <div class="form-text">
+                        </div>
+
+<section id="options2_2_fn">
+                        <!-- md extension - footnotes add hr --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_FN_ADD_HR; ?>
+                        <div class="row mt-2 mb-1">
+                            <div class="col-3 d-flex align-items-center justify-content-start">
+                                <legend class="col-form-label wt-page-options-label">
+                                    <?= I18N::translate('Add hr-tag at the beginning of the footnote container') ?>
+                                </legend>
+                            </div>
+                            <div class="col-2 d-flex  justify-content-start mt-2">
+                                <?= insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                            </div>
+                            <div class="col-4 d-flex align-items-start justify-content-start form-text">
+                            </div>
+                        </div>
+
+                        <!-- md extension - footnotes backref --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_FN_BACKREF_CHAR; ?>
+                        <div class="row mt-2 mb-1">
+                            <div class="col-3 d-flex align-items-center justify-content-start mt-1">
+                                <label for="<?= e($prefId) ?>" class="me-1 mb-0"> <?= I18N::translate('Backreference symbol') ?></label>
+                            </div>
+                            <div class="col-1 d-flex  justify-content-start">
+                                <input class="form-control text-center" type="text" id="<?= e($prefId) ?>" name="<?= e($prefId) ?>"
+                                    size="3" maxlength="3" value="<?= e($prefs[$prefId]) ?>">                                
+                            </div>
+                            <div class="col-5 d-flex align-items-start justify-content-start form-text">
+                                <?= I18N::translate('Example') ?>:&nbsp;&nbsp; <code>↩</code>
+                            </div>
+                        </div>
+</section>
+                    </div>
+
+                </div>
+
+            </fieldset>
+
+            <!-- md extension - table of contents --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_TOC_ACTIVE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
+                        <?= I18N::translate('Table of contents') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                        <div class="form-text">
+                        </div>
+
+<section id="options2_2_toc">                       
+                        <!-- md extension - toc normalize --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_TOC_NORMALIZE; ?>
+                        <div class="row mt-2 mb-1">
+                            <div class="col-3 d-flex align-items-center justify-content-start mt-1">
+                                <label for="<?= e($prefId) ?>" class="me-1 mb-0"> <?= I18N::translate('Normalize') ?></label>
+                            </div>
+                            <div class="col-9 d-flex  justify-content-start">
+                                <?= view('components/select', [
+                                    'name' => $prefId, 
+                                    'selected' => $prefs[$prefId], 
+                                    'options' => prefixKeysToValues(CustomMarkdownFactory::getExtensionSettingOptions(ExtensionSettingOption::TOC_NORMALIZE))
+                                ]) ?>
+                            </div>
+                        </div>
+                        
+                        <!-- md extension - toc style --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_TOC_STYLE; ?>
+                        <div class="row mt-2 mb-1">
+                            <div class="col-3 d-flex align-items-center justify-content-start mt-1">
+                                <label for="<?= e($prefId) ?>" class="me-1 mb-0"> <?= I18N::translate('Style') ?></label>
+                            </div>
+                            <div class="col-9 d-flex  justify-content-start">
+                                <?= view('components/select', [
+                                    'name' => $prefId, 
+                                    'selected' => $prefs[$prefId], 
+                                    'options' => prefixKeysToValues(CustomMarkdownFactory::getExtensionSettingOptions(ExtensionSettingOption::TOC_STYLE))
+                                ]) ?>
+                            </div>
+                        </div>
+
+                        <!-- md extension - toc position --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_TOC_POS; ?>
+                        <div class="row mt-2 mb-1">
+                            <div class="col-3 d-flex align-items-center justify-content-start mt-1">
+                                <label for="<?= e($prefId) ?>" class="me-1 mb-0"> <?= I18N::translate('Position') ?></label>
+                            </div>
+                            <div class="col-9 d-flex  justify-content-start">
+                                <?= view('components/select', [
+                                    'name' => $prefId, 
+                                    'selected' => $prefs[$prefId], 
+                                    'options' => prefixKeysToValues(CustomMarkdownFactory::getExtensionSettingOptions(ExtensionSettingOption::TOC_POSITION))
+                                ]) ?>
+                            </div>
+                        </div>
+
+                        <!-- md extension - toc placeholder --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_TOC_PLACEHOLDER; ?>
+<section id="pos-is-placeholder">
+                        <div class="row mt-2 mb-1">
+                            <div class="col-3 d-flex align-items-center justify-content-start mt-1 sub">
+                                <label for="<?= e($prefId) ?>" class="me-1 mb-0"> <?= I18N::translate('Placeholder') ?></label>
+                            </div>
+                            <div class="col-3 d-flex  justify-content-start">
+                                <input class="form-control" type="text" id="<?= e($prefId) ?>" name="<?= e($prefId) ?>" value="<?= e($prefs[$prefId]) ?>">
+                            </div>
+                            <div class="col-5 d-flex align-items-start justify-content-start form-text">
+                                <?= I18N::translate('Example') ?>:&nbsp;&nbsp; <code>[TOC]</code>
+                            </div>
+                        </div>
+</section>
+
+                        <!-- md extension - toc css class name --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_TOC_CSSCLASS; ?>
+                        <div class="row mt-2 mb-1">
+                            <div class="col-3 d-flex align-items-center justify-content-start mt-1">
+                                <label for="<?= e($prefId) ?>" class="me-1 mb-0"><?= I18N::translate('CSS class name(s)') ?></label>
+                            </div>
+                            <div class="col-3 d-flex  justify-content-start">
+                                <input class="form-control" type="text" id="<?= e($prefId) ?>" name="<?= e($prefId) ?>" value="<?= e($prefs[$prefId]) ?>">
+                            </div>
+                            <div class="col-5 d-flex align-items-start justify-content-start form-text">
+                                <?= I18N::translate('Example') ?>:&nbsp;&nbsp; <code>md-toc float-end</code>
+                            </div>
+                        </div>
+
+                        <!-- md extension - toc permalink --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_TOC_PERMALINK_CHAR; ?>
+                        <div class="row mt-2 mb-1">
+                            <div class="col-3 d-flex align-items-center justify-content-start mt-1">
+                                <label for="<?= e($prefId) ?>" class="me-1 mb-0"> <?= I18N::translate('Permalink symbol') ?></label>
+                            </div>
+                            <div class="col-1 d-flex  justify-content-start">
+                                <input class="form-control text-center" type="text" id="<?= e($prefId) ?>" name="<?= e($prefId) ?>"
+                                    size="3" maxlength="3" value="<?= e($prefs[$prefId]) ?>">                                
+                            </div>
+                            <div class="col-2 d-flex align-items-start justify-content-start form-text"></div>
+                            <div class="col-5 d-flex align-items-start justify-content-start form-text">
+                                <?= I18N::translate('Example') ?>:&nbsp;&nbsp; <code>¶ #</code>
+                            </div>
+                        </div>                        
+
+</section>
+                    </div>
+                </div>
+            </fieldset>
+</section>
+        </div>
+</section>
 
         <h4 class="subdiv">[3] <a name="section3" href="#top"><?= /*I18N: Settings - section title */ I18N::translate('Webtrees manual') ?></a></h4>
+<section id="options3">
         <div class="row">
             <!-- prepend faicon to wthb-link --><?php $prefId = LinkEnhancerModule::PREF_WTHB_FAICON; ?>
             <fieldset class="form-group mb-3">
@@ -316,16 +516,8 @@ $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li>
                     <legend class="col-form-label col-sm-3 wt-page-options-label">
                         <i class="fa-solid fa-circle-question"></i> <?= I18N::translate('Precede the help link with an icon') ?>
                     </legend>
-                    <div class="col-sm-9 wt-page-options-value">
-                        <?= view('components/radios-inline', [
-                            'id' => $prefId,
-                            'name' => $prefId,
-                            'options' => [
-                                I18N::translate('no'),
-                                /*I18N: webtrees.pot */ I18N::translate('yes')
-                            ],
-                            'selected' => (int) $prefs[$prefId]
-                        ]) ?>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
                     </div>
                 </div>
             </fieldset>
@@ -336,16 +528,8 @@ $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li>
                     <legend class="col-form-label col-sm-3 wt-page-options-label">
                         <?= I18N::translate('Help link for subcontext topics') ?>
                     </legend>
-                    <div class="col-sm-9 wt-page-options-value">
-                        <?= view('components/radios-inline', [
-                            'id' => $prefId,
-                            'name' => $prefId,
-                            'options' => [
-                                I18N::translate('no'),
-                                /*I18N: webtrees.pot */ I18N::translate('yes')
-                            ],
-                            'selected' => (int) $prefs[$prefId]
-                        ]) ?>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
                     </div>
                 </div>
             </fieldset>
@@ -356,16 +540,8 @@ $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li>
                     <legend class="col-form-label col-sm-3 wt-page-options-label">
                         <?= I18N::translate("Full-text search") . ' / ' . I18N::translate('Table of contents') ?>
                     </legend>
-                    <div class="col-sm-9 wt-page-options-value">
-                        <?= view('components/radios-inline', [
-                            'id' => $prefId,
-                            'name' => $prefId,
-                            'options' => [
-                                I18N::translate('no'),
-                                /*I18N: webtrees.pot */ I18N::translate('yes')
-                            ],
-                            'selected' => (int) $prefs[$prefId]
-                        ]) ?>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
                     </div>
                 </div>
             </fieldset>
@@ -376,7 +552,7 @@ $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li>
                     <legend class="col-form-label col-sm-3 wt-page-options-label">
                         <?= /*I18N: wthb link setting option */ I18N::translate('Open webtrees manual URL with Google Translate?') ?>
                     </legend>
-                    <div class="col-sm-9 wt-page-options-value">
+                    <div class="col-sm-9 wt-page-options-value mt-2">
                         <?= view('components/radios-inline', [
                             'id' => $prefId,
                             'name' => $prefId,
@@ -391,24 +567,31 @@ $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li>
                 </div>
             </fieldset>
 
+            
+            <div class="row">
+                <div class="col-form-label col-sm-3 wt-page-options-label">
+                    <?= I18N::translate('Help link in the admin backend') ?>
+                </div>
+                <div class="col-sm-9 wt-page-options-value">
+                    <div class="form-text">
+                        <p><?= I18N::translate('Vesta modules override the admin layout view and provide a way to insert code through custom modules.') ?><br>
+                        <?= I18N::translate('As they are frequently used, this module first attempts this approach.') ?>
+                        </p>
+                        <p>vesta_common <?= ($vesta_common_enabled ? "✅" : "❌") ?></p>
+                    </div>                    
+                </div>
+            </div>
+
+
             <!-- fallback admin view patch --><?php $prefId = LinkEnhancerModule::PREF_WTHB_ADMINVIEWPATCH; ?>
             <fieldset class="form-group mb-3">
                 <div class="row">
-                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
                         <?= I18N::translate('Fallback patch for admin layout view') ?>
                     </legend>
-                    <div class="col-sm-9 wt-page-options-value">
-                        <?= view('components/radios-inline', [
-                            'id' => $prefId,
-                            'name' => $prefId,
-                            'options' => [
-                                I18N::translate('no'),
-                                /*I18N: webtrees.pot */ I18N::translate('yes')
-                            ],
-                            'selected' => (int) $prefs[$prefId]
-                        ]) ?>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
                         <div class="form-text">
-                        <p>vesta_common <?= ($vesta_common_enabled ? "✅" : "❌") ?></p>
                         </div>                    
                     </div>
                 </div>
@@ -516,29 +699,22 @@ $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li>
                     <legend class="col-form-label col-sm-3 wt-page-options-label sub">
                         <?= I18N::translate('Automatically refresh data table when module is updated') ?>
                     </legend>
-                    <div class="col-sm-9 wt-page-options-value">
-                        <?= view('components/radios-inline', [
-                            'id' => $prefId,
-                            'name' => $prefId,
-                            'options' => [
-                                I18N::translate('no'),
-                                /*I18N: webtrees.pot */ I18N::translate('yes')
-                            ],
-                            'selected' => (int) $prefs[$prefId]
-                        ]) ?>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
                     </div>
                 </div>
             </fieldset>
         </div>
-
+</section>
 
         <h4 class="subdiv">[4] <a name="section4" href="#top"><?= /*I18N: Settings - section title */ I18N::translate('Home link') ?></a></h4>
+<section id="options4">
         <div class="row">
             <!-- home link --><?php $prefId = LinkEnhancerModule::PREF_HOME_LINK_JSON; ?>
             <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
                 <?= I18N::translate('JSON for home link styling') . ' (' . /*I18N: webtrees.pot */ I18N::translate('optional') . ')' ?>
             </label>
-            <div class="col-sm-9 wt-page-options-value">
+            <div class="col-sm-9 wt-page-options-value mt-3">
                 <textarea id="<?= $prefId ?>" name="<?= $prefId ?>" class="form-control font-monospace" dir="ltr"
                     rows="5"><?= e($prefs[$prefId]) ?></textarea>
                 <div class="form-text">
@@ -550,6 +726,8 @@ $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li>
                 </div>
             </div>
         </div>
+</section>
+
         <p>&nbsp;</p>
 
         <button type="submit" class="btn btn-primary">
@@ -616,6 +794,52 @@ $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li>
         });
     });
 
+    function toggleSectionByRadio(secId, radioGroupname, cname) {
+        console.log(secId, radioGroupname, cname)
+        let section = $(`#${secId}`);
+        if ($(`#${radioGroupname}-0:checked`).length == 1) { // radio "no" is selected - disable
+            $(section).addClass(cname);
+        } else {
+            $(section).removeClass(cname);
+        }
+    }
+
+    function toggleSectionBySelectSingle(secId, selectName, cname, checkvalues, disableifincluded = true) {
+        let section = $(`#${secId}`);
+        let selectvalue = $(`select[name="${selectName}"]`).val();
+        checkvalues = Array.isArray(checkvalues) ? checkvalues : [ checkvalues ];
+        invalues = checkvalues.includes(selectvalue);
+        if (disableifincluded && invalues || !disableifincluded && !invalues) {
+            $(section).addClass(cname);
+        } else {
+            $(section).removeClass(cname);
+        }
+    }
+
+    $(()=> {
+        [['<?= LinkEnhancerModule::PREF_LINKSPP_ACTIVE; ?>', 1],
+        ['<?= LinkEnhancerModule::PREF_MD_ACTIVE; ?>', 2],
+        ['<?= LinkEnhancerModule::PREF_MD_IMG_ACTIVE; ?>', '2_1'],
+        ['<?= LinkEnhancerModule::PREF_MD_EXT_ACTIVE; ?>', '2_2'],
+        ['<?= LinkEnhancerModule::PREF_MD_EXT_FN_ACTIVE; ?>', '2_2_fn'],
+        ['<?= LinkEnhancerModule::PREF_MD_EXT_TOC_ACTIVE; ?>', '2_2_toc'],
+        ['<?= LinkEnhancerModule::PREF_WTHB_ACTIVE; ?>', 3],
+        ['<?= LinkEnhancerModule::PREF_HOME_LINK_TYPE; ?>', 4]].forEach( (sec) => {
+            [secName, secIdx ] = sec;
+            ((name, idx) => {
+                $(`input[type=radio][name='${name}']`).on("change", () => {toggleSectionByRadio('options' + idx, name, 'disabled-w-text')});
+            })(secName, secIdx);
+            toggleSectionByRadio('options' + secIdx, secName, 'disabled-w-text');
+        });
+
+        [['<?= LinkEnhancerModule::PREF_MD_EXT_TOC_POS; ?>', 'pos-is-placeholder', [ 'placeholder' ], false ]].forEach( (elem) => {
+            [selname, secId, cvalues, dii ] = elem;
+            ((selname, secId, cvalues, dii=true) => {
+                $(`select[name='${selname}']`).on("change", () => {toggleSectionBySelectSingle(secId, selname, 'disabled', cvalues, dii)});
+            })(selname, secId, cvalues, dii);
+            toggleSectionBySelectSingle(secId, selname, 'disabled', cvalues, dii);            
+        });
+    });
 </script>
 <?php View::endpush() ?>
 
@@ -639,7 +863,6 @@ h4.subdiv {
 }
 .sub {
   padding-left: 3.0em !important;
-  font-size: 0.9em;
 }
 .linkenhancer {
   padding-bottom:60vh;
@@ -647,6 +870,35 @@ h4.subdiv {
 .treelist {
   max-height: 6.0em;
   overflow: auto;
+}
+.alert-warning {
+  border-left: .25em solid #d29922;
+  padding: 0.5rem 1rem;
+}
+.alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1;
+  color: #d29922;    
+}
+.octicon {
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.disabled {
+  display: none;
+}
+.disabled-w-text {
+  max-height: 2.0em;
+  overflow: clip;
+}
+.disabled-w-text::before {
+  content: "<?= I18N::translate('Enable for more options') ?>...";
+  color: gray;
 }
 </style>
 <?php View::endpush() ?>

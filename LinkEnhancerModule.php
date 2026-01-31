@@ -101,7 +101,24 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public const PREF_MD_IMG_STDCLASS = 'MD_IMG_STDCLASS'; // standard classname(s) for div wrapping img- and link-tag    
     public const PREF_MD_IMG_TITLE_STDCLASS = 'MD_IMG_TITLE_STDCLASS'; // standard classname(s) for picture subtitle
     public const PREF_MDE_ACTIVE = 'MDE_ACTIVE'; // enable markdown editor for note textareas
+    
     public const PREF_MD_EXT_ACTIVE = 'MD_EXT_ACTIVE'; // enable markdown extensions
+    public const PREF_MD_EXT_STRIKE_ACTIVE = 'MD_EXT_STRIKE_ACTIVE'; // enable markdown extension - strikethrough
+    public const PREF_MD_EXT_DL_ACTIVE = 'MD_EXT_DL_ACTIVE'; // enable markdown extension - definition list
+    public const PREF_MD_EXT_MARK_ACTIVE = 'MD_EXT_MARK_ACTIVE'; // enable markdown extension - highlight
+    
+    public const PREF_MD_EXT_FN_ACTIVE = 'MD_EXT_FN_ACTIVE'; // enable markdown extension - footnotes
+    public const PREF_MD_EXT_FN_BACKREF_CHAR = 'MD_EXT_FN_BACKREF_CHAR'; // markdown extension - footnotes back reference symbol
+    public const PREF_MD_EXT_FN_ADD_HR = 'MD_EXT_FN_ADD_HR'; // markdown extension - footnotes add container hr
+    
+    public const PREF_MD_EXT_TOC_ACTIVE = 'MD_EXT_TOC_ACTIVE'; // enable markdown extension - table of contents
+    public const PREF_MD_EXT_TOC_PERMALINK_CHAR = 'MD_EXT_TOC_PERMALINK_CHAR'; // markdown extension - table of contents permalink symbol
+    public const PREF_MD_EXT_TOC_STYLE = 'MD_EXT_TOC_STYLE'; // markdown extension - table of contents style of list (bullet / ordered)
+    public const PREF_MD_EXT_TOC_NORMALIZE = 'MD_EXT_TOC_NORMALIZE'; // markdown extension - table of contentsnormalize method (flat, relative, as-is)
+    public const PREF_MD_EXT_TOC_POS = 'MD_EXT_TOC_POS'; // markdown extension - table of contents position
+    public const PREF_MD_EXT_TOC_PLACEHOLDER = 'MD_EXT_TOC_PLACEHOLDER'; // markdown extension - table of contents placeholder
+    public const PREF_MD_EXT_TOC_CSSCLASS = 'MD_EXT_TOC_CSSCLASS'; // markdown extension - table of contents additional css class name
+    
 
     public const STDCLASS_HOME_LINK = 'homelink';
     public const STDCLASS_MD_IMG = 'md-img';
@@ -117,27 +134,42 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public const HELP_SCHEMA_TARGET_VERSION = 2;
 
     protected const PREFERENCES_SCHEMA = [ //type=int|string|bool
-        self::PREF_HOME_LINK_TYPE          => [ 'type' => 'int',    'default' => '1' ], // triple-state, 0=off, 1=tree, 2=my-page
-        self::PREF_HOME_LINK_JSON          => [ 'type' => 'string', 'default' => '' ], // json object { '*': stylerules-string, 'theme': stylerules-string}
-        self::PREF_WTHB_ACTIVE             => [ 'type' => 'bool',   'default' => '1' ],
-        self::PREF_WTHB_SUBCONTEXT         => [ 'type' => 'bool',   'default' => '1' ],
-        self::PREF_WTHB_TOCNSEARCH         => [ 'type' => 'bool',   'default' => '1' ],
-        self::PREF_WTHB_FAICON             => [ 'type' => 'bool',   'default' => '1' ],
-        self::PREF_WTHB_UPDATE             => [ 'type' => 'bool',   'default' => '1' ],
-        self::PREF_WTHB_ADMINVIEWPATCH     => [ 'type' => 'bool',   'default' => '1' ],
-        self::PREF_JS_DEBUG_CONSOLE        => [ 'type' => 'bool',   'default' => '0' ],
-        self::PREF_WTHB_STD_LINK           => [ 'type' => 'string', 'default' => self::STDLINK_WTHB ], // url
-        self::PREF_GENWIKI_LINK            => [ 'type' => 'string', 'default' => self::STDLINK_GENWIKI ], // url
-        self::PREF_WTHB_TRANSLATE          => [ 'type' => 'int',    'default' => '1' ], // triple-state. 0=off, 1=user defined, 2=on
-        self::PREF_LINKSPP_ACTIVE          => [ 'type' => 'bool',   'default' => '1' ],
-        self::PREF_LINKSPP_JS              => [ 'type' => 'string', 'default' => '' ],
-        self::PREF_LINKSPP_OPEN_IN_NEW_TAB => [ 'type' => 'bool',   'default' => '1' ],
-        self::PREF_MD_ACTIVE               => [ 'type' => 'bool',   'default' => '1' ],
-        self::PREF_MD_IMG_ACTIVE           => [ 'type' => 'bool',   'default' => '1' ],
-        self::PREF_MD_IMG_STDCLASS         => [ 'type' => 'string', 'default' => self::STDCLASS_MD_IMG ], // css class name
-        self::PREF_MD_IMG_TITLE_STDCLASS   => [ 'type' => 'string', 'default' => self::STDCLASS_MD_IMG_TITLE ], // css class name
-        self::PREF_MDE_ACTIVE              => [ 'type' => 'bool',   'default' => '1' ],
-        self::PREF_MD_EXT_ACTIVE           => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_HOME_LINK_TYPE            => [ 'type' => 'int',    'default' => '1' ], // triple-state, 0=off, 1=tree, 2=my-page
+        self::PREF_HOME_LINK_JSON            => [ 'type' => 'string', 'default' => '' ], // json object { '*': stylerules-string, 'theme': stylerules-string}
+        self::PREF_WTHB_ACTIVE               => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_WTHB_SUBCONTEXT           => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_WTHB_TOCNSEARCH           => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_WTHB_FAICON               => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_WTHB_UPDATE               => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_WTHB_ADMINVIEWPATCH       => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_JS_DEBUG_CONSOLE          => [ 'type' => 'bool',   'default' => '0' ],
+        self::PREF_WTHB_STD_LINK             => [ 'type' => 'string', 'default' => self::STDLINK_WTHB ], // url
+        self::PREF_GENWIKI_LINK              => [ 'type' => 'string', 'default' => self::STDLINK_GENWIKI ], // url
+        self::PREF_WTHB_TRANSLATE            => [ 'type' => 'int',    'default' => '1' ], // triple-state. 0=off, 1=user defined, 2=on
+        self::PREF_LINKSPP_ACTIVE            => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_LINKSPP_JS                => [ 'type' => 'string', 'default' => '' ],
+        self::PREF_LINKSPP_OPEN_IN_NEW_TAB   => [ 'type' => 'bool',   'default' => '1' ],
+        // markdown
+        self::PREF_MD_ACTIVE                 => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_MD_IMG_ACTIVE             => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_MD_IMG_STDCLASS           => [ 'type' => 'string', 'default' => self::STDCLASS_MD_IMG ], // css class name
+        self::PREF_MD_IMG_TITLE_STDCLASS     => [ 'type' => 'string', 'default' => self::STDCLASS_MD_IMG_TITLE ], // css class name
+        self::PREF_MDE_ACTIVE                => [ 'type' => 'bool',   'default' => '1' ],
+        // markdown extensions
+        self::PREF_MD_EXT_ACTIVE             => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_MD_EXT_STRIKE_ACTIVE      => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_MD_EXT_DL_ACTIVE          => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_MD_EXT_MARK_ACTIVE        => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_MD_EXT_FN_ACTIVE          => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_MD_EXT_FN_BACKREF_CHAR    => [ 'type' => 'string', 'default' => '↩' ],
+        self::PREF_MD_EXT_FN_ADD_HR          => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_MD_EXT_TOC_ACTIVE         => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_MD_EXT_TOC_PERMALINK_CHAR => [ 'type' => 'string', 'default' => '#' ],
+        self::PREF_MD_EXT_TOC_STYLE          => [ 'type' => 'string', 'default' => 'bullet' ],
+        self::PREF_MD_EXT_TOC_NORMALIZE      => [ 'type' => 'string', 'default' => 'flat' ],
+        self::PREF_MD_EXT_TOC_POS            => [ 'type' => 'string', 'default' => 'placeholder' ],
+        self::PREF_MD_EXT_TOC_PLACEHOLDER    => [ 'type' => 'string', 'default' => '[TOC]'],
+        self::PREF_MD_EXT_TOC_CSSCLASS       => [ 'type' => 'string', 'default' => 'md-toc' ],
     ];
 
     private array|null $prefs_cache = null;
@@ -449,11 +481,13 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                     $docReadyJs .= 'window.LEhelp = "' . e(route('module', ['module' => $this->name(), 'action' => 'helpmd'])) . '";';
 
                     $options = [
-                        'href'     => $cfg_link_active,
-                        'src'      => $cfg_md_img_active,
-                        'ext'      => $cfg_md_ext_active,
-                        'ext_mark' => $this->canActivateHighlightExtension(),
-                        'todo'     => version_compare(Webtrees::VERSION, '2.2.5', '>='),
+                        'href'       => $cfg_link_active,
+                        'src'        => $cfg_md_img_active,
+                        'ext'        => $cfg_md_ext_active,
+                        'ext_mark'   => $this->canActivateHighlightExtension(),
+                        'ext_fn'     => $this->getPref(self::PREF_MD_EXT_FN_ACTIVE, true),
+                        'ext_strike' => $this->getPref(self::PREF_MD_EXT_STRIKE_ACTIVE, true),
+                        'todo'       => version_compare(Webtrees::VERSION, '2.2.5', '>='),
                     ];                    
                     $docReadyJs .= "LinkEnhMod.installMDE(" . json_encode($options) . ");";
                 }
@@ -647,6 +681,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
     public function canActivateHighlightExtension(): bool {
         return ($this->getPref(self::PREF_MD_EXT_ACTIVE, true) 
+            && $this->getPref(self::PREF_MD_EXT_MARK_ACTIVE, true)
             && class_exists('\\League\\CommonMark\\Extension\\Highlight\\HighlightExtension', true));
     }
 
@@ -805,13 +840,19 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         // resources/views/edit/shared-note.phtml doesn't include < ?= view('modals/ajax') ? >
         // see also app/Http/RequestHandlers/HelpText.php
         //$topic = $request->getAttribute('topic');
-        $cfg_md_img_active = $this->getPref(self::PREF_MD_IMG_ACTIVE, true);
-        $cfg_md_ext_active = $this->getPref(self::PREF_MD_EXT_ACTIVE, true);
         $title = /*I18N: webtrees.pot */ I18N::translate('Help') . ' - Markdown';
+        $mdsyntax = Utils::getMarkdownHelpExamples(
+            Validator::attributes($request)->string('base_url'),
+            $this->getPref(self::PREF_MD_EXT_ACTIVE, true),
+            $this->canActivateHighlightExtension(),
+            $this->getPref(self::PREF_MD_EXT_STRIKE_ACTIVE, true),
+            $this->getPref(self::PREF_MD_EXT_DL_ACTIVE, true),
+            $this->getPref(self::PREF_MD_EXT_FN_ACTIVE, true)
+        );
         $text  = view($this->name() . '::help-md', [
             'link_active'       => $this->getPref(self::PREF_LINKSPP_ACTIVE, true),
-            'mdimg_active'      => $cfg_md_img_active,
-            'mdsyntax'          => Utils::getMarkdownHelpExamples(Validator::attributes($request)->string('base_url'), $cfg_md_ext_active, $this->canActivateHighlightExtension()),
+            'mdimg_active'      => $this->getPref(self::PREF_MD_IMG_ACTIVE, true),
+            'mdsyntax'          => $mdsyntax,
             'mdimg_css_class1'  => $this->getPref(self::PREF_MD_IMG_STDCLASS),
             'mdimg_css_class2'  => $this->getPref(self::PREF_MD_IMG_TITLE_STDCLASS)
         ]);

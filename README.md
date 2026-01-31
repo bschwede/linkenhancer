@@ -40,7 +40,8 @@ Additionally there are some goodies more or less related with links:
 ### Enhanced links
 Although webtrees replaces [XREFs](https://wiki.genealogy.net/GEDCOM/XREF_ID) such as `@I2@` in notes with a **cross-reference** and it's appropriate display name, this is not so flexible. You can't determine the display name. Unfortunately, this does not work in the HTML block on the start page if you want to refer to a data record in the continuous text without inserting absolute references (such absolute references could be entered in the source code of the HTML block as follows, for example: `<a href="https://mytree.somewhere/tree/mytree/individual/I2">Jon Doe</a>`).
 
-**Hint:** The custom module [webtrees-mitalteli-show-xref](https://github.com/elysch/webtrees-mitalteli-show-xref) can help you find the XREF reference of personal data records.
+> [!TIP]
+> The custom module [webtrees-mitalteli-show-xref](https://github.com/elysch/webtrees-mitalteli-show-xref) can help you find the XREF reference of personal data records.
 
 The enhanced links function is implemented via Javascript and searches in the rendered output of webtrees for `<a>` tags whose href attribute values begin with `#@`. This way it is possible to handle links in markdown and html markup. Because it is processed in the browser on client side, the existence of the cross-referenced data records in webtrees is not checked in advance. Errors only occur when the link is clicked (e. g. if the access to the ressource is restricted).
 
@@ -178,14 +179,17 @@ Besides syntax highlighting it ships with an icon bar for common format commands
 
 <a name="mdext"></a>
 #### Markdown Extensions
+> [!WARNING]
+> Please keep in mind when using this extensions, you are deviating from the smallest common markdown dialect set.
+> If the library used to render markdown in HTML needs to be changed for any reason, there is a possibility that not all of the extended markup used here will be supported. (see also [#32](https://github.com/bschwede/linkenhancer/issues/32#issuecomment-3761130124)).
+> Since the markup is not so intrusive, the impact should not be so serious – of course, it does not look so nice.
+
 The package [League\CommonMarkdown](https://commonmark.thephpleague.com/) used for processing Markdown texts offers several useful extensions that can be activated optionally:
 - [Strikethrough](https://commonmark.thephpleague.com/2.x/extensions/strikethrough/) - see also fisharebest/webtrees#5113
 - [Description Lists](https://commonmark.thephpleague.com/2.x/extensions/description-lists/)
 - [Footnotes](https://commonmark.thephpleague.com/2.x/extensions/footnotes/)
 - [Highlight](https://commonmark.thephpleague.com/2.x/extensions/highlight/) (available with CommonMark v2.8.0 / webtrees v2.2.5)
-
-**Warning**: Please keep in mind when using this extensions, you are deviating from the standard/smallest common markdown dialect set (CommonMark).
-If the library used to render markdown in HTML needs to be changed for any reason, there is a possibility that the markup used here will not be supported (see also [#32](https://github.com/bschwede/linkenhancer/issues/32#issuecomment-3761130124)).
+- [Table of contents](https://commonmark.thephpleague.com/2.x/extensions/table-of-contents/)
 
 
 <a name="wthb"></a>

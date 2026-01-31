@@ -107,7 +107,14 @@ class LinkEnhancerUtils { // misc helper functions
      * @param string $base_url
      * @return array
      */
-    public static function getMarkdownHelpExamples(string $base_url, bool $mdext_active = false, bool $mdext_highlight_active = false): array
+    public static function getMarkdownHelpExamples(
+        string $base_url, 
+        bool $mdext_active = false,
+        bool $mdext_highlight_active = false,
+        bool $mdext_strike_active = false,
+        bool $mdext_dl_active = false,
+        bool $mdext_fn_active = false
+    ): array
     {
         $public_url = $base_url . '/public/apple-touch-icon.png';
 
@@ -128,7 +135,7 @@ class LinkEnhancerUtils { // misc helper functions
                 'html' => '<code>' . I18N::translate('format as code') . '</code>'
             ]
         ];
-        if ($mdext_active) {
+        if ($mdext_active && $mdext_strike_active) {
             array_push($mdsyntax,
                 [
                     'md' => '~~' . I18N::translate('strikethrough') . '~~',
@@ -136,7 +143,7 @@ class LinkEnhancerUtils { // misc helper functions
                 ],
             );
         }
-        if ($mdext_highlight_active) {
+        if ($mdext_active && $mdext_highlight_active) {
             array_push(
                 $mdsyntax,
                 [
@@ -164,14 +171,18 @@ class LinkEnhancerUtils { // misc helper functions
                 'html' => "<ol>\n" . str_repeat('  <li>' . I18N::translate('Numbered list') . "</li>\n", 2) . '</ol>'
             ]
         );
-        if ($mdext_active) {
+        if ($mdext_active && $mdext_dl_active) {
             array_push($mdsyntax,
                 [
                     'md' => I18N::translate('Term') . "\n: "
                         . /*I18N: webtrees.pot */I18N::translate('Definition'),
                     'html' => "<dl>\n  <dt>" . I18N::translate('Term') . "</dt>\n  <dd>" 
                         . /*I18N: webtrees.pot */I18N::translate('Definition') . "</dd>\n</dl>"
-                ],
+                ]
+            );
+        }
+        if ($mdext_active && $mdext_fn_active) {
+            array_push($mdsyntax,
                 [
                     'md' => I18N::translate('Text with a footnote reference') . "[^note1]\n\n[^note1]: " . I18N::translate('Footnote text'),
                     'html' => "<p>" . I18N::translate('Text with a footnote reference') . "<sup id=\"fnref_note1__\"><a class=\"footnote-ref\" href=\"#\">1</a></sup></p>\n\n<div class=\"footnotes\"><hr>\n<ol>\n  <li id=\"fn_note1__\" class=\"footnote\"><p>" . I18N::translate('Footnote text') . " <a class=\"footnote-backref\" href=\"#\">↩</a></p></li>\n</ol></div>"
