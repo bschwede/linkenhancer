@@ -32,6 +32,7 @@ Additionally there are some goodies more or less related with links:
 
 - The note textarea can be a [**visual markdown editor**](#mde) with **markdown help**.
 - Enabling further [**markdown extensions**](#mdext).
+- Take control over [**table cell height**](#mdtdh) of longer markdown notes.
 - [**Context sensitive help links**](#wthb) to the [german webtrees manual](https://wiki.genealogy.net/Webtrees_Handbuch) can be activated in the small menu at the top of the page and for subcontext topics on the page. Furthermore, full-text search is supported and it is possible to browse the table of contents.
 - The [**site title can be a link**](#homelink) to the tree homepage or the user my page.
 - A few minor [**patches**](#patches), that can applied by bash script (not necessary for this module).
@@ -182,15 +183,25 @@ Besides syntax highlighting it ships with an icon bar for common format commands
 > [!WARNING]
 > Please keep in mind when using this extensions, you are deviating from the smallest common markdown dialect set.
 > If the library used to render markdown in HTML needs to be changed for any reason, there is a possibility that not all of the extended markup used here will be supported. (see also [#32](https://github.com/bschwede/linkenhancer/issues/32#issuecomment-3761130124)).
-> Since the markup is not so intrusive, the impact should not be so serious – of course, it does not look so nice.
+> Since the markup is not intrusive, the impact should not be serious – of course, it's a minor drawback.
 
 The package [League\CommonMarkdown](https://commonmark.thephpleague.com/) used for processing Markdown texts offers several useful extensions that can be activated optionally:
 - [Strikethrough](https://commonmark.thephpleague.com/2.x/extensions/strikethrough/) - see also fisharebest/webtrees#5113
 - [Description Lists](https://commonmark.thephpleague.com/2.x/extensions/description-lists/)
 - [Footnotes](https://commonmark.thephpleague.com/2.x/extensions/footnotes/)
 - [Highlight](https://commonmark.thephpleague.com/2.x/extensions/highlight/) (available with CommonMark v2.8.0 / webtrees v2.2.5)
-- [Table of contents](https://commonmark.thephpleague.com/2.x/extensions/table-of-contents/)
+- [Table of contents](https://commonmark.thephpleague.com/2.x/extensions/table-of-contents/) along with [Heading Permalinks](https://commonmark.thephpleague.com/2.x/extensions/heading-permalinks/)
 
+You can activate all or a few selected of these extensions. As far as possible they are of course integrated with the markdown editor and you find additional information in the markdown help.
+
+<a name="mdtdh"></a>
+#### Table cell height control
+For longer markdown note texts it's sometimes a pain to scroll through if you are interested in the next facts beneath them at the moment. This feature should come in handy here: By activating the checkbox in the top right corner of the title cell (first table column), the maximum height of the content cell with the long note is set to about 80% of the view port height. This makes the content itself scrollable.
+Where applicable, the function can be activated by default (or simply made available) and can also be deactivated independently.
+
+![Markdown table cell height control](resources/img/screenshot_markdown-td-height.png)
+
+In combination with the table of contents extension (position = dropdown), you can navigate through the text easily - assuming the text is structured with headings.
 
 <a name="wthb"></a>
 ### German webtrees manual
