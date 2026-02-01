@@ -39,7 +39,7 @@ const findCssRule = (selector, property) => {
 }
 
 
-const  parseCssValue = (cssValue, relativeToVh = window.innerHeight) => {
+const parseCssValue = (cssValue, relativeToVh = window.innerHeight) => {
     if (cssValue.includes('vh')) {
         return parseFloat(cssValue) / 100 * relativeToVh;
     }
@@ -47,6 +47,40 @@ const  parseCssValue = (cssValue, relativeToVh = window.innerHeight) => {
         return parseFloat(cssValue);
     }
     return Infinity; // none, auto, etc.
+}
+
+const gotoTop = (refElement = null) => {
+    if (!refElement) {
+        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+        return;
+    }
+
+    // TreeWalker über refElement SELBST und alle Kinder
+    const walker = document.createTreeWalker(
+        refElement,
+        NodeFilter.SHOW_ELEMENT,
+        {
+            acceptNode(node) {
+                const el = node;
+                return (el.offsetParent !== null && el.getClientRects().length > 0)
+                    ? NodeFilter.FILTER_ACCEPT
+                    : NodeFilter.FILTER_SKIP;
+            }
+        }
+    );
+
+    // ERSTES sichtbares Element (inkl. refElement selbst)
+    const firstVisible = walker.nextNode();
+
+    if (firstVisible) {
+        firstVisible.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+            inline: 'nearest'
+        });
+    } else {
+        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    }
 }
 
 const uniqueRefs = (idPrefix) => {
@@ -182,9 +216,15 @@ const initMd = (options) => {
     if (OPTS.ext_toc ?? false) {
         // table of contents / heading permalink - prefix declared for CommonMark HeadingPermalinkExtension in Factories/CustomMarkdownFactory.php
         uniqueRefs('mdnote-');
+
+        // goto top of cell (with toc in dropdown)
+        $("button.gototop").on("click", (e) => {
+            gotoTop(e.target.closest("td"));
+        });
+
     }
 
-    if (OPTS.td_h_ctrl ?? false) {
+    if (OPTS.td_h_ctrl ?? false) { // cell height control
         initTdHCtrl();
         initTdHObserver();
     }

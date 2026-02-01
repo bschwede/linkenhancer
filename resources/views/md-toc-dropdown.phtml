@@ -16,12 +16,14 @@ $toctitle = I18N::translate('Table of contents');
 if (!isset($menuheader) || $menuheader !== null) {
     $menuheader = $toctitle;
 }
+$gototitle = I18N::translate('Goto top of cell content');
 //$module = Registry::container()->get(LinkEnhancerModule::class);
 
 ?>
 <div class="<?= LinkEnhancerModule::STDCLASS_MD_STICKY_WRAPPER ?> me-3">
-    <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button"
+    <div class="dropdown btn-group">
+        <button class="btn btn-secondary gototop" type="button" title="<?= e($gototitle) ?>"><i class="fa-solid fa-arrow-up"></i></button>
+        <button class="btn btn-secondary dropdown-toggle dropdown-toggle-split" type="button"
             data-bs-toggle="dropdown" aria-expanded="false"
             title="<?= e($toctitle) ?>">
             <i class="fa-solid fa-bars"></i>
