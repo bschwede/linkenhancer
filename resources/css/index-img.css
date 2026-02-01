@@ -76,6 +76,51 @@ h6:hover .heading-permalink,
     color: #777;
 }
 
+/* stick checkbox or toc to the top of a container */
+.md-sticky-wrapper {
+  background: rgba(255, 255, 255, 0.1) !important;
+  position: sticky !important; /* position-sticky */
+  z-index: 3 !important; /* z-3 */
+  top: 0 !important; /* top-0 */
+}
+
+[dir="ltr"] .md-sticky-wrapper {
+  text-align: right;
+}
+[dir="rtl"] .md-sticky-wrapper {
+  text-align: left;
+}
+
+[dir="ltr"] ul.md-toc-wo-marker, ol.md-toc-wo-marker {
+  padding-left: 0.2em;
+}
+[dir="rtl"] ul.md-toc-wo-marker, ol.md-toc-wo-marker {
+  padding-right: 0.2em;
+}
+
+
+/* toc dropdown */
+.md-toc-dropdown {
+  max-height: 70vh; /* dropdown-menu: 90vh */
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+  padding: 0.5rem;
+}
+[dir="ltr"] .md-toc-dropdown ol, .md-toc-dropdown ul {
+  padding-left: 1.0rem;
+}
+[dir="rtl"] .md-toc-dropdown ol, .md-toc-dropdown ul {
+  padding-right: 1.0rem;
+}
+
+
+.md-toc-wo-marker, .md-toc-wo-marker ul, .md-toc-wo-marker ol {
+  list-style: none;
+}
+.md-toc-wo-marker li {
+  margin-inline: 0.5rem;
+}
+
 /* flat inline toc */
 ol.md-toc-inline, ul.md-toc-inline {
     list-style: none;
@@ -103,6 +148,12 @@ ol.md-toc-inline li::after, ul.md-toc-inline li::after {
 
 ol.md-toc-inline li:last-child::after, ul.md-toc-inline li:last-child::after {
     content: "";
+}
+
+.md-td-heightctrl {
+  max-height: 80vh;
+  overflow: auto;
+  display: grid;
 }
 
 

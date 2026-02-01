@@ -429,6 +429,7 @@ $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li>
                         </div>
                         
                         <!-- md extension - toc style --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_TOC_STYLE; ?>
+<section id="md-toc-style">
                         <div class="row mt-2 mb-1">
                             <div class="col-3 d-flex align-items-center justify-content-start mt-1">
                                 <label for="<?= e($prefId) ?>" class="me-1 mb-0"> <?= I18N::translate('Style') ?></label>
@@ -441,6 +442,7 @@ $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li>
                                 ]) ?>
                             </div>
                         </div>
+</section>
 
                         <!-- md extension - toc position --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_TOC_POS; ?>
                         <div class="row mt-2 mb-1">
@@ -480,7 +482,7 @@ $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li>
                                 <input class="form-control" type="text" id="<?= e($prefId) ?>" name="<?= e($prefId) ?>" value="<?= e($prefs[$prefId]) ?>">
                             </div>
                             <div class="col-5 d-flex align-items-start justify-content-start form-text">
-                                <?= I18N::translate('Example') ?>:&nbsp;&nbsp; <code>md-toc float-end</code>
+                                <?= I18N::translate('Example') ?>:&nbsp;&nbsp; <code>float-end</code>
                             </div>
                         </div>
 
@@ -832,7 +834,9 @@ $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li>
             toggleSectionByRadio('options' + secIdx, secName, 'disabled-w-text');
         });
 
-        [['<?= LinkEnhancerModule::PREF_MD_EXT_TOC_POS; ?>', 'pos-is-placeholder', [ 'placeholder' ], false ]].forEach( (elem) => {
+        [['<?= LinkEnhancerModule::PREF_MD_EXT_TOC_POS; ?>', 'pos-is-placeholder', [ 'placeholder' ], false ],
+        ['<?= LinkEnhancerModule::PREF_MD_EXT_TOC_NORMALIZE; ?>', 'md-toc-style', [ 'flat-inline' ], true ]
+        ].forEach( (elem) => {
             [selname, secId, cvalues, dii ] = elem;
             ((selname, secId, cvalues, dii=true) => {
                 $(`select[name='${selname}']`).on("change", () => {toggleSectionBySelectSingle(secId, selname, 'disabled', cvalues, dii)});

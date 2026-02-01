@@ -26,6 +26,7 @@ namespace Schwendinger\Webtrees\Module\LinkEnhancer\Factories;
 
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\CommonMark\LeImageRenderer;
+use Schwendinger\Webtrees\Module\LinkEnhancer\CommonMark\LeTableOfContentsRenderer;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Tree;
 use Fisharebest\Webtrees\CommonMark\CensusTableExtension;
@@ -33,8 +34,9 @@ use Fisharebest\Webtrees\CommonMark\XrefExtension;
 use Fisharebest\Webtrees\Factories\MarkdownFactory;
 use League\CommonMark\MarkdownConverter;
 use League\CommonMark\Environment\Environment;
-use League\CommonMark\Extension\CommonMark\Node\Inline\Image;
 use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
+use League\CommonMark\Extension\CommonMark\Node\Inline\Image;
+use League\CommonMark\Extension\CommonMark\Renderer\Block\ListBlockRenderer;
 use League\CommonMark\Extension\DescriptionList\DescriptionListExtension;
 use League\CommonMark\Extension\Footnote\FootnoteExtension;
 use League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkExtension;
@@ -42,6 +44,7 @@ use League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkExtension;
 use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
 use League\CommonMark\Extension\Table\TableExtension;
 use League\CommonMark\Extension\TableOfContents\TableOfContentsExtension;
+use League\CommonMark\Extension\TableOfContents\Node\TableOfContents;
 
 
 enum ExtensionSettingOption {
@@ -63,17 +66,21 @@ class CustomMarkdownFactory extends MarkdownFactory {
         return match($option) {
             ExtensionSettingOption::TOC_STYLE => [
                 'bullet'  => I18N::translate('unordered, bulleted list') . ' (<ul>)',
-                'ordered' => I18N::translate('ordered list') . ' (<ol>)'
+                'ordered' => I18N::translate('ordered list') . ' (<ol>)',
+                'none'    => I18N::translate('list without marker') //addon: css class = list-style-type: none
             ],
             ExtensionSettingOption::TOC_POSITION => [
-                'top'             => I18N::translate('Insert at the very top of the document, before any content'),
+                // is not useful with shared notes that are nested on level 2 or above, because content of first line is used to create a summary
+                //'top'             => I18N::translate('Insert at the very top of the document, before any content'), 
                 'before-headings' => I18N::translate('Insert just before the very first heading'),
+                'dropdown'        => I18N::translate('Insert just before the very first heading') . ' (Bootstrap dropdown)', // addon: bootstrap drop-down menu
                 'placeholder'     => I18N::translate('Location is manually defined by a placeholder'),
             ],
             ExtensionSettingOption::TOC_NORMALIZE => [
-                'relative' => I18N::translate('applies nesting, but handles edge cases'),
-                'flat'     => I18N::translate('a flat, single-level list'),
-                'as-is'    => I18N::translate('nesting exactly as headings occur within the document'),
+                'relative'    => I18N::translate('applies nesting, but handles edge cases'),
+                'flat'        => I18N::translate('a flat, single-level list'),
+                'flat-inline' => I18N::translate('a flat, single-level list') . ' (' . I18N::translate('inline') . ')', // addon: like flat and with disply=flex
+                'as-is'       => I18N::translate('nesting exactly as headings occur within the document'),
             ]
         };
     }
@@ -122,14 +129,74 @@ class CustomMarkdownFactory extends MarkdownFactory {
         if ($this->module->getPref(LinkEnhancerModule::PREF_MD_EXT_TOC_ACTIVE, true)) {
             $extensionclasses[] = HeadingPermalinkExtension::class;
             $extensionclasses[] = TableOfContentsExtension::class;
+            
+            $dropdown = false;
+            // sanitize parameter
+            // - html classes
+            $html_user_class = $this->module->getPref(LinkEnhancerModule::PREF_MD_EXT_TOC_CSSCLASS);
+            $user_classes = explode(' ', $html_user_class);
+            $user_classes = array_diff($user_classes, [
+                LinkEnhancerModule::STDCLASS_MD_TOC,
+                LinkEnhancerModule::STDCLASS_MD_TOC_INLINE,
+                LinkEnhancerModule::STDCLASS_MD_TOC_DROPDOWN,
+                LinkEnhancerModule::STDCLASS_MD_STICKY_WRAPPER,
+            ]);
+            $html_user_class = implode(' ', $user_classes);
+            $std_classes = [LinkEnhancerModule::STDCLASS_MD_TOC];
+
+            // - normalize
+            $normalize = $this->module->getPref(LinkEnhancerModule::PREF_MD_EXT_TOC_NORMALIZE);
+            $normalize = in_array($normalize, array_keys($this->getExtensionSettingOptions(ExtensionSettingOption::TOC_NORMALIZE))) 
+                ? $normalize 
+                : LinkEnhancerModule::PREFERENCES_SCHEMA[LinkEnhancerModule::PREF_MD_EXT_TOC_NORMALIZE]['default'];
+
+            // - position
+            $position = $this->module->getPref(LinkEnhancerModule::PREF_MD_EXT_TOC_POS);
+            $position = in_array($position, array_keys($this->getExtensionSettingOptions(ExtensionSettingOption::TOC_POSITION)))
+                ? $position
+                : LinkEnhancerModule::PREFERENCES_SCHEMA[LinkEnhancerModule::PREF_MD_EXT_TOC_POS]['default'];
+
+            // - style
+            $style = $this->module->getPref(LinkEnhancerModule::PREF_MD_EXT_TOC_STYLE);
+            $style = in_array($style, array_keys($this->getExtensionSettingOptions(ExtensionSettingOption::TOC_STYLE)))
+                ? $style
+                : LinkEnhancerModule::PREFERENCES_SCHEMA[LinkEnhancerModule::PREF_MD_EXT_TOC_STYLE]['default'];
+
+            
+            // handle addon parameter values
+            if ($normalize === 'flat-inline') {
+                $normalize = 'flat';
+                $std_classes[] = LinkEnhancerModule::STDCLASS_MD_TOC_INLINE;
+                $style = 'bullet';
+            }
+
+            if ($style === 'none') {
+                $style = 'bullet';
+                $std_classes[] = LinkEnhancerModule::STDCLASS_MD_TOC_WO_MARKER;
+            }
+
+            if ($position === 'dropdown') {
+                $dropdown = true;
+                $position = 'before-headings';
+                $std_classes[] = LinkEnhancerModule::STDCLASS_MD_TOC_DROPDOWN;
+            }
+
+            // compose html class
+            $html_std_class = implode(' ', $std_classes);
+            $html_class = trim(implode(' ', [$html_std_class, $html_user_class]));
+
             $config['table_of_contents'] = [ // see https://commonmark.thephpleague.com/2.x/extensions/table-of-contents/
-                'html_class' => $this->module->getPref(LinkEnhancerModule::PREF_MD_EXT_TOC_CSSCLASS),
-                'position' => $this->module->getPref(LinkEnhancerModule::PREF_MD_EXT_TOC_POS),
-                'style' => $this->module->getPref(LinkEnhancerModule::PREF_MD_EXT_TOC_STYLE),
+                'html_class' => $html_class,
+                'position' => $position,
+                'style' => $style,
                 'min_heading_level' => 1,
                 'max_heading_level' => 6,
-                'normalize' => $this->module->getPref(LinkEnhancerModule::PREF_MD_EXT_TOC_NORMALIZE),
+                'normalize' => $normalize,
                 'placeholder' => $this->module->getPref(LinkEnhancerModule::PREF_MD_EXT_TOC_PLACEHOLDER),
+            ];
+            $config['table_of_contents_addon'] = [
+                'dropdown' => $dropdown,
+                'search'   => false,
             ];
             $config['heading_permalink'] = [ // used by toc-ext -  see https://commonmark.thephpleague.com/2.x/extensions/heading-permalinks/
                 'html_class' => 'heading-permalink',
@@ -178,6 +245,16 @@ class CustomMarkdownFactory extends MarkdownFactory {
         if (isset($config['_extensions']) && is_array($config['_extensions'])) {
             foreach ($config['_extensions'] as $class) {
                 $environment->addExtension(new $class());
+                if ($class === TableOfContentsExtension::class) {
+                    $environment->addRenderer(
+                        TableOfContents::class, 
+                        new LeTableOfContentsRenderer(new ListBlockRenderer(), 
+                            $this->module, 
+                            $config['table_of_contents_addon']
+                        ),
+                        10
+                    );
+                }
             }
         }
 
@@ -205,7 +282,14 @@ class CustomMarkdownFactory extends MarkdownFactory {
         $html = $converter->convert($markdown)->getContent();
 
         // The markdown convert adds newlines, but not in a documented way.  Safest to ignore them.
-        $html =  strtr($html, ["\n" => '']); //return
+        $html = rtrim($html, "\n"); // fisharebest/webtrees#5295 rendering of markdown code blocks lacked \n
+
+        // wrap content with section tags
+        if ($html !== '') {
+            //TODO if toc enabled, replace placeholder with empty string
+            $class = LinkEnhancerModule::STDCLASS_MD_CONTENT;
+            $html = "<section class=\"$class\">$html</section>";
+        }
 
         return $html;
     }

@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Schwendinger\Webtrees\Module\LinkEnhancer;
 
+use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Webtrees;
 use Illuminate\Database\Capsule\Manager as DB;
 use Illuminate\Support\Collection;
@@ -42,6 +43,7 @@ Collection::make($filenames)
     });
 //---
 
+$module = null;
 $vesta_installed = class_exists("Cissee\WebtreesExt\AbstractModule", true);
 if ($vesta_installed) {
     $vesta_active = (bool) (
@@ -52,7 +54,9 @@ if ($vesta_installed) {
         ) === 'enabled'
     );
     if ($vesta_active) {
-        return new LinkEnhancerModuleExt(true);
+        $module = new LinkEnhancerModuleExt(true);
     }
 }
-return new LinkEnhancerModule();
+$module = $module ?? new LinkEnhancerModule();
+Registry::container()->set(LinkEnhancerModule::class, $module);
+return $module;

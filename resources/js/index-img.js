@@ -11,7 +11,8 @@ const uniqueRefs = (idPrefix) => {
         if (idCount > 1) {
             let elems = document.querySelectorAll(`[id="${baseId}"]`);
             for (let nthElem = 1; nthElem < idCount; nthElem++) {
-                let noteElem = elems[nthElem].closest('div.wt-fact-notes, td > div:not(.footnotes), td'); // div.wt-fact-notes - notes for names on INDI page
+                //let noteElem = elems[nthElem].closest('div.wt-fact-notes, td > div:not(.footnotes), td'); // div.wt-fact-notes - notes for names on INDI page
+                let noteElem = elems[nthElem].closest('section.md-content'); // see LinkEnhancerModule::STDCLASS_MD_CONTENT
                 if (noteElem) {
                     let newId = `${baseId}_${nthElem}`;
                     let newHref = `#${newId}`;

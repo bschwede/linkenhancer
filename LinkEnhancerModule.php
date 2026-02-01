@@ -121,8 +121,14 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     
 
     public const STDCLASS_HOME_LINK = 'homelink';
+    public const STDCLASS_MD_CONTENT = 'md-content'; // section with rendered content; also used in index-img.js
     public const STDCLASS_MD_IMG = 'md-img';
     public const STDCLASS_MD_IMG_TITLE = 'md-img-title';
+    public const STDCLASS_MD_STICKY_WRAPPER = 'md-sticky-wrapper'; // for Bootstrap dropdown ()=> md-toc-dropdown.phtml) or height-control checkbox
+    public const STDCLASS_MD_TOC = 'md-toc';
+    public const STDCLASS_MD_TOC_WO_MARKER = 'md-toc-wo-marker';
+    public const STDCLASS_MD_TOC_INLINE = 'md-toc-inline';
+    public const STDCLASS_MD_TOC_DROPDOWN = 'md-toc-dropdown';
     public const STDLINK_GENWIKI = 'https://wiki.genealogy.net/';
     public const STDLINK_WTHB = 'https://wiki.genealogy.net/Webtrees_Handbuch';
     public const STDLINK_WTHB_TOC = 'https://wiki.genealogy.net/Webtrees_Handbuch/Verzeichnisse/Inhaltsverzeichnis';
