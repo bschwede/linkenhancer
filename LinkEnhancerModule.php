@@ -174,11 +174,11 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         self::PREF_MD_EXT_FN_ADD_HR          => [ 'type' => 'bool',   'default' => '1' ],
         self::PREF_MD_EXT_TOC_ACTIVE         => [ 'type' => 'bool',   'default' => '1' ],
         self::PREF_MD_EXT_TOC_PERMALINK_CHAR => [ 'type' => 'string', 'default' => '#' ],
-        self::PREF_MD_EXT_TOC_STYLE          => [ 'type' => 'string', 'default' => 'bullet' ],
-        self::PREF_MD_EXT_TOC_NORMALIZE      => [ 'type' => 'string', 'default' => 'flat' ],
-        self::PREF_MD_EXT_TOC_POS            => [ 'type' => 'string', 'default' => 'placeholder' ],
+        self::PREF_MD_EXT_TOC_STYLE          => [ 'type' => 'string', 'default' => 'none' ],
+        self::PREF_MD_EXT_TOC_NORMALIZE      => [ 'type' => 'string', 'default' => 'relative' ],
+        self::PREF_MD_EXT_TOC_POS            => [ 'type' => 'string', 'default' => 'dropdown' ],
         self::PREF_MD_EXT_TOC_PLACEHOLDER    => [ 'type' => 'string', 'default' => '[TOC]'],
-        self::PREF_MD_EXT_TOC_CSSCLASS       => [ 'type' => 'string', 'default' => 'md-toc' ],
+        self::PREF_MD_EXT_TOC_CSSCLASS       => [ 'type' => 'string', 'default' => '' ],
     ];
 
     private array|null $prefs_cache = null;
