@@ -285,6 +285,32 @@ $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li>
 
             <hr class="subdiv" />
 
+            <!-- table cell height control --><?php $prefId = LinkEnhancerModule::PREF_MD_TD_H_CTRL_TYPE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                            <?= I18N::translate('Table cell height control') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= view('components/radios-inline', [
+                            'id' => $prefId,
+                            'name' => $prefId,
+                            'options' => [
+                                /*I18N: webtrees.pot */ I18N::translate('no'),
+                                /*I18N: */ I18N::translate('available') . ' (' . I18N::translate('disabled') . ')',
+                                /*I18N: */ I18N::translate('available') . ' (' . I18N::translate('enabled') . ')',
+                            ],
+                            'selected' => (int) $prefs[$prefId]
+                        ]) ?>
+                        <div class="form-text">
+                            <?= I18N::translate('Toggle checkbox in order to set max-height and make longer content scrollable') ?>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <hr class="subdiv" />
+
             <!-- md extensions active --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_ACTIVE; ?>
             <fieldset class="form-group mb-4">
                 <div class="row">
