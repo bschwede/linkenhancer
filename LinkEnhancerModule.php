@@ -72,7 +72,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public const CUSTOM_AUTHOR = 'Bernd Schwendinger';
     public const GITHUB_USER = 'bschwede';
     public const CUSTOM_WEBSITE = 'https://github.com/' . self::GITHUB_USER . '/' . self::CUSTOM_MODULE . '/';
-    public const CUSTOM_VERSION = '1.2.3';
+    public const CUSTOM_VERSION = '1.2.4';
     public const CUSTOM_LAST = 'https://raw.githubusercontent.com/' . self::GITHUB_USER . '/' .
         self::CUSTOM_MODULE . '/main/latest-version.txt';
 
