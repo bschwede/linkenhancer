@@ -2,10 +2,10 @@
 /*
  * webtrees - linkenhancer (custom module)
  *
- * Copyright (C) 2025 Bernd Schwendinger
+ * Copyright (C) 2026 Bernd Schwendinger
  *
  * webtrees: online genealogy application
- * Copyright (C) 2025 webtrees development team.
+ * Copyright (C) 2026 webtrees development team.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -389,7 +389,7 @@ Beside English the following languages are available:
 <a name="license"></a>
 ## License
 
-* Copyright (C) 2025 Bernd Schwendinger
+* Copyright (C) 2026 Bernd Schwendinger
 * Derived from **webtrees** - Copyright 2025 webtrees development team.
 
 This program is free software: you can redistribute it and/or modify
