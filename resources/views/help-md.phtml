@@ -85,11 +85,11 @@ use Fisharebest\Webtrees\I18N;
     <?= /*I18N: MD img - sentence 2 */ I18N::translate('Technically the images are packed into a div container together with an image subtitle - which is also a link to the media data set for GEDCOM objects.') ?>
     <?= /*I18N: MD img - sentence 3 */ I18N::translate('The display can be customized as required using the following standard CSS classes or additional CSS classes.') ?>
 </p>
-<b>CSS</b>:<ul>
-    <li><u><?= I18N::translate('Markdown image container standard css class') ?>:</u>
+<b><?= I18N::translate('CSS class name(s)') ?></b>:<ul>
+    <li><u><?= I18N::translate('Markdown image container') ?>:</u>
     <?= $mdimg_css_class1 ? '<code>' . $mdimg_css_class1 . '</code>' : I18N::translate('not defined') ?>
     </li>
-    <li><u><?= I18N::translate('Markdown image title container standard css class') ?>:</u>
+    <li><u><?= I18N::translate('Markdown image title container') ?>:</u>
     <?= $mdimg_css_class2 ? '<code>' . $mdimg_css_class2 . '</code>' : I18N::translate('not defined') ?>
     </li>
 </ul>

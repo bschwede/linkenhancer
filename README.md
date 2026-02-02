@@ -32,6 +32,7 @@ Additionally there are some goodies more or less related with links:
 
 - The note textarea can be a [**visual markdown editor**](#mde) with **markdown help**.
 - Enabling further [**markdown extensions**](#mdext).
+- Take control over [**table cell height**](#mdtdh) of longer markdown notes.
 - [**Context sensitive help links**](#wthb) to the [german webtrees manual](https://wiki.genealogy.net/Webtrees_Handbuch) can be activated in the small menu at the top of the page and for subcontext topics on the page. Furthermore, full-text search is supported and it is possible to browse the table of contents.
 - The [**site title can be a link**](#homelink) to the tree homepage or the user my page.
 - A few minor [**patches**](#patches), that can applied by bash script (not necessary for this module).
@@ -40,7 +41,8 @@ Additionally there are some goodies more or less related with links:
 ### Enhanced links
 Although webtrees replaces [XREFs](https://wiki.genealogy.net/GEDCOM/XREF_ID) such as `@I2@` in notes with a **cross-reference** and it's appropriate display name, this is not so flexible. You can't determine the display name. Unfortunately, this does not work in the HTML block on the start page if you want to refer to a data record in the continuous text without inserting absolute references (such absolute references could be entered in the source code of the HTML block as follows, for example: `<a href="https://mytree.somewhere/tree/mytree/individual/I2">Jon Doe</a>`).
 
-**Hint:** The custom module [webtrees-mitalteli-show-xref](https://github.com/elysch/webtrees-mitalteli-show-xref) can help you find the XREF reference of personal data records.
+> [!TIP]
+> The custom module [webtrees-mitalteli-show-xref](https://github.com/elysch/webtrees-mitalteli-show-xref) can help you find the XREF reference of personal data records.
 
 The enhanced links function is implemented via Javascript and searches in the rendered output of webtrees for `<a>` tags whose href attribute values begin with `#@`. This way it is possible to handle links in markdown and html markup. Because it is processed in the browser on client side, the existence of the cross-referenced data records in webtrees is not checked in advance. Errors only occur when the link is clicked (e. g. if the access to the ressource is restricted).
 
@@ -178,15 +180,28 @@ Besides syntax highlighting it ships with an icon bar for common format commands
 
 <a name="mdext"></a>
 #### Markdown Extensions
+> [!WARNING]
+> Please keep in mind when using this extensions, you are deviating from the smallest common markdown dialect set.
+> If the library used to render markdown in HTML needs to be changed for any reason, there is a possibility that not all of the extended markup used here will be supported. (see also [#32](https://github.com/bschwede/linkenhancer/issues/32#issuecomment-3761130124)).
+> Since the markup is not intrusive, the impact should not be serious – of course, it's a minor drawback.
+
 The package [League\CommonMarkdown](https://commonmark.thephpleague.com/) used for processing Markdown texts offers several useful extensions that can be activated optionally:
 - [Strikethrough](https://commonmark.thephpleague.com/2.x/extensions/strikethrough/) - see also fisharebest/webtrees#5113
 - [Description Lists](https://commonmark.thephpleague.com/2.x/extensions/description-lists/)
 - [Footnotes](https://commonmark.thephpleague.com/2.x/extensions/footnotes/)
 - [Highlight](https://commonmark.thephpleague.com/2.x/extensions/highlight/) (available with CommonMark v2.8.0 / webtrees v2.2.5)
+- [Table of contents](https://commonmark.thephpleague.com/2.x/extensions/table-of-contents/) along with [Heading Permalinks](https://commonmark.thephpleague.com/2.x/extensions/heading-permalinks/)
 
-**Warning**: Please keep in mind when using this extensions, you are deviating from the standard/smallest common markdown dialect set (CommonMark).
-If the library used to render markdown in HTML needs to be changed for any reason, there is a possibility that the markup used here will not be supported (see also [#32](https://github.com/bschwede/linkenhancer/issues/32#issuecomment-3761130124)).
+You can activate all or a few selected of these extensions. As far as possible they are of course integrated with the markdown editor and you find additional information in the markdown help.
 
+<a name="mdtdh"></a>
+#### Table cell height control
+For longer markdown note texts it's sometimes a pain to scroll through if you are interested in the next facts beneath them at the moment. This feature should come in handy here: By activating the checkbox in the top right corner of the title cell (first table column), the maximum height of the content cell with the long note is set to about 80% of the view port height. This makes the content itself scrollable.
+Where applicable, the function can be activated by default (or simply made available) and can also be deactivated independently.
+
+![Markdown table cell height control](resources/img/screenshot_markdown-td-height.png)
+
+In combination with the table of contents extension (position = dropdown), you can navigate through the text easily - assuming the text is structured with headings.
 
 <a name="wthb"></a>
 ### German webtrees manual
@@ -195,7 +210,7 @@ If the library used to render markdown in HTML needs to be changed for any reaso
 A **context sensitive help link** to the [german webtrees manual](https://wiki.genealogy.net/Webtrees_Handbuch) can be added to the small navigation menu. Context links are also available for components on pages provided by custom extensions (e.g. on the individuals page, the start page or items in the main menu) – these can be identified by the i symbols in a circle.
 ![WTHB subcontext help](resources/img/screenshot_wthb-subcontext.png)
 
-If this feature is also required in the admin backend, patch P002 must be applied or at least the custom module [vesta_common](https://github.com/vesta-webtrees-2-custom-modules/vesta_common/tree/master) must be installed
+To ensure that this function is also available in the admin backend a modified version of [views/layouts/administration.phtml](https://github.com/fisharebest/webtrees/blob/main/resources/views/layouts/administration.phtml) must be registered. This module attempts to use the custom module [vesta_common](https://github.com/vesta-webtrees-2-custom-modules/vesta_common/tree/master) (if installed and enabled) or its own version of the view layout file. Alternatively, patch P002 could also be applied.
 
 If the webtrees page is displayed in a language other than german, it is possible to **open the webtrees manual URL via a translation service** ([Google Translate](https://translate.google.com/)). This can be enabled or disabled as a site setting or delegated to the visitor to decide.
 ![WTHB user setting](resources/img/screenshot_wthb-user-setting.png)

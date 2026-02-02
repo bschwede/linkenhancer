@@ -37,6 +37,7 @@ use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Session;
 use Fisharebest\Webtrees\Validator;
 use Fisharebest\Webtrees\View;
+use Fisharebest\Webtrees\Webtrees;
 use Fisharebest\Webtrees\Http\RequestHandlers\HomePage;
 use Fisharebest\Webtrees\Http\RequestHandlers\TreePage;
 use Fisharebest\Webtrees\Module\AbstractModule;
@@ -87,6 +88,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public const PREF_WTHB_LASTHASH = 'WTHB_LASTHASH'; // last csv hash used for import
     public const PREF_WTHB_STD_LINK = 'WTHB_STD_LINK'; // standard link to GenWiki "Webtrees Handbuch"
     public const PREF_WTHB_TRANSLATE = 'WTHB_TRANSLATE'; // use translation service for webtrees manual pages
+    public const PREF_WTHB_ADMINVIEWPATCH = 'WTHB_ADMINVIEWPATCH'; // register admin layout view
     public const PREF_JS_DEBUG_CONSOLE = 'JS_DEBUG_CONSOLE'; // console.debug with active route info; 0=off, 1=on
     public const PREF_GENWIKI_LINK = 'GENWIKI_LINK'; // base link to GenWiki
     
@@ -99,11 +101,36 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public const PREF_MD_IMG_STDCLASS = 'MD_IMG_STDCLASS'; // standard classname(s) for div wrapping img- and link-tag    
     public const PREF_MD_IMG_TITLE_STDCLASS = 'MD_IMG_TITLE_STDCLASS'; // standard classname(s) for picture subtitle
     public const PREF_MDE_ACTIVE = 'MDE_ACTIVE'; // enable markdown editor for note textareas
+
+    public const PREF_MD_TD_H_CTRL_TYPE = 'MD_TD_H_CTRL_ACTIVE'; // enable table cell height control
+
     public const PREF_MD_EXT_ACTIVE = 'MD_EXT_ACTIVE'; // enable markdown extensions
+    public const PREF_MD_EXT_STRIKE_ACTIVE = 'MD_EXT_STRIKE_ACTIVE'; // enable markdown extension - strikethrough
+    public const PREF_MD_EXT_DL_ACTIVE = 'MD_EXT_DL_ACTIVE'; // enable markdown extension - definition list
+    public const PREF_MD_EXT_MARK_ACTIVE = 'MD_EXT_MARK_ACTIVE'; // enable markdown extension - highlight
+    
+    public const PREF_MD_EXT_FN_ACTIVE = 'MD_EXT_FN_ACTIVE'; // enable markdown extension - footnotes
+    public const PREF_MD_EXT_FN_BACKREF_CHAR = 'MD_EXT_FN_BACKREF_CHAR'; // markdown extension - footnotes back reference symbol
+    public const PREF_MD_EXT_FN_ADD_HR = 'MD_EXT_FN_ADD_HR'; // markdown extension - footnotes add container hr
+    
+    public const PREF_MD_EXT_TOC_ACTIVE = 'MD_EXT_TOC_ACTIVE'; // enable markdown extension - table of contents
+    public const PREF_MD_EXT_TOC_PERMALINK_CHAR = 'MD_EXT_TOC_PERMALINK_CHAR'; // markdown extension - table of contents permalink symbol
+    public const PREF_MD_EXT_TOC_STYLE = 'MD_EXT_TOC_STYLE'; // markdown extension - table of contents style of list (bullet / ordered)
+    public const PREF_MD_EXT_TOC_NORMALIZE = 'MD_EXT_TOC_NORMALIZE'; // markdown extension - table of contentsnormalize method (flat, relative, as-is)
+    public const PREF_MD_EXT_TOC_POS = 'MD_EXT_TOC_POS'; // markdown extension - table of contents position
+    public const PREF_MD_EXT_TOC_PLACEHOLDER = 'MD_EXT_TOC_PLACEHOLDER'; // markdown extension - table of contents placeholder
+    public const PREF_MD_EXT_TOC_CSSCLASS = 'MD_EXT_TOC_CSSCLASS'; // markdown extension - table of contents additional css class name
+    
 
     public const STDCLASS_HOME_LINK = 'homelink';
+    public const STDCLASS_MD_CONTENT = 'md-content'; // section with rendered content; also used in index-img.js
     public const STDCLASS_MD_IMG = 'md-img';
     public const STDCLASS_MD_IMG_TITLE = 'md-img-title';
+    public const STDCLASS_MD_STICKY_WRAPPER = 'md-sticky-wrapper'; // for Bootstrap dropdown ()=> md-toc-dropdown.phtml) or height-control checkbox
+    public const STDCLASS_MD_TOC = 'md-toc';
+    public const STDCLASS_MD_TOC_WO_MARKER = 'md-toc-wo-marker';
+    public const STDCLASS_MD_TOC_INLINE = 'md-toc-inline';
+    public const STDCLASS_MD_TOC_DROPDOWN = 'md-toc-dropdown';
     public const STDLINK_GENWIKI = 'https://wiki.genealogy.net/';
     public const STDLINK_WTHB = 'https://wiki.genealogy.net/Webtrees_Handbuch';
     public const STDLINK_WTHB_TOC = 'https://wiki.genealogy.net/Webtrees_Handbuch/Verzeichnisse/Inhaltsverzeichnis';
@@ -114,35 +141,56 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
     public const HELP_SCHEMA_TARGET_VERSION = 2;
 
-    protected const DEFAULT_PREFERENCES = [
-        self::PREF_HOME_LINK_TYPE          => '1', //int triple-state, 0=off, 1=tree, 2=my-page
-        self::PREF_HOME_LINK_JSON          => '', // string; json object { '*': stylerules-string, 'theme': stylerules-string}
-        self::PREF_WTHB_ACTIVE             => '1', //bool
-        self::PREF_WTHB_SUBCONTEXT         => '1', //bool
-        self::PREF_WTHB_TOCNSEARCH         => '1', //bool
-        self::PREF_WTHB_FAICON             => '1', //bool
-        self::PREF_WTHB_UPDATE             => '1', //bool
-        self::PREF_JS_DEBUG_CONSOLE        => '0', //bool
-        self::PREF_WTHB_STD_LINK           => self::STDLINK_WTHB, //string
-        self::PREF_GENWIKI_LINK            => self::STDLINK_GENWIKI, //string
-        self::PREF_WTHB_TRANSLATE          => '1', //int triple-state. 0=off, 1=user defined, 2=on
-        self::PREF_LINKSPP_ACTIVE          => '1', //bool
-        self::PREF_LINKSPP_JS              => '',  //string
-        self::PREF_LINKSPP_OPEN_IN_NEW_TAB => '1', //bool
-        self::PREF_MD_ACTIVE               => '1', //bool
-        self::PREF_MD_IMG_ACTIVE           => '1', //bool
-        self::PREF_MD_IMG_STDCLASS         => self::STDCLASS_MD_IMG, //string
-        self::PREF_MD_IMG_TITLE_STDCLASS   => self::STDCLASS_MD_IMG_TITLE, //string
-        self::PREF_MDE_ACTIVE              => '1', //bool
-        self::PREF_MD_EXT_ACTIVE           => '1', //bool
+    protected const PREFERENCES_SCHEMA = [ //type=int|string|bool
+        self::PREF_HOME_LINK_TYPE            => [ 'type' => 'int',    'default' => '1' ], // triple-state, 0=off, 1=tree, 2=my-page
+        self::PREF_HOME_LINK_JSON            => [ 'type' => 'string', 'default' => '' ], // json object { '*': stylerules-string, 'theme': stylerules-string}
+        self::PREF_WTHB_ACTIVE               => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_WTHB_SUBCONTEXT           => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_WTHB_TOCNSEARCH           => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_WTHB_FAICON               => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_WTHB_UPDATE               => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_WTHB_ADMINVIEWPATCH       => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_JS_DEBUG_CONSOLE          => [ 'type' => 'bool',   'default' => '0' ],
+        self::PREF_WTHB_STD_LINK             => [ 'type' => 'string', 'default' => self::STDLINK_WTHB ], // url
+        self::PREF_GENWIKI_LINK              => [ 'type' => 'string', 'default' => self::STDLINK_GENWIKI ], // url
+        self::PREF_WTHB_TRANSLATE            => [ 'type' => 'int',    'default' => '1' ], // triple-state. 0=off, 1=user defined, 2=on
+        self::PREF_LINKSPP_ACTIVE            => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_LINKSPP_JS                => [ 'type' => 'string', 'default' => '' ],
+        self::PREF_LINKSPP_OPEN_IN_NEW_TAB   => [ 'type' => 'bool',   'default' => '1' ],
+        // markdown
+        self::PREF_MD_ACTIVE                 => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_MD_IMG_ACTIVE             => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_MD_IMG_STDCLASS           => [ 'type' => 'string', 'default' => self::STDCLASS_MD_IMG ], // css class name
+        self::PREF_MD_IMG_TITLE_STDCLASS     => [ 'type' => 'string', 'default' => self::STDCLASS_MD_IMG_TITLE ], // css class name
+        self::PREF_MDE_ACTIVE                => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_MD_TD_H_CTRL_TYPE         => [ 'type' => 'int',    'default' => '1'], // triple-state. 0=off, 1=available (default=off), 2=available (default=ON)
+        // markdown extensions
+        self::PREF_MD_EXT_ACTIVE             => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_MD_EXT_STRIKE_ACTIVE      => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_MD_EXT_DL_ACTIVE          => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_MD_EXT_MARK_ACTIVE        => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_MD_EXT_FN_ACTIVE          => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_MD_EXT_FN_BACKREF_CHAR    => [ 'type' => 'string', 'default' => '↩' ],
+        self::PREF_MD_EXT_FN_ADD_HR          => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_MD_EXT_TOC_ACTIVE         => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_MD_EXT_TOC_PERMALINK_CHAR => [ 'type' => 'string', 'default' => '#' ],
+        self::PREF_MD_EXT_TOC_STYLE          => [ 'type' => 'string', 'default' => 'none' ],
+        self::PREF_MD_EXT_TOC_NORMALIZE      => [ 'type' => 'string', 'default' => 'relative' ],
+        self::PREF_MD_EXT_TOC_POS            => [ 'type' => 'string', 'default' => 'dropdown' ],
+        self::PREF_MD_EXT_TOC_PLACEHOLDER    => [ 'type' => 'string', 'default' => '[TOC]'],
+        self::PREF_MD_EXT_TOC_CSSCLASS       => [ 'type' => 'string', 'default' => '' ],
     ];
+
+    private array|null $prefs_cache = null;
 
     protected WthbService $wthb;
 
-    public function __construct()
+    public function __construct(public readonly bool $vesta_common_enabled = false)
     {
-        $std_url = $this->getPref(self::PREF_WTHB_STD_LINK, self::STDLINK_WTHB);
-        $wiki_url = rtrim($this->getPref(self::PREF_GENWIKI_LINK, self::STDLINK_GENWIKI), '/') . '/';
+        $this->setName('_' . self::CUSTOM_MODULE . '_'); // need to be initialized before getPref is called; normally set in app/Services/ModuleService.php: $module->setName('_' . basename(dirname($filename)) . '_'); but in this case this is too late
+
+        $std_url = $this->getPref(self::PREF_WTHB_STD_LINK);
+        $wiki_url = rtrim($this->getPref(self::PREF_GENWIKI_LINK), '/') . '/';
 
         $this->wthb = new WthbService(
             self::HELP_TABLE, 
@@ -248,7 +296,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             function () {
                 $importOnUpdate = false;
                 $this_hash = null;
-                $cfg_wthb_update = boolval($this->getPref(self::PREF_WTHB_UPDATE));
+                $cfg_wthb_update = $this->getPref(self::PREF_WTHB_UPDATE, true);
                 if ($cfg_wthb_update) {
                     $csvfile = self::HELP_CSV;
                     if (file_exists($csvfile)) {
@@ -271,12 +319,19 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         // Register a namespace for our views.
         View::registerNamespace($this->name(), $this->resourcesFolder() . 'views/');
 
-        if (boolval($this->getPref(self::PREF_MD_ACTIVE))) {
+        if ($this->getPref(self::PREF_WTHB_ACTIVE, true) 
+            && $this->getPref(self::PREF_WTHB_ADMINVIEWPATCH, true)
+            && !$this->vesta_common_enabled) {
+            // register patched administration layout if vesta common is not available
+            View::registerCustomView('::layouts/administration', $this->name() . '::patched/layouts/administration');
+        }
+
+        if ($this->getPref(self::PREF_MD_ACTIVE, true)) {
             Registry::markdownFactory(new CustomMarkdownFactory($this));
         }
 
         $router = Registry::routeFactory()->routeMap();
-        if (boolval($this->getPref(self::PREF_LINKSPP_ACTIVE))) {
+        if ($this->getPref(self::PREF_LINKSPP_ACTIVE, true)) {
             $router->attach('', '/tree/{tree}', static function (Map $router) {
                 $router->get(GotoXrefAction::class, '/goto-xref/{xref}');
             });
@@ -292,20 +347,20 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
      */
     public function headContent(): string
     {
-        $cfg_home_type = intval($this->getPref(self::PREF_HOME_LINK_TYPE)); // 0=off, 1=Home, 2=My-Page
+        $cfg_home_type   = $this->getPref(self::PREF_HOME_LINK_TYPE, true); // 0=off, 1=Home, 2=My-Page
         $cfg_home_active = boolval($cfg_home_type);
-        $cfg_wthb_active = boolval($this->getPref(self::PREF_WTHB_ACTIVE));     
-        $cfg_link_active = boolval($this->getPref(self::PREF_LINKSPP_ACTIVE));
-        $cfg_md_active = boolval($this->getPref(self::PREF_MD_ACTIVE));
+        $cfg_wthb_active = $this->getPref(self::PREF_WTHB_ACTIVE, true);
+        $cfg_link_active = $this->getPref(self::PREF_LINKSPP_ACTIVE, true);
+        $cfg_md_active   = $this->getPref(self::PREF_MD_ACTIVE, true);
 
         if (!$cfg_home_active && !$cfg_wthb_active && ! $cfg_md_active && !$cfg_link_active) {
             return '';
         }
 
-        $cfg_md_editor_active = $cfg_md_active ? boolval($this->getPref(self::PREF_MDE_ACTIVE)) : false;
-        $cfg_md_img_active = $cfg_md_active ? boolval($this->getPref(self::PREF_MD_IMG_ACTIVE)) : false;
-        $cfg_md_ext_active = $cfg_md_active ? boolval($this->getPref(self::PREF_MD_EXT_ACTIVE)) : false;
-        $cfg_js_debug_console = boolval($this->getPref(self::PREF_JS_DEBUG_CONSOLE));
+        $cfg_md_editor_active = $cfg_md_active ? $this->getPref(self::PREF_MDE_ACTIVE, true) : false;
+        $cfg_md_img_active    = $cfg_md_active ? $this->getPref(self::PREF_MD_IMG_ACTIVE, true) : false;
+        $cfg_md_ext_active    = $cfg_md_active ? $this->getPref(self::PREF_MD_EXT_ACTIVE, true) : false;
+        $cfg_js_debug_console = $this->getPref(self::PREF_JS_DEBUG_CONSOLE, true);
 
 
         $request = Registry::container()->get(ServerRequestInterface::class);
@@ -328,7 +383,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         if ($cfg_wthb_active) {
             $bundleShortcuts[] = 'wthb';
 
-            $withSubcontext = boolval($this->getPref(self::PREF_WTHB_SUBCONTEXT));
+            $withSubcontext = $this->getPref(self::PREF_WTHB_SUBCONTEXT, true);
             $help = $this->wthb->getContextHelp($activeRouteInfo, $withSubcontext);
             if ($cfg_js_debug_console) {
                 $docReadyJs .= "console.debug('LE-Mod help rows:', " . json_encode($help['result']) . ");";
@@ -339,7 +394,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             $help_url = $help['help_url']; //gettype(value: $help) == 'string' ? $help : $help->first()->url;
             
             // link to Webtrees Manual in GenWiki or external link?
-            $wiki_url = $this->getPref(self::PREF_GENWIKI_LINK, self::STDLINK_GENWIKI);
+            $wiki_url = $this->getPref(self::PREF_GENWIKI_LINK);
             
             $options = [
                 'I18N' => [
@@ -349,12 +404,12 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                     'searchntoc'        => I18N::translate("Full-text search") . ' / ' . I18N::translate('Table of contents'),
                 ],
                 'help_url'     => $help_url,
-                'faicon'       => boolval($this->getPref(self::PREF_WTHB_FAICON)),
+                'faicon'       => $this->getPref(self::PREF_WTHB_FAICON, true),
                 'wiki_url'     => $wiki_url,
-                'dotranslate'  => intval($this->getPref(self::PREF_WTHB_TRANSLATE)), // 0=off, 1=user defined, 2=on
+                'dotranslate'  => $this->getPref(self::PREF_WTHB_TRANSLATE, true), // 0=off, 1=user defined, 2=on
                 'subcontext'   => $withSubcontext ? $help['subcontext'] : [],
                 'modal_url'    => route('module', ['module' => $this->name(), 'action' => 'helpwthb']),
-                'tocnsearch'   => boolval($this->getPref(self::PREF_WTHB_TOCNSEARCH)),
+                'tocnsearch'   => $this->getPref(self::PREF_WTHB_TOCNSEARCH, true),
             ];
 
             $initJs .= "LinkEnhMod.initWthb(" . json_encode($options) . ");";
@@ -385,7 +440,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             $url = $cfg_home_type == 1 ? route(TreePage::class, $params) : route(HomePage::class, $params);
             $docReadyJs .= '$(".wt-site-title").wrapInner(`<a class="' . self::STDCLASS_HOME_LINK .'" href="' . e($url) . '"></a>`);';
 
-            $cfg_home_link_json = trim($this->getPref(self::PREF_HOME_LINK_JSON));
+            $cfg_home_link_json = $this->getPref(self::PREF_HOME_LINK_JSON); // getPref returns trimmed string 
             if ($cfg_home_link_json) {
                 $theme_palette = $theme . ($palette ? "_{$palette}" : ''); // palette is also set with other themes than colors
                 $json = json_decode($cfg_home_link_json, true);
@@ -409,12 +464,12 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         if ($cfg_link_active) {
             $bundleShortcuts[] = 'le';
 
-            $lecfg = trim($this->getPref(self::PREF_LINKSPP_JS));
+            $lecfg = $this->getPref(self::PREF_LINKSPP_JS); // getPref returns trimmed string
             $lecfg = $lecfg != '' ? $lecfg : '{}';
 
             $options = [
                 'thisXref'     => Validator::attributes($request)->isXref()->string('xref', ''),
-                'openInNewTab' => boolval($this->getPref(self::PREF_LINKSPP_OPEN_IN_NEW_TAB)),
+                'openInNewTab' => $this->getPref(self::PREF_LINKSPP_OPEN_IN_NEW_TAB, true),
             ];
             $docReadyJs .= "LinkEnhMod.initLE($lecfg, " . json_encode($options) . ");";
         }
@@ -425,7 +480,16 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             if ($cfg_md_img_active || $cfg_md_ext_active) {
                 // markdown image support
                 $bundleShortcuts[] = 'img';
-                $docReadyJs .= "LinkEnhMod.initMd();";
+
+                $options = [
+                    'I18N' => [
+                        'limitheight'   => I18N::translate('Limit cell height'),
+                    ],                    
+                    'ext_fn'    => $this->getPref(self::PREF_MD_EXT_FN_ACTIVE, true),
+                    'ext_toc'   => $this->getPref(self::PREF_MD_EXT_TOC_ACTIVE, true),
+                    'td_h_ctrl' => $this->getPref(self::PREF_MD_TD_H_CTRL_TYPE, true),
+                ];
+                $docReadyJs .= "LinkEnhMod.initMd(" . json_encode($options) . ");";
             }
 
             if ($cfg_md_editor_active) {
@@ -435,10 +499,13 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                     $docReadyJs .= 'window.LEhelp = "' . e(route('module', ['module' => $this->name(), 'action' => 'helpmd'])) . '";';
 
                     $options = [
-                        'href'     => $cfg_link_active,
-                        'src'      => $cfg_md_img_active,
-                        'ext'      => $cfg_md_ext_active,
-                        'ext_mark' => $this->canActivateHighlightExtension(),
+                        'href'       => $cfg_link_active,
+                        'src'        => $cfg_md_img_active,
+                        'ext'        => $cfg_md_ext_active,
+                        'ext_mark'   => $this->canActivateHighlightExtension(),
+                        'ext_fn'     => $this->getPref(self::PREF_MD_EXT_FN_ACTIVE, true),
+                        'ext_strike' => $this->getPref(self::PREF_MD_EXT_STRIKE_ACTIVE, true),
+                        'todo'       => version_compare(Webtrees::VERSION, '2.2.5', '>='),
                     ];                    
                     $docReadyJs .= "LinkEnhMod.installMDE(" . json_encode($options) . ");";
                 }
@@ -457,10 +524,10 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
      * @return string
      */
     public function bodyContent(): string {
-        $cfg_md_active = boolval($this->getPref(self::PREF_MD_ACTIVE));
-        $cfg_md_editor_active = $cfg_md_active ? boolval($this->getPref(self::PREF_MDE_ACTIVE)) : false;
-        $cfg_wthb_active = boolval($this->getPref(self::PREF_WTHB_ACTIVE));
-        $cfg_wthb_tocnsearch = boolval($this->getPref(self::PREF_WTHB_TOCNSEARCH));
+        $cfg_md_active        = $this->getPref(self::PREF_MD_ACTIVE, true);
+        $cfg_md_editor_active = $cfg_md_active ? $this->getPref(self::PREF_MDE_ACTIVE, true) : false;
+        $cfg_wthb_active      = $this->getPref(self::PREF_WTHB_ACTIVE, true);
+        $cfg_wthb_tocnsearch  = $this->getPref(self::PREF_WTHB_TOCNSEARCH, true);
 
         $html = '';
         $needajax = false;
@@ -602,9 +669,14 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     {
         if (Validator::parsedBody($request)->string('save') === '1') {
 
-            $preferences = array_keys(self::DEFAULT_PREFERENCES);
+            $preferences = array_keys(self::PREFERENCES_SCHEMA);
             foreach ($preferences as $preference) {
-                $this->setPref($preference, trim(Validator::parsedBody($request)->string($preference)));
+                try {
+                    $value = trim(Validator::parsedBody($request)->string($preference));
+                    $this->setPref($preference, $value);
+                } catch (Exception $ex) { //Fisharebest\Webtrees\Http\Exceptions\HttpBadRequestException
+                    //TODO maybe compose warning flash message for preferences not found in request?!
+                }
             }
 
             FlashMessages::addMessage(/*I18N: webtrees.pot */ I18N::translate(
@@ -626,7 +698,8 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
 
     public function canActivateHighlightExtension(): bool {
-        return (boolval($this->getPref(self::PREF_MD_EXT_ACTIVE)) 
+        return ($this->getPref(self::PREF_MD_EXT_ACTIVE, true) 
+            && $this->getPref(self::PREF_MD_EXT_MARK_ACTIVE, true)
             && class_exists('\\League\\CommonMark\\Extension\\Highlight\\HighlightExtension', true));
     }
 
@@ -638,12 +711,37 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
      * @param string $setting_name
      * @param string $default
      *
-     * @return string
+     * @return mixed
      */
-    public function getPref(string $setting_name, string $default = ''): string
+    public function getPref(string $setting_name, bool $typecasted = false): mixed
     {
-        $result = $this->getPreference($setting_name, $default);
-        return trim(isset($result) && $result != '' ? $result : self::DEFAULT_PREFERENCES[$setting_name] ?? '');
+        if ($this->prefs_cache === null) {
+            $this->prefs_cache = $this->getAllPrefs();
+        }
+        $result = (array_key_exists($setting_name, $this->prefs_cache) ? $this->prefs_cache[$setting_name] : '');
+        
+        $value = trim(isset($result) && $result != '' ? $result : self::PREFERENCES_SCHEMA[$setting_name]['default'] ?? '');
+        if ($typecasted) {
+            $value = match (self::PREFERENCES_SCHEMA[$setting_name]['type']) {
+                'int' => intval($value),
+                'bool' => filter_var($value, FILTER_VALIDATE_BOOLEAN),
+                default => (string) $value,
+            };            
+        }
+        return $value;
+    }
+
+    /**
+     * Load all module settings as array.
+     *
+     * @return array
+     */    
+    public function getAllPrefs(): array {
+        $result = DB::table('module_setting')
+            ->where('module_name', '=', $this->name())
+            ->pluck('setting_value', 'setting_name')
+            ->toArray();
+        return $result;
     }
 
 
@@ -663,8 +761,14 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public function setPref(string $setting_name, string $setting_value): void
     {
         //allow user to blank a setting, also if we have a DEFAULT_PREFERENCE
-        $setting_value = ((self::DEFAULT_PREFERENCES[$setting_name] ?? false) && !$setting_value ? ' ' : $setting_value);
+        if (self::PREFERENCES_SCHEMA[$setting_name]['type'] === 'string') {
+            $setting_value = ((self::PREFERENCES_SCHEMA[$setting_name]['default'] ?? false) && !$setting_value ? ' ' : $setting_value);
+        }
+        
         $this->setPreference($setting_name, $setting_value);
+        if (is_array($this->prefs_cache)) {
+            $this->prefs_cache[$setting_name] = $setting_value;
+        }        
     }
 
 
@@ -681,7 +785,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         $response['title'] = $this->title();
         $response['description'] = $this->description();
 
-        $preferences = array_keys(self::DEFAULT_PREFERENCES);
+        $preferences = array_keys(self::PREFERENCES_SCHEMA);
         foreach ($preferences as $preference) {
             $response['prefs'][$preference] = $this->getPref($preference);
         }
@@ -736,6 +840,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             'trees_w_text' => $trees_w_text
         ];
 
+        $response['vesta_common_enabled'] = $this->vesta_common_enabled;
 
         return $response;
     }
@@ -753,13 +858,19 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         // resources/views/edit/shared-note.phtml doesn't include < ?= view('modals/ajax') ? >
         // see also app/Http/RequestHandlers/HelpText.php
         //$topic = $request->getAttribute('topic');
-        $cfg_md_img_active = boolval($this->getPref(self::PREF_MD_IMG_ACTIVE));
-        $cfg_md_ext_active = boolval($this->getPref(self::PREF_MD_EXT_ACTIVE));
         $title = /*I18N: webtrees.pot */ I18N::translate('Help') . ' - Markdown';
+        $mdsyntax = Utils::getMarkdownHelpExamples(
+            Validator::attributes($request)->string('base_url'),
+            $this->getPref(self::PREF_MD_EXT_ACTIVE, true),
+            $this->canActivateHighlightExtension(),
+            $this->getPref(self::PREF_MD_EXT_STRIKE_ACTIVE, true),
+            $this->getPref(self::PREF_MD_EXT_DL_ACTIVE, true),
+            $this->getPref(self::PREF_MD_EXT_FN_ACTIVE, true)
+        );
         $text  = view($this->name() . '::help-md', [
-            'link_active'       => boolval($this->getPref(self::PREF_LINKSPP_ACTIVE)),
-            'mdimg_active'      => $cfg_md_img_active,
-            'mdsyntax'          => Utils::getMarkdownHelpExamples(Validator::attributes($request)->string('base_url'), $cfg_md_ext_active, $this->canActivateHighlightExtension()),
+            'link_active'       => $this->getPref(self::PREF_LINKSPP_ACTIVE, true),
+            'mdimg_active'      => $this->getPref(self::PREF_MD_IMG_ACTIVE, true),
+            'mdsyntax'          => $mdsyntax,
             'mdimg_css_class1'  => $this->getPref(self::PREF_MD_IMG_STDCLASS),
             'mdimg_css_class2'  => $this->getPref(self::PREF_MD_IMG_TITLE_STDCLASS)
         ]);

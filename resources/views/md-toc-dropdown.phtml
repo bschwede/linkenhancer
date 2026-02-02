@@ -1,0 +1,38 @@
+<?php
+
+declare(strict_types=1);
+
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
+use Fisharebest\Webtrees\I18N;
+//use Fisharebest\Webtrees\Registry;
+
+/**
+ * @var string      $html
+ * @var string|null $menuheader
+ * 
+ */
+
+$toctitle = I18N::translate('Table of contents');
+if (!isset($menuheader) || $menuheader !== null) {
+    $menuheader = $toctitle;
+}
+$gototitle = I18N::translate('Goto top of cell content');
+//$module = Registry::container()->get(LinkEnhancerModule::class);
+
+?>
+<div class="<?= LinkEnhancerModule::STDCLASS_MD_STICKY_WRAPPER ?> me-3">
+    <div class="dropdown btn-group">
+        <button class="btn btn-secondary gototop" type="button" title="<?= e($gototitle) ?>"><i class="fa-solid fa-arrow-up"></i></button>
+        <button class="btn btn-secondary dropdown-toggle dropdown-toggle-split" type="button"
+            data-bs-toggle="dropdown" aria-expanded="false"
+            title="<?= e($toctitle) ?>">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="dropdown-menu dropdown-menu-end">
+        <?php if ($menuheader !== ''): ?>
+            <h6 class="dropdown-header"><?= $menuheader ?></h6>
+        <?php endif; ?>
+            <?= $html ?>
+        </div>
+    </div>
+</div>

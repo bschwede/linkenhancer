@@ -57,6 +57,106 @@
   visibility: visible;
 }
 
+/* heading / toc */
+.heading-permalink {
+    font-size: .8em;
+    vertical-align: super;
+    text-decoration: none;
+    color: transparent;
+}
+
+h1:hover .heading-permalink,
+h2:hover .heading-permalink,
+h3:hover .heading-permalink,
+h4:hover .heading-permalink,
+h5:hover .heading-permalink,
+h6:hover .heading-permalink,
+.heading-permalink:hover {
+    text-decoration: none;
+    color: #777;
+}
+
+/* stick checkbox or toc to the top of a container */
+.md-sticky-wrapper {
+  background: rgba(255, 255, 255, 0.1) !important;
+  position: sticky !important; /* position-sticky */
+  z-index: 3 !important; /* z-3 */
+  top: 0 !important; /* top-0 */
+}
+
+[dir="ltr"] .md-sticky-wrapper {
+  text-align: right;
+}
+[dir="rtl"] .md-sticky-wrapper {
+  text-align: left;
+}
+
+[dir="ltr"] ul.md-toc-wo-marker, ol.md-toc-wo-marker {
+  padding-left: 0.2em;
+}
+[dir="rtl"] ul.md-toc-wo-marker, ol.md-toc-wo-marker {
+  padding-right: 0.2em;
+}
+
+
+/* toc dropdown */
+.md-toc-dropdown {
+  max-height: 70vh; /* dropdown-menu: 90vh */
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+  padding: 0.5rem;
+}
+[dir="ltr"] .md-toc-dropdown ol, .md-toc-dropdown ul {
+  padding-left: 1.0rem;
+}
+[dir="rtl"] .md-toc-dropdown ol, .md-toc-dropdown ul {
+  padding-right: 1.0rem;
+}
+
+
+.md-toc-wo-marker, .md-toc-wo-marker ul, .md-toc-wo-marker ol {
+  list-style: none;
+}
+.md-toc-wo-marker li {
+  margin-inline: 0.5rem;
+}
+
+/* flat inline toc */
+ol.md-toc-inline, ul.md-toc-inline {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;     /* or: display: inline-flex; for flexible inline layout */
+    flex-direction: row;
+}
+ol.md-toc-inline::before, ul.md-toc-inline::before {
+  content: "[";
+}
+ol.md-toc-inline::after, ul.md-toc-inline::after {
+  content: "]";
+}
+ol.md-toc-inline li, ul.md-toc-inline li {
+    display: inline;   /* or: display: inline-block; for better control */
+    margin: 0 5px;     /* distance between items */
+}
+
+ol.md-toc-inline li::after, ul.md-toc-inline li::after {
+    content: " | ";
+    color: #ccc;
+    padding-left: 5px;
+}
+
+ol.md-toc-inline li:last-child::after, ul.md-toc-inline li:last-child::after {
+    content: "";
+}
+
+.md-td-heightctrl {
+  max-height: 80vh;
+  overflow: auto;
+  display: grid;
+}
+
+
 /* no extension - overwrite webtrees definition */
 blockquote {
   padding-left: 1.0em;
