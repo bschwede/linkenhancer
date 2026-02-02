@@ -55,7 +55,7 @@ const gotoTop = (refElement = null) => {
         return;
     }
 
-    // TreeWalker über refElement SELBST und alle Kinder
+    // refElement and children
     const walker = document.createTreeWalker(
         refElement,
         NodeFilter.SHOW_ELEMENT,
@@ -69,7 +69,6 @@ const gotoTop = (refElement = null) => {
         }
     );
 
-    // ERSTES sichtbares Element (inkl. refElement selbst)
     const firstVisible = walker.nextNode();
 
     if (firstVisible) {
@@ -95,7 +94,7 @@ const uniqueRefs = (idPrefix) => {
         if (idCount > 1) {
             let elems = document.querySelectorAll(`[id="${baseId}"]`);
             for (let nthElem = 1; nthElem < idCount; nthElem++) {
-                //let noteElem = elems[nthElem].closest('div.wt-fact-notes, td > div:not(.footnotes), td'); // div.wt-fact-notes - notes for names on INDI page
+                //it's easier now to detect md rendered content - before: let noteElem = elems[nthElem].closest('div.wt-fact-notes, td > div:not(.footnotes), td'); // div.wt-fact-notes - notes for names on INDI page
                 let noteElem = elems[nthElem].closest(mdsection_selector); // see LinkEnhancerModule::STDCLASS_MD_CONTENT
                 if (noteElem) {
                     let newId = `${baseId}_${nthElem}`;
@@ -134,7 +133,6 @@ const initTdHCtrl = () => {
         // register event handler for checkboxes
         const checkbox = firstTd.querySelector(td_h_selector);
         checkbox.addEventListener('change', function () {
-            // Ziel-TD (zweites Element) für Klassenanpassung
             const targetTdFromCheckbox = this.closest('tr').children[1];
             if (this.checked) {
                 if (targetTdFromCheckbox.classList.contains(td_h_class)) { // it's already under control
@@ -152,10 +150,7 @@ const initTdHCtrl = () => {
             }
             
             if (this.hasAttribute('data-triggered')) { // no scrolling on init
-                this.closest('tr').children[0].scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
+                gotoTop(this.closest('tr').children[1]); // always start with content top
             }
         });
 
@@ -186,13 +181,20 @@ const initTdHObserver = () => {
     function checkAndTriggerCheckboxes(node) { // trigger all checkboxes in a node when visible
         if (!(node instanceof Element)) return;
 
-        // checkVisibility() prüft echte Sichtbarkeit (inkl. opacity, display, etc.)
+        // checkVisibility() for real visibility (opacity, display, etc.)
         if (node.checkVisibility?.() || node.offsetParent !== null) {
             const checkboxes = node.querySelectorAll(td_h_selector);
             checkboxes.forEach(cb => {
                 if (!cb.hasAttribute('data-triggered')) {
                     cb.dispatchEvent(new Event('change', { bubbles: true }));
                     cb.setAttribute('data-triggered', 'true'); // only once per visibility cycle
+                } else { // for cases were init doesn't work properly (INDI page > note tab > show all notes)
+                    const targetTdFromCheckbox = cb.closest('tr').children[1];
+                    if (cb.checked && !targetTdFromCheckbox.classList.contains(td_h_class)) {
+                        cb.removeAttribute('data-triggered');
+                        cb.dispatchEvent(new Event('change', { bubbles: true }));
+                        cb.setAttribute('data-triggered', 'true');                       
+                    }
                 }
             });
         }
@@ -201,7 +203,8 @@ const initTdHObserver = () => {
     visibilityObserver.observe(document.body, {
         attributes: true,
         subtree: true,
-        attributeFilter: ['style', 'class', 'hidden']
+        attributeFilter: ['style', 'class'],
+        attributeOldValue: false,
     });    
 }
 
