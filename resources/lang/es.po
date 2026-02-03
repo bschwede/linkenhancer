@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-01 21:08+0100\n"
+"POT-Creation-Date: 2026-02-03 04:57+0100\n"
 "PO-Revision-Date: 2026-02-02 07:40+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -20,7 +20,7 @@ msgstr ""
 #. I18N: Settings - section title
 #: Services/WthbService.php:104 Services/WthbService.php:137
 #: Services/WthbService.php:266 resources/views/settings.phtml:538
-#: LinkEnhancerModule.php:401 LinkEnhancerModule.php:896
+#: LinkEnhancerModule.php:402 LinkEnhancerModule.php:907
 msgid "Webtrees manual"
 msgstr "Manual Webtrees"
 
@@ -532,17 +532,22 @@ msgstr ""
 "La visualización puede personalizarse como se desee utilizando las "
 "siguientes clases CSS estándar o clase CSS adicionales."
 
-#: resources/views/help-md.phtml:89
-msgid "Markdown image container standard css class"
-msgstr "Clase CSS estándar de contenedor de imágenes Markdown"
+#: resources/views/help-md.phtml:88 resources/views/settings.phtml:239
+#: resources/views/settings.phtml:505
+msgid "CSS class name(s)"
+msgstr "Nombre(s) de clase CSS"
+
+#: resources/views/help-md.phtml:89 resources/views/settings.phtml:246
+msgid "Markdown image container"
+msgstr "Contenedor de imágenes Markdown"
 
 #: resources/views/help-md.phtml:90 resources/views/help-md.phtml:93
 msgid "not defined"
 msgstr "sin definir"
 
-#: resources/views/help-md.phtml:92
-msgid "Markdown image title container standard css class"
-msgstr "Clase CSS estándar para el contenedor del título de imagen en Markdown"
+#: resources/views/help-md.phtml:92 resources/views/settings.phtml:257
+msgid "Markdown image title container"
+msgstr "Contenedor del título de imagen en Markdown"
 
 #. I18N: MD img code example 1
 #: resources/views/help-md.phtml:99
@@ -561,7 +566,7 @@ msgstr "imagen con altura, anchura y clase CSS adicional definidas"
 
 #: resources/views/md-toc-dropdown.phtml:15 resources/views/help-wthb.phtml:52
 #: resources/views/settings.phtml:435 resources/views/settings.phtml:569
-#: LinkEnhancerModule.php:404
+#: LinkEnhancerModule.php:405
 msgid "Table of contents"
 msgstr "Índice"
 
@@ -578,7 +583,7 @@ msgid "Goto section"
 msgstr "Ir a la sección"
 
 #: resources/views/help-wthb.phtml:36 resources/views/settings.phtml:569
-#: LinkEnhancerModule.php:404
+#: LinkEnhancerModule.php:405
 msgid "Full-text search"
 msgstr "Búsqueda de texto completo"
 
@@ -591,7 +596,7 @@ msgstr ""
 "el sitio web."
 
 #. I18N: wthb link user setting title
-#: resources/views/wthb-modal.phtml:11 LinkEnhancerModule.php:403
+#: resources/views/wthb-modal.phtml:11 LinkEnhancerModule.php:404
 msgid "Webtrees manual link - user setting"
 msgstr "Enlace manual de Webtrees - configuración del usuario"
 
@@ -753,14 +758,6 @@ msgstr ""
 msgid "Activate markdown image tweak?"
 msgstr "¿Activar el ajuste de imagen Markdown?"
 
-#: resources/views/settings.phtml:239 resources/views/settings.phtml:505
-msgid "CSS class name(s)"
-msgstr "Nombre(s) de clase CSS"
-
-#: resources/views/settings.phtml:246
-msgid "Markdown image container"
-msgstr "Contenedor de imágenes Markdown"
-
 #. I18N: Home link js
 #: resources/views/settings.phtml:252 resources/views/settings.phtml:264
 #: resources/views/settings.phtml:421 resources/views/settings.phtml:497
@@ -768,10 +765,6 @@ msgstr "Contenedor de imágenes Markdown"
 #: resources/views/settings.phtml:753
 msgid "Example"
 msgstr "Ejemplo"
-
-#: resources/views/settings.phtml:257
-msgid "Markdown image title container"
-msgstr "Contenedor del título de imagen en Markdown"
 
 #: resources/views/settings.phtml:292
 msgid "Table cell height control"
@@ -955,7 +948,7 @@ msgstr "Línea de datos"
 msgid "%s of %s assigned"
 msgstr "%s de %s asignados"
 
-#: resources/views/settings.phtml:675 LinkEnhancerModule.php:610
+#: resources/views/settings.phtml:675 LinkEnhancerModule.php:611
 msgid "Import registered routes"
 msgstr "Importar rutas registradas"
 
@@ -1024,12 +1017,12 @@ msgid "Enable for more options"
 msgstr "Habilitar para más opciones"
 
 #. I18N: Module title
-#: LinkEnhancerModule.php:209
+#: LinkEnhancerModule.php:210
 msgid "Link-Enhancer"
 msgstr "Mejorador de enlaces"
 
 #. I18N: Module description
-#: LinkEnhancerModule.php:219
+#: LinkEnhancerModule.php:220
 msgid ""
 "Cross-references to Gedcom datasets, Markdown editor, context-sensitive link "
 "to the GenWiki webtrees manual"
@@ -1037,13 +1030,20 @@ msgstr ""
 "Referencias a los conjuntos de datos GEDCOM, con el editor Markdown, a "
 "enlaces contextuales al manual GenWiki webtrees"
 
-#: LinkEnhancerModule.php:456
+#: LinkEnhancerModule.php:457
 msgid "Home link - JSON with CSS rules seems to be invalid."
 msgstr "El enlace de inicio JSON con reglas CSS, parece no ser válido."
 
-#: LinkEnhancerModule.php:486
+#: LinkEnhancerModule.php:487
 msgid "Limit cell height"
 msgstr "Limitar la altura de las celdas"
+
+#~ msgid "Markdown image container standard css class"
+#~ msgstr "Clase CSS estándar de contenedor de imágenes Markdown"
+
+#~ msgid "Markdown image title container standard css class"
+#~ msgstr ""
+#~ "Clase CSS estándar para el contenedor del título de imagen en Markdown"
 
 #, fuzzy
 #~ msgid "Skip to content"

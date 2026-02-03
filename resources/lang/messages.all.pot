@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-01 21:08+0100\n"
+"POT-Creation-Date: 2026-02-03 04:57+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,7 +20,7 @@ msgstr ""
 #. I18N: Settings - section title
 #: Services/WthbService.php:104 Services/WthbService.php:137
 #: Services/WthbService.php:266 resources/views/settings.phtml:538
-#: LinkEnhancerModule.php:401 LinkEnhancerModule.php:896
+#: LinkEnhancerModule.php:402 LinkEnhancerModule.php:907
 msgid "Webtrees manual"
 msgstr ""
 
@@ -163,8 +163,8 @@ msgid "Redo"
 msgstr ""
 
 #. I18N: webtrees.pot
-#: LinkEnhancerUtils.php:74 LinkEnhancerModule.php:402
-#: LinkEnhancerModule.php:861 LinkEnhancerModule.php:896
+#: LinkEnhancerUtils.php:74 LinkEnhancerModule.php:403
+#: LinkEnhancerModule.php:872 LinkEnhancerModule.php:907
 msgid "Help"
 msgstr ""
 
@@ -536,16 +536,21 @@ msgid ""
 "classes or additional CSS classes."
 msgstr ""
 
-#: resources/views/help-md.phtml:89
-msgid "Markdown image container standard css class"
+#: resources/views/help-md.phtml:88 resources/views/settings.phtml:239
+#: resources/views/settings.phtml:505
+msgid "CSS class name(s)"
+msgstr ""
+
+#: resources/views/help-md.phtml:89 resources/views/settings.phtml:246
+msgid "Markdown image container"
 msgstr ""
 
 #: resources/views/help-md.phtml:90 resources/views/help-md.phtml:93
 msgid "not defined"
 msgstr ""
 
-#: resources/views/help-md.phtml:92
-msgid "Markdown image title container standard css class"
+#: resources/views/help-md.phtml:92 resources/views/settings.phtml:257
+msgid "Markdown image title container"
 msgstr ""
 
 #. I18N: MD img code example 1
@@ -592,7 +597,7 @@ msgstr ""
 
 #: resources/views/md-toc-dropdown.phtml:15 resources/views/help-wthb.phtml:52
 #: resources/views/settings.phtml:435 resources/views/settings.phtml:569
-#: LinkEnhancerModule.php:404
+#: LinkEnhancerModule.php:405
 msgid "Table of contents"
 msgstr ""
 
@@ -609,7 +614,7 @@ msgid "Goto section"
 msgstr ""
 
 #: resources/views/help-wthb.phtml:36 resources/views/settings.phtml:569
-#: LinkEnhancerModule.php:404
+#: LinkEnhancerModule.php:405
 msgid "Full-text search"
 msgstr ""
 
@@ -630,7 +635,7 @@ msgid ""
 msgstr ""
 
 #. I18N: wthb link user setting title
-#: resources/views/wthb-modal.phtml:11 LinkEnhancerModule.php:403
+#: resources/views/wthb-modal.phtml:11 LinkEnhancerModule.php:404
 msgid "Webtrees manual link - user setting"
 msgstr ""
 
@@ -806,24 +811,12 @@ msgstr ""
 msgid "Activate markdown image tweak?"
 msgstr ""
 
-#: resources/views/settings.phtml:239 resources/views/settings.phtml:505
-msgid "CSS class name(s)"
-msgstr ""
-
-#: resources/views/settings.phtml:246
-msgid "Markdown image container"
-msgstr ""
-
 #. I18N: Home link js
 #: resources/views/settings.phtml:252 resources/views/settings.phtml:264
 #: resources/views/settings.phtml:421 resources/views/settings.phtml:497
 #: resources/views/settings.phtml:511 resources/views/settings.phtml:526
 #: resources/views/settings.phtml:753
 msgid "Example"
-msgstr ""
-
-#: resources/views/settings.phtml:257
-msgid "Markdown image title container"
 msgstr ""
 
 #: resources/views/settings.phtml:292
@@ -991,7 +984,7 @@ msgstr ""
 msgid "%s of %s assigned"
 msgstr ""
 
-#: resources/views/settings.phtml:675 LinkEnhancerModule.php:610
+#: resources/views/settings.phtml:675 LinkEnhancerModule.php:611
 msgid "Import registered routes"
 msgstr ""
 
@@ -1067,37 +1060,37 @@ msgid "Enable for more options"
 msgstr ""
 
 #. I18N: Module title
-#: LinkEnhancerModule.php:209
+#: LinkEnhancerModule.php:210
 msgid "Link-Enhancer"
 msgstr ""
 
 #. I18N: Module description
-#: LinkEnhancerModule.php:219
+#: LinkEnhancerModule.php:220
 msgid ""
 "Cross-references to Gedcom datasets, Markdown editor, context-sensitive link "
 "to the GenWiki webtrees manual"
 msgstr ""
 
-#: LinkEnhancerModule.php:456
+#: LinkEnhancerModule.php:457
 msgid "Home link - JSON with CSS rules seems to be invalid."
 msgstr ""
 
-#: LinkEnhancerModule.php:486
+#: LinkEnhancerModule.php:487
 msgid "Limit cell height"
 msgstr ""
 
 #. I18N: webtrees.pot
-#: LinkEnhancerModule.php:635
+#: LinkEnhancerModule.php:636
 msgid "Export failed"
 msgstr ""
 
 #. I18N: webtrees.pot
-#: LinkEnhancerModule.php:654
+#: LinkEnhancerModule.php:655
 msgid "Import failed"
 msgstr ""
 
 #. I18N: webtrees.pot
-#: LinkEnhancerModule.php:683
+#: LinkEnhancerModule.php:687
 #, php-format
 msgid "The preferences for the module “%s” have been updated."
 msgstr ""

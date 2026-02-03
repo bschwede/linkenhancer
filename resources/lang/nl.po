@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-01 21:08+0100\n"
+"POT-Creation-Date: 2026-02-03 04:57+0100\n"
 "PO-Revision-Date: 2026-02-02 07:40+0100\n"
 "Last-Translator: TheDutchJewel <thedutchjewel@gmail.com>\n"
 "Language-Team: TheDutchJewel\n"
@@ -20,7 +20,7 @@ msgstr ""
 #. I18N: Settings - section title
 #: Services/WthbService.php:104 Services/WthbService.php:137
 #: Services/WthbService.php:266 resources/views/settings.phtml:538
-#: LinkEnhancerModule.php:401 LinkEnhancerModule.php:896
+#: LinkEnhancerModule.php:402 LinkEnhancerModule.php:907
 msgid "Webtrees manual"
 msgstr "Webtreeshandleiding"
 
@@ -529,17 +529,22 @@ msgstr ""
 "De weergave kan naar wens worden aangepast met behulp van de volgende "
 "standaard CSS-klassen of aanvullende CSS-klassen."
 
-#: resources/views/help-md.phtml:89
-msgid "Markdown image container standard css class"
-msgstr "Markdown-afbeeldingscontainer standaard CSS-klasse"
+#: resources/views/help-md.phtml:88 resources/views/settings.phtml:239
+#: resources/views/settings.phtml:505
+msgid "CSS class name(s)"
+msgstr "CSS-klassenaam/klassennamen"
+
+#: resources/views/help-md.phtml:89 resources/views/settings.phtml:246
+msgid "Markdown image container"
+msgstr "Markdown-afbeeldingscontainer"
 
 #: resources/views/help-md.phtml:90 resources/views/help-md.phtml:93
 msgid "not defined"
 msgstr "niet gedefinieerd"
 
-#: resources/views/help-md.phtml:92
-msgid "Markdown image title container standard css class"
-msgstr "Markdown-afbeeldingstitelcontainer standaard CSS-klasse"
+#: resources/views/help-md.phtml:92 resources/views/settings.phtml:257
+msgid "Markdown image title container"
+msgstr "Markdown-afbeeldingstitelcontainer"
 
 #. I18N: MD img code example 1
 #: resources/views/help-md.phtml:99
@@ -558,7 +563,7 @@ msgstr "afbeelding met gedefinieerde hoogte, breedte en extra CSS-klasse"
 
 #: resources/views/md-toc-dropdown.phtml:15 resources/views/help-wthb.phtml:52
 #: resources/views/settings.phtml:435 resources/views/settings.phtml:569
-#: LinkEnhancerModule.php:404
+#: LinkEnhancerModule.php:405
 msgid "Table of contents"
 msgstr "Inhoudsopgave"
 
@@ -575,7 +580,7 @@ msgid "Goto section"
 msgstr "Ga naar sectie"
 
 #: resources/views/help-wthb.phtml:36 resources/views/settings.phtml:569
-#: LinkEnhancerModule.php:404
+#: LinkEnhancerModule.php:405
 msgid "Full-text search"
 msgstr "Volledige tekst zoeken"
 
@@ -588,7 +593,7 @@ msgstr ""
 "rechtstreeks naar de website."
 
 #. I18N: wthb link user setting title
-#: resources/views/wthb-modal.phtml:11 LinkEnhancerModule.php:403
+#: resources/views/wthb-modal.phtml:11 LinkEnhancerModule.php:404
 msgid "Webtrees manual link - user setting"
 msgstr "Webtreeshandleiding-link - gebruikersinstelling"
 
@@ -749,14 +754,6 @@ msgstr ""
 msgid "Activate markdown image tweak?"
 msgstr "Markdown-afbeeldingsaanpassing activeren?"
 
-#: resources/views/settings.phtml:239 resources/views/settings.phtml:505
-msgid "CSS class name(s)"
-msgstr "CSS-klassenaam/klassennamen"
-
-#: resources/views/settings.phtml:246
-msgid "Markdown image container"
-msgstr "Markdown-afbeeldingscontainer"
-
 #. I18N: Home link js
 #: resources/views/settings.phtml:252 resources/views/settings.phtml:264
 #: resources/views/settings.phtml:421 resources/views/settings.phtml:497
@@ -764,10 +761,6 @@ msgstr "Markdown-afbeeldingscontainer"
 #: resources/views/settings.phtml:753
 msgid "Example"
 msgstr "Voorbeeld"
-
-#: resources/views/settings.phtml:257
-msgid "Markdown image title container"
-msgstr "Markdown-afbeeldingstitelcontainer"
 
 #: resources/views/settings.phtml:292
 msgid "Table cell height control"
@@ -949,7 +942,7 @@ msgstr "Gegevensrijen"
 msgid "%s of %s assigned"
 msgstr "%s van %s toegewezen"
 
-#: resources/views/settings.phtml:675 LinkEnhancerModule.php:610
+#: resources/views/settings.phtml:675 LinkEnhancerModule.php:611
 msgid "Import registered routes"
 msgstr "Geregistreerde routes importeren"
 
@@ -1018,12 +1011,12 @@ msgid "Enable for more options"
 msgstr "Schakel in voor meer opties"
 
 #. I18N: Module title
-#: LinkEnhancerModule.php:209
+#: LinkEnhancerModule.php:210
 msgid "Link-Enhancer"
 msgstr "Link-verbeteraar"
 
 #. I18N: Module description
-#: LinkEnhancerModule.php:219
+#: LinkEnhancerModule.php:220
 msgid ""
 "Cross-references to Gedcom datasets, Markdown editor, context-sensitive link "
 "to the GenWiki webtrees manual"
@@ -1031,13 +1024,19 @@ msgstr ""
 "Kruisverwijzingen naar Gedcom-gegevenssets, Markdown-editor, "
 "contextgevoelige link naar de GenWiki-webtreeshandleiding"
 
-#: LinkEnhancerModule.php:456
+#: LinkEnhancerModule.php:457
 msgid "Home link - JSON with CSS rules seems to be invalid."
 msgstr "Startpagina-link - JSON met CSS-regels lijkt ongeldig te zijn."
 
-#: LinkEnhancerModule.php:486
+#: LinkEnhancerModule.php:487
 msgid "Limit cell height"
 msgstr "Beperk celhoogte"
+
+#~ msgid "Markdown image container standard css class"
+#~ msgstr "Markdown-afbeeldingscontainer standaard CSS-klasse"
+
+#~ msgid "Markdown image title container standard css class"
+#~ msgstr "Markdown-afbeeldingstitelcontainer standaard CSS-klasse"
 
 #, fuzzy
 #~ msgid "Skip to content"
