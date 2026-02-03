@@ -150,6 +150,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         self::PREF_WTHB_FAICON               => [ 'type' => 'bool',   'default' => '1' ],
         self::PREF_WTHB_UPDATE               => [ 'type' => 'bool',   'default' => '1' ],
         self::PREF_WTHB_ADMINVIEWPATCH       => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_WTHB_LASTHASH             => [ 'type' => 'string', 'default' => '' ],
         self::PREF_JS_DEBUG_CONSOLE          => [ 'type' => 'bool',   'default' => '0' ],
         self::PREF_WTHB_STD_LINK             => [ 'type' => 'string', 'default' => self::STDLINK_WTHB ], // url
         self::PREF_GENWIKI_LINK              => [ 'type' => 'string', 'default' => self::STDLINK_GENWIKI ], // url
@@ -669,7 +670,10 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     {
         if (Validator::parsedBody($request)->string('save') === '1') {
 
-            $preferences = array_keys(self::PREFERENCES_SCHEMA);
+            $preferences = array_diff(
+                array_keys(self::PREFERENCES_SCHEMA),
+                [ self::PREF_WTHB_LASTHASH ]
+            );
             foreach ($preferences as $preference) {
                 try {
                     $value = trim(Validator::parsedBody($request)->string($preference));
@@ -720,9 +724,14 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         }
         $result = (array_key_exists($setting_name, $this->prefs_cache) ? $this->prefs_cache[$setting_name] : '');
         
-        $value = trim(isset($result) && $result != '' ? $result : self::PREFERENCES_SCHEMA[$setting_name]['default'] ?? '');
+        $value = trim(
+            isset($result) && $result != ''
+                ? $result 
+                : (array_key_exists($setting_name, self::PREFERENCES_SCHEMA) ? (self::PREFERENCES_SCHEMA[$setting_name]['default'] ?? '') : '')
+        );
         if ($typecasted) {
-            $value = match (self::PREFERENCES_SCHEMA[$setting_name]['type']) {
+            $type  = (array_key_exists($setting_name, self::PREFERENCES_SCHEMA) ? (self::PREFERENCES_SCHEMA[$setting_name]['type'] ?? 'string') : 'string');
+            $value = match ($type) {
                 'int' => intval($value),
                 'bool' => filter_var($value, FILTER_VALIDATE_BOOLEAN),
                 default => (string) $value,
@@ -761,8 +770,10 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public function setPref(string $setting_name, string $setting_value): void
     {
         //allow user to blank a setting, also if we have a DEFAULT_PREFERENCE
-        if (self::PREFERENCES_SCHEMA[$setting_name]['type'] === 'string') {
+        if (array_key_exists($setting_name, self::PREFERENCES_SCHEMA) && (self::PREFERENCES_SCHEMA[$setting_name]['type'] ?? '') === 'string') {
             $setting_value = ((self::PREFERENCES_SCHEMA[$setting_name]['default'] ?? false) && !$setting_value ? ' ' : $setting_value);
+        } else {
+            $setting_value = (!$setting_value ? ' ' : $setting_value);
         }
         
         $this->setPreference($setting_name, $setting_value);
