@@ -103,6 +103,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public const PREF_MDE_ACTIVE = 'MDE_ACTIVE'; // enable markdown editor for note textareas
 
     public const PREF_MD_TD_H_CTRL_TYPE = 'MD_TD_H_CTRL_ACTIVE'; // enable table cell height control
+    public const PREF_MD_TD_H_CB_VISIBLE = 'MD_TD_H_CB_VISIBLE'; // set checkbox visiblity: always or on th:hover
 
     public const PREF_MD_EXT_ACTIVE = 'MD_EXT_ACTIVE'; // enable markdown extensions
     public const PREF_MD_EXT_STRIKE_ACTIVE = 'MD_EXT_STRIKE_ACTIVE'; // enable markdown extension - strikethrough
@@ -164,7 +165,8 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         self::PREF_MD_IMG_STDCLASS           => [ 'type' => 'string', 'default' => self::STDCLASS_MD_IMG ], // css class name
         self::PREF_MD_IMG_TITLE_STDCLASS     => [ 'type' => 'string', 'default' => self::STDCLASS_MD_IMG_TITLE ], // css class name
         self::PREF_MDE_ACTIVE                => [ 'type' => 'bool',   'default' => '1' ],
-        self::PREF_MD_TD_H_CTRL_TYPE         => [ 'type' => 'int',    'default' => '1'], // triple-state. 0=off, 1=available (default=off), 2=available (default=ON)
+        self::PREF_MD_TD_H_CTRL_TYPE         => [ 'type' => 'int',    'default' => '1' ], // triple-state. 0=off, 1=available (default=off), 2=available (default=ON)
+        self::PREF_MD_TD_H_CB_VISIBLE        => [ 'type' => 'bool', 'default' => '1' ],
         // markdown extensions
         self::PREF_MD_EXT_ACTIVE             => [ 'type' => 'bool',   'default' => '1' ],
         self::PREF_MD_EXT_STRIKE_ACTIVE      => [ 'type' => 'bool',   'default' => '1' ],
@@ -489,6 +491,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                     'ext_fn'    => $this->getPref(self::PREF_MD_EXT_FN_ACTIVE, true),
                     'ext_toc'   => $this->getPref(self::PREF_MD_EXT_TOC_ACTIVE, true),
                     'td_h_ctrl' => $this->getPref(self::PREF_MD_TD_H_CTRL_TYPE, true),
+                    'td_h_cb'   => $this->getPref(self::PREF_MD_TD_H_CB_VISIBLE, true),
                 ];
                 $docReadyJs .= "LinkEnhMod.initMd(" . json_encode($options) . ");";
             }

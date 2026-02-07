@@ -309,6 +309,22 @@ $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li>
                 </div>
             </fieldset>
 
+<section id="options2_td_h">
+            <!-- table cell height checkbox visiblity --><?php $prefId = LinkEnhancerModule::PREF_MD_TD_H_CB_VISIBLE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
+                        <?= I18N::translate('Checkbox always visible') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                        <div class="form-text">
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+</section>
+
             <hr class="subdiv" />
 
             <!-- md extensions active --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_ACTIVE; ?>
@@ -848,6 +864,7 @@ $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li>
         [['<?= LinkEnhancerModule::PREF_LINKSPP_ACTIVE; ?>', 1],
         ['<?= LinkEnhancerModule::PREF_MD_ACTIVE; ?>', 2],
         ['<?= LinkEnhancerModule::PREF_MD_IMG_ACTIVE; ?>', '2_1'],
+        ['<?= LinkEnhancerModule::PREF_MD_TD_H_CTRL_TYPE; ?>', '2_td_h'],
         ['<?= LinkEnhancerModule::PREF_MD_EXT_ACTIVE; ?>', '2_2'],
         ['<?= LinkEnhancerModule::PREF_MD_EXT_FN_ACTIVE; ?>', '2_2_fn'],
         ['<?= LinkEnhancerModule::PREF_MD_EXT_TOC_ACTIVE; ?>', '2_2_toc'],

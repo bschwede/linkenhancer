@@ -7,6 +7,7 @@ const getOptions = () => {
         ext_fn: true,
         ext_toc: true,
         td_h_ctrl: 1,
+        td_h_cb: true,
     }
 }
 let OPTS = getOptions();
@@ -115,8 +116,9 @@ const uniqueRefs = (idPrefix) => {
 
 const initTdHCtrl = () => {
     const checked = (OPTS.td_h_ctrl === 2) ? ' checked' : '';
+    const cbvis = (OPTS.td_h_cb ? '' : ' invisible');
     const title = escapeHtmlAttribute(OPTS.I18N.limitheight ?? '');
-    const html = `<div class="md-sticky-wrapper me-0 float-end"><input class="td-h-checker" type="checkbox" title="${title}"${checked}></div>`;
+    const html = `<div class="md-sticky-wrapper me-0 float-end${cbvis}"><input class="td-h-checker" type="checkbox" title="${title}"${checked}></div>`;
 
     [...new Set(
         Array.from(document.querySelectorAll(mdsection_selector))
