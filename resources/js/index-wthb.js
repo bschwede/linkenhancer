@@ -123,6 +123,52 @@ const newPopover = (el, options) => new window.bootstrap.Popover(
     );
 
 
+const createSafeFilter = (filterExpr) => { // a bit better than using eval - rollup doesn't like eval
+    // https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/Function/Function
+    const safeGlobals = {
+        document,
+        querySelectorAll: (sel) => Array.from(document.querySelectorAll(sel)),
+        find: Array.prototype.find.bind(Array.prototype),  // Bound for Arrays
+
+        // DOM-traversal as function (with this binding)
+        nextElementSibling: function (node) {
+            if (!(node instanceof Element)) {
+                throw new TypeError("'nextElementSibling' called on non-Element");
+            }
+            return node.nextElementSibling;
+        },
+        querySelector: function (parent, sel) {
+            if (!(parent instanceof Element)) {
+                throw new TypeError("'querySelector' called on non-Element");
+            }
+            return parent.querySelector(sel);
+        },
+
+        // helper functions
+        Array,
+        from: Array.from.bind(Array),
+
+        // jQuery
+        $: (sel) => Array.from(document.querySelectorAll(sel))
+    };
+
+    const fn = new Function(
+        ...Object.keys(safeGlobals),
+        `'use strict'; return (${filterExpr})`
+    );
+
+    return () => {
+        try {
+            return fn(...Object.values(safeGlobals));
+        } catch (e) {
+            console.error('LE-mod wthb subcontext filter error:', filterExpr);
+            console.error(e);
+            return null;
+        }
+    };
+}
+
+
 const insertWthbSubcontextLinks = (contexts) => {
     if (!Array.isArray(contexts) || contexts.length === 0) return;
     
@@ -139,7 +185,13 @@ const insertWthbSubcontextLinks = (contexts) => {
         if (ctx.startsWith('{')) { // JSON object: {f:filter, e:JS, p:position} e or f needed, p optional
             try {
                 let ctxobj = JSON.parse(ctx);
-                node = jQuery(ctxobj?.e ? eval(ctxobj.e) : (ctxobj?.f ?? null));
+                if (ctxobj?.e ?? null) {
+                    const filterFn = createSafeFilter(ctxobj.e);
+                    const result = filterFn();
+                    node = jQuery(Array.isArray(result) ? result[0] : result);
+                } else {
+                    node = jQuery((ctxobj?.f ?? null));
+                }               
                 pos = ctxobj?.p ?? pos;
             } catch (e) {
                 console.warn('LE-mod wthb subcontext:', ctx, e);
