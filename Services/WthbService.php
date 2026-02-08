@@ -37,6 +37,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Illuminate\Database\Capsule\Manager as DB;
+use Illuminate\Database\Query\Builder;
 use Exception;
 use Fisharebest\Webtrees\Exceptions\FileUploadException;
 
@@ -334,9 +335,17 @@ class WthbService { // stuff related to webtrees manual link handling
                         });
                 })
                 ->orderBy('order');
-            
-            $sql = $query->toRawSql();
-            
+
+            // prevent "RuntimeException: Strings with null bytes cannot be escaped. Use the binary escape option"
+            // thrown when using Builder->toRawSql() in combination with bindings, where string values contain null bytes
+            Builder::macro('toRawSqlSafe', function () {
+                $bindings = $this->getBindings();
+                $sanitizedBindings = array_map(fn($b) => is_string($b) ? str_replace("\0", "", $b) : $b, $bindings);
+                $grammar = $this->getGrammar();
+                return $grammar->substituteBindingsIntoRawSql($this->toSql(), $sanitizedBindings);
+            });
+            $sql = $query->toRawSqlSafe();
+
             $result = $query
                 ->get()
                 ->map(function ($obj) use ($std_url, $wiki_url): mixed { // complete url by appending prefix to url path - also external url are possible
