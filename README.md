@@ -194,6 +194,9 @@ The package [League\CommonMarkdown](https://commonmark.thephpleague.com/) used f
 
 You can activate all or a few selected of these extensions. As far as possible they are of course integrated with the markdown editor and you find additional information in the markdown help.
 
+Footnotes can be placed near their references (there can be one or many references to one footnote) or everywhere you want. For the overview, it is advisable to place them at the bootom. When rendering, the footnote container resides at the end of the content.
+If your text is structured with headings, it is a good choice to activate the table of contents extension. The table of contents is generated automatically and included into the content above the very first heading or instead of a placeholder.
+
 <a name="mdtdh"></a>
 #### Table cell height control
 For longer markdown note texts it's sometimes a pain to scroll through if you are interested in the next facts beneath them at the moment. This feature should come in handy here: By activating the checkbox in the top right corner of the title cell (first table column), the maximum height of the content cell with the long note is set to about 80% of the view port height. This makes the content itself scrollable.
@@ -202,6 +205,8 @@ Where applicable, the function can be activated by default (or simply made avail
 ![Markdown table cell height control](resources/img/screenshot_markdown-td-height.png)
 
 In combination with the table of contents extension (position = dropdown), you can navigate through the text easily - assuming the text is structured with headings.
+
+You can decide, if the checkbox is always visible or hidden until you hover the fact title cell with the mouse cursor. If the text length of the content cell doesn't exceed the defined maximum height, the checkbox can not be activated.
 
 <a name="wthb"></a>
 ### German webtrees manual
@@ -216,6 +221,10 @@ If the webtrees page is displayed in a language other than german, it is possibl
 ![WTHB user setting](resources/img/screenshot_wthb-user-setting.png)
 The settings dialogue can be accessed via the popover of the help link in the top menu. When this option is enabled, you will also find a link to a dialogue box that displays a **full-text search** in the german webtrees manual (using various search engines) and the **table of contents**.
 ![WTHB full-text search and toc](resources/img/screenshot_wthb-help.png)
+
+> [!NOTE]
+> This module comes with a local copy of the german webtrees manual **table of contents**. An automatic update is not implemented so far.
+> If you wish to update it without updating this module, you can use the utility script [update-wthb-toc.sh](util/update-wthb-toc.sh).
 
 
 The **mapping of routes to help articles** in the manual is stored in the database table `route_help_map`. This module comes with predefined mapping rules. If there is something missing or you find an issue, don't hesitate to share it. I'll include it in the next release. 
@@ -273,8 +282,6 @@ Further more you can import and export data in csv format in order to make chang
 ![admin page data table](resources/img/screenshot_admin-page-data-table.png)
 
 In case of discrepancies the context help can be more easily adjusted by activating the option "Output of debug information on the JS console". This provides you with information on the active route and, if applicable, data table entries found for matching routing to help topics.
-
-This module comes with a local copy of the german webtrees manual **table of contents**. An automatic update is not implemented so far. If you wish to update it without updating this module, you can use the utility script [update-wthb-toc.sh](util/update-wthb-toc.sh).
 
 
 <a name="homelink"></a>
