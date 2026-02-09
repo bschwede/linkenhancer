@@ -166,7 +166,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         self::PREF_MD_IMG_TITLE_STDCLASS     => [ 'type' => 'string', 'default' => self::STDCLASS_MD_IMG_TITLE ], // css class name
         self::PREF_MDE_ACTIVE                => [ 'type' => 'bool',   'default' => '1' ],
         self::PREF_MD_TD_H_CTRL_TYPE         => [ 'type' => 'int',    'default' => '1' ], // triple-state. 0=off, 1=available (default=off), 2=available (default=ON)
-        self::PREF_MD_TD_H_CB_VISIBLE        => [ 'type' => 'bool', 'default' => '1' ],
+        self::PREF_MD_TD_H_CB_VISIBLE        => [ 'type' => 'bool',   'default' => '1' ],
         // markdown extensions
         self::PREF_MD_EXT_ACTIVE             => [ 'type' => 'bool',   'default' => '1' ],
         self::PREF_MD_EXT_STRIKE_ACTIVE      => [ 'type' => 'bool',   'default' => '1' ],
@@ -387,7 +387,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             $bundleShortcuts[] = 'wthb';
 
             $withSubcontext = $this->getPref(self::PREF_WTHB_SUBCONTEXT, true);
-            $help = $this->wthb->getContextHelp($activeRouteInfo, $withSubcontext);
+            $help = $this->wthb->getContextHelp($activeRouteInfo, $withSubcontext, $cfg_js_debug_console);
             if ($cfg_js_debug_console) {
                 $docReadyJs .= "console.debug('LE-Mod help rows:', " . json_encode($help['result']) . ");";
                 $docReadyJs .= "console.debug('LE-Mod help sql:', " . json_encode($help['sql']) . ");";
