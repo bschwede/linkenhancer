@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-03 04:57+0100\n"
-"PO-Revision-Date: 2026-02-02 07:40+0100\n"
+"POT-Creation-Date: 2026-02-09 15:27+0100\n"
+"PO-Revision-Date: 2026-02-09 15:29+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ca\n"
@@ -18,70 +18,70 @@ msgstr ""
 "X-Poedit-SearchPath-2: module.php\n"
 
 #. I18N: Settings - section title
-#: Services/WthbService.php:104 Services/WthbService.php:137
-#: Services/WthbService.php:266 resources/views/settings.phtml:538
-#: LinkEnhancerModule.php:402 LinkEnhancerModule.php:907
+#: Services/WthbService.php:105 Services/WthbService.php:138
+#: Services/WthbService.php:267 resources/views/settings.phtml:554
+#: LinkEnhancerModule.php:404 LinkEnhancerModule.php:910
 msgid "Webtrees manual"
 msgstr "Manual Webtrees"
 
-#: Services/WthbService.php:104
+#: Services/WthbService.php:105
 msgid "Error occurred"
 msgstr "S'ha produït un error"
 
 #. I18N: csv import
-#: Services/WthbService.php:117
+#: Services/WthbService.php:118
 msgid "empty rows"
 msgstr "fileres buides"
 
 #. I18N: csv import
-#: Services/WthbService.php:118
+#: Services/WthbService.php:119
 msgid "rows whose number of fields differs from the header row"
 msgstr "fils el nombre de camps dels quals difereix de la fila d'encapçalament"
 
 #. I18N: data import with seeder
-#: Services/WthbService.php:119
+#: Services/WthbService.php:120
 msgid "rows in which at least one required field is not set"
 msgstr "fileres en què almenys un camp obligatori no està establert"
 
 #. I18N: data import with seeder
-#: Services/WthbService.php:120
+#: Services/WthbService.php:121
 msgid "rows in which the maximum field value length has been exceeded"
 msgstr "fileres en què s'ha superat la longitud màxima del valor del camp"
 
-#: Services/WthbService.php:137
+#: Services/WthbService.php:138
 msgid "Routes imported"
 msgstr "Les rutes s'han importat"
 
 #. I18N: wthb import skipped rows
-#: Services/WthbService.php:141
+#: Services/WthbService.php:142
 msgid "Skipped"
 msgstr "Saltat"
 
-#: Services/WthbService.php:153 resources/views/settings.phtml:690
+#: Services/WthbService.php:154 resources/views/settings.phtml:706
 msgid "CSV-Import"
 msgstr "Importar CSV"
 
-#: Services/WthbService.php:266
+#: Services/WthbService.php:267
 msgid "Table for context help is missing - fallback to standard url"
 msgstr "Falta la taula d'ajuda contextual - es torna a la URL estàndard"
 
-#: Services/WthbService.php:386 Services/WthbService.php:419
+#: Services/WthbService.php:398 Services/WthbService.php:431
 msgid "Table for context help is missing - nothing to do."
 msgstr "Falta la taula d'ajuda contextual - no es pot fer res."
 
-#: Services/WthbService.php:392
+#: Services/WthbService.php:404
 msgid "No data available for export."
 msgstr "No hi ha dades disponibles per a l'exportació."
 
-#: Services/WthbService.php:428
+#: Services/WthbService.php:440
 msgid "No CSV file was received."
 msgstr "No s'ha trobat cap arxiu CSV."
 
-#: Services/WthbService.php:446
+#: Services/WthbService.php:458
 msgid "Separator is not set."
 msgstr "El separador no està configurat."
 
-#: Services/WthbService.php:449
+#: Services/WthbService.php:461
 msgid "For the separator is only a single character allowed."
 msgstr "Per delimitar el separador només es permet un únic caràcter."
 
@@ -399,7 +399,7 @@ msgstr ""
 
 #: resources/views/help-md.phtml:19 resources/views/help-md.phtml:51
 #: resources/views/help-md.phtml:61 resources/views/settings.phtml:68
-#: resources/views/settings.phtml:212 resources/views/settings.phtml:333
+#: resources/views/settings.phtml:212 resources/views/settings.phtml:349
 msgid "See also"
 msgstr "Veure també"
 
@@ -532,7 +532,7 @@ msgstr ""
 "classes CSS estàndard o classe CSS addicionals."
 
 #: resources/views/help-md.phtml:88 resources/views/settings.phtml:239
-#: resources/views/settings.phtml:505
+#: resources/views/settings.phtml:521
 msgid "CSS class name(s)"
 msgstr "Nom(s) de classe CSS"
 
@@ -564,8 +564,8 @@ msgid "picture with defined height, width and additional css class"
 msgstr "imatge amb alçada, amplada i classe CSS addicional definides"
 
 #: resources/views/md-toc-dropdown.phtml:15 resources/views/help-wthb.phtml:52
-#: resources/views/settings.phtml:435 resources/views/settings.phtml:569
-#: LinkEnhancerModule.php:405
+#: resources/views/settings.phtml:451 resources/views/settings.phtml:585
+#: LinkEnhancerModule.php:407
 msgid "Table of contents"
 msgstr "Índex"
 
@@ -581,8 +581,8 @@ msgstr "Selecciona el motor de cerca"
 msgid "Goto section"
 msgstr "Ves a la secció"
 
-#: resources/views/help-wthb.phtml:36 resources/views/settings.phtml:569
-#: LinkEnhancerModule.php:405
+#: resources/views/help-wthb.phtml:36 resources/views/settings.phtml:585
+#: LinkEnhancerModule.php:407
 msgid "Full-text search"
 msgstr "Cerca de text complet"
 
@@ -595,7 +595,7 @@ msgstr ""
 "directament el lloc web."
 
 #. I18N: wthb link user setting title
-#: resources/views/wthb-modal.phtml:11 LinkEnhancerModule.php:404
+#: resources/views/wthb-modal.phtml:11 LinkEnhancerModule.php:406
 msgid "Webtrees manual link - user setting"
 msgstr "Enllaç manual de Webtrees - configuració d'usuari"
 
@@ -609,7 +609,7 @@ msgstr ""
 "servei de traducció."
 
 #. I18N: wthb link setting option
-#: resources/views/wthb-modal.phtml:21 resources/views/settings.phtml:581
+#: resources/views/wthb-modal.phtml:21 resources/views/settings.phtml:597
 msgid "Open webtrees manual URL with Google Translate?"
 msgstr ""
 "Trieu si voleu obrir la pàgina d’ajuda directament o a través d’un traductor."
@@ -761,9 +761,9 @@ msgstr "Activar l'ajust d'imatge Markdown?"
 
 #. I18N: Home link js
 #: resources/views/settings.phtml:252 resources/views/settings.phtml:264
-#: resources/views/settings.phtml:421 resources/views/settings.phtml:497
-#: resources/views/settings.phtml:511 resources/views/settings.phtml:526
-#: resources/views/settings.phtml:753
+#: resources/views/settings.phtml:437 resources/views/settings.phtml:513
+#: resources/views/settings.phtml:527 resources/views/settings.phtml:542
+#: resources/views/settings.phtml:769
 msgid "Example"
 msgstr "Exemple"
 
@@ -791,15 +791,19 @@ msgstr ""
 "Marca la casella per establir l'alçada màxima i fer que el contingut més "
 "llarg sigui desplaçable"
 
-#: resources/views/settings.phtml:318
+#: resources/views/settings.phtml:317
+msgid "Checkbox always visible"
+msgstr "Casella de selecció sempre visible"
+
+#: resources/views/settings.phtml:334
 msgid "Markdown extensions"
 msgstr "Extensions de markdown"
 
-#: resources/views/settings.phtml:325
+#: resources/views/settings.phtml:341
 msgid "Warning"
 msgstr "Avís"
 
-#: resources/views/settings.phtml:328
+#: resources/views/settings.phtml:344
 msgid ""
 "Please keep in mind when using this extensions, you are deviating from the "
 "smallest common markdown dialect set."
@@ -807,7 +811,7 @@ msgstr ""
 "Tingueu en compte que en utilitzar aquesta extensió us allunyeu del conjunt "
 "més petit de dialectes de marcatge comú."
 
-#: resources/views/settings.phtml:329
+#: resources/views/settings.phtml:345
 msgid ""
 "If the library used to render markdown in HTML needs to be changed for any "
 "reason, there is a possibility that not all of the extended markup used here "
@@ -817,69 +821,69 @@ msgstr ""
 "HTML, és possible que no es doni suport a tota la marcatja ampliada "
 "utilitzada aquí."
 
-#: resources/views/settings.phtml:345
+#: resources/views/settings.phtml:361
 msgid "Strikethrough"
 msgstr "Text travessat"
 
-#: resources/views/settings.phtml:359
+#: resources/views/settings.phtml:375
 msgid "Description list"
 msgstr "Llista de descripció"
 
-#: resources/views/settings.phtml:374
+#: resources/views/settings.phtml:390
 msgid "Highlight"
 msgstr "ressaltar"
 
-#: resources/views/settings.phtml:389
+#: resources/views/settings.phtml:405
 msgid "Footnotes"
 msgstr "Notes a peu de pàgina"
 
-#: resources/views/settings.phtml:401
+#: resources/views/settings.phtml:417
 msgid "Add hr-tag at the beginning of the footnote container"
 msgstr ""
 "Afegeix l'etiqueta hr al principi del contenidor de la nota a peu de pàgina"
 
-#: resources/views/settings.phtml:414
+#: resources/views/settings.phtml:430
 msgid "Backreference symbol"
 msgstr "Símbol de referència posterior"
 
-#: resources/views/settings.phtml:446
+#: resources/views/settings.phtml:462
 msgid "Normalize"
 msgstr "Normalitzar"
 
-#: resources/views/settings.phtml:461
+#: resources/views/settings.phtml:477
 msgid "Style"
 msgstr "Estil"
 
-#: resources/views/settings.phtml:476
+#: resources/views/settings.phtml:492
 msgid "Position"
 msgstr "Posició"
 
-#: resources/views/settings.phtml:491
+#: resources/views/settings.phtml:507
 msgid "Placeholder"
 msgstr "Marcador de lloc"
 
-#: resources/views/settings.phtml:518
+#: resources/views/settings.phtml:534
 msgid "Permalink symbol"
 msgstr "Símbol d'enllaç permanent"
 
-#: resources/views/settings.phtml:545
+#: resources/views/settings.phtml:561
 msgid "Precede the help link with an icon"
 msgstr "Anteposar una icona a l'enllaç d'ajuda"
 
-#: resources/views/settings.phtml:557
+#: resources/views/settings.phtml:573
 msgid "Help link for subcontext topics"
 msgstr "Enllaç d'ajuda per a temes de subcontext"
 
 #. I18N: wthb translate
-#: resources/views/settings.phtml:589
+#: resources/views/settings.phtml:605
 msgid "user defined"
 msgstr "sense definir"
 
-#: resources/views/settings.phtml:601
+#: resources/views/settings.phtml:617
 msgid "Help link in the admin backend"
 msgstr "Enllaç d'ajuda al panell d'administració"
 
-#: resources/views/settings.phtml:605
+#: resources/views/settings.phtml:621
 msgid ""
 "Vesta modules override the admin layout view and provide a way to insert "
 "code through custom modules."
@@ -887,21 +891,21 @@ msgstr ""
 "Els mòduls Vesta sobreescriven la vista de disseny de l'administrador i "
 "proporcionen una manera d'inserir codi mitjançant mòduls personalitzats."
 
-#: resources/views/settings.phtml:606
+#: resources/views/settings.phtml:622
 msgid "As they are frequently used, this module first attempts this approach."
 msgstr ""
 "Com que s'utilitzen sovint, aquest mòdul primer prova aquest enfocament."
 
-#: resources/views/settings.phtml:618
+#: resources/views/settings.phtml:634
 msgid "Fallback patch for admin layout view"
 msgstr "Pedaç de recórrer per a la vista de disseny d'administrador"
 
-#: resources/views/settings.phtml:632
+#: resources/views/settings.phtml:648
 msgid "Link to GenWiki"
 msgstr "Enllaç a GenWiki"
 
 #. I18N: WTHB Link
-#: resources/views/settings.phtml:638
+#: resources/views/settings.phtml:654
 msgid ""
 "This is the base link that is combined with the relative context links from "
 "the database table."
@@ -909,23 +913,23 @@ msgstr ""
 "Aquest és l'enllaç que es combina amb els enllaços contextuals relatius de "
 "la tabla de base de dades."
 
-#: resources/views/settings.phtml:645
+#: resources/views/settings.phtml:661
 msgid "Standard Link to webtrees manual"
 msgstr "Enllaç al manual de webtrees"
 
 #. I18N: WTHB Link
-#: resources/views/settings.phtml:651
+#: resources/views/settings.phtml:667
 msgid "This fallback link is used, when no specific context link was defined."
 msgstr ""
 "Aquest enllaç alternatiu s'utilitza quan no s'ha definit cap enllaç "
 "contextual específic."
 
-#: resources/views/settings.phtml:660
+#: resources/views/settings.phtml:676
 msgid "Data table"
 msgstr "Tabla de dades"
 
 #. I18N: WTHB Link table
-#: resources/views/settings.phtml:664
+#: resources/views/settings.phtml:680
 msgid ""
 "The context is established by assigning the routes used in webtrees to the "
 "corresponding sections in the manual."
@@ -934,65 +938,65 @@ msgstr ""
 "les seccions corresponents del manual."
 
 #. I18N: WTHB Link table
-#: resources/views/settings.phtml:666
+#: resources/views/settings.phtml:682
 msgid "The data is stored in the database table"
 msgstr "Les dades s'emmagatzemen a la tabla de la base de dades"
 
 #. I18N: WTHB Link table rows
-#: resources/views/settings.phtml:668
+#: resources/views/settings.phtml:684
 msgid "Data rows"
 msgstr "Línia de dades"
 
 #. I18N: WTHB Link table rows assigned/total
-#: resources/views/settings.phtml:669
+#: resources/views/settings.phtml:685
 #, php-format
 msgid "%s of %s assigned"
 msgstr "%s de %s assignats"
 
-#: resources/views/settings.phtml:675 LinkEnhancerModule.php:611
+#: resources/views/settings.phtml:691 LinkEnhancerModule.php:614
 msgid "Import registered routes"
 msgstr "Importar rutes registrades"
 
-#: resources/views/settings.phtml:677
+#: resources/views/settings.phtml:693
 msgid "truncate table before import routes or csv file"
 msgstr "retallar tabla abans d'importar rutes o arxiu CSV"
 
-#: resources/views/settings.phtml:679
+#: resources/views/settings.phtml:695
 msgid "Table truncate"
 msgstr "Retallar tabla"
 
-#: resources/views/settings.phtml:683
+#: resources/views/settings.phtml:699
 msgid "Reset routes to delivery status"
 msgstr "Restablir rutes al format de lliurament"
 
-#: resources/views/settings.phtml:694
+#: resources/views/settings.phtml:710
 msgid "Separator"
 msgstr "Separador"
 
-#: resources/views/settings.phtml:699
+#: resources/views/settings.phtml:715
 msgid "CSV-Export"
 msgstr "Exportar CSV"
 
-#: resources/views/settings.phtml:706
+#: resources/views/settings.phtml:722
 msgid "CSV import file"
 msgstr "Arxiu CSV d'importació"
 
-#: resources/views/settings.phtml:728
+#: resources/views/settings.phtml:744
 msgid "Automatically refresh data table when module is updated"
 msgstr ""
 "Actualitzar automàticament la taula de dades quan s'actualitza el mòdul"
 
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:738
+#: resources/views/settings.phtml:754
 msgid "Home link"
 msgstr "Enllaç d'inici"
 
-#: resources/views/settings.phtml:743
+#: resources/views/settings.phtml:759
 msgid "JSON for home link styling"
 msgstr "JSON per dissenyar els enllaços d'inici"
 
 #. I18N: Home link js
-#: resources/views/settings.phtml:749
+#: resources/views/settings.phtml:765
 msgid ""
 "JSON object that can be used to dynamically apply CSS styles for the home "
 "link that match the current theme."
@@ -1001,29 +1005,29 @@ msgstr ""
 "d'inici que coincideixin amb el tema actual."
 
 #. I18N: Home link js
-#: resources/views/settings.phtml:751
+#: resources/views/settings.phtml:767
 msgid "Standard CSS class name"
 msgstr "Nom de la classe CSS estàndard"
 
-#: resources/views/settings.phtml:790
+#: resources/views/settings.phtml:806
 msgid "Javascript is invalid"
 msgstr "JavaScript no és vàlid"
 
-#: resources/views/settings.phtml:801
+#: resources/views/settings.phtml:817
 msgid "JSON is invalid"
 msgstr "JSON no és vàlid"
 
-#: resources/views/settings.phtml:930
+#: resources/views/settings.phtml:947
 msgid "Enable for more options"
 msgstr "Activa per a més opcions"
 
 #. I18N: Module title
-#: LinkEnhancerModule.php:210
+#: LinkEnhancerModule.php:212
 msgid "Link-Enhancer"
 msgstr "Millorador d'enllaços"
 
 #. I18N: Module description
-#: LinkEnhancerModule.php:220
+#: LinkEnhancerModule.php:222
 msgid ""
 "Cross-references to Gedcom datasets, Markdown editor, context-sensitive link "
 "to the GenWiki webtrees manual"
@@ -1031,11 +1035,11 @@ msgstr ""
 "Referències als conjunts de dades GEDCOM, amb l'editor Markdown, a enllaços "
 "contextuals  al manual GenWiki webtrees"
 
-#: LinkEnhancerModule.php:457
+#: LinkEnhancerModule.php:459
 msgid "Home link - JSON with CSS rules seems to be invalid."
 msgstr "L'enllaç d'inici JSON amb regles CSS, sembla no ser vàlid."
 
-#: LinkEnhancerModule.php:487
+#: LinkEnhancerModule.php:489
 msgid "Limit cell height"
 msgstr "Limita l'alçada de la cel·la"
 
