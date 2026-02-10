@@ -149,11 +149,14 @@ On the subject of markdown see also:
 - [Github webtrees Issues](https://github.com/fisharebest/webtrees/issues?q=is%3Aissue%20markdown)
 - GEDCOM-Standard: [NOTE.MIME and markdown #222](https://github.com/FamilySearch/GEDCOM/issues/222) - support in GEDCOM 7.1
 
+> [!NOTE]
+> For the Markdown Image Support and the additional Markdown Extensions the [MarkDownFactory class](https://github.com/fisharebest/webtrees/blob/main/app/Factories/MarkdownFactory.php) needs to be extended by this module. This replacement class also fixes [fisharebest#4841](https://github.com/fisharebest/webtrees/issues/4841), so that a pre-formatted markdown block is not rendered as a single line any more.
+
 
 <a name="mdimg"></a>
 #### Markdown Image Support
 ![note with links](resources/img/screenshot_note-with-links-and-img.png)
-This feature allows you to easily embed images from GEDCOM media records (first image) or from the public directory into notes.
+This feature allows you to easily embed images from GEDCOM media records (first image), which reside behind the media firewall or from the public directory into notes.
 If restriction rules apply to the record, instead of the image, a message is displayed.
 
 **Syntax:**
@@ -162,8 +165,6 @@ If restriction rules apply to the record, instead of the image, a message is dis
 - `![picture with defined height, width and additional css class](#@id=@M1@&h=200&w=200&cname=float-right)`
 
 Technically the images are packed into a div container together with an image subtitle - which is also a link to the media data set for GEDCOM objects. The display can be customized as required using the standard CSS classes or per image additional CSS classes (e.g. `float-start` or `float-end` from webtrees vendor.css).
-
-Images of gedcom media records reside behind the media firewall. Therefore, this function cannot be provided with JavaScript, but by extending the [MarkDownFactory class](https://github.com/fisharebest/webtrees/blob/main/app/Factories/MarkdownFactory.php).
 
 
 <a name="mde"></a>
