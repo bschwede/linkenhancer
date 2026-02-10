@@ -21,7 +21,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "tiny-markdown-editor": "^0.2.18"
+    "tiny-markdown-editor": "^0.2.19"
   },
   "devDependencies": {
     "@rollup/plugin-babel": "^6.1.0",

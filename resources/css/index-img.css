@@ -155,6 +155,10 @@ ol.md-toc-inline li:last-child::after, ul.md-toc-inline li:last-child::after {
   overflow: auto;
   display: grid;
 }
+/* show checkbox on hover th cell */
+th:hover .md-sticky-wrapper.invisible {
+  visibility: visible !important;
+}
 
 
 /* no extension - overwrite webtrees definition */
