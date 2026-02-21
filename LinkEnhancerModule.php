@@ -623,6 +623,28 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     }
 
     /**
+     * export Custom Module Manager config as csv
+     * Jefferson49\Webtrees\Module\CustomModuleManager\Configuration\ModuleUpdateServiceConfiguration
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    public function getAdminCmmConfig2CsvAction(ServerRequestInterface $request): ResponseInterface
+    {
+        $filename = "wthb-route-mapping-export-cmm.csv";
+        try {
+            return $this->wthb->exportCmmCsvAction($filename, $request);
+
+        } catch (Exception $ex) {
+            FlashMessages::addMessage(
+                /*I18N: webtrees.pot */ I18N::translate('Export failed') . ' - Custom Module Manager config<hr><samp dir="ltr">' . $ex->getMessage() . '</samp>',
+                'danger'
+            );
+            return redirect($this->getConfigLink());
+        }
+
+    }    
+
+    /**
      * Download context help mapping table as CSV
      *
      * @param ServerRequestInterface $request
@@ -828,6 +850,13 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             'module' => $this->name(),
             'action' => 'AdminResetRoutes'
         ]);
+        $response['links']['csvexportcmm'] = ($this->wthb->isCmmAvailable() ?
+            route('module', [
+                'module' => $this->name(),
+                'action' => 'AdminCmmConfig2Csv'
+            ])
+            : ''
+        );
         
 
         $response['tablerows'] = $this->wthb->getHelpTableCount();

@@ -51,6 +51,8 @@ $trees_w_md = $trees_w_md ?  "<ol class=\"treelist\"><li>{$trees_w_md}</li></ol>
 $trees_w_text = join('</li><li>', $mdcfg['trees_w_text']);
 $trees_w_text_cnt = count($mdcfg['trees_w_text']);
 $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li></ol>" : '';
+
+$link_cmm = $links['csvexportcmm'] ?? '';
 ?>
 
 <?= view('components/breadcrumbs', [
@@ -711,10 +713,21 @@ $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li>
                         <input class="form-control form-control-sm text-center" type="text" id="csv-separator" name="csv-separator" size="3" maxlength="3" value=";" required>
                     </div>
                     <div class="col-5 d-flex align-items-center justify-content-end">
-                        <button type="submit" class="btn btn-secondary" formaction="<?= e($links['csvexport']) ?>">
-                            <?= I18N::translate('CSV-Export') ?>
-                        </button>
-
+                    <?php if ($link_cmm !== ''): ?>
+                        <div class="dropdown btn-group">
+                    <?php endif; ?>
+                            <button type="submit" class="btn btn-secondary" formaction="<?= e($links['csvexport']) ?>">
+                                <?= I18N::translate('CSV-Export') ?>
+                            </button>
+                    <?php if ($link_cmm !== ''): ?>
+                            <button class="btn btn-secondary dropdown-toggle dropdown-toggle-split" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="ms-2" href="<?= e($links['csvexportcmm']) ?>" title="Custom Module Manager configuration">CMM-Config</a>
+                            </div>
+                        </div>
+                    <?php endif; ?>
                     </div>
                 </div>
                 <div class="row mt-1 mb-1">
