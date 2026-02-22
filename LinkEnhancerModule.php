@@ -295,7 +295,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
         // check for csv updates once a day and if schema was updated
         Registry::cache()->file()->remember(
-            $this->name() . '-check-wthb-csvupdate-' . self::HELP_SCHEMA_TARGET_VERSION,
+            $this->name() . '-check-wthb-csvupdate-' . self::CUSTOM_VERSION . '_' . self::HELP_SCHEMA_TARGET_VERSION,
             function () {
                 $importOnUpdate = false;
                 $this_hash = null;
@@ -600,6 +600,13 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public function getAdminResetRoutesAction(ServerRequestInterface $request): ResponseInterface
     {
         $this->importDeliveredCsv();
+        $csvfile = self::HELP_CSV;
+        if (file_exists($csvfile)) {
+            $this_hash = hash_file('sha256', $csvfile);
+            if ($this_hash) {
+                $this->setPref(self::PREF_WTHB_LASTHASH, $this_hash);
+            }
+        }
         return redirect($this->getConfigLink());
     }    
 
