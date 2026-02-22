@@ -74,7 +74,7 @@ Included are the following **predefined external targets** (the parameter keys a
   - `wt=i@XREF@othertree+dia` - link to record type individual with XREF from tree "othertree" and also link to Interactive tree of this person
   - `wt=@XREF@` - simplified standard link without given record type - access to record page via redirect url
 * **HTML**: The same applies to html links: `<a href="#@wt=i@I1@">Link display title</a>`
-  So this is also useable in cooperation with the name badge function of the [“⚶ Vesta Classic Look & Feel” module](https://github.com/vesta-webtrees-2-custom-modules/vesta_classic_laf) in the HTML snippet field: `<a href="#@fsft=<ref/>"></a>` for linking to a record in the Family Search Family Tree.
+  So this is also useable in cooperation with the name badge function of the [“⚶ Vesta Classic Look & Feel” module](https://github.com/vesta-webtrees-2-custom-modules/vesta_classic_laf) in the HTML snippet field: `<a href="#@fsft=<ref/>"></a>` for linking to a record in the Family Search Family Tree. It's also possible to embed those links in news articles of Tywed's [news-menu module](https://github.com/Tywed/news-menu) or in [FAQ](https://wiki.genealogy.net/Webtrees_Handbuch/Anleitung_für_Besucher#H.C3.A4ufige_Fragen_.28FAQ.29) articles.
 
 The syntax of the external targets is listed by the markdown help function of this module. In most cases, only one key-value parameter pair needs to be specified, consisting of the short name of the desired target and the ID of the data record located there.
 
@@ -133,10 +133,11 @@ Any CSS rules required are best added via the [“CSS and JS” module](https://
 For example: `.icon-whatever { background-image: url(...) }`
 
 
-**Note:** When Webtrees provides better support for UID, referencing via UID will probably also be implemented in this module, as this will make links more fail-safe.
-See also:
-- Forum post [Feature Request: Improved support for UID / _UID](https://www.webtrees.net/index.php/forum/9-request-for-new-feature/39942-feature-request-improved-support-for-uid-uid)
-- PR [UID References in notes and text #5145](https://github.com/fisharebest/webtrees/pull/5145)
+> [!NOTE]
+> When Webtrees provides better support for UID, referencing via UID will probably also be implemented in this module, as this will make links more fail-safe.
+> See also:
+> - Forum post [Feature Request: Improved support for UID / _UID](https://www.webtrees.net/index.php/forum/9-request-for-new-feature/39942-feature-request-improved-support-for-uid-uid)
+> - PR [UID References in notes and text #5145](https://github.com/fisharebest/webtrees/pull/5145)
 
 ### Markdown
 Markdown is a simple system of formatting, used on websites such as Wikipedia or Github. It uses unobtrusive punctuation characters to create headings and sub-headings, bold and italic text, lists, tables, etc.
@@ -150,7 +151,7 @@ On the subject of markdown see also:
 - GEDCOM-Standard: [NOTE.MIME and markdown #222](https://github.com/FamilySearch/GEDCOM/issues/222) - support in GEDCOM 7.1
 
 > [!NOTE]
-> For the Markdown Image Support and the additional Markdown Extensions the [MarkDownFactory class](https://github.com/fisharebest/webtrees/blob/main/app/Factories/MarkdownFactory.php) needs to be extended by this module. This replacement class also fixes [fisharebest#4841](https://github.com/fisharebest/webtrees/issues/4841), so that a pre-formatted markdown block is not rendered as a single line any more.
+> For the Markdown Image Support and the additional Markdown Extensions the [MarkDownFactory class](https://github.com/fisharebest/webtrees/blob/main/app/Factories/MarkdownFactory.php) needs to be extended by this module. This replacement class also fixes [fisharebest/webtrees#4841](https://github.com/fisharebest/webtrees/issues/4841), so that a pre-formatted markdown block is not rendered as a single line any more.
 
 
 <a name="mdimg"></a>
@@ -177,7 +178,8 @@ Besides syntax highlighting it ships with an icon bar for common format commands
 
 ![Markdown Help](resources/img/screenshot_markdown-help.png)
 
-**Note:** Unfortunately, the on-screen keyboard does NOT work as before with the previous text input field. The selected characters end up as an intermediate step in the small text field below the Markdown editor and then must be copied manually to the desired position.
+> [!NOTE]
+> Unfortunately, the on-screen keyboard does NOT work as before with the previous text input field. The selected characters end up as an intermediate step in the small text field below the Markdown editor and then must be copied manually to the desired position.
 
 <a name="mdext"></a>
 #### Markdown Extensions
