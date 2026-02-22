@@ -441,7 +441,7 @@ id;path;handler;method;extras;subcontext;category;order;url
 469;/admin;Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;"{""e"":""$('h2')[5]""}";standard;30;Webtrees_Handbuch/Anleitung_f%C3%BCr_Administratoren/Landkarte
 470;/tree/{tree};Fisharebest\Webtrees\Http\RequestHandlers\TreePage;GET;;div.wt-block-_vesta_extended_relationships_ > div.card-header;custom module;30;https://github.com/vesta-webtrees-2-custom-modules/vesta_extended_relationships
 471;;;GET;;li.nav-item.menu-clippings.CCE_Menue > a;generic;35;Webtrees_Handbuch/Anleitung_für_Webmaster/Erweiterungsmodule/Sammelbehälter
-472;;;GET;;"{""e"":""Array.from(document.querySelectorAll('li.nav-item.menu-clippings > a')).find(a => a.nextElementSibling.querySelector('a[href*=\"vesta_clippings_cart\"]') !== null)""}";generic;35;https://github.com/vesta-webtrees-2-custom-modules/vesta_clippings_cart
+472;;;GET;;"{""e"":""Array.from(document.querySelectorAll('li.nav-item.menu-clippings:not(.CCE_Menue) > a')).find(a => a.nextElementSibling.querySelector('a[href*=\"vesta_clippings_cart\"]') !== null)""}";generic;35;https://github.com/vesta-webtrees-2-custom-modules/vesta_clippings_cart
 473;;_news-menu_;GET;;;custom module;20;https://github.com/Tywed/news-menu
 474;;_huhwt-cce_;GET;;;custom module;20;Webtrees_Handbuch/Anleitung_für_Webmaster/Erweiterungsmodule/Sammelbehälter
 475;;_vesta_clippings_cart_;GET;;;custom module;20;https://github.com/vesta-webtrees-2-custom-modules/vesta_clippings_cart
@@ -459,3 +459,27 @@ id;path;handler;method;extras;subcontext;category;order;url
 487;;_vesta_shared_places_;GET;;;custom module;15;https://github.com/vesta-webtrees-2-custom-modules/vesta_shared_places
 488;;_extended_import_export_;GET;;;custom module;15;https://github.com/Jefferson49/ExtendedImportExport
 489;/tree/{tree}/goto-xref/{xref};Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoXrefAction;GET;;;custom module;10;https://github.com/bschwede/linkenhancer
+490;;_jc-fancy-imagebar_;GET;;;custom module;15;https://github.com/JustCarmen/webtrees-fancy-imagebar
+491;;_jc-fancy-research-links_;GET;;;custom module;15;https://github.com/JustCarmen/webtrees-fancy-research-links
+492;;_jc-simple-menu_;GET;;;custom module;15;https://github.com/JustCarmen/webtrees-simple-menu
+493;;_huhwt-tsm_;GET;;;custom module;15;Webtrees_Handbuch/Anleitung_f%C3%BCr_Webmaster/Erweiterungsmodule/Tagging-Service-Manager
+494;;_huhwt-mtv_;GET;;;custom module;15;https://github.com/huhwt/huhwt-mtv
+495;;_vesta_relatives_;GET;;;custom module;15;https://github.com/vesta-webtrees-2-custom-modules/vesta_relatives
+496;;_vesta_gov4webtrees_;GET;;;custom module;15;https://github.com/vesta-webtrees-2-custom-modules/vesta_gov4webtrees
+497;;_vesta_places_and_pedigree_map_;GET;;;custom module;15;https://github.com/vesta-webtrees-2-custom-modules/vesta_places_and_pedigree_map
+498;;_vesta_research_suggestions_;GET;;;custom module;15;https://github.com/vesta-webtrees-2-custom-modules/vesta_research_suggestions
+499;;_sosa20_;GET;;;custom module;15;https://github.com/gustine/sosa20
+500;;_hh_extended_family_;GET;;;custom module;15;Webtrees_Handbuch/Anleitung_f%C3%BCr_Webmaster/Erweiterungsmodule/Gro%C3%9Ffamilie
+501;;_hh_legal_notice_;GET;;;custom module;15;Webtrees_Handbuch/Anleitung_f%C3%BCr_Webmaster/Erweiterungsmodule/Impressum
+502;;_mitalteli-show-xref_;GET;;;custom module;15;https://github.com/elysch/webtrees-mitalteli-show-xref
+503;;_webtrees-faces_;GET;;;custom module;15;https://github.com/UksusoFF/webtrees-faces
+504;/admin/faces-admin/{action};faces-admin;GET|POST;;;custom module;10;https://github.com/UksusoFF/webtrees-faces
+505;;_insight-lens_;GET;;;custom module;15;https://github.com/godzil3/webtrees-insight-lens
+506;;stories;GET;;;standard module;15;Webtrees_Handbuch/Anleitung_für_Besucher#Geschichten
+507;;relationships_chart;GET;;;standard module;15;Webtrees_Handbuch/Anleitung_für_Administratoren/Module#Diagramme
+508;;faq;GET;;;standard module;15;Webtrees_Handbuch/Anleitung_für_Besucher#H.C3.A4ufige_Fragen_.28FAQ.29
+509;;_telegram_;GET;;;custom module;15;https://github.com/Tywed/telegram
+510;;_time-travel-map_;GET;;;custom module;15;https://github.com/gmarcon/webtrees-time-travel-map
+511;;_jc-simple-footer_;GET;;;custom module;15;https://github.com/JustCarmen/webtrees-simple-footer
+512;/tree/{tree}/individual/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\IndividualPage;GET;;"a[href^=""#stories""]";custom module;30;Webtrees_Handbuch/Anleitung_für_Besucher#Geschichten
+513;/tree/{tree}/time-travel-map/view;;GET;;;custom module;10;https://github.com/gmarcon/webtrees-time-travel-map
