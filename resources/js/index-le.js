@@ -271,7 +271,8 @@ function processLinks(linkElement) {
             if (!option) return;
 
             if (key == 'wt') {
-                const { type, xref, newtree, dia } = parseCrossReferenceLink(option);
+                let { type, xref, newtree, dia } = parseCrossReferenceLink(option);
+                newtree = (newtree === tree ? null : newtree);
                 if ((!type && type !== '') || !xref) {
                     let nextLink = getNextLink(link, lastLink);
                     lastLink = setLink(nextLink, lastLink, '', LEcfg[key].name + " - " + I18N['syntax error'] + "!", LEcfg[key].cname);
