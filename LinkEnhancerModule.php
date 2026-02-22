@@ -469,10 +469,14 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
             $lecfg = $this->getPref(self::PREF_LINKSPP_JS); // getPref returns trimmed string
             $lecfg = $lecfg != '' ? $lecfg : '{}';
+            $treename = ($tree !== null ? $tree->name() : '');
 
             $options = [
                 'thisXref'     => Validator::attributes($request)->isXref()->string('xref', ''),
                 'openInNewTab' => $this->getPref(self::PREF_LINKSPP_OPEN_IN_NEW_TAB, true),
+                'tree'         => $treename,
+                'baseurl'      => route(TreePage::class, [ 'tree' => $treename ]),
+                'urlmode'      => (Validator::attributes($request)->boolean('rewrite_urls', false) ? 'pretty' : 'default'),
             ];
             $docReadyJs .= "LinkEnhMod.initLE($lecfg, " . json_encode($options) . ");";
         }
