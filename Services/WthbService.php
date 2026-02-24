@@ -33,6 +33,7 @@ use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Validator;
 use Fisharebest\Webtrees\GedcomFilters\GedcomEncodingFilter;
+use Fisharebest\Webtrees\Services\ModuleService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
@@ -47,6 +48,9 @@ class WthbService { // stuff related to webtrees manual link handling
     protected string $help_table;
     protected string $std_url;
     protected string $wiki_url;
+
+    public const string CMM_CLASS = '\Jefferson49\Webtrees\Module\CustomModuleManager\CustomModuleManager';
+    public const string CMM_CFG_CLASS = '\Jefferson49\Webtrees\Module\CustomModuleManager\Configuration\ModuleUpdateServiceConfiguration';
 
     public function __construct(string $helptable, string $std_url, string $wiki_url)
     {
@@ -383,6 +387,74 @@ class WthbService { // stuff related to webtrees manual link handling
             'help_url'   => $url,
             'subcontext' => array_values($subcontext), // important for json_encode - ensure zero-based array numbering, otherwise it's encoded as object and not as array
         ];
+    }
+
+    
+    public function isCmmAvailable(): bool {
+        $result = false;
+        if (class_exists(self::CMM_CFG_CLASS, true)) {
+            try {
+                $module_service = new ModuleService();
+                /** @var self::CMM_CLASS $custom_module_manager To avoid IDE warnings */
+                $custom_module_manager = $module_service->findByName((self::CMM_CLASS)::activeModuleName());
+                $result = $custom_module_manager !== null;
+            } catch (Exception $ex)  {
+            }
+        }
+        return $result;
+    }
+    public function exportCmmCsvAction(string $filename, ServerRequestInterface $request): ResponseInterface
+    {
+        if (!$this->isCmmAvailable()) {
+            throw new Exception('class ModuleUpdateServiceConfiguration not found.');
+        }
+        
+        $class = self::CMM_CFG_CLASS;
+        $cmmConfig = $class::getModuleUpdateServiceConfig(); //getLocalConfiguration(); //MODULE_UPDATE_SERVICE_CONFIG;
+
+        $headers = [
+            'Content-Type' => 'text/csv; charset=utf-8',
+            'Content-Disposition' => 'attachment; filename="' . addcslashes($filename, '"') . '"',
+        ];
+
+        try {
+            $separator = $this->getSeparator($request);
+        } catch(Exception $ex) {
+            $separator = ";";
+        }
+
+        ob_start();
+        $file = fopen('php://output', 'w');
+
+        // CSV-Header
+        $header = ['id', 'path', 'handler', 'method', 'extras', 'subcontext', 'category', 'order', 'url'];
+
+        fputcsv($file, $header, $separator, "\"", "\\", "\n");
+        // Array iterieren und Zeilen bauen
+        foreach ($cmmConfig as $handler => $config) {
+            $params = $config['params'] ?? [];
+            $githubRepo = $params['github_repo'] ?? '???';
+            $url = 'https://github.com/' . $githubRepo;
+            $category = $params[$class::CATEGORY] ?? 'custom module';
+
+            $row = [
+                '',         // id
+                '',         // path
+                $handler,   // handler = Array-Key
+                'GET',      // method
+                '',         // extras
+                '',         // subcontext
+                $category,  // category
+                15,         // order (default)
+                $url        // url
+            ];
+            fputcsv($file, $row, $separator, "\"", "\\", "\n");
+        }
+
+        fclose($file);
+        $csv = ob_get_clean();
+
+        return response($csv, 200, $headers);
     }
 
     public function exportCsvAction(string $filename, ServerRequestInterface $request): ResponseInterface

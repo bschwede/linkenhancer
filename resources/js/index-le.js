@@ -140,6 +140,9 @@ const getLEOptions = () => {
     return {
         thisXref: '',
         openInNewTab: true,
+        tree: '',
+        baseurl: '',
+        urlmode: 'standard',
     }
 }
 let LEcfg = getLECfg();
@@ -153,19 +156,6 @@ function initLE(cfg, options) {
     observeDomLinks();
 }
 
-function getTreeInfoFromURL() {
-    const href = document.location.href;
-    const match1 = href.match(/^.+?\/index\.php\?route=(?:%2F.+?)*%2Ftree%2F([^%\/#?]+)/i);
-    const match2 = href.match(/^.+?\/tree\/([^\/#?]+)/i);
-    const baseMatch = match1 || match2;
-    if (!baseMatch) return {};
-
-    const tree = baseMatch[1];
-    const baseurl = baseMatch[0];
-    const urlmode = baseurl.includes('index.php') ? 'default' : 'pretty';
-
-    return { tree, baseurl, urlmode };
-}
 
 function getLEhelpInfo() {
     let lis = [];
@@ -281,7 +271,8 @@ function processLinks(linkElement) {
             if (!option) return;
 
             if (key == 'wt') {
-                const { type, xref, newtree, dia } = parseCrossReferenceLink(option);
+                let { type, xref, newtree, dia } = parseCrossReferenceLink(option);
+                newtree = (newtree === tree ? null : newtree);
                 if ((!type && type !== '') || !xref) {
                     let nextLink = getNextLink(link, lastLink);
                     lastLink = setLink(nextLink, lastLink, '', LEcfg[key].name + " - " + I18N['syntax error'] + "!", LEcfg[key].cname);
@@ -329,7 +320,9 @@ function processLinks(linkElement) {
     }
 
     // Alle a-Tags durchlaufen
-    const { tree, baseurl, urlmode } = getTreeInfoFromURL();
+    const tree     = LEoptions.tree;
+    const baseurl  = LEoptions.baseurl;
+    const urlmode  = LEoptions.urlmode;
     const diatitle = $("a.dropdown-item.menu-chart-tree[role=menuitem]").text().trim() || I18N['Interactive tree'];
 
     if (linkElement) {

@@ -14,6 +14,7 @@ const getWthbCfg = () => {
         subcontext: [],
         modal_url: '', // url to action handler for wthb toc data and search engine form
         tocnsearch: true, // toggle for showing wthb help modal
+        openInNewTab: true,
     };
 }
 
@@ -78,7 +79,8 @@ const insertWthbLink = (node) => { // prepend context help link to topmenu
     let fahtml = WthbCfg.faicon ? '<i class="fa-solid fa-circle-question"></i> ' : '';
     // difference in styling between front- and backend: style="display: inline-block;" is missing on admin page
     let help_title = getHelpTitle(WthbCfg.help_url);
-    topmenu.insertAdjacentHTML('afterbegin', `<li class="nav-item menu-wthb"><a id="wthb-link" class="nav-link" style="display: inline-block;" target="_blank" href="${WthbCfg.help_url}">${fahtml}${help_title}</a></li>`);
+    const target = (WthbCfg.openInNewTab ? 'target="_blank" ' : '');
+    topmenu.insertAdjacentHTML('afterbegin', `<li class="nav-item menu-wthb"><a id="wthb-link" class="nav-link" style="display: inline-block;" ${target}href="${WthbCfg.help_url}">${fahtml}${help_title}</a></li>`);
 };
 
 const insertWthbLinkCallback = function (mutationsList, observer) {
@@ -174,6 +176,7 @@ const insertWthbSubcontextLinks = (contexts) => {
     
     popovers = [];
 
+    const target = (WthbCfg.openInNewTab ? 'target="_blank" ' : '');
     contexts.forEach((elem) => {
         let ctx = elem.ctx;
         let url = elem.url;
@@ -211,7 +214,7 @@ const insertWthbSubcontextLinks = (contexts) => {
         node.append(poptrigger);
 
         let helptitle = getHelpTitle(url);
-        let wthblink = jQuery(`<a href="${url}" target="_blank" class="stretched-link d-inline-block p-1 text-decoration-none"><i class="fa-solid fa-circle-question"></i> ${helptitle}</a>`);
+        let wthblink = jQuery(`<a href="${url}" ${target}class="stretched-link d-inline-block p-1 text-decoration-none"><i class="fa-solid fa-circle-question"></i> ${helptitle}</a>`);
         setWthbLinkClickHandler(wthblink);
         popovers.push(newPopover(poptrigger, {
             placement: pos,
@@ -392,7 +395,10 @@ const initWthbHelp = (searchengines) => {
     $(".wthbtoc a").each((idx, elem) => { 
         let href = $(elem).attr('href') ?? '';
         if (! href.match(/^https?:\/\//)) {
-            $(elem).attr('href', wikiurl + href.replace(/^\/+/, '')).attr('target', '_blank');
+            $(elem).attr('href', wikiurl + href.replace(/^\/+/, ''));
+            if (WthbCfg.openInNewTab) {
+                $(elem).attr('target', '_blank');
+            }
             setWthbLinkClickHandler(elem);
         }
     });
