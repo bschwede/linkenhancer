@@ -10,12 +10,16 @@ use Fisharebest\Webtrees\MediaFile;
  * @var int $width
  * @var int $height
  * @var string|null $titleclassnames
+ * @var bool $open_in_new_tab
  */
 
 $classnames = trim($classnames);   
 $divattrib = $classnames ? ' class="' . $classnames . '"' : '';
 $titleclassnames = trim($titleclassnames);
 $subattrib = $titleclassnames ? ' class="' . $titleclassnames . '"' : '';
+if ($open_in_new_tab) {
+    $subattrib .= ' target="blank"';
+}
 
 ?>
 <div<?= $divattrib ?>>

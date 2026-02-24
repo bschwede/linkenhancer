@@ -184,11 +184,33 @@ $link_cmm = $links['csvexportcmm'] ?? '';
                     </div>
                 </div>
             </fieldset>
+
+            <!-- open links in new tab - global --><?php $prefId = LinkEnhancerModule::PREF_OPEN_IN_NEW_TAB; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                        <?= /*I18N: see also fancy-research-links */ I18N::translate('Open links in a new tab') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= view('components/radios-inline', [
+                            'id' => $prefId,
+                            'name' => $prefId,
+                            'options' => [
+                                /*I18N: webtrees.pot */ I18N::translate('no'),
+                                /*I18N: */ I18N::translate('user defined'),
+                                /*I18N: webtrees.pot */ I18N::translate('yes')
+                            ],
+                            'selected' => (int) $prefs[$prefId]
+                        ]) ?>
+                    </div>
+                </div>
+            </fieldset>            
         </div>
 
         <h4 class="subdiv">[1] <a name="section1" href="#top"><?= /*I18N: Settings - section title */I18N::translate('Enhanced Link Support') ?></a></h4>
 <section id="options1">
         <div class="row">
+<section class="openinnewtab">
             <!-- links++ open in new tab --><?php $prefId = LinkEnhancerModule::PREF_LINKSPP_OPEN_IN_NEW_TAB; ?>
             <fieldset class="form-group mb-3">
                 <div class="row">
@@ -200,12 +222,13 @@ $link_cmm = $links['csvexportcmm'] ?? '';
                     </div>
                 </div>
             </fieldset>
+</section>
 
             <!-- links++ javascript --><?php $prefId = LinkEnhancerModule::PREF_LINKSPP_JS; ?>
             <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
                 <?= I18N::translate('JavaScript for additional link targets') . ' (' . /*I18N: webtrees.pot */I18N::translate('optional') . ')' ?>
             </label>
-            <div class="col-sm-9 wt-page-options-value mt-1">
+            <div class="col-sm-9 wt-page-options-value mt-2">
                 <textarea id="<?= $prefId ?>" name="<?= $prefId ?>" class="form-control font-monospace" dir="ltr" rows="5"><?= e($prefs[$prefId]) ?></textarea>
                 <div class="form-text">
                     <p><?= /*I18N: Enhanced Links js */ I18N::translate('The JavaScript object overwrites and supplements the predefined settings, which are taken from the following code excerpt and can also serve as a reference point for adjustments.') ?></p>
@@ -236,6 +259,19 @@ $link_cmm = $links['csvexportcmm'] ?? '';
                 </div>
 
 <section id="options2_1">
+    <section class="openinnewtab">
+                <!-- md img open in new tab --><?php $prefId = LinkEnhancerModule::PREF_MD_IMG_OPEN_IN_NEW_TAB; ?>
+                <fieldset class="form-group mb-3">
+                    <div class="row">
+                        <legend class="col-form-label col-sm-3 wt-page-options-label">
+                            <?= /*I18N: see also fancy-research-links */ I18N::translate('Open links in a new tab') ?>
+                        </legend>
+                        <div class="col-sm-9 wt-page-options-value mt-2">
+                            <?= insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                        </div>
+                    </div>
+                </fieldset>
+    </section>
                 <div class="row">
                     <div class="col-sm-3 col-form-label wt-page-options-label">
                         <?= I18N::translate('CSS class name(s)') ?>
@@ -613,6 +649,19 @@ $link_cmm = $links['csvexportcmm'] ?? '';
                 </div>
             </fieldset>
 
+    <section class="openinnewtab">
+            <!-- wthb open in new tab --><?php $prefId = LinkEnhancerModule::PREF_WTHB_OPEN_IN_NEW_TAB; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                        <?= /*I18N: see also fancy-research-links */ I18N::translate('Open links in a new tab') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                    </div>
+                </div>
+            </fieldset>
+    </section>
             
             <div class="row">
                 <div class="col-form-label col-sm-3 wt-page-options-label">
@@ -800,7 +849,6 @@ $link_cmm = $links['csvexportcmm'] ?? '';
         const showError = (elem, msg) => {
             let errId = 'error-' + elem.attr('id');
             let errElem = $(`#${errId}`);
-            console.log(errElem);
             if (errElem.length == 1) {
                 $(errElem).text(msg);
             } else {
@@ -851,14 +899,19 @@ $link_cmm = $links['csvexportcmm'] ?? '';
         });
     });
 
-    function toggleSectionByRadio(secId, radioGroupname, cname) {
-        console.log(secId, radioGroupname, cname)
-        let section = $(`#${secId}`);
-        if ($(`#${radioGroupname}-0:checked`).length == 1) { // radio "no" is selected - disable
-            $(section).addClass(cname);
-        } else {
-            $(section).removeClass(cname);
+    function toggleSectionByRadio(secSelector, radioGroupname, cname, indexes) {
+        let section = $(secSelector);
+        if (!section || section.length == 0) {
+            return;
         }
+
+        for (const idx of indexes) {
+            if ($(`#${radioGroupname}-${idx}:checked`).length == 1) { // radio is selected - disable
+                $(section).addClass(cname);
+                return;
+            }
+        }
+        $(section).removeClass(cname);
     }
 
     function toggleSectionBySelectSingle(secId, selectName, cname, checkvalues, disableifincluded = true) {
@@ -873,21 +926,26 @@ $link_cmm = $links['csvexportcmm'] ?? '';
         }
     }
 
-    $(()=> {
-        [['<?= LinkEnhancerModule::PREF_LINKSPP_ACTIVE; ?>', 1],
-        ['<?= LinkEnhancerModule::PREF_MD_ACTIVE; ?>', 2],
-        ['<?= LinkEnhancerModule::PREF_MD_IMG_ACTIVE; ?>', '2_1'],
-        ['<?= LinkEnhancerModule::PREF_MD_TD_H_CTRL_TYPE; ?>', '2_td_h'],
-        ['<?= LinkEnhancerModule::PREF_MD_EXT_ACTIVE; ?>', '2_2'],
-        ['<?= LinkEnhancerModule::PREF_MD_EXT_FN_ACTIVE; ?>', '2_2_fn'],
-        ['<?= LinkEnhancerModule::PREF_MD_EXT_TOC_ACTIVE; ?>', '2_2_toc'],
-        ['<?= LinkEnhancerModule::PREF_WTHB_ACTIVE; ?>', 3],
-        ['<?= LinkEnhancerModule::PREF_HOME_LINK_TYPE; ?>', 4]].forEach( (sec) => {
-            [secName, secIdx ] = sec;
-            ((name, idx) => {
-                $(`input[type=radio][name='${name}']`).on("change", () => {toggleSectionByRadio('options' + idx, name, 'disabled-w-text')});
-            })(secName, secIdx);
-            toggleSectionByRadio('options' + secIdx, secName, 'disabled-w-text');
+    $(()=> { // pref name, element selector, [indexes of checkbox selected for disable state=standard is 0], disable class name=standard 'disabled-w-text'
+        [
+            ['<?= LinkEnhancerModule::PREF_LINKSPP_ACTIVE; ?>', '#options1'],
+            ['<?= LinkEnhancerModule::PREF_MD_ACTIVE; ?>', '#options2'],
+            ['<?= LinkEnhancerModule::PREF_MD_IMG_ACTIVE; ?>', '#options2_1'],
+            ['<?= LinkEnhancerModule::PREF_MD_TD_H_CTRL_TYPE; ?>', '#options2_td_h'],
+            ['<?= LinkEnhancerModule::PREF_MD_EXT_ACTIVE; ?>', '#options2_2'],
+            ['<?= LinkEnhancerModule::PREF_MD_EXT_FN_ACTIVE; ?>', '#options2_2_fn'],
+            ['<?= LinkEnhancerModule::PREF_MD_EXT_TOC_ACTIVE; ?>', '#options2_2_toc'],
+            ['<?= LinkEnhancerModule::PREF_WTHB_ACTIVE; ?>', '#options3'],
+            ['<?= LinkEnhancerModule::PREF_HOME_LINK_TYPE; ?>', '#options4'],
+            ['<?= LinkEnhancerModule::PREF_OPEN_IN_NEW_TAB; ?>', '.openinnewtab', [0,2], 'disabled']
+        ].forEach( (sec) => {
+            [secName, secSelector, indexes, cname ] = sec;
+            indexes = (indexes === null || !Array.isArray(indexes) ? [0] : indexes);
+            cname   = (cname ?? 'disabled-w-text');
+            ((name, selector, idx, cname) => {
+                $(`input[type=radio][name='${name}']`).on("change", () => {toggleSectionByRadio(selector, name, cname, idx)});
+            })(secName, secSelector, indexes, cname);
+            toggleSectionByRadio(secSelector, secName, cname, indexes);
         });
 
         [['<?= LinkEnhancerModule::PREF_MD_EXT_TOC_POS; ?>', 'pos-is-placeholder', [ 'placeholder' ], false ],

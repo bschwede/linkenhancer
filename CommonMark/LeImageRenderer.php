@@ -78,6 +78,8 @@ final class LeImageRenderer implements NodeRendererInterface, XmlNodeRendererInt
     private array $img_stdclassnames;
 
     private string $img_titleclassnames;
+
+    private bool $open_in_new_tab;
     //+++
 
     public function __construct(LinkEnhancerModule $module, null|Tree $tree)
@@ -85,6 +87,7 @@ final class LeImageRenderer implements NodeRendererInterface, XmlNodeRendererInt
         $this->module = $module;
         $this->img_stdclassnames = explode(' ', $this->module->getPref($this->module::PREF_MD_IMG_STDCLASS));
         $this->img_titleclassnames = $this->module->getPref($this->module::PREF_MD_IMG_TITLE_STDCLASS);
+        $this->open_in_new_tab = $this->module->getPref($this->module::PREF_MD_IMG_OPEN_IN_NEW_TAB, true, true);
 
         $this->tree = $tree;
         
@@ -163,6 +166,7 @@ final class LeImageRenderer implements NodeRendererInterface, XmlNodeRendererInt
                             'width' => $width,
                             'height' => $height,
                             'titleclassnames' => $this->img_titleclassnames,
+                            'open_in_new_tab' => $this->open_in_new_tab,
                         ]);
                     } else {
                         return view($this->module->name() . '::error-img-svg', [
