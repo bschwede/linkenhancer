@@ -57,6 +57,12 @@ use Aura\Router\Map;
 use Exception;
 use PDOException;
 
+enum OverwriteMode
+{ // pref schema cascading setting - overwrite setting value with parent if...
+    case ParentIsZero;   // parent is bool - if component is active, subordinated settings can be evaluated
+    case ParentIsNotOne; // parent is int triple state
+}
+
 class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface, ModuleGlobalInterface, ModuleConfigInterface {
 
 
@@ -89,7 +95,9 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public const PREF_WTHB_STD_LINK = 'WTHB_STD_LINK'; // standard link to GenWiki "Webtrees Handbuch"
     public const PREF_WTHB_TRANSLATE = 'WTHB_TRANSLATE'; // use translation service for webtrees manual pages
     public const PREF_WTHB_ADMINVIEWPATCH = 'WTHB_ADMINVIEWPATCH'; // register admin layout view
+    public const PREF_WTHB_OPEN_IN_NEW_TAB = 'WTHB_OPEN_IN_NEW_TAB';
     public const PREF_JS_DEBUG_CONSOLE = 'JS_DEBUG_CONSOLE'; // console.debug with active route info; 0=off, 1=on
+    public const PREF_OPEN_IN_NEW_TAB = 'OPEN_IN_NEW_TAB'; // triple-state, 0=off, 1=user defined, 2=on
     public const PREF_GENWIKI_LINK = 'GENWIKI_LINK'; // base link to GenWiki
     
     public const PREF_LINKSPP_ACTIVE = 'LINKSPP_ACTIVE'; // enable links++
@@ -100,6 +108,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public const PREF_MD_IMG_ACTIVE = 'MD_IMG_ACTIVE'; // enable enhanced markdown img syntax
     public const PREF_MD_IMG_STDCLASS = 'MD_IMG_STDCLASS'; // standard classname(s) for div wrapping img- and link-tag    
     public const PREF_MD_IMG_TITLE_STDCLASS = 'MD_IMG_TITLE_STDCLASS'; // standard classname(s) for picture subtitle
+    public const PREF_MD_IMG_OPEN_IN_NEW_TAB = 'MD_IMG_OPEN_IN_NEW_TAB';
     public const PREF_MDE_ACTIVE = 'MDE_ACTIVE'; // enable markdown editor for note textareas
 
     public const PREF_MD_TD_H_CTRL_TYPE = 'MD_TD_H_CTRL_ACTIVE'; // enable table cell height control
@@ -142,7 +151,13 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
     public const HELP_SCHEMA_TARGET_VERSION = 2;
 
-    protected const PREFERENCES_SCHEMA = [ //type=int|string|bool
+    protected const PREFERENCES_SCHEMA = [
+        // required settings:
+        // - type=int|string|bool
+        // - default=string with default value (bool=0/1) 
+        // optional settings for dependent options:
+        // - parent=PREF_-Keyname 
+        // - mode=define how value is overwritten py parent value
         self::PREF_HOME_LINK_TYPE            => [ 'type' => 'int',    'default' => '1' ], // triple-state, 0=off, 1=tree, 2=my-page
         self::PREF_HOME_LINK_JSON            => [ 'type' => 'string', 'default' => '' ], // json object { '*': stylerules-string, 'theme': stylerules-string}
         self::PREF_WTHB_ACTIVE               => [ 'type' => 'bool',   'default' => '1' ],
@@ -152,30 +167,33 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         self::PREF_WTHB_UPDATE               => [ 'type' => 'bool',   'default' => '1' ],
         self::PREF_WTHB_ADMINVIEWPATCH       => [ 'type' => 'bool',   'default' => '1' ],
         self::PREF_WTHB_LASTHASH             => [ 'type' => 'string', 'default' => '' ],
+        self::PREF_WTHB_OPEN_IN_NEW_TAB      => [ 'type' => 'bool',   'default' => '1', 'parent' => self::PREF_OPEN_IN_NEW_TAB, 'mode' => OverwriteMode::ParentIsNotOne ],
         self::PREF_JS_DEBUG_CONSOLE          => [ 'type' => 'bool',   'default' => '0' ],
+        self::PREF_OPEN_IN_NEW_TAB           => [ 'type' => 'int',    'default' => '2' ], // triple-state, 0=off, 1=user defined, 2=on
         self::PREF_WTHB_STD_LINK             => [ 'type' => 'string', 'default' => self::STDLINK_WTHB ], // url
         self::PREF_GENWIKI_LINK              => [ 'type' => 'string', 'default' => self::STDLINK_GENWIKI ], // url
         self::PREF_WTHB_TRANSLATE            => [ 'type' => 'int',    'default' => '1' ], // triple-state. 0=off, 1=user defined, 2=on
         self::PREF_LINKSPP_ACTIVE            => [ 'type' => 'bool',   'default' => '1' ],
         self::PREF_LINKSPP_JS                => [ 'type' => 'string', 'default' => '' ],
-        self::PREF_LINKSPP_OPEN_IN_NEW_TAB   => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_LINKSPP_OPEN_IN_NEW_TAB   => [ 'type' => 'bool',   'default' => '1', 'parent' => self::PREF_OPEN_IN_NEW_TAB, 'mode' => OverwriteMode::ParentIsNotOne ],
         // markdown
         self::PREF_MD_ACTIVE                 => [ 'type' => 'bool',   'default' => '1' ],
-        self::PREF_MD_IMG_ACTIVE             => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_MD_IMG_ACTIVE             => [ 'type' => 'bool',   'default' => '1', 'parent' => self::PREF_MD_ACTIVE, 'mode' => OverwriteMode::ParentIsZero ],
         self::PREF_MD_IMG_STDCLASS           => [ 'type' => 'string', 'default' => self::STDCLASS_MD_IMG ], // css class name
         self::PREF_MD_IMG_TITLE_STDCLASS     => [ 'type' => 'string', 'default' => self::STDCLASS_MD_IMG_TITLE ], // css class name
-        self::PREF_MDE_ACTIVE                => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_MD_IMG_OPEN_IN_NEW_TAB    => [ 'type' => 'bool',   'default' => '1', 'parent' => self::PREF_OPEN_IN_NEW_TAB, 'mode' => OverwriteMode::ParentIsNotOne ],
+        self::PREF_MDE_ACTIVE                => [ 'type' => 'bool',   'default' => '1', 'parent' => self::PREF_MD_ACTIVE, 'mode' => OverwriteMode::ParentIsZero ],
         self::PREF_MD_TD_H_CTRL_TYPE         => [ 'type' => 'int',    'default' => '1' ], // triple-state. 0=off, 1=available (default=off), 2=available (default=ON)
         self::PREF_MD_TD_H_CB_VISIBLE        => [ 'type' => 'bool',   'default' => '1' ],
         // markdown extensions
-        self::PREF_MD_EXT_ACTIVE             => [ 'type' => 'bool',   'default' => '1' ],
-        self::PREF_MD_EXT_STRIKE_ACTIVE      => [ 'type' => 'bool',   'default' => '1' ],
-        self::PREF_MD_EXT_DL_ACTIVE          => [ 'type' => 'bool',   'default' => '1' ],
-        self::PREF_MD_EXT_MARK_ACTIVE        => [ 'type' => 'bool',   'default' => '1' ],
-        self::PREF_MD_EXT_FN_ACTIVE          => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_MD_EXT_ACTIVE             => [ 'type' => 'bool',   'default' => '1', 'parent' => self::PREF_MD_ACTIVE, 'mode' => OverwriteMode::ParentIsZero ],
+        self::PREF_MD_EXT_STRIKE_ACTIVE      => [ 'type' => 'bool',   'default' => '1', 'parent' => self::PREF_MD_EXT_ACTIVE, 'mode' => OverwriteMode::ParentIsZero ],
+        self::PREF_MD_EXT_DL_ACTIVE          => [ 'type' => 'bool',   'default' => '1', 'parent' => self::PREF_MD_EXT_ACTIVE, 'mode' => OverwriteMode::ParentIsZero ],
+        self::PREF_MD_EXT_MARK_ACTIVE        => [ 'type' => 'bool',   'default' => '1', 'parent' => self::PREF_MD_EXT_ACTIVE, 'mode' => OverwriteMode::ParentIsZero ],
+        self::PREF_MD_EXT_FN_ACTIVE          => [ 'type' => 'bool',   'default' => '1', 'parent' => self::PREF_MD_EXT_ACTIVE, 'mode' => OverwriteMode::ParentIsZero ],
         self::PREF_MD_EXT_FN_BACKREF_CHAR    => [ 'type' => 'string', 'default' => '↩' ],
         self::PREF_MD_EXT_FN_ADD_HR          => [ 'type' => 'bool',   'default' => '1' ],
-        self::PREF_MD_EXT_TOC_ACTIVE         => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_MD_EXT_TOC_ACTIVE         => [ 'type' => 'bool',   'default' => '1', 'parent' => self::PREF_MD_EXT_ACTIVE, 'mode' => OverwriteMode::ParentIsZero ],
         self::PREF_MD_EXT_TOC_PERMALINK_CHAR => [ 'type' => 'string', 'default' => '#' ],
         self::PREF_MD_EXT_TOC_STYLE          => [ 'type' => 'string', 'default' => 'none' ],
         self::PREF_MD_EXT_TOC_NORMALIZE      => [ 'type' => 'string', 'default' => 'relative' ],
@@ -360,9 +378,9 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             return '';
         }
 
-        $cfg_md_editor_active = $cfg_md_active ? $this->getPref(self::PREF_MDE_ACTIVE, true) : false;
-        $cfg_md_img_active    = $cfg_md_active ? $this->getPref(self::PREF_MD_IMG_ACTIVE, true) : false;
-        $cfg_md_ext_active    = $cfg_md_active ? $this->getPref(self::PREF_MD_EXT_ACTIVE, true) : false;
+        $cfg_md_editor_active = $this->getPref(self::PREF_MDE_ACTIVE, true, true);
+        $cfg_md_img_active    = $this->getPref(self::PREF_MD_IMG_ACTIVE, true, true);
+        $cfg_md_ext_active    = $this->getPref(self::PREF_MD_EXT_ACTIVE, true, true);
         $cfg_js_debug_console = $this->getPref(self::PREF_JS_DEBUG_CONSOLE, true);
 
 
@@ -413,6 +431,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                 'subcontext'   => $withSubcontext ? $help['subcontext'] : [],
                 'modal_url'    => route('module', ['module' => $this->name(), 'action' => 'helpwthb']),
                 'tocnsearch'   => $this->getPref(self::PREF_WTHB_TOCNSEARCH, true),
+                'openInNewTab' => $this->getPref(self::PREF_WTHB_OPEN_IN_NEW_TAB, true, true),
             ];
 
             $initJs .= "LinkEnhMod.initWthb(" . json_encode($options) . ");";
@@ -749,29 +768,49 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
      * extends getPreference
      *
      * @param string $setting_name
-     * @param string $default
+     * @param bool   $typecasted      if true, return type cated value depending on PREFERENCES_SCHEMA type
+     * @param bool   $resolveCascade
      *
      * @return mixed
      */
-    public function getPref(string $setting_name, bool $typecasted = false): mixed
+    public function getPref(string $setting_name, bool $typecasted = false, bool $resolveCascade = false): mixed
     {
         if ($this->prefs_cache === null) {
             $this->prefs_cache = $this->getAllPrefs();
         }
         $result = (array_key_exists($setting_name, $this->prefs_cache) ? $this->prefs_cache[$setting_name] : '');
         
-        $value = trim(
-            isset($result) && $result != ''
-                ? $result 
-                : (array_key_exists($setting_name, self::PREFERENCES_SCHEMA) ? (self::PREFERENCES_SCHEMA[$setting_name]['default'] ?? '') : '')
-        );
+        $setting_schema = (array_key_exists($setting_name, self::PREFERENCES_SCHEMA) ? self::PREFERENCES_SCHEMA[$setting_name] : []);
+
+        $type = $setting_schema['type'] ?? 'string';
+
+        $value = match ($type) {
+            'int'   => $result === ' ' ? '0' : $result,
+            'bool'  => $result === ' ' ? '0' : $result,
+            default => $result,
+        };
+
+        $value = trim( (string) ($value !== '' ? $value : $setting_schema['default'] ?? ''));
+
+        if ($resolveCascade 
+            && ($setting_schema['parent'] ?? null) && array_key_exists($setting_schema['parent'], self::PREFERENCES_SCHEMA)
+            && ($setting_schema['mode'] ?? null)
+        ) {
+            $parentvalue = trim((string) $this->getPref($setting_schema['parent'], false, true) );
+
+            $value = match ($setting_schema['mode']) {
+                OverwriteMode::ParentIsZero   => ($parentvalue == 0 ? $parentvalue : $value),
+                OverwriteMode::ParentIsNotOne => ($parentvalue != 1 ? $parentvalue : $value),
+                default => $value,
+            };            
+        }
+        
         if ($typecasted) {
-            $type  = (array_key_exists($setting_name, self::PREFERENCES_SCHEMA) ? (self::PREFERENCES_SCHEMA[$setting_name]['type'] ?? 'string') : 'string');
             $value = match ($type) {
                 'int' => intval($value),
-                'bool' => filter_var($value, FILTER_VALIDATE_BOOLEAN),
+                'bool' => boolval($value), // we only have int (triple state values) to cast to bool; boolval has a more appropriate logic in this case than filter_var($value, FILTER_VALIDATE_BOOLEAN),
                 default => (string) $value,
-            };            
+            };
         }
         return $value;
     }
@@ -805,11 +844,16 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
      */
     public function setPref(string $setting_name, string $setting_value): void
     {
+        $setting_value = ($setting_value === '' ? ' ' : $setting_value);
+
         //allow user to blank a setting, also if we have a DEFAULT_PREFERENCE
-        if (array_key_exists($setting_name, self::PREFERENCES_SCHEMA) && (self::PREFERENCES_SCHEMA[$setting_name]['type'] ?? '') === 'string') {
-            $setting_value = ((self::PREFERENCES_SCHEMA[$setting_name]['default'] ?? false) && !$setting_value ? ' ' : $setting_value);
-        } else {
-            $setting_value = (!$setting_value ? ' ' : $setting_value);
+        if (array_key_exists($setting_name, self::PREFERENCES_SCHEMA)) {
+            $setting_value = match(self::PREFERENCES_SCHEMA[$setting_name]['type'] ?? '') {
+                'string' => ((self::PREFERENCES_SCHEMA[$setting_name]['default'] ?? false) && $setting_value === '' ? ' ' : $setting_value),
+                'bool'   => boolval(trim($setting_value)) ? '1' : '0',
+                'int'    => (string) intval(trim($setting_value)),
+                default  => $setting_value
+            };
         }
         
         $this->setPreference($setting_name, $setting_value);
