@@ -6,3 +6,4 @@ dist/*
 *.hash
 util/wthb-toc
 resources/views/*.phtml.~*
+.vscode/*
