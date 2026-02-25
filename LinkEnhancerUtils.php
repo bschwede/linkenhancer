@@ -29,7 +29,12 @@ namespace Schwendinger\Webtrees\Module\LinkEnhancer;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Validator;
+use Fisharebest\Webtrees\Module\AbstractModule;
+use Fisharebest\Webtrees\Schema\MigrationInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Illuminate\Database\Capsule\Manager as DB;
+
+use PDOException;
 
 class LinkEnhancerUtils { // misc helper functions
     /**
@@ -299,6 +304,94 @@ class LinkEnhancerUtils { // misc helper functions
             || (str_starts_with($activeRouteInfo['path'], '/module') && str_starts_with($action, 'admin')));
         }
         return false;
-    }     
+    }
+
+
+    /**
+     * applies Migrate# class files (zero based) to the database until target_version -1
+     * same as Database::getSchema, but use module settings instead of site settings (Issue #3 in personal_facts_with_hooks)
+     * taken from modules_v4/vesta_common/VestaModuleTrait.php
+     * @param AbstractModule $module
+     * @param string $namespace      namespace of Migration class
+     * @param string $schema_name    setting name of current schema version
+     * @param int $target_version
+     * @return bool                  true if updates upplied
+     */
+    public static function updateSchema(AbstractModule $module, string $namespace, string $schema_name, int $target_version): bool
+    {
+        try {
+            $current_version = intval($module->getPreference($schema_name));
+        } catch (PDOException $ex) {
+            // During initial installation, the site_preference table won’t exist.
+            $current_version = 0;
+        }
+
+        $updates_applied = false;
+
+        // Update the schema, one version at a time.
+        while ($current_version < $target_version) {
+
+            $class = $namespace . '\\Migration' . $current_version;
+            /** @var MigrationInterface $migration */
+            $migration = new $class();
+            $migration->upgrade();
+            $current_version++;
+
+            //when a module is first installed, we may not be able to setPreference at this point
+            ////(if this is called e.g. from SetName())
+            //because of foreign key constraints:
+            //the module may not have been inserted in the 'module' table at this point!
+            //cf. ModuleService.all()
+            //
+            //not that critical, we can just set the preference next time
+            //
+            //let's just check this directly (using ModuleService at this point may lead to looping, if we're indirectly called from there)
+            if (DB::table('module')->where('module_name', '=', $module->name())->exists()) {
+                $module->setPreference($schema_name, (string) $current_version);
+            }
+            $updates_applied = true;
+        }
+
+        return $updates_applied;
+    }
+
+
+    /**
+     * include bundle-{infix}.min.[css|js] from ressource folder depending on given bundle shortcuts
+     * css files smaler than 500 Bytes are included directly, otherwise per link- and script-tag (js)
+     * @param AbstractModule $module   methods assetUrl (ModuleCustomTrait) and resourcesFolder (AbstractModule) are used
+     * @param array $bundleShortcuts
+     * @return string
+     */
+    public static function getIncludeWebressourceString(AbstractModule $module, array $bundleShortcuts): string
+    {
+        if (!$bundleShortcuts) {
+            return '';
+        }
+        $includeRes = '';
+        asort($bundleShortcuts);
+        $bundleShortcutsCss = $bundleShortcuts; //array_filter($bundleShortcuts, function ($var) { return $var !== 'wthb'; }); // wthb support - only js
+        $bundleShortcutsJs = $bundleShortcuts; //array_filter($bundleShortcuts, fn($var) => $var !== 'img'); // markdown image support - only css
+
+        // CSS
+        if ($bundleShortcutsCss) {
+            $infix = implode("-", $bundleShortcutsCss);
+            $assetFile = $module->resourcesFolder() . "css/bundle-{$infix}.min.css";
+            if (file_exists($assetFile)) {
+                if (filesize($assetFile) > 500) {
+                    $includeRes .= '<link rel="stylesheet" type="text/css" href="' . $module->assetUrl("css/bundle-{$infix}.min.css") . '">';
+                } else {
+                    $includeRes .= '<style>' . file_get_contents($assetFile) . '</style>';
+                }
+            }
+        }
+
+        // Javascript
+        if ($bundleShortcutsJs) {
+            $infix = implode("-", $bundleShortcutsJs);
+            $includeRes .= '<script src="' . $module->assetUrl("js/bundle-{$infix}.min.js") . '"></script>';
+        }
+        return $includeRes;
+    }
 
 }

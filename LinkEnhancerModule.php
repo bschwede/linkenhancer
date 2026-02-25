@@ -47,7 +47,6 @@ use Fisharebest\Webtrees\Module\ModuleCustomInterface;
 use Fisharebest\Webtrees\Module\ModuleCustomTrait;
 use Fisharebest\Webtrees\Module\ModuleGlobalInterface;
 use Fisharebest\Webtrees\Module\ModuleGlobalTrait;
-use Fisharebest\Webtrees\Schema\MigrationInterface;
 use Fisharebest\Webtrees\Services\TreeService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -55,7 +54,6 @@ use Illuminate\Database\Capsule\Manager as DB;
 use Aura\Router\Map;
 
 use Exception;
-use PDOException;
 
 enum OverwriteMode
 { // pref schema cascading setting - overwrite setting value with parent if...
@@ -149,7 +147,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
     public const HELP_CSV = __DIR__ . DIRECTORY_SEPARATOR . 'Schema' . DIRECTORY_SEPARATOR . 'SeedHelpTable.csv';
 
-    public const HELP_SCHEMA_TARGET_VERSION = 2;
+    public const int HELP_SCHEMA_TARGET_VERSION = 2;
 
     protected const PREFERENCES_SCHEMA = [
         // required settings:
@@ -309,7 +307,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
      */
     public function boot(): void
     {
-        $this->updateSchema('\Schwendinger\Webtrees\Module\LinkEnhancer\Schema', 'SCHEMA_VERSION', self::HELP_SCHEMA_TARGET_VERSION);
+        Utils::updateSchema($this, '\Schwendinger\Webtrees\Module\LinkEnhancer\Schema', 'SCHEMA_VERSION', self::HELP_SCHEMA_TARGET_VERSION);
 
         // check for csv updates once a day and if schema was updated
         Registry::cache()->file()->remember(
@@ -442,7 +440,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         if (Utils::isAdminPage($request))
         {
                 if ($cfg_wthb_active) {
-                    $includeRes .= $this->getIncludeWebressourceString(['wthb']);
+                    $includeRes .= Utils::getIncludeWebressourceString($this, ['wthb']);
                     return $includeRes . Utils::getJavascriptWrapper($docReadyJs, $initJs);
                 }
                 return ''; # other stuff is of no use in admin backend
@@ -539,7 +537,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             }
         }
         
-        $includeRes .= $this->getIncludeWebressourceString($bundleShortcuts);
+        $includeRes .= Utils::getIncludeWebressourceString($this, $bundleShortcuts);
 
         return $includeRes . Utils::getJavascriptWrapper($docReadyJs, $initJs);
     }
@@ -569,37 +567,6 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         return $html;
     }
 
-
-    private function getIncludeWebressourceString(array $bundleShortcuts): string
-    {
-        if (!$bundleShortcuts) {
-            return '';
-        }
-        $includeRes = '';
-        asort($bundleShortcuts);
-        $bundleShortcutsCss = $bundleShortcuts; //array_filter($bundleShortcuts, function ($var) { return $var !== 'wthb'; }); // wthb support - only js
-        $bundleShortcutsJs = $bundleShortcuts; //array_filter($bundleShortcuts, fn($var) => $var !== 'img'); // markdown image support - only css
-
-        // CSS
-        if ($bundleShortcutsCss) {
-            $infix = implode("-", $bundleShortcutsCss);
-            $assetFile = $this->resourcesFolder() . "css/bundle-{$infix}.min.css";
-            if (file_exists($assetFile)) {
-                if (filesize($assetFile) > 500) {
-                    $includeRes .= '<link rel="stylesheet" type="text/css" href="' . $this->assetUrl("css/bundle-{$infix}.min.css") . '">';
-                } else {
-                    $includeRes .= '<style>' . file_get_contents($assetFile) . '</style>';
-                }
-            }
-        }
-
-        // Javascript
-        if ($bundleShortcutsJs) {
-            $infix = implode("-", $bundleShortcutsJs);
-            $includeRes .= '<script src="' . $this->assetUrl("js/bundle-{$infix}.min.js") . '"></script>';
-        }
-        return $includeRes;
-    }
     
     /**
      * Open control panel page with options
@@ -1025,46 +992,6 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             'DuckDuckGo' => 'https://duckduckgo.com/?q=site:wiki.genealogy.net+inurl:"Webtrees%20Handbuch"+',
             'Google'     => 'https://www.google.com/search?q=site:wiki.genealogy.net+"webtrees+Handbuch"+AND+',
         ];
-    }
-
-    //same as Database::getSchema, but use module settings instead of site settings (Issue #3 in personal_facts_with_hooks)
-    /* taken from modules_v4/vesta_common/VestaModuleTrait.php */
-    protected function updateSchema($namespace, $schema_name, $target_version): bool
-    {
-        try {
-            $current_version = intval($this->getPreference($schema_name));
-        } catch (PDOException $ex) {
-            // During initial installation, the site_preference table won’t exist.
-            $current_version = 0;
-        }
-
-        $updates_applied = false;
-
-        // Update the schema, one version at a time.
-        while ($current_version < $target_version) {
-            
-            $class = $namespace . '\\Migration' . $current_version;
-            /** @var MigrationInterface $migration */
-            $migration = new $class();
-            $migration->upgrade();
-            $current_version++;
-
-            //when a module is first installed, we may not be able to setPreference at this point
-            ////(if this is called e.g. from SetName())
-            //because of foreign key constraints:
-            //the module may not have been inserted in the 'module' table at this point!
-            //cf. ModuleService.all()
-            //
-            //not that critical, we can just set the preference next time
-            //
-            //let's just check this directly (using ModuleService at this point may lead to looping, if we're indirectly called from there)
-            if (DB::table('module')->where('module_name', '=', $this->name())->exists()) {
-                $this->setPreference($schema_name, (string) $current_version);
-            }
-            $updates_applied = true;
-        }
-
-        return $updates_applied;
     }
 
 }
