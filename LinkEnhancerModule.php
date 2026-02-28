@@ -94,6 +94,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public const PREF_WTHB_TRANSLATE = 'WTHB_TRANSLATE'; // use translation service for webtrees manual pages
     public const PREF_WTHB_ADMINVIEWPATCH = 'WTHB_ADMINVIEWPATCH'; // register admin layout view
     public const PREF_WTHB_OPEN_IN_NEW_TAB = 'WTHB_OPEN_IN_NEW_TAB';
+    public const PREF_WTHB_SPLIT_TOPMENU = 'WTHB_SPLIT_TOPMENU';
     public const PREF_JS_DEBUG_CONSOLE = 'JS_DEBUG_CONSOLE'; // console.debug with active route info; 0=off, 1=on
     public const PREF_OPEN_IN_NEW_TAB = 'OPEN_IN_NEW_TAB'; // triple-state, 0=off, 1=user defined, 2=on
     public const PREF_GENWIKI_LINK = 'GENWIKI_LINK'; // base link to GenWiki
@@ -166,6 +167,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         self::PREF_WTHB_ADMINVIEWPATCH       => [ 'type' => 'bool',   'default' => '1' ],
         self::PREF_WTHB_LASTHASH             => [ 'type' => 'string', 'default' => '' ],
         self::PREF_WTHB_OPEN_IN_NEW_TAB      => [ 'type' => 'bool',   'default' => '1', 'parent' => self::PREF_OPEN_IN_NEW_TAB, 'mode' => OverwriteMode::ParentIsNotOne ],
+        self::PREF_WTHB_SPLIT_TOPMENU        => [ 'type' => 'bool',   'default' => '1' ],
         self::PREF_JS_DEBUG_CONSOLE          => [ 'type' => 'bool',   'default' => '0' ],
         self::PREF_OPEN_IN_NEW_TAB           => [ 'type' => 'int',    'default' => '2' ], // triple-state, 0=off, 1=user defined, 2=on
         self::PREF_WTHB_STD_LINK             => [ 'type' => 'string', 'default' => self::STDLINK_WTHB ], // url
@@ -430,6 +432,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                 'modal_url'    => route('module', ['module' => $this->name(), 'action' => 'helpwthb']),
                 'tocnsearch'   => $this->getPref(self::PREF_WTHB_TOCNSEARCH, true),
                 'openInNewTab' => $this->getPref(self::PREF_WTHB_OPEN_IN_NEW_TAB, true, true),
+                'splitNavlink' => $this->getPref(self::PREF_WTHB_SPLIT_TOPMENU, true),
             ];
 
             $initJs .= "LinkEnhMod.initWthb(" . json_encode($options) . ");";

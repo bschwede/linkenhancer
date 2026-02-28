@@ -592,23 +592,25 @@ $link_cmm = $links['csvexportcmm'] ?? '';
         <h4 class="subdiv">[3] <a name="section3" href="#top"><?= /*I18N: Settings - section title */ I18N::translate('Webtrees manual') ?></a></h4>
 <section id="options3">
         <div class="row">
-            <!-- prepend faicon to wthb-link --><?php $prefId = LinkEnhancerModule::PREF_WTHB_FAICON; ?>
-            <fieldset class="form-group mb-3">
-                <div class="row">
-                    <legend class="col-form-label col-sm-3 wt-page-options-label">
-                        <i class="fa-solid fa-circle-question"></i> <?= I18N::translate('Precede the help link with an icon') ?>
-                    </legend>
-                    <div class="col-sm-9 wt-page-options-value mt-2">
-                        <?= insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+
+            <div class="row">
+                <div class="col-form-label col-sm-3 wt-page-options-label">
+                    <?= I18N::translate('Top menu') ?>
+                </div>
+                <div class="col-sm-9 wt-page-options-value mt-2">
+                    <div class="form-text">
+                        <p>
+                            <?= I18N::translate('An entry is added to the top menu, which provides access to a context-sensitive help link for the current page.') ?>
+                        </p>
                     </div>
                 </div>
-            </fieldset>
-        
-            <!-- support subcontext wthb-links --><?php $prefId = LinkEnhancerModule::PREF_WTHB_SUBCONTEXT; ?>
-            <fieldset class="form-group mb-3">
+            </div>
+
+            <!-- prepend faicon to wthb-link --><?php $prefId = LinkEnhancerModule::PREF_WTHB_FAICON; ?>
+            <fieldset class="form-group mb-1">
                 <div class="row">
-                    <legend class="col-form-label col-sm-3 wt-page-options-label">
-                        <?= I18N::translate('Help link for subcontext topics') ?>
+                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
+                        <i class="fa-solid fa-circle-question"></i> <?= I18N::translate('Precede the top menu link with an icon') ?>
                     </legend>
                     <div class="col-sm-9 wt-page-options-value mt-2">
                         <?= insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
@@ -616,11 +618,41 @@ $link_cmm = $links['csvexportcmm'] ?? '';
                 </div>
             </fieldset>
 
+            <!-- split top menu item --><?php $prefId = LinkEnhancerModule::PREF_WTHB_SPLIT_TOPMENU; ?>
+            <fieldset class="form-group mb-1">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
+                        <?= I18N::translate('Split top menu item') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                        <div class="form-text">
+                            <p>
+                                <?= I18N::translate('This option controls whether the help link is located in the submenu or can be clicked directly, opening the submenu via a separate link.') ?>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
             <!-- full-text search and toc --><?php $prefId = LinkEnhancerModule::PREF_WTHB_TOCNSEARCH; ?>
             <fieldset class="form-group mb-3">
                 <div class="row">
-                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
                         <?= I18N::translate("Full-text search") . ' / ' . I18N::translate('Table of contents') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                    </div>
+                </div>
+            </fieldset>
+
+
+            <!-- support subcontext wthb-links --><?php $prefId = LinkEnhancerModule::PREF_WTHB_SUBCONTEXT; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                        <?= I18N::translate('Help link for subcontext topics') ?>
                     </legend>
                     <div class="col-sm-9 wt-page-options-value mt-2">
                         <?= insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
