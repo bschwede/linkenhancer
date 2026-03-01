@@ -44,6 +44,34 @@ function insertNoYesInlineRadiobuttons(string $id, string $value): string {
     ]);
 }
 
+function getFormButtons(string $idSuffix):string { 
+    ob_start();?>
+        <div class="row">
+            <div class="col-6 d-flex align-items-center justify-content-start">
+                <button type="submit" class="btn btn-primary">
+                    <?= view('icons/save') ?>
+                    <?= /*I18N: webtrees.pot */ I18N::translate('save') ?>
+                </button>
+            </div>
+
+            <div class="col-6 d-flex align-items-center justify-content-end">
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle settings-dropdown" id="settings-dropdown<?= $idSuffix ?>" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <?= I18N::translate('Settings') ?>...
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="settings-dropdown<?= $idSuffix ?>">
+                        <li><a class="dropdown-item settings-reset" href="#"><?= /*I18N: webtrees.pot */ I18N::translate('reset') ?></a></li>
+                        <li><a class="dropdown-item settings-reset-to-default" href="#"><?= I18N::translate('reset to default') ?></a></li>
+                        <li><a class="dropdown-item settings-json-export" href="#"><?= I18N::translate('JSON export') ?></a></li>
+                        <li><a class="dropdown-item settings-json-import" href="#"><?= I18N::translate('JSON import') ?></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+<?php
+    return ob_get_clean();
+}
+
 $trees_w_md = join('</li><li>', $mdcfg['trees_w_md']);
 $trees_w_md_cnt = count($mdcfg['trees_w_md']);
 $trees_w_md = $trees_w_md ?  "<ol class=\"treelist\"><li>{$trees_w_md}</li></ol>" : '';
@@ -53,6 +81,8 @@ $trees_w_text_cnt = count($mdcfg['trees_w_text']);
 $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li></ol>" : '';
 
 $link_cmm = $links['csvexportcmm'] ?? '';
+
+$defaults_json = LinkEnhancerModule::getDefaultPrefsAsJson();
 ?>
 
 <?= view('components/breadcrumbs', [
@@ -162,10 +192,7 @@ $link_cmm = $links['csvexportcmm'] ?? '';
             </fieldset>
         </div>
 
-        <button type="submit" class="btn btn-primary">
-            <?= view('icons/save') ?>
-            <?= /*I18N: webtrees.pot */ I18N::translate('save') ?>
-        </button>
+<?= getFormButtons('1') ?>
 
         <hr class="div" />
         <h3><?= /*I18N: Settings - section title */ I18N::translate('More options') ?></h3>
@@ -592,23 +619,25 @@ $link_cmm = $links['csvexportcmm'] ?? '';
         <h4 class="subdiv">[3] <a name="section3" href="#top"><?= /*I18N: Settings - section title */ I18N::translate('Webtrees manual') ?></a></h4>
 <section id="options3">
         <div class="row">
-            <!-- prepend faicon to wthb-link --><?php $prefId = LinkEnhancerModule::PREF_WTHB_FAICON; ?>
-            <fieldset class="form-group mb-3">
-                <div class="row">
-                    <legend class="col-form-label col-sm-3 wt-page-options-label">
-                        <i class="fa-solid fa-circle-question"></i> <?= I18N::translate('Precede the help link with an icon') ?>
-                    </legend>
-                    <div class="col-sm-9 wt-page-options-value mt-2">
-                        <?= insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+
+            <div class="row">
+                <div class="col-form-label col-sm-3 wt-page-options-label">
+                    <?= I18N::translate('Top menu') ?>
+                </div>
+                <div class="col-sm-9 wt-page-options-value mt-2">
+                    <div class="form-text">
+                        <p>
+                            <?= I18N::translate('An entry is added to the top menu, which provides access to a context-sensitive help link for the current page.') ?>
+                        </p>
                     </div>
                 </div>
-            </fieldset>
-        
-            <!-- support subcontext wthb-links --><?php $prefId = LinkEnhancerModule::PREF_WTHB_SUBCONTEXT; ?>
-            <fieldset class="form-group mb-3">
+            </div>
+
+            <!-- prepend faicon to wthb-link --><?php $prefId = LinkEnhancerModule::PREF_WTHB_FAICON; ?>
+            <fieldset class="form-group mb-1">
                 <div class="row">
-                    <legend class="col-form-label col-sm-3 wt-page-options-label">
-                        <?= I18N::translate('Help link for subcontext topics') ?>
+                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
+                        <i class="fa-solid fa-circle-question"></i> <?= I18N::translate('Precede the top menu link with an icon') ?>
                     </legend>
                     <div class="col-sm-9 wt-page-options-value mt-2">
                         <?= insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
@@ -616,11 +645,67 @@ $link_cmm = $links['csvexportcmm'] ?? '';
                 </div>
             </fieldset>
 
+            <!-- split top menu item --><?php $prefId = LinkEnhancerModule::PREF_WTHB_SPLIT_TOPMENU; ?>
+            <fieldset class="form-group mb-1">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
+                        <?= I18N::translate('Split top menu item') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                        <div class="form-text">
+                            <p>
+                                <?= I18N::translate('This option controls whether the help link is located in the submenu or can be clicked directly, opening the submenu via a separate link.') ?>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>           
+
             <!-- full-text search and toc --><?php $prefId = LinkEnhancerModule::PREF_WTHB_TOCNSEARCH; ?>
+            <fieldset class="form-group mb-1">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
+                        <?= I18N::translate("Full-text search") . ' / ' . I18N::translate('Table of contents') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- webtrees help topics (included) --><?php $prefId = LinkEnhancerModule::PREF_WTHB_WTCOREHELP; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
+                        <?= I18N::translate("webtrees help topics (included)") ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- wthb links json --><?php $prefId = LinkEnhancerModule::PREF_WTHB_LINKS_JSON; ?>
+            <label class="col-sm-3 col-form-label wt-page-options-label sub" for="<?= $prefId ?>">
+                <?= I18N::translate('Additional help links') ?>
+                (JSON / <?= /*I18N: webtrees.pot */ I18N::translate('optional') ?>)
+            </label>
+            <div class="col-sm-9 wt-page-options-value mt-2">
+                <textarea id="<?= $prefId ?>" name="<?= $prefId ?>" class="form-control font-monospace" dir="ltr"
+                    rows="5"><?= e($prefs[$prefId]) ?></textarea>
+                <div class="form-text">
+                    <p><?= I18N::translate('Example') ?>:
+                        <textarea class="form-control font-monospace" dir="ltr" rows="5" disabled readonly wrap="off" style="font-size:0.9em; color: gray;"><?= e(LinkEnhancerModule::STD_WTHB_LINKS_JSON) ?></textarea>
+                    </p>
+                </div>
+            </div>
+
+            <!-- support subcontext wthb-links --><?php $prefId = LinkEnhancerModule::PREF_WTHB_SUBCONTEXT; ?>
             <fieldset class="form-group mb-3">
                 <div class="row">
                     <legend class="col-form-label col-sm-3 wt-page-options-label">
-                        <?= I18N::translate("Full-text search") . ' / ' . I18N::translate('Table of contents') ?>
+                        <?= I18N::translate('Help link for subcontext topics') ?>
                     </legend>
                     <div class="col-sm-9 wt-page-options-value mt-2">
                         <?= insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
@@ -836,49 +921,68 @@ $link_cmm = $links['csvexportcmm'] ?? '';
 
         <p>&nbsp;</p>
 
-        <button type="submit" class="btn btn-primary">
-            <?= view('icons/save') ?>
-            <?= /*I18N: webtrees.pot */I18N::translate('save') ?>
-        </button>
+<?= getFormButtons('2') ?>
     </form>
 </div>
 
 <?php View::push('javascript') ?>
 <script>
     function checkForm(message) {
-        const showError = (elem, msg) => {
+        let firstErrElem = null;
+
+        const checkJs = (elemId, isJson = true) => { // validate syntax of JavaScript object or JSON string
+            let elem = $(`#${elemId}`);
+            let code = elem && (elem.val() ?? false) ? elem.val().trim() : null;
+            let okay = false;
+            if (code) {
+                try {
+                    if (isJson) {
+                        const obj = JSON.parse(code);
+                    } else {
+                        eval(`() => { let a = ${code}}`);
+                        if (!code.match(/^\s*\{/)) {
+                            throw new Error("Code does not start with a { - seems not to be an object!");
+                        }
+                    }
+                    okay = true;
+                } catch (e) {
+                    if (isJson) {
+                        showError(elem, '<?= e(I18N::translate('JSON is invalid')) ?>', e);
+                    } else {
+                        showError(elem, '<?= e(I18N::translate('Javascript is invalid')) ?>', e);
+                    }
+                    firstErrElem ??= elem;
+                }
+            } else {
+                okay = true;
+            }
+            if (okay) { clearError(elemId) }
+
+        }
+    
+        const clearError = (elemId) => {
+            let errElem = $(`#error-${elemId}`);
+            if (errElem.length > 0) {
+                $(errElem).remove();
+            }
+        }
+
+        const showError = (elem, msg, e) => {
             let errId = 'error-' + elem.attr('id');
             let errElem = $(`#${errId}`);
+            let errMsg = (e && (e.message ?? false) ? e.message : '');
+            console.warn('showError e', e)
+            let html = `<div id="${errId}" class="error">${msg}<br><code>${errMsg}</code></div>`;
             if (errElem.length == 1) {
-                $(errElem).text(msg);
+                $(errElem).html(html);
             } else {
-                $(elem).after(`<div id="${errId}" class="error">${msg}</div>`);
+                $(elem).after(html);
             }
         }
         
-        let firstErrElem = null;
-
-        let linkspp = $('#<?= LinkEnhancerModule::PREF_LINKSPP_JS; ?>');
-        let jsString = linkspp.val().trim();
-        if (jsString) {
-            try {
-                eval(`() => { let a = ${jsString}}`);
-            } catch (e) { 
-                showError(linkspp, '<?= e(I18N::translate('Javascript is invalid')) ?>: ' + e.message);
-                firstErrElem ??= linkspp;
-            }
-        }
-
-        let homelink = $('#<?= LinkEnhancerModule::PREF_HOME_LINK_JSON; ?>');
-        let jsonString = homelink.val().trim();
-        if (jsonString) {
-            try {
-                const obj = JSON.parse(jsonString); // Syntax-Validierung
-            } catch (e) {
-                showError(homelink, '<?= e(I18N::translate('JSON is invalid')) ?>');
-                firstErrElem ??= homelink;
-            }
-        }
+        checkJs('<?= LinkEnhancerModule::PREF_LINKSPP_JS; ?>', false);
+        checkJs('<?= LinkEnhancerModule::PREF_WTHB_LINKS_JSON; ?>', true);
+        checkJs('<?= LinkEnhancerModule::PREF_HOME_LINK_JSON; ?>', true);
 
         if (firstErrElem) {
             $(firstErrElem).get(0).scrollIntoView({behavior: 'smooth'});
@@ -926,8 +1030,145 @@ $link_cmm = $links['csvexportcmm'] ?? '';
         }
     }
 
-    $(()=> { // pref name, element selector, [indexes of checkbox selected for disable state=standard is 0], disable class name=standard 'disabled-w-text'
-        [
+    const getDefaultSettings = () => {
+        try {
+            return JSON.parse(`<?= $defaults_json ?>`);
+        } catch (e) {
+        }
+        return {};
+    };
+
+    function getSettings() {
+        let cfg = {};
+        Object.keys(getDefaultSettings()).forEach((key) => { 
+            let value = getCtrlValue(key);
+            if (value !== null) {
+                cfg[key] = value;
+            }
+        });
+        return cfg;
+    }
+
+    function setSettings(cfg) {
+        // is cfg object?
+        if (!cfg || typeof cfg !== 'object' || Array.isArray(cfg)) {
+            console.warn('setSettings: cfg muss ein Objekt sein');
+            return false;
+        }
+        
+        // only process known keys from defaults
+        Object.keys(getDefaultSettings()).forEach((key) => {
+            const value = cfg[key];
+            if (value !== undefined) {
+            setCtrlValue(key, value);
+            }
+        });
+        return true;
+        }
+
+        function setCtrlValue(key, value) {
+        const ctrls = document.querySelectorAll(`[name="${key}"]`);
+        if (ctrls.length === 0) return false;
+        
+        const tagName = ctrls[0].tagName;
+        const type    = ctrls[0].type?.toLowerCase();
+
+        // Radio
+        if (type === 'radio') {
+            Array.from(ctrls).forEach(radio => {
+            radio.checked = (radio.value == value);
+            });
+            ctrls[0].dispatchEvent(new Event('change', { bubbles: true }));
+            return true;
+        }
+        
+        // Checkbox: true/false/Array
+        if (type === 'checkbox') {
+            const values = Array.isArray(value) ? value : [value];
+            Array.from(ctrls).forEach(cb => {
+            cb.checked = values.includes(cb.value);
+            });
+            ctrls[0].dispatchEvent(new Event('change', { bubbles: true }));
+            return true;
+        }
+        
+        // Text, Email, Number, Password, etc.
+        if (tagName === 'INPUT' && ['text', 'email', 'number', 'password', 'hidden'].includes(type)) {
+            Array.from(ctrls).forEach(input => input.value = value);
+            ctrls[0].dispatchEvent(new Event('input', { bubbles: true }));
+            return true;
+        }
+        
+        // Textarea
+        if (tagName === 'TEXTAREA') {
+            Array.from(ctrls).forEach(textarea => textarea.value = value);
+            ctrls[0].dispatchEvent(new Event('input', { bubbles: true }));
+            return true;
+        }
+        
+        // Select (single/multi)
+        if (tagName === 'SELECT') {
+            const select = ctrls[0];
+            const values = Array.isArray(value) ? value : [value];
+            
+            Array.from(select.options).forEach(option => {
+            option.selected = values.includes(option.value);
+            });
+            
+            select.dispatchEvent(new Event('change', { bubbles: true }));
+            return true;
+        }
+        
+        return false;  // unknown type
+    }
+
+    function getCtrlValue(key) {
+        const ctrls = document.querySelectorAll(`[name="${key}"]`);
+        if (ctrls.length === 0) return null;
+        
+        const tagName = ctrls[0].tagName;
+        const type    = ctrls[0].type?.toLowerCase();
+
+        // radio: first checked value
+        if (type === 'radio') {
+            const checked = Array.from(ctrls).find(r => r.checked);
+            return checked ? checked.value : null;
+        }
+        
+        // checkbox: array of all checked values
+        if (type === 'checkbox') {
+            const values = Array.from(ctrls)
+                .filter(cb => cb.checked)
+                .map(cb => cb.value);
+            return values.length ? values : null;
+        }
+        
+        // text inputs (text, email, number, password, hidden, etc.)
+        if (tagName === 'INPUT' && 
+            ['text', 'email', 'number', 'password', 'hidden', 'search', 'tel', 'url'].includes(type)) {
+            return ctrls[0].value || '';
+        }
+        
+        // textarea
+        if (tagName === 'TEXTAREA') {
+            return ctrls[0].value || '';
+        }
+        
+        // select: Array if multiple else single value
+        if (tagName === 'SELECT') {
+            const select = ctrls[0];
+            if (select.multiple) {
+                const values = Array.from(select.selectedOptions).map(opt => opt.value);
+                return values.length ? values : null;
+            }
+            return select.value || '';
+        }
+        
+        return null;  // unknown type
+    }
+
+    $(()=> {
+        [ // pref name, element selector, [indexes of checkbox selected for disable state=standard is 0], disable class name=standard 'disabled-w-text'
             ['<?= LinkEnhancerModule::PREF_LINKSPP_ACTIVE; ?>', '#options1'],
             ['<?= LinkEnhancerModule::PREF_MD_ACTIVE; ?>', '#options2'],
             ['<?= LinkEnhancerModule::PREF_MD_IMG_ACTIVE; ?>', '#options2_1'],
@@ -957,6 +1198,33 @@ $link_cmm = $links['csvexportcmm'] ?? '';
             })(selname, secId, cvalues, dii);
             toggleSectionBySelectSingle(secId, selname, 'disabled', cvalues, dii);            
         });
+
+        const settings = getSettings();
+        $('.settings-reset').on('click', (e) => { setSettings(settings); });
+        $('.settings-reset-to-default').on('click', (e) => { 
+            const defaults = {};
+            const config = getDefaultSettings();
+            Object.keys(config).forEach(key => {
+                defaults[key] = config[key].default;
+            });
+            setSettings(defaults);
+        });
+        $('.settings-json-export').on('click', (e) => { 
+            const json = JSON.stringify(getSettings());
+            prompt("<?= I18N::translate('Settings') ?> - <?= I18N::translate('JSON export') ?>", json);
+        });
+        $('.settings-json-import').on('click', (e) => { 
+            const json = prompt("<?= I18N::translate('Settings') ?> - <?= I18N::translate('JSON import') ?>", '');
+            if (json === null || json === '') return;
+            try {
+                const import_settings = JSON.parse(json);
+                setSettings(import_settings);
+            } catch (e) {
+                alert("Error on JSON parsing");
+                console.error(e);
+            }
+        });
+
     });
 </script>
 <?php View::endpush() ?>

@@ -5,16 +5,23 @@ const getWthbCfg = () => {
             help_title_wthb: 'Webtrees manual', //link displayname
             help_title_ext: 'Help',
             cfg_title: '', // tooltip user setting link
-            searchntoc: 'Full-text search / Table of contents', // title of submenu item of topmenu wthb-link
+            tocnsearch: 'Full-text search / Table of contents', // title of submenu item of topmenu wthb-link
+            wtcorehelp: 'webtrees help topics (included)',
+            startpage: 'start page',
         },
         help_url: '#', // help url for top menu link
         faicon: false, // prepend symbol to top menu help link
         wiki_url: 'https://wiki.genealogy.net/',  // is link external or a webtrees manual link?
+        wthb_url: 'https://wiki.genealogy.net/Webtrees_Handbuch',
         dotranslate: 0, //0=off, 1=user defined, 2=on
         subcontext: [],
-        modal_url: '', // url to action handler for wthb toc data and search engine form
+        tocnsearch_url: '', // url to action handler for wthb toc data and search engine form
         tocnsearch: true, // toggle for showing wthb help modal
         openInNewTab: true,
+        splitNavlink: true,
+        wtcorehelp: true,
+        wtcorehelp_url: '', // url to action handler for wt help topics overview
+        linksJson: [], // [{"title":"webtrees FAQ", "url":"https://webtrees.net/faq/"},]
     };
 }
 
@@ -72,15 +79,93 @@ const getHelpTitle = (url) => isWthbLink(url) ? WthbCfg.I18N.help_title_wthb : W
 
 
 const insertWthbLink = (node) => { // prepend context help link to topmenu
-    if (document.querySelector('li.nav-item.menu-wthb')) return;
-    const topmenu = node ?? document.querySelector('ul.wt-user-menu, ul.nav.small');
+    if (document.querySelector('li.nav-item.menu-wthb')) return; // already there nothing to do
+    const topmenu = node ?? document.querySelector('ul.wt-user-menu, ul.nav.small'); // selector for frontend / backend
 
     if (!topmenu) return;
-    let fahtml = WthbCfg.faicon ? '<i class="fa-solid fa-circle-question"></i> ' : '';
-    // difference in styling between front- and backend: style="display: inline-block;" is missing on admin page
-    let help_title = getHelpTitle(WthbCfg.help_url);
-    const target = (WthbCfg.openInNewTab ? 'target="_blank" ' : '');
-    topmenu.insertAdjacentHTML('afterbegin', `<li class="nav-item menu-wthb"><a id="wthb-link" class="nav-link" style="display: inline-block;" ${target}href="${WthbCfg.help_url}">${fahtml}${help_title}</a></li>`);
+
+    let isSplitNavlink = WthbCfg.splitNavlink; // split nav link means: help link is a clickable top menu item and the trigger for the submenu is separated
+    let dropdown = '';
+    
+    // include link to webtrees manual start page, if context link is external
+    dropdown += (isWthbLink(WthbCfg.help_url) ? '' : `<a class="dropdown-item menu-wthb" role="menuitem" target="_blank" href="${WthbCfg.wthb_url}">${WthbCfg.I18N.help_title_wthb} - ${WthbCfg.I18N.startpage}</a>`);
+    if (WthbCfg.tocnsearch) { // webtrees table of contents and search
+        dropdown += `<a class="dropdown-item menu-wthb" role="menuitem" href="#" data-bs-backdrop="static" data-bs-toggle="modal" data-bs-target="#le-ajax-modal" data-wt-href="${WthbCfg.tocnsearch_url}">${WthbCfg.I18N.tocnsearch}</a>`;
+    }
+    if (WthbCfg.dotranslate === 1 && WthbCfg.lang?.substr(0, 2).toLowerCase() != 'de') { // 
+        dropdown += `<a class="dropdown-item menu-wthb" role="menuitem" id="wthb-link-cfg" href="#"><i class="fa-solid fa-wrench fa-fw"></i>&nbsp;${WthbCfg.I18N.cfg_title}</a>`;
+    }
+    if (WthbCfg.wtcorehelp) { // overview of help topic included in webtrees
+        dropdown += (dropdown !== '' || !isSplitNavlink ? '<hr>' : '') + `<a class="dropdown-item menu-wthb" role="menuitem" href="#" data-bs-backdrop="static" data-bs-toggle="modal" data-bs-target="#le-ajax-modal" data-wt-href="${WthbCfg.wtcorehelp_url}">${WthbCfg.I18N.wtcorehelp}</a>`;
+    }
+
+    // additional help links at the end of the submenu
+    if ((WthbCfg.linksJson ?? false) && WthbCfg.linksJson !== '') {
+        let links = null;
+        try {
+            links = JSON.parse(WthbCfg.linksJson);
+        } catch(e) {
+            console.warn('LEMod - wthb links JSON is invalid', e);
+            links = null;
+        }
+        if (Array.isArray(links)) {
+            let linkshtml = '';
+            links.forEach((link) => {
+                let title  = link.title ?? null;
+                let url    = link.url ?? null;
+                let cname  = (link.class ?? false ? ` ${link.class}` : '');
+                let target = (link.self ?? false ? '_self' : '_blank');
+                linkshtml += (title && url ? `<a class="dropdown-item menu-wthb${cname}" role="menuitem" target="${target}" href="${url}">${title}</a>` : '');
+            });
+            dropdown += (linkshtml != '' && (dropdown !== '' || !isSplitNavlink) ? '<hr>' : '') + linkshtml;
+        }
+    }
+
+    const help_icon = '<i class="fa-solid fa-circle-question"></i> ';
+    const navlink_icon = WthbCfg.faicon ? help_icon : '';
+    const help_title = getHelpTitle(WthbCfg.help_url);
+    
+    // help link is top menu item, if we have nothing other to display in a dropdown menu
+    let link_class = 'nav-link';
+    let link_attrs = ''; // difference in styling between front- and backend: style="display: inline-block;" is missing on admin page
+    let link_text  = `${navlink_icon}${help_title}`;
+    let navlink_text  = '<i class="fa-solid fa-bars"></i>';
+    let navlink_class = '';
+    let li_class = '';
+    let dropdown_title = '';
+    if (dropdown !== '') { // we have a dropdown
+        if (!isSplitNavlink) {
+            link_class = 'dropdown-item menu-wthb';
+            link_attrs = ' role="menuitem"';
+            link_text = `${help_icon}${help_title}`; // always visible question mark icon like in sub context popovers
+            navlink_text = `${navlink_icon}${WthbCfg.I18N.help_title_wthb}`; // no distinction between webtrees manual and external help for the top menu item title 
+        } else {
+            link_class += ' nav-link-p';
+            navlink_class = ' nav-link-p';
+            dropdown_title = ` title="${WthbCfg.I18N.help_title_wthb}"`;
+        }
+    }
+
+    // compose help link
+    link_attrs += (WthbCfg.openInNewTab ? ' target="_blank"' : '');
+    const wthblink = `<a id="wthb-link" class="${link_class}"${link_attrs} href="${WthbCfg.help_url}">${link_text}</a>`;
+
+    // insert help link on right position
+    let navlink = wthblink;
+    if (dropdown !== '') {
+        const navlink_dropdown = `<a href="#" class="nav-link dropdown-toggle${navlink_class}" data-bs-toggle="dropdown"${dropdown_title} role="button" aria-expanded="false">${navlink_text} <span class="caret"></span></a>`;                
+        if (!isSplitNavlink) {
+            dropdown = wthblink + dropdown;
+            navlink = navlink_dropdown;
+        } else {
+            navlink = wthblink + navlink_dropdown;
+            li_class = ' menu-wthb-p';
+        }
+        dropdown = `<div class="dropdown-menu dropdown-menu-end" role="menu">${dropdown}</div>`;
+    }
+
+    const html = `<li class="nav-item dropdown menu-wthb${li_class}">${navlink}${dropdown}</li>`
+    topmenu.insertAdjacentHTML('afterbegin', html);
 };
 
 const insertWthbLinkCallback = function (mutationsList, observer) {
@@ -274,6 +359,9 @@ const setWthbLinkClickHandler = (wthblink) => {
 const initWthb = (options) => {
     WthbCfg = Object.assign(getWthbCfg(), options);
 
+    // get language
+    WthbCfg.lang = document.documentElement.lang || 'de';
+
     // extend topmenu
     insertWthbLink();
     const observer = new MutationObserver(insertWthbLinkCallback);
@@ -287,60 +375,16 @@ const initWthb = (options) => {
         if ($(wthblink).length === 0) { // not all pages have a top menu (e.g. note edit page)
             return;
         }
-        // get language
-        WthbCfg.lang = $("html").attr("lang") ?? 'de';
         
-        // topmenu link "submenu"
-        let popcontent = '';
-        let wthbcfg = false;
-        if (WthbCfg.tocnsearch) {
-            popcontent += `<p><a class="wthbpopover" href="#" data-bs-backdrop="static" data-bs-toggle="modal" data-bs-target="#le-ajax-modal" data-wt-href="${WthbCfg.modal_url}">${WthbCfg.I18N.searchntoc}</a></p>`;
-        }
-        if (WthbCfg.lang?.substr(0, 2).toLowerCase() != 'de') {
-            popcontent += `<p><a class="wthbpopover" id="wthb-link-cfg" href="#"><i class="fa-solid fa-wrench fa-fw"></i>&nbsp;${WthbCfg.I18N.cfg_title}</a></p>`;
-            wthbcfg = true;
-        }
-
-        if (popcontent !== '') {
-            let poptrigger = wthblink;
-            if (is_touch_device) {
-                poptrigger = jQuery('<span>', {
-                    class: 'popover-trigger',
-                    text: 'ⓘ',
-                });
-                wthblink.after(poptrigger);
-            }
-
-            let wthbpopover = newPopover(poptrigger, {
-                content: popcontent,
-                title: WthbCfg.I18N.help_title_wthb
-            });
-            wthbpopover._element.addEventListener('shown.bs.popover', () => {
-                if (wthbcfg) {
-                    let wthbcfg = $("#wthb-link-cfg").on('click', () => toggleModal(true));
-                    if (WthbCfg.I18N.cfg_title) $(wthbcfg).attr('title', WthbCfg.I18N.cfg_title);
-                }
-                $('a.wthbpopover').each((idx, elem) => {
-                    $(elem).on('click', () => wthbpopover.hide());
-                });
-                if (is_touch_device) {
-                    // Automatic fading after 5 seconds
-                    onShownBsPopoverHideTimeout(wthbpopover);
-                }
-            });
-            if (is_touch_device) {
-                wthbpopover._element.addEventListener('hide.bs.popover', () => {
-                    onHideBsPopoverHideTimout(wthbpopover);
-                });
-            }
-        }
-
         // translation settings only needed for non german language
         if (WthbCfg.lang?.substr(0, 2).toLowerCase() == 'de') return;
 
         setWthbLinkClickHandler(wthblink);
 
         if (WthbCfg.dotranslate !== 1) return; // no user setting 
+
+        let wthbcfg = $("#wthb-link-cfg").on('click', () => toggleModal(true));
+        if (WthbCfg.I18N.cfg_title) $(wthbcfg).attr('title', WthbCfg.I18N.cfg_title);        
 
         $('#wthb-modal').on('show.bs.modal', (e) => {
             $("#wthb-epilogue").hide(); // standard - should be only visible if user has not yet made decission for translation, because the dialog is opened automatically
