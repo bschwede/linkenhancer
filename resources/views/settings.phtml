@@ -686,6 +686,21 @@ $defaults_json = LinkEnhancerModule::getDefaultPrefsAsJson();
                 </div>
             </fieldset>
 
+            <!-- wthb links json --><?php $prefId = LinkEnhancerModule::PREF_WTHB_LINKS_JSON; ?>
+            <label class="col-sm-3 col-form-label wt-page-options-label sub" for="<?= $prefId ?>">
+                <?= I18N::translate('Additional help links') ?>
+                (JSON / <?= /*I18N: webtrees.pot */ I18N::translate('optional') ?>)
+            </label>
+            <div class="col-sm-9 wt-page-options-value mt-2">
+                <textarea id="<?= $prefId ?>" name="<?= $prefId ?>" class="form-control font-monospace" dir="ltr"
+                    rows="5"><?= e($prefs[$prefId]) ?></textarea>
+                <div class="form-text">
+                    <p><?= I18N::translate('Example') ?>:
+                        <textarea class="form-control font-monospace" dir="ltr" rows="5" disabled readonly wrap="off" style="font-size:0.9em; color: gray;"><?= e(LinkEnhancerModule::STD_WTHB_LINKS_JSON) ?></textarea>
+                    </p>
+                </div>
+            </div>
+
             <!-- support subcontext wthb-links --><?php $prefId = LinkEnhancerModule::PREF_WTHB_SUBCONTEXT; ?>
             <fieldset class="form-group mb-3">
                 <div class="row">
@@ -913,39 +928,61 @@ $defaults_json = LinkEnhancerModule::getDefaultPrefsAsJson();
 <?php View::push('javascript') ?>
 <script>
     function checkForm(message) {
-        const showError = (elem, msg) => {
+        let firstErrElem = null;
+
+        const checkJs = (elemId, isJson = true) => { // validate syntax of JavaScript object or JSON string
+            let elem = $(`#${elemId}`);
+            let code = elem && (elem.val() ?? false) ? elem.val().trim() : null;
+            let okay = false;
+            if (code) {
+                try {
+                    if (isJson) {
+                        const obj = JSON.parse(code);
+                    } else {
+                        eval(`() => { let a = ${code}}`);
+                        if (!code.match(/^\s*\{/)) {
+                            throw new Error("Code does not start with a { - seems not to be an object!");
+                        }
+                    }
+                    okay = true;
+                } catch (e) {
+                    if (isJson) {
+                        showError(elem, '<?= e(I18N::translate('JSON is invalid')) ?>', e);
+                    } else {
+                        showError(elem, '<?= e(I18N::translate('Javascript is invalid')) ?>', e);
+                    }
+                    firstErrElem ??= elem;
+                }
+            } else {
+                okay = true;
+            }
+            if (okay) { clearError(elemId) }
+
+        }
+    
+        const clearError = (elemId) => {
+            let errElem = $(`#error-${elemId}`);
+            if (errElem.length > 0) {
+                $(errElem).remove();
+            }
+        }
+
+        const showError = (elem, msg, e) => {
             let errId = 'error-' + elem.attr('id');
             let errElem = $(`#${errId}`);
+            let errMsg = (e && (e.message ?? false) ? e.message : '');
+            console.warn('showError e', e)
+            let html = `<div id="${errId}" class="error">${msg}<br><code>${errMsg}</code></div>`;
             if (errElem.length == 1) {
-                $(errElem).text(msg);
+                $(errElem).html(html);
             } else {
-                $(elem).after(`<div id="${errId}" class="error">${msg}</div>`);
+                $(elem).after(html);
             }
         }
         
-        let firstErrElem = null;
-
-        let linkspp = $('#<?= LinkEnhancerModule::PREF_LINKSPP_JS; ?>');
-        let jsString = linkspp.val().trim();
-        if (jsString) {
-            try {
-                eval(`() => { let a = ${jsString}}`);
-            } catch (e) { 
-                showError(linkspp, '<?= e(I18N::translate('Javascript is invalid')) ?>: ' + e.message);
-                firstErrElem ??= linkspp;
-            }
-        }
-
-        let homelink = $('#<?= LinkEnhancerModule::PREF_HOME_LINK_JSON; ?>');
-        let jsonString = homelink.val().trim();
-        if (jsonString) {
-            try {
-                const obj = JSON.parse(jsonString); // Syntax-Validierung
-            } catch (e) {
-                showError(homelink, '<?= e(I18N::translate('JSON is invalid')) ?>');
-                firstErrElem ??= homelink;
-            }
-        }
+        checkJs('<?= LinkEnhancerModule::PREF_LINKSPP_JS; ?>', false);
+        checkJs('<?= LinkEnhancerModule::PREF_WTHB_LINKS_JSON; ?>', true);
+        checkJs('<?= LinkEnhancerModule::PREF_HOME_LINK_JSON; ?>', true);
 
         if (firstErrElem) {
             $(firstErrElem).get(0).scrollIntoView({behavior: 'smooth'});

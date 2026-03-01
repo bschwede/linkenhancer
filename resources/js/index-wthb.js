@@ -7,10 +7,12 @@ const getWthbCfg = () => {
             cfg_title: '', // tooltip user setting link
             tocnsearch: 'Full-text search / Table of contents', // title of submenu item of topmenu wthb-link
             wtcorehelp: 'webtrees help topics (included)',
+            startpage: 'start page',
         },
         help_url: '#', // help url for top menu link
         faicon: false, // prepend symbol to top menu help link
         wiki_url: 'https://wiki.genealogy.net/',  // is link external or a webtrees manual link?
+        wthb_url: 'https://wiki.genealogy.net/Webtrees_Handbuch',
         dotranslate: 0, //0=off, 1=user defined, 2=on
         subcontext: [],
         tocnsearch_url: '', // url to action handler for wthb toc data and search engine form
@@ -19,6 +21,7 @@ const getWthbCfg = () => {
         splitNavlink: true,
         wtcorehelp: true,
         wtcorehelp_url: '', // url to action handler for wt help topics overview
+        linksJson: [], // [{"title":"webtrees FAQ", "url":"https://webtrees.net/faq/"},]
     };
 }
 
@@ -76,26 +79,48 @@ const getHelpTitle = (url) => isWthbLink(url) ? WthbCfg.I18N.help_title_wthb : W
 
 
 const insertWthbLink = (node) => { // prepend context help link to topmenu
-    if (document.querySelector('li.nav-item.menu-wthb')) return;
-    const topmenu = node ?? document.querySelector('ul.wt-user-menu, ul.nav.small');
+    if (document.querySelector('li.nav-item.menu-wthb')) return; // already there nothing to do
+    const topmenu = node ?? document.querySelector('ul.wt-user-menu, ul.nav.small'); // selector for frontend / backend
 
     if (!topmenu) return;
 
     let isSplitNavlink = WthbCfg.splitNavlink; // split nav link means: help link is a clickable top menu item and the trigger for the submenu is separated
     let dropdown = '';
-    let wthbcfg = false;
-    if (WthbCfg.tocnsearch) {
+    
+    // include link to webtrees manual start page, if context link is external
+    dropdown += (isWthbLink(WthbCfg.help_url) ? '' : `<a class="dropdown-item menu-wthb" role="menuitem" target="_blank" href="${WthbCfg.wthb_url}">${WthbCfg.I18N.help_title_wthb} - ${WthbCfg.I18N.startpage}</a>`);
+    if (WthbCfg.tocnsearch) { // webtrees table of contents and search
         dropdown += `<a class="dropdown-item menu-wthb" role="menuitem" href="#" data-bs-backdrop="static" data-bs-toggle="modal" data-bs-target="#le-ajax-modal" data-wt-href="${WthbCfg.tocnsearch_url}">${WthbCfg.I18N.tocnsearch}</a>`;
     }
-    if (WthbCfg.lang?.substr(0, 2).toLowerCase() != 'de') {
+    if (WthbCfg.dotranslate === 1 && WthbCfg.lang?.substr(0, 2).toLowerCase() != 'de') { // 
         dropdown += `<a class="dropdown-item menu-wthb" role="menuitem" id="wthb-link-cfg" href="#"><i class="fa-solid fa-wrench fa-fw"></i>&nbsp;${WthbCfg.I18N.cfg_title}</a>`;
-        wthbcfg = true;
     }
-    if (WthbCfg.wtcorehelp) {
+    if (WthbCfg.wtcorehelp) { // overview of help topic included in webtrees
         dropdown += (dropdown !== '' || !isSplitNavlink ? '<hr>' : '') + `<a class="dropdown-item menu-wthb" role="menuitem" href="#" data-bs-backdrop="static" data-bs-toggle="modal" data-bs-target="#le-ajax-modal" data-wt-href="${WthbCfg.wtcorehelp_url}">${WthbCfg.I18N.wtcorehelp}</a>`;
     }
 
-    //`<li class="nav-item menu-wthb"><a id="wthb-link" class="nav-link" style="display: inline-block;" ${target}href="${WthbCfg.help_url}">${fahtml}${help_title}</a></li>`
+    // additional help links at the end of the submenu
+    if ((WthbCfg.linksJson ?? false) && WthbCfg.linksJson !== '') {
+        let links = null;
+        try {
+            links = JSON.parse(WthbCfg.linksJson);
+        } catch(e) {
+            console.warn('LEMod - wthb links JSON is invalid', e);
+            links = null;
+        }
+        if (Array.isArray(links)) {
+            let linkshtml = '';
+            links.forEach((link) => {
+                let title  = link.title ?? null;
+                let url    = link.url ?? null;
+                let cname  = (link.class ?? false ? ` ${link.class}` : '');
+                let target = (link.self ?? false ? '_self' : '_blank');
+                linkshtml += (title && url ? `<a class="dropdown-item menu-wthb${cname}" role="menuitem" target="${target}" href="${url}">${title}</a>` : '');
+            });
+            dropdown += (linkshtml != '' && (dropdown !== '' || !isSplitNavlink) ? '<hr>' : '') + linkshtml;
+        }
+    }
+
     const help_icon = '<i class="fa-solid fa-circle-question"></i> ';
     const navlink_icon = WthbCfg.faicon ? help_icon : '';
     const help_title = getHelpTitle(WthbCfg.help_url);

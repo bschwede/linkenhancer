@@ -96,6 +96,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public const PREF_WTHB_OPEN_IN_NEW_TAB = 'WTHB_OPEN_IN_NEW_TAB';
     public const PREF_WTHB_SPLIT_TOPMENU = 'WTHB_SPLIT_TOPMENU';
     public const PREF_WTHB_WTCOREHELP = 'WTHB_WTCOREHELP';
+    public const PREF_WTHB_LINKS_JSON = 'WTHB_LINKS_JSON'; // additional links for webtrees manual top menu
     public const PREF_JS_DEBUG_CONSOLE = 'JS_DEBUG_CONSOLE'; // console.debug with active route info; 0=off, 1=on
     public const PREF_OPEN_IN_NEW_TAB = 'OPEN_IN_NEW_TAB'; // triple-state, 0=off, 1=user defined, 2=on
     public const PREF_GENWIKI_LINK = 'GENWIKI_LINK'; // base link to GenWiki
@@ -144,6 +145,13 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public const STDLINK_GENWIKI = 'https://wiki.genealogy.net/';
     public const STDLINK_WTHB = 'https://wiki.genealogy.net/Webtrees_Handbuch';
     public const STDLINK_WTHB_TOC = 'https://wiki.genealogy.net/Webtrees_Handbuch/Verzeichnisse/Inhaltsverzeichnis';
+
+    public const STD_WTHB_LINKS_JSON = '[
+{"title":"webtrees FAQ", "url":"https://webtrees.net/faq/"}
+,{"title":"webtrees Forum", "url":"https://www.webtrees.net/index.php/forum/index"}
+,{"title":"GitHub - webtrees issues", "url":"https://github.com/fisharebest/webtrees/issues"}
+,{"title":"GitHub - webtrees related projects", "url":"https://github.com/topics/webtrees?o=desc&s=updated"}
+]'; // standard additional links for webtrees manual top menu
     
     public const HELP_TABLE = 'route_help_map';
 
@@ -170,6 +178,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         self::PREF_WTHB_OPEN_IN_NEW_TAB      => [ 'type' => 'bool',   'default' => '1', 'parent' => self::PREF_OPEN_IN_NEW_TAB, 'mode' => OverwriteMode::ParentIsNotOne ],
         self::PREF_WTHB_SPLIT_TOPMENU        => [ 'type' => 'bool',   'default' => '1' ],
         self::PREF_WTHB_WTCOREHELP           => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_WTHB_LINKS_JSON           => [ 'type' => 'string', 'default' => self::STD_WTHB_LINKS_JSON ],
         self::PREF_JS_DEBUG_CONSOLE          => [ 'type' => 'bool',   'default' => '0' ],
         self::PREF_OPEN_IN_NEW_TAB           => [ 'type' => 'int',    'default' => '2' ], // triple-state, 0=off, 1=user defined, 2=on
         self::PREF_WTHB_STD_LINK             => [ 'type' => 'string', 'default' => self::STDLINK_WTHB ], // url
@@ -415,10 +424,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             }
 
             $help_url = $help['help_url']; //gettype(value: $help) == 'string' ? $help : $help->first()->url;
-            
-            // link to Webtrees Manual in GenWiki or external link?
-            $wiki_url = $this->getPref(self::PREF_GENWIKI_LINK);
-            
+                       
             $options = [
                 'I18N' => [
                     'help_title_wthb'   => I18N::translate('Webtrees manual'),
@@ -426,10 +432,12 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                     'cfg_title'         => /*I18N: wthb link user setting title */ I18N::translate('Webtrees manual link - user setting'),
                     'tocnsearch'        => I18N::translate("Full-text search") . ' / ' . I18N::translate('Table of contents'),
                     'wtcorehelp'        => I18N::translate("webtrees help topics (included)"),
+                    'startpage'         => I18N::translate("start page"),
                 ],
                 'help_url'        => $help_url,
                 'faicon'          => $this->getPref(self::PREF_WTHB_FAICON, true),
-                'wiki_url'        => $wiki_url,
+                'wiki_url'        => $this->getPref(self::PREF_GENWIKI_LINK),
+                'wthb_url'        => $this->getPref(self::PREF_WTHB_STD_LINK),
                 'dotranslate'     => $this->getPref(self::PREF_WTHB_TRANSLATE, true), // 0=off, 1=user defined, 2=on
                 'subcontext'      => $withSubcontext ? $help['subcontext'] : [],
                 'tocnsearch_url'  => route('module', ['module' => $this->name(), 'action' => 'helpwthb']),
@@ -438,6 +446,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                 'splitNavlink'    => $this->getPref(self::PREF_WTHB_SPLIT_TOPMENU, true),
                 'wtcorehelp'      => $this->getPref(self::PREF_WTHB_WTCOREHELP, true),
                 'wtcorehelp_url'  => route('module', ['module' => $this->name(), 'action' => 'helpwtcore']),
+                'linksJson'       => $this->getPref(self::PREF_WTHB_LINKS_JSON, true),
             ];
 
             $initJs .= "LinkEnhMod.initWthb(" . json_encode($options) . ");";
