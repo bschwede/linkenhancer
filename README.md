@@ -222,13 +222,15 @@ To ensure that this function is also available in the admin backend a modified v
 
 If the webtrees page is displayed in a language other than german, it is possible to **open the webtrees manual URL via a translation service** ([Google Translate](https://translate.google.com/)). This can be enabled or disabled as a site setting or delegated to the visitor to decide.
 ![WTHB user setting](resources/img/screenshot_wthb-user-setting.png)
-The settings dialogue can be accessed via the popover of the help link in the top menu. When this option is enabled, you will also find a link to a dialogue box that displays a **full-text search** in the german webtrees manual (using various search engines) and the **table of contents**.
+The settings dialogue can be accessed via the help submenu in the  top menu. When this option is enabled, you will also find a link to a dialogue box that displays a **full-text search** in the german webtrees manual (using various search engines) and the **table of contents**.
 ![WTHB full-text search and toc](resources/img/screenshot_wthb-help.png)
 
 > [!NOTE]
 > This module comes with a local copy of the german webtrees manual **table of contents**. An automatic update is not implemented so far.
 > If you wish to update it without updating this module, you can use the utility script [update-wthb-toc.sh](util/update-wthb-toc.sh).
 
+Additionally you can find in the **submenu** an overview of help topics included in webtrees and customizable external help links (e.g. webtrees faq and forum, GitHub repo etc.). The top menu item can be split into two links - one to directly open the context help article and the other to open the submenu.
+![WTHB submenu and split menu item](resources/img/screenshot_wthb-submenu.png)
 
 The **mapping of routes to help articles** in the manual is stored in the database table `route_help_map`. This module comes with predefined mapping rules. If there is something missing or you find an issue, don't hesitate to share it. I'll include it in the next release. 
 
