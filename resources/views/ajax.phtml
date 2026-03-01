@@ -12,21 +12,30 @@
 </div>
 
 <script>
+  function eventLeAjaxModalLoad(event) {
+    //console.debug('this', this, 'event', event);
+    let that = this;
+    let target = event.relatedTarget;
+    if (event.type == 'click') { // for links on the visible modal that should load other content to be shown in this modal
+      that = document.querySelector('#le-ajax-modal');
+      target = event.target;
+    }
+    let modal_content = that.querySelector('.modal-content');
+
+    // If we need to paste the result into a tom-select control
+    modal_content.dataset.wtSelectId = target.dataset.wtSelectId;
+
+    // Clear existing content (to prevent FOUC) and load new content.
+    $(modal_content)
+      .empty()
+      .load(target.dataset.wtHref, function () {
+        // Activate autocomplete fields
+        this.querySelectorAll('.tom-select').forEach(element => webtrees.initializeTomSelect(element));
+      });
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     $('#le-ajax-modal')
-      .on('show.bs.modal', function (event) {
-        let modal_content = this.querySelector('.modal-content');
-
-        // If we need to paste the result into a tom-select control
-        modal_content.dataset.wtSelectId = event.relatedTarget.dataset.wtSelectId;
-
-        // Clear existing content (to prevent FOUC) and load new content.
-        $(modal_content)
-          .empty()
-          .load(event.relatedTarget.dataset.wtHref, function () {
-            // Activate autocomplete fields
-            this.querySelectorAll('.tom-select').forEach(element => webtrees.initializeTomSelect(element));
-          });
-      });
+      .on('show.bs.modal', eventLeAjaxModalLoad);
   });
 </script>

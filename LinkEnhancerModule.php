@@ -95,6 +95,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public const PREF_WTHB_ADMINVIEWPATCH = 'WTHB_ADMINVIEWPATCH'; // register admin layout view
     public const PREF_WTHB_OPEN_IN_NEW_TAB = 'WTHB_OPEN_IN_NEW_TAB';
     public const PREF_WTHB_SPLIT_TOPMENU = 'WTHB_SPLIT_TOPMENU';
+    public const PREF_WTHB_WTCOREHELP = 'WTHB_WTCOREHELP';
     public const PREF_JS_DEBUG_CONSOLE = 'JS_DEBUG_CONSOLE'; // console.debug with active route info; 0=off, 1=on
     public const PREF_OPEN_IN_NEW_TAB = 'OPEN_IN_NEW_TAB'; // triple-state, 0=off, 1=user defined, 2=on
     public const PREF_GENWIKI_LINK = 'GENWIKI_LINK'; // base link to GenWiki
@@ -168,6 +169,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         self::PREF_WTHB_LASTHASH             => [ 'type' => 'string' ], // no default needed, internal setting
         self::PREF_WTHB_OPEN_IN_NEW_TAB      => [ 'type' => 'bool',   'default' => '1', 'parent' => self::PREF_OPEN_IN_NEW_TAB, 'mode' => OverwriteMode::ParentIsNotOne ],
         self::PREF_WTHB_SPLIT_TOPMENU        => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_WTHB_WTCOREHELP           => [ 'type' => 'bool',   'default' => '1' ],
         self::PREF_JS_DEBUG_CONSOLE          => [ 'type' => 'bool',   'default' => '0' ],
         self::PREF_OPEN_IN_NEW_TAB           => [ 'type' => 'int',    'default' => '2' ], // triple-state, 0=off, 1=user defined, 2=on
         self::PREF_WTHB_STD_LINK             => [ 'type' => 'string', 'default' => self::STDLINK_WTHB ], // url
@@ -422,17 +424,20 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                     'help_title_wthb'   => I18N::translate('Webtrees manual'),
                     'help_title_ext'    => /*I18N: webtrees.pot */ I18N::translate('Help'),
                     'cfg_title'         => /*I18N: wthb link user setting title */ I18N::translate('Webtrees manual link - user setting'),
-                    'searchntoc'        => I18N::translate("Full-text search") . ' / ' . I18N::translate('Table of contents'),
+                    'tocnsearch'        => I18N::translate("Full-text search") . ' / ' . I18N::translate('Table of contents'),
+                    'wtcorehelp'        => I18N::translate("webtrees help topics (included)"),
                 ],
-                'help_url'     => $help_url,
-                'faicon'       => $this->getPref(self::PREF_WTHB_FAICON, true),
-                'wiki_url'     => $wiki_url,
-                'dotranslate'  => $this->getPref(self::PREF_WTHB_TRANSLATE, true), // 0=off, 1=user defined, 2=on
-                'subcontext'   => $withSubcontext ? $help['subcontext'] : [],
-                'modal_url'    => route('module', ['module' => $this->name(), 'action' => 'helpwthb']),
-                'tocnsearch'   => $this->getPref(self::PREF_WTHB_TOCNSEARCH, true),
-                'openInNewTab' => $this->getPref(self::PREF_WTHB_OPEN_IN_NEW_TAB, true, true),
-                'splitNavlink' => $this->getPref(self::PREF_WTHB_SPLIT_TOPMENU, true),
+                'help_url'        => $help_url,
+                'faicon'          => $this->getPref(self::PREF_WTHB_FAICON, true),
+                'wiki_url'        => $wiki_url,
+                'dotranslate'     => $this->getPref(self::PREF_WTHB_TRANSLATE, true), // 0=off, 1=user defined, 2=on
+                'subcontext'      => $withSubcontext ? $help['subcontext'] : [],
+                'tocnsearch_url'  => route('module', ['module' => $this->name(), 'action' => 'helpwthb']),
+                'tocnsearch'      => $this->getPref(self::PREF_WTHB_TOCNSEARCH, true),
+                'openInNewTab'    => $this->getPref(self::PREF_WTHB_OPEN_IN_NEW_TAB, true, true),
+                'splitNavlink'    => $this->getPref(self::PREF_WTHB_SPLIT_TOPMENU, true),
+                'wtcorehelp'      => $this->getPref(self::PREF_WTHB_WTCOREHELP, true),
+                'wtcorehelp_url'  => route('module', ['module' => $this->name(), 'action' => 'helpwtcore']),
             ];
 
             $initJs .= "LinkEnhMod.initWthb(" . json_encode($options) . ");";
@@ -556,13 +561,14 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         $cfg_md_editor_active = $cfg_md_active ? $this->getPref(self::PREF_MDE_ACTIVE, true) : false;
         $cfg_wthb_active      = $this->getPref(self::PREF_WTHB_ACTIVE, true);
         $cfg_wthb_tocnsearch  = $this->getPref(self::PREF_WTHB_TOCNSEARCH, true);
+        $cfg_wthb_wtcorehelp  = $this->getPref(self::PREF_WTHB_WTCOREHELP, true);
 
         $html = '';
         $needajax = false;
 
         if ($cfg_wthb_active) {
             $html .= view($this->name() . '::wthb-modal');
-            $needajax = $cfg_wthb_tocnsearch;
+            $needajax = $cfg_wthb_tocnsearch || $cfg_wthb_wtcorehelp;
         }
         if ($needajax || ($cfg_md_editor_active && Utils::isEditPage())) { // markdown editor is not useful on other pages
             $html .= view($this->name() . '::ajax');
@@ -913,6 +919,28 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         return $response;
     }
 
+
+    /**
+     * Serve overview for webtrees core context help
+     *
+     * @param ServerRequestInterface $request
+     *
+     * @return ResponseInterface
+     */
+    public function getHelpWtCoreAction(ServerRequestInterface $request): ResponseInterface
+    {
+        $title = /*I18N: webtrees.pot */ I18N::translate('Help') 
+            . ' - ' 
+            . I18N::translate("webtrees help topics (included)");
+        $text = view($this->name() . '::help-wt-helptext');
+
+        $html = view('modals/help', [
+            'title' => $title,
+            'text' => $text,
+        ]);
+
+        return response($html);
+    }
 
     /**
      * Serve help page.

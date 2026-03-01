@@ -1,0 +1,101 @@
+<?php
+
+declare(strict_types=1);
+
+use Fisharebest\Webtrees\Auth;
+use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\Http\RequestHandlers\HelpText;
+
+/**
+ * @ var bool
+ */
+
+
+
+$help_topics = [ // see: app/Http/RequestHandlers/HelpText.php
+    'DATE' => [
+        'title' => /*I18N: webtrees.pot */ I18N::translate('Date'),
+    ],
+
+    'NAME' => [
+        'title' => /*I18N: webtrees.pot */ I18N::translate('Name'),
+        'text' => view('help/name'),
+    ],
+
+    'SURN' => [
+        'title' => /*I18N: webtrees.pot */ I18N::translate('Surname'),
+        'text' => view('help/surname'),
+    ],
+
+    'OBJE' => [
+        'title' => /*I18N: webtrees.pot */ I18N::translate('Media object'),
+        'text' => view('help/media-object'),
+    ],
+
+    'PLAC' => [
+        'title' => /*I18N: webtrees.pot */ I18N::translate('Place'),
+        'text' => view('help/place'),
+    ],
+
+    'RESN' => [
+        'title' => /*I18N: webtrees.pot */ I18N::translate('Restriction'),
+        'text' => view('help/restriction'),
+    ],
+
+    'ROMN' => [
+        'title' => /*I18N: webtrees.pot */ I18N::translate('Romanized'),
+        'text' => view('help/romanized'),
+    ],
+
+    '_HEB' => [
+        'title' => /*I18N: webtrees.pot */ I18N::translate('Hebrew'),
+        'text' => view('help/hebrew'),
+    ],
+
+    'data-fixes' => [
+        'title' => /*I18N: webtrees.pot */ I18N::translate('Data fixes'),
+        'text' => view('help/data-fixes'),
+    ],
+
+    'edit_SOUR_EVEN' => [
+        'title' => /*I18N: webtrees.pot */ I18N::translate('Associate events with this source'),
+        'text' => view('help/source-events'),
+    ],
+
+    'pending_changes' => [
+        'title' => /*I18N: webtrees.pot */ I18N::translate('Pending changes'),
+        'text' => view('help/pending-changes', [
+                        'is_admin' => Auth::isAdmin(),
+                    ]),
+    ],
+
+    'relationship-privacy' => [
+        'title' => /*I18N: webtrees.pot */ I18N::translate('Restrict to immediate family'),
+        'text' => view('help/relationship-privacy'),
+    ],    
+];
+?>
+<p><?= I18N::translate('The context help topics provided by webtrees are listed below.') ?></p>
+<?php
+
+
+foreach ($help_topics as $key => $attribs) {
+    $title = $attribs['title'];?>
+<h4 class="helpsection"><?= $title ?></h4>
+<?php
+    if (array_key_exists('text', $attribs)) {
+        echo($attribs['text']);
+    } else {
+        $route = route(HelpText::class, ['topic' => $key]);
+        // important: links on a visible modal that should load other content into this modal 
+        // must not set the attribute data-bs-toggle="modal", otherwise bootstrap toggles visibility of the modal
+?>
+<p><a class="modal-reload-link" href="#" data-bs-backdrop="static" data-bs-target="#le-ajax-modal" data-wt-href="<?= e($route)?>"><?= I18N::translate('Further information can be found on a separate help page.') ?></a></p>
+<?php
+    }
+}
+?>
+<script>
+    $('.modal-reload-link').on('click', eventLeAjaxModalLoad);
+</script>
+

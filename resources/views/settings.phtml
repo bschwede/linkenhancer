@@ -660,10 +660,10 @@ $defaults_json = LinkEnhancerModule::getDefaultPrefsAsJson();
                         </div>
                     </div>
                 </div>
-            </fieldset>
+            </fieldset>           
 
             <!-- full-text search and toc --><?php $prefId = LinkEnhancerModule::PREF_WTHB_TOCNSEARCH; ?>
-            <fieldset class="form-group mb-3">
+            <fieldset class="form-group mb-1">
                 <div class="row">
                     <legend class="col-form-label col-sm-3 wt-page-options-label sub">
                         <?= I18N::translate("Full-text search") . ' / ' . I18N::translate('Table of contents') ?>
@@ -674,6 +674,17 @@ $defaults_json = LinkEnhancerModule::getDefaultPrefsAsJson();
                 </div>
             </fieldset>
 
+            <!-- webtrees help topics (included) --><?php $prefId = LinkEnhancerModule::PREF_WTHB_WTCOREHELP; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
+                        <?= I18N::translate("webtrees help topics (included)") ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                    </div>
+                </div>
+            </fieldset>
 
             <!-- support subcontext wthb-links --><?php $prefId = LinkEnhancerModule::PREF_WTHB_SUBCONTEXT; ?>
             <fieldset class="form-group mb-3">

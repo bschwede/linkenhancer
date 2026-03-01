@@ -5,17 +5,20 @@ const getWthbCfg = () => {
             help_title_wthb: 'Webtrees manual', //link displayname
             help_title_ext: 'Help',
             cfg_title: '', // tooltip user setting link
-            searchntoc: 'Full-text search / Table of contents', // title of submenu item of topmenu wthb-link
+            tocnsearch: 'Full-text search / Table of contents', // title of submenu item of topmenu wthb-link
+            wtcorehelp: 'webtrees help topics (included)',
         },
         help_url: '#', // help url for top menu link
         faicon: false, // prepend symbol to top menu help link
         wiki_url: 'https://wiki.genealogy.net/',  // is link external or a webtrees manual link?
         dotranslate: 0, //0=off, 1=user defined, 2=on
         subcontext: [],
-        modal_url: '', // url to action handler for wthb toc data and search engine form
+        tocnsearch_url: '', // url to action handler for wthb toc data and search engine form
         tocnsearch: true, // toggle for showing wthb help modal
         openInNewTab: true,
         splitNavlink: true,
+        wtcorehelp: true,
+        wtcorehelp_url: '', // url to action handler for wt help topics overview
     };
 }
 
@@ -78,14 +81,18 @@ const insertWthbLink = (node) => { // prepend context help link to topmenu
 
     if (!topmenu) return;
 
+    let isSplitNavlink = WthbCfg.splitNavlink; // split nav link means: help link is a clickable top menu item and the trigger for the submenu is separated
     let dropdown = '';
     let wthbcfg = false;
     if (WthbCfg.tocnsearch) {
-        dropdown += `<a class="dropdown-item menu-wthb" role="menuitem" href="#" data-bs-backdrop="static" data-bs-toggle="modal" data-bs-target="#le-ajax-modal" data-wt-href="${WthbCfg.modal_url}">${WthbCfg.I18N.searchntoc}</a>`;
+        dropdown += `<a class="dropdown-item menu-wthb" role="menuitem" href="#" data-bs-backdrop="static" data-bs-toggle="modal" data-bs-target="#le-ajax-modal" data-wt-href="${WthbCfg.tocnsearch_url}">${WthbCfg.I18N.tocnsearch}</a>`;
     }
     if (WthbCfg.lang?.substr(0, 2).toLowerCase() != 'de') {
         dropdown += `<a class="dropdown-item menu-wthb" role="menuitem" id="wthb-link-cfg" href="#"><i class="fa-solid fa-wrench fa-fw"></i>&nbsp;${WthbCfg.I18N.cfg_title}</a>`;
         wthbcfg = true;
+    }
+    if (WthbCfg.wtcorehelp) {
+        dropdown += (dropdown !== '' || !isSplitNavlink ? '<hr>' : '') + `<a class="dropdown-item menu-wthb" role="menuitem" href="#" data-bs-backdrop="static" data-bs-toggle="modal" data-bs-target="#le-ajax-modal" data-wt-href="${WthbCfg.wtcorehelp_url}">${WthbCfg.I18N.wtcorehelp}</a>`;
     }
 
     //`<li class="nav-item menu-wthb"><a id="wthb-link" class="nav-link" style="display: inline-block;" ${target}href="${WthbCfg.help_url}">${fahtml}${help_title}</a></li>`
@@ -93,8 +100,6 @@ const insertWthbLink = (node) => { // prepend context help link to topmenu
     const navlink_icon = WthbCfg.faicon ? help_icon : '';
     const help_title = getHelpTitle(WthbCfg.help_url);
     
-    let isSplitNavlink = WthbCfg.splitNavlink; // split nav link means: help link is a clickable top menu item and the trigger for the submenu is separated
-
     // help link is top menu item, if we have nothing other to display in a dropdown menu
     let link_class = 'nav-link';
     let link_attrs = ''; // difference in styling between front- and backend: style="display: inline-block;" is missing on admin page
