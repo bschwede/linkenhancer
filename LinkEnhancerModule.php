@@ -150,7 +150,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
     public const int HELP_SCHEMA_TARGET_VERSION = 2;
 
-    protected const PREFERENCES_SCHEMA = [
+    public const PREFERENCES_SCHEMA = [
         // required settings:
         // - type=int|string|bool
         // - default=string with default value (bool=0/1) 
@@ -165,7 +165,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         self::PREF_WTHB_FAICON               => [ 'type' => 'bool',   'default' => '1' ],
         self::PREF_WTHB_UPDATE               => [ 'type' => 'bool',   'default' => '1' ],
         self::PREF_WTHB_ADMINVIEWPATCH       => [ 'type' => 'bool',   'default' => '1' ],
-        self::PREF_WTHB_LASTHASH             => [ 'type' => 'string', 'default' => '' ],
+        self::PREF_WTHB_LASTHASH             => [ 'type' => 'string' ], // no default needed, internal setting
         self::PREF_WTHB_OPEN_IN_NEW_TAB      => [ 'type' => 'bool',   'default' => '1', 'parent' => self::PREF_OPEN_IN_NEW_TAB, 'mode' => OverwriteMode::ParentIsNotOne ],
         self::PREF_WTHB_SPLIT_TOPMENU        => [ 'type' => 'bool',   'default' => '1' ],
         self::PREF_JS_DEBUG_CONSOLE          => [ 'type' => 'bool',   'default' => '0' ],
@@ -995,6 +995,17 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             'DuckDuckGo' => 'https://duckduckgo.com/?q=site:wiki.genealogy.net+inurl:"Webtrees%20Handbuch"+',
             'Google'     => 'https://www.google.com/search?q=site:wiki.genealogy.net+"webtrees+Handbuch"+AND+',
         ];
+    }
+
+    public static function getDefaultPrefsAsJson():string  {
+        $reduced = array_map(function ($sub) {
+            return array_intersect_key($sub, array_flip(['type', 'default']));
+        }, self::PREFERENCES_SCHEMA);
+
+        $filtered = array_filter($reduced, function ($sub) {
+            return array_key_exists('default', $sub);
+        });
+        return ((string) json_encode($filtered));
     }
 
 }

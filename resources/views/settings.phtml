@@ -44,6 +44,34 @@ function insertNoYesInlineRadiobuttons(string $id, string $value): string {
     ]);
 }
 
+function getFormButtons(string $idSuffix):string { 
+    ob_start();?>
+        <div class="row">
+            <div class="col-6 d-flex align-items-center justify-content-start">
+                <button type="submit" class="btn btn-primary">
+                    <?= view('icons/save') ?>
+                    <?= /*I18N: webtrees.pot */ I18N::translate('save') ?>
+                </button>
+            </div>
+
+            <div class="col-6 d-flex align-items-center justify-content-end">
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle settings-dropdown" id="settings-dropdown<?= $idSuffix ?>" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <?= I18N::translate('Settings') ?>...
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="settings-dropdown<?= $idSuffix ?>">
+                        <li><a class="dropdown-item settings-reset" href="#"><?= /*I18N: webtrees.pot */ I18N::translate('reset') ?></a></li>
+                        <li><a class="dropdown-item settings-reset-to-default" href="#"><?= I18N::translate('reset to default') ?></a></li>
+                        <li><a class="dropdown-item settings-json-export" href="#"><?= I18N::translate('JSON export') ?></a></li>
+                        <li><a class="dropdown-item settings-json-import" href="#"><?= I18N::translate('JSON import') ?></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+<?php
+    return ob_get_clean();
+}
+
 $trees_w_md = join('</li><li>', $mdcfg['trees_w_md']);
 $trees_w_md_cnt = count($mdcfg['trees_w_md']);
 $trees_w_md = $trees_w_md ?  "<ol class=\"treelist\"><li>{$trees_w_md}</li></ol>" : '';
@@ -53,6 +81,8 @@ $trees_w_text_cnt = count($mdcfg['trees_w_text']);
 $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li></ol>" : '';
 
 $link_cmm = $links['csvexportcmm'] ?? '';
+
+$defaults_json = LinkEnhancerModule::getDefaultPrefsAsJson();
 ?>
 
 <?= view('components/breadcrumbs', [
@@ -162,10 +192,7 @@ $link_cmm = $links['csvexportcmm'] ?? '';
             </fieldset>
         </div>
 
-        <button type="submit" class="btn btn-primary">
-            <?= view('icons/save') ?>
-            <?= /*I18N: webtrees.pot */ I18N::translate('save') ?>
-        </button>
+<?= getFormButtons('1') ?>
 
         <hr class="div" />
         <h3><?= /*I18N: Settings - section title */ I18N::translate('More options') ?></h3>
@@ -868,10 +895,7 @@ $link_cmm = $links['csvexportcmm'] ?? '';
 
         <p>&nbsp;</p>
 
-        <button type="submit" class="btn btn-primary">
-            <?= view('icons/save') ?>
-            <?= /*I18N: webtrees.pot */I18N::translate('save') ?>
-        </button>
+<?= getFormButtons('2') ?>
     </form>
 </div>
 
@@ -958,8 +982,145 @@ $link_cmm = $links['csvexportcmm'] ?? '';
         }
     }
 
-    $(()=> { // pref name, element selector, [indexes of checkbox selected for disable state=standard is 0], disable class name=standard 'disabled-w-text'
-        [
+    const getDefaultSettings = () => {
+        try {
+            return JSON.parse(`<?= $defaults_json ?>`);
+        } catch (e) {
+        }
+        return {};
+    };
+
+    function getSettings() {
+        let cfg = {};
+        Object.keys(getDefaultSettings()).forEach((key) => { 
+            let value = getCtrlValue(key);
+            if (value !== null) {
+                cfg[key] = value;
+            }
+        });
+        return cfg;
+    }
+
+    function setSettings(cfg) {
+        // is cfg object?
+        if (!cfg || typeof cfg !== 'object' || Array.isArray(cfg)) {
+            console.warn('setSettings: cfg muss ein Objekt sein');
+            return false;
+        }
+        
+        // only process known keys from defaults
+        Object.keys(getDefaultSettings()).forEach((key) => {
+            const value = cfg[key];
+            if (value !== undefined) {
+            setCtrlValue(key, value);
+            }
+        });
+        return true;
+        }
+
+        function setCtrlValue(key, value) {
+        const ctrls = document.querySelectorAll(`[name="${key}"]`);
+        if (ctrls.length === 0) return false;
+        
+        const tagName = ctrls[0].tagName;
+        const type    = ctrls[0].type?.toLowerCase();
+
+        // Radio
+        if (type === 'radio') {
+            Array.from(ctrls).forEach(radio => {
+            radio.checked = (radio.value == value);
+            });
+            ctrls[0].dispatchEvent(new Event('change', { bubbles: true }));
+            return true;
+        }
+        
+        // Checkbox: true/false/Array
+        if (type === 'checkbox') {
+            const values = Array.isArray(value) ? value : [value];
+            Array.from(ctrls).forEach(cb => {
+            cb.checked = values.includes(cb.value);
+            });
+            ctrls[0].dispatchEvent(new Event('change', { bubbles: true }));
+            return true;
+        }
+        
+        // Text, Email, Number, Password, etc.
+        if (tagName === 'INPUT' && ['text', 'email', 'number', 'password', 'hidden'].includes(type)) {
+            Array.from(ctrls).forEach(input => input.value = value);
+            ctrls[0].dispatchEvent(new Event('input', { bubbles: true }));
+            return true;
+        }
+        
+        // Textarea
+        if (tagName === 'TEXTAREA') {
+            Array.from(ctrls).forEach(textarea => textarea.value = value);
+            ctrls[0].dispatchEvent(new Event('input', { bubbles: true }));
+            return true;
+        }
+        
+        // Select (single/multi)
+        if (tagName === 'SELECT') {
+            const select = ctrls[0];
+            const values = Array.isArray(value) ? value : [value];
+            
+            Array.from(select.options).forEach(option => {
+            option.selected = values.includes(option.value);
+            });
+            
+            select.dispatchEvent(new Event('change', { bubbles: true }));
+            return true;
+        }
+        
+        return false;  // unknown type
+    }
+
+    function getCtrlValue(key) {
+        const ctrls = document.querySelectorAll(`[name="${key}"]`);
+        if (ctrls.length === 0) return null;
+        
+        const tagName = ctrls[0].tagName;
+        const type    = ctrls[0].type?.toLowerCase();
+
+        // radio: first checked value
+        if (type === 'radio') {
+            const checked = Array.from(ctrls).find(r => r.checked);
+            return checked ? checked.value : null;
+        }
+        
+        // checkbox: array of all checked values
+        if (type === 'checkbox') {
+            const values = Array.from(ctrls)
+                .filter(cb => cb.checked)
+                .map(cb => cb.value);
+            return values.length ? values : null;
+        }
+        
+        // text inputs (text, email, number, password, hidden, etc.)
+        if (tagName === 'INPUT' && 
+            ['text', 'email', 'number', 'password', 'hidden', 'search', 'tel', 'url'].includes(type)) {
+            return ctrls[0].value || '';
+        }
+        
+        // textarea
+        if (tagName === 'TEXTAREA') {
+            return ctrls[0].value || '';
+        }
+        
+        // select: Array if multiple else single value
+        if (tagName === 'SELECT') {
+            const select = ctrls[0];
+            if (select.multiple) {
+                const values = Array.from(select.selectedOptions).map(opt => opt.value);
+                return values.length ? values : null;
+            }
+            return select.value || '';
+        }
+        
+        return null;  // unknown type
+    }
+
+    $(()=> {
+        [ // pref name, element selector, [indexes of checkbox selected for disable state=standard is 0], disable class name=standard 'disabled-w-text'
             ['<?= LinkEnhancerModule::PREF_LINKSPP_ACTIVE; ?>', '#options1'],
             ['<?= LinkEnhancerModule::PREF_MD_ACTIVE; ?>', '#options2'],
             ['<?= LinkEnhancerModule::PREF_MD_IMG_ACTIVE; ?>', '#options2_1'],
@@ -989,6 +1150,33 @@ $link_cmm = $links['csvexportcmm'] ?? '';
             })(selname, secId, cvalues, dii);
             toggleSectionBySelectSingle(secId, selname, 'disabled', cvalues, dii);            
         });
+
+        const settings = getSettings();
+        $('.settings-reset').on('click', (e) => { setSettings(settings); });
+        $('.settings-reset-to-default').on('click', (e) => { 
+            const defaults = {};
+            const config = getDefaultSettings();
+            Object.keys(config).forEach(key => {
+                defaults[key] = config[key].default;
+            });
+            setSettings(defaults);
+        });
+        $('.settings-json-export').on('click', (e) => { 
+            const json = JSON.stringify(getSettings());
+            prompt("<?= I18N::translate('Settings') ?> - <?= I18N::translate('JSON export') ?>", json);
+        });
+        $('.settings-json-import').on('click', (e) => { 
+            const json = prompt("<?= I18N::translate('Settings') ?> - <?= I18N::translate('JSON import') ?>", '');
+            if (json === null || json === '') return;
+            try {
+                const import_settings = JSON.parse(json);
+                setSettings(import_settings);
+            } catch (e) {
+                alert("Error on JSON parsing");
+                console.error(e);
+            }
+        });
+
     });
 </script>
 <?php View::endpush() ?>
