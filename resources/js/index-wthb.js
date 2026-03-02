@@ -8,6 +8,7 @@ const getWthbCfg = () => {
             tocnsearch: 'Full-text search / Table of contents', // title of submenu item of topmenu wthb-link
             wtcorehelp: 'webtrees help topics (included)',
             startpage: 'start page',
+            admin_title: 'Link-Enhancer - Admin',
         },
         help_url: '#', // help url for top menu link
         faicon: false, // prepend symbol to top menu help link
@@ -22,6 +23,7 @@ const getWthbCfg = () => {
         wtcorehelp: true,
         wtcorehelp_url: '', // url to action handler for wt help topics overview
         linksJson: [], // [{"title":"webtrees FAQ", "url":"https://webtrees.net/faq/"},]
+        admin_url: '',
     };
 }
 
@@ -119,6 +121,10 @@ const insertWthbLink = (node) => { // prepend context help link to topmenu
             });
             dropdown += (linkshtml != '' && (dropdown !== '' || !isSplitNavlink) ? '<hr>' : '') + linkshtml;
         }
+    }
+
+    if (WthbCfg.admin_url != '' && !document.location.href.startsWith(WthbCfg.admin_url)) {
+        dropdown += (dropdown !== '' || !isSplitNavlink ? '<hr>' : '') + `<a class="dropdown-item menu-wthb" role="menuitem" href="${WthbCfg.admin_url}"><i class="fa-solid fa-wrench fa-fw"></i>&nbsp;${WthbCfg.I18N.admin_title}</a>`;
     }
 
     const help_icon = '<i class="fa-solid fa-circle-question"></i> ';

@@ -31,6 +31,7 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\WthbService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoXrefAction;;
 use Fisharebest\Localization\Translation;
+use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\FlashMessages;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Registry;
@@ -148,8 +149,8 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
     public const STD_WTHB_LINKS_JSON = '[
 {"title":"webtrees FAQ", "url":"https://webtrees.net/faq/"}
-,{"title":"webtrees Forum", "url":"https://www.webtrees.net/index.php/forum/index"}
-,{"title":"GitHub - webtrees issues", "url":"https://github.com/fisharebest/webtrees/issues"}
+,{"title":"webtrees Forum", "url":"https://www.webtrees.net/index.php/forum/recent"}
+,{"title":"GitHub - webtrees issues", "url":"https://github.com/fisharebest/webtrees/issues?q=is%3Aissue state%3Aopen sort%3Aupdated-desc"}
 ,{"title":"GitHub - webtrees related projects", "url":"https://github.com/topics/webtrees?o=desc&s=updated"}
 ]'; // standard additional links for webtrees manual top menu
     
@@ -433,6 +434,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                     'tocnsearch'        => I18N::translate("Full-text search") . ' / ' . I18N::translate('Table of contents'),
                     'wtcorehelp'        => I18N::translate("webtrees help topics (included)"),
                     'startpage'         => I18N::translate("start page"),
+                    'admin_title'       => $this->title() . ' - ' . I18N::translate('Settings'),
                 ],
                 'help_url'        => $help_url,
                 'faicon'          => $this->getPref(self::PREF_WTHB_FAICON, true),
@@ -447,6 +449,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                 'wtcorehelp'      => $this->getPref(self::PREF_WTHB_WTCOREHELP, true),
                 'wtcorehelp_url'  => route('module', ['module' => $this->name(), 'action' => 'helpwtcore']),
                 'linksJson'       => $this->getPref(self::PREF_WTHB_LINKS_JSON, true),
+                'admin_url'       => (Auth::isAdmin() ? route('module', ['module' => $this->name(), 'action' => 'Admin']) : ''),
             ];
 
             $initJs .= "LinkEnhMod.initWthb(" . json_encode($options) . ");";
