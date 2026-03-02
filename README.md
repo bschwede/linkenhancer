@@ -39,7 +39,7 @@ Additionally there are some goodies more or less related with links:
 
 <a name="enhancedlinks"></a>
 ### Enhanced links
-Although webtrees replaces [XREFs](https://wiki.genealogy.net/GEDCOM/XREF_ID) such as `@I2@` in notes with a **cross-reference** and it's appropriate display name, this is not so flexible. You can't determine the display name. Unfortunately, this does not work in the HTML block on the start page if you want to refer to a data record in the continuous text without inserting absolute references (such absolute references could be entered in the source code of the HTML block as follows, for example: `<a href="https://mytree.somewhere/tree/mytree/individual/I2">Jon Doe</a>`).
+Although webtrees replaces [XREFs](https://wiki.genealogy.net/GEDCOM/XREF_ID) such as `@I2@` in notes with a **cross-reference** and it's appropriate display name, this is not so flexible. You can't determine the display name, which means that in the event of an error (due to XREF renumbering or typing error), it is not easy or possible to resolve the cross-reference to the corresponding data record without any doubt. Unfortunately, this does not work in the HTML block on the start page if you want to refer to a data record in the continuous text without inserting absolute references (such absolute references could be entered in the source code of the HTML block as follows, for example: `<a href="https://mytree.somewhere/tree/mytree/individual/I2">Jon Doe</a>`).
 
 > [!TIP]
 > The custom module [webtrees-mitalteli-show-xref](https://github.com/elysch/webtrees-mitalteli-show-xref) can help you find the XREF reference of personal data records.
@@ -218,7 +218,7 @@ You can decide, if the checkbox is always visible or hidden until you hover the 
 A **context sensitive help link** to the [german webtrees manual](https://wiki.genealogy.net/Webtrees_Handbuch) can be added to the small navigation menu. Context links are also available for components on pages provided by custom extensions (e.g. on the individuals page, the start page or items in the main menu) – these can be identified by the i symbols in a circle.
 ![WTHB subcontext help](resources/img/screenshot_wthb-subcontext.png)
 
-To ensure that this function is also available in the admin backend a modified version of [views/layouts/administration.phtml](https://github.com/fisharebest/webtrees/blob/main/resources/views/layouts/administration.phtml) must be registered. This module attempts to use the custom module [vesta_common](https://github.com/vesta-webtrees-2-custom-modules/vesta_common/tree/master) (if installed and enabled) or its own version of the view layout file. Alternatively, patch P002 could also be applied.
+To ensure that this function is also available in the admin backend a modified version of [views/layouts/administration.phtml](https://github.com/fisharebest/webtrees/blob/main/resources/views/layouts/administration.phtml) must be registered. This module attempts to use the custom module [vesta_common](https://github.com/vesta-webtrees-2-custom-modules/vesta_common/tree/master) (if installed and enabled) or its own version of the view layout file. Alternatively, patch P002 could also be applied to the core code.
 
 If the webtrees page is displayed in a language other than german, it is possible to **open the webtrees manual URL via a translation service** ([Google Translate](https://translate.google.com/)). This can be enabled or disabled as a site setting or delegated to the visitor to decide.
 ![WTHB user setting](resources/img/screenshot_wthb-user-setting.png)
@@ -231,6 +231,22 @@ The settings dialogue can be accessed via the help submenu in the  top menu. Whe
 
 Additionally you can find in the **submenu** an overview of help topics included in webtrees and customizable external help links (e.g. webtrees faq and forum, GitHub repo etc.). The top menu item can be split into two links - one to directly open the context help article and the other to open the submenu.
 ![WTHB submenu and split menu item](resources/img/screenshot_wthb-submenu.png)
+
+The module contains some standard **external help links**, that are defined in JSON - array of objects with the following members:
+
+* `title`: display text for the link, can also contain html (string, mandatory)
+* `url`: link to web resource (string, mandatory)
+* `class` : additional css class names; (string, optional)
+* `self` : if set, link [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a#target) is `_self` (opens in place), otherwise `_blank` (any type, optional)
+
+Example:
+```json
+[
+  {"title":"webtrees FAQ <i class=\"fa-solid fa-circle-question\"></i>",
+   "url":"https://webtrees.net/faq/"
+  }
+]
+```
 
 The **mapping of routes to help articles** in the manual is stored in the database table `route_help_map`. This module comes with predefined mapping rules. If there is something missing or you find an issue, don't hesitate to share it. I'll include it in the next release. 
 
