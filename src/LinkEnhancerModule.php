@@ -299,7 +299,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
      */
     public function resourcesFolder(): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR;
+        return dirname(__DIR__, 1) . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR;
     }
 
     /**
