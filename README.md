@@ -127,7 +127,7 @@ Now some **explanation** for the used properties in the code snippet above (as a
 * *cname* = [CSS](https://en.wikipedia.org/wiki/CSS) class name(s) whitespace separated
 * *help* = optional array of objects `[{n:'', e:''},..]` to illustrate the use of a non standard target (where the url-property is a function) by examples (in e), provided with explanatory text (in n). This information is listed in the markdown help.
 
-`I18N` is an JavaScript object passed through from this module. 
+`I18N` is a JavaScript object passed through from this module.
 
 Any CSS rules required are best added via the [“CSS and JS” module](https://wiki.genealogy.net/Webtrees_Handbuch/Anleitung_f%C3%BCr_Administratoren/Module#CSS_und_JS). Only the definition of the icon (size 30 x 30 pixels is sufficient) as a background image is actually needed - referencing as data: URL (see also: [mdn web docs - data: URLs](https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Schemes/data)).\
 For example: `.icon-whatever { background-image: url(...) }`
@@ -197,7 +197,7 @@ The package [League\CommonMarkdown](https://commonmark.thephpleague.com/) used f
 
 You can activate all or a few selected of these extensions. As far as possible they are of course integrated with the markdown editor and you find additional information in the markdown help.
 
-Footnotes can be placed near their references (there can be one or many references to one footnote) or everywhere you want. For the overview, it is advisable to place them at the bootom. When rendering, the footnote container resides at the end of the content.
+Footnotes can be placed near their references (there can be one or many references to one footnote) or everywhere you want. For the overview, it is advisable to place them at the bottom. When rendering, the footnote container resides at the end of the content.
 If your text is structured with headings, it is a good choice to activate the table of contents extension. The table of contents is generated automatically and included into the content above the very first heading or instead of a placeholder.
 
 <a name="mdtdh"></a>
@@ -229,7 +229,7 @@ The settings dialogue can be accessed via the help submenu in the  top menu. Whe
 > This module comes with a local copy of the german webtrees manual **table of contents**. An automatic update is not implemented so far.
 > If you wish to update it without updating this module, you can use the utility script [update-wthb-toc.sh](util/update-wthb-toc.sh).
 
-Additionally you can find in the **submenu** an overview of help topics included in webtrees and customizable external help links (e.g. webtrees faq and forum, GitHub repo etc.). The top menu item can be split into two links - one to directly open the context help article and the other to open the submenu.
+In addition, the **submenu** contains an overview of the help topics included in Webtrees and customisable external help links (e.g. Webtrees FAQ and forum, GitHub repo, etc.). The top menu item can be split into two links - one to directly open the context help article and the other to open the submenu.
 ![WTHB submenu and split menu item](resources/img/screenshot_wthb-submenu.png)
 
 The module contains some standard **external help links**, that are defined in JSON - array of objects with the following members:
