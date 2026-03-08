@@ -36,6 +36,13 @@ use Illuminate\Database\Capsule\Manager as DB;
 
 use PDOException;
 
+enum WebRessource
+{
+    case CssAndJs;
+    case Css;
+    case Js;
+}
+
 class LinkEnhancerUtils { // misc helper functions
     /**
      * Wrapper for init javascript with try-catch-wrapper
@@ -363,15 +370,21 @@ class LinkEnhancerUtils { // misc helper functions
      * @param array $bundleShortcuts
      * @return string
      */
-    public static function getIncludeWebressourceString(AbstractModule $module, array $bundleShortcuts): string
+    public static function getIncludeWebressourceString(AbstractModule $module, array $bundleShortcuts, WebRessource $resType): string
     {
         if (!$bundleShortcuts) {
             return '';
         }
         $includeRes = '';
         asort($bundleShortcuts);
-        $bundleShortcutsCss = $bundleShortcuts; //array_filter($bundleShortcuts, function ($var) { return $var !== 'wthb'; }); // wthb support - only js
-        $bundleShortcutsJs = $bundleShortcuts; //array_filter($bundleShortcuts, fn($var) => $var !== 'img'); // markdown image support - only css
+        $bundleShortcutsCss = match ($resType) { //array_filter($bundleShortcuts, function ($var) { return $var !== 'wthb'; }); // wthb support - only js
+                WebRessource::Js => null,
+                default => $bundleShortcuts
+        };
+        $bundleShortcutsJs = match ($resType) { //array_filter($bundleShortcuts, fn($var) => $var !== 'img'); // markdown image support - only css
+                WebRessource::Css => null,
+                default => $bundleShortcuts
+        };
 
         // CSS
         if ($bundleShortcutsCss) {
