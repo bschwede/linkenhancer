@@ -22,6 +22,7 @@ util/wt-patch/patch.log
 util/create-archive.sh
 util/update-po-files.sh
 resources/*/index-*.*
+resources/js/src
 resources/img
 resources/css/icons
 resources/views/*.phtml.~*
