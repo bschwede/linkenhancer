@@ -9,7 +9,8 @@ export const buildMenuHtml = (cfg, locationHref) => {
         let target = (cfg.openInNewTab ? ' target="_blank"' : '');
         dropdown += `
         <a class="dropdown-item menu-wthb"${target}
-           href="${cfg.wthb_url}">
+            id="wthb-link-sp"
+            href="${cfg.wthb_url}">
            ${cfg.I18N.help_title_wthb} - ${cfg.I18N.startpage}
         </a>`;
     }
@@ -17,7 +18,9 @@ export const buildMenuHtml = (cfg, locationHref) => {
     if (cfg.tocnsearch) { // webtrees table of contents and search
         dropdown += `
         <a class="dropdown-item menu-wthb"
-            role="menuitem" href="#"
+            role="menuitem" 
+            id="wthb-link-toc"
+            href="#"
             data-bs-backdrop="static"
             data-bs-toggle="modal"
             data-bs-target="#le-ajax-modal"
@@ -39,6 +42,7 @@ export const buildMenuHtml = (cfg, locationHref) => {
         dropdown += (dropdown !== '' || !cfg.splitNavlink ? '<hr>' : '') + `
         <a class="dropdown-item menu-wthb"
             role="menuitem"
+            id="wthb-link-core"
             href="#"
             data-bs-backdrop="static"
             data-bs-toggle="modal"
@@ -64,7 +68,7 @@ export const buildMenuHtml = (cfg, locationHref) => {
                 let url = link.url ?? null;
                 let cname = (link.class ?? false ? ` ${link.class}` : '');
                 let target = (link.self ?? false ? '_self' : '_blank');
-                linkshtml += (title && url ? `<a class="dropdown-item menu-wthb${cname}" role="menuitem" target="${target}" href="${url}">${title}</a>` : '');
+                linkshtml += (title && url ? `<a class="dropdown-item menu-wthb-external${cname}" role="menuitem" target="${target}" href="${url}">${title}</a>` : '');
             });
             dropdown += (linkshtml != '' && (dropdown !== '' || !cfg.splitNavlink) ? '<hr>' : '') + linkshtml;
         }
@@ -75,6 +79,7 @@ export const buildMenuHtml = (cfg, locationHref) => {
         dropdown += (dropdown !== '' || !cfg.splitNavlink ? '<hr>' : '') + `
         <a class="dropdown-item menu-wthb"
             role="menuitem"
+            id="le-admin-link"
             href="${cfg.admin_url}">
             <i class="fa-solid fa-wrench fa-fw"></i>&nbsp;${cfg.I18N.admin_title}
         </a>`;

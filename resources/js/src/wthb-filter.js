@@ -30,10 +30,16 @@ export const createSafeFilter = (document, expr) => { // a bit better than using
         }
     };
 
-    const fn = new Function(
-        ...Object.keys(safeGlobals),
-        `"use strict"; return (${expr})`
-    );
+    let fn = null;
+    try {
+        fn = new Function(
+            ...Object.keys(safeGlobals),
+            `"use strict"; return (${expr})`
+        );
+    } catch (e) { // syntax error
+        console.error("LE-mod wthb subcontext filter error:", expr, e);
+        return null;
+    }
 
     return () => {
 
