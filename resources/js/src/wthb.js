@@ -7,7 +7,8 @@ import { getUserSetting, setUserSetting } from "./wthb-storage.js";
 
 export function createWthb(env) {
 
-    const { document, window, bootstrap, jQuery } = env;
+    //const { document, window, bootstrap, jQuery } = env; // if js is included in head, bootstrap and jQuery aren't loaded yet, so those two objects are null
+    const { document, window } = env; // inclusion in the header has a better timing, otherwise if included in body the top menu item is flickering
 
     let cfg = getDefaultConfig();
 
@@ -40,7 +41,7 @@ export function createWthb(env) {
             insertSubcontextLinks(
                 document,
                 window,
-                bootstrap,
+                bootstrap, // on doc loaded vendor modules are initialized 
                 jQuery,
                 cfg
             );

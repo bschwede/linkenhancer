@@ -218,7 +218,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
     protected WthbService $wthb;
 
-    // JavaScript is composed in headContent and injected in bodyContent, after vendor and webtrees js is included
+    // JavaScript is composed in headContent and can be injected in bodyContent, after vendor and webtrees js is included
     protected array $bundleShortcuts;
     protected string $docReadyJs;
     protected string $initJs;
@@ -466,7 +466,8 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         if (Utils::isAdminPage($request))
         {
                 if ($cfg_wthb_active) {
-                    $includeRes .= Utils::getIncludeWebressourceString($this, $this->bundleShortcuts, WebRessource::Css);
+                    $includeRes .= Utils::getIncludeWebressourceString($this, $this->bundleShortcuts, WebRessource::CssAndJs);
+                    $includeRes .= Utils::getJavascriptWrapper($this->docReadyJs, $this->initJs);
                     return $includeRes;
                 }
                 return ''; # other stuff is of no use in admin backend
@@ -563,8 +564,8 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             }
         }
         
-        $includeRes .= Utils::getIncludeWebressourceString($this, $this->bundleShortcuts, WebRessource::Css);
-
+        $includeRes .= Utils::getIncludeWebressourceString($this, $this->bundleShortcuts, WebRessource::CssAndJs);
+        $includeRes .= Utils::getJavascriptWrapper($this->docReadyJs, $this->initJs);
         return $includeRes;
     }
 
@@ -582,8 +583,8 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         $cfg_wthb_wtcorehelp  = $this->getPref(self::PREF_WTHB_WTCOREHELP, true);
 
         $includeRes = '';
-        $includeRes .= Utils::getIncludeWebressourceString($this, $this->bundleShortcuts, WebRessource::Js);
-        $includeRes .= Utils::getJavascriptWrapper($this->docReadyJs, $this->initJs);
+        //$includeRes .= Utils::getIncludeWebressourceString($this, $this->bundleShortcuts, WebRessource::Js);
+        //$includeRes .= Utils::getJavascriptWrapper($this->docReadyJs, $this->initJs);
 
         $html = '';
         $needajax = false;

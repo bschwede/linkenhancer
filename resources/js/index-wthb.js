@@ -3,9 +3,7 @@ import { createWthb } from "./src/wthb.js";
 
 const wthb = createWthb({
     document: window.document,
-    window,
-    bootstrap: window.bootstrap,
-    jQuery: window.jQuery
+    window
 });
 
 
