@@ -15,11 +15,10 @@ import {
 } from './img-utils.js';
 
 
-export const initTdHCtrl = (
+const createHeightCheckbox = (
     document,
-    window,
     opts
-) => { // table cell height control - init routine
+) => { // DOM creation
 
     const checked =
         (opts.td_h_ctrl === 2) ? ' checked' : '';
@@ -33,12 +32,101 @@ export const initTdHCtrl = (
             opts.I18N.limitheight ?? ''
         );
 
-    const html =
-        `<div class="md-sticky-wrapper me-0 float-end${cbvis}">
-        <input class="td-h-checker"
-        type="checkbox"
-        title="${title}"${checked}>
-        </div>`;
+    return `
+        <div class="md-sticky-wrapper me-0 float-end${cbvis}">
+            <input
+                class="td-h-checker"
+                type="checkbox"
+                title="${title}"${checked}>
+        </div>
+    `;
+};
+
+
+const evaluateHeightLimit = (
+    element,
+    cssMaxHeight,
+    window
+) => {
+
+    const height = element.offsetHeight;
+
+    return (
+        height >
+        parseCssValue(cssMaxHeight, window.innerHeight)
+    );
+};
+
+
+
+const attachHeightHandler = (
+    checkbox,
+    cssMaxHeight,
+    window,
+    document
+) => { // Event handling
+
+    checkbox.addEventListener('change', function () {
+
+        const target =
+            this.closest('tr').children[1];
+
+        if (this.checked) {
+
+            if (
+                target.classList.contains(TD_H_CLASS)
+            ) return;
+
+            const worthIt =
+                evaluateHeightLimit(
+                    target,
+                    cssMaxHeight,
+                    window
+                );
+
+            if (!worthIt) {
+
+                this.checked =
+                    (target.offsetHeight === 0);
+
+                return;
+            }
+
+            target.classList.add(TD_H_CLASS);
+
+        } else {
+
+            target.classList.remove(TD_H_CLASS);
+        }
+
+
+        if (this.hasAttribute('data-triggered')) {
+
+            gotoTop(
+                window,
+                document,
+                this.closest('tr').children[1]
+            );
+        }
+    });
+};
+
+
+export const initTdHCtrl = (
+    document,
+    window,
+    opts
+) => { // table cell height control - init routine
+
+    const checkboxHtml =
+        createHeightCheckbox(document, opts);
+
+    const cssMaxHeight =
+        findCssRule(
+            document,
+            `.${TD_H_CLASS}`,
+            'max-height'
+        );
 
     const targets = [...new Set(
 
@@ -49,12 +137,12 @@ export const initTdHCtrl = (
                 )
             )
             .map(el => el.closest('td'))
-            .filter(Boolean) // remove null and undefined values from an array - https://mikebifulco.com/posts/javascript-filter-boolean
+            .filter(Boolean)
 
     )];
 
     targets.forEach(targetTd => {
-        // 2-column tables: first td contains cehckbox, second td is controlled
+
         const firstTd =
             targetTd.parentElement.children[0];
 
@@ -64,76 +152,17 @@ export const initTdHCtrl = (
 
         firstTd.insertAdjacentHTML(
             'afterbegin',
-            html
+            checkboxHtml
         );
-
-        const cssMaxHeight =
-            findCssRule(
-                document,
-                `.${TD_H_CLASS}`,
-                'max-height'
-            ); // keep in sync with css rule
 
         const checkbox =
             firstTd.querySelector(TD_H_SELECTOR);
 
-        checkbox.addEventListener(
-            'change',
-            function () {
-
-                const target =
-                    this.closest('tr').children[1];
-
-                if (this.checked) {
-
-                    if (
-                        target.classList.contains(
-                            TD_H_CLASS
-                        )
-                    ) return; // it's already under control
-
-                    const tdHeight =
-                        target.offsetHeight;
-
-                    const isWorthIt =
-                        tdHeight >
-                        parseCssValue(
-                            cssMaxHeight,
-                            window.innerHeight
-                        );
-
-                    if (!isWorthIt) {
-
-                        this.checked =
-                            (tdHeight === 0); // if element not visible
-
-                        return;
-                    }
-
-                    target.classList.add(
-                        TD_H_CLASS
-                    );
-
-                } else {
-
-                    target.classList.remove(
-                        TD_H_CLASS
-                    );
-                }
-
-                if (
-                    this.hasAttribute(
-                        'data-triggered'
-                    )
-                ) { // no scrolling on init
-
-                    gotoTop(
-                        window,
-                        document,
-                        this.closest('tr').children[1] // always start with content top
-                    );
-                }
-            }
+        attachHeightHandler(
+            checkbox,
+            cssMaxHeight,
+            window,
+            document
         );
 
         checkbox.dispatchEvent(
@@ -143,12 +172,14 @@ export const initTdHCtrl = (
 };
 
 
-export const checkAndTriggerCheckboxes = node => { // cell height control - trigger all checkboxes in a node when visible
+export const checkAndTriggerCheckboxes = node => { // Visibility trigger logic
 
     if (!(node instanceof Element)) return;
 
-    // checkVisibility() for real visibility (opacity, display, etc.)
-    if (node.checkVisibility?.() || node.offsetParent !== null) {
+    if (
+        node.checkVisibility?.() ||
+        node.offsetParent !== null
+    ) {
 
         const checkboxes =
             node.querySelectorAll(TD_H_SELECTOR);
@@ -158,15 +189,18 @@ export const checkAndTriggerCheckboxes = node => { // cell height control - trig
             if (!cb.hasAttribute('data-triggered')) {
 
                 cb.dispatchEvent(
-                    new Event('change', { bubbles: true })
+                    new Event(
+                        'change',
+                        { bubbles: true }
+                    )
                 );
 
                 cb.setAttribute(
                     'data-triggered',
                     'true'
-                ); // only once per visibility cycle
+                );
 
-            } else { // for cases were init doesn't work properly (INDI page > note tab > show all notes)
+            } else {
 
                 const target =
                     cb.closest('tr').children[1];
@@ -197,4 +231,4 @@ export const checkAndTriggerCheckboxes = node => { // cell height control - trig
             }
         });
     }
-};
+};    
