@@ -23,6 +23,7 @@ util/create-archive.sh
 util/update-po-files.sh
 resources/*/index-*.*
 resources/js/src
+resources/js/tests
 resources/img
 resources/css/icons
 resources/views/*.phtml.~*
