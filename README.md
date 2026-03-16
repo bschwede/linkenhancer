@@ -5,6 +5,14 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0) ![webtrees major version](https://img.shields.io/badge/webtrees-v2.2.x-green) ![Latest Release](https://img.shields.io/github/v/release/bschwede/linkenhancer) ![Downloads](https://img.shields.io/github/downloads/bschwede/linkenhancer/total.svg)
 
 
+> [!IMPORTANT]
+> **Primary Repository:** <https://codeberg.org/bschwede/linkenhancer>
+>
+> **All activity happens on Codeberg:**
+>
+> - ✅ Issues → [Open on Codeberg](https://codeberg.org/bschwede/linkenhancer/issues)
+> - ✅ Pull Requests → [Open on Codeberg](https://codeberg.org/bschwede/linkenhancer/pulls)
+
 <a name="tldr"></a>
 ## TL;DR
 **Cross-references to Gedcom datasets, Markdown editor, context-sensitive link to the GenWiki Webtrees manual**
@@ -19,6 +27,7 @@ What you can expect from the module, illustrated with screenshots:
 | markdown editor | markdown help |
 
 Here are the available options that can be set on the admin page of this module:
+
 [![admin page](resources/img/screenshot_admin-page_small.png)](resources/img/screenshot_admin-page.png)
 
 <a name="description"></a>
@@ -157,6 +166,7 @@ On the subject of markdown see also:
 <a name="mdimg"></a>
 #### Markdown Image Support
 ![note with links](resources/img/screenshot_note-with-links-and-img.png)
+
 This feature allows you to easily embed images from GEDCOM media records (first image), which reside behind the media firewall or from the public directory into notes.
 If restriction rules apply to the record, instead of the image, a message is displayed.
 
@@ -185,7 +195,7 @@ Besides syntax highlighting it ships with an icon bar for common format commands
 #### Markdown Extensions
 > [!WARNING]
 > Please keep in mind when using this extensions, you are deviating from the smallest common markdown dialect set.
-> If the library used to render markdown in HTML needs to be changed for any reason, there is a possibility that not all of the extended markup used here will be supported. (see also [#32](https://github.com/bschwede/linkenhancer/issues/32#issuecomment-3761130124)).
+> If the library used to render markdown in HTML needs to be changed for any reason, there is a possibility that not all of the extended markup used here will be supported. (see also [#32](https://codeberg.org/bschwede/linkenhancer/issues/32)).
 > Since the markup is not intrusive, the impact should not be serious – of course, it's a minor drawback.
 
 The package [League\CommonMarkdown](https://commonmark.thephpleague.com/) used for processing Markdown texts offers several useful extensions that can be activated optionally:
@@ -223,6 +233,7 @@ To ensure that this function is also available in the admin backend a modified v
 If the webtrees page is displayed in a language other than german, it is possible to **open the webtrees manual URL via a translation service** ([Google Translate](https://translate.google.com/)). This can be enabled or disabled as a site setting or delegated to the visitor to decide.
 ![WTHB user setting](resources/img/screenshot_wthb-user-setting.png)
 The settings dialogue can be accessed via the help submenu in the  top menu. When this option is enabled, you will also find a link to a dialogue box that displays a **full-text search** in the german webtrees manual (using various search engines) and the **table of contents**.
+
 ![WTHB full-text search and toc](resources/img/screenshot_wthb-help.png)
 
 > [!NOTE]
@@ -379,7 +390,7 @@ and build-in themes and some other custom modules.
 
 If everything was successful, you should see a subdirectory ``linkenhancer`` with the unpacked content in the ``modules_v4`` directory.
 
-During the initial installation, the following problem may occur: "PDO error - There is no active transaction" - for more details see [known issues](https://github.com/bschwede/linkenhancer/issues?q=label%3A"known-issue").
+During the initial installation, the following problem may occur: "PDO error - There is no active transaction" - for more details see [known issues](https://codeberg.org/bschwede/linkenhancer/issues?q=&type=all&labels=1288213&milestone=0&assignee=0&poster=0).
 
 <a name="contributing"></a>
 ## Contributing
@@ -387,14 +398,14 @@ During the initial installation, the following problem may occur: "PDO error - T
 If you'd like to contribute to this module, great! You can contribute by
 
 * Contributing code - check out the issues for things that need attention. If you have changes you want to make not listed in an issue, please create one, then you can link your pull request.
-* Testing - it's all manual currently, please [create an issue](https://github.com/bschwede/linkenhancer/issues) for any bugs you find.
+* Testing - it's all manual currently, please [create an issue](https://codeberg.org/bschwede/linkenhancer/issues) for any bugs you find.
 
 <a name="translation"></a>
 ## Translation
 
 You can use a local editor, like [Poedit](https://poeditor.com/) or [Notepad++](https://notepad-plus-plus.org/) to make the translations and send them back to me. You can do this via a pull request (if you know how) or by e-mail.
 
-Discussion on translating can be done by creating an [issue](https://github.com/bschwede/linkenhancer/issues).
+Discussion on translating can be done by creating an [issue](https://codeberg.org/bschwede/linkenhancer/issues).
 
 Updated translations will be included in the next release of this module.
 
@@ -410,7 +421,7 @@ Beside English the following languages are available:
 <a name="support"></a>
 ## Support
 
-* **Issues**: for any ideas you have, or when finding a bug you can raise an [issue](https://github.com/bschwede/linkenhancer/issues).
+* **Issues**: for any ideas you have, or when finding a bug you can raise an [issue](https://codeberg.org/bschwede/linkenhancer/issues).
 
 * **Forum**: general webtrees support can be found at the [webtrees forum](http://www.webtrees.net/).
 
