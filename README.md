@@ -88,6 +88,7 @@ Included are the following **predefined external targets** (the parameter keys a
 The syntax of the external targets is listed by the markdown help function of this module. In most cases, only one key-value parameter pair needs to be specified, consisting of the short name of the desired target and the ID of the data record located there.
 
 After a lot of theory: How does it looks like in webtrees?! In the upper part of the image we can see the edit mode of a note record, below how it ist rendered in view mode:
+
 ![Note with enhanced links - edit and view](resources/img/screenshot_note-enh-links-edit-and-view.png)
 
 
@@ -165,6 +166,7 @@ On the subject of markdown see also:
 
 <a name="mdimg"></a>
 #### Markdown Image Support
+
 ![note with links](resources/img/screenshot_note-with-links-and-img.png)
 
 This feature allows you to easily embed images from GEDCOM media records (first image), which reside behind the media firewall or from the public directory into notes.
@@ -223,15 +225,19 @@ You can decide, if the checkbox is always visible or hidden until you hover the 
 
 <a name="wthb"></a>
 ### German webtrees manual
+
 ![small menu with help link](resources/img/screenshot_small-menu-wthb-link.png)
 
 A **context sensitive help link** to the [german webtrees manual](https://wiki.genealogy.net/Webtrees_Handbuch) can be added to the small navigation menu. Context links are also available for components on pages provided by custom extensions (e.g. on the individuals page, the start page or items in the main menu) – these can be identified by the i symbols in a circle.
+
 ![WTHB subcontext help](resources/img/screenshot_wthb-subcontext.png)
 
 To ensure that this function is also available in the admin backend a modified version of [views/layouts/administration.phtml](https://github.com/fisharebest/webtrees/blob/main/resources/views/layouts/administration.phtml) must be registered. This module attempts to use the custom module [vesta_common](https://github.com/vesta-webtrees-2-custom-modules/vesta_common/tree/master) (if installed and enabled) or its own version of the view layout file. Alternatively, patch P002 could also be applied to the core code.
 
 If the webtrees page is displayed in a language other than german, it is possible to **open the webtrees manual URL via a translation service** ([Google Translate](https://translate.google.com/)). This can be enabled or disabled as a site setting or delegated to the visitor to decide.
+
 ![WTHB user setting](resources/img/screenshot_wthb-user-setting.png)
+
 The settings dialogue can be accessed via the help submenu in the  top menu. When this option is enabled, you will also find a link to a dialogue box that displays a **full-text search** in the german webtrees manual (using various search engines) and the **table of contents**.
 
 ![WTHB full-text search and toc](resources/img/screenshot_wthb-help.png)
@@ -241,6 +247,7 @@ The settings dialogue can be accessed via the help submenu in the  top menu. Whe
 > If you wish to update it without updating this module, you can use the utility script [update-wthb-toc.sh](util/update-wthb-toc.sh).
 
 In addition, the **submenu** contains an overview of the help topics included in Webtrees and customisable external help links (e.g. Webtrees FAQ and forum, GitHub repo, etc.). The top menu item can be split into two links - one to directly open the context help article and the other to open the submenu.
+
 ![WTHB submenu and split menu item](resources/img/screenshot_wthb-submenu.png)
 
 The module contains some standard **external help links**, that are defined in JSON - array of objects with the following members:
@@ -311,6 +318,7 @@ Set `category='generic'` for rules that should apply to more than one page.
 
 On the **admin page** of this module it is possible to import routes registered in webtrees on demand. This make it easier to cover individual custom module configurations.
 Further more you can import and export data in csv format in order to make changes more convenient. You can define the separator and for import the character encoding (on export it is always utf-8).   You can see at a glance how many data rows are stored in the table and how many of them have an url assigned.
+
 ![admin page data table](resources/img/screenshot_admin-page-data-table.png)
 
 In case of discrepancies the context help can be more easily adjusted by activating the option "Output of debug information on the JS console". This provides you with information on the active route and, if applicable, data table entries found for matching routing to help topics.
