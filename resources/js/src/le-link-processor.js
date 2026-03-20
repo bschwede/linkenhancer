@@ -40,7 +40,7 @@ export const processLinks = (
                 .filter(k => !matchingKeys.includes(k));
 
         let lastLink = null;
-
+        const diatitle = $("a.dropdown-item.menu-chart-tree[role=menuitem]").text().trim() || LEoptions.I18N['Interactive tree'];
 
         matchingKeys.forEach(key => {
 
@@ -56,25 +56,44 @@ export const processLinks = (
                 if (!parsed) return;
 
                 let { type, xref, newtree, dia } = parsed;
+                newtree = (newtree === LEoptions.tree ? null : newtree);
+
+                if ((!type && type !== '') || !xref) {
+                    let nextLink = getNextLink(link, lastLink);
+                    lastLink = setLink(
+                        document,
+                        nextLink,
+                        lastLink, 
+                        '',
+                        LEcfg[key].name + " - " + LEoptions.I18N['syntax error'] + "!", 
+                        LEcfg[key].cname,
+                        LEoptions
+                    );
+                    lastLink.classList.add('icon-wt-xref');
+                    return;
+                }
 
                 let url = LEoptions.baseurl;
+                let thisXrefShown = false;
+                let xrefsuffix = '';                
 
                 if (newtree) {
-                    url =
-                        url.replace(
-                            `/tree/${LEoptions.tree}`,
-                            `/tree/${newtree}`
-                        );
+                    url = url.replace(`/tree/${LEoptions.tree}`.replaceAll('/', separator[LEoptions.urlmode].path),
+                        `/tree/${newtree}`.replaceAll('/', separator[LEoptions.urlmode].path));
+                    xrefsuffix = ` @ ${newtree}`;
+                } else if (LEoptions.thisXref === xref) {
+                    link = changeTagName(document, link, 'mark');
+                    thisXrefShown = true;
                 }
 
                 const urlxref =
                     url +
                     separator[LEoptions.urlmode].path +
-                    (type || 'goto-xref') +
+                    (type !== '' ? rectypes[type] : 'goto-xref') +
                     separator[LEoptions.urlmode].path +
                     xref;
 
-                const nextLink =
+                let nextLink =
                     lastLink ? createLink(document) : link;
 
                 lastLink =
@@ -83,11 +102,28 @@ export const processLinks = (
                         nextLink,
                         lastLink,
                         urlxref,
-                        `${LEtargets[key].name} - ${xref}`,
+                        `${LEtargets[key].name} - ${xref}${xrefsuffix}`,
                         LEtargets[key].cname,
-                        LEoptions.openInNewTab
+                        LEoptions
                     );
+                lastLink.classList.add('icon-wt-xref');
 
+                if (type == 'i' && dia && !thisXrefShown) {
+                    let diaurl = url.replace(
+                            "/tree/".replaceAll('/', separator[LEoptions.urlmode].path),
+                            "/module/tree/Chart/".replaceAll('/', separator[LEoptions.urlmode].path)
+                        ) + separator[LEoptions.urlmode].option + "xref=" + xref;
+                    nextLink = lastLink ? createLink(document) : link;
+                    lastLink = setLink(
+                        document,
+                        nextLink,
+                        lastLink,
+                        diaurl,
+                        `${diatitle} - ${xref}`,
+                        'icon-wt-dia',
+                        LEoptions
+                    );
+                }
             } else {
 
                 let url = '';
@@ -108,9 +144,7 @@ export const processLinks = (
                 const nextLink =
                     lastLink ? createLink(document) : link;
 
-                title =
-                    title.replace(/\$ID/ig,
-                        decodeURIComponent(option));
+                title = title.replace(/\$ID/ig, decodeURIComponent(option));
 
                 lastLink =
                     setLink(
@@ -120,7 +154,7 @@ export const processLinks = (
                         url,
                         title,
                         LEtargets[key].cname,
-                        LEoptions.openInNewTab
+                        LEoptions
                     );
             }
 
@@ -137,7 +171,9 @@ export const processLinks = (
                 nextLink,
                 lastLink,
                 '',
-                "param error: " + unknownKeys.join(', ')
+                LEoptions.I18N["param error"] + ": " + unknownKeys.join(', '),
+                '',
+                LEoptions
             );
         }
 

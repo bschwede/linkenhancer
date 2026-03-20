@@ -83,7 +83,7 @@ const jsPipe = (inputFile, outputInfix, format ='iife') =>
         .pipe(size({ showFiles: true }));
 
 const jsExtractLeConfig = async () => {
-    const srcfile = "./resources/js/index-le.js";
+    const srcfile = "./resources/js/src/le-config.js";
     const dstfile = "./resources/js/bundle-le-config.js";
     if (! await fileExists(srcfile)) {
         log.error(`${srcfile} not exists`);

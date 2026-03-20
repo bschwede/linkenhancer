@@ -5,21 +5,21 @@ export const setLink = (
     href,
     title,
     classname,
-    openInNewTab
+    LEoptions
 ) => {
 
     if (href) {
 
         link.setAttribute("href", href);
 
-        if (openInNewTab) {
+        if (LEoptions.openInNewTab) {
             link.setAttribute("target", '_blank');
         }
 
     } else {
 
         link.onclick = e => {
-            alert(title || "syntax error");
+            alert(link.title ?? LEoptions.I18N['syntax error'] + "!");
             e.preventDefault();
         };
 

@@ -15,15 +15,18 @@ export const initLEext = (
     options
 ) => {
 
-    LEtargets =
-        typeof targets === 'object'
-            ? Object.assign(getLETargetCfg(I18N, getLErecTypes), targets)
-            : getLETargetCfg(I18N, getLErecTypes);
-
     LEoptions =
         typeof options === 'object'
             ? Object.assign(getLEOptions(), options)
             : getLEOptions();
+    
+    LEoptions.I18N = I18N; // temporary - should be set in php header routine
+
+    LEtargets =
+        typeof targets === 'object'
+            ? Object.assign(getLETargetCfg(LEoptions.I18N, getLErecTypes), targets)
+        : getLETargetCfg(LEoptions.I18N, getLErecTypes);
+
 
     LEoptions.thisXref =
         String(LEoptions.thisXref).toUpperCase();
