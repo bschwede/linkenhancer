@@ -9,7 +9,6 @@ export function initMDE(document, options = {}) {
             ? { ...getMdeConfig(), ...options }
             : getMdeConfig()
 
-    cfg.I18N = I18N // temp.
 
     createDomObserver({
 

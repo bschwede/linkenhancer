@@ -61,56 +61,77 @@ class LinkEnhancerUtils { // misc helper functions
 
 
     /**
-     * wrap I18N strings needed by javascript routines in a json object
+     * array of I18N strings needed by javascript routines
      *
-     * @return string
+     * @return array
      */
-    public static function getJsonI18N(): string
+    public static function getJsI18N(string $component, AbstractModule $module): array
     {
-        return json_encode([
-            // MDE
-            'bold' => /*I18N: JS MDE */ I18N::translate('bold'),
-            'italic' => /*I18N: JS MDE */ I18N::translate('italic'),
-            'strikethrough' => /*I18N: JS MDE */ I18N::translate('strikethrough'),
-            'format as code' => /*I18N: JS MDE */ I18N::translate('format as code'),
-            'highlight' => /*I18N: JS MDE */ I18N::translate('highlight'),
-            'Level 1 heading' => /*I18N: JS MDE */ I18N::translate('Level %s heading', '1'),
-            'Bulleted list' => /*I18N: JS MDE */ I18N::translate('Bulleted list'),
-            'Numbered list' => /*I18N: JS MDE */ I18N::translate('Numbered list'),
-            'quote' => /*I18N: JS MDE blockquote */ I18N::translate('quote'),
-            'Insert link' => /*I18N: JS MDE */ I18N::translate('Insert link'),
-            'Insert image' => /*I18N: JS MDE */ I18N::translate('Insert image'),
-            'hr' => /*I18N: JS MDE */ I18N::translate('Horizontal rule'),
-            'Undo' => /*I18N: JS MDE */ I18N::translate('Undo'),
-            'Redo' => /*I18N: JS MDE */ I18N::translate('Redo'),
-            'Help' => /*I18N: webtrees.pot */ I18N::translate('Help'),
-            'Link destination' => /*I18N: JS MDE */ I18N::translate('Link destination'),
-            'Insert table' => /*I18N: JS MDE */ I18N::translate('Insert table'),
-            'queryTableCnR' => /*I18N: JS MDE */ I18N::translate('How many columns and rows should the table have (input: [number] [number])?'),
-            // enhanced links 
-            'cross reference' => /*I18N: JS enhanced link */ I18N::translate('cross reference'),
-            'oofb' => /*I18N: JS enhanced link, %s name of location */ I18N::translate('Online Local heritage book of %s at CompGen', '%s'),
-            'gov' => /*I18N: JS enhanced link */ I18N::translate('Historic Geo Information System (GOV)'),
-            'gedbas' => /*I18N: JS enhanced link */ I18N::translate('GEDBAS (Genealogical Database - collected personal data)'),
-            'www' => /*I18N: JS enhanced link */ I18N::translate('wer-wir-waren.at'),
-            'ewp' => /*I18N: JS enhanced link */ I18N::translate('Residents database - Family research in West Prussia'),
-            'Interactive tree' => /*I18N: webtrees.pot */ I18N::translate('Interactive tree'),
-            'syntax error' => /*I18N: JS enhanced link */ I18N::translate('Syntax error'),
-            'param error' => /*I18N: JS enhanced link */ I18N::translate('Unknown parameter keys'),
-            'wt-help1' => /*I18N: JS enhanced link wt1 - %s=rectypes*/ I18N::translate('standard link to note (available record types: %s) with XREF in active tree', '%s'),
-            'wt-help2' => /*I18N: JS enhanced link wt2 */ I18N::translate('link to record type individual with XREF from "othertree" and also link to'),
-            'wt-help3' => /*I18N: JS enhanced link wt3 */ I18N::translate('link to record without given record type - access via redirect url'),
-            'osm-help1' => /*I18N: JS enhanced link osm1 */ I18N::translate('zoom/lat/lon for locating map'),
-            'osm-help2' => /*I18N: JS enhanced link osm2 */ I18N::translate('same as before with additional marker'),
-            'osm-help3' => /*I18N: JS enhanced link osm3 */ I18N::translate('show also node/way/relation, see also'),
-            'osm-help4' => /*I18N: JS enhanced link osm4 */ I18N::translate('show also node/way/relation - alternative notation'),
-            'ofb-help1' => /*I18N: JS enhanced link ofb1 */ I18N::translate('link to Online Local heritage book at CompGen with given uid'),
-            'wp-help1' => /*I18N: JS enhanced link wp1 */ I18N::translate('open the article in the german wikipedia'),
-            'wp-help2' => /*I18N: JS enhanced link wp2 */ I18N::translate('open the english version of the article'),
-            'wp-help3' => /*I18N: JS enhanced link wp3 */ I18N::translate('you can address every subdomain instance of wikipedia.org'),
-            'gedbas-help1' => /*I18N: JS enhanced link gedbas1 */ I18N::translate('open person record with given number'),
-            'gedbas-help2' => /*I18N: JS enhanced link gedbas2 */ I18N::translate('open person record with UID'),
-        ]);
+        return match(strtolower($component)) {
+            'mde' => [
+                    // MDE
+                    'bold'             => /*I18N: JS MDE */ I18N::translate('bold'),
+                    'italic'           => /*I18N: JS MDE */ I18N::translate('italic'),
+                    'strikethrough'    => /*I18N: JS MDE */ I18N::translate('strikethrough'),
+                    'format as code'   => /*I18N: JS MDE */ I18N::translate('format as code'),
+                    'highlight'        => /*I18N: JS MDE */ I18N::translate('highlight'),
+                    'Level 1 heading'  => /*I18N: JS MDE */ I18N::translate('Level %s heading', '1'),
+                    'Bulleted list'    => /*I18N: JS MDE */ I18N::translate('Bulleted list'),
+                    'Numbered list'    => /*I18N: JS MDE */ I18N::translate('Numbered list'),
+                    'quote'            => /*I18N: JS MDE blockquote */ I18N::translate('quote'),
+                    'Insert link'      => /*I18N: JS MDE */ I18N::translate('Insert link'),
+                    'Insert image'     => /*I18N: JS MDE */ I18N::translate('Insert image'),
+                    'hr'               => /*I18N: JS MDE */ I18N::translate('Horizontal rule'),
+                    'Undo'             => /*I18N: JS MDE */ I18N::translate('Undo'),
+                    'Redo'             => /*I18N: JS MDE */ I18N::translate('Redo'),
+                    'Help'             => /*I18N: webtrees.pot */ I18N::translate('Help'),
+                    'Link destination' => /*I18N: JS MDE */ I18N::translate('Link destination'),
+                    'Insert table'     => /*I18N: JS MDE */ I18N::translate('Insert table'),
+                    'queryTableCnR'    => /*I18N: JS MDE */ I18N::translate('How many columns and rows should the table have (input: [number] [number])?'),
+                ],
+
+            'le' => [
+                    // enhanced links 
+                    'cross reference'  => /*I18N: JS enhanced link */ I18N::translate('cross reference'),
+                    'oofb'             => /*I18N: JS enhanced link, %s name of location */ I18N::translate('Online Local heritage book of %s at CompGen', '%s'),
+                    'gov'              => /*I18N: JS enhanced link */ I18N::translate('Historic Geo Information System (GOV)'),
+                    'gedbas'           => /*I18N: JS enhanced link */ I18N::translate('GEDBAS (Genealogical Database - collected personal data)'),
+                    'www'              => /*I18N: JS enhanced link */ I18N::translate('wer-wir-waren.at'),
+                    'ewp'              => /*I18N: JS enhanced link */ I18N::translate('Residents database - Family research in West Prussia'),
+                    'Interactive tree' => /*I18N: webtrees.pot */ I18N::translate('Interactive tree'),
+                    'syntax error'     => /*I18N: JS enhanced link */ I18N::translate('Syntax error'),
+                    'param error'      => /*I18N: JS enhanced link */ I18N::translate('Unknown parameter keys'),
+                    'wt-help1'         => /*I18N: JS enhanced link wt1 - %s=rectypes*/ I18N::translate('standard link to note (available record types: %s) with XREF in active tree', '%s'),
+                    'wt-help2'         => /*I18N: JS enhanced link wt2 */ I18N::translate('link to record type individual with XREF from "othertree" and also link to'),
+                    'wt-help3'         => /*I18N: JS enhanced link wt3 */ I18N::translate('link to record without given record type - access via redirect url'),
+                    'osm-help1'        => /*I18N: JS enhanced link osm1 */ I18N::translate('zoom/lat/lon for locating map'),
+                    'osm-help2'        => /*I18N: JS enhanced link osm2 */ I18N::translate('same as before with additional marker'),
+                    'osm-help3'        => /*I18N: JS enhanced link osm3 */ I18N::translate('show also node/way/relation, see also'),
+                    'osm-help4'        => /*I18N: JS enhanced link osm4 */ I18N::translate('show also node/way/relation - alternative notation'),
+                    'ofb-help1'        => /*I18N: JS enhanced link ofb1 */ I18N::translate('link to Online Local heritage book at CompGen with given uid'),
+                    'wp-help1'         => /*I18N: JS enhanced link wp1 */ I18N::translate('open the article in the german wikipedia'),
+                    'wp-help2'         => /*I18N: JS enhanced link wp2 */ I18N::translate('open the english version of the article'),
+                    'wp-help3'         => /*I18N: JS enhanced link wp3 */ I18N::translate('you can address every subdomain instance of wikipedia.org'),
+                    'gedbas-help1'     => /*I18N: JS enhanced link gedbas1 */ I18N::translate('open person record with given number'),
+                    'gedbas-help2'     => /*I18N: JS enhanced link gedbas2 */ I18N::translate('open person record with UID'),
+                ],
+            
+            'wthb' => [
+                    'help_title_wthb'   => I18N::translate('Webtrees manual'),
+                    'help_title_ext'    => /*I18N: webtrees.pot */ I18N::translate('Help'),
+                    'cfg_title'         => /*I18N: wthb link user setting title */ I18N::translate('Webtrees manual link - user setting'),
+                    'tocnsearch'        => I18N::translate("Full-text search") . ' / ' . I18N::translate('Table of contents'),
+                    'wtcorehelp'        => I18N::translate("webtrees help topics (included)"),
+                    'startpage'         => I18N::translate("start page"),
+                    'admin_title'       => $module->title() . ' - ' . I18N::translate('Settings'),
+                ],
+            
+            'img' => [
+                    'limitheight'   => I18N::translate('Limit cell height'),
+                ],
+            
+            default => []
+        };
     }
 
     /**

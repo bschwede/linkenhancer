@@ -10,7 +10,6 @@ let LEoptions;
 
 export const initLEext = (
     document,
-    I18N,
     targets,
     options
 ) => {
@@ -20,7 +19,6 @@ export const initLEext = (
             ? Object.assign(getLEOptions(), options)
             : getLEOptions();
     
-    LEoptions.I18N = I18N; // temporary - should be set in php header routine
 
     LEtargets =
         typeof targets === 'object'

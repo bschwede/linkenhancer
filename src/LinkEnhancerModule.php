@@ -433,15 +433,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             $help_url = $help['help_url']; //gettype(value: $help) == 'string' ? $help : $help->first()->url;
                        
             $options = [
-                'I18N' => [
-                    'help_title_wthb'   => I18N::translate('Webtrees manual'),
-                    'help_title_ext'    => /*I18N: webtrees.pot */ I18N::translate('Help'),
-                    'cfg_title'         => /*I18N: wthb link user setting title */ I18N::translate('Webtrees manual link - user setting'),
-                    'tocnsearch'        => I18N::translate("Full-text search") . ' / ' . I18N::translate('Table of contents'),
-                    'wtcorehelp'        => I18N::translate("webtrees help topics (included)"),
-                    'startpage'         => I18N::translate("start page"),
-                    'admin_title'       => $this->title() . ' - ' . I18N::translate('Settings'),
-                ],
+                'I18N'            => Utils::getJsI18N('wthb', $this),
                 'help_url'        => $help_url,
                 'faicon'          => $this->getPref(self::PREF_WTHB_FAICON, true),
                 'wiki_url'        => $this->getPref(self::PREF_GENWIKI_LINK),
@@ -478,9 +470,9 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
         // === include on all pages
         // --- I18N for JS MDE and enhanced links
-        if ($cfg_link_active || $cfg_md_editor_active) {
-            $includeRes .= "<script>window.I18N = " . Utils::getJsonI18N() . "; </script>";
-        }
+        //if ($cfg_link_active || $cfg_md_editor_active) {
+        //    $includeRes .= "<script>window.I18N = " . Utils::getJsI18N() . "; </script>";
+        //}
         // --- Home Link
         if ($cfg_home_active && $tree != null) {
             $params = [ 'tree' => $tree->name()];
@@ -516,6 +508,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             $treename = ($tree !== null ? $tree->name() : '');
 
             $options = [
+                'I18N'         => Utils::getJsI18N('le', $this),
                 'thisXref'     => Validator::attributes($request)->isXref()->string('xref', ''),
                 'openInNewTab' => $this->getPref(self::PREF_LINKSPP_OPEN_IN_NEW_TAB, true),
                 'tree'         => $treename,
@@ -533,9 +526,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                 $this->bundleShortcuts[] = 'img';
 
                 $options = [
-                    'I18N' => [
-                        'limitheight'   => I18N::translate('Limit cell height'),
-                    ],                    
+                    'I18N'      => Utils::getJsI18N('img', $this),
                     'ext_fn'    => $this->getPref(self::PREF_MD_EXT_FN_ACTIVE, true),
                     'ext_toc'   => $this->getPref(self::PREF_MD_EXT_TOC_ACTIVE, true),
                     'td_h_ctrl' => $this->getPref(self::PREF_MD_TD_H_CTRL_TYPE, true),
@@ -551,6 +542,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                     $this->docReadyJs .= 'window.LEhelp = "' . e(route('module', ['module' => $this->name(), 'action' => 'helpmd'])) . '";';
 
                     $options = [
+                        'I18N'       => Utils::getJsI18N('mde', $this),    
                         'href'       => $cfg_link_active,
                         'src'        => $cfg_md_img_active,
                         'ext'        => $cfg_md_ext_active,
