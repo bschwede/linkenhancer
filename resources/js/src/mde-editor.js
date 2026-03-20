@@ -4,17 +4,6 @@ import { setupLineNumbers } from "./mde-line-numbers.js"
 import { createGrammar } from "./mde-grammar.js"
 import { createCommandBar } from "./mde-commandbar.js"
 
-export function initEditors(document, cfg) {
-
-    const selector =
-        "textarea[id$='NOTE'], textarea[id$='note']" +
-        (cfg.todo ? ", textarea[id$='_TODO']" : "")
-
-    document.querySelectorAll(selector).forEach(textarea => {
-        initEditor(document, cfg, textarea)
-    })
-}
-
 export const initEditor = (document, cfg, textarea) => {
     const id = `md-${textarea.id}`
 

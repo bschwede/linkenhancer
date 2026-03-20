@@ -1,7 +1,7 @@
-import { getLETargetCfg, getLEOptions } from './le-config.js';
-import { observeDomLinks } from './le-observer.js';
+import { getLETargetCfg, getLEOptions, LINK_SELECTOR } from './le-config.js';
 import { processLinks } from './le-link-processor.js';
 import { getLErecTypes } from './le-xref-parser.js';
+import { createDomObserver } from './dom-observer-factory.js';
 
 
 export let LEtargets;
@@ -32,21 +32,26 @@ export const initLEext = (
         String(LEoptions.thisXref).toUpperCase();
 
 
-    const processNode =
-        node => processLinks(
-            document,
-            LEtargets,
-            LEoptions,
-            node
-        );
+    createDomObserver({
 
+        root: document.body,
 
-    processNode(null); // process all available links
+        match: node =>
+            node.tagName === "A",
 
-    observeDomLinks(
-        document,
-        processNode
-    );
+        collect: node =>
+            node.querySelectorAll?.(LINK_SELECTOR),
+
+        process: link =>
+            processLinks(
+                document,
+                LEtargets,
+                LEoptions,
+                link
+            ),
+
+        initialScan: true
+    })
 };
 
 

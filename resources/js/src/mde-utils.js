@@ -2,18 +2,3 @@ export function wrap(el, wrapper = document.createElement("div")) { //https://st
     el.parentNode.insertBefore(wrapper, el)
     return wrapper.appendChild(el)
 }
-
-
-export function debounceFrame(fn) {
-    let scheduled = false
-
-    return (...args) => {
-        if (scheduled) return
-        scheduled = true
-
-        requestAnimationFrame(() => {
-            scheduled = false
-            fn(...args)
-        })
-    }
-}

@@ -1,8 +1,8 @@
 import { getMdeConfig } from "./mde-config.js"
-import { initEditors } from "./mde-editor.js"
-import { observeEditors } from "./mde-observer.js"
+import { initEditor } from "./mde-editor.js"
+import { createDomObserver } from "./dom-observer-factory.js" 
 
-export function installMDEExt(document, options = {}) {
+export function initMDE(document, options = {}) {
 
     const cfg =
         typeof options === "object"
@@ -11,7 +11,22 @@ export function installMDEExt(document, options = {}) {
 
     cfg.I18N = I18N // temp.
 
-    initEditors(document, cfg)
+    createDomObserver({
 
-    observeEditors(document, initEditors, cfg)
+        root: document.body,
+
+        match: node =>
+            node.tagName === "TEXTAREA",
+
+        collect: node =>
+            node.querySelectorAll?.(
+                "textarea[id$='NOTE'], textarea[id$='note']" +
+                (cfg.todo ? ", textarea[id$='_TODO']" : "")
+            ),
+
+        process: textarea =>
+            initEditor(document, cfg, textarea),
+
+        initialScan: true
+    })    
 }
