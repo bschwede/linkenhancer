@@ -37,7 +37,7 @@ export function createCommandBar(editor, cfg, showHelp) {
         { name: "h1", title: cfg.I18N["Level 1 heading"] },
         { name: "ul", title: cfg.I18N["Bulleted list"] },
         { name: "ol", title: cfg.I18N["Numbered list"] },
-        { name: "blockquote", title: I18N['quote'] },
+        { name: "blockquote", title: cfg.I18N['quote'] },
 
         "|",
 
@@ -53,7 +53,7 @@ export function createCommandBar(editor, cfg, showHelp) {
 
         {
             name: 'insertImage',
-            title: I18N['Insert image'],
+            title: cfg.I18N['Insert image'],
             action: editor => {
                 let dest = MdeCfg.src ? "#@id=@@" : '';
                 editor.wrapSelection('![', `](${dest})`);
