@@ -60,8 +60,6 @@ export const initHelp = (document, window, bootstrap, jQuery, cfg, searchengines
         }
     });
 
-    jQuery().ready(() => jQuery(tocheads).get(0).scrollIntoView());
-
     // full-text search
     const setSEngineIcon = (value) => {
         let iconspan = jQuery('#sengineicon');
@@ -114,4 +112,11 @@ export const initHelp = (document, window, bootstrap, jQuery, cfg, searchengines
         }
     });
     jQuery('#wthbsearchsubmit').on('click', () => submitSearch());
+
+    //https://stackoverflow.com/questions/2180326/jquery-event-model-and-preventing-duplicate-handlers
+    jQuery('#le-ajax-modal').off('shown.bs.modal.wthb').on('shown.bs.modal.wthb', function () {
+        jQuery(tocheads).get(0).scrollIntoView();
+        jQuery(this).scrollTop(0);
+        jQuery(this).find('input:first').trigger('focus');
+    })  
 };
