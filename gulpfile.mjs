@@ -9,6 +9,9 @@ import postcss from "gulp-postcss";
 import concat from 'gulp-concat';
 import terser from "gulp-terser";
 import file from "gulp-file";
+// sourcemaps don't work as expected - because of media firewall for assets
+// map-file must be inline or maybe in public folder, but tests were not successful 
+//import sourcemaps from 'gulp-sourcemaps'; 
 import { hashFileSync } from 'hasha';
 import source from "vinyl-source-stream";
 import buffer from "vinyl-buffer";
@@ -39,7 +42,7 @@ import merge from 'merge-stream';
 //--- common consts
 const VERSION_TXT = 'latest-version.txt';
 const VERSION_PHP = 'LinkEnhancerModule.php';
-
+let DEV = false; // bundling js for dev or production
 
 //--- Rollup - javascript
 const rollupConfig = (inputFile, sourcemaps = false, format ='iife') => {
@@ -67,16 +70,20 @@ const rollupConfig = (inputFile, sourcemaps = false, format ='iife') => {
     };
 };
 
+const getTerserCfg = () => DEV ? { compress: false, mangle: false, format: { beautify: true} } : {};
+
 const jsPipe = (inputFile, outputInfix, format ='iife') =>
     rollupStream(rollupConfig(inputFile, false, format))
         .pipe(source(`bundle-${outputInfix}.min.js`))
         .pipe(buffer())
-        .pipe(terser())
+        //.pipe(sourcemaps.init())
+        .pipe(terser(getTerserCfg()))
+        //.pipe(sourcemaps.write('.'))               // separate .map-Dateien
         .pipe(gulp.dest("./resources/js"))
         .pipe(size({ showFiles: true }));
 
 const jsExtractLeConfig = async () => {
-    const srcfile = "./resources/js/index-le.js";
+    const srcfile = "./resources/js/src/le-config.js";
     const dstfile = "./resources/js/bundle-le-config.js";
     if (! await fileExists(srcfile)) {
         log.error(`${srcfile} not exists`);
@@ -264,10 +271,14 @@ const clean = () => del(["./resources/js/bundle*", "./resources/css/bundle*"]);
 const hashCsv = () => hashFile('./Schema/SeedHelpTable.csv');
 
 const build = gulp.series(clean, jscripts, css); //, hashCsv);
+const devbuild = async () => {
+    DEV = true;
+    build();
+};
 const bumpversion = gulp.series(gitCheckClean, bumpVersion, syncVersion);
 
 const archive = gulp.series(build, createmo, createarchive);
 const syncversion = syncVersion
 
 
-export { build, bumpversion, syncversion, updatepo, createmo, archive };
+export { build, bumpversion, devbuild, syncversion, updatepo, createmo, archive };

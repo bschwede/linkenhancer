@@ -63,6 +63,8 @@ END {
 ' "$POT_FILE_ALL" > "$POT_FILE_FILTERED"
 POT_FILE="$POT_FILE_FILTERED"
 
+exit 0
+## po files are updated via Weblate to prevent conflicts
 # init PO-files
 for PO_FILE in "$LANG_DIR"/*.po; do
   lang=$(basename "${PO_FILE%.*}")

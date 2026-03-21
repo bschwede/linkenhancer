@@ -218,6 +218,12 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
     protected WthbService $wthb;
 
+    // JavaScript is composed in headContent and can be injected in bodyContent, after vendor and webtrees js is included
+    protected array $bundleShortcuts;
+    protected string $docReadyJs;
+    protected string $initJs;
+
+
     public function __construct(public readonly bool $vesta_common_enabled = false)
     {
         $this->setName('_' . self::CUSTOM_MODULE . '_'); // need to be initialized before getPref is called; normally set in app/Services/ModuleService.php: $module->setName('_' . basename(dirname($filename)) . '_'); but in this case this is too late
@@ -299,7 +305,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
      */
     public function resourcesFolder(): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR;
+        return dirname(__DIR__, 1) . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -398,44 +404,36 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
         $request = Registry::container()->get(ServerRequestInterface::class);
         //ressources to include
-        $bundleShortcuts = [];
+        $this->bundleShortcuts = [];
         $includeRes = '';
-        $docReadyJs = ''; // init on document ready
-        $initJs = '';
+        $this->docReadyJs = ''; // init on document ready
+        $this->initJs = '';
 
         $theme = Session::get('theme');
         $palette = Session::get('palette', '');
         
         $activeRouteInfo = Utils::getActiveRoute($request);
         if ($cfg_js_debug_console) {
-            $docReadyJs .= "console.debug('LE-Mod theme:', '$theme'" . ($palette ? ", 'palette=$palette'" : '') . ");";
-            $docReadyJs .= "console.debug('LE-Mod active route:', " . json_encode($activeRouteInfo) .");";
+            $this->docReadyJs .= "console.debug('LE-Mod theme:', '$theme'" . ($palette ? ", 'palette=$palette'" : '') . ");";
+            $this->docReadyJs .= "console.debug('LE-Mod active route:', " . json_encode($activeRouteInfo) .");";
         }
 
         // --- Webtrees Handbuch Link
         if ($cfg_wthb_active) {
-            $bundleShortcuts[] = 'wthb';
+            $this->bundleShortcuts[] = 'wthb';
 
             $withSubcontext = $this->getPref(self::PREF_WTHB_SUBCONTEXT, true);
             $help = $this->wthb->getContextHelp($activeRouteInfo, $withSubcontext, $cfg_js_debug_console);
             if ($cfg_js_debug_console) {
-                $docReadyJs .= "console.debug('LE-Mod help rows:', " . json_encode($help['result']) . ");";
-                $docReadyJs .= "console.debug('LE-Mod help sql:', " . json_encode($help['sql']) . ");";
-                if ($withSubcontext) $docReadyJs .= "console.debug('LE-Mod help subcontext:', " . json_encode($help['subcontext']) . ");";
+                $this->docReadyJs .= "console.debug('LE-Mod help rows:', " . json_encode($help['result']) . ");";
+                $this->docReadyJs .= "console.debug('LE-Mod help sql:', " . json_encode($help['sql']) . ");";
+                if ($withSubcontext) $this->docReadyJs .= "console.debug('LE-Mod help subcontext:', " . json_encode($help['subcontext']) . ");";
             }
 
             $help_url = $help['help_url']; //gettype(value: $help) == 'string' ? $help : $help->first()->url;
                        
             $options = [
-                'I18N' => [
-                    'help_title_wthb'   => I18N::translate('Webtrees manual'),
-                    'help_title_ext'    => /*I18N: webtrees.pot */ I18N::translate('Help'),
-                    'cfg_title'         => /*I18N: wthb link user setting title */ I18N::translate('Webtrees manual link - user setting'),
-                    'tocnsearch'        => I18N::translate("Full-text search") . ' / ' . I18N::translate('Table of contents'),
-                    'wtcorehelp'        => I18N::translate("webtrees help topics (included)"),
-                    'startpage'         => I18N::translate("start page"),
-                    'admin_title'       => $this->title() . ' - ' . I18N::translate('Settings'),
-                ],
+                'I18N'            => Utils::getJsI18N('wthb', $this),
                 'help_url'        => $help_url,
                 'faicon'          => $this->getPref(self::PREF_WTHB_FAICON, true),
                 'wiki_url'        => $this->getPref(self::PREF_GENWIKI_LINK),
@@ -452,7 +450,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                 'admin_url'       => (Auth::isAdmin() ? route('module', ['module' => $this->name(), 'action' => 'Admin']) : ''),
             ];
 
-            $initJs .= "LinkEnhMod.initWthb(" . json_encode($options) . ");";
+            $this->initJs .= "LinkEnhMod.initWthb(" . json_encode($options) . ");";
         }        
 
         // === admin backend - only if patch P002 for administration.phtml was applied; default: headContent of custom modules is not called on the admin backend
@@ -460,8 +458,9 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         if (Utils::isAdminPage($request))
         {
                 if ($cfg_wthb_active) {
-                    $includeRes .= Utils::getIncludeWebressourceString($this, ['wthb']);
-                    return $includeRes . Utils::getJavascriptWrapper($docReadyJs, $initJs);
+                    $includeRes .= Utils::getIncludeWebressourceString($this, $this->bundleShortcuts, WebRessource::CssAndJs);
+                    $includeRes .= Utils::getJavascriptWrapper($this->docReadyJs, $this->initJs);
+                    return $includeRes;
                 }
                 return ''; # other stuff is of no use in admin backend
         }
@@ -471,14 +470,14 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
         // === include on all pages
         // --- I18N for JS MDE and enhanced links
-        if ($cfg_link_active || $cfg_md_editor_active) {
-            $includeRes .= "<script>window.I18N = " . Utils::getJsonI18N() . "; </script>";
-        }
+        //if ($cfg_link_active || $cfg_md_editor_active) {
+        //    $includeRes .= "<script>window.I18N = " . Utils::getJsI18N() . "; </script>";
+        //}
         // --- Home Link
         if ($cfg_home_active && $tree != null) {
             $params = [ 'tree' => $tree->name()];
             $url = $cfg_home_type == 1 ? route(TreePage::class, $params) : route(HomePage::class, $params);
-            $docReadyJs .= '$(".wt-site-title").wrapInner(`<a class="' . self::STDCLASS_HOME_LINK .'" href="' . e($url) . '"></a>`);';
+            $this->docReadyJs .= '$(".wt-site-title").wrapInner(`<a class="' . self::STDCLASS_HOME_LINK .'" href="' . e($url) . '"></a>`);';
 
             $cfg_home_link_json = $this->getPref(self::PREF_HOME_LINK_JSON); // getPref returns trimmed string 
             if ($cfg_home_link_json) {
@@ -489,7 +488,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                     if ($stylerules) {
                         $includeRes .= "<style>{$stylerules}</style>";
                     } elseif ($cfg_js_debug_console) {
-                        $docReadyJs .= "console.debug('LE-Mod home link: JSON contains no matching style rule for current theme');";
+                        $this->docReadyJs .= "console.debug('LE-Mod home link: JSON contains no matching style rule for current theme');";
                     }
                 } else {
                     FlashMessages::addMessage(
@@ -502,20 +501,21 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         
         // --- Link++
         if ($cfg_link_active) {
-            $bundleShortcuts[] = 'le';
+            $this->bundleShortcuts[] = 'le';
 
             $lecfg = $this->getPref(self::PREF_LINKSPP_JS); // getPref returns trimmed string
             $lecfg = $lecfg != '' ? $lecfg : '{}';
             $treename = ($tree !== null ? $tree->name() : '');
 
             $options = [
+                'I18N'         => Utils::getJsI18N('le', $this),
                 'thisXref'     => Validator::attributes($request)->isXref()->string('xref', ''),
                 'openInNewTab' => $this->getPref(self::PREF_LINKSPP_OPEN_IN_NEW_TAB, true),
                 'tree'         => $treename,
                 'baseurl'      => route(TreePage::class, [ 'tree' => $treename ]),
                 'urlmode'      => (Validator::attributes($request)->boolean('rewrite_urls', false) ? 'pretty' : 'default'),
             ];
-            $docReadyJs .= "LinkEnhMod.initLE($lecfg, " . json_encode($options) . ");";
+            $this->docReadyJs .= "LinkEnhMod.initLE($lecfg, " . json_encode($options) . ");";
         }
 
         // === include selectively
@@ -523,27 +523,26 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         if ($cfg_md_active && $tree != null && $tree->getPreference('FORMAT_TEXT') == 'markdown') {
             if ($cfg_md_img_active || $cfg_md_ext_active) {
                 // markdown image support
-                $bundleShortcuts[] = 'img';
+                $this->bundleShortcuts[] = 'img';
 
                 $options = [
-                    'I18N' => [
-                        'limitheight'   => I18N::translate('Limit cell height'),
-                    ],                    
+                    'I18N'      => Utils::getJsI18N('img', $this),
                     'ext_fn'    => $this->getPref(self::PREF_MD_EXT_FN_ACTIVE, true),
                     'ext_toc'   => $this->getPref(self::PREF_MD_EXT_TOC_ACTIVE, true),
                     'td_h_ctrl' => $this->getPref(self::PREF_MD_TD_H_CTRL_TYPE, true),
                     'td_h_cb'   => $this->getPref(self::PREF_MD_TD_H_CB_VISIBLE, true),
                 ];
-                $docReadyJs .= "LinkEnhMod.initMd(" . json_encode($options) . ");";
+                $this->docReadyJs .= "LinkEnhMod.initMd(" . json_encode($options) . ");";
             }
 
             if ($cfg_md_editor_active) {
                 // --- TinyMDE -- only nessary on edit pages        
                 if (Utils::isEditPage($request)) {
-                    $bundleShortcuts[] = 'mde';
-                    $docReadyJs .= 'window.LEhelp = "' . e(route('module', ['module' => $this->name(), 'action' => 'helpmd'])) . '";';
+                    $this->bundleShortcuts[] = 'mde';
+                    $this->docReadyJs .= 'window.LEhelp = "' . e(route('module', ['module' => $this->name(), 'action' => 'helpmd'])) . '";';
 
                     $options = [
+                        'I18N'       => Utils::getJsI18N('mde', $this),    
                         'href'       => $cfg_link_active,
                         'src'        => $cfg_md_img_active,
                         'ext'        => $cfg_md_ext_active,
@@ -552,14 +551,14 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                         'ext_strike' => $this->getPref(self::PREF_MD_EXT_STRIKE_ACTIVE, true),
                         'todo'       => version_compare(Webtrees::VERSION, '2.2.5', '>='),
                     ];                    
-                    $docReadyJs .= "LinkEnhMod.installMDE(" . json_encode($options) . ");";
+                    $this->docReadyJs .= "LinkEnhMod.installMDE(" . json_encode($options) . ");";
                 }
             }
         }
         
-        $includeRes .= Utils::getIncludeWebressourceString($this, $bundleShortcuts);
-
-        return $includeRes . Utils::getJavascriptWrapper($docReadyJs, $initJs);
+        $includeRes .= Utils::getIncludeWebressourceString($this, $this->bundleShortcuts, WebRessource::CssAndJs);
+        $includeRes .= Utils::getJavascriptWrapper($this->docReadyJs, $this->initJs);
+        return $includeRes;
     }
 
     /**
@@ -575,9 +574,13 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         $cfg_wthb_tocnsearch  = $this->getPref(self::PREF_WTHB_TOCNSEARCH, true);
         $cfg_wthb_wtcorehelp  = $this->getPref(self::PREF_WTHB_WTCOREHELP, true);
 
+        $includeRes = '';
+        //$includeRes .= Utils::getIncludeWebressourceString($this, $this->bundleShortcuts, WebRessource::Js);
+        //$includeRes .= Utils::getJavascriptWrapper($this->docReadyJs, $this->initJs);
+
         $html = '';
         $needajax = false;
-
+        
         if ($cfg_wthb_active) {
             $html .= view($this->name() . '::wthb-modal');
             $needajax = $cfg_wthb_tocnsearch || $cfg_wthb_wtcorehelp;
@@ -585,7 +588,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         if ($needajax || ($cfg_md_editor_active && Utils::isEditPage())) { // markdown editor is not useful on other pages
             $html .= view($this->name() . '::ajax');
         }
-        return $html;
+        return $includeRes . $html;
     }
 
     

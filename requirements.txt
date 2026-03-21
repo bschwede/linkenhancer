@@ -1,0 +1,10 @@
+argcomplete==3.6.3
+certifi==2026.2.25
+charset-normalizer==3.4.6
+idna==3.11
+python-dateutil==2.9.0.post0
+pyxdg==0.28
+requests==2.32.5
+six==1.17.0
+urllib3==2.6.3
+wlc==1.17.2

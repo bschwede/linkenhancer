@@ -65,8 +65,8 @@ class CustomMarkdownFactory extends MarkdownFactory {
     public static function getExtensionSettingOptions(ExtensionSettingOption $option):array {
         return match($option) {
             ExtensionSettingOption::TOC_STYLE => [
-                'bullet'  => I18N::translate('unordered, bulleted list') . ' (<ul>)',
-                'ordered' => I18N::translate('ordered list') . ' (<ol>)',
+                'bullet'  => I18N::translate('Bulleted list') . ' (<ul>)',
+                'ordered' => I18N::translate('Numbered list') . ' (<ol>)',
                 'none'    => I18N::translate('list without marker') //addon: css class = list-style-type: none
             ],
             ExtensionSettingOption::TOC_POSITION => [
