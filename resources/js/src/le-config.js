@@ -142,6 +142,11 @@ export const getLETargetCfg = (I18N, getLErecTypes) => {
         url: 'https://www.wikitree.com/wiki/',
         cname: 'icon-wit'
     },
+    "vl": {
+        name: I18N['des-vl'],
+        url: 'https://des.genealogy.net/search/uuid/',
+        cname: 'icon-compgen'
+    },    
 }
 //--- code-snippet end
     return cfg

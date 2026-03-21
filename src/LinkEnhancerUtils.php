@@ -114,6 +114,7 @@ class LinkEnhancerUtils { // misc helper functions
                     'wp-help3'         => /*I18N: JS enhanced link wp3 */ I18N::translate('you can address every subdomain instance of wikipedia.org'),
                     'gedbas-help1'     => /*I18N: JS enhanced link gedbas1 */ I18N::translate('open person record with given number'),
                     'gedbas-help2'     => /*I18N: JS enhanced link gedbas2 */ I18N::translate('open person record with UID'),
+                    'des-vl'           => I18N::translate('Data Entry System (DES)') . ' - ' . I18N::translate('Casualty lists'),
                 ],
             
             'wthb' => [
