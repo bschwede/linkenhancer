@@ -17,7 +17,8 @@ export function createDomObserver({
     collect,
     process,
     useWeakSet = true,
-    initialScan = false
+    initialScan = false,
+    attributeFilter
 
 }) {
 
@@ -37,7 +38,7 @@ export function createDomObserver({
             try {
                 process(el)
             } catch (e) {
-                console.error("Observer process error:", e)
+                console.error("LE-mod - Observer process error:", e)
             }
 
         })
@@ -74,31 +75,58 @@ export function createDomObserver({
         }
     }
 
-    if (initialScan) {
-        collectFromNode(root)
-        flush()
-    }
+    let observer = null
 
-    const observer = new MutationObserver(mutations => {
+    if (Array.isArray(attributeFilter)) { // attribute
 
-        for (const m of mutations) {
+        observer = new MutationObserver(mutations => {
 
-            if (m.type !== "childList") continue
+            for (const m of mutations) {
 
-            for (const node of m.addedNodes) {
-                collectFromNode(node)
+                if (m.type !== "attributes" || !attributeFilter.includes(m.attributeName)) continue
+
+                queue.add(m.target)
+
             }
+
+            if (queue.size > 0) {
+                schedule()
+            }
+        })
+
+        observer.observe(root, {
+            attributes: true,
+            subtree: true,
+            attributeFilter: attributeFilter
+        })
+
+    } else { // childList
+        if (initialScan) {
+            collectFromNode(root)
+            flush()
         }
 
-        if (queue.size > 0) {
-            schedule()
-        }
-    })
+        observer = new MutationObserver(mutations => {
 
-    observer.observe(root, {
-        childList: true,
-        subtree: true
-    })
+            for (const m of mutations) {
+
+                if (m.type !== "childList") continue
+
+                for (const node of m.addedNodes) {
+                    collectFromNode(node)
+                }
+            }
+
+            if (queue.size > 0) {
+                schedule()
+            }
+        })
+
+        observer.observe(root, {
+            childList: true,
+            subtree: true
+        })
+    }
 
     return {
 
