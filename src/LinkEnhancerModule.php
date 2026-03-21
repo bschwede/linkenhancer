@@ -151,6 +151,9 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public const STD_WTHB_LINKS_JSON = '[
 {"title":"webtrees FAQ", "url":"https://webtrees.net/faq/"}
 ,{"title":"webtrees Forum", "url":"https://www.webtrees.net/index.php/forum/recent"}
+,{"title":"webtrees Forum - ask a question (account necessary)", "url":"https://www.webtrees.net/index.php/forum/webtrees-help-and-support/topic/create"}
+,{"title":"CompGen Discourse", "url":"https://discourse.genealogy.net/c/webtrees/153"}
+,{"title":"CompGen Discourse - ask a question (account necessary)", "url":"https://discourse.genealogy.net/new-topic?category=webtrees"}
 ,{"title":"GitHub - webtrees issues", "url":"https://github.com/fisharebest/webtrees/issues?q=is%3Aissue state%3Aopen sort%3Aupdated-desc"}
 ,{"title":"GitHub - webtrees related projects", "url":"https://github.com/topics/webtrees?o=desc&s=updated"}
 ]'; // standard additional links for webtrees manual top menu
@@ -438,7 +441,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                 2 => self::STD_WTHB_LINKS_JSON, // default json
                 default => '' // off
             };
-                       
+
             $options = [
                 'I18N'            => Utils::getJsI18N('wthb', $this),
                 'help_url'        => $help_url,
@@ -453,7 +456,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                 'splitNavlink'    => $this->getPref(self::PREF_WTHB_SPLIT_TOPMENU, true),
                 'wtcorehelp'      => $this->getPref(self::PREF_WTHB_WTCOREHELP, true),
                 'wtcorehelp_url'  => route('module', ['module' => $this->name(), 'action' => 'helpwtcore']),
-                'linksJson'       => $linksJsonString,
+                'linksJson'       => Utils::getWthbLinksJsonStringTranslated($linksJsonString),
                 'admin_url'       => (Auth::isAdmin() ? route('module', ['module' => $this->name(), 'action' => 'Admin']) : ''),
             ];
 
