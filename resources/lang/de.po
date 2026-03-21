@@ -3,20 +3,22 @@
 # This file is distributed under the same license as the PACKAGE package.
 # Automatically generated, 2025.
 #
+# bschwede <bschwede@noreply.codeberg.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-20 21:36+0100\n"
-"PO-Revision-Date: 2026-03-01 13:39+0100\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2026-03-21 09:19+0000\n"
+"Last-Translator: bschwede <bschwede@noreply.codeberg.org>\n"
+"Language-Team: German <https://translate.codeberg.org/projects/linkenhancer/"
+"module/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4.2\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. I18N: Settings - section title
 msgid "Webtrees manual"
@@ -52,7 +54,7 @@ msgid "CSV-Import"
 msgstr "CSV-Import"
 
 msgid "Table for context help is missing - fallback to standard url"
-msgstr "Die Tabelle für die Kontext-Hilfe fehlt  –  Fallback auf Standard-URL"
+msgstr "Die Tabelle für die Kontext-Hilfe fehlt – Fallback auf Standard-URL"
 
 msgid "Table for context help is missing - nothing to do."
 msgstr "Die Tabelle für die Kontext-Hilfe fehlt - nichts zu tun."
@@ -558,8 +560,8 @@ msgid ""
 "This avoids having to store fully qualified links, which impairs the "
 "portability of Gedcom data."
 msgstr ""
-"Es wird damit vermieden voll qualifizierte Links hinterlegen zu müssen, die "
-"die Portabilität der Gedcom-Daten verschlechtert."
+"Es wird damit vermieden voll qualifizierte Links hinterlegen zu müssen, "
+"welche die Portabilität der Gedcom-Daten verschlechtert."
 
 #. I18N: Settings - prologue sentence 4
 msgid ""
