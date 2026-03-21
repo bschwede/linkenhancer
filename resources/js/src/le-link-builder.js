@@ -1,35 +1,38 @@
 export const setLink = (
     document,
-    link,
+    startlink,
     lastlink,
     href,
     title,
     classname,
-    LEoptions
+    LEoptions,
+    fragment
 ) => {
+    
+    let nextlink = lastlink ? document.createElement("a") : startlink;
 
     if (href) {
 
-        link.setAttribute("href", href);
+        nextlink.setAttribute("href", href);
 
         if (LEoptions.openInNewTab) {
-            link.setAttribute("target", '_blank');
+            nextlink.setAttribute("target", '_blank');
         }
 
     } else {
 
-        link.onclick = e => {
-            alert(link.title ?? LEoptions.I18N['syntax error'] + "!");
+        nextlink.onclick = e => {
+            alert(nextlink.title ?? LEoptions.I18N['syntax error'] + "!");
             e.preventDefault();
         };
 
-        link.classList.add('icon-error');
+        nextlink.classList.add('icon-error');
     }
 
     if (title) {
 
-        link.setAttribute("title", title);
-        link.setAttribute("aria-label", title);
+        nextlink.setAttribute("title", title);
+        nextlink.setAttribute("aria-label", title);
     }
 
     if (classname) {
@@ -39,10 +42,13 @@ export const setLink = (
         iconSpan.classList.add("linkicon");
         iconSpan.classList.add(classname);
 
-        link.appendChild(iconSpan);
+        nextlink.appendChild(iconSpan);
     }
 
-    if (lastlink) lastlink.after(link);
+    //if (lastlink) lastlink.after(nextlink);
+    if (nextlink !== startlink) {
+        fragment.appendChild(nextlink)
+    }
 
-    return link;
+    return nextlink;
 };
