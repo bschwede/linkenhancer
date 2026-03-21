@@ -1,7 +1,8 @@
 import { getOptions } from './img-config.js';
 
 import {
-    MD_SECTION_SELECTOR
+    MD_SECTION_SELECTOR,
+    OBSERVED_TAGS
 } from './img-consts.js';
 
 import {
@@ -17,11 +18,7 @@ import {
     checkAndTriggerCheckboxes
 } from './img-height-control.js';
 
-import {
-    initChildListObserver,
-    initTdHObserver
-} from './img-observers.js';
-
+import { createDomObserver } from './dom-observer-factory.js';
 
 export const initMdExt = (
     document,
@@ -35,9 +32,9 @@ export const initMdExt = (
             : getOptions();
 
 
-    const initGotoTopHandler = (root = document) => { // goto top of cell (with toc in dropdown)
+    const initGotoTopHandler = () => { // goto top of cell (with toc in dropdown)
 
-        root
+        document
             .querySelectorAll("button.gototop")
             .forEach(el => {
 
@@ -58,13 +55,13 @@ export const initMdExt = (
         if (opts.ext_fn) {
 
             uniqueRefs(
-                node,
+                document, // node, always apply to the entire document
                 'fn_',
                 MD_SECTION_SELECTOR
             );
 
             uniqueRefs(
-                node,
+                document, //node, always apply to the entire document
                 'fnref_',
                 MD_SECTION_SELECTOR
             );
@@ -73,12 +70,12 @@ export const initMdExt = (
         if (opts.ext_toc) {
 
             uniqueRefs(
-                node,
+                document, // node, always apply to the entire document
                 'mdnote-',
                 MD_SECTION_SELECTOR
             );
 
-            initGotoTopHandler(node);
+            initGotoTopHandler();
         }
 
         if (opts.td_h_ctrl) {
@@ -93,21 +90,30 @@ export const initMdExt = (
         }
     };
 
+    // childList - added elements
+    createDomObserver({
 
-    processNode(document);
+        root: document,
 
+        match: node => OBSERVED_TAGS.includes(node.tagName),
 
-    initChildListObserver(
-        document,
-        processNode
-    );
+        process: processNode,
+
+        initialScan: true
+    })
 
 
     if (opts.td_h_ctrl) {
 
-        initTdHObserver(
-            document,
-            checkAndTriggerCheckboxes
-        );
+        // attribute changes
+        createDomObserver({
+
+            root: document,
+
+            process: checkAndTriggerCheckboxes,
+
+            attributeFilter: ['style', 'class'],
+
+        })        
     }
 };
