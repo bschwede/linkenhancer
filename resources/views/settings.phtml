@@ -686,20 +686,44 @@ $defaults_json = LinkEnhancerModule::getDefaultPrefsAsJson();
                 </div>
             </fieldset>
 
-            <!-- wthb links json --><?php $prefId = LinkEnhancerModule::PREF_WTHB_LINKS_JSON; ?>
-            <label class="col-sm-3 col-form-label wt-page-options-label sub" for="<?= $prefId ?>">
-                <?= I18N::translate('Additional help links') ?>
-                (JSON / <?= /*I18N: webtrees.pot */ I18N::translate('optional') ?>)
-            </label>
-            <div class="col-sm-9 wt-page-options-value mt-2">
-                <textarea id="<?= $prefId ?>" name="<?= $prefId ?>" class="form-control font-monospace" dir="ltr"
-                    rows="5"><?= e($prefs[$prefId]) ?></textarea>
-                <div class="form-text">
-                    <p><?= I18N::translate('Example') ?>:
-                        <textarea class="form-control font-monospace" dir="ltr" rows="5" disabled readonly wrap="off" style="font-size:0.9em; color: gray;"><?= e(LinkEnhancerModule::STD_WTHB_LINKS_JSON) ?></textarea>
-                    </p>
+            <!-- wthb links activation type --><?php $prefId = LinkEnhancerModule::PREF_WTHB_LINKS_TYPE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
+                        <?= I18N::translate('Additional help links') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= view('components/radios-inline', [
+                            'id' => $prefId,
+                            'name' => $prefId,
+                            'options' => [
+                                /*I18N: webtrees.pot */ I18N::translate('no'),
+                                /*I18N: */ I18N::translate('user defined'),
+                                /*I18N: webtrees.pot */ I18N::translate('yes')
+                            ],
+                            'selected' => (int) $prefs[$prefId]
+                        ]) ?>
+
+<section id="wthb-links-json">          
+                        <!-- wthb links json --><?php $prefId = LinkEnhancerModule::PREF_WTHB_LINKS_JSON; ?>
+                        <div class="row">
+                            <div class="col-sm-12 wt-page-options-value mt-2">
+                            <div class="form-text">JSON</div>
+                            <textarea id="<?= $prefId ?>" name="<?= $prefId ?>" class="form-control font-monospace" dir="ltr"
+                                    rows="5"><?= e($prefs[$prefId]) ?></textarea>
+                                <div class="form-text">
+                                    <p><?= I18N::translate('Example') ?>:
+                                        <textarea class="form-control font-monospace" dir="ltr" rows="5" disabled readonly wrap="off" style="font-size:0.9em; color: gray;"><?= e(LinkEnhancerModule::STD_WTHB_LINKS_JSON) ?></textarea>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+</section>
+
+                    </div>
                 </div>
-            </div>
+            </fieldset>
+
 
             <!-- support subcontext wthb-links --><?php $prefId = LinkEnhancerModule::PREF_WTHB_SUBCONTEXT; ?>
             <fieldset class="form-group mb-3">
@@ -1178,7 +1202,8 @@ $defaults_json = LinkEnhancerModule::getDefaultPrefsAsJson();
             ['<?= LinkEnhancerModule::PREF_MD_EXT_TOC_ACTIVE; ?>', '#options2_2_toc'],
             ['<?= LinkEnhancerModule::PREF_WTHB_ACTIVE; ?>', '#options3'],
             ['<?= LinkEnhancerModule::PREF_HOME_LINK_TYPE; ?>', '#options4'],
-            ['<?= LinkEnhancerModule::PREF_OPEN_IN_NEW_TAB; ?>', '.openinnewtab', [0,2], 'disabled']
+            ['<?= LinkEnhancerModule::PREF_OPEN_IN_NEW_TAB; ?>', '.openinnewtab', [0,2], 'disabled'],
+            ['<?= LinkEnhancerModule::PREF_WTHB_LINKS_TYPE; ?>', '#wthb-links-json', [0,2], 'disabled'],
         ].forEach( (sec) => {
             [secName, secSelector, indexes, cname ] = sec;
             indexes = (indexes === null || !Array.isArray(indexes) ? [0] : indexes);
