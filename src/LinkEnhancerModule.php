@@ -1058,7 +1058,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         $filtered = array_filter($reduced, function ($sub) {
             return array_key_exists('default', $sub);
         });
-        return ((string) json_encode($filtered));
+        return ((string) json_encode($filtered, JSON_HEX_TAG | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
     }
 
 }

@@ -1055,11 +1055,7 @@ $defaults_json = LinkEnhancerModule::getDefaultPrefsAsJson();
     }
 
     const getDefaultSettings = () => {
-        try {
-            return JSON.parse(`<?= $defaults_json ?>`);
-        } catch (e) {
-        }
-        return {};
+        return <?= $defaults_json ?>;
     };
 
     function getSettings() {
