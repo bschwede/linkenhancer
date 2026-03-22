@@ -118,5 +118,9 @@ export const initHelp = (document, window, bootstrap, jQuery, cfg, searchengines
         jQuery(tocheads).get(0).scrollIntoView();
         jQuery(this).scrollTop(0);
         jQuery(this).find('input:first').trigger('focus');
-    })  
+    })
+    // cleanup event handlers after hide
+    jQuery('#le-ajax-modal').off('hide.bs.modal.wthb').on('hide.bs.modal.wthb', function () {
+        jQuery(this).off('shown.bs.modal.wthb').off('hide.bs.modal.wthb')
+    })    
 };
