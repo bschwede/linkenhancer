@@ -2,7 +2,7 @@ import { getDefaultConfig, WTHB_USER_SETTING } from "./wthb-config.js";
 import { buildMenuHtml, insertMenu } from "./wthb-menu.js";
 import { insertSubcontextLinks } from "./wthb-subcontext.js";
 import { setWthbLinkClickHandler, toggleModal } from "./wthb-logic.js";
-import { initHelp } from "./wthb-help.js";
+import { initHelp, prepareWthbLinks } from "./wthb-help.js";
 import { getUserSetting, setUserSetting } from "./wthb-storage.js";
 
 export function createWthb(env) {
@@ -93,7 +93,9 @@ export function createWthb(env) {
 
         init,
 
-        initHelp: (searchengines) =>
-            initHelp(document, window, bootstrap, jQuery, cfg, searchengines)
+        initHelp: (searchengines) => // webtrees manual toc and search
+            initHelp(document, window, bootstrap, jQuery, cfg, searchengines),
+
+        initWtHelp: (aselector) => prepareWthbLinks(document, window, bootstrap, jQuery, cfg, aselector) // webtrees core help topics
     };
 }

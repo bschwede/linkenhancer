@@ -10,56 +10,80 @@ use Fisharebest\Webtrees\Http\RequestHandlers\HelpText;
  * @ var bool
  */
 
+$hbaselevel = 4;
 
+$wthbref_text = I18N::translate('Webtrees manual') . ' - ' . I18N::translate('cross reference');
+$idprefix = 'wtchlp_';
 
 $help_topics = [ // see: app/Http/RequestHandlers/HelpText.php
-    'DATE' => [
-        'title' => /*I18N: webtrees.pot */ I18N::translate('Date'),
+    'NAMES' => [
+        'title' => /*I18N: webtrees.pot */ I18N::translate('Names'),
+        'text' => '',
+        'level' => 1,
+        'notoc' => true,
     ],
-
+    
     'NAME' => [
         'title' => /*I18N: webtrees.pot */ I18N::translate('Name'),
         'text' => view('help/name'),
+        'level' => 2,
+        'wthb' => 'Webtrees_Handbuch/Genealogischer_Prozess#Namen',
     ],
 
     'SURN' => [
         'title' => /*I18N: webtrees.pot */ I18N::translate('Surname'),
         'text' => view('help/surname'),
-    ],
-
-    'OBJE' => [
-        'title' => /*I18N: webtrees.pot */ I18N::translate('Media object'),
-        'text' => view('help/media-object'),
-    ],
-
-    'PLAC' => [
-        'title' => /*I18N: webtrees.pot */ I18N::translate('Place'),
-        'text' => view('help/place'),
-    ],
-
-    'RESN' => [
-        'title' => /*I18N: webtrees.pot */ I18N::translate('Restriction'),
-        'text' => view('help/restriction'),
+        'level' => 2,
+        'wthb' => 'Webtrees_Handbuch/Genealogischer_Prozess#Familiennamen',
     ],
 
     'ROMN' => [
         'title' => /*I18N: webtrees.pot */ I18N::translate('Romanized'),
         'text' => view('help/romanized'),
+        'level' => 2,
+        'wthb' => '',
     ],
 
     '_HEB' => [
         'title' => /*I18N: webtrees.pot */ I18N::translate('Hebrew'),
         'text' => view('help/hebrew'),
+        'level' => 2,
+        'wthb' => 'Webtrees_Handbuch/Genealogischer_Prozess#Namen_in_verschiedenen_Alphabeten',
+    ],
+
+    'DATE' => [
+        'title' => /*I18N: webtrees.pot */ I18N::translate('Date'),
+        //'text' => not set - link to original help route; view needs parameter
+        'level' => 1,
+        'wthb' => 'Webtrees_Handbuch/Anleitung_f%C3%BCr_Bearbeiter#Datumsangaben',
+    ],
+
+    'OBJE' => [
+        'title' => /*I18N: webtrees.pot */ I18N::translate('Media object'),
+        'text' => view('help/media-object'),
+        'level' => 1,
+        'wthb' => 'Webtrees_Handbuch/Genealogischer_Prozess#Medien',
+    ],
+
+    'PLAC' => [
+        'title' => /*I18N: webtrees.pot */ I18N::translate('Place'),
+        'text' => view('help/place'),
+        'level' => 1,
+        'wthb' => 'Webtrees_Handbuch/Genealogischer_Prozess#Orte',
     ],
 
     'data-fixes' => [
         'title' => /*I18N: webtrees.pot */ I18N::translate('Data fixes'),
         'text' => view('help/data-fixes'),
+        'level' => 1,
+        'wthb' => 'Webtrees_Handbuch/Anleitung_f%C3%BCr_Verwalter#Datenkorrekturen',        
     ],
 
     'edit_SOUR_EVEN' => [
         'title' => /*I18N: webtrees.pot */ I18N::translate('Associate events with this source'),
         'text' => view('help/source-events'),
+        'level' => 1,
+        'wthb' => 'Webtrees_Handbuch/Genealogischer_Prozess#Quellen_und_Archive',        
     ],
 
     'pending_changes' => [
@@ -67,24 +91,54 @@ $help_topics = [ // see: app/Http/RequestHandlers/HelpText.php
         'text' => view('help/pending-changes', [
                         'is_admin' => Auth::isAdmin(),
                     ]),
+        'level' => 1,
+        'wthb' => 'Webtrees_Handbuch/Anleitung_f%C3%BCr_Moderatoren',
     ],
 
     'relationship-privacy' => [
         'title' => /*I18N: webtrees.pot */ I18N::translate('Restrict to immediate family'),
         'text' => view('help/relationship-privacy'),
-    ],    
+        'level' => 1,
+        'wthb' => 'Webtrees_Handbuch/Anleitung_für_Administratoren/Benutzer#Benutzerverwaltung',
+    ],
+
+    'RESN' => [
+        'title' => /*I18N: webtrees.pot */ I18N::translate('Restriction'),
+        'text' => view('help/restriction'),
+        'level' => 1,
+        'wthb' => 'Webtrees_Handbuch/Allgemeine_Erl%C3%A4uterung_des_Programms#Datenschutz',
+    ],
+
 ];
 ?>
 <p><?= I18N::translate('The context help topics provided by webtrees are listed below.') ?></p>
+<ul>
 <?php
-
-
-foreach ($help_topics as $key => $attribs) {
-    $title = $attribs['title'];?>
-<h4 class="helpsection"><?= $title ?></h4>
+// toc
+foreach ($help_topics as $key => $attribs):
+    $title   = $attribs['title'];
+    if (!array_key_exists('notoc', $attribs)): ?>
+    <li><a href="#<?= e($idprefix . $key) ?>"><?= $title?></a></li>
 <?php
+    endif;
+endforeach;
+?>
+</ul>
+<?php
+// topics
+foreach ($help_topics as $key => $attribs):
+    $title   = $attribs['title'];
+    $wthbref_href = $attribs['wthb'] ?? '';
+    $hlevel  =  $hbaselevel + ($attribs['level'] ?? 1);?>
+<h<?=$hlevel?> class="helpsection" id="<?= e($idprefix . $key) ?>"><?= $title ?></h<?= $hlevel ?>>
+<?php if ($wthbref_href !==''):?>
+<p><a class="wtreflink" href="<?= e($wthbref_href) ?>"><?= $wthbref_text ?></a></p>
+<?php
+    endif;
     if (array_key_exists('text', $attribs)) {
-        echo($attribs['text']);
+        if ($attribs['text'] !== '') {
+            echo($attribs['text']);
+        }
     } else {
         $route = route(HelpText::class, ['topic' => $key]);
         // important: links on a visible modal that should load other content into this modal 
@@ -93,9 +147,9 @@ foreach ($help_topics as $key => $attribs) {
 <p><a class="modal-reload-link" href="#" data-bs-backdrop="static" data-bs-target="#le-ajax-modal" data-wt-href="<?= e($route)?>"><?= I18N::translate('Further information can be found on a separate help page.') ?></a></p>
 <?php
     }
-}
+endforeach;
 ?>
 <script>
     $('.modal-reload-link').on('click', eventLeAjaxModalLoad);
+    LinkEnhMod.initWtHelp('a.wtreflink');
 </script>
-

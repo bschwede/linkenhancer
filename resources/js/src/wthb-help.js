@@ -29,18 +29,7 @@ export const initHelp = (document, window, bootstrap, jQuery, cfg, searchengines
     });
 
     // prepare wt manual links - prepend base url and bind click handler
-    let wikiurl = cfg.wiki_url;
-    wikiurl = wikiurl + (wikiurl.match(/\/$/) ? '' : '/');
-    jQuery(".wthbtoc a").each((idx, elem) => {
-        let href = jQuery(elem).attr('href') ?? '';
-        if (!href.match(/^https?:\/\//)) {
-            jQuery(elem).attr('href', wikiurl + href.replace(/^\/+/, ''));
-            if (cfg.openInNewTab) {
-                jQuery(elem).attr('target', '_blank');
-            }
-            setWthbLinkClickHandler(document, window, bootstrap, jQuery, cfg, elem);
-        }
-    });
+    prepareWthbLinks(document, window, bootstrap, jQuery, cfg, ".wthbtoc a"); 
     jQuery("a.gwlink").each(((idx, elem) => setWthbLinkClickHandler(document,window, bootstrap, jQuery, cfg, elem)));
 
     // populate select with toc section headings
@@ -124,3 +113,19 @@ export const initHelp = (document, window, bootstrap, jQuery, cfg, searchengines
         jQuery(this).off('shown.bs.modal.wthb').off('hide.bs.modal.wthb')
     })    
 };
+
+export const prepareWthbLinks = (document, window, bootstrap, jQuery, cfg, aselector) => {
+    // prepare wt manual links - prepend base url and bind click handler
+    let wikiurl = cfg.wiki_url;
+    wikiurl = wikiurl + (wikiurl.match(/\/$/) ? '' : '/');
+    jQuery(aselector).each((idx, elem) => {
+        let href = jQuery(elem).attr('href') ?? '';
+        if (!href.match(/^https?:\/\//)) {
+            jQuery(elem).attr('href', wikiurl + href.replace(/^\/+/, ''));
+            if (cfg.openInNewTab) {
+                jQuery(elem).attr('target', '_blank');
+            }
+            setWthbLinkClickHandler(document, window, bootstrap, jQuery, cfg, elem);
+        }
+    });    
+}
