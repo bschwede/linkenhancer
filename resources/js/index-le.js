@@ -6,5 +6,5 @@ export const initLE = (targets, options) => {
 };
 
 export const getLEhelpInfo = () => {
-    getLEhelpInfoExt(LEtargets);
+    return getLEhelpInfoExt(LEtargets);
 };

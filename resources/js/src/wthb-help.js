@@ -29,18 +29,7 @@ export const initHelp = (document, window, bootstrap, jQuery, cfg, searchengines
     });
 
     // prepare wt manual links - prepend base url and bind click handler
-    let wikiurl = cfg.wiki_url;
-    wikiurl = wikiurl + (wikiurl.match(/\/$/) ? '' : '/');
-    jQuery(".wthbtoc a").each((idx, elem) => {
-        let href = jQuery(elem).attr('href') ?? '';
-        if (!href.match(/^https?:\/\//)) {
-            jQuery(elem).attr('href', wikiurl + href.replace(/^\/+/, ''));
-            if (cfg.openInNewTab) {
-                jQuery(elem).attr('target', '_blank');
-            }
-            setWthbLinkClickHandler(document, window, bootstrap, jQuery, cfg, elem);
-        }
-    });
+    prepareWthbLinks(document, window, bootstrap, jQuery, cfg, ".wthbtoc a"); 
     jQuery("a.gwlink").each(((idx, elem) => setWthbLinkClickHandler(document,window, bootstrap, jQuery, cfg, elem)));
 
     // populate select with toc section headings
@@ -59,8 +48,6 @@ export const initHelp = (document, window, bootstrap, jQuery, cfg, searchengines
             jQuery(tocselect).prop("selectedIndex", 0);
         }
     });
-
-    jQuery().ready(() => jQuery(tocheads).get(0).scrollIntoView());
 
     // full-text search
     const setSEngineIcon = (value) => {
@@ -114,4 +101,31 @@ export const initHelp = (document, window, bootstrap, jQuery, cfg, searchengines
         }
     });
     jQuery('#wthbsearchsubmit').on('click', () => submitSearch());
+
+    //https://stackoverflow.com/questions/2180326/jquery-event-model-and-preventing-duplicate-handlers
+    jQuery('#le-ajax-modal').off('shown.bs.modal.wthb').on('shown.bs.modal.wthb', function () {
+        jQuery(tocheads).get(0).scrollIntoView();
+        jQuery(this).scrollTop(0);
+        jQuery(this).find('input:first').trigger('focus');
+    })
+    // cleanup event handlers after hide
+    jQuery('#le-ajax-modal').off('hide.bs.modal.wthb').on('hide.bs.modal.wthb', function () {
+        jQuery(this).off('shown.bs.modal.wthb').off('hide.bs.modal.wthb')
+    })    
 };
+
+export const prepareWthbLinks = (document, window, bootstrap, jQuery, cfg, aselector) => {
+    // prepare wt manual links - prepend base url and bind click handler
+    let wikiurl = cfg.wiki_url;
+    wikiurl = wikiurl + (wikiurl.match(/\/$/) ? '' : '/');
+    jQuery(aselector).each((idx, elem) => {
+        let href = jQuery(elem).attr('href') ?? '';
+        if (!href.match(/^https?:\/\//)) {
+            jQuery(elem).attr('href', wikiurl + href.replace(/^\/+/, ''));
+            if (cfg.openInNewTab) {
+                jQuery(elem).attr('target', '_blank');
+            }
+            setWthbLinkClickHandler(document, window, bootstrap, jQuery, cfg, elem);
+        }
+    });    
+}

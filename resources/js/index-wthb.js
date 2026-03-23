@@ -11,8 +11,13 @@ const initWthb = (options) => {
     wthb.init(options);
 }
 
-const initWthbHelp = (searchEngines) => {
+const initWthbHelp = (searchEngines) => { // see resources/views/help-wthb.phtml
     wthb.initHelp(searchEngines);
 }
 
-export { initWthb, initWthbHelp };
+const initWtHelp = (aselector) => { // see resources/views/help-wt-helptext.phtml
+    wthb.initWtHelp(aselector);
+}
+
+
+export { initWthb, initWthbHelp, initWtHelp };

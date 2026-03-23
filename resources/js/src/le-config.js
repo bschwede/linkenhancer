@@ -83,12 +83,15 @@ export const getLETargetCfg = (I18N, getLErecTypes) => {
     "gedbas": {
         name: I18N['gedbas'],
         url: (id, title) => {
-            let parts = id.split('/');
-            switch (parts.length) {
+            let idtype = id.split('/').length;
+            idtype = idtype === 1 && !id.match(/^\d+$/) ? 3 : idtype;
+            switch (idtype) {
                 case 1: // dataset number
                     return { url: `https://gedbas.genealogy.net/person/show/${id}`, title };
                 case 2: // UID
                     return { url: `https://gedbas.genealogy.net/person/uid/${id}`, title };
+                case 3: // UID without database number
+                    return { url: `https://gedbas.genealogy.net/uid/${id}`, title };
                 default:
                     title = title + ' - ' + I18N['syntax error'] + "!";
                     return { url: '', title };
@@ -96,8 +99,9 @@ export const getLETargetCfg = (I18N, getLErecTypes) => {
         },
         cname: 'icon-compgen',
         help: [
-            { n: I18N['gedbas-help1'], e: '1234567' },
+            { n: I18N['gedbas-help1'], e: '1051362866' },
             { n: I18N['gedbas-help2'], e: '56789/136049f257c96e34430aec053fa0fbce865c' },
+            { n: I18N['gedbas-help3'], e: 'b43cd5ad-695c-4e1f-9c9d-25918d292256' },
         ]
     },
     "ewp": {
@@ -142,6 +146,11 @@ export const getLETargetCfg = (I18N, getLErecTypes) => {
         url: 'https://www.wikitree.com/wiki/',
         cname: 'icon-wit'
     },
+    "vl": {
+        name: I18N['des-vl'],
+        url: 'https://des.genealogy.net/search/uuid/',
+        cname: 'icon-compgen'
+    },    
 }
 //--- code-snippet end
     return cfg

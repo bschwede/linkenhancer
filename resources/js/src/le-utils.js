@@ -15,7 +15,3 @@ export const changeTagName = (document, element, newTag) => {
 
     return replacement;
 };
-
-
-export const createLink = (document) =>
-    document.createElement("a");

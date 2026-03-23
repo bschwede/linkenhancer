@@ -96,3 +96,4 @@ p:has(+ .wthbtoc), #wthbtocfiltercnt { color: gray; font-size: 0.8em;}
   font-weight: bold;
   max-height: 3.0em;
 }
+.wtreflink { font-size: 0.8em; } /* see resources/views/help-wt-helptext.phtml */

@@ -59,6 +59,48 @@ class LinkEnhancerUtils { // misc helper functions
         return $js ? "<script>$js</script>" : '';
     }
 
+    /**
+     * translate title items of the json string
+     *
+     * @return string
+     */
+    public static function getWthbLinksJsonStringTranslated(string $jsonString): string
+    {
+        $json = json_decode($jsonString, true);
+        if (!$json) return '';
+        
+        $translation = self::getWthbLinksTranslations();
+
+        $fnmap = function($item) use ($translation) {
+            if ($item['title'] ?? false) {
+                $item['title'] = $translation[$item['title']] ?? false ? $translation[$item['title']] : $item['title'];
+            }
+            return $item;
+        };
+
+        $result = json_encode(array_map($fnmap, $json));
+        return ($result ? $result : $jsonString);
+    }
+
+
+    /**
+     * array of I18N strings needed for by javascript routines
+     *
+     * @return array
+     */    
+    public static function getWthbLinksTranslations(): array 
+    {
+        // see also: LinkEnhancerModule::STD_WTHB_LINKS_JSON
+        return [
+            "webtrees FAQ"                       => I18N::translate('webtrees FAQ'),
+            "webtrees Forum"                     => I18N::translate('webtrees Forum'),
+            "webtrees Forum - ask a question (account necessary)" => I18N::translate('webtrees Forum') . ' - ' . I18N::translate('ask a question (account necessary)'),
+            "CompGen Discourse"                  => I18N::translate('CompGen Discourse'),
+            "CompGen Discourse - ask a question (account necessary)" => I18N::translate('CompGen Discourse') . ' - ' . I18N::translate('ask a question (account necessary)'),
+            "GitHub - webtrees issues"           => I18N::translate('GitHub - webtrees issues'),
+            "GitHub - webtrees related projects" => I18N::translate('GitHub - webtrees related projects'),
+        ];
+    }
 
     /**
      * array of I18N strings needed by javascript routines
@@ -114,6 +156,8 @@ class LinkEnhancerUtils { // misc helper functions
                     'wp-help3'         => /*I18N: JS enhanced link wp3 */ I18N::translate('you can address every subdomain instance of wikipedia.org'),
                     'gedbas-help1'     => /*I18N: JS enhanced link gedbas1 */ I18N::translate('open person record with given number'),
                     'gedbas-help2'     => /*I18N: JS enhanced link gedbas2 */ I18N::translate('open person record with UID'),
+                    'gedbas-help3'     => /*I18N: JS enhanced link gedbas3 */ I18N::translate('open person record with UID') . ' (' . I18N::translate('without database number') . ')',
+                    'des-vl'           => I18N::translate('Data Entry System (DES)') . ' - ' . I18N::translate('Casualty lists'),
                 ],
             
             'wthb' => [

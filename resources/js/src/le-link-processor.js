@@ -1,6 +1,6 @@
 import { LINK_SELECTOR } from './le-config.js';
 import { getLErecTypes, parseCrossReferenceLink } from './le-xref-parser.js';
-import { createLink, changeTagName } from './le-utils.js';
+import { changeTagName } from './le-utils.js';
 import { setLink } from './le-link-builder.js';
 
 
@@ -19,9 +19,9 @@ export const processLinks = (
     };
 
 
-    const processLink = link => {
+    const processLink = startlink => {
 
-        const href = link.getAttribute("href");
+        const href = startlink.getAttribute("href");
 
         if (!href) return;
 
@@ -32,151 +32,161 @@ export const processLinks = (
         const params = new URLSearchParams(hash);
 
         const matchingKeys =
-            Object.keys(LEtargets)
+            Object.keys(LEtargets) // important to match against key order of target config, where wt-key is the first; only works, if there are no nnumeric keys!
                 .filter(k => params.has(k));
 
-        const unknownKeys =
-            [...params.keys()]
-                .filter(k => !matchingKeys.includes(k));
+        const unknownKeys = 
+            [...new Set(
+                [...params.keys()]
+                    .filter(k => !matchingKeys.includes(k))
+            )].sort(); // list unknown parameter keys once in lexicographical order
 
         let lastLink = null;
         const diatitle = $("a.dropdown-item.menu-chart-tree[role=menuitem]").text().trim() || LEoptions.I18N['Interactive tree'];
 
+        const fragment =
+            document.createDocumentFragment()
+
+        let wtcnt = 0
+
         matchingKeys.forEach(key => {
 
-            const option = params.get(key);
+            const options = params.getAll(key); // support multiple entries per key
 
-            if (!option) return;
+            options.forEach(option => {
+                if (!option) return;
 
-            if (key === 'wt') {
+                if (key === 'wt') {
+                    wtcnt++;
 
-                const parsed =
-                    parseCrossReferenceLink(option, rectypes);
+                    const parsed =
+                        parseCrossReferenceLink(option, rectypes);
 
-                if (!parsed) return;
+                    if (!parsed) return;
 
-                let { type, xref, newtree, dia } = parsed;
-                newtree = (newtree === LEoptions.tree ? null : newtree);
+                    let { type, xref, newtree, dia } = parsed;
+                    newtree = (newtree === LEoptions.tree ? null : newtree);
 
-                if ((!type && type !== '') || !xref) {
-                    let nextLink = getNextLink(link, lastLink);
-                    lastLink = setLink(
-                        document,
-                        nextLink,
-                        lastLink, 
-                        '',
-                        LEcfg[key].name + " - " + LEoptions.I18N['syntax error'] + "!", 
-                        LEcfg[key].cname,
-                        LEoptions
-                    );
-                    lastLink.classList.add('icon-wt-xref');
-                    return;
-                }
+                    if ((!type && type !== '') || !xref) {
+                        lastLink = setLink(
+                            document,
+                            startlink,
+                            lastLink, 
+                            '',
+                            LEcfg[key].name + " - " + LEoptions.I18N['syntax error'] + "!", 
+                            LEcfg[key].cname,
+                            LEoptions,
+                            fragment
+                        );
+                        lastLink.classList.add('icon-wt-xref');
+                        return;
+                    }
 
-                let url = LEoptions.baseurl;
-                let thisXrefShown = false;
-                let xrefsuffix = '';                
+                    let url = LEoptions.baseurl;
+                    let thisXrefShown = false;
+                    let xrefsuffix = '';                
 
-                if (newtree) {
-                    url = url.replace(`/tree/${LEoptions.tree}`.replaceAll('/', separator[LEoptions.urlmode].path),
-                        `/tree/${newtree}`.replaceAll('/', separator[LEoptions.urlmode].path));
-                    xrefsuffix = ` @ ${newtree}`;
-                } else if (LEoptions.thisXref === xref) {
-                    link = changeTagName(document, link, 'mark');
-                    thisXrefShown = true;
-                }
+                    if (newtree) {
+                        url = url.replace(`/tree/${LEoptions.tree}`.replaceAll('/', separator[LEoptions.urlmode].path),
+                            `/tree/${newtree}`.replaceAll('/', separator[LEoptions.urlmode].path));
+                        xrefsuffix = ` @ ${newtree}`;
+                    } else if (LEoptions.thisXref === xref) {
+                        startlink = changeTagName(document, startlink, 'mark');
+                        thisXrefShown = true;
+                    }
 
-                const urlxref =
-                    url +
-                    separator[LEoptions.urlmode].path +
-                    (type !== '' ? rectypes[type] : 'goto-xref') +
-                    separator[LEoptions.urlmode].path +
-                    xref;
+                    const urlxref =
+                        url +
+                        separator[LEoptions.urlmode].path +
+                        (type !== '' ? rectypes[type] : 'goto-xref') +
+                        separator[LEoptions.urlmode].path +
+                        xref;
 
-                let nextLink =
-                    lastLink ? createLink(document) : link;
+                    lastLink =
+                        setLink(
+                            document,
+                            startlink,
+                            lastLink,
+                            urlxref,
+                            `${LEtargets[key].name} - ${xref}${xrefsuffix}`,
+                            LEtargets[key].cname,
+                            LEoptions,
+                            fragment
+                        );
+                    if (wtcnt > 1) {
+                        lastLink.innerHTML = '<i class="fa fa-link" aria-hidden="true"></i>';
+                    } else {
+                        lastLink.classList.add('icon-wt-xref');
+                    }
 
-                lastLink =
-                    setLink(
-                        document,
-                        nextLink,
-                        lastLink,
-                        urlxref,
-                        `${LEtargets[key].name} - ${xref}${xrefsuffix}`,
-                        LEtargets[key].cname,
-                        LEoptions
-                    );
-                lastLink.classList.add('icon-wt-xref');
-
-                if (type == 'i' && dia && !thisXrefShown) {
-                    let diaurl = url.replace(
-                            "/tree/".replaceAll('/', separator[LEoptions.urlmode].path),
-                            "/module/tree/Chart/".replaceAll('/', separator[LEoptions.urlmode].path)
-                        ) + separator[LEoptions.urlmode].option + "xref=" + xref;
-                    nextLink = lastLink ? createLink(document) : link;
-                    lastLink = setLink(
-                        document,
-                        nextLink,
-                        lastLink,
-                        diaurl,
-                        `${diatitle} - ${xref}`,
-                        'icon-wt-dia',
-                        LEoptions
-                    );
-                }
-            } else {
-
-                let url = '';
-                let title = LEtargets[key].name;
-
-                if (typeof LEtargets[key].url === 'function') {
-
-                    ({ url, title } =
-                        LEtargets[key].url(option, title));
-
+                    if (type == 'i' && dia && !thisXrefShown) { // diagram link for individuals record
+                        let diaurl = url.replace(
+                                "/tree/".replaceAll('/', separator[LEoptions.urlmode].path),
+                                "/module/tree/Chart/".replaceAll('/', separator[LEoptions.urlmode].path)
+                            ) + separator[LEoptions.urlmode].option + "xref=" + xref;
+                        lastLink = setLink(
+                            document,
+                            startlink,
+                            lastLink,
+                            diaurl,
+                            `${diatitle} - ${xref}`,
+                            'icon-wt-dia',
+                            LEoptions,
+                            fragment
+                        );
+                    }              
                 } else {
 
-                    url =
-                        LEtargets[key].url +
-                        encodeURIComponent(option);
+                    let url = '';
+                    let title = LEtargets[key].name;
+
+                    if (typeof LEtargets[key].url === 'function') {
+
+                        ({ url, title } =
+                            LEtargets[key].url(option, title));
+
+                    } else {
+
+                        url =
+                            LEtargets[key].url +
+                            encodeURIComponent(option);
+                    }
+
+                    title = title.replace(/\$ID/ig, decodeURIComponent(option));
+
+                    lastLink =
+                        setLink(
+                            document,
+                            startlink,
+                            lastLink,
+                            url,
+                            title,
+                            LEtargets[key].cname,
+                            LEoptions,
+                            fragment
+                        );
                 }
-
-                const nextLink =
-                    lastLink ? createLink(document) : link;
-
-                title = title.replace(/\$ID/ig, decodeURIComponent(option));
-
-                lastLink =
-                    setLink(
-                        document,
-                        nextLink,
-                        lastLink,
-                        url,
-                        title,
-                        LEtargets[key].cname,
-                        LEoptions
-                    );
-            }
-
+            });
         });
 
 
         if (unknownKeys.length) {
 
-            const nextLink =
-                lastLink ? createLink(document) : link;
-
             setLink(
                 document,
-                nextLink,
+                startlink,
                 lastLink,
                 '',
                 LEoptions.I18N["param error"] + ": " + unknownKeys.join(', '),
                 '',
-                LEoptions
+                LEoptions,
+                fragment
             );
         }
 
+        if (fragment.childNodes.length) {
+            startlink.after(fragment)
+        }
     };
 
 

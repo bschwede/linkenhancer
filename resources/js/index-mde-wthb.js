@@ -1,5 +1,5 @@
 // markdown editor and Webtrees manual
-import { initWthb, initWthbHelp } from './index-wthb.js';
+import { initWthb, initWthbHelp, initWtHelp } from './index-wthb.js';
 import { installMDE } from './index-mde.js';
 
-export default { installMDE, initWthb, initWthbHelp };
+export default { installMDE, initWthb, initWthbHelp, initWtHelp };

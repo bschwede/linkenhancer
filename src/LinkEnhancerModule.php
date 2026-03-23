@@ -97,6 +97,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public const PREF_WTHB_OPEN_IN_NEW_TAB = 'WTHB_OPEN_IN_NEW_TAB';
     public const PREF_WTHB_SPLIT_TOPMENU = 'WTHB_SPLIT_TOPMENU';
     public const PREF_WTHB_WTCOREHELP = 'WTHB_WTCOREHELP';
+    public const PREF_WTHB_LINKS_TYPE = 'WTHB_LINKS_TYPE'; // triple-state, 0=off, 1=user defined, 2=on
     public const PREF_WTHB_LINKS_JSON = 'WTHB_LINKS_JSON'; // additional links for webtrees manual top menu
     public const PREF_JS_DEBUG_CONSOLE = 'JS_DEBUG_CONSOLE'; // console.debug with active route info; 0=off, 1=on
     public const PREF_OPEN_IN_NEW_TAB = 'OPEN_IN_NEW_TAB'; // triple-state, 0=off, 1=user defined, 2=on
@@ -150,6 +151,9 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public const STD_WTHB_LINKS_JSON = '[
 {"title":"webtrees FAQ", "url":"https://webtrees.net/faq/"}
 ,{"title":"webtrees Forum", "url":"https://www.webtrees.net/index.php/forum/recent"}
+,{"title":"webtrees Forum - ask a question (account necessary)", "url":"https://www.webtrees.net/index.php/forum/webtrees-help-and-support/topic/create"}
+,{"title":"CompGen Discourse", "url":"https://discourse.genealogy.net/c/webtrees/153"}
+,{"title":"CompGen Discourse - ask a question (account necessary)", "url":"https://discourse.genealogy.net/new-topic?category=webtrees"}
 ,{"title":"GitHub - webtrees issues", "url":"https://github.com/fisharebest/webtrees/issues?q=is%3Aissue state%3Aopen sort%3Aupdated-desc"}
 ,{"title":"GitHub - webtrees related projects", "url":"https://github.com/topics/webtrees?o=desc&s=updated"}
 ]'; // standard additional links for webtrees manual top menu
@@ -179,6 +183,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         self::PREF_WTHB_OPEN_IN_NEW_TAB      => [ 'type' => 'bool',   'default' => '1', 'parent' => self::PREF_OPEN_IN_NEW_TAB, 'mode' => OverwriteMode::ParentIsNotOne ],
         self::PREF_WTHB_SPLIT_TOPMENU        => [ 'type' => 'bool',   'default' => '1' ],
         self::PREF_WTHB_WTCOREHELP           => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_WTHB_LINKS_TYPE           => [ 'type' => 'int',    'default' => '2' ], // triple-state, 0=off, 1=user defined, 2=on
         self::PREF_WTHB_LINKS_JSON           => [ 'type' => 'string', 'default' => self::STD_WTHB_LINKS_JSON ],
         self::PREF_JS_DEBUG_CONSOLE          => [ 'type' => 'bool',   'default' => '0' ],
         self::PREF_OPEN_IN_NEW_TAB           => [ 'type' => 'int',    'default' => '2' ], // triple-state, 0=off, 1=user defined, 2=on
@@ -431,7 +436,12 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             }
 
             $help_url = $help['help_url']; //gettype(value: $help) == 'string' ? $help : $help->first()->url;
-                       
+            $linksJsonString = match($this->getPref(self::PREF_WTHB_LINKS_TYPE, true)) {
+                1 => $this->getPref( self::PREF_WTHB_LINKS_JSON, true), // user defined
+                2 => self::STD_WTHB_LINKS_JSON, // default json
+                default => '' // off
+            };
+
             $options = [
                 'I18N'            => Utils::getJsI18N('wthb', $this),
                 'help_url'        => $help_url,
@@ -446,7 +456,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                 'splitNavlink'    => $this->getPref(self::PREF_WTHB_SPLIT_TOPMENU, true),
                 'wtcorehelp'      => $this->getPref(self::PREF_WTHB_WTCOREHELP, true),
                 'wtcorehelp_url'  => route('module', ['module' => $this->name(), 'action' => 'helpwtcore']),
-                'linksJson'       => $this->getPref(self::PREF_WTHB_LINKS_JSON, true),
+                'linksJson'       => Utils::getWthbLinksJsonStringTranslated($linksJsonString),
                 'admin_url'       => (Auth::isAdmin() ? route('module', ['module' => $this->name(), 'action' => 'Admin']) : ''),
             ];
 
@@ -1048,7 +1058,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         $filtered = array_filter($reduced, function ($sub) {
             return array_key_exists('default', $sub);
         });
-        return ((string) json_encode($filtered));
+        return ((string) json_encode($filtered, JSON_HEX_TAG | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
     }
 
 }
