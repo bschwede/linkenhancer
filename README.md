@@ -13,6 +13,8 @@
 > - ✅ Issues → [Open on Codeberg](https://codeberg.org/bschwede/linkenhancer/issues)
 > - ✅ Pull Requests → [Open on Codeberg](https://codeberg.org/bschwede/linkenhancer/pulls)
 > - ✅ Translations → [Contribute on Codeberg Weblate](https://translate.codeberg.org/projects/linkenhancer/)
+>
+> Mirror Repository: <https://github.com/bschwede/linkenhancer>
 
 <a name="tldr"></a>
 ## TL;DR
@@ -69,6 +71,7 @@ Included are the following **predefined external targets** (the parameter keys a
   - [Online Local heritage books](https://ofb.genealogy.net/?lang=en) *(ofb)*
   - [The Historic Geo Information System](https://gov.genealogy.net/?lang=en) *(gov)*
   - [GEDBAS - Genealogical Database - collected personal data](https://gedbas.genealogy.net/?lang=en) *(gedbas)*
+  - [Data Entry System (DES) - Casualty lists](https://des.genealogy.net/?lang=en) *(vl)*
 
 
 **Syntax:**
