@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-24 15:11+0100\n"
-"PO-Revision-Date: 2026-03-21 09:19+0000\n"
+"PO-Revision-Date: 2026-03-24 16:09+0000\n"
 "Last-Translator: bschwede <bschwede@noreply.codeberg.org>\n"
 "Language-Team: German <https://translate.codeberg.org/projects/linkenhancer/"
 "module/de/>\n"
@@ -72,22 +72,22 @@ msgid "For the separator is only a single character allowed."
 msgstr "Als Trennzeichen ist nur ein Zeichen erlaubt."
 
 msgid "webtrees FAQ"
-msgstr ""
+msgstr "webtrees Häufig gestellte Fragen (FAQ)"
 
 msgid "webtrees Forum"
-msgstr ""
+msgstr "webtrees Forum"
 
 msgid "ask a question (account necessary)"
-msgstr ""
+msgstr "eine Frage stellen (Anmeldung erforderlich)"
 
 msgid "CompGen Discourse"
-msgstr ""
+msgstr "CompGen Discourse"
 
 msgid "GitHub - webtrees issues"
-msgstr ""
+msgstr "GitHub - webtrees gemeldete Probleme (issues)"
 
 msgid "GitHub - webtrees related projects"
-msgstr ""
+msgstr "GitHub - Projekte mit webtrees-Bezug"
 
 #. I18N: JS MDE
 msgid "bold"
@@ -259,13 +259,13 @@ msgid "open person record with UID"
 msgstr "Personendatensatz mittels UID öffnen"
 
 msgid "without database number"
-msgstr ""
+msgstr "ohne Datenbanknummer"
 
 msgid "Data Entry System (DES)"
-msgstr ""
+msgstr "Daten-Eingabe-System (DES)"
 
 msgid "Casualty lists"
-msgstr ""
+msgstr "Verlustlisten"
 
 #. I18N: wthb link user setting title
 msgid "Webtrees manual link - user setting"
@@ -588,8 +588,8 @@ msgid ""
 "This avoids having to store fully qualified links, which impairs the "
 "portability of Gedcom data."
 msgstr ""
-"Es wird damit vermieden voll qualifizierte Links hinterlegen zu müssen, "
-"welche die Portabilität der Gedcom-Daten verschlechtert."
+"Es wird damit vermieden voll qualifizierte Links hinterlegen zu müssen, was "
+"die Portabilität der Gedcom-Daten verschlechtert."
 
 #. I18N: Settings - prologue sentence 4
 msgid ""
