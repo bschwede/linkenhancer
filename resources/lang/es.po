@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-24 15:11+0100\n"
-"PO-Revision-Date: 2026-03-24 16:09+0000\n"
+"PO-Revision-Date: 2026-03-24 16:26+0000\n"
 "Last-Translator: Iberni2 <iberni2@noreply.codeberg.org>\n"
 "Language-Team: Spanish <https://translate.codeberg.org/projects/linkenhancer/"
 "module/es/>\n"
@@ -74,19 +74,19 @@ msgid "webtrees FAQ"
 msgstr "webtrees PF"
 
 msgid "webtrees Forum"
-msgstr ""
+msgstr "Foro de webtrees"
 
 msgid "ask a question (account necessary)"
-msgstr ""
+msgstr "Hacer una pregunta (es necesario tener una cuenta)"
 
 msgid "CompGen Discourse"
-msgstr ""
+msgstr "Discusión en CompGen"
 
 msgid "GitHub - webtrees issues"
-msgstr ""
+msgstr "GitHub - Incidencias de webtrees"
 
 msgid "GitHub - webtrees related projects"
-msgstr ""
+msgstr "GitHub: proyectos relacionados con webtrees"
 
 #. I18N: JS MDE
 msgid "bold"
@@ -253,13 +253,13 @@ msgid "open person record with UID"
 msgstr "abrir ficha de una persona con el identificador UID"
 
 msgid "without database number"
-msgstr ""
+msgstr "Sin número de base de datos"
 
 msgid "Data Entry System (DES)"
-msgstr ""
+msgstr "Sistema de introducción de datos (DES)"
 
 msgid "Casualty lists"
-msgstr ""
+msgstr "Lista de bajas"
 
 #. I18N: wthb link user setting title
 msgid "Webtrees manual link - user setting"
