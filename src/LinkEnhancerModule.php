@@ -29,7 +29,8 @@ namespace Schwendinger\Webtrees\Module\LinkEnhancer;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Factories\CustomMarkdownFactory;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\WthbService;
-use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoXrefAction;;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoXrefAction;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpWthbAction;
 use Fisharebest\Localization\Translation;
 use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\FlashMessages;
@@ -362,19 +363,29 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
         // Register a namespace for our views.
         View::registerNamespace($this->name(), $this->resourcesFolder() . 'views/');
+        $router = Registry::routeFactory()->routeMap();
 
-        if ($this->getPref(self::PREF_WTHB_ACTIVE, true) 
-            && $this->getPref(self::PREF_WTHB_ADMINVIEWPATCH, true)
-            && !$this->vesta_common_enabled) {
-            // register patched administration layout if vesta common is not available
-            View::registerCustomView('::layouts/administration', $this->name() . '::patched/layouts/administration');
+        if ($this->getPref(self::PREF_WTHB_ACTIVE, true)) {
+            if ($this->getPref(self::PREF_WTHB_ADMINVIEWPATCH, true)
+                && !$this->vesta_common_enabled) 
+            {
+                // register patched administration layout if vesta common is not available
+                View::registerCustomView('::layouts/administration', $this->name() . '::patched/layouts/administration');
+            }
+
+            if ($this->getPref(self::PREF_WTHB_TOCNSEARCH, true)) {
+                $router->attach('', '', static function (Map $router): void {
+                    $router->get(HelpWthbAction::class, '/helpwthb/{language}');
+                });
+
+            }
         }
 
         if ($this->getPref(self::PREF_MD_ACTIVE, true)) {
             Registry::markdownFactory(new CustomMarkdownFactory($this));
         }
 
-        $router = Registry::routeFactory()->routeMap();
+        
         if ($this->getPref(self::PREF_LINKSPP_ACTIVE, true)) {
             $router->attach('', '/tree/{tree}', static function (Map $router) {
                 $router->get(GotoXrefAction::class, '/goto-xref/{xref}');
@@ -450,7 +461,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                 'wthb_url'        => $this->getPref(self::PREF_WTHB_STD_LINK),
                 'dotranslate'     => $this->getPref(self::PREF_WTHB_TRANSLATE, true), // 0=off, 1=user defined, 2=on
                 'subcontext'      => $withSubcontext ? $help['subcontext'] : [],
-                'tocnsearch_url'  => route('module', ['module' => $this->name(), 'action' => 'helpwthb']),
+                'tocnsearch_url'  => route(HelpWthbAction::class, ['language' => I18N::languageTag()]),
                 'tocnsearch'      => $this->getPref(self::PREF_WTHB_TOCNSEARCH, true),
                 'openInNewTab'    => $this->getPref(self::PREF_WTHB_OPEN_IN_NEW_TAB, true, true),
                 'splitNavlink'    => $this->getPref(self::PREF_WTHB_SPLIT_TOPMENU, true),
@@ -1004,51 +1015,6 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         return response($html);        
     }
 
-    /**
-     * Serve help page for webtrees manual full-text search and table of contents
-     * Addressed by top menu WTHB-Link (see XXX.js; url passed via window.LEhelp in headContent)
-     *
-     * @param ServerRequestInterface $request
-     *
-     * @return ResponseInterface
-     */
-    public function getHelpWthbAction(ServerRequestInterface $request): ResponseInterface
-    {           
-        $title = /*I18N: webtrees.pot */ I18N::translate('Help') . ' - ' . I18N::translate('Webtrees manual');
-        $tochtml = view($this->name() . '::help-wthb-toc');
-        $text = view($this->name() . '::help-wthb', [
-            'toc_url'  => self::STDLINK_WTHB_TOC,
-            'toc_html' => $tochtml,
-            'search'   => $this->getSearchEngines(),
-        ]);
-
-        $html = view('modals/help', [
-            'title' => $title,
-            'text' => $text,
-        ]);
-
-        return response($html)
-            ->withHeader('Cache-Control', 'public, max-age=86400, immutable')
-            ->withHeader('Expires', gmdate('D, d M Y H:i:s', time() + 86400) . ' GMT') // force caching for Firefox
-            ->withHeader('ETag', md5($html));
-    }
-
-
-    private function getSearchEngines() : array
-    {
-        // key   = Displayname without whitespaces, in lower case prepended with 'icon-' it's the css class name for background icon to be displayed
-        // value = search engine url, append search terms uriencoded
-        return [
-            'GenWiki'    => 'https://wiki.genealogy.net/index.php?title=Spezial%3ASuche&profile=advanced&fulltext=1&ns0=1&ns6=1&search=%22Webtrees+Handbuch%22+',
-            'Startpage'  => 'https://www.startpage.com/do/search?query=site:wiki.genealogy.net+"Webtrees%20Handbuch"+AND+',
-            'Ecosia'     => 'https://www.ecosia.org/search?q=site%3Agenealogy.net%20%22webtrees%20handbuch%22%20AND%20',
-            'mojeek'     => 'https://www.mojeek.com/search?q=inurl%3Agenealogy.net+%22Webtrees+Handbuch%22+',
-            'Qwant'      => 'https://www.qwant.com/?t=web&q=site%3Awiki.genealogy.net+%22Webtrees+Handbuch%22+AND+',
-            'Perplexity' => 'https://www.perplexity.ai/search/?q=site:wiki.genealogy.net%20inurl:%22Webtrees%20Handbuch%22+',
-            'DuckDuckGo' => 'https://duckduckgo.com/?q=site:wiki.genealogy.net+inurl:"Webtrees%20Handbuch"+',
-            'Google'     => 'https://www.google.com/search?q=site:wiki.genealogy.net+"webtrees+Handbuch"+AND+',
-        ];
-    }
 
     public static function getDefaultPrefsAsJson():string  {
         $reduced = array_map(function ($sub) {
