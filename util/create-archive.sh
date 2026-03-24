@@ -29,6 +29,9 @@ resources/css/icons
 resources/views/*.phtml.~*
 resources/lang/*.po*
 util/wthb-toc
+.weblate
+requirements.txt
+.venv
 EOT
 
 cd "$SRCDIR" || exit 1
