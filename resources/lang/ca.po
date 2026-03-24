@@ -1,17 +1,19 @@
+# Iberni2 <iberni2@noreply.codeberg.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-20 21:36+0100\n"
-"PO-Revision-Date: 2026-03-01 13:37+0100\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"POT-Creation-Date: 2026-03-24 15:11+0100\n"
+"PO-Revision-Date: 2026-03-24 16:09+0000\n"
+"Last-Translator: Iberni2 <iberni2@noreply.codeberg.org>\n"
+"Language-Team: Catalan <https://translate.codeberg.org/projects/linkenhancer/"
+"module/ca/>\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Weblate 5.16.2\n"
 "X-Poedit-Basepath: ../..\n"
 "X-Poedit-SearchPath-0: CustomMarkdownFactory.php\n"
 "X-Poedit-SearchPath-1: LinkEnhancerModule.php\n"
@@ -67,6 +69,24 @@ msgstr "El separador no està configurat."
 
 msgid "For the separator is only a single character allowed."
 msgstr "Per delimitar el separador només es permet un únic caràcter."
+
+msgid "webtrees FAQ"
+msgstr ""
+
+msgid "webtrees Forum"
+msgstr "Fòrum webtrees"
+
+msgid "ask a question (account necessary)"
+msgstr "Fes una pregunta (compte necessari)"
+
+msgid "CompGen Discourse"
+msgstr "Debat CompGen"
+
+msgid "GitHub - webtrees issues"
+msgstr "GitHub - problemes de webtrees"
+
+msgid "GitHub - webtrees related projects"
+msgstr "GitHub - projectes relacionats amb webtrees"
 
 #. I18N: JS MDE
 msgid "bold"
@@ -228,8 +248,18 @@ msgid "open person record with given number"
 msgstr "obrir fitxa d'una persona amb un número determinat"
 
 #. I18N: JS enhanced link gedbas2
+#. I18N: JS enhanced link gedbas3
 msgid "open person record with UID"
 msgstr "obrir fitxa d'una persona amb l'identificador UID"
+
+msgid "without database number"
+msgstr "sense número de base de dades"
+
+msgid "Data Entry System (DES)"
+msgstr "Sistema d'Entrada de Dades (SED)"
+
+msgid "Casualty lists"
+msgstr "Llistes de baixes"
 
 #. I18N: wthb link user setting title
 msgid "Webtrees manual link - user setting"

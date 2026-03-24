@@ -1,17 +1,19 @@
+# Iberni2 <iberni2@noreply.codeberg.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-20 21:36+0100\n"
-"PO-Revision-Date: 2026-03-01 13:37+0100\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"POT-Creation-Date: 2026-03-24 15:11+0100\n"
+"PO-Revision-Date: 2026-03-24 16:09+0000\n"
+"Last-Translator: Iberni2 <iberni2@noreply.codeberg.org>\n"
+"Language-Team: Spanish <https://translate.codeberg.org/projects/linkenhancer/"
+"module/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Weblate 5.16.2\n"
 "X-Poedit-Basepath: ../..\n"
 "X-Poedit-SearchPath-0: CustomMarkdownFactory.php\n"
 "X-Poedit-SearchPath-1: LinkEnhancerModule.php\n"
@@ -67,6 +69,24 @@ msgstr "El separador no está configurado"
 
 msgid "For the separator is only a single character allowed."
 msgstr "Para delimitar el separador solamente se permite un único carácter."
+
+msgid "webtrees FAQ"
+msgstr "webtrees PF"
+
+msgid "webtrees Forum"
+msgstr ""
+
+msgid "ask a question (account necessary)"
+msgstr ""
+
+msgid "CompGen Discourse"
+msgstr ""
+
+msgid "GitHub - webtrees issues"
+msgstr ""
+
+msgid "GitHub - webtrees related projects"
+msgstr ""
 
 #. I18N: JS MDE
 msgid "bold"
@@ -228,8 +248,18 @@ msgid "open person record with given number"
 msgstr "abrir ficha de una persona con un número determinado"
 
 #. I18N: JS enhanced link gedbas2
+#. I18N: JS enhanced link gedbas3
 msgid "open person record with UID"
 msgstr "abrir ficha de una persona con el identificador UID"
+
+msgid "without database number"
+msgstr ""
+
+msgid "Data Entry System (DES)"
+msgstr ""
+
+msgid "Casualty lists"
+msgstr ""
 
 #. I18N: wthb link user setting title
 msgid "Webtrees manual link - user setting"
