@@ -21,7 +21,7 @@
     "test": "mocha 'resources/js/tests/**/*.test.js' --require jsdom-global/register"
   },
   "dependencies": {
-    "tiny-markdown-editor": "^0.2.22"
+    "tiny-markdown-editor": "^0.2.23"
   },
   "devDependencies": {
     "@rollup/plugin-babel": "^6.1.0",
