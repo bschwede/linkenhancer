@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-20 21:36+0100\n"
+"POT-Creation-Date: 2026-03-24 15:11+0100\n"
 "PO-Revision-Date: 2026-03-01 13:37+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -67,6 +67,24 @@ msgstr "El separador no està configurat."
 
 msgid "For the separator is only a single character allowed."
 msgstr "Per delimitar el separador només es permet un únic caràcter."
+
+msgid "webtrees FAQ"
+msgstr ""
+
+msgid "webtrees Forum"
+msgstr ""
+
+msgid "ask a question (account necessary)"
+msgstr ""
+
+msgid "CompGen Discourse"
+msgstr ""
+
+msgid "GitHub - webtrees issues"
+msgstr ""
+
+msgid "GitHub - webtrees related projects"
+msgstr ""
 
 #. I18N: JS MDE
 msgid "bold"
@@ -228,8 +246,18 @@ msgid "open person record with given number"
 msgstr "obrir fitxa d'una persona amb un número determinat"
 
 #. I18N: JS enhanced link gedbas2
+#. I18N: JS enhanced link gedbas3
 msgid "open person record with UID"
 msgstr "obrir fitxa d'una persona amb l'identificador UID"
+
+msgid "without database number"
+msgstr ""
+
+msgid "Data Entry System (DES)"
+msgstr ""
+
+msgid "Casualty lists"
+msgstr ""
 
 #. I18N: wthb link user setting title
 msgid "Webtrees manual link - user setting"

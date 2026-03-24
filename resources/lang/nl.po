@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-20 21:36+0100\n"
+"POT-Creation-Date: 2026-03-24 15:11+0100\n"
 "PO-Revision-Date: 2026-03-01 13:38+0100\n"
 "Last-Translator: TheDutchJewel <thedutchjewel@gmail.com>\n"
 "Language-Team: TheDutchJewel\n"
@@ -67,6 +67,24 @@ msgstr "Scheidingsteken is niet ingesteld."
 
 msgid "For the separator is only a single character allowed."
 msgstr "Voor het scheidingsteken is slechts één teken toegestaan."
+
+msgid "webtrees FAQ"
+msgstr ""
+
+msgid "webtrees Forum"
+msgstr ""
+
+msgid "ask a question (account necessary)"
+msgstr ""
+
+msgid "CompGen Discourse"
+msgstr ""
+
+msgid "GitHub - webtrees issues"
+msgstr ""
+
+msgid "GitHub - webtrees related projects"
+msgstr ""
 
 #. I18N: JS MDE
 msgid "bold"
@@ -227,8 +245,18 @@ msgid "open person record with given number"
 msgstr "open persoonsrecord met opgegeven nummer"
 
 #. I18N: JS enhanced link gedbas2
+#. I18N: JS enhanced link gedbas3
 msgid "open person record with UID"
 msgstr "open persoonrecord met UID"
+
+msgid "without database number"
+msgstr ""
+
+msgid "Data Entry System (DES)"
+msgstr ""
+
+msgid "Casualty lists"
+msgstr ""
 
 #. I18N: wthb link user setting title
 msgid "Webtrees manual link - user setting"
