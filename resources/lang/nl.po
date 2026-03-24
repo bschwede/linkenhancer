@@ -1,17 +1,19 @@
+# TheDutchJewel <thedutchjewel@noreply.codeberg.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-24 15:11+0100\n"
-"PO-Revision-Date: 2026-03-01 13:38+0100\n"
-"Last-Translator: TheDutchJewel <thedutchjewel@gmail.com>\n"
-"Language-Team: TheDutchJewel\n"
+"PO-Revision-Date: 2026-03-24 18:08+0000\n"
+"Last-Translator: TheDutchJewel <thedutchjewel@noreply.codeberg.org>\n"
+"Language-Team: Dutch <https://translate.codeberg.org/projects/linkenhancer/"
+"module/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4.2\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.16.2\n"
 "X-Poedit-Basepath: ../..\n"
 "X-Poedit-SearchPath-0: CustomMarkdownFactory.php\n"
 "X-Poedit-SearchPath-1: LinkEnhancerModule.php\n"
@@ -41,7 +43,7 @@ msgid "rows in which the maximum field value length has been exceeded"
 msgstr "rijen waarin de maximale veldlengte is overschreden"
 
 msgid "Routes imported"
-msgstr "De routes zijn geïmporteerd"
+msgstr "Routes zijn geïmporteerd"
 
 #. I18N: wthb import skipped rows
 msgid "Skipped"
@@ -69,22 +71,22 @@ msgid "For the separator is only a single character allowed."
 msgstr "Voor het scheidingsteken is slechts één teken toegestaan."
 
 msgid "webtrees FAQ"
-msgstr ""
+msgstr "webtrees veelgestelde vragen (FAQ)"
 
 msgid "webtrees Forum"
-msgstr ""
+msgstr "webtrees-forum"
 
 msgid "ask a question (account necessary)"
-msgstr ""
+msgstr "stel een vraag (account vereist)"
 
 msgid "CompGen Discourse"
-msgstr ""
+msgstr "CompGen-discussie"
 
 msgid "GitHub - webtrees issues"
-msgstr ""
+msgstr "GitHub - webtrees-issues"
 
 msgid "GitHub - webtrees related projects"
-msgstr ""
+msgstr "GitHub - webtrees-gerelateerde projecten"
 
 #. I18N: JS MDE
 msgid "bold"
@@ -188,7 +190,7 @@ msgstr "Syntaxfout"
 
 #. I18N: JS enhanced link
 msgid "Unknown parameter keys"
-msgstr "Onbekende parametertoetsen"
+msgstr "Onbekende parametersleutels"
 
 #. I18N: JS enhanced link wt1 - %s=rectypes
 #, php-format
@@ -226,7 +228,7 @@ msgstr "toon ook knooppunt/weg/relatie - alternatieve notatie"
 
 #. I18N: JS enhanced link ofb1
 msgid "link to Online Local heritage book at CompGen with given uid"
-msgstr "link naar online-lokaalerfgoedboek bij CompGen met opgegeven uid"
+msgstr "link naar online-lokaalerfgoedboek bij CompGen met opgegeven UID"
 
 #. I18N: JS enhanced link wp1
 msgid "open the article in the german wikipedia"
@@ -250,13 +252,13 @@ msgid "open person record with UID"
 msgstr "open persoonrecord met UID"
 
 msgid "without database number"
-msgstr ""
+msgstr "zonder databasenummer"
 
 msgid "Data Entry System (DES)"
-msgstr ""
+msgstr "Gegevensinvoersysteem (DES)"
 
 msgid "Casualty lists"
-msgstr ""
+msgstr "Slachtofferslijsten"
 
 #. I18N: wthb link user setting title
 msgid "Webtrees manual link - user setting"
@@ -301,11 +303,10 @@ msgid "Insert just before the very first heading"
 msgstr "Voeg in vlak voor de allereerste koptekst"
 
 msgid "Location is manually defined by a placeholder"
-msgstr ""
-"De locatie wordt handmatig gedefinieerd door een tijdelijke aanduiding."
+msgstr "De locatie wordt handmatig gedefinieerd door een tijdelijke aanduiding"
 
 msgid "applies nesting, but handles edge cases"
-msgstr "past nesting toe, maar behandelt randgevallen"
+msgstr "past nesting toe, maar houdt rekening met randgevallen"
 
 msgid "a flat, single-level list"
 msgstr "een platte lijst op één niveau"
@@ -351,7 +352,7 @@ msgstr "Alleen bestanden in de openbare map worden ondersteund"
 #. I18N: MD img error public file, %s1=rel. filename, %s2=mimetype
 #, php-format
 msgid "File ‘%s’ in the public folder is not an image but '%s'"
-msgstr "Het bestand ‘%s’ in de openbare map is geen afbeelding, maar ‘%s’."
+msgstr "Bestand ‘%s’ in de openbare map is geen afbeelding, maar ‘%s’"
 
 #. I18N: Module title
 msgid "Link-Enhancer"
@@ -505,7 +506,7 @@ msgstr "Markdown-afbeeldingstitelcontainer"
 
 #. I18N: MD img code example 1
 msgid "alternate text for gedcom object"
-msgstr "alternatieve tekst voor gedcom-object"
+msgstr "alternatieve tekst voor GEDCOM-object"
 
 #. I18N: MD img code example 2
 msgid "alternate text for picture in public folder"
@@ -577,7 +578,7 @@ msgid ""
 "portability of Gedcom data."
 msgstr ""
 "Hierdoor hoeft u geen volledig gekwalificeerde links op te slaan, wat de "
-"overdraagbaarheid van Gedcom-gegevens belemmert."
+"overdraagbaarheid van GEDCOM-gegevens belemmert."
 
 #. I18N: Settings - prologue sentence 4
 msgid ""
@@ -613,7 +614,7 @@ msgstr "Werkt alleen in notities die zijn opgemaakt met Markdown."
 #. I18N: MDE
 #, php-format
 msgid "Precondition: Tree preference '%s' need to be set to markdown."
-msgstr "Voorwaarde: De boomvoorkeur ‘%s’ moet worden ingesteld op markdown."
+msgstr "Voorwaarde: De stamboomvoorkeur ‘%s’ moet worden ingesteld op markdown."
 
 msgid "Show Help Link"
 msgstr "Toon Help-link"
@@ -761,7 +762,7 @@ msgid "Position"
 msgstr "Positie"
 
 msgid "Placeholder"
-msgstr "Plaatshouder"
+msgstr "Tijdelijke aanduiding"
 
 msgid "Permalink symbol"
 msgstr "Permalink-symbool"
@@ -780,7 +781,7 @@ msgid "Precede the top menu link with an icon"
 msgstr "Voorzie de link in het hoofdmenu van een pictogram"
 
 msgid "Split top menu item"
-msgstr "Gesplitst menu-item bovenaan"
+msgstr "Gesplitst topmenu-item"
 
 msgid ""
 "This option controls whether the help link is located in the submenu or can "
@@ -793,10 +794,10 @@ msgid "Additional help links"
 msgstr "Extra hulplinks"
 
 msgid "Help link for subcontext topics"
-msgstr "Help link voor subcontext onderwerpen"
+msgstr "Help link voor subcontext-onderwerpen"
 
 msgid "Help link in the admin backend"
-msgstr "Help-link in de admin-backend"
+msgstr "Help-link in het beheerdersgedeelte"
 
 msgid ""
 "Vesta modules override the admin layout view and provide a way to insert "
