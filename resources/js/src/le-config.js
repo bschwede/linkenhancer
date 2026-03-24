@@ -36,7 +36,7 @@ export const getLETargetCfg = (I18N, getLErecTypes) => {
             }
             let subdomain = parts[0];
             let article = parts.slice(1).join('/');
-            title = `${title} - ` + decodeURIComponent(article);
+            title = `${title} - ` + decodeURIComponent(article) + ` (${subdomain})`;
             return { url: `https://${subdomain}.wikipedia.org/wiki/${article}`, title };
         },
         cname: 'icon-wp',
