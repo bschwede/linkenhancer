@@ -12,6 +12,7 @@
 >
 > - ✅ Issues → [Open on Codeberg](https://codeberg.org/bschwede/linkenhancer/issues)
 > - ✅ Pull Requests → [Open on Codeberg](https://codeberg.org/bschwede/linkenhancer/pulls)
+> - ✅ Translations → [Contribute on Codeberg Weblate](https://translate.codeberg.org/projects/linkenhancer/)
 
 <a name="tldr"></a>
 ## TL;DR
@@ -411,9 +412,7 @@ If you'd like to contribute to this module, great! You can contribute by
 <a name="translation"></a>
 ## Translation
 
-You can use a local editor, like [Poedit](https://poeditor.com/) or [Notepad++](https://notepad-plus-plus.org/) to make the translations and send them back to me. You can do this via a pull request (if you know how) or by e-mail.
-
-Discussion on translating can be done by creating an [issue](https://codeberg.org/bschwede/linkenhancer/issues).
+You can contribute to this project on [Codeberg Weblate](https://translate.codeberg.org/projects/linkenhancer/).
 
 Updated translations will be included in the next release of this module.
 
