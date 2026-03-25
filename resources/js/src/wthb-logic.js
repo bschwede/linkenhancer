@@ -8,8 +8,8 @@ export const isWthbLink = (url, wikiUrl) => {
 export const getHelpTitle = (url, cfg) => {
 
     return isWthbLink(url, cfg.wiki_url)
-        ? cfg.I18N.help_title_wthb
-        : cfg.I18N.help_title_ext;
+        ? cfg.i18n('help_title_wthb')
+        : cfg.i18n('help_title_ext');
 };
 
 export const buildTranslateUrl = (url, lang) => {

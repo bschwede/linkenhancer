@@ -1,4 +1,7 @@
+import { i18nMixin } from './i18n-mixin.js';
+
 export const getDefaultConfig = () => ({
+    ...i18nMixin,
     I18N: {
         help_title_wthb: 'Webtrees manual',
         help_title_ext: 'Help',

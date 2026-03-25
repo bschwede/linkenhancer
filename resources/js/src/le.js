@@ -22,8 +22,8 @@ export const initLEext = (
 
     LEtargets =
         typeof targets === 'object'
-            ? Object.assign(getLETargetCfg(LEoptions.I18N, getLErecTypes), targets)
-        : getLETargetCfg(LEoptions.I18N, getLErecTypes);
+            ? Object.assign(getLETargetCfg(LEoptions, getLErecTypes), targets)
+        : getLETargetCfg(LEoptions, getLErecTypes);
 
 
     LEoptions.thisXref =

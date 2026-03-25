@@ -65,7 +65,7 @@ export function createWthb(env) {
         if (cfg.dotranslate !== 1) return; // no user setting 
 
         let wthbcfg = jQuery("#wthb-link-cfg").on('click', () => toggleModal(document, bootstrap, true));
-        if (cfg.I18N.cfg_title) $(wthbcfg).attr('title', cfg.I18N.cfg_title);
+        if (cfg.i18n('cfg_title')) $(wthbcfg).attr('title', cfg.i18n('cfg_title'));
 
         jQuery('#wthb-modal').on('show.bs.modal', (e) => {
             jQuery("#wthb-epilogue").hide(); // standard - should be only visible if user has not yet made decission for translation, because the dialog is opened automatically

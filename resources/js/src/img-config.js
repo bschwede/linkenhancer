@@ -1,7 +1,7 @@
+import { i18nMixin } from './i18n-mixin.js';
+
 export const getOptions = () => ({
-    I18N: {
-        limitheight: 'Limit cell height',
-    },
+    ...i18nMixin,
 
     ext_fn: true,  // Footnotes extension
     ext_toc: true, // Table of contents extension

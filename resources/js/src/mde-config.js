@@ -1,6 +1,8 @@
+import { i18nMixin } from './i18n-mixin.js';
+
 export function getMdeConfig() {
     return {
-        I18N: {},
+        ...i18nMixin,        
         href: true,
         src: true,
         ext: true,        // extension master switch

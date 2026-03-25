@@ -22,7 +22,7 @@ export const setLink = (
     } else {
 
         nextlink.onclick = e => {
-            alert(nextlink.title ?? LEoptions.I18N['syntax error'] + "!");
+            alert(nextlink.title ?? LEoptions.i18n('syntax error') + "!");
             e.preventDefault();
         };
 
