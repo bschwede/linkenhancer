@@ -41,7 +41,7 @@ import merge from 'merge-stream';
 
 //--- common consts
 const VERSION_TXT = 'latest-version.txt';
-const VERSION_PHP = 'LinkEnhancerModule.php';
+const VERSION_PHP = 'src/LinkEnhancerModule.php';
 let DEV = false; // bundling js for dev or production
 
 //--- Rollup - javascript
