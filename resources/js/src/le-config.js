@@ -56,7 +56,7 @@ export const getLETargetCfg = (options, getLErecTypes) => {
     "ofb": {
         name: options.i18n('oofb'),
         url: (id, title) => {
-            let parts = id.split('/', 2);
+            let parts = id.split('/');
             if (parts.length != 2) {
                 title = title + ' - ' + options.i18n('syntax error') + "!";
                 return { url: '', title };
@@ -85,14 +85,14 @@ export const getLETargetCfg = (options, getLErecTypes) => {
     "gedbas": {
         name: options.i18n('gedbas'),
         url: (id, title) => {
-            let idtype = id.split('/').length;
-            idtype = idtype === 1 && !id.match(/^\d+$/) ? 3 : idtype;
+            let idtype = !id.match(/^[\da-f\-\/]+$/i) ? 'error' : id.split('/').length;
+            idtype = idtype === 1 && !id.match(/^\d+$/) ? 'uid' : idtype;
             switch (idtype) {
                 case 1: // dataset number
                     return { url: `https://gedbas.genealogy.net/person/show/${id}`, title };
                 case 2: // UID
                     return { url: `https://gedbas.genealogy.net/person/uid/${id}`, title };
-                case 3: // UID without database number
+                case 'uid': // UID without database number
                     return { url: `https://gedbas.genealogy.net/uid/${id}`, title };
                 default:
                     title = title + ' - ' + options.i18n('syntax error') + "!";
