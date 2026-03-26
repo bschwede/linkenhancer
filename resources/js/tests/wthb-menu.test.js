@@ -5,13 +5,15 @@ import {
     insertMenu
 } from "../src/wthb-menu.js";
 
+import { i18nMixin } from '../src/i18n-mixin.js';
+
 describe("wthb-menu.js", () => {
 
     let document;
 
     const cfg = {
+        ...i18nMixin,
         help_url: "https://example.com",
-        wiki_url: "https://wiki.genealogy.net/",
         faicon: false,
         openInNewTab: true,
         I18N: {
@@ -19,7 +21,8 @@ describe("wthb-menu.js", () => {
             help_title_wthb: "Manual",
             startpage: "start page"
         },
-        wthb_url: "https://wiki.genealogy.net",
+        wthb_url: "https://wiki.genealogy.net/Webtrees Handbuch",
+        wiki_url: "https://wiki.genealogy.net",
         tocnsearch: false,
         wtcorehelp: false,
         admin_url: 'https://site/admin'
@@ -29,7 +32,9 @@ describe("wthb-menu.js", () => {
 
         const dom = new JSDOM(`
         <ul class="wt-user-menu"></ul>
-        `);
+        `, {
+            url: "http://localhost"
+        });
 
         document = dom.window.document;
     });
@@ -160,9 +165,11 @@ describe("wthb-menu.js", () => {
         expect(link).to.not.equal(null);
     });
 
-    it.skip("inserts NO wiki start page if help url is wiki page", () => {
+    it("inserts NO wiki start page if help url is wiki page", () => {
         //?? SecurityError: localStorage is not available for opaque origins
-        const html = buildMenuHtml(cfg, cfg.wiki_url);
+        // https://github.com/jsdom/jsdom/issues/2383
+        cfg.help_url = cfg.wthb_url;
+        const html = buildMenuHtml(cfg, "https://site");
 
         insertMenu(document, html);
 

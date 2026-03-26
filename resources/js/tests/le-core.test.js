@@ -1,7 +1,7 @@
 import { expect } from "chai"
 import { JSDOM } from "jsdom"
 
-import { i18nMixin } from './i18n-mixin.js';
+import { i18nMixin } from '../src/i18n-mixin.js';
 
 import { parseCrossReferenceLink, getLErecTypes }
     from "../src/le-xref-parser.js"
@@ -25,6 +25,7 @@ describe("Enhanced Links core tests", () => {
 
     const options = {
         ...i18nMixin,
+        I18N: {},
         openInNewTab: true,
         baseurl: "https://example.org/tree/main",
         tree: "main",
