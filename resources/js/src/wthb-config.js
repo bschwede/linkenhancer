@@ -21,14 +21,12 @@ export const getDefaultConfig = () => ({
     doTranslateUser: undefined,
     subcontext: [],
 
-    tocnsearch_url: '',
-    tocnsearch: true,
+    tocnsearch_url: '', // help is shown if not empty
 
     openInNewTab: true,
     splitNavlink: true,
 
-    wtcorehelp: true,
-    wtcorehelp_url: '',
+    wtcorehelp_url: '', // help is shown if not empty
 
     linksJson: [],
     admin_url: ''

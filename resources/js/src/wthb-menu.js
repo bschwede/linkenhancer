@@ -15,7 +15,7 @@ export const buildMenuHtml = (cfg, locationHref) => {
         </a>`;
     }
 
-    if (cfg.tocnsearch) { // webtrees table of contents and search
+    if (cfg.tocnsearch_url) { // webtrees table of contents and search
         dropdown += `
         <a class="dropdown-item menu-wthb"
             role="menuitem" 
@@ -38,7 +38,7 @@ export const buildMenuHtml = (cfg, locationHref) => {
         </a>`;
     }
 
-    if (cfg.wtcorehelp) { // overview of help topic included in webtrees
+    if (cfg.wtcorehelp_url) { // overview of help topic included in webtrees
         dropdown += (dropdown !== '' || !cfg.splitNavlink ? '<hr>' : '') + `
         <a class="dropdown-item menu-wthb"
             role="menuitem"

@@ -10,5 +10,6 @@ export function getMdeConfig() {
         ext_fn: true,     // footnote extension
         ext_strike: true, // striketrough extension
         todo: true, // with wt 2.2.5 _TODO text fields also support markdown
+        helpmd_url: '',
     }
 }

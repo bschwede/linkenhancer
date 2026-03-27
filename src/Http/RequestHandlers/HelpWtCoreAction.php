@@ -29,10 +29,9 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 
 /**
- * Serve help page for webtrees manual full-text search and table of contents
- * in given language (toc is not translated only headings and labels)
+ * Serve overview for webtrees core context help in given language
  */
-class HelpWthbAction implements RequestHandlerInterface
+class HelpWtCoreAction implements RequestHandlerInterface
 {
     /**
      * @param ServerRequestInterface $request
@@ -42,16 +41,13 @@ class HelpWthbAction implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     { // referenced by javascript handler from top menu submenu "Webtrees manual"
         $prev_language_tag = Utils::checkRequestLanguage($request);
-
+       
         $module = Registry::container()->get(LinkEnhancerModule::class);
         
-        $title = /*I18N: webtrees.pot */ I18N::translate('Help') . ' - ' . I18N::translate('Webtrees manual');
-        $tochtml = view($module->name() . '::help-wthb-toc');
-        $text = view($module->name() . '::help-wthb', [
-            'toc_url' => LinkEnhancerModule::STDLINK_WTHB_TOC,
-            'toc_html' => $tochtml,
-            'search' => Utils::getSearchEngines(),
-        ]);
+        $title = /*I18N: webtrees.pot */ I18N::translate('Help')
+            . ' - '
+            . I18N::translate("webtrees help topics (included)");
+        $text = view($module->name() . '::help-wt-helptext');
 
         $html = view('modals/help', [
             'title' => $title,
