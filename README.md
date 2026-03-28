@@ -256,16 +256,18 @@ In addition, the **submenu** contains an overview of the help topics included in
 
 The module contains some standard **external help links**, that are defined in JSON - array of objects with the following members:
 
-* `title`: display text for the link, can also contain html (string, mandatory)
+- `title`: display text for the link, can also contain html (string, mandatory), language should be en-US, for standard link titles translations are provided
 * `url`: link to web resource (string, mandatory)
 * `class` : additional css class names; (string, optional)
 * `self` : if set, link [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a#target) is `_self` (opens in place), otherwise `_blank` (any type, optional)
+* `i18n` : overwrite title with user defined translation for given language tags (object, optional; keys are language tags, values translated title)
 
 Example:
 ```json
 [
   {"title":"webtrees FAQ <i class=\"fa-solid fa-circle-question\"></i>",
-   "url":"https://webtrees.net/faq/"
+   "url":"https://webtrees.net/faq/",
+   "i18n": { "de": "webtrees Häufig-gestellte-Fragen <i class=\"fa-solid fa-circle-question\"></i>" }
   }
 ]
 ```
