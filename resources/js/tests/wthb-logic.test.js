@@ -5,9 +5,12 @@ import {
     buildTranslateUrl
 } from "../src/wthb-logic.js";
 
+import { i18nMixin } from '../src/i18n-mixin.js';
+
 describe("wthb-logic.js", () => {
 
     const cfg = {
+        ...i18nMixin,
         wiki_url: "https://wiki.genealogy.net/",
         I18N: {
             help_title_wthb: "Manual",

@@ -11,11 +11,11 @@ export const buildMenuHtml = (cfg, locationHref) => {
         <a class="dropdown-item menu-wthb"${target}
             id="wthb-link-sp"
             href="${cfg.wthb_url}">
-           ${cfg.I18N.help_title_wthb} - ${cfg.I18N.startpage}
+           ${cfg.i18n('help_title_wthb')} - ${cfg.i18n('startpage')}
         </a>`;
     }
 
-    if (cfg.tocnsearch) { // webtrees table of contents and search
+    if (cfg.tocnsearch_url) { // webtrees table of contents and search
         dropdown += `
         <a class="dropdown-item menu-wthb"
             role="menuitem" 
@@ -25,7 +25,7 @@ export const buildMenuHtml = (cfg, locationHref) => {
             data-bs-toggle="modal"
             data-bs-target="#le-ajax-modal"
             data-wt-href="${cfg.tocnsearch_url}">
-            ${cfg.I18N.tocnsearch}
+            ${cfg.i18n('tocnsearch')}
         </a>`;
     }
 
@@ -34,11 +34,11 @@ export const buildMenuHtml = (cfg, locationHref) => {
         <a class="dropdown-item menu-wthb"
             role="menuitem" id="wthb-link-cfg" 
             href="#">
-            <i class="fa-solid fa-wrench fa-fw"></i>&nbsp;${cfg.I18N.cfg_title}
+            <i class="fa-solid fa-wrench fa-fw"></i>&nbsp;${cfg.i18n('cfg_title')}
         </a>`;
     }
 
-    if (cfg.wtcorehelp) { // overview of help topic included in webtrees
+    if (cfg.wtcorehelp_url) { // overview of help topic included in webtrees
         dropdown += (dropdown !== '' || !cfg.splitNavlink ? '<hr>' : '') + `
         <a class="dropdown-item menu-wthb"
             role="menuitem"
@@ -48,7 +48,7 @@ export const buildMenuHtml = (cfg, locationHref) => {
             data-bs-toggle="modal"
             data-bs-target="#le-ajax-modal"
             data-wt-href="${cfg.wtcorehelp_url}">
-            ${cfg.I18N.wtcorehelp}
+            ${cfg.i18n('wtcorehelp')}
         </a>`;
     }
 
@@ -65,6 +65,8 @@ export const buildMenuHtml = (cfg, locationHref) => {
             let linkshtml = '';
             links.forEach((link) => {
                 let title = link.title ?? null;
+                let user_i18n = link?.i18n?.[cfg.lang];
+                title = (title && user_i18n ? user_i18n : title);
                 let url = link.url ?? null;
                 let cname = (link.class ?? false ? ` ${link.class}` : '');
                 let target = (link.self ?? false ? '_self' : '_blank');
@@ -81,7 +83,7 @@ export const buildMenuHtml = (cfg, locationHref) => {
             role="menuitem"
             id="le-admin-link"
             href="${cfg.admin_url}">
-            <i class="fa-solid fa-wrench fa-fw"></i>&nbsp;${cfg.I18N.admin_title}
+            <i class="fa-solid fa-wrench fa-fw"></i>&nbsp;${cfg.i18n('admin_title')}
         </a>`;
     }
 
@@ -102,11 +104,11 @@ export const buildMenuHtml = (cfg, locationHref) => {
             link_class = 'dropdown-item menu-wthb';
             link_attrs = ' role="menuitem"';
             link_text = `${help_icon}${help_title}`; // always visible question mark icon like in sub context popovers
-            navlink_text = `${navlink_icon}${cfg.I18N.help_title_wthb}`; // no distinction between webtrees manual and external help for the top menu item title 
+            navlink_text = `${navlink_icon}${cfg.i18n('help_title_wthb')}`; // no distinction between webtrees manual and external help for the top menu item title 
         } else {
             link_class += ' nav-link-p';
             navlink_class = ' nav-link-p';
-            dropdown_title = ` title="${cfg.I18N.help_title_wthb}"`;
+            dropdown_title = ` title="${cfg.i18n('help_title_wthb')}"`;
         }
     }
 

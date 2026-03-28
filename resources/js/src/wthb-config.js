@@ -1,4 +1,7 @@
+import { i18nMixin } from './i18n-mixin.js';
+
 export const getDefaultConfig = () => ({
+    ...i18nMixin,
     I18N: {
         help_title_wthb: 'Webtrees manual',
         help_title_ext: 'Help',
@@ -18,14 +21,12 @@ export const getDefaultConfig = () => ({
     doTranslateUser: undefined,
     subcontext: [],
 
-    tocnsearch_url: '',
-    tocnsearch: true,
+    tocnsearch_url: '', // help is shown if not empty
 
     openInNewTab: true,
     splitNavlink: true,
 
-    wtcorehelp: true,
-    wtcorehelp_url: '',
+    wtcorehelp_url: '', // help is shown if not empty
 
     linksJson: [],
     admin_url: ''

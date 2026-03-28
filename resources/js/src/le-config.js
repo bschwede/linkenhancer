@@ -1,7 +1,9 @@
+import { i18nMixin } from './i18n-mixin.js';
+
 export const LINK_SELECTOR = "a[href*='#@']";
 
 export const getLEOptions = () => ({
-    I18N: {},
+    ...i18nMixin,
     thisXref: '',
     openInNewTab: true,
     tree: '',
@@ -10,7 +12,7 @@ export const getLEOptions = () => ({
 });
 
 
-export const getLETargetCfg = (I18N, getLErecTypes) => {
+export const getLETargetCfg = (options, getLErecTypes) => {
     let cfg = //+++ code-snippet begin next line - used for display in admin settings page
 {   // link targets
     // - key = query parameter key;
@@ -19,11 +21,11 @@ export const getLETargetCfg = (I18N, getLErecTypes) => {
     // - cname = css class name(s) whitespace separated
     // - help = [{n:'', e:''},..] - optional parameter examples (in e) with explanation (in n)
     "wt": { // placeholder - is always the first link
-        name: 'webtrees ' + I18N['cross reference'],
+        name: 'webtrees ' + options.i18n('cross reference'),
         help: [
-            { n: I18N['wt-help1'].replace(/%s/, getLErecTypes(1)), e: 'n@XREF@' },
-            { n: I18N['wt-help2'] + ' ' + I18N['Interactive tree'], e: 'i@XREF@othertree+dia' },
-            { n: I18N['wt-help3'], e: '@XREF@' }
+            { n: options.i18n('wt-help1').replace(/%s/, getLErecTypes(1)), e: 'n@XREF@' },
+            { n: options.i18n('wt-help2') + ' ' + options.i18n('Interactive tree'), e: 'i@XREF@othertree+dia' },
+            { n: options.i18n('wt-help3'), e: '@XREF@' }
         ]
     },
     "wp": {
@@ -31,7 +33,7 @@ export const getLETargetCfg = (I18N, getLErecTypes) => {
         url: (id, title) => {
             let parts = id.split('/');
             if (parts.length < 2) {
-                title = title + " - " + I18N['syntax error'] + "!";
+                title = title + " - " + options.i18n('syntax error') + "!";
                 return { url: '', title };
             }
             let subdomain = parts[0];
@@ -41,22 +43,22 @@ export const getLETargetCfg = (I18N, getLErecTypes) => {
         },
         cname: 'icon-wp',
         help: [
-            { n: I18N['wp-help1'], e: 'de/Webtrees' },
-            { n: I18N['wp-help2'], e: 'en/Webtrees' },
-            { n: I18N['wp-help3'], e: 'other-subdomain/Webtrees' },
+            { n: options.i18n('wp-help1'), e: 'de/Webtrees' },
+            { n: options.i18n('wp-help2'), e: 'en/Webtrees' },
+            { n: options.i18n('wp-help3'), e: 'other-subdomain/Webtrees' },
         ]
     },
     "www": {
-        name: I18N['www'],
+        name: options.i18n('www'),
         url: 'https://www.wer-wir-waren.at/daten?guid=',
         cname: 'icon-www'
     },
     "ofb": {
-        name: I18N['oofb'],
+        name: options.i18n('oofb'),
         url: (id, title) => {
-            let parts = id.split('/', 2);
+            let parts = id.split('/');
             if (parts.length != 2) {
-                title = title + ' - ' + I18N['syntax error'] + "!";
+                title = title + ' - ' + options.i18n('syntax error') + "!";
                 return { url: '', title };
             }
             let ofb = parts[0];
@@ -67,7 +69,7 @@ export const getLETargetCfg = (I18N, getLErecTypes) => {
         },
         cname: 'icon-compgen',
         help: [
-            { n: I18N['ofb-help1'], e: 'dornbirn/BDDBBFB7531C4A2EB0F56852BDD7720F8697A5' },
+            { n: options.i18n('ofb-help1'), e: 'dornbirn/BDDBBFB7531C4A2EB0F56852BDD7720F8697A5' },
         ]
     },
     "gw": {
@@ -76,36 +78,36 @@ export const getLETargetCfg = (I18N, getLErecTypes) => {
         cname: 'icon-compgen'
     },
     "gov": {
-        name: I18N['gov'] + ' - $ID',
+        name: options.i18n('gov') + ' - $ID',
         url: "https://gov.genealogy.net/item/show/",
         cname: 'icon-compgen'
     },
     "gedbas": {
-        name: I18N['gedbas'],
+        name: options.i18n('gedbas'),
         url: (id, title) => {
-            let idtype = id.split('/').length;
-            idtype = idtype === 1 && !id.match(/^\d+$/) ? 3 : idtype;
+            let idtype = !id.match(/^[\da-f\-\/]+$/i) ? 'error' : id.split('/').length;
+            idtype = idtype === 1 && !id.match(/^\d+$/) ? 'uid' : idtype;
             switch (idtype) {
                 case 1: // dataset number
                     return { url: `https://gedbas.genealogy.net/person/show/${id}`, title };
                 case 2: // UID
                     return { url: `https://gedbas.genealogy.net/person/uid/${id}`, title };
-                case 3: // UID without database number
+                case 'uid': // UID without database number
                     return { url: `https://gedbas.genealogy.net/uid/${id}`, title };
                 default:
-                    title = title + ' - ' + I18N['syntax error'] + "!";
+                    title = title + ' - ' + options.i18n('syntax error') + "!";
                     return { url: '', title };
             }
         },
         cname: 'icon-compgen',
         help: [
-            { n: I18N['gedbas-help1'], e: '1051362866' },
-            { n: I18N['gedbas-help2'], e: '56789/136049f257c96e34430aec053fa0fbce865c' },
-            { n: I18N['gedbas-help3'], e: 'b43cd5ad-695c-4e1f-9c9d-25918d292256' },
+            { n: options.i18n('gedbas-help1'), e: '1051362866' },
+            { n: options.i18n('gedbas-help2'), e: '56789/136049f257c96e34430aec053fa0fbce865c' },
+            { n: options.i18n('gedbas-help3'), e: 'b43cd5ad-695c-4e1f-9c9d-25918d292256' },
         ]
     },
     "ewp": {
-        name: I18N['ewp'] + ' (westpreussen.de)',
+        name: options.i18n('ewp') + ' (westpreussen.de)',
         url: 'https://westpreussen.de/tngeinwohner/getperson.php?tree=DB1&personID=',
         cname: 'icon-ewp'
     },
@@ -119,7 +121,7 @@ export const getLETargetCfg = (I18N, getLErecTypes) => {
         url: (id, title) => {
             let parts = id.split('/');
             if (parts.length < 3) {
-                title = title + ' - ' + I18N['syntax error'] + "!";
+                title = title + ' - ' + options.i18n('syntax error') + "!";
                 return { url: '', title };
             }
             let map = parts.slice(0, 3).join('/');
@@ -135,10 +137,10 @@ export const getLETargetCfg = (I18N, getLErecTypes) => {
         },
         cname: 'icon-osm',
         help: [
-            { n: I18N['osm-help1'], e: '17/53.619095/10.037395' },
-            { n: I18N['osm-help2'], e: '17/53.619095/10.037395/!' },
-            { n: I18N['osm-help3'] + ' <a href="https://wiki.openstreetmap.org/wiki/DE:Browsing">OSM-Wiki</a>', e: '16/50.11185/8.09636/way/60367151' },
-            { n: I18N['osm-help4'], e: '13/50.09906/8.04660/?relation=403139' },
+            { n: options.i18n('osm-help1'), e: '17/53.619095/10.037395' },
+            { n: options.i18n('osm-help2'), e: '17/53.619095/10.037395/!' },
+            { n: options.i18n('osm-help3') + ' <a href="https://wiki.openstreetmap.org/wiki/DE:Browsing">OSM-Wiki</a>', e: '16/50.11185/8.09636/way/60367151' },
+            { n: options.i18n('osm-help4'), e: '13/50.09906/8.04660/?relation=403139' },
         ]
     },
     "wit": {
@@ -147,7 +149,7 @@ export const getLETargetCfg = (I18N, getLErecTypes) => {
         cname: 'icon-wit'
     },
     "vl": {
-        name: I18N['des-vl'],
+        name: options.i18n('des-vl'),
         url: 'https://des.genealogy.net/search/uuid/',
         cname: 'icon-compgen'
     },    

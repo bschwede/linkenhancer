@@ -29,7 +29,7 @@ const createHeightCheckbox = (
     const title =
         escapeHtmlAttribute(
             document,
-            opts.I18N.limitheight ?? ''
+            opts.i18n('limitheight') ?? ''
         );
 
     return `

@@ -30,6 +30,8 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\Factories\CustomMarkdownFactory;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\WthbService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoXrefAction;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpMdAction;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpWtCoreAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpWthbAction;
 use Fisharebest\Localization\Translation;
 use Fisharebest\Webtrees\Auth;
@@ -373,16 +375,27 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                 View::registerCustomView('::layouts/administration', $this->name() . '::patched/layouts/administration');
             }
 
-            if ($this->getPref(self::PREF_WTHB_TOCNSEARCH, true)) {
+            if ($this->getPref(self::PREF_WTHB_TOCNSEARCH, true)) { // webtrees manual help (search and toc)
                 $router->attach('', '', static function (Map $router): void {
                     $router->get(HelpWthbAction::class, '/helpwthb/{language}');
                 });
 
             }
+            if ($this->getPref(self::PREF_WTHB_WTCOREHELP, true)) { // webtrees core help overview
+                $router->attach('', '', static function (Map $router): void {
+                    $router->get(HelpWtCoreAction::class, '/helpwtcore/{language}');
+                });
+            }            
         }
 
         if ($this->getPref(self::PREF_MD_ACTIVE, true)) {
             Registry::markdownFactory(new CustomMarkdownFactory($this));
+            
+            if ($this->getPref(self::PREF_MDE_ACTIVE, true)) { // markdown and links++ help
+                $router->attach('', '', static function (Map $router): void {
+                    $router->get(HelpMdAction::class, '/helpmd/{language}');
+                });
+            }
         }
 
         
@@ -461,12 +474,10 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                 'wthb_url'        => $this->getPref(self::PREF_WTHB_STD_LINK),
                 'dotranslate'     => $this->getPref(self::PREF_WTHB_TRANSLATE, true), // 0=off, 1=user defined, 2=on
                 'subcontext'      => $withSubcontext ? $help['subcontext'] : [],
-                'tocnsearch_url'  => route(HelpWthbAction::class, ['language' => I18N::languageTag()]),
-                'tocnsearch'      => $this->getPref(self::PREF_WTHB_TOCNSEARCH, true),
+                'tocnsearch_url'  => ($this->getPref(self::PREF_WTHB_TOCNSEARCH, true) ? route(HelpWthbAction::class, ['language' => I18N::languageTag()]) : ''),
                 'openInNewTab'    => $this->getPref(self::PREF_WTHB_OPEN_IN_NEW_TAB, true, true),
                 'splitNavlink'    => $this->getPref(self::PREF_WTHB_SPLIT_TOPMENU, true),
-                'wtcorehelp'      => $this->getPref(self::PREF_WTHB_WTCOREHELP, true),
-                'wtcorehelp_url'  => route('module', ['module' => $this->name(), 'action' => 'helpwtcore']),
+                'wtcorehelp_url'  => ($this->getPref(self::PREF_WTHB_WTCOREHELP, true) ? route(HelpWtCoreAction::class, ['language' => I18N::languageTag()]) : ''),
                 'linksJson'       => Utils::getWthbLinksJsonStringTranslated($linksJsonString),
                 'admin_url'       => (Auth::isAdmin() ? route('module', ['module' => $this->name(), 'action' => 'Admin']) : ''),
             ];
@@ -560,7 +571,6 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                 // --- TinyMDE -- only nessary on edit pages        
                 if (Utils::isEditPage($request)) {
                     $this->bundleShortcuts[] = 'mde';
-                    $this->docReadyJs .= 'window.LEhelp = "' . e(route('module', ['module' => $this->name(), 'action' => 'helpmd'])) . '";';
 
                     $options = [
                         'I18N'       => Utils::getJsI18N('mde', $this),    
@@ -571,6 +581,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                         'ext_fn'     => $this->getPref(self::PREF_MD_EXT_FN_ACTIVE, true),
                         'ext_strike' => $this->getPref(self::PREF_MD_EXT_STRIKE_ACTIVE, true),
                         'todo'       => version_compare(Webtrees::VERSION, '2.2.5', '>='),
+                        'helpmd_url' => route(HelpMdAction::class, ['language' => I18N::languageTag()]),
                     ];                    
                     $this->docReadyJs .= "LinkEnhMod.installMDE(" . json_encode($options) . ");";
                 }
@@ -953,66 +964,6 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         $response['vesta_common_enabled'] = $this->vesta_common_enabled;
 
         return $response;
-    }
-
-
-    /**
-     * Serve overview for webtrees core context help
-     *
-     * @param ServerRequestInterface $request
-     *
-     * @return ResponseInterface
-     */
-    public function getHelpWtCoreAction(ServerRequestInterface $request): ResponseInterface
-    {
-        $title = /*I18N: webtrees.pot */ I18N::translate('Help') 
-            . ' - ' 
-            . I18N::translate("webtrees help topics (included)");
-        $text = view($this->name() . '::help-wt-helptext');
-
-        $html = view('modals/help', [
-            'title' => $title,
-            'text' => $text,
-        ]);
-
-        return response($html);
-    }
-
-    /**
-     * Serve help page.
-     * Addressed by MDE command bar help icon (see tiny-mde-wt.js; url passed via window.LEhelp in headContent)
-     *
-     * @param ServerRequestInterface $request
-     *
-     * @return ResponseInterface
-     */
-    public function getHelpMdAction(ServerRequestInterface $request): ResponseInterface {
-        // resources/views/edit/shared-note.phtml doesn't include < ?= view('modals/ajax') ? >
-        // see also app/Http/RequestHandlers/HelpText.php
-        //$topic = $request->getAttribute('topic');
-        $title = /*I18N: webtrees.pot */ I18N::translate('Help') . ' - Markdown';
-        $mdsyntax = Utils::getMarkdownHelpExamples(
-            Validator::attributes($request)->string('base_url'),
-            $this->getPref(self::PREF_MD_EXT_ACTIVE, true),
-            $this->canActivateHighlightExtension(),
-            $this->getPref(self::PREF_MD_EXT_STRIKE_ACTIVE, true),
-            $this->getPref(self::PREF_MD_EXT_DL_ACTIVE, true),
-            $this->getPref(self::PREF_MD_EXT_FN_ACTIVE, true)
-        );
-        $text  = view($this->name() . '::help-md', [
-            'link_active'       => $this->getPref(self::PREF_LINKSPP_ACTIVE, true),
-            'mdimg_active'      => $this->getPref(self::PREF_MD_IMG_ACTIVE, true),
-            'mdsyntax'          => $mdsyntax,
-            'mdimg_css_class1'  => $this->getPref(self::PREF_MD_IMG_STDCLASS),
-            'mdimg_css_class2'  => $this->getPref(self::PREF_MD_IMG_TITLE_STDCLASS)
-        ]);
-
-        $html = view('modals/help', [
-            'title' => $title,
-            'text' => $text,
-        ]);
-
-        return response($html);        
     }
 
 

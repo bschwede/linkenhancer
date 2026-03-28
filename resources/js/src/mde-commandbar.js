@@ -6,21 +6,21 @@ export function createCommandBar(editor, cfg, showHelp) {
 
     let commands = [
 
-        { name: "bold", title: cfg.I18N.bold },
-        { name: "italic", title: cfg.I18N.italic },
+        { name: "bold", title: cfg.i18n('bold') },
+        { name: "italic", title: cfg.i18n('italic') },
 
         ...(cfg.ext && cfg.ext_strike
-            ? [{ name: "strikethrough", title: cfg.I18N.strikethrough }]
+            ? [{ name: "strikethrough", title: cfg.i18n('strikethrough') }]
             : []),
 
-        { name: "code", title: cfg.I18N["format as code"] },
+        { name: "code", title: cfg.i18n("format as code") },
     ];
 
     if (cfg.ext && cfg.ext_mark) { // HighlightExtension is shipped with CommonMark 2.8.0 and available in webtrees 2.2.5
         commands.push(
             {
                 name: 'highlight',
-                title: cfg.I18N['highlight'],
+                title: cfg.i18n('highlight'),
                 action: editor => {
                     if (editor.isInlineFormattingAllowed()) editor.wrapSelection("==", "==");
                 },
@@ -34,18 +34,18 @@ export function createCommandBar(editor, cfg, showHelp) {
     commands.push(
         "|",
 
-        { name: "h1", title: cfg.I18N["Level 1 heading"] },
-        { name: "ul", title: cfg.I18N["Bulleted list"] },
-        { name: "ol", title: cfg.I18N["Numbered list"] },
-        { name: "blockquote", title: cfg.I18N['quote'] },
+        { name: "h1", title: cfg.i18n("Level 1 heading") },
+        { name: "ul", title: cfg.i18n("Bulleted list") },
+        { name: "ol", title: cfg.i18n("Numbered list") },
+        { name: "blockquote", title: cfg.i18n('quote') },
 
         "|",
 
         {
             name: "insertLink",
-            title: cfg.I18N["Insert link"],
+            title: cfg.i18n("Insert link"),
             action: e => {
-                let dest = prompt(cfg.I18N["Link destination"])
+                let dest = prompt(cfg.i18n("Link destination"))
                 if (!dest && cfg.href) dest = "#@wt=i@@"
                 e.wrapSelection("[", `](${dest})`)
             }
@@ -53,7 +53,7 @@ export function createCommandBar(editor, cfg, showHelp) {
 
         {
             name: 'insertImage',
-            title: cfg.I18N['Insert image'],
+            title: cfg.i18n('Insert image'),
             action: editor => {
                 let dest = MdeCfg.src ? "#@id=@@" : '';
                 editor.wrapSelection('![', `](${dest})`);
@@ -61,10 +61,10 @@ export function createCommandBar(editor, cfg, showHelp) {
         },
         {
             name: 'insertTable',
-            title: cfg.I18N['Insert table'],
+            title: cfg.i18n('Insert table'),
             action: editor => {
                 const getTabRow = (cols, cellvalue) => ['', Array.from({ length: cols }, () => cellvalue).join('|'), ''].join('|');
-                let colsNrows = window.prompt(cfg.I18N['queryTableCnR']);
+                let colsNrows = window.prompt(cfg.i18n('queryTableCnR'));
                 if (!colsNrows) return;
                 let cols = 3;
                 let rows = 2;
@@ -83,10 +83,10 @@ export function createCommandBar(editor, cfg, showHelp) {
             //material-symbols:table-outline-sharp
             innerHTML: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M3 21V3h18v18zm8-6H5v4h6zm2 0v4h6v-4zm-2-2V9H5v4zm2 0h6V9h-6zM5 7h14V5H5z"/></svg>'
         },
-        { name: 'hr', title: cfg.I18N['hr'] },
+        { name: 'hr', title: cfg.i18n('hr') },
         '|',
-        { name: 'undo', title: cfg.I18N['Undo'] },
-        { name: 'redo', title: cfg.I18N['Redo'] },        
+        { name: 'undo', title: cfg.i18n('Undo') },
+        { name: 'redo', title: cfg.i18n('Redo') },        
     );
 
     if (showHelp) {
@@ -94,8 +94,8 @@ export function createCommandBar(editor, cfg, showHelp) {
             '|',
             {
                 name: 'modHelp',
-                title: cfg.I18N['Help'],
-                innerHTML: `<a href="#" data-bs-backdrop="static" data-bs-toggle="modal" data-bs-target="#le-ajax-modal" data-wt-href="${LEhelp}"><b style="padding:0 3px;">?</b></a>`,
+                title: cfg.i18n('Help'),
+                innerHTML: `<a href="#" data-bs-backdrop="static" data-bs-toggle="modal" data-bs-target="#le-ajax-modal" data-wt-href="${cfg.helpmd_url ?? ''}"><b style="padding:0 3px;">?</b></a>`,
             }
         );
     }

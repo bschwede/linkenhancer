@@ -28,12 +28,14 @@ namespace Schwendinger\Webtrees\Module\LinkEnhancer;
 
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Registry;
+use Fisharebest\Webtrees\Session;
 use Fisharebest\Webtrees\Validator;
 use Fisharebest\Webtrees\Module\AbstractModule;
 use Fisharebest\Webtrees\Schema\MigrationInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Illuminate\Database\Capsule\Manager as DB;
-
+use Exception;
 use PDOException;
 
 enum WebRessource
@@ -487,5 +489,37 @@ class LinkEnhancerUtils { // misc helper functions
             'DuckDuckGo' => 'https://duckduckgo.com/?q=site:wiki.genealogy.net+inurl:"Webtrees%20Handbuch"+',
             'Google' => 'https://www.google.com/search?q=site:wiki.genealogy.net+"webtrees+Handbuch"+AND+',
         ];
-    }    
+    }
+
+    /**
+     * checks if language set in request is the same as set in I18N. if they are different, sets request language in I18N.
+     * @param ServerRequestInterface $request
+     *
+     * @return string   previous language tag or empty string if the same
+     */    
+    public static function checkRequestLanguage(ServerRequestInterface $request):string {
+        $language_session = Session::get('language');
+        $language = Validator::attributes($request)->string('language', $language_session);
+        $prev_language_tag = '';
+        if (
+            preg_match('/^[a-z]{2}(?:-[a-zA-Z]{1,10})?$/', $language) // only accept codes like "de-DE"
+            && I18N::languageTag() !== $language
+        ) {
+            try {
+                $language_tag = I18N::languageTag();
+                I18N::init($language);
+                $prev_language_tag = $language_tag;
+            } catch (Exception $e) { // language code not found - silently use session language
+            }
+        }
+        return $prev_language_tag;
+    }
+
+    public static function getCachedResponse(string $content):ResponseInterface {
+        return response($content)
+            ->withHeader('Cache-Control', 'public, max-age=86400, immutable')
+            ->withHeader('Expires', gmdate('D, d M Y H:i:s', time() + 86400) . ' GMT') // force caching for Firefox
+            ->withHeader('ETag', md5($content));
+    }
+
 }

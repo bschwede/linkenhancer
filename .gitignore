@@ -8,3 +8,4 @@ util/wthb-toc
 resources/views/*.phtml.~*
 .vscode/*
 .venv/*
+resources/lang/*.php

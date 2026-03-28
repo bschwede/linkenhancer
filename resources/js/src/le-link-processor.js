@@ -42,7 +42,7 @@ export const processLinks = (
             )].sort(); // list unknown parameter keys once in lexicographical order
 
         let lastLink = null;
-        const diatitle = $("a.dropdown-item.menu-chart-tree[role=menuitem]").text().trim() || LEoptions.I18N['Interactive tree'];
+        const diatitle = document.querySelector("a.dropdown-item.menu-chart-tree[role=menuitem]")?.textContent?.trim() || LEoptions.i18n('Interactive tree');
 
         const fragment =
             document.createDocumentFragment()
@@ -73,7 +73,7 @@ export const processLinks = (
                             startlink,
                             lastLink, 
                             '',
-                            LEcfg[key].name + " - " + LEoptions.I18N['syntax error'] + "!", 
+                            LEcfg[key].name + " - " + LEoptions.i18n('syntax error') + "!", 
                             LEcfg[key].cname,
                             LEoptions,
                             fragment
@@ -177,7 +177,7 @@ export const processLinks = (
                 startlink,
                 lastLink,
                 '',
-                LEoptions.I18N["param error"] + ": " + unknownKeys.join(', '),
+                LEoptions.i18n("param error") + ": " + unknownKeys.join(', '),
                 '',
                 LEoptions,
                 fragment
