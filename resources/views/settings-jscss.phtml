@@ -1,0 +1,381 @@
+<?php
+
+declare(strict_types=1);
+
+use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
+use Fisharebest\Webtrees\View;
+
+$defaults_json = LinkEnhancerModule::getDefaultPrefsAsJson();
+?>
+<?php View::push('javascript') ?>
+<script>
+    function checkForm(message) {
+        let firstErrElem = null;
+
+        const checkJs = (elemId, isJson = true) => { // validate syntax of JavaScript object or JSON string
+            let elem = $(`#${elemId}`);
+            let code = elem && (elem.val() ?? false) ? elem.val().trim() : null;
+            let okay = false;
+            if (code) {
+                try {
+                    if (isJson) {
+                        const obj = JSON.parse(code);
+                    } else {
+                        eval(`() => { let a = ${code}}`);
+                        if (!code.match(/^\s*\{/)) {
+                            throw new Error("Code does not start with a { - seems not to be an object!");
+                        }
+                    }
+                    okay = true;
+                } catch (e) {
+                    if (isJson) {
+                        showError(elem, '<?= e(I18N::translate('JSON is invalid')) ?>', e);
+                    } else {
+                        showError(elem, '<?= e(I18N::translate('Javascript is invalid')) ?>', e);
+                    }
+                    firstErrElem ??= elem;
+                }
+            } else {
+                okay = true;
+            }
+            if (okay) { clearError(elemId) }
+
+        }
+
+        const clearError = (elemId) => {
+            let errElem = $(`#error-${elemId}`);
+            if (errElem.length > 0) {
+                $(errElem).remove();
+            }
+        }
+
+        const showError = (elem, msg, e) => {
+            let errId = 'error-' + elem.attr('id');
+            let errElem = $(`#${errId}`);
+            let errMsg = (e && (e.message ?? false) ? e.message : '');
+            console.warn('showError e', e)
+            let html = `<div id="${errId}" class="error">${msg}<br><code>${errMsg}</code></div>`;
+            if (errElem.length == 1) {
+                $(errElem).html(html);
+            } else {
+                $(elem).after(html);
+            }
+        }
+
+        checkJs('<?= LinkEnhancerModule::PREF_LINKSPP_JS; ?>', false);
+        checkJs('<?= LinkEnhancerModule::PREF_WTHB_LINKS_JSON; ?>', true);
+        checkJs('<?= LinkEnhancerModule::PREF_HOME_LINK_JSON; ?>', true);
+
+        if (firstErrElem) {
+            $(firstErrElem).get(0).scrollIntoView({ behavior: 'smooth' });
+            return false;
+        }
+        return true;
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', event => {
+            event.preventDefault();
+            let id = link.hash.substring(1);
+            let elem = (id === 'top' ? document.documentElement : document.querySelector(`[id="${id}"], [name="${id}"]`));
+            if (elem) {
+                elem.scrollIntoView({ behavior: 'smooth' });
+            }
+            return false;
+        });
+    });
+
+    function toggleSectionByRadio(secSelector, radioGroupname, cname, indexes) {
+        let section = $(secSelector);
+        if (!section || section.length == 0) {
+            return;
+        }
+
+        for (const idx of indexes) {
+            if ($(`#${radioGroupname}-${idx}:checked`).length == 1) { // radio is selected - disable
+                $(section).addClass(cname);
+                return;
+            }
+        }
+        $(section).removeClass(cname);
+    }
+
+    function toggleSectionBySelectSingle(secId, selectName, cname, checkvalues, disableifincluded = true) {
+        let section = $(`#${secId}`);
+        let selectvalue = $(`select[name="${selectName}"]`).val();
+        checkvalues = Array.isArray(checkvalues) ? checkvalues : [checkvalues];
+        invalues = checkvalues.includes(selectvalue);
+        if (disableifincluded && invalues || !disableifincluded && !invalues) {
+            $(section).addClass(cname);
+        } else {
+            $(section).removeClass(cname);
+        }
+    }
+
+    const getDefaultSettings = () => {
+        return <?= $defaults_json ?>;
+    };
+
+    function getSettings() {
+        let cfg = {};
+        Object.keys(getDefaultSettings()).forEach((key) => {
+            let value = getCtrlValue(key);
+            if (value !== null) {
+                cfg[key] = value;
+            }
+        });
+        return cfg;
+    }
+
+    function setSettings(cfg) {
+        // is cfg object?
+        if (!cfg || typeof cfg !== 'object' || Array.isArray(cfg)) {
+            console.warn('setSettings: cfg muss ein Objekt sein');
+            return false;
+        }
+
+        // only process known keys from defaults
+        Object.keys(getDefaultSettings()).forEach((key) => {
+            const value = cfg[key];
+            if (value !== undefined) {
+                setCtrlValue(key, value);
+            }
+        });
+        return true;
+    }
+
+    function setCtrlValue(key, value) {
+        const ctrls = document.querySelectorAll(`[name="${key}"]`);
+        if (ctrls.length === 0) return false;
+
+        const tagName = ctrls[0].tagName;
+        const type = ctrls[0].type?.toLowerCase();
+
+        // Radio
+        if (type === 'radio') {
+            Array.from(ctrls).forEach(radio => {
+                radio.checked = (radio.value == value);
+            });
+            ctrls[0].dispatchEvent(new Event('change', { bubbles: true }));
+            return true;
+        }
+
+        // Checkbox: true/false/Array
+        if (type === 'checkbox') {
+            const values = Array.isArray(value) ? value : [value];
+            Array.from(ctrls).forEach(cb => {
+                cb.checked = values.includes(cb.value);
+            });
+            ctrls[0].dispatchEvent(new Event('change', { bubbles: true }));
+            return true;
+        }
+
+        // Text, Email, Number, Password, etc.
+        if (tagName === 'INPUT' && ['text', 'email', 'number', 'password', 'hidden'].includes(type)) {
+            Array.from(ctrls).forEach(input => input.value = value);
+            ctrls[0].dispatchEvent(new Event('input', { bubbles: true }));
+            return true;
+        }
+
+        // Textarea
+        if (tagName === 'TEXTAREA') {
+            Array.from(ctrls).forEach(textarea => textarea.value = value);
+            ctrls[0].dispatchEvent(new Event('input', { bubbles: true }));
+            return true;
+        }
+
+        // Select (single/multi)
+        if (tagName === 'SELECT') {
+            const select = ctrls[0];
+            const values = Array.isArray(value) ? value : [value];
+
+            Array.from(select.options).forEach(option => {
+                option.selected = values.includes(option.value);
+            });
+
+            select.dispatchEvent(new Event('change', { bubbles: true }));
+            return true;
+        }
+
+        return false;  // unknown type
+    }
+
+    function getCtrlValue(key) {
+        const ctrls = document.querySelectorAll(`[name="${key}"]`);
+        if (ctrls.length === 0) return null;
+
+        const tagName = ctrls[0].tagName;
+        const type = ctrls[0].type?.toLowerCase();
+
+        // radio: first checked value
+        if (type === 'radio') {
+            const checked = Array.from(ctrls).find(r => r.checked);
+            return checked ? checked.value : null;
+        }
+
+        // checkbox: array of all checked values
+        if (type === 'checkbox') {
+            const values = Array.from(ctrls)
+                .filter(cb => cb.checked)
+                .map(cb => cb.value);
+            return values.length ? values : null;
+        }
+
+        // text inputs (text, email, number, password, hidden, etc.)
+        if (tagName === 'INPUT' &&
+            ['text', 'email', 'number', 'password', 'hidden', 'search', 'tel', 'url'].includes(type)) {
+            return ctrls[0].value || '';
+        }
+
+        // textarea
+        if (tagName === 'TEXTAREA') {
+            return ctrls[0].value || '';
+        }
+
+        // select: Array if multiple else single value
+        if (tagName === 'SELECT') {
+            const select = ctrls[0];
+            if (select.multiple) {
+                const values = Array.from(select.selectedOptions).map(opt => opt.value);
+                return values.length ? values : null;
+            }
+            return select.value || '';
+        }
+
+        return null;  // unknown type
+    }
+
+    $(() => {
+        [ // pref name, element selector, [indexes of checkbox selected for disable state=standard is 0], disable class name=standard 'disabled-w-text'
+            ['<?= LinkEnhancerModule::PREF_LINKSPP_ACTIVE; ?>', '#options1'],
+            ['<?= LinkEnhancerModule::PREF_MD_ACTIVE; ?>', '#options2'],
+            ['<?= LinkEnhancerModule::PREF_MD_IMG_ACTIVE; ?>', '#options2_1'],
+            ['<?= LinkEnhancerModule::PREF_MD_TD_H_CTRL_TYPE; ?>', '#options2_td_h'],
+            ['<?= LinkEnhancerModule::PREF_MD_EXT_ACTIVE; ?>', '#options2_2'],
+            ['<?= LinkEnhancerModule::PREF_MD_EXT_FN_ACTIVE; ?>', '#options2_2_fn'],
+            ['<?= LinkEnhancerModule::PREF_MD_EXT_TOC_ACTIVE; ?>', '#options2_2_toc'],
+            ['<?= LinkEnhancerModule::PREF_WTHB_ACTIVE; ?>', '#options3'],
+            ['<?= LinkEnhancerModule::PREF_HOME_LINK_TYPE; ?>', '#options4'],
+            ['<?= LinkEnhancerModule::PREF_OPEN_IN_NEW_TAB; ?>', '.openinnewtab', [0, 2], 'disabled'],
+            ['<?= LinkEnhancerModule::PREF_WTHB_LINKS_TYPE; ?>', '#wthb-links-json', [0, 2], 'disabled'],
+        ].forEach((sec) => {
+            [secName, secSelector, indexes, cname] = sec;
+            indexes = (indexes === null || !Array.isArray(indexes) ? [0] : indexes);
+            cname = (cname ?? 'disabled-w-text');
+            ((name, selector, idx, cname) => {
+                $(`input[type=radio][name='${name}']`).on("change", () => { toggleSectionByRadio(selector, name, cname, idx) });
+            })(secName, secSelector, indexes, cname);
+            toggleSectionByRadio(secSelector, secName, cname, indexes);
+        });
+
+        [['<?= LinkEnhancerModule::PREF_MD_EXT_TOC_POS; ?>', 'pos-is-placeholder', ['placeholder'], false],
+        ['<?= LinkEnhancerModule::PREF_MD_EXT_TOC_NORMALIZE; ?>', 'md-toc-style', ['flat-inline'], true]
+        ].forEach((elem) => {
+            [selname, secId, cvalues, dii] = elem;
+            ((selname, secId, cvalues, dii = true) => {
+                $(`select[name='${selname}']`).on("change", () => { toggleSectionBySelectSingle(secId, selname, 'disabled', cvalues, dii) });
+            })(selname, secId, cvalues, dii);
+            toggleSectionBySelectSingle(secId, selname, 'disabled', cvalues, dii);
+        });
+
+        const settings = getSettings();
+        $('.settings-reset').on('click', (e) => { setSettings(settings); });
+        $('.settings-reset-to-default').on('click', (e) => {
+            const defaults = {};
+            const config = getDefaultSettings();
+            Object.keys(config).forEach(key => {
+                defaults[key] = config[key].default;
+            });
+            setSettings(defaults);
+        });
+        $('.settings-json-export').on('click', (e) => {
+            const json = JSON.stringify(getSettings());
+            prompt("<?= I18N::translate('Settings') ?> - <?= I18N::translate('JSON export') ?>", json);
+        });
+        $('.settings-json-import').on('click', (e) => {
+            const json = prompt("<?= I18N::translate('Settings') ?> - <?= I18N::translate('JSON import') ?>", '');
+            if (json === null || json === '') return;
+            try {
+                const import_settings = JSON.parse(json);
+                setSettings(import_settings);
+            } catch (e) {
+                alert("Error on JSON parsing");
+                console.error(e);
+            }
+        });
+
+    });
+</script>
+<?php View::endpush() ?>
+
+<?php View::push('styles') ?>
+<style>
+    .error {
+        color: #d00;
+        font-weight: bold;
+    }
+
+    hr.div {
+        border-top: 2px solid black;
+    }
+
+    hr.subdiv {
+        width: 96%;
+        margin: 0.5em 2% 0.5em 2% !important;
+        border: 1px silver solid !important;
+    }
+
+    h4.subdiv {
+        border-bottom: 1px solid black;
+        margin-top: 1.2em;
+    }
+
+    .sub {
+        padding-left: 3.0em !important;
+    }
+
+    .linkenhancer {
+        padding-bottom: 60vh;
+    }
+
+    .treelist {
+        max-height: 6.0em;
+        overflow: auto;
+    }
+
+    .alert-warning {
+        border-left: .25em solid #d29922;
+        padding: 0.5rem 1rem;
+    }
+
+    .alert-title {
+        display: flex;
+        font-weight: 500;
+        align-items: center;
+        line-height: 1;
+        color: #d29922;
+    }
+
+    .octicon {
+        display: inline-block;
+        overflow: visible !important;
+        vertical-align: text-bottom;
+        fill: currentColor;
+    }
+
+    .disabled {
+        display: none;
+    }
+
+    .disabled-w-text {
+        max-height: 2.0em;
+        overflow: clip;
+    }
+
+    .disabled-w-text::before {
+        content: "<?= I18N::translate('Enable for more options') ?>...";
+        color: gray;
+    }
+</style>
+<?php View::endpush() ?>

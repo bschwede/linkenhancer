@@ -1,0 +1,46 @@
+<?php
+
+declare(strict_types=1);
+
+use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
+
+/**
+ * @var array<string>           $prefs                  list of chapter objects
+ * @var string                  $jscode_linkpp          javascript code snippet from js-file, csv-export...
+ */
+?>
+        <div class="row">
+<section class="openinnewtab">
+            <!-- links++ open in new tab --><?php $prefId = LinkEnhancerModule::PREF_LINKSPP_OPEN_IN_NEW_TAB; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                        <?= /*I18N: see also fancy-research-links */ I18N::translate('Open links in a new tab') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                    </div>
+                </div>
+            </fieldset>
+</section>
+
+            <!-- links++ javascript --><?php $prefId = LinkEnhancerModule::PREF_LINKSPP_JS; ?>
+            <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
+                <?= I18N::translate('JavaScript for additional link targets') . ' (' . /*I18N: webtrees.pot */ I18N::translate('optional') . ')' ?>
+            </label>
+            <div class="col-sm-9 wt-page-options-value mt-2">
+                <textarea id="<?= $prefId ?>" name="<?= $prefId ?>" class="form-control font-monospace" dir="ltr" rows="5"><?= e($prefs[$prefId]) ?></textarea>
+                <div class="form-text">
+                    <p><?= /*I18N: Enhanced Links js */ I18N::translate('The JavaScript object overwrites and supplements the predefined settings, which are taken from the following code excerpt and can also serve as a reference point for adjustments.') ?></p>
+                    <textarea class="form-control font-monospace" dir="ltr" rows="5" disabled readonly wrap="off" style="font-size:0.9em; color: gray;"><?= e($jscode_linkpp) ?></textarea>
+                    <p><?= /*I18N: Enhanced Links js */ I18N::translate('Any CSS rules required are best added via the “CSS and JS” module.') ?>
+                       <?= /*I18N: Enhanced Links js */ I18N::translate('Only the definition of the icon as a background image is actually needed - referencing as data: URL.') ?> <?= I18N::translate('See also') ?>: <a href="https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Schemes/data">mdn web docs - data: URLs</a>
+                       <br />
+                       <code>.icon-whatever { background-image: url(...) }</code>
+                    </p>
+                </div>
+            </div>
+
+        </div>

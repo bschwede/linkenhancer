@@ -522,4 +522,17 @@ class LinkEnhancerUtils { // misc helper functions
             ->withHeader('ETag', md5($content));
     }
 
+
+    public static function insertNoYesInlineRadiobuttons(string $id, string $value): string
+    {
+        return view('components/radios-inline', [
+            'id' => $id,
+            'name' => $id,
+            'options' => [
+                /*I18N: webtrees.pot */ I18N::translate('no'),
+                /*I18N: webtrees.pot */ I18N::translate('yes')
+            ],
+            'selected' => (int) $value
+        ]);
+    }    
 }
