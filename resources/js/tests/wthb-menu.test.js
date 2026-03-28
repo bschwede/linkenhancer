@@ -23,8 +23,6 @@ describe("wthb-menu.js", () => {
         },
         wthb_url: "https://wiki.genealogy.net/Webtrees Handbuch",
         wiki_url: "https://wiki.genealogy.net",
-        tocnsearch: false,
-        wtcorehelp: false,
         admin_url: 'https://site/admin'
     };
 
@@ -142,9 +140,27 @@ describe("wthb-menu.js", () => {
         expect(link).to.not.equal(null);
     });
 
+    it("inserts additional external link with user i18n", () => {
+        const user_i18n = "External Link userdefined";
+        cfg.lang = 'de';
+        cfg.linksJson = JSON.stringify([
+            {
+                title: 'External Link',
+                url: 'https://external',
+                i18n: { de: user_i18n }
+            }
+        ]);
+        const html = buildMenuHtml(cfg, "https://site");
+        insertMenu(document, html);
+
+        const link = document.querySelector(`.menu-wthb-external`);
+
+        expect(link.textContent).to.equal(user_i18n);
+    });    
+
     
     it("inserts wt core help menu item", () => {
-        cfg.wtcorehelp = true;
+        cfg.wtcorehelp_url = 'http://localhost/helpcore/de';
 
         const html = buildMenuHtml(cfg, "https://site");
 

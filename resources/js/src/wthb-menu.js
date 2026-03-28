@@ -65,6 +65,8 @@ export const buildMenuHtml = (cfg, locationHref) => {
             let linkshtml = '';
             links.forEach((link) => {
                 let title = link.title ?? null;
+                let user_i18n = link?.i18n?.[cfg.lang];
+                title = (title && user_i18n ? user_i18n : title);
                 let url = link.url ?? null;
                 let cname = (link.class ?? false ? ` ${link.class}` : '');
                 let target = (link.self ?? false ? '_self' : '_blank');
