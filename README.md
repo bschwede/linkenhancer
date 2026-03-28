@@ -73,6 +73,7 @@ Included are the following **predefined external targets** (the parameter keys a
   - [GEDBAS - Genealogical Database - collected personal data](https://gedbas.genealogy.net/?lang=en) *(gedbas)*
   - [Data Entry System (DES) - Casualty lists](https://des.genealogy.net/?lang=en) *(vl)*
 
+Each parameter key can be specified multiple times – but you shouldn’t overdo it for the sake of clarity.
 
 **Syntax:**
 
@@ -104,28 +105,24 @@ After a lot of theory: How does it looks like in webtrees?! In the upper part of
       url: 'https://www.familysearch.org/tree/person/details/',
       cname: 'icon-fsft'
   },
-  "osm": {
-      name: 'OpenStreetMap',
-      url: (id, title) => { 
+  "wp": {
+      name: 'Wikipedia',
+      url: (id, title) => {
           let parts = id.split('/');
-          if (parts.length < 3) {
-              title = title + ' - ' + I18N['syntax error'] + "!";
+          if (parts.length < 2) {
+              title = title + " - " + options.i18n('syntax error') + "!";
               return { url: '', title };
           }
-          let map = parts.slice(0, 3).join('/');
-          let urlsearch = '';
-          if (parts.length > 3 && parts[3].trim()) {
-              if (parts[3].trim() === '!') {
-                  urlsearch = `?mlat=${parts[1]}&mlon=${parts[2]}`;
-              } else {
-                  urlsearch = parts.slice(3).join('/');
-              }
-          }
-          return {url:`https://www.openstreetmap.org/${urlsearch}#map=${map}`, title};
+          let subdomain = parts[0];
+          let article = parts.slice(1).join('/');
+          title = `${title} - ` + decodeURIComponent(article) + ` (${subdomain})`;
+          return { url: `https://${subdomain}.wikipedia.org/wiki/${article}`, title };
       },
-      cname: 'icon-osm',
+      cname: 'icon-wp',
       help: [
-          { n: I18N['osm-help1'], e: '17/53.619095/10.037395' },
+          { n: options.i18n('wp-help1'), e: 'de/Webtrees' },
+          { n: options.i18n('wp-help2'), e: 'en/Webtrees' },
+          { n: options.i18n('wp-help3'), e: 'other-subdomain/Webtrees' },
       ]
   }
 }
@@ -141,7 +138,7 @@ Now some **explanation** for the used properties in the code snippet above (as a
 * *cname* = [CSS](https://en.wikipedia.org/wiki/CSS) class name(s) whitespace separated
 * *help* = optional array of objects `[{n:'', e:''},..]` to illustrate the use of a non standard target (where the url-property is a function) by examples (in e), provided with explanatory text (in n). This information is listed in the markdown help.
 
-`I18N` is a JavaScript object passed through from this module.
+`options.i18n` is a function passed through from this module in order to provide translated strings.
 
 Any CSS rules required are best added via the [“CSS and JS” module](https://wiki.genealogy.net/Webtrees_Handbuch/Anleitung_f%C3%BCr_Administratoren/Module#CSS_und_JS). Only the definition of the icon (size 30 x 30 pixels is sufficient) as a background image is actually needed - referencing as data: URL (see also: [mdn web docs - data: URLs](https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Schemes/data)).\
 For example: `.icon-whatever { background-image: url(...) }`
