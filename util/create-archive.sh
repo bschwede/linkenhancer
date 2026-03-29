@@ -21,6 +21,7 @@ util/wt-patch/src/*/replacements.sed
 util/wt-patch/patch.log
 util/create-archive.sh
 util/update-po-files.sh
+util/convert-po2mo.sh
 resources/*/index-*.*
 resources/js/src
 resources/js/tests
@@ -28,6 +29,7 @@ resources/img
 resources/css/icons
 resources/views/*.phtml.~*
 resources/lang/*.po*
+resources/lang/*.mo
 util/wthb-toc
 .weblate
 requirements.txt

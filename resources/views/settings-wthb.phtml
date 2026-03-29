@@ -1,0 +1,321 @@
+<?php
+
+declare(strict_types=1);
+
+use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\DB;
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils As Utils;
+use Fisharebest\Webtrees\Registry;
+
+/**
+ * @var array<string>           $prefs                  list of chapter objects
+ * @var array<string>           $links                  links for: csvexport
+ * @var array<int>              $tablerows              [total, assigned]
+ * @var bool                    $vesta_common_enabled
+ */
+
+$link_cmm = $links['csvexportcmm'] ?? '';
+?>
+        <div class="row">
+
+            <div class="row">
+                <div class="col-form-label col-sm-3 wt-page-options-label">
+                    <?= I18N::translate('Top menu') ?>
+                </div>
+                <div class="col-sm-9 wt-page-options-value mt-2">
+                    <div class="form-text">
+                        <p>
+                            <?= I18N::translate('An entry is added to the top menu, which provides access to a context-sensitive help link for the current page.') ?>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- prepend faicon to wthb-link --><?php $prefId = LinkEnhancerModule::PREF_WTHB_FAICON; ?>
+            <fieldset class="form-group mb-1">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
+                        <i class="fa-solid fa-circle-question"></i> <?= I18N::translate('Precede the top menu link with an icon') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- split top menu item --><?php $prefId = LinkEnhancerModule::PREF_WTHB_SPLIT_TOPMENU; ?>
+            <fieldset class="form-group mb-1">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
+                        <?= I18N::translate('Split top menu item') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                        <div class="form-text">
+                            <p>
+                                <?= I18N::translate('This option controls whether the help link is located in the submenu or can be clicked directly, opening the submenu via a separate link.') ?>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>           
+
+            <!-- full-text search and toc --><?php $prefId = LinkEnhancerModule::PREF_WTHB_TOCNSEARCH; ?>
+            <fieldset class="form-group mb-1">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
+                        <?= I18N::translate("Full-text search") . ' / ' . I18N::translate('Table of contents') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- webtrees help topics (included) --><?php $prefId = LinkEnhancerModule::PREF_WTHB_WTCOREHELP; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
+                        <?= I18N::translate("webtrees help topics (included)") ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- wthb links activation type --><?php $prefId = LinkEnhancerModule::PREF_WTHB_LINKS_TYPE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
+                        <?= I18N::translate('Additional help links') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= view('components/radios-inline', [
+                            'id' => $prefId,
+                            'name' => $prefId,
+                            'options' => [
+                                /*I18N: webtrees.pot */ I18N::translate('no'),
+                                /*I18N: */ I18N::translate('user defined'),
+                                /*I18N: webtrees.pot */ I18N::translate('yes')
+                            ],
+                            'selected' => (int) $prefs[$prefId]
+                        ]) ?>
+
+<section id="wthb-links-json">          
+                        <!-- wthb links json --><?php $prefId = LinkEnhancerModule::PREF_WTHB_LINKS_JSON; ?>
+                        <div class="row">
+                            <div class="col-sm-12 wt-page-options-value mt-2">
+                            <div class="form-text">JSON</div>
+                            <textarea id="<?= $prefId ?>" name="<?= $prefId ?>" class="form-control font-monospace" dir="ltr"
+                                    rows="5"><?= e($prefs[$prefId]) ?></textarea>
+                                <div class="form-text">
+                                    <p><?= I18N::translate('Example') ?>:
+                                        <textarea class="form-control font-monospace" dir="ltr" rows="5" disabled readonly wrap="off" style="font-size:0.9em; color: gray;"><?= e(LinkEnhancerModule::STD_WTHB_LINKS_JSON) ?></textarea>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+</section>
+
+                    </div>
+                </div>
+            </fieldset>
+
+
+            <!-- support subcontext wthb-links --><?php $prefId = LinkEnhancerModule::PREF_WTHB_SUBCONTEXT; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                        <?= I18N::translate('Help link for subcontext topics') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- translate wthb-link --><?php $prefId = LinkEnhancerModule::PREF_WTHB_TRANSLATE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                        <?= /*I18N: wthb link setting option */ I18N::translate('Open webtrees manual URL with Google Translate?') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= view('components/radios-inline', [
+                            'id' => $prefId,
+                            'name' => $prefId,
+                            'options' => [
+                                /*I18N: webtrees.pot */ I18N::translate('no'),
+                                /*I18N: wthb translate */ I18N::translate('user defined'),
+                                /*I18N: webtrees.pot */ I18N::translate('yes')
+                            ],
+                            'selected' => (int) $prefs[$prefId]
+                        ]) ?>
+                    </div>
+                </div>
+            </fieldset>
+
+    <section class="openinnewtab">
+            <!-- wthb open in new tab --><?php $prefId = LinkEnhancerModule::PREF_WTHB_OPEN_IN_NEW_TAB; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                        <?= /*I18N: see also fancy-research-links */ I18N::translate('Open links in a new tab') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                    </div>
+                </div>
+            </fieldset>
+    </section>
+            
+            <div class="row">
+                <div class="col-form-label col-sm-3 wt-page-options-label">
+                    <?= I18N::translate('Help link in the admin backend') ?>
+                </div>
+                <div class="col-sm-9 wt-page-options-value">
+                    <div class="form-text">
+                        <p><?= I18N::translate('Vesta modules override the admin layout view and provide a way to insert code through custom modules.') ?><br>
+                        <?= I18N::translate('As they are frequently used, this module first attempts this approach.') ?>
+                        </p>
+                        <p>vesta_common <?= ($vesta_common_enabled ? "✅" : "❌") ?></p>
+                    </div>                    
+                </div>
+            </div>
+
+
+            <!-- fallback admin view patch --><?php $prefId = LinkEnhancerModule::PREF_WTHB_ADMINVIEWPATCH; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
+                        <?= I18N::translate('Fallback patch for admin layout view') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                        <div class="form-text">
+                        </div>                    
+                    </div>
+                </div>
+            </fieldset>
+
+            <hr class="subdiv" />
+            
+            <!-- genwiki std link --><?php $prefId = LinkEnhancerModule::PREF_GENWIKI_LINK; ?>
+            <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
+                <?= I18N::translate('Link to GenWiki') ?>
+            </label>
+            <div class="col-sm-9 wt-page-options-value">
+                <input class="form-control" id="<?= $prefId ?>" name="<?= $prefId ?>" type="text"
+                    value="<?= e($prefs[$prefId]) ?>">
+                <div class="form-text">
+                    <p><?= /*I18N: WTHB Link */ I18N::translate('This is the base link that is combined with the relative context links from the database table.') ?>
+                    </p>
+                </div>
+            </div>
+        
+            <!-- wthb std link --><?php $prefId = LinkEnhancerModule::PREF_WTHB_STD_LINK; ?>
+            <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
+                <?= I18N::translate('Standard Link to webtrees manual') ?>
+            </label>
+            <div class="col-sm-9 wt-page-options-value">
+                <input class="form-control" id="<?= $prefId ?>" name="<?= $prefId ?>" type="text"
+                    value="<?= e($prefs[$prefId]) ?>">
+                <div class="form-text">
+                    <p><?= /*I18N: WTHB Link */ I18N::translate('This fallback link is used, when no specific context link was defined.') ?>
+                    </p>
+                </div>
+            </div>
+
+            <hr class="subdiv" />
+
+            <!-- wthb mapping data table -->
+            <div class="col-sm-3 col-form-label wt-page-options-label">
+                <?= I18N::translate('Data table') ?>
+            </div>
+            <div class="col-sm-9 wt-page-options-value">
+                <div class="form-text">
+                    <p><?= /*I18N: WTHB Link table */ I18N::translate('The context is established by assigning the routes used in webtrees to the corresponding sections in the manual.') ?>
+                        <br>
+                        <?= /*I18N: WTHB Link table */ I18N::translate('The data is stored in the database table') ?>:
+                        <code><?= DB::prefix(LinkEnhancerModule::HELP_TABLE) ?></code>
+                        <em>(<strong><?= /*I18N: WTHB Link table rows */ I18N::translate('Data rows') ?>:</strong>
+                            <?= /*I18N: WTHB Link table rows assigned/total */ I18N::translate('%s of %s assigned', $tablerows['assigned'] ?? 0, $tablerows['total'] ?? 0) ?>)</em>
+                    </p>
+                </div>                    
+                <div class="row mt-1">
+                    <div class="col-5 d-flex align-items-center justify-content-start">
+                        <a class="btn btn-secondary"
+                            href="<?= e($links['routeimport']) ?>"><?= I18N::translate('Import registered routes') ?></a>
+                    </div>
+                    <div class="col-2 d-flex align-items-center justify-content-start" title="<?= e(I18N::translate('truncate table before import routes or csv file')) ?>">
+                        <input type="checkbox" class="form-check-input me-1" name="table-truncate" id="table-truncate" value="1">
+                        <label class="form-check-label ms-1 mb-0" for="table-truncate"> <?= I18N::translate('Table truncate') ?></label>
+                    </div>
+                    <div class="col-5 d-flex align-items-center justify-content-end">
+                        <a class="btn btn-secondary"
+                            href="<?= e($links['resetroutes']) ?>"><?= I18N::translate('Reset routes to delivery status') ?></a>
+                    </div>
+
+                </div>
+                <div class="row mt-3 mb-1">
+                    <div class="col-5 d-flex align-items-center justify-content-start">
+                        <button type="submit" class="btn btn-secondary" formaction="<?= e($links['csvimport']) ?>">
+                            <?= I18N::translate('CSV-Import') ?>
+                        </button>
+                    </div>
+                    <div class="col-2 d-flex align-items-center justify-content-center">
+                        <label for="csv-separator" class="me-1 mb-0"> <?= I18N::translate('Separator') ?></label>
+                        <input class="form-control form-control-sm text-center" type="text" id="csv-separator" name="csv-separator" size="3" maxlength="3" value=";" required>
+                    </div>
+                    <div class="col-5 d-flex align-items-center justify-content-end">
+                    <?php if ($link_cmm !== ''): ?>
+                        <div class="dropdown btn-group">
+                    <?php endif; ?>
+                            <button type="submit" class="btn btn-secondary" formaction="<?= e($links['csvexport']) ?>">
+                                <?= I18N::translate('CSV-Export') ?>
+                            </button>
+                    <?php if ($link_cmm !== ''): ?>
+                            <button class="btn btn-secondary dropdown-toggle dropdown-toggle-split" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="ms-2" href="<?= e($links['csvexportcmm']) ?>" title="Custom Module Manager configuration">CMM-Config</a>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                    </div>
+                </div>
+                <div class="row mt-1 mb-1">
+                    <label for="csv-file" class="col-sm-3 mt-2">
+                        <?= I18N::translate('CSV import file') ?>
+                    </label>
+                
+                    <div class="col-sm-9">
+                        <input id="csv-file" type="file" name="csv-file" class="form-control">
+                    </div>
+                </div>
+                <div class="row mt-1 mb-3">
+                    <label for="encoding" class="col-sm-3 mt-2">
+                        <?= /*I18N: webtrees.pot */ I18N::translate('Character encoding') ?>
+                    </label>
+                    
+                    <div class="col-sm-9">
+                        <?= view('components/select', ['name' => 'encoding', 'selected' => '', 'options' => ['' => /*I18N: webtrees.pot */I18N::translate('automatic')] + Registry::encodingFactory()->list()]) ?>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- auto update to wthb-link --><?php $prefId = LinkEnhancerModule::PREF_WTHB_UPDATE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
+                        <?= I18N::translate('Automatically refresh data table when module is updated') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                    </div>
+                </div>
+            </fieldset>
+        </div>

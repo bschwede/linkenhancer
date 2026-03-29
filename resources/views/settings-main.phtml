@@ -1,0 +1,105 @@
+<?php
+
+declare(strict_types=1);
+
+use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
+
+/**
+ * @var array<string>           $prefs                  list of chapter objects
+ * @var array                   $mdcfg                  [int total, int activated, array<string> trees_wo_md]
+ */
+
+$trees_w_md = join('</li><li>', $mdcfg['trees_w_md']);
+$trees_w_md_cnt = count($mdcfg['trees_w_md']);
+$trees_w_md = $trees_w_md ? "<ol class=\"treelist\"><li>{$trees_w_md}</li></ol>" : '';
+
+$trees_w_text = join('</li><li>', $mdcfg['trees_w_text']);
+$trees_w_text_cnt = count($mdcfg['trees_w_text']);
+$trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li></ol>" : '';
+
+?>
+        <div class="row">
+            <!-- activate link++ --><?php $prefId = LinkEnhancerModule::PREF_LINKSPP_ACTIVE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label">[1]
+                        <a href="#section1"><?= I18N::translate('Activate enhanced links?') ?></a>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                        <div class="form-text">
+                            <p><?= /*I18N: Enhanced Links */ I18N::translate('This function is implemented via Javascript and only affects links in notes and HTML blocks on the client side.') ?>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- md active --><?php $prefId = LinkEnhancerModule::PREF_MD_ACTIVE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                        [2] <a href="#section2"><?= I18N::translate('Markdown enhancements') ?></a>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                        <div class="form-text">
+                            <p><?= /*I18N: MD img - sentence 1 */ I18N::translate('Only works in notes that are formatted with Markdown.') ?>
+                            </p>
+                            <p style="color: gray;"><strong><?= /*I18N: MDE */ I18N::translate("Precondition: Tree preference '%s' need to be set to markdown.", /*I18N: webtrees.pot */ I18N::translate('Format text and notes')) ?></strong>
+                            <table style="color: gray;">
+                              <thead><tr>
+                                <th style="background-color: lightgreen; min-width:150px; text-align: center;">markdown <small>(<?= $trees_w_md_cnt ?>)</small></th>
+                                <th style="background-color: rgba(236, 74, 34, 0.52); min-width:150px; text-align: center;">text <small>(<?= $trees_w_text_cnt ?>)</small></th>
+                              </tr></thead>
+                              <tbody><tr>
+                                <td><?= $trees_w_md ?></td>
+                                <td><?= $trees_w_text ?></td>
+                            </tr></tbody>
+                            </table>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+           
+            <!-- show wthb-link --><?php $prefId = LinkEnhancerModule::PREF_WTHB_ACTIVE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                        [3] <a href="#section3"><?= I18N::translate('Show Help Link') ?></a>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                        <div class="form-text">
+                            <p>
+                                <?= /*I18N: */ I18N::translate("Context sensitive help links to the german webtrees manual can be activated in the small menu at the top of the page and for subcontext topics on the page.") ?>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- home link --><?php $prefId = LinkEnhancerModule::PREF_HOME_LINK_TYPE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                        [4] <a href="#section4"><?= I18N::translate('Site title as home link') ?></a>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= view('components/radios-inline', [
+                            'id' => $prefId,
+                            'name' => $prefId,
+                            'options' => [
+                                /*I18N: webtrees.pot */ I18N::translate('no'),
+                                /*I18N: home link */ I18N::translate('home page of the current tree'),
+                                /*I18N: home link */ I18N::translate('my page of the registered user')
+                            ],
+                            'selected' => (int) $prefs[$prefId]
+                        ]) ?>
+                    </div>
+                </div>
+            </fieldset>
+        </div>

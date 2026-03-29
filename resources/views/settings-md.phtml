@@ -1,0 +1,366 @@
+<?php
+
+declare(strict_types=1);
+
+use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Factories\CustomMarkdownFactory;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Factories\ExtensionSettingOption;
+use Fisharebest\Webtrees\Webtrees;
+
+/**
+ * @var array<string>           $prefs                  list of chapter objects
+ */
+
+function prefixKeysToValues(array $data, string $separator = ': '): array
+{
+    foreach ($data as $key => &$value) {
+        $value = $key . $separator . $value;
+    }
+    unset($value);
+    return $data;
+}
+
+?>
+        <div class="row">
+            <!-- md img active --><?php $prefId = LinkEnhancerModule::PREF_MD_IMG_ACTIVE; ?>
+            <fieldset class="form-group mb-1">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                        <?= I18N::translate('Activate markdown image tweak?') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                    </div>
+                </div>
+
+<section id="options2_1">
+    <section class="openinnewtab">
+                <!-- md img open in new tab --><?php $prefId = LinkEnhancerModule::PREF_MD_IMG_OPEN_IN_NEW_TAB; ?>
+                <fieldset class="form-group mb-3">
+                    <div class="row">
+                        <legend class="col-form-label col-sm-3 wt-page-options-label">
+                            <?= /*I18N: see also fancy-research-links */ I18N::translate('Open links in a new tab') ?>
+                        </legend>
+                        <div class="col-sm-9 wt-page-options-value mt-2">
+                            <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                        </div>
+                    </div>
+                </fieldset>
+    </section>
+                <div class="row">
+                    <div class="col-sm-3 col-form-label wt-page-options-label">
+                        <?= I18N::translate('CSS class name(s)') ?>
+                    </div>
+
+                </div>                
+                <div class="row">
+                    <!-- md img stdclass --><?php $prefId = LinkEnhancerModule::PREF_MD_IMG_STDCLASS; ?>
+                    <label class="col-sm-3 col-form-label wt-page-options-label sub" for="<?= $prefId ?>">
+                        <?= I18N::translate('Markdown image container') ?>
+                    </label>
+                    <div class="col-sm-3 wt-page-options-value mt-2">
+                        <input class="form-control" id="<?= $prefId ?>" name="<?= $prefId ?>" type="text" value="<?= e($prefs[$prefId]) ?>">
+                    </div>
+                    <div class="col-sm-6 mt-2 form-text">
+                        <?= I18N::translate('Example') ?>:&nbsp;&nbsp; <code>md-img</code>
+                    </div>
+
+                    <!-- md img title stdclass --><?php $prefId = LinkEnhancerModule::PREF_MD_IMG_TITLE_STDCLASS; ?>
+                    <label class="col-sm-3 col-form-label wt-page-options-label sub" for="<?= $prefId ?>">
+                        <?= I18N::translate('Markdown image title container') ?>
+                    </label>
+                    <div class="col-sm-3 wt-page-options-value mt-2">
+                        <input class="form-control" id="<?= $prefId ?>" name="<?= $prefId ?>" type="text"
+                            value="<?= e($prefs[$prefId]) ?>">
+                    </div>
+                    <div class="col-sm-6 mt-2 form-text">
+                        <?= I18N::translate('Example') ?>:&nbsp;&nbsp; <code>md-img-title</code>
+                    </div>
+                </div>
+</section>
+            </fieldset>
+
+            <hr class="subdiv" />
+
+            <!-- mde active --><?php $prefId = LinkEnhancerModule::PREF_MDE_ACTIVE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                        <?= I18N::translate('Markdown editor for note textareas') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                        <div class="form-text">
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <hr class="subdiv" />
+
+            <!-- table cell height control --><?php $prefId = LinkEnhancerModule::PREF_MD_TD_H_CTRL_TYPE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                            <?= I18N::translate('Table cell height control') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= view('components/radios-inline', [
+                            'id' => $prefId,
+                            'name' => $prefId,
+                            'options' => [
+                                /*I18N: webtrees.pot */ I18N::translate('no'),
+                                /*I18N: */ I18N::translate('available') . ' (' . I18N::translate('disabled') . ')',
+                                /*I18N: */ I18N::translate('available') . ' (' . I18N::translate('enabled') . ')',
+                            ],
+                            'selected' => (int) $prefs[$prefId]
+                        ]) ?>
+                        <div class="form-text">
+                            <?= I18N::translate('Toggle checkbox in order to set max-height and make longer content scrollable') ?>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+<section id="options2_td_h">
+            <!-- table cell height checkbox visiblity --><?php $prefId = LinkEnhancerModule::PREF_MD_TD_H_CB_VISIBLE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
+                        <?= I18N::translate('Checkbox always visible') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                        <div class="form-text">
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+</section>
+
+            <hr class="subdiv" />
+
+            <!-- md extensions active --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_ACTIVE; ?>
+            <fieldset class="form-group mb-4">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                        <?= I18N::translate('Markdown extensions') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                        <div class="alert-warning mt-2 mb-2">
+                            <p class="alert-title">
+                                <svg class="octicon octicon-alert me-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>
+                                <?= I18N::translate('Warning'); ?>
+                            </p>
+                            <p class="form-text">
+                            <?= I18N::translate('Please keep in mind when using this extensions, you are deviating from the smallest common markdown dialect set.'); ?>
+                            <?= I18N::translate('If the library used to render markdown in HTML needs to be changed for any reason, there is a possibility that not all of the extended markup used here will be supported.'); ?>
+                            </p>
+                        </div>
+                        <div class="form-text">
+                            <?= I18N::translate('See also') ?>: 
+                            <a href="https://github.com/bschwede/linkenhancer/issues/32#issuecomment-3761130124">#32</a> | 
+                            <a href="https://commonmark.thephpleague.com/2.x/extensions/overview/">https://commonmark.thephpleague.com/2.x/extensions/overview/</a>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+<section id="options2_2">
+            <!-- md extension - striketrough --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_STRIKE_ACTIVE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
+                        <?= I18N::translate('Strikethrough') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                        <div class="form-text">
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- md extension - definition list --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_DL_ACTIVE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
+                        <?= I18N::translate('Description list') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                        <div class="form-text">
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <?php if (version_compare(Webtrees::VERSION, '2.2.5', '>=')): ?>
+            <!-- md extension - highlight >= wt2.2.5 --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_MARK_ACTIVE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
+                        <?= I18N::translate('Highlight') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                        <div class="form-text">
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <?php endif; ?>
+
+            <!-- md extension - footnotes --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_FN_ACTIVE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
+                        <?= I18N::translate('Footnotes') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                        <div class="form-text">
+                        </div>
+
+<section id="options2_2_fn">
+                        <!-- md extension - footnotes add hr --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_FN_ADD_HR; ?>
+                        <div class="row mt-2 mb-1">
+                            <div class="col-3 d-flex align-items-center justify-content-start">
+                                <legend class="col-form-label wt-page-options-label">
+                                    <?= I18N::translate('Add hr-tag at the beginning of the footnote container') ?>
+                                </legend>
+                            </div>
+                            <div class="col-2 d-flex  justify-content-start mt-2">
+                                <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                            </div>
+                            <div class="col-4 d-flex align-items-start justify-content-start form-text">
+                            </div>
+                        </div>
+
+                        <!-- md extension - footnotes backref --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_FN_BACKREF_CHAR; ?>
+                        <div class="row mt-2 mb-1">
+                            <div class="col-3 d-flex align-items-center justify-content-start mt-1">
+                                <label for="<?= e($prefId) ?>" class="me-1 mb-0"> <?= I18N::translate('Backreference symbol') ?></label>
+                            </div>
+                            <div class="col-1 d-flex  justify-content-start">
+                                <input class="form-control text-center" type="text" id="<?= e($prefId) ?>" name="<?= e($prefId) ?>"
+                                    size="3" maxlength="3" value="<?= e($prefs[$prefId]) ?>">                                
+                            </div>
+                            <div class="col-5 d-flex align-items-start justify-content-start form-text">
+                                <?= I18N::translate('Example') ?>:&nbsp;&nbsp; <code>↩</code>
+                            </div>
+                        </div>
+</section>
+                    </div>
+
+                </div>
+
+            </fieldset>
+
+            <!-- md extension - table of contents --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_TOC_ACTIVE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
+                        <?= I18N::translate('Table of contents') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                        <div class="form-text">
+                        </div>
+
+<section id="options2_2_toc">                       
+                        <!-- md extension - toc normalize --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_TOC_NORMALIZE; ?>
+                        <div class="row mt-2 mb-1">
+                            <div class="col-3 d-flex align-items-center justify-content-start mt-1">
+                                <label for="<?= e($prefId) ?>" class="me-1 mb-0"> <?= I18N::translate('Normalize') ?></label>
+                            </div>
+                            <div class="col-9 d-flex  justify-content-start">
+                                <?= view('components/select', [
+                                    'name' => $prefId, 
+                                    'selected' => $prefs[$prefId], 
+                                    'options' => prefixKeysToValues(CustomMarkdownFactory::getExtensionSettingOptions(ExtensionSettingOption::TOC_NORMALIZE))
+                                ]) ?>
+                            </div>
+                        </div>
+                        
+                        <!-- md extension - toc style --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_TOC_STYLE; ?>
+<section id="md-toc-style">
+                        <div class="row mt-2 mb-1">
+                            <div class="col-3 d-flex align-items-center justify-content-start mt-1">
+                                <label for="<?= e($prefId) ?>" class="me-1 mb-0"> <?= I18N::translate('Style') ?></label>
+                            </div>
+                            <div class="col-9 d-flex  justify-content-start">
+                                <?= view('components/select', [
+                                    'name' => $prefId, 
+                                    'selected' => $prefs[$prefId], 
+                                    'options' => prefixKeysToValues(CustomMarkdownFactory::getExtensionSettingOptions(ExtensionSettingOption::TOC_STYLE))
+                                ]) ?>
+                            </div>
+                        </div>
+</section>
+
+                        <!-- md extension - toc position --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_TOC_POS; ?>
+                        <div class="row mt-2 mb-1">
+                            <div class="col-3 d-flex align-items-center justify-content-start mt-1">
+                                <label for="<?= e($prefId) ?>" class="me-1 mb-0"> <?= I18N::translate('Position') ?></label>
+                            </div>
+                            <div class="col-9 d-flex  justify-content-start">
+                                <?= view('components/select', [
+                                    'name' => $prefId, 
+                                    'selected' => $prefs[$prefId], 
+                                    'options' => prefixKeysToValues(CustomMarkdownFactory::getExtensionSettingOptions(ExtensionSettingOption::TOC_POSITION))
+                                ]) ?>
+                            </div>
+                        </div>
+
+                        <!-- md extension - toc placeholder --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_TOC_PLACEHOLDER; ?>
+<section id="pos-is-placeholder">
+                        <div class="row mt-2 mb-1">
+                            <div class="col-3 d-flex align-items-center justify-content-start mt-1 sub">
+                                <label for="<?= e($prefId) ?>" class="me-1 mb-0"> <?= I18N::translate('Placeholder') ?></label>
+                            </div>
+                            <div class="col-3 d-flex  justify-content-start">
+                                <input class="form-control" type="text" id="<?= e($prefId) ?>" name="<?= e($prefId) ?>" value="<?= e($prefs[$prefId]) ?>">
+                            </div>
+                            <div class="col-5 d-flex align-items-start justify-content-start form-text">
+                                <?= I18N::translate('Example') ?>:&nbsp;&nbsp; <code>[TOC]</code>
+                            </div>
+                        </div>
+</section>
+
+                        <!-- md extension - toc css class name --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_TOC_CSSCLASS; ?>
+                        <div class="row mt-2 mb-1">
+                            <div class="col-3 d-flex align-items-center justify-content-start mt-1">
+                                <label for="<?= e($prefId) ?>" class="me-1 mb-0"><?= I18N::translate('CSS class name(s)') ?></label>
+                            </div>
+                            <div class="col-3 d-flex  justify-content-start">
+                                <input class="form-control" type="text" id="<?= e($prefId) ?>" name="<?= e($prefId) ?>" value="<?= e($prefs[$prefId]) ?>">
+                            </div>
+                            <div class="col-5 d-flex align-items-start justify-content-start form-text">
+                                <?= I18N::translate('Example') ?>:&nbsp;&nbsp; <code>float-end</code>
+                            </div>
+                        </div>
+
+                        <!-- md extension - toc permalink --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_TOC_PERMALINK_CHAR; ?>
+                        <div class="row mt-2 mb-1">
+                            <div class="col-3 d-flex align-items-center justify-content-start mt-1">
+                                <label for="<?= e($prefId) ?>" class="me-1 mb-0"> <?= I18N::translate('Permalink symbol') ?></label>
+                            </div>
+                            <div class="col-1 d-flex  justify-content-start">
+                                <input class="form-control text-center" type="text" id="<?= e($prefId) ?>" name="<?= e($prefId) ?>"
+                                    size="3" maxlength="3" value="<?= e($prefs[$prefId]) ?>">                                
+                            </div>
+                            <div class="col-2 d-flex align-items-start justify-content-start form-text"></div>
+                            <div class="col-5 d-flex align-items-start justify-content-start form-text">
+                                <?= I18N::translate('Example') ?>:&nbsp;&nbsp; <code>¶ #</code>
+                            </div>
+                        </div>                        
+
+</section>
+                    </div>
+                </div>
+            </fieldset>
+</section>
+        </div>
