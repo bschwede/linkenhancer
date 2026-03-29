@@ -36,6 +36,10 @@ import * as fs from 'node:fs/promises';
 import child_process from "node:child_process";
 import { globSync } from 'glob';
 import merge from 'merge-stream';
+
+//po2php
+import gettextParser from "gettext-parser";
+import jsPhpData from "js-php-data";
 //import readline from "node:readline/promises";
 //import process from "process";
 
@@ -205,6 +209,63 @@ const createmo = () => {
     return execPromise("./util/convert-po2mo.sh");
 };
 
+const findPoFiles = async (srcPath) => {
+    const poFiles = [];
+
+    async function walk(dir) {
+        const entries = await fs.readdir(dir, { withFileTypes: true });
+        for (const entry of entries) {
+            const fullPath = path.join(dir, entry.name);
+            if (entry.isDirectory()) {
+                await walk(fullPath);
+            } else if (entry.isFile() && entry.name.endsWith(".po")) {
+                poFiles.push(fullPath);
+            }
+        }
+    }
+
+    await walk(srcPath);
+    return poFiles;
+}
+
+const po2php = async () => {
+    const srcPath = "./resources/lang";
+
+    const poFiles = await findPoFiles(srcPath);
+
+    for (const file of poFiles) {
+        try {
+            const content = await fs.readFile(file);
+            const po = gettextParser.po.parse(content);
+
+            const flatArray = {};
+            for (const context in po.translations) {
+                for (const msgid in po.translations[context]) {
+                    const msg = po.translations[context][msgid];
+                    if (msg.msgstr?.length > 0 && msg.msgstr[0]) {
+                        flatArray[msgid] = msg.msgstr[0];
+                    }
+                }
+            }
+
+            if (flatArray['']) delete flatArray['']; // po file metadata is stored in this property - not necessary
+            const phpArrayExpr = jsPhpData(flatArray, {
+                bracketArrays: true,
+                indentation: 0,
+            });
+
+            const phpFile = file.replace(/\.po$/, ".php");
+            const phpSource = `<?php\n\nreturn ${phpArrayExpr};\n`;
+
+            await fs.writeFile(phpFile, phpSource);
+
+            log(`✅ ${file} → ${phpFile}`);
+        } catch (err) {
+            log.error(`❌ Error processing ${file}:`, err.message);
+        }
+    }
+}
+
 //--- Utils
 const hashFile = async (filepath) => {
     const hashValue = hashFileSync(filepath, { algorithm: 'sha256' });
@@ -277,8 +338,8 @@ const devbuild = async () => {
 };
 const bumpversion = gulp.series(gitCheckClean, bumpVersion, syncVersion);
 
-const archive = gulp.series(build, createmo, createarchive);
+const archive = gulp.series(build, po2php, createarchive);
 const syncversion = syncVersion
 
 
-export { build, bumpversion, devbuild, syncversion, updatepo, createmo, archive };
+export { build, bumpversion, devbuild, syncversion, updatepo, createmo, po2php, archive };
