@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-24 15:11+0100\n"
+"POT-Creation-Date: 2026-03-29 20:46+0200\n"
 "PO-Revision-Date: 2026-03-24 16:26+0000\n"
 "Last-Translator: Iberni2 <iberni2@noreply.codeberg.org>\n"
 "Language-Team: Spanish <https://translate.codeberg.org/projects/linkenhancer/"
@@ -375,6 +375,56 @@ msgstr "El enlace de inicio JSON con reglas CSS, parece no ser válido."
 msgid "Import registered routes"
 msgstr "Importar rutas registradas"
 
+msgid "Activate enhanced links?"
+msgstr "¿Activar enlaces mejorados?"
+
+#. I18N: Enhanced Links
+msgid ""
+"This function is implemented via Javascript and only affects links in notes "
+"and HTML blocks on the client side."
+msgstr ""
+"Esta función se implementa mediante JavaScript y solamente afecta a los "
+"enlaces de las notas y a los bloques del área del cliente."
+
+#. I18N: Settings - section title
+msgid "Markdown enhancements"
+msgstr "Mejoras en Markdown"
+
+#. I18N: MD img - sentence 1
+msgid "Only works in notes that are formatted with Markdown."
+msgstr "Solamente funciona en notas formateadas con Markdown."
+
+#. I18N: MDE
+#, php-format
+msgid "Precondition: Tree preference '%s' need to be set to markdown."
+msgstr ""
+"Condición previa: La preferencia del árbol '%s' debe estar establecida en "
+"Markown."
+
+msgid "Show Help Link"
+msgstr "Mostrar enlace de ayuda"
+
+#. I18N:
+msgid ""
+"Context sensitive help links to the german webtrees manual can be activated "
+"in the small menu at the top of the page and for subcontext topics on the "
+"page."
+msgstr ""
+"Los enlaces de ayuda contextual al manual alemán de webtrees se pueden "
+"activar en el pequeño menú situado en la parte superior de la página y para "
+"temas de subcontexto en la página."
+
+msgid "Site title as home link"
+msgstr "Título del sitio web como enlace de inicio"
+
+#. I18N: home link
+msgid "home page of the current tree"
+msgstr "Página de inicio del árbol actual"
+
+#. I18N: home link
+msgid "my page of the registered user"
+msgstr "mi página de usuario registrado"
+
 msgid ""
 "Webtrees uses a CommonMark implementation and supports a subset of the markup"
 msgstr ""
@@ -544,152 +594,12 @@ msgstr ""
 "No parece haber una copia local del índice disponible. Visite directamente "
 "el sitio web."
 
-#. I18N: wthb link user setting prologue
-msgid ""
-"Please select whether you want to access the help page directly or via a "
-"translation service."
-msgstr ""
-"Seleccione si desea acceder a la página de ayuda directamente o a través."
-
-#. I18N: wthb link setting option
-msgid "Open webtrees manual URL with Google Translate?"
-msgstr "¿Abrir la URL del manual de webtrees con Google Translate?"
-
-#. I18N: wthb link user setting epilogue 1
-msgid "This setting can be adjusted at any time."
-msgstr "Esta configuración puede ajustarse en cualquier momento"
-
-msgid "reset to default"
-msgstr "restablecer a los valores predeterminados"
-
-msgid "JSON export"
-msgstr "Exportación JSON"
-
-msgid "JSON import"
-msgstr "Importación JSON"
-
-#. I18N: Settings - prologue sentence 1
-msgid ""
-"The main purpose of this module is to make links to data records stored in "
-"family trees more convenient."
-msgstr ""
-"El objetivo principal de este módulo es hacer más cómodos los enlaces a los "
-"registros almacenados en árboles genealógicos."
-
-#. I18N: Settings - prologue sentence 2
-msgid ""
-"This avoids having to store fully qualified links, which impairs the "
-"portability of Gedcom data."
-msgstr ""
-"Esto evita tener que almacenar enlaces totalmente cualificados, lo que "
-"perjudica la portabilidad de los datos GEDCOM."
-
-#. I18N: Settings - prologue sentence 4
-msgid ""
-"The option of embedding the images already inserted in the family tree in "
-"the notes rounds off this approach."
-msgstr ""
-"La opción de incrustar las imágenes ya insertadas en el árbol genealógico "
-"enlas notas, completan este procedimiento."
-
-#. I18N: Settings - section title
-msgid "Activate Support"
-msgstr "Activar asistencia"
-
-msgid "Activate enhanced links?"
-msgstr "¿Activar enlaces mejorados?"
-
-#. I18N: Enhanced Links
-msgid ""
-"This function is implemented via Javascript and only affects links in notes "
-"and HTML blocks on the client side."
-msgstr ""
-"Esta función se implementa mediante JavaScript y solamente afecta a los "
-"enlaces de las notas y a los bloques del área del cliente."
-
-#. I18N: Settings - section title
-msgid "Markdown enhancements"
-msgstr "Mejoras en Markdown"
-
-#. I18N: MD img - sentence 1
-msgid "Only works in notes that are formatted with Markdown."
-msgstr "Solamente funciona en notas formateadas con Markdown."
-
-#. I18N: MDE
-#, php-format
-msgid "Precondition: Tree preference '%s' need to be set to markdown."
-msgstr ""
-"Condición previa: La preferencia del árbol '%s' debe estar establecida en "
-"Markown."
-
-msgid "Show Help Link"
-msgstr "Mostrar enlace de ayuda"
-
-#. I18N:
-msgid ""
-"Context sensitive help links to the german webtrees manual can be activated "
-"in the small menu at the top of the page and for subcontext topics on the "
-"page."
-msgstr ""
-"Los enlaces de ayuda contextual al manual alemán de webtrees se pueden "
-"activar en el pequeño menú situado en la parte superior de la página y para "
-"temas de subcontexto en la página."
-
-msgid "Site title as home link"
-msgstr "Título del sitio web como enlace de inicio"
-
-#. I18N: home link
-msgid "home page of the current tree"
-msgstr "Página de inicio del árbol actual"
-
-#. I18N: home link
-msgid "my page of the registered user"
-msgstr "mi página de usuario registrado"
-
-#. I18N: Settings - section title
-msgid "More options"
-msgstr "Más opciones"
-
-msgid "Output of debug information on the JS console"
-msgstr "Salida de información de depuración en la consola JS"
+msgid "Activate markdown image tweak?"
+msgstr "¿Activar el ajuste de imagen Markdown?"
 
 #. I18N: see also fancy-research-links
 msgid "Open links in a new tab"
 msgstr "Abrir enlaces en una nueva pestaña"
-
-#. I18N:
-#. I18N: wthb translate
-msgid "user defined"
-msgstr "sin definir"
-
-msgid "JavaScript for additional link targets"
-msgstr "JavaScrip para enlaces adicionales"
-
-#. I18N: Enhanced Links js
-msgid ""
-"The JavaScript object overwrites and supplements the predefined settings, "
-"which are taken from the following code excerpt and can also serve as a "
-"reference point for adjustments."
-msgstr ""
-"El complemento JavaScrip sobrescribe y complementa los ajustes predefinidos "
-"que se extraen del siguiente extracto de código y que también puede servir "
-"como punto de referencia para los ajustes."
-
-#. I18N: Enhanced Links js
-msgid "Any CSS rules required are best added via the “CSS and JS” module."
-msgstr ""
-"las reglas CSS necesarias se añaden mejor a través del módulo «CCS y JS»."
-
-#. I18N: Enhanced Links js
-msgid ""
-"Only the definition of the icon as a background image is actually needed - "
-"referencing as data: URL."
-msgstr ""
-"En realidad, solamente se necesita la definición del icono como imagen de "
-"fondo haciendo referencia como datos: URL."
-
-msgid "Activate markdown image tweak?"
-msgstr "¿Activar el ajuste de imagen Markdown?"
 
 #. I18N: Home link js
 msgid "Example"
@@ -772,6 +682,62 @@ msgstr "Marcador de posición"
 msgid "Permalink symbol"
 msgstr "Símbolo de enlace permanente"
 
+msgid "JSON is invalid"
+msgstr "JSON no es válido"
+
+msgid "Javascript is invalid"
+msgstr "JavaScript no es válido"
+
+msgid "JSON export"
+msgstr "Exportación JSON"
+
+msgid "JSON import"
+msgstr "Importación JSON"
+
+msgid "Enable for more options"
+msgstr "Habilitar para más opciones"
+
+msgid "JavaScript for additional link targets"
+msgstr "JavaScrip para enlaces adicionales"
+
+#. I18N: Enhanced Links js
+msgid ""
+"The JavaScript object overwrites and supplements the predefined settings, "
+"which are taken from the following code excerpt and can also serve as a "
+"reference point for adjustments."
+msgstr ""
+"El complemento JavaScrip sobrescribe y complementa los ajustes predefinidos "
+"que se extraen del siguiente extracto de código y que también puede servir "
+"como punto de referencia para los ajustes."
+
+#. I18N: Enhanced Links js
+msgid "Any CSS rules required are best added via the “CSS and JS” module."
+msgstr ""
+"las reglas CSS necesarias se añaden mejor a través del módulo «CCS y JS»."
+
+#. I18N: Enhanced Links js
+msgid ""
+"Only the definition of the icon as a background image is actually needed - "
+"referencing as data: URL."
+msgstr ""
+"En realidad, solamente se necesita la definición del icono como imagen de "
+"fondo haciendo referencia como datos: URL."
+
+#. I18N: wthb link user setting prologue
+msgid ""
+"Please select whether you want to access the help page directly or via a "
+"translation service."
+msgstr ""
+"Seleccione si desea acceder a la página de ayuda directamente o a través."
+
+#. I18N: wthb link setting option
+msgid "Open webtrees manual URL with Google Translate?"
+msgstr "¿Abrir la URL del manual de webtrees con Google Translate?"
+
+#. I18N: wthb link user setting epilogue 1
+msgid "This setting can be adjusted at any time."
+msgstr "Esta configuración puede ajustarse en cualquier momento"
+
 msgid "Top menu"
 msgstr "Menú superior"
 
@@ -798,6 +764,12 @@ msgstr ""
 
 msgid "Additional help links"
 msgstr "Enlaces de ayuda adicionales"
+
+#. I18N:
+#. I18N: wthb translate
+#. I18N:
+msgid "user defined"
+msgstr "sin definir"
 
 msgid "Help link for subcontext topics"
 msgstr "Enlace de ayuda para temas secundarios"
@@ -886,6 +858,44 @@ msgid "Automatically refresh data table when module is updated"
 msgstr ""
 "Actualizar automáticamente la tabla de datos cuando se actualiza el módulo"
 
+msgid "reset to default"
+msgstr "restablecer a los valores predeterminados"
+
+#. I18N: Settings - prologue sentence 1
+msgid ""
+"The main purpose of this module is to make links to data records stored in "
+"family trees more convenient."
+msgstr ""
+"El objetivo principal de este módulo es hacer más cómodos los enlaces a los "
+"registros almacenados en árboles genealógicos."
+
+#. I18N: Settings - prologue sentence 2
+msgid ""
+"This avoids having to store fully qualified links, which impairs the "
+"portability of Gedcom data."
+msgstr ""
+"Esto evita tener que almacenar enlaces totalmente cualificados, lo que "
+"perjudica la portabilidad de los datos GEDCOM."
+
+#. I18N: Settings - prologue sentence 4
+msgid ""
+"The option of embedding the images already inserted in the family tree in "
+"the notes rounds off this approach."
+msgstr ""
+"La opción de incrustar las imágenes ya insertadas en el árbol genealógico "
+"enlas notas, completan este procedimiento."
+
+#. I18N: Settings - section title
+msgid "Activate Support"
+msgstr "Activar asistencia"
+
+#. I18N: Settings - section title
+msgid "More options"
+msgstr "Más opciones"
+
+msgid "Output of debug information on the JS console"
+msgstr "Salida de información de depuración en la consola JS"
+
 #. I18N: Settings - section title
 msgid "Home link"
 msgstr "Enlace de inicio"
@@ -904,15 +914,6 @@ msgstr ""
 #. I18N: Home link js
 msgid "Standard CSS class name"
 msgstr "Nombre de la clase CSS estándar"
-
-msgid "JSON is invalid"
-msgstr "JSON no es válido"
-
-msgid "Javascript is invalid"
-msgstr "JavaScript no es válido"
-
-msgid "Enable for more options"
-msgstr "Habilitar para más opciones"
 
 #~ msgid "unordered, bulleted list"
 #~ msgstr "lista sin ordenar, con viñetas"
