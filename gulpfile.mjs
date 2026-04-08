@@ -5,8 +5,6 @@ import pkgTiny from './node_modules/tiny-markdown-editor/package.json' with { ty
 import gulp from "gulp";
 
 import size from "gulp-size";
-import postcss from "gulp-postcss";
-import concat from 'gulp-concat';
 import terser from "gulp-terser";
 import file from "gulp-file";
 // sourcemaps don't work as expected - because of media firewall for assets
@@ -22,9 +20,6 @@ import { babel as rollupBabel } from "@rollup/plugin-babel";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 
-import autoprefixer from "autoprefixer";
-import cssnano from "cssnano";
-import postcssUrl from 'postcss-url';
 
 import { glob } from 'glob';
 import path from "path";
@@ -38,6 +33,8 @@ import { globSync } from 'glob';
 import merge from 'merge-stream';
 
 import { convertPo2php } from "./resources/js/src/build/convert-po2php.js";
+import { getCssSubTasks } from "./resources/js/src/build/css-files.js";
+
 
 //import readline from "node:readline/promises";
 //import process from "process";
@@ -129,38 +126,7 @@ const jsIndex = () => {
 const jscripts = gulp.parallel(jsIndex, jsExtractLeConfig);
 
 //--- CSS
-const cssPipe = (inputFile, outputInfix) => 
-    gulp
-        .src(inputFile)
-        .pipe(postcss([autoprefixer()]))
-        .pipe(postcss([cssnano(), postcssUrl({
-            url: 'inline',
-            maxSize: 20,
-            fallback: 'copy'
-        })]))
-        .pipe(concat(`bundle-${outputInfix}.min.css`))
-        .pipe(gulp.dest("./resources/css"))
-        .pipe(size({ showFiles: true }));
-
-const cssMde = () => cssPipe(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/index-mde.css"], 'mde');
-const cssMdeLe = () => cssPipe(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/index-mde.css", "./resources/css/index-le.css"], 'le-mde');
-const cssMdeWthb = () => cssPipe(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/index-mde.css", "./resources/css/index-wthb.css"], 'mde-wthb');
-const cssMdeLeWthb = () => cssPipe(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/index-mde.css", "./resources/css/index-le.css", "./resources/css/index-wthb.css"], 'le-mde-wthb');
-const cssLe = () => cssPipe(["./resources/css/index-le.css"], 'le');
-const cssLeWthb = () => cssPipe(["./resources/css/index-le.css", "./resources/css/index-wthb.css"], 'le-wthb');
-const cssWthb = () => cssPipe(["./resources/css/index-wthb.css"], 'wthb');
-const cssImg = () => cssPipe(["./resources/css/index-img.css"], 'img');
-const cssImgLe = () => cssPipe(["./resources/css/index-le.css", "./resources/css/index-img.css"], 'img-le');
-const cssImgLeWthb = () => cssPipe(["./resources/css/index-le.css", "./resources/css/index-img.css", "./resources/css/index-wthb.css"], 'img-le-wthb');
-const cssImgWthb = () => cssPipe(["./resources/css/index-img.css", "./resources/css/index-wthb.css"], 'img-wthb');
-const cssImgMde = () => cssPipe(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/index-mde.css", "./resources/css/index-img.css"], 'img-mde');
-const cssImgMdeWthb = () => cssPipe(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/index-mde.css", "./resources/css/index-img.css", "./resources/css/index-wthb.css"], 'img-mde-wthb');
-const cssImgMdeLe = () => cssPipe(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/index-mde.css", "./resources/css/index-le.css", "./resources/css/index-img.css"], 'img-le-mde');
-const cssImgMdeLeWthb = () => cssPipe(["./node_modules/tiny-markdown-editor/dist/tiny-mde.min.css", "./resources/css/index-mde.css", "./resources/css/index-le.css", "./resources/css/index-img.css", "./resources/css/index-wthb.css"], 'img-le-mde-wthb');
-const css = gulp.parallel(
-    cssMde, cssMdeLe, cssLe, cssImg, cssImgLe, cssImgMde, cssImgMdeLe, cssImgMdeLeWthb, 
-    cssWthb, cssLeWthb, cssImgWthb, cssImgLeWthb, cssMdeLeWthb, cssMdeWthb, cssImgMdeWthb
-);
+const css = gulp.parallel(...getCssSubTasks());
 
 
 //--- Version
