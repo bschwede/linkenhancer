@@ -1,255 +1,95 @@
-import pkg from './package.json' with { type: 'json' }; 
+/**
+ * gulp/build file for webtrees custom module linkenhancer
+ */
+import gulp from "gulp"
 
-import pkgTiny from './node_modules/tiny-markdown-editor/package.json' with { type: 'json' };
+import { deleteAsync as del } from "del"
 
-import gulp from "gulp";
+import {
+        jsExtractLeConfig,
+        jsIndex,
+        toggleDevMode
+    } from "./resources/js/src/build/js-files.js"
+import { getCssSubTasks } from "./resources/js/src/build/css-files.js"
+import { convertPo2php } from "./resources/js/src/build/convert-po2php.js"
+import { 
+        bumpVersion,
+        execPromise,
+        gitCheckClean,
+        syncVersion
+    } from './resources/js/src/build/utils.js'
 
-import size from "gulp-size";
-import terser from "gulp-terser";
-import file from "gulp-file";
-// sourcemaps don't work as expected - because of media firewall for assets
-// map-file must be inline or maybe in public folder, but tests were not successful 
-//import sourcemaps from 'gulp-sourcemaps'; 
-import { hashFileSync } from 'hasha';
-import source from "vinyl-source-stream";
-import buffer from "vinyl-buffer";
-import log from 'fancy-log';
-
-import rollupStream from "@rollup/stream";
-import { babel as rollupBabel } from "@rollup/plugin-babel";
-import { nodeResolve } from "@rollup/plugin-node-resolve";
-import commonjs from "@rollup/plugin-commonjs";
-
-
-import { glob } from 'glob';
-import path from "path";
-
-import { deleteAsync as del } from "del";
-
-import * as fs from 'node:fs/promises';
-
-import child_process from "node:child_process";
-import { globSync } from 'glob';
-import merge from 'merge-stream';
-
-import { convertPo2php } from "./resources/js/src/build/convert-po2php.js";
-import { getCssSubTasks } from "./resources/js/src/build/css-files.js";
-
-
+//import log from 'fancy-log';
+//import pkg from './package.json' with { type: 'json' }; 
+//import pkgTiny from './node_modules/tiny-markdown-editor/package.json' with { type: 'json' };
 //import readline from "node:readline/promises";
 //import process from "process";
 
 //--- common consts
 const VERSION_TXT = 'latest-version.txt';
 const VERSION_PHP = 'src/LinkEnhancerModule.php';
-let DEV = false; // bundling js for dev or production
 
-//--- Rollup - javascript
-const rollupConfig = (inputFile, sourcemaps = false, format ='iife') => {
-    return {
-        input: inputFile,
-        output: {
-            format: format,
-            name: "LinkEnhMod",
-            sourcemap: sourcemaps,
-        },
-        //treeshake: false,
-        plugins: [
-            //eslint({ throwOnError: true }),
-            rollupBabel({
-                babelHelpers: "bundled",
-                extensions: [".js"],
-                exclude: "node_modules/**"
-            }),
-            nodeResolve({
-                extensions: [".js", ".ts"],
-                moduleDirectories: ['node_modules'],
-            }),
-            commonjs(),
-        ],
-    };
-};
+// tasks:
+//--- bundling js and css files
+const jscripts = gulp.parallel(
+    jsIndex,
+    jsExtractLeConfig
+)
 
-const getTerserCfg = () => DEV ? { compress: false, mangle: false, format: { beautify: true} } : {};
+const css = gulp.parallel(...getCssSubTasks())
 
-const jsPipe = (inputFile, outputInfix, format ='iife') =>
-    rollupStream(rollupConfig(inputFile, false, format))
-        .pipe(source(`bundle-${outputInfix}.min.js`))
-        .pipe(buffer())
-        //.pipe(sourcemaps.init())
-        .pipe(terser(getTerserCfg()))
-        //.pipe(sourcemaps.write('.'))               // separate .map-Dateien
-        .pipe(gulp.dest("./resources/js"))
-        .pipe(size({ showFiles: true }));
+const clean = () => del(["./resources/js/bundle*", "./resources/css/bundle*"])
 
-const jsExtractLeConfig = async () => {
-    const srcfile = "./resources/js/src/le-config.js";
-    const dstfile = "./resources/js/bundle-le-config.js";
-    if (! await fileExists(srcfile)) {
-        log.error(`${srcfile} not exists`);
-        return;
-    }
-    let jscode = await fs.readFile(srcfile, 'utf8');
+const build = gulp.series(
+    clean,
+    jscripts,
+    css
+)
 
-    const snippetRegex = /\/\/ *\+{3,} *code-snippet.*?\r?\n(.+?)\/\/ *-{3,} *code-snippet/is;
-
-    const match = jscode.match(snippetRegex);
-    if (match) {
-        await fs.writeFile(dstfile, match[1], 'utf8');
-        log(`${dstfile} was created`);
-    } else {
-        log.error(`no code snippet found`);
-    }   
+const devbuild = async () => {
+    toggleDevMode(true)
+    build()
 }
 
-const jsIndex = () => {
-    const files = globSync('./resources/js/index-*.js');
-
-    if (files.length === 0) {
-        log('jsIndex: keine Dateien gefunden – übersprungen');
-        // Leeren, sofort endenden Stream zurückgeben:
-        return merge(); // merge() ohne Argumente endet sofort
-    }
-
-    const streams = files.map((filename) => {
-        const infix = path.basename(filename, '.js').replace(/^index-/, '');
-        const s = jsPipe(filename, infix);
-        s.on('error', (err) => {
-            log.error(`jsIndex: Fehler in Pipeline "${infix}":`, err);
-        });
-        return s;
-    });
-
-    return merge(...streams); // <-- EIN Stream als Fertig‑Signal
-};
-
-const jscripts = gulp.parallel(jsIndex, jsExtractLeConfig);
-
-//--- CSS
-const css = gulp.parallel(...getCssSubTasks());
-
-
-//--- Version
-const bumpVersion = () => {
-    return execPromise("npm --no-git-tag-version version patch");
-};
-
-const syncVersion = async () => {
-    const version = JSON.parse(await fs.readFile('./package.json', 'utf8')).version;
-
-    let currentTxt = '';
-    if (await fileExists(VERSION_TXT)) {
-        currentTxt = await fs.readFile(VERSION_TXT, 'utf8');
-        currentTxt = currentTxt.trim();
-    }
-    if (currentTxt !== version) {
-        await fs.writeFile(VERSION_TXT, version, 'utf8');
-        log(`${VERSION_TXT} update to ${version}`);
-    } else {
-        log(`${VERSION_TXT} - no change.`);
-    }
-
-    let currentPhp = '';
-    if (await fileExists(VERSION_PHP)) {
-        currentPhp = await fs.readFile(VERSION_PHP, 'utf8');
-    }
-
-    const phpRegex = /(public\s+const\s+CUSTOM_VERSION\s*=\s*["'])([\d.]+)(["']\s*;)/;
-    const replacedPhp = currentPhp.replace(phpRegex, `$1${version}$3`);
-    
-    if (replacedPhp !== currentPhp) {
-        await fs.writeFile(VERSION_PHP, replacedPhp, 'utf8');
-        log(`${VERSION_PHP} updated to ${version}`);
-    } else {
-        log(`${VERSION_PHP} - no change.`);
-    }
-}
-
-//--- Lang files
+//--- language files
 const updatepo = () => {
-    return execPromise("./util/update-po-files.sh");
-};
+    return execPromise("./util/update-po-files.sh")
+}
 
-const createmo = () => {
-    return execPromise("./util/convert-po2mo.sh");
-};
+const createmo = () => { // because of #88 Translations file format switch not necessary any more
+    return execPromise("./util/convert-po2mo.sh")
+}
 
 const po2php = () => convertPo2php("./resources/lang")
 
-//--- Utils
-const hashFile = async (filepath) => {
-    const hashValue = hashFileSync(filepath, { algorithm: 'sha256' });
-    const destpath = path.dirname(filepath);
-    const hashfile = path.basename(filepath) + '.hash';
-    
-    return file(hashfile, hashValue)
-        .pipe(gulp.dest(destpath));
-}
 
-const fileExists = async path => !!(await fs.stat(path).catch(e => false));
+//--- versioning
+const syncversion = async () => await syncVersion(VERSION_TXT, VERSION_PHP)
+const bumpversion = gulp.series(
+    gitCheckClean, 
+    bumpVersion, 
+    syncversion
+)
 
-const execPromise = (command) => {
-    const cp = child_process.exec(command, { shell: "/bin/bash" });
-    cp.stdout.on("data", (data) => {
-        console.log(data.toString());
-    });
-    cp.stderr.on("data", (data) => {
-        console.error(data.toString());
-    });
-    return new Promise((resolve, reject) => {
-        cp.on("exit", (code) => (code ? reject(code) : resolve()));
-    });
-};
 
-const gitCheckBranch = async () => {
-    return new Promise((resolve, reject) => {
-        child_process.exec("git branch --show-current", (err, stdout) => {
-            if (err) reject(err);
-            const branch = stdout.trim();
-            if (branch === "main") {
-                resolve();
-            } else {
-                reject(
-                    `Releases can only be made from the main branch, current branch is ${branch}`
-                );
-            }
-        });
-    });
-};
-
-const gitCheckClean = async () => {
-    return new Promise((resolve, reject) => {
-        child_process.exec("git status -s", (err, stdout) => {
-            if (err) reject(err);
-            const status = stdout.trim();
-            if (!status) {
-                resolve();
-            } else {
-                reject(
-                    `git repo is not clean: ${status}`
-                );
-            }
-        });
-    });
-};
-
+//--- prepare archive for release
 const createarchive = () => {
-    return execPromise("./util/create-archive.sh");
-};
+    return execPromise("./util/create-archive.sh")
+}
+const archive = gulp.series(
+    build,
+    po2php,
+    createarchive
+)
 
 
-const clean = () => del(["./resources/js/bundle*", "./resources/css/bundle*"]);
-const hashCsv = () => hashFile('./Schema/SeedHelpTable.csv');
-
-const build = gulp.series(clean, jscripts, css); //, hashCsv);
-const devbuild = async () => {
-    DEV = true;
-    build();
-};
-const bumpversion = gulp.series(gitCheckClean, bumpVersion, syncVersion);
-
-const archive = gulp.series(build, po2php, createarchive);
-const syncversion = syncVersion
-
-
-export { build, bumpversion, devbuild, syncversion, updatepo, createmo, po2php, archive };
+// public tasks
+export { 
+    build,
+    bumpversion,
+    devbuild,
+    syncversion,
+    updatepo,
+    po2php,
+    archive
+}
