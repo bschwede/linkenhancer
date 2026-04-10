@@ -15,6 +15,7 @@ echo "📦 Generate POT-File: $POT_FILE_ALL"
 # Erzeuge messages.pot mit relativen Pfaden
 xgettext -L PHP \
   --keyword=translate \
+  --keyword=plural:1,2 \
   --add-comments=I18N \
   --from-code=utf-8 \
   --output="$POT_FILE_ALL" \
