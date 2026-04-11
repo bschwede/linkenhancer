@@ -1,408 +1,393 @@
-# Iberni2 <iberni2@noreply.codeberg.org>, 2026.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# bschwede <bschwede@noreply.codeberg.org>, 2026.
+# MicXDev <micxdev@noreply.codeberg.org>, 2026.
 msgid ""
 msgstr ""
-"Project-Id-Version: LinkEnhancer\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-29 20:46+0200\n"
-"PO-Revision-Date: 2026-03-24 16:26+0000\n"
-"Last-Translator: Iberni2 <iberni2@noreply.codeberg.org>\n"
-"Language-Team: Spanish <https://translate.codeberg.org/projects/linkenhancer/"
-"module/es/>\n"
-"Language: es\n"
+"PO-Revision-Date: 2026-04-01 13:57+0000\n"
+"Last-Translator: MicXDev <micxdev@noreply.codeberg.org>\n"
+"Language-Team: English <https://translate.codeberg.org/projects/linkenhancer/"
+"module/english_GB/>\n"
+"Language: english_GB\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 5.16.2\n"
-"X-Poedit-Basepath: ../..\n"
-"X-Poedit-SearchPath-0: CustomMarkdownFactory.php\n"
-"X-Poedit-SearchPath-1: LinkEnhancerModule.php\n"
-"X-Poedit-SearchPath-2: module.php\n"
 
 #. I18N: Settings - section title
 msgid "Webtrees manual"
-msgstr "Manual Webtrees"
+msgstr ""
 
 msgid "Error occurred"
-msgstr "Se ha producido un error"
+msgstr ""
 
 #. I18N: csv import
 msgid "empty rows"
-msgstr "filas vacías"
+msgstr ""
 
 #. I18N: csv import
 msgid "rows whose number of fields differs from the header row"
-msgstr "filas cuyo número de campos difiere del de la fila de encabezado"
+msgstr ""
 
 #. I18N: data import with seeder
 msgid "rows in which at least one required field is not set"
-msgstr "filas en las que al menos un campo obligatorio no está configurado"
+msgstr ""
 
 #. I18N: data import with seeder
 msgid "rows in which the maximum field value length has been exceeded"
-msgstr "filas en las que se ha superado la longitud máxima del valor del campo"
+msgstr ""
 
 msgid "Routes imported"
-msgstr "Las rutas se importaron"
+msgstr ""
 
 #. I18N: wthb import skipped rows
 msgid "Skipped"
-msgstr "Omitido"
+msgstr ""
 
 msgid "CSV-Import"
-msgstr "Importar CSV"
+msgstr ""
 
 msgid "Table for context help is missing - fallback to standard url"
-msgstr "Falta la tabla de ayuda contextual - se vuelve a la URL estándar"
+msgstr ""
 
 msgid "Table for context help is missing - nothing to do."
-msgstr "Falta la tabla de ayuda contextual - no se puede hacer nada."
+msgstr ""
 
 msgid "No data available for export."
-msgstr "No hay datos disponibles para la exportación."
+msgstr ""
 
 msgid "No CSV file was received."
-msgstr "No se ha encontrado ningún archivo CSV."
+msgstr ""
 
 msgid "Separator is not set."
-msgstr "El separador no está configurado"
+msgstr ""
 
 msgid "For the separator is only a single character allowed."
-msgstr "Para delimitar el separador solamente se permite un único carácter."
+msgstr ""
 
 msgid "webtrees FAQ"
-msgstr "webtrees PF"
+msgstr ""
 
 msgid "webtrees Forum"
-msgstr "Foro de webtrees"
+msgstr ""
 
 msgid "ask a question (account necessary)"
-msgstr "Hacer una pregunta (es necesario tener una cuenta)"
+msgstr ""
 
 msgid "CompGen Discourse"
-msgstr "Discusión en CompGen"
+msgstr ""
 
 msgid "GitHub - webtrees issues"
-msgstr "GitHub - Incidencias de webtrees"
+msgstr ""
 
 msgid "GitHub - webtrees related projects"
-msgstr "GitHub: proyectos relacionados con webtrees"
+msgstr ""
 
 #. I18N: JS MDE
 msgid "bold"
-msgstr "en negrita"
+msgstr ""
 
 #. I18N: JS MDE
 msgid "italic"
-msgstr "itálica"
+msgstr ""
 
 #. I18N: JS MDE
 msgid "strikethrough"
-msgstr "tachado"
+msgstr ""
 
 #. I18N: JS MDE
 msgid "format as code"
-msgstr "formato de código"
+msgstr ""
 
 #. I18N: JS MDE
 msgid "highlight"
-msgstr "destacar"
+msgstr ""
 
 #. I18N: JS MDE
 #, php-format
 msgid "Level %s heading"
-msgstr "Nivel %s para el encabezamiento"
+msgstr ""
 
 #. I18N: JS MDE
 msgid "Bulleted list"
-msgstr "Listado con viñetas"
+msgstr ""
 
 #. I18N: JS MDE
 msgid "Numbered list"
-msgstr "Lista numerada"
+msgstr ""
 
 #. I18N: JS MDE blockquote
 msgid "quote"
-msgstr "cita"
+msgstr ""
 
 #. I18N: JS MDE
 msgid "Insert link"
-msgstr "Insertar enlace"
+msgstr ""
 
 #. I18N: JS MDE
 msgid "Insert image"
-msgstr "Insertar imagen"
+msgstr ""
 
 #. I18N: JS MDE
 msgid "Horizontal rule"
-msgstr "Línea Horizontal"
+msgstr ""
 
 #. I18N: JS MDE
 msgid "Undo"
-msgstr "Deshacer"
+msgstr ""
 
 #. I18N: JS MDE
 msgid "Redo"
-msgstr "Rehacer"
+msgstr ""
 
 #. I18N: JS MDE
 msgid "Link destination"
-msgstr "enlace de destino"
+msgstr ""
 
 #. I18N: JS MDE
 msgid "Insert table"
-msgstr "Insertar tabla"
+msgstr ""
 
 #. I18N: JS MDE
 msgid ""
 "How many columns and rows should the table have (input: [number] [number])?"
 msgstr ""
-"¿Cuántas columnas y filas debe tener la tabla (entrada: [número] [número])?"
 
 #. I18N: JS enhanced link
 msgid "cross reference"
-msgstr "referencia"
+msgstr ""
 
 #. I18N: JS enhanced link, %s name of location
 #, php-format
 msgid "Online Local heritage book of %s at CompGen"
-msgstr "Libro de familia en línea de %s en CompuGen"
+msgstr ""
 
 #. I18N: JS enhanced link
 msgid "Historic Geo Information System (GOV)"
-msgstr "Sistema de Geoinformación Histórica (GOV)"
+msgstr ""
 
 #. I18N: JS enhanced link
 msgid "GEDBAS (Genealogical Database - collected personal data)"
-msgstr "GEDBAS (Base de datos genealógicos - datos personales recogidos)"
+msgstr ""
 
 #. I18N: JS enhanced link
 msgid "wer-wir-waren.at"
-msgstr "wer-wir-waren.at"
+msgstr ""
 
 #. I18N: JS enhanced link
 msgid "Residents database - Family research in West Prussia"
 msgstr ""
-"Base de datos de residentes - Investigación familiar en Prusia occidental"
 
 #. I18N: JS enhanced link
 msgid "Syntax error"
-msgstr "Error sintáctico"
+msgstr ""
 
 #. I18N: JS enhanced link
 msgid "Unknown parameter keys"
-msgstr "Parámetros desconocidos keys"
+msgstr ""
 
 #. I18N: JS enhanced link wt1 - %s=rectypes
 #, php-format
 msgid ""
 "standard link to note (available record types: %s) with XREF in active tree"
 msgstr ""
-"Enlace a nota (tipos de registro disponibles: %s) con XREF en el árbol activo"
 
 #. I18N: JS enhanced link wt2
 msgid ""
 "link to record type individual with XREF from \"othertree\" and also link to"
-msgstr "enlace al registro individual con XREF de \"othertree\""
+msgstr ""
 
 #. I18N: JS enhanced link wt3
 msgid "link to record without given record type - access via redirect url"
 msgstr ""
-"Enlace al registro sin tipo de registro especificado: acceso a través de la "
-"URL de redireccionamiento"
 
 #. I18N: JS enhanced link osm1
 msgid "zoom/lat/lon for locating map"
-msgstr "Latitud/longitud y zum para ubicar en el mapa"
+msgstr ""
 
 #. I18N: JS enhanced link osm2
 msgid "same as before with additional marker"
-msgstr "lo mismo que antes con un marcador adicional"
+msgstr ""
 
 #. I18N: JS enhanced link osm3
 msgid "show also node/way/relation, see also"
-msgstr "mostrar también nodo/vía/relación"
+msgstr ""
 
 #. I18N: JS enhanced link osm4
 msgid "show also node/way/relation - alternative notation"
-msgstr "mostrar también nodo/vía/relación - sistema alternativo"
+msgstr ""
 
 #. I18N: JS enhanced link ofb1
 msgid "link to Online Local heritage book at CompGen with given uid"
-msgstr "enlace al libro de familia en CompGen con el UID proporcionado"
+msgstr ""
 
 #. I18N: JS enhanced link wp1
 msgid "open the article in the german wikipedia"
-msgstr "abrir el artículo en la Wikipedia alemana"
+msgstr ""
 
 #. I18N: JS enhanced link wp2
 msgid "open the english version of the article"
-msgstr "abrir el artículo en la versión inglesa"
+msgstr ""
 
 #. I18N: JS enhanced link wp3
 msgid "you can address every subdomain instance of wikipedia.org"
-msgstr "puede dirigirse a cada subdominio de wikipedia.org"
+msgstr ""
 
 #. I18N: JS enhanced link gedbas1
 msgid "open person record with given number"
-msgstr "abrir ficha de una persona con un número determinado"
+msgstr ""
 
 #. I18N: JS enhanced link gedbas2
 #. I18N: JS enhanced link gedbas3
 msgid "open person record with UID"
-msgstr "abrir ficha de una persona con el identificador UID"
+msgstr ""
 
 msgid "without database number"
-msgstr "Sin número de base de datos"
+msgstr ""
 
 msgid "Data Entry System (DES)"
-msgstr "Sistema de introducción de datos (DES)"
+msgstr ""
 
 msgid "Casualty lists"
-msgstr "Lista de bajas"
+msgstr ""
 
 #. I18N: wthb link user setting title
 msgid "Webtrees manual link - user setting"
-msgstr "Enlace manual de Webtrees - configuración del usuario"
+msgstr ""
 
 msgid "Full-text search"
-msgstr "Búsqueda de texto completo"
+msgstr ""
 
 msgid "Table of contents"
-msgstr "Índice"
+msgstr ""
 
 msgid "webtrees help topics (included)"
-msgstr "Temas de ayuda de webtrees (incluidos)"
+msgstr ""
 
 msgid "start page"
-msgstr "página de inicio"
+msgstr ""
 
 msgid "Settings"
-msgstr "Configuración"
+msgstr ""
 
 msgid "Limit cell height"
-msgstr "Limitar la altura de las celdas"
+msgstr ""
 
 #, php-format
 msgid "and so on until level %s"
-msgstr "y así sucesivamente hasta el nivel %s"
+msgstr ""
 
 msgid "Term"
-msgstr "Término"
+msgstr ""
 
 msgid "Text with a footnote reference"
-msgstr "Texto con una referencia a una nota al pie"
+msgstr ""
 
 msgid "Footnote text"
-msgstr "Texto de la nota al pie"
+msgstr ""
 
 msgid "list without marker"
-msgstr "lista sin marcador"
+msgstr ""
 
 #. I18N::translate('Insert at the very top of the document, before any content'),
 msgid "Insert just before the very first heading"
-msgstr "Insertar justo antes del primer encabezado"
+msgstr ""
 
 msgid "Location is manually defined by a placeholder"
-msgstr "La ubicación se define manualmente mediante un marcador de posición."
+msgstr ""
 
 msgid "applies nesting, but handles edge cases"
-msgstr "aplica el anidamiento, pero gestiona los casos extremos"
+msgstr ""
 
 msgid "a flat, single-level list"
-msgstr "una lista plana de un solo nivel"
+msgstr ""
 
 msgid "inline"
-msgstr "en línea"
+msgstr ""
 
 msgid "nesting exactly as headings occur within the document"
-msgstr "anidant exactament com els encapçalaments apareixen dins del document"
+msgstr ""
 
 msgid "Permalink"
-msgstr "Enlace permanente"
+msgstr ""
 
 #. I18N: MD img error precondition
 msgid ""
 "Neither a media object nor a file from the public directory was specified."
 msgstr ""
-"No se ha especificado ni un objeto multimedia ni un archivo del directorio "
-"público."
 
 #. I18N: MD img error precondition
 msgid ""
 "Only one media object OR one file from the public directory can be specified."
 msgstr ""
-"Sólo se puede especificar un objeto multimedia O un archivo del directorio "
-"público."
 
 #. I18N: MD img error crossreference
 msgid "There is no image file available for display."
-msgstr "No hay ningún archivo de imagen disponible para mostrar."
+msgstr ""
 
 #. I18N: MD img error public folder
 msgid "The public folder does not exist."
-msgstr "La carpeta pública no existe."
+msgstr ""
 
 #. I18N: MD img error public file, %s the relative filename
 #, php-format
 msgid "File ‘%s’ does not exist in the public folder"
-msgstr "El fichero “%s” no existe en la carpeta pública"
+msgstr ""
 
 #. I18N: MD img error public file
 msgid "Only files within the public folder are supported"
-msgstr "Sólo se admiten archivos dentro de la carpeta pública"
+msgstr ""
 
 #. I18N: MD img error public file, %s1=rel. filename, %s2=mimetype
 #, php-format
 msgid "File ‘%s’ in the public folder is not an image but '%s'"
-msgstr "El archivo «%s» de la carpeta pública no es una imagen, sino «%s»."
+msgstr ""
 
 #. I18N: Module title
 msgid "Link-Enhancer"
-msgstr "Mejorador de enlaces"
+msgstr ""
 
 #. I18N: Module description
 msgid ""
 "Cross-references to Gedcom datasets, Markdown editor, context-sensitive link "
 "to the GenWiki webtrees manual"
 msgstr ""
-"Referencias a los conjuntos de datos GEDCOM, con el editor Markdown, a "
-"enlaces contextuales al manual GenWiki webtrees"
 
 msgid "Home link - JSON with CSS rules seems to be invalid."
-msgstr "El enlace de inicio JSON con reglas CSS, parece no ser válido."
+msgstr ""
 
 msgid "Import registered routes"
-msgstr "Importar rutas registradas"
+msgstr ""
 
 msgid "Activate enhanced links?"
-msgstr "¿Activar enlaces mejorados?"
+msgstr ""
 
 #. I18N: Enhanced Links
 msgid ""
 "This function is implemented via Javascript and only affects links in notes "
 "and HTML blocks on the client side."
 msgstr ""
-"Esta función se implementa mediante JavaScript y solamente afecta a los "
-"enlaces de las notas y a los bloques del área del cliente."
 
 #. I18N: Settings - section title
 msgid "Markdown enhancements"
-msgstr "Mejoras en Markdown"
+msgstr ""
 
 #. I18N: MD img - sentence 1
 msgid "Only works in notes that are formatted with Markdown."
-msgstr "Solamente funciona en notas formateadas con Markdown."
+msgstr ""
 
 #. I18N: MDE
 #, php-format
 msgid "Precondition: Tree preference '%s' need to be set to markdown."
 msgstr ""
-"Condición previa: La preferencia del árbol '%s' debe estar establecida en "
-"Markown."
 
 msgid "Show Help Link"
-msgstr "Mostrar enlace de ayuda"
+msgstr ""
 
 #. I18N:
 msgid ""
@@ -410,51 +395,42 @@ msgid ""
 "in the small menu at the top of the page and for subcontext topics on the "
 "page."
 msgstr ""
-"Los enlaces de ayuda contextual al manual alemán de webtrees se pueden "
-"activar en el pequeño menú situado en la parte superior de la página y para "
-"temas de subcontexto en la página."
 
 msgid "Site title as home link"
-msgstr "Título del sitio web como enlace de inicio"
+msgstr ""
 
 #. I18N: home link
 msgid "home page of the current tree"
-msgstr "Página de inicio del árbol actual"
+msgstr ""
 
 #. I18N: home link
 msgid "my page of the registered user"
-msgstr "mi página de usuario registrado"
+msgstr ""
 
 msgid ""
 "Webtrees uses a CommonMark implementation and supports a subset of the markup"
 msgstr ""
-"Webtrees utiliza una implementación de CommonMark y admite un subconjunto "
-"del marcado"
 
 msgid "See also"
-msgstr "Ver también"
+msgstr ""
 
 msgid "The following overview only briefly lists common formatting options"
 msgstr ""
-"En el siguiente resumen solamente se enumeran con brevedad las opciones de "
-"formato más comunes"
 
 msgid "Rendered output"
-msgstr "Resultado renderizado"
+msgstr ""
 
 msgid "For more depth of detail"
-msgstr "Para más detalles"
+msgstr ""
 
 msgid "Markdown editor for note textareas"
-msgstr "Editor Markdown para áreas de texto de notas"
+msgstr ""
 
 #. I18N: MDE
 msgid ""
 "The project “TinyMDE - A tiny, dependency-free embeddable HTML/JavaScript "
 "Markdown editor” is used"
 msgstr ""
-"El proyecto “TinyMDE - Un pequeño HTML/JavaScript integrado y sin "
-"dependencias Se utiliza el editor Markdown“"
 
 #. I18N: MDE
 msgid ""
@@ -463,15 +439,11 @@ msgid ""
 "step in the small text field below the Markdown editor and must then be "
 "copied manually to the desired position."
 msgstr ""
-"Nota: Desgraciadamente, el teclado en pantalla NO funciona como antes con el "
-"campo de entrada de texto anterior. Los caracteres seleccionados terminan en "
-"el pequeño campo de texto situado debajo del editor Markdown y, a "
-"continuación, se debe copiar manualmente en la posición deseada."
 
 #. I18N: help md - section title
 #. I18N: Settings - section title
 msgid "Enhanced Link Support"
-msgstr "Soporte de enlaces mejorado"
+msgstr ""
 
 #. I18N: Enhanced Links
 #. I18N: Settings - prologue sentence 3
@@ -480,9 +452,6 @@ msgid ""
 "etc.) from the text makes story telling much easier and thus also save this "
 "information in the GEDCOM file."
 msgstr ""
-"Vinculando las notas a los registros de datos GEDCOM (personas, familias, "
-"fuentes, etc.) del texto, facilita mucha la narración y, por tanto también, "
-"ahora esta información se encuentra en el archivo GEDCOM."
 
 #. I18N: Enhanced Links
 msgid ""
@@ -490,43 +459,34 @@ msgid ""
 "the internal cross-reference is always the first link and the other external "
 "targets are represented by attached clickable icons."
 msgstr ""
-"Es posible dirigirse a diferentes destinos con una definición de enlace, "
-"mediante el cualla referencia cruzada interna es siempre el primer enlace y "
-"los demás destinos externos están representados por iconos clicables "
-"adjuntos."
 
 #. I18N: Enhanced Links code example 1
 msgid "Link display title"
-msgstr "Título del enlace"
+msgstr ""
 
 #. I18N: Enhanced Links code
 msgid "The following parameters can be used"
-msgstr "Pueden utilizarse los siguientes parámetros"
+msgstr ""
 
 #. I18N: Enhanced Links
 msgid "The parameter definitions will be inserted by a javascript routine"
 msgstr ""
-"Las definiciones de parámetros se insertarán mediante una rutina JavaScript"
 
 #. I18N: Enhanced Links
 msgid ""
 "The existence of the linked data records is not checked in advance. Errors "
 "only appear when the link is clicked."
 msgstr ""
-"No se comprueba previamente la existencia de los registros de datos "
-"enlazados Solamente aparecen cuando se hace clic en el enlace."
 
 #. I18N: help md - section title
 msgid "Markdown Image Support"
-msgstr "Soporte de imágenes Markdown"
+msgstr ""
 
 #. I18N: MD img - sentence 1
 msgid ""
 "This option allows you to easily embed images from GEDCOM media records or "
 "from the public directory into notes."
 msgstr ""
-"Esta opción le permite incrustar fácilmente imágenes de registros multimedia "
-"GEDCOM o del directorio público en las notas."
 
 #. I18N: MD img - sentence 2
 msgid ""
@@ -534,171 +494,157 @@ msgid ""
 "image subtitle - which is also a link to the media data set for GEDCOM "
 "objects."
 msgstr ""
-"Técnicamente, las imágenes se empaquetan en un contenedor DIV junto con un "
-"subtítulo de la imagen, que también es un enlace al conjunto de datos "
-"multimedia de los objetos GEDCOM."
 
 #. I18N: MD img - sentence 3
 msgid ""
 "The display can be customized as required using the following standard CSS "
 "classes or additional CSS classes."
 msgstr ""
-"La visualización puede personalizarse como se desee utilizando las "
-"siguientes clases CSS estándar o clase CSS adicionales."
+"The display can be customised as required using the following standard CSS "
+"classes or additional CSS classes."
 
 msgid "CSS class name(s)"
-msgstr "Nombre(s) de clase CSS"
+msgstr ""
 
 msgid "Markdown image container"
-msgstr "Contenedor de imágenes Markdown"
+msgstr ""
 
 msgid "not defined"
-msgstr "sin definir"
+msgstr ""
 
 msgid "Markdown image title container"
-msgstr "Contenedor del título de imagen en Markdown"
+msgstr ""
 
 #. I18N: MD img code example 1
 msgid "alternate text for gedcom object"
-msgstr "texto alternativo para el objeto GEDCOM"
+msgstr ""
 
 #. I18N: MD img code example 2
 msgid "alternate text for picture in public folder"
-msgstr "texto alternativo para la imagen en la carpeta pública"
+msgstr ""
 
 #. I18N: MD img code example 3
 msgid "picture with defined height, width and additional css class"
-msgstr "imagen con altura, anchura y clase CSS adicional definidas"
+msgstr ""
 
 msgid "The context help topics provided by webtrees are listed below."
 msgstr ""
-"A continuación se enumeran los temas de ayuda contextual proporcionados por "
-"webtrees."
 
 msgid "Further information can be found on a separate help page."
-msgstr "Para más información, consulte la página de ayuda independiente."
+msgstr ""
 
 msgid "Goto top of cell content"
-msgstr "Ir al inicio del contenido de la celda"
+msgstr ""
 
 msgid "Select search engine"
-msgstr "Seleccionar motor de búsqueda"
+msgstr ""
 
 msgid "Goto section"
-msgstr "Ir a la sección"
+msgstr ""
 
 msgid ""
 "A local copy of the table of contents does not appear to be available. "
 "Please visit the website directly."
 msgstr ""
-"No parece haber una copia local del índice disponible. Visite directamente "
-"el sitio web."
 
 msgid "Activate markdown image tweak?"
-msgstr "¿Activar el ajuste de imagen Markdown?"
+msgstr ""
 
 #. I18N: see also fancy-research-links
 msgid "Open links in a new tab"
-msgstr "Abrir enlaces en una nueva pestaña"
+msgstr ""
 
 #. I18N: Home link js
 msgid "Example"
-msgstr "Ejemplo"
+msgstr ""
 
 msgid "Table cell height control"
-msgstr "Control de la altura de las celdas de la tabla"
+msgstr ""
 
 #. I18N:
 msgid "available"
-msgstr "disponible"
+msgstr ""
 
 msgid "disabled"
-msgstr "discapacitado"
+msgstr ""
 
 msgid "enabled"
-msgstr "habilitado"
+msgstr ""
 
 msgid ""
 "Toggle checkbox in order to set max-height and make longer content scrollable"
 msgstr ""
-"Activa la casilla de verificación para establecer la altura máxima y hacer "
-"que el contenido más largo sea desplazable"
 
 msgid "Checkbox always visible"
-msgstr "Casilla de verificación siempre visible"
+msgstr ""
 
 msgid "Markdown extensions"
-msgstr "Extensiones de Markdown"
+msgstr ""
 
 msgid "Warning"
-msgstr "Advertencia"
+msgstr ""
 
 msgid ""
 "Please keep in mind when using this extensions, you are deviating from the "
 "smallest common markdown dialect set."
 msgstr ""
-"Ten en cuenta que al utilizar estas extensiones, te estás desviando del "
-"conjunto mínimo común de dialectos de Markdown."
 
 msgid ""
 "If the library used to render markdown in HTML needs to be changed for any "
 "reason, there is a possibility that not all of the extended markup used here "
 "will be supported."
 msgstr ""
-"Si por cualquier motivo es necesario cambiar la biblioteca utilizada para "
-"convertir Markdown a HTML, existe la posibilidad de que no se admitan todas "
-"las etiquetas extendidas utilizadas aquí."
 
 msgid "Strikethrough"
-msgstr "Tachado"
+msgstr ""
 
 msgid "Description list"
-msgstr "Lista descriptiva"
+msgstr ""
 
 msgid "Highlight"
-msgstr "Hito"
+msgstr ""
 
 msgid "Footnotes"
-msgstr "Notas al pie"
+msgstr ""
 
 msgid "Add hr-tag at the beginning of the footnote container"
-msgstr "Añadir la etiqueta hr al principio del contenedor de la nota al pie"
+msgstr ""
 
 msgid "Backreference symbol"
-msgstr "Símbolo de referencia hacia atrás"
+msgstr ""
 
 msgid "Normalize"
-msgstr "Normalizar"
+msgstr "Normalise"
 
 msgid "Style"
-msgstr "Estilo"
+msgstr ""
 
 msgid "Position"
-msgstr "Posición"
+msgstr ""
 
 msgid "Placeholder"
-msgstr "Marcador de posición"
+msgstr ""
 
 msgid "Permalink symbol"
-msgstr "Símbolo de enlace permanente"
+msgstr ""
 
 msgid "JSON is invalid"
-msgstr "JSON no es válido"
+msgstr ""
 
 msgid "Javascript is invalid"
-msgstr "JavaScript no es válido"
+msgstr ""
 
 msgid "JSON export"
-msgstr "Exportación JSON"
+msgstr ""
 
 msgid "JSON import"
-msgstr "Importación JSON"
+msgstr ""
 
 msgid "Enable for more options"
-msgstr "Habilitar para más opciones"
+msgstr ""
 
 msgid "JavaScript for additional link targets"
-msgstr "JavaScrip para enlaces adicionales"
+msgstr ""
 
 #. I18N: Enhanced Links js
 msgid ""
@@ -706,255 +652,180 @@ msgid ""
 "which are taken from the following code excerpt and can also serve as a "
 "reference point for adjustments."
 msgstr ""
-"El complemento JavaScrip sobrescribe y complementa los ajustes predefinidos "
-"que se extraen del siguiente extracto de código y que también puede servir "
-"como punto de referencia para los ajustes."
 
 #. I18N: Enhanced Links js
 msgid "Any CSS rules required are best added via the “CSS and JS” module."
 msgstr ""
-"las reglas CSS necesarias se añaden mejor a través del módulo «CCS y JS»."
 
 #. I18N: Enhanced Links js
 msgid ""
 "Only the definition of the icon as a background image is actually needed - "
 "referencing as data: URL."
 msgstr ""
-"En realidad, solamente se necesita la definición del icono como imagen de "
-"fondo haciendo referencia como datos: URL."
 
 #. I18N: wthb link user setting prologue
 msgid ""
 "Please select whether you want to access the help page directly or via a "
 "translation service."
 msgstr ""
-"Seleccione si desea acceder a la página de ayuda directamente o a través."
 
 #. I18N: wthb link setting option
 msgid "Open webtrees manual URL with Google Translate?"
-msgstr "¿Abrir la URL del manual de webtrees con Google Translate?"
+msgstr ""
 
 #. I18N: wthb link user setting epilogue 1
 msgid "This setting can be adjusted at any time."
-msgstr "Esta configuración puede ajustarse en cualquier momento"
+msgstr ""
 
 msgid "Top menu"
-msgstr "Menú superior"
+msgstr ""
 
 msgid ""
 "An entry is added to the top menu, which provides access to a context-"
 "sensitive help link for the current page."
 msgstr ""
-"Se añade una entrada al menú superior, que proporciona acceso a un enlace de "
-"ayuda contextual para la página actual."
 
 msgid "Precede the top menu link with an icon"
-msgstr "Antepon un icono al enlace del menú superior."
+msgstr ""
 
 msgid "Split top menu item"
-msgstr "Elemento del menú superior dividido"
+msgstr ""
 
 msgid ""
 "This option controls whether the help link is located in the submenu or can "
 "be clicked directly, opening the submenu via a separate link."
 msgstr ""
-"Esta opción controla si el enlace de ayuda se encuentra en el submenú o si "
-"se puede hacer clic directamente en él, abriendo el submenú a través de un "
-"enlace independiente."
 
 msgid "Additional help links"
-msgstr "Enlaces de ayuda adicionales"
+msgstr ""
 
 #. I18N:
 #. I18N: wthb translate
 #. I18N:
 msgid "user defined"
-msgstr "sin definir"
+msgstr ""
 
 msgid "Help link for subcontext topics"
-msgstr "Enlace de ayuda para temas secundarios"
+msgstr ""
 
 msgid "Help link in the admin backend"
-msgstr "Enlace de ayuda en el backend de administración"
+msgstr ""
 
 msgid ""
 "Vesta modules override the admin layout view and provide a way to insert "
 "code through custom modules."
 msgstr ""
-"Los módulos Vesta anulan la vista de diseño del administrador y proporcionan "
-"una forma de insertar código a través de módulos personalizados."
 
 msgid "As they are frequently used, this module first attempts this approach."
 msgstr ""
-"Dado que se utilizan con frecuencia, este módulo intenta primero este "
-"enfoque."
 
 msgid "Fallback patch for admin layout view"
-msgstr "Parche alternativo para la vista de diseño del administrador"
+msgstr ""
 
 msgid "Link to GenWiki"
-msgstr "enlace a GenWiki"
+msgstr ""
 
 #. I18N: WTHB Link
 msgid ""
 "This is the base link that is combined with the relative context links from "
 "the database table."
 msgstr ""
-"Este es el enlace que se combina con los enlaces contextuales relativos de "
-"la tabla de base de datos."
 
 msgid "Standard Link to webtrees manual"
-msgstr "Enlace al manual de webtrees"
+msgstr ""
 
 #. I18N: WTHB Link
 msgid "This fallback link is used, when no specific context link was defined."
 msgstr ""
-"Este enlace alternativo se utiliza cuando no se ha definido ningún enlace "
-"contextual específico."
 
 msgid "Data table"
-msgstr "Tabla de datos"
+msgstr ""
 
 #. I18N: WTHB Link table
 msgid ""
 "The context is established by assigning the routes used in webtrees to the "
 "corresponding sections in the manual."
 msgstr ""
-"El contexto se establece asignando las rutas utilizadas en los «webtrees» a "
-"lassecciones correspondientes del manual."
 
 #. I18N: WTHB Link table
 msgid "The data is stored in the database table"
-msgstr "Los datos se almacenan en la tabla de la base de datos"
+msgstr ""
 
 #. I18N: WTHB Link table rows
 msgid "Data rows"
-msgstr "Línea de datos"
+msgstr ""
 
 #. I18N: WTHB Link table rows assigned/total
 #, php-format
 msgid "%s of %s assigned"
-msgstr "%s de %s asignados"
+msgstr ""
 
 msgid "truncate table before import routes or csv file"
-msgstr "recortar tabla antes de importar rutas o archivo CSV"
+msgstr ""
 
 msgid "Table truncate"
-msgstr "Recortar tabla"
+msgstr ""
 
 msgid "Reset routes to delivery status"
-msgstr "Restablecer rutas al formato de entrega"
+msgstr ""
 
 msgid "Separator"
-msgstr "Separador"
+msgstr ""
 
 msgid "CSV-Export"
-msgstr "Exportar CSV"
+msgstr ""
 
 msgid "CSV import file"
-msgstr "Archivo CSV de importación"
+msgstr ""
 
 msgid "Automatically refresh data table when module is updated"
 msgstr ""
-"Actualizar automáticamente la tabla de datos cuando se actualiza el módulo"
 
 msgid "reset to default"
-msgstr "restablecer a los valores predeterminados"
+msgstr ""
 
 #. I18N: Settings - prologue sentence 1
 msgid ""
 "The main purpose of this module is to make links to data records stored in "
 "family trees more convenient."
 msgstr ""
-"El objetivo principal de este módulo es hacer más cómodos los enlaces a los "
-"registros almacenados en árboles genealógicos."
 
 #. I18N: Settings - prologue sentence 2
 msgid ""
 "This avoids having to store fully qualified links, which impairs the "
 "portability of Gedcom data."
 msgstr ""
-"Esto evita tener que almacenar enlaces totalmente cualificados, lo que "
-"perjudica la portabilidad de los datos GEDCOM."
 
 #. I18N: Settings - prologue sentence 4
 msgid ""
 "The option of embedding the images already inserted in the family tree in "
 "the notes rounds off this approach."
 msgstr ""
-"La opción de incrustar las imágenes ya insertadas en el árbol genealógico "
-"enlas notas, completan este procedimiento."
 
 #. I18N: Settings - section title
 msgid "Activate Support"
-msgstr "Activar asistencia"
+msgstr ""
 
 #. I18N: Settings - section title
 msgid "More options"
-msgstr "Más opciones"
+msgstr ""
 
 msgid "Output of debug information on the JS console"
-msgstr "Salida de información de depuración en la consola JS"
+msgstr ""
 
 #. I18N: Settings - section title
 msgid "Home link"
-msgstr "Enlace de inicio"
+msgstr ""
 
 msgid "JSON for home link styling"
-msgstr "JSON para diseñar los enlaces de inicio"
+msgstr ""
 
 #. I18N: Home link js
 msgid ""
 "JSON object that can be used to dynamically apply CSS styles for the home "
 "link that match the current theme."
 msgstr ""
-"JSON se puede utilizar para aplicar dinámicamente estilos CSS para el enlace "
-"de inicio que coincidan con el tema actual."
 
 #. I18N: Home link js
 msgid "Standard CSS class name"
-msgstr "Nombre de la clase CSS estándar"
-
-#~ msgid "unordered, bulleted list"
-#~ msgstr "lista sin ordenar, con viñetas"
-
-#~ msgid "ordered list"
-#~ msgstr "Lista numerada"
-
-#~ msgid "Markdown image container standard css class"
-#~ msgstr "Clase CSS estándar de contenedor de imágenes Markdown"
-
-#~ msgid "Markdown image title container standard css class"
-#~ msgstr ""
-#~ "Clase CSS estándar para el contenedor del título de imagen en Markdown"
-
-#, fuzzy
-#~ msgid "Skip to content"
-#~ msgstr "Índice"
-
-#~ msgid ""
-#~ "If this feature is also desired in the admin backend, patch P002 would "
-#~ "need to be applied or at least the custom module vesta_common would need "
-#~ "to be installed."
-#~ msgstr ""
-#~ "Si también se desea esta función en el módulo de administración, será "
-#~ "necesario aplicar el parche P002o, al menos, instalar el módulo "
-#~ "personalizado Vesta_common."
-
-#, php-format
-#~ msgid "Routes imported (Total: %s / skipped: %s)"
-#~ msgstr "Rutas importadas (Total: %s / omitidas %s)"
-
-#~ msgid "Full text search"
-#~ msgstr "Búsqueda de texto completo"
-
-#~ msgid ""
-#~ "The link to the setting dialog is displayed when you hover the mouse "
-#~ "cursor over the help link for a few seconds."
-#~ msgstr ""
-#~ "El enlace al cuadro de diálogo de configuración se muestra al pasar el "
-#~ "cursor del ratón sobre el enlace de ayuda durante unos segundos."
-
-#~ msgid "The link function is controlled via the anchor part of the URI."
-#~ msgstr ""
-#~ "La función de enlace se controla a través de la parte de anclaje de la "
+msgstr ""
