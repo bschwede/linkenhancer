@@ -9,3 +9,4 @@ resources/views/*.phtml.~*
 .vscode/*
 .venv/*
 resources/lang/*.php
+.env
