@@ -2,17 +2,17 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # bschwede <bschwede@noreply.codeberg.org>, 2026.
-# MicXDev <micxdev@noreply.codeberg.org>, 2026.
+# RickM <rickm@noreply.codeberg.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-29 20:46+0200\n"
-"PO-Revision-Date: 2026-04-01 13:57+0000\n"
-"Last-Translator: MicXDev <micxdev@noreply.codeberg.org>\n"
-"Language-Team: English <https://translate.codeberg.org/projects/linkenhancer/"
-"module/english_GB/>\n"
-"Language: english_GB\n"
+"PO-Revision-Date: 2026-03-28 03:57+0000\n"
+"Last-Translator: RickM <rickm@noreply.codeberg.org>\n"
+"Language-Team: English (Australia) <https://translate.codeberg.org/projects/"
+"linkenhancer/module/en_AU/>\n"
+"Language: en-AU\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -21,10 +21,11 @@ msgstr ""
 
 #. I18N: Settings - section title
 msgid "Webtrees manual"
-msgstr ""
+msgstr "Webtrees Manual"
 
+#, fuzzy
 msgid "Error occurred"
-msgstr ""
+msgstr "Error occurred"
 
 #. I18N: csv import
 msgid "empty rows"
@@ -500,8 +501,6 @@ msgid ""
 "The display can be customized as required using the following standard CSS "
 "classes or additional CSS classes."
 msgstr ""
-"The display can be customised as required using the following standard CSS "
-"classes or additional CSS classes."
 
 msgid "CSS class name(s)"
 msgstr ""
@@ -614,7 +613,7 @@ msgid "Backreference symbol"
 msgstr ""
 
 msgid "Normalize"
-msgstr "Normalise"
+msgstr ""
 
 msgid "Style"
 msgstr ""
