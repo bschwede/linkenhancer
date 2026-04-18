@@ -216,7 +216,7 @@ final class LeImageRenderer implements NodeRendererInterface, XmlNodeRendererInt
             $public_type = mime_content_type($public_file);
             if (!strstr($public_type, 'image/')) {
                 return view($this->module->name() . '::error-img-svg', [
-                    'text' => /*I18N: MD img error public file, %s1=rel. filename, %s2=mimetype */ I18N::translate("File ‘%s’ in the public folder is not an image but '%s'", $public_relpath, $public_type),
+                    'text' => /*I18N: MD img error public file, %s1=rel. filename, %s2=mimetype */ I18N::translate('File \'%1$s\' in the public folder is not an image but \'%2$s\'', $public_relpath, $public_type),
                     'classnames' => $classnames,
                 ]);
             }

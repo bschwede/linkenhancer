@@ -241,7 +241,7 @@ $link_cmm = $links['csvexportcmm'] ?? '';
                         <?= /*I18N: WTHB Link table */ I18N::translate('The data is stored in the database table') ?>:
                         <code><?= DB::prefix(LinkEnhancerModule::HELP_TABLE) ?></code>
                         <em>(<strong><?= /*I18N: WTHB Link table rows */ I18N::translate('Data rows') ?>:</strong>
-                            <?= /*I18N: WTHB Link table rows assigned/total */ I18N::translate('%s of %s assigned', $tablerows['assigned'] ?? 0, $tablerows['total'] ?? 0) ?>)</em>
+                            <?= /*I18N: WTHB Link table rows assigned/total */ I18N::translate('%1$s of %2$s assigned', $tablerows['assigned'] ?? 0, $tablerows['total'] ?? 0) ?>)</em>
                     </p>
                 </div>                    
                 <div class="row mt-1">
