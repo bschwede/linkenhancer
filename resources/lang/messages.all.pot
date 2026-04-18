@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-29 20:46+0200\n"
+"POT-Creation-Date: 2026-04-18 10:34+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -504,7 +504,7 @@ msgstr ""
 #. I18N: MD img error public file, %s1=rel. filename, %s2=mimetype
 #: src/CommonMark/LeImageRenderer.php:219
 #, php-format
-msgid "File ‘%s’ in the public folder is not an image but '%s'"
+msgid "File '%1$s' in the public folder is not an image but '%2$s'"
 msgstr ""
 
 #. I18N: Module title
@@ -1162,7 +1162,7 @@ msgstr ""
 #. I18N: WTHB Link table rows assigned/total
 #: resources/views/settings-wthb.phtml:244
 #, php-format
-msgid "%s of %s assigned"
+msgid "%1$s of %2$s assigned"
 msgstr ""
 
 #: resources/views/settings-wthb.phtml:252
