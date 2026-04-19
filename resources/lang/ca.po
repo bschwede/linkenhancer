@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-29 20:46+0200\n"
+"POT-Creation-Date: 2026-04-18 10:34+0200\n"
 "PO-Revision-Date: 2026-03-31 08:57+0000\n"
 "Last-Translator: Iberni2 <iberni2@noreply.codeberg.org>\n"
 "Language-Team: Catalan <https://translate.codeberg.org/projects/linkenhancer/"
@@ -354,8 +354,8 @@ msgstr "Només s'admeten arxius dins de la carpeta pública"
 
 #. I18N: MD img error public file, %s1=rel. filename, %s2=mimetype
 #, php-format
-msgid "File ‘%s’ in the public folder is not an image but '%s'"
-msgstr "L'arxiu «%s» de la carpeta pública no és una imatge, sinó «%s»."
+msgid "File '%1$s' in the public folder is not an image but '%2$s'"
+msgstr ""
 
 #. I18N: Module title
 msgid "Link-Enhancer"
@@ -833,8 +833,8 @@ msgstr "Línia de dades"
 
 #. I18N: WTHB Link table rows assigned/total
 #, php-format
-msgid "%s of %s assigned"
-msgstr "%s de %s assignats"
+msgid "%1$s of %2$s assigned"
+msgstr ""
 
 msgid "truncate table before import routes or csv file"
 msgstr "retallar tabla abans d'importar rutes o arxiu CSV"
@@ -914,6 +914,14 @@ msgstr ""
 #. I18N: Home link js
 msgid "Standard CSS class name"
 msgstr "Nom de la classe CSS estàndard"
+
+#, php-format
+#~ msgid "File ‘%s’ in the public folder is not an image but '%s'"
+#~ msgstr "L'arxiu «%s» de la carpeta pública no és una imatge, sinó «%s»."
+
+#, php-format
+#~ msgid "%s of %s assigned"
+#~ msgstr "%s de %s assignats"
 
 #~ msgid "unordered, bulleted list"
 #~ msgstr "llista desordenada amb punts"

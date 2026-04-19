@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-29 20:46+0200\n"
+"POT-Creation-Date: 2026-04-18 10:34+0200\n"
 "PO-Revision-Date: 2026-03-25 18:57+0000\n"
 "Last-Translator: TheDutchJewel <thedutchjewel@noreply.codeberg.org>\n"
 "Language-Team: Dutch <https://translate.codeberg.org/projects/linkenhancer/"
@@ -351,8 +351,8 @@ msgstr "Alleen bestanden in de openbare map worden ondersteund"
 
 #. I18N: MD img error public file, %s1=rel. filename, %s2=mimetype
 #, php-format
-msgid "File ‘%s’ in the public folder is not an image but '%s'"
-msgstr "Bestand ‘%s’ in de openbare map is geen afbeelding, maar ‘%s’"
+msgid "File '%1$s' in the public folder is not an image but '%2$s'"
+msgstr ""
 
 #. I18N: Module title
 msgid "Link-Enhancer"
@@ -826,8 +826,8 @@ msgstr "Gegevensrijen"
 
 #. I18N: WTHB Link table rows assigned/total
 #, php-format
-msgid "%s of %s assigned"
-msgstr "%s van %s toegewezen"
+msgid "%1$s of %2$s assigned"
+msgstr ""
 
 msgid "truncate table before import routes or csv file"
 msgstr "tabel afkappen vóór het importeren van routes of CSV-bestand"
@@ -907,6 +907,14 @@ msgstr ""
 #. I18N: Home link js
 msgid "Standard CSS class name"
 msgstr "Standaard CSS-klassenaam"
+
+#, php-format
+#~ msgid "File ‘%s’ in the public folder is not an image but '%s'"
+#~ msgstr "Bestand ‘%s’ in de openbare map is geen afbeelding, maar ‘%s’"
+
+#, php-format
+#~ msgid "%s of %s assigned"
+#~ msgstr "%s van %s toegewezen"
 
 #~ msgid "unordered, bulleted list"
 #~ msgstr "ongeordende lijst met opsommingstekens"
