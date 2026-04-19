@@ -1,11 +1,12 @@
 # Iberni2 <iberni2@noreply.codeberg.org>, 2026.
+# bschwede <bschwede@noreply.codeberg.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-18 10:34+0200\n"
-"PO-Revision-Date: 2026-03-24 16:26+0000\n"
-"Last-Translator: Iberni2 <iberni2@noreply.codeberg.org>\n"
+"PO-Revision-Date: 2026-04-19 10:54+0000\n"
+"Last-Translator: bschwede <bschwede@noreply.codeberg.org>\n"
 "Language-Team: Spanish <https://translate.codeberg.org/projects/linkenhancer/"
 "module/es/>\n"
 "Language: es\n"
@@ -13,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 "X-Poedit-Basepath: ../..\n"
 "X-Poedit-SearchPath-0: CustomMarkdownFactory.php\n"
 "X-Poedit-SearchPath-1: LinkEnhancerModule.php\n"
@@ -355,7 +356,7 @@ msgstr "Sólo se admiten archivos dentro de la carpeta pública"
 #. I18N: MD img error public file, %s1=rel. filename, %s2=mimetype
 #, php-format
 msgid "File '%1$s' in the public folder is not an image but '%2$s'"
-msgstr ""
+msgstr "El archivo «%1$s» de la carpeta pública no es una imagen, sino «%2$s»"
 
 #. I18N: Module title
 msgid "Link-Enhancer"
@@ -834,7 +835,7 @@ msgstr "Línea de datos"
 #. I18N: WTHB Link table rows assigned/total
 #, php-format
 msgid "%1$s of %2$s assigned"
-msgstr ""
+msgstr "%1$s de %2$s asignados"
 
 msgid "truncate table before import routes or csv file"
 msgstr "recortar tabla antes de importar rutas o archivo CSV"
