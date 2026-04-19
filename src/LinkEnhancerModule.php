@@ -326,8 +326,14 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public function customTranslations(string $language): array
     {
         $file_base = $this->resourcesFolder() . 'lang' . DIRECTORY_SEPARATOR . $language;
-        $file = file_exists($file_base . '.php') ?  $file_base . '.php' : $file_base . '.po';
-        return file_exists($file) ? (new Translation($file))->asArray() : [];
+        $file = null;
+        foreach (['.php', '.po'] as $ext) {
+            if (is_readable($file_base . $ext)) {
+                $file = $file_base . $ext;
+                break;
+            }
+        }
+        return $file ? (new Translation($file))->asArray() : [];
     }
 
 
