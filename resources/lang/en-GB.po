@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-29 20:46+0200\n"
+"POT-Creation-Date: 2026-04-18 10:34+0200\n"
 "PO-Revision-Date: 2026-04-01 13:57+0000\n"
 "Last-Translator: MicXDev <micxdev@noreply.codeberg.org>\n"
 "Language-Team: English <https://translate.codeberg.org/projects/linkenhancer/"
@@ -345,7 +345,7 @@ msgstr ""
 
 #. I18N: MD img error public file, %s1=rel. filename, %s2=mimetype
 #, php-format
-msgid "File ‘%s’ in the public folder is not an image but '%s'"
+msgid "File '%1$s' in the public folder is not an image but '%2$s'"
 msgstr ""
 
 #. I18N: Module title
@@ -757,7 +757,7 @@ msgstr ""
 
 #. I18N: WTHB Link table rows assigned/total
 #, php-format
-msgid "%s of %s assigned"
+msgid "%1$s of %2$s assigned"
 msgstr ""
 
 msgid "truncate table before import routes or csv file"

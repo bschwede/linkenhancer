@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-29 20:46+0200\n"
-"PO-Revision-Date: 2026-03-24 16:09+0000\n"
+"POT-Creation-Date: 2026-04-18 10:34+0200\n"
+"PO-Revision-Date: 2026-04-19 10:54+0000\n"
 "Last-Translator: bschwede <bschwede@noreply.codeberg.org>\n"
 "Language-Team: German <https://translate.codeberg.org/projects/linkenhancer/"
 "module/de/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. I18N: Settings - section title
 msgid "Webtrees manual"
@@ -360,8 +360,8 @@ msgstr "Es werden nur Dateien innerhalb des public-Ordners unterstützt"
 
 #. I18N: MD img error public file, %s1=rel. filename, %s2=mimetype
 #, php-format
-msgid "File ‘%s’ in the public folder is not an image but '%s'"
-msgstr "Datei '%s' im public-Ordner ist kein Bild sondern '%s'"
+msgid "File '%1$s' in the public folder is not an image but '%2$s'"
+msgstr "Datei '%1$s' im public-Ordner ist kein Bild sondern '%2$s'"
 
 #. I18N: Module title
 msgid "Link-Enhancer"
@@ -839,8 +839,8 @@ msgstr "Daten-Zeilen"
 
 #. I18N: WTHB Link table rows assigned/total
 #, php-format
-msgid "%s of %s assigned"
-msgstr "%s von %s zugewiesen"
+msgid "%1$s of %2$s assigned"
+msgstr "%1$s von %2$s zugewiesen"
 
 msgid "truncate table before import routes or csv file"
 msgstr "Tabelle leeren vor dem Import der Routen oder einer CSV-Datei"
@@ -919,6 +919,14 @@ msgstr ""
 #. I18N: Home link js
 msgid "Standard CSS class name"
 msgstr "Standard CSS-Klassenname"
+
+#, php-format
+#~ msgid "File ‘%s’ in the public folder is not an image but '%s'"
+#~ msgstr "Datei '%s' im public-Ordner ist kein Bild sondern '%s'"
+
+#, php-format
+#~ msgid "%s of %s assigned"
+#~ msgstr "%s von %s zugewiesen"
 
 #~ msgid "unordered, bulleted list"
 #~ msgstr "Aufzählungsliste"
