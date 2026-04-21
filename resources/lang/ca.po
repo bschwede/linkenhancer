@@ -5,8 +5,8 @@ msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-18 10:34+0200\n"
-"PO-Revision-Date: 2026-04-19 10:54+0000\n"
-"Last-Translator: bschwede <bschwede@noreply.codeberg.org>\n"
+"PO-Revision-Date: 2026-04-21 08:57+0000\n"
+"Last-Translator: Iberni2 <iberni2@noreply.codeberg.org>\n"
 "Language-Team: Catalan <https://translate.codeberg.org/projects/linkenhancer/"
 "module/ca/>\n"
 "Language: ca\n"
@@ -107,7 +107,7 @@ msgstr "format de codi"
 
 #. I18N: JS MDE
 msgid "highlight"
-msgstr "ressaltar"
+msgstr "destacar"
 
 #. I18N: JS MDE
 #, php-format
@@ -305,7 +305,7 @@ msgid "Insert just before the very first heading"
 msgstr "Inseriu just abans del primer encapçalament"
 
 msgid "Location is manually defined by a placeholder"
-msgstr "La ubicació es defineix manualment per un marcador de posició."
+msgstr "La ubicació es defineix manualment per un marcador de posició"
 
 msgid "applies nesting, but handles edge cases"
 msgstr "aplica el condicionat anidat, però gestiona els casos límit"
@@ -368,7 +368,7 @@ msgid ""
 "to the GenWiki webtrees manual"
 msgstr ""
 "Referències als conjunts de dades GEDCOM, amb l'editor Markdown, a enllaços "
-"contextuals  al manual GenWiki webtrees"
+"contextuals al manual GenWiki webtrees"
 
 msgid "Home link - JSON with CSS rules seems to be invalid."
 msgstr "L'enllaç d'inici JSON amb regles CSS, sembla no ser vàlid."
@@ -707,9 +707,9 @@ msgid ""
 "which are taken from the following code excerpt and can also serve as a "
 "reference point for adjustments."
 msgstr ""
-"El complement JavaScrip sobreescriu i complementa els ajustos redefinits  "
-"qque s'extreuen del següent extracte de codi i que també pot servir com a "
-"punt de referència per als ajustos."
+"El complement JavaScrip sobreescriu i complementa els ajustos redefinits que "
+"s'extreuen del següent extracte de codi i que també pot servir com a punt de "
+"referència per als ajustos."
 
 #. I18N: Enhanced Links js
 msgid "Any CSS rules required are best added via the “CSS and JS” module."
@@ -735,7 +735,7 @@ msgstr ""
 #. I18N: wthb link setting option
 msgid "Open webtrees manual URL with Google Translate?"
 msgstr ""
-"Trieu si voleu obrir la pàgina d’ajuda directament o a través d’un traductor."
+"Trieu si voleu obrir la pàgina d’ajuda directament o a través d’un traductor?"
 
 #. I18N: wthb link user setting epilogue 1
 msgid "This setting can be adjusted at any time."
@@ -771,7 +771,7 @@ msgstr "Enllaços d'ajuda addicionals"
 #. I18N: wthb translate
 #. I18N:
 msgid "user defined"
-msgstr "sense definir"
+msgstr "definit per l'usuari"
 
 msgid "Help link for subcontext topics"
 msgstr "Enllaç d'ajuda per a temes de subcontext"
