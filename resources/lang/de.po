@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-18 10:34+0200\n"
-"PO-Revision-Date: 2026-04-19 10:54+0000\n"
+"POT-Creation-Date: 2026-04-28 17:51+0200\n"
+"PO-Revision-Date: 2026-04-28 18:29+0000\n"
 "Last-Translator: bschwede <bschwede@noreply.codeberg.org>\n"
 "Language-Team: German <https://translate.codeberg.org/projects/linkenhancer/"
 "module/de/>\n"
@@ -381,6 +381,34 @@ msgstr "Home-Link - JSON mit CSS-Regeln scheint ungültig zu sein."
 msgid "Import registered routes"
 msgstr "Registrierte Routen importieren"
 
+#. I18N: user defined url
+#. I18N: Settings - section title
+msgid "Home link"
+msgstr "Home-Link"
+
+#. I18N: see also fancy-research-links
+msgid "Open links in a new tab"
+msgstr "Verknüpfungen in einem neuen Reiter öffnen"
+
+msgid "JSON for home link styling"
+msgstr "JSON für die Gestaltung des Home-Links"
+
+#. I18N: Home link js
+msgid ""
+"JSON object that can be used to dynamically apply CSS styles for the home "
+"link that match the current theme."
+msgstr ""
+"JSON Objekt mit dem dynamisch zum aktuellen Theme passende CSS-Styles für "
+"den Home-Link angewendet werden können."
+
+#. I18N: Home link js
+msgid "Standard CSS class name"
+msgstr "Standard CSS-Klassenname"
+
+#. I18N: Home link js
+msgid "Example"
+msgstr "Beispiel"
+
 msgid "Activate enhanced links?"
 msgstr "Verbesserte Links aktivieren?"
 
@@ -429,6 +457,12 @@ msgstr "Startseite des aktiven Stammbaums"
 #. I18N: home link
 msgid "my page of the registered user"
 msgstr "Meine Seite des Benutzers"
+
+#. I18N:
+#. I18N: wthb translate
+#. I18N:
+msgid "user defined"
+msgstr "benutzerdefiniert"
 
 msgid ""
 "Webtrees uses a CommonMark implementation and supports a subset of the markup"
@@ -602,14 +636,6 @@ msgstr ""
 msgid "Activate markdown image tweak?"
 msgstr "Markdown Bilderlink Optimierung aktivieren?"
 
-#. I18N: see also fancy-research-links
-msgid "Open links in a new tab"
-msgstr "Verknüpfungen in einem neuen Reiter öffnen"
-
-#. I18N: Home link js
-msgid "Example"
-msgstr "Beispiel"
-
 msgid "Table cell height control"
 msgstr "Höhensteuerung für Tabellenzellen"
 
@@ -693,6 +719,9 @@ msgstr "JSON ist ungültig"
 msgid "Javascript is invalid"
 msgstr "JavaScript ist ungültig"
 
+msgid "Input required"
+msgstr "Eingabe erforderlich"
+
 msgid "JSON export"
 msgstr "JSON-Export"
 
@@ -771,12 +800,6 @@ msgstr ""
 
 msgid "Additional help links"
 msgstr "Zusätzliche Hilfe-Links"
-
-#. I18N:
-#. I18N: wthb translate
-#. I18N:
-msgid "user defined"
-msgstr "benutzerdefiniert"
 
 msgid "Help link for subcontext topics"
 msgstr "Hilfe-Link für Unterthemen"
@@ -900,25 +923,6 @@ msgstr "Mehr Optionen"
 
 msgid "Output of debug information on the JS console"
 msgstr "Ausgabe von Debug-Informationen auf der JS-Konsole"
-
-#. I18N: Settings - section title
-msgid "Home link"
-msgstr "Home-Link"
-
-msgid "JSON for home link styling"
-msgstr "JSON für die Gestaltung des Home-Links"
-
-#. I18N: Home link js
-msgid ""
-"JSON object that can be used to dynamically apply CSS styles for the home "
-"link that match the current theme."
-msgstr ""
-"JSON Objekt mit dem dynamisch zum aktuellen Theme passende CSS-Styles für "
-"den Home-Link angewendet werden können."
-
-#. I18N: Home link js
-msgid "Standard CSS class name"
-msgstr "Standard CSS-Klassenname"
 
 #, php-format
 #~ msgid "File ‘%s’ in the public folder is not an image but '%s'"
