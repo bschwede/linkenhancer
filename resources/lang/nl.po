@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-18 10:34+0200\n"
-"PO-Revision-Date: 2026-04-19 10:54+0000\n"
+"POT-Creation-Date: 2026-04-28 17:51+0200\n"
+"PO-Revision-Date: 2026-04-28 18:29+0000\n"
 "Last-Translator: bschwede <bschwede@noreply.codeberg.org>\n"
 "Language-Team: Dutch <https://translate.codeberg.org/projects/linkenhancer/"
 "module/nl/>\n"
@@ -373,6 +373,34 @@ msgstr "Startpagina-link - JSON met CSS-regels lijkt ongeldig te zijn."
 msgid "Import registered routes"
 msgstr "Geregistreerde routes importeren"
 
+#. I18N: user defined url
+#. I18N: Settings - section title
+msgid "Home link"
+msgstr "Startpagina-link"
+
+#. I18N: see also fancy-research-links
+msgid "Open links in a new tab"
+msgstr "Koppelingen openen in een nieuwe tab"
+
+msgid "JSON for home link styling"
+msgstr "JSON voor opmaak startpagina-link"
+
+#. I18N: Home link js
+msgid ""
+"JSON object that can be used to dynamically apply CSS styles for the home "
+"link that match the current theme."
+msgstr ""
+"JSON-object dat kan worden gebruikt om dynamisch CSS-stijlen toe te passen "
+"op de startpagina-link die overeenkomt met het huidige thema."
+
+#. I18N: Home link js
+msgid "Standard CSS class name"
+msgstr "Standaard CSS-klassenaam"
+
+#. I18N: Home link js
+msgid "Example"
+msgstr "Voorbeeld"
+
 msgid "Activate enhanced links?"
 msgstr "Verbeterde links activeren?"
 
@@ -421,6 +449,12 @@ msgstr "startpagina van de huidige stamboom"
 #. I18N: home link
 msgid "my page of the registered user"
 msgstr "mijn pagina van de geregistreerde gebruiker"
+
+#. I18N:
+#. I18N: wthb translate
+#. I18N:
+msgid "user defined"
+msgstr "door gebruiker gedefinieerd"
 
 msgid ""
 "Webtrees uses a CommonMark implementation and supports a subset of the markup"
@@ -593,14 +627,6 @@ msgstr ""
 msgid "Activate markdown image tweak?"
 msgstr "Markdown-afbeeldingsaanpassing activeren?"
 
-#. I18N: see also fancy-research-links
-msgid "Open links in a new tab"
-msgstr "Koppelingen openen in een nieuwe tab"
-
-#. I18N: Home link js
-msgid "Example"
-msgstr "Voorbeeld"
-
 msgid "Table cell height control"
 msgstr "Hoogte van tabelcellen aanpassen"
 
@@ -684,6 +710,9 @@ msgstr "JSON is ongeldig"
 msgid "Javascript is invalid"
 msgstr "Javascript is ongeldig"
 
+msgid "Input required"
+msgstr "Invoer vereist"
+
 msgid "JSON export"
 msgstr "JSON-export"
 
@@ -760,12 +789,6 @@ msgstr ""
 
 msgid "Additional help links"
 msgstr "Extra hulplinks"
-
-#. I18N:
-#. I18N: wthb translate
-#. I18N:
-msgid "user defined"
-msgstr "door gebruiker gedefinieerd"
 
 msgid "Help link for subcontext topics"
 msgstr "Help link voor subcontext-onderwerpen"
@@ -889,25 +912,6 @@ msgstr "Meer opties"
 
 msgid "Output of debug information on the JS console"
 msgstr "Uitvoer van debug-informatie op de JS-console"
-
-#. I18N: Settings - section title
-msgid "Home link"
-msgstr "Startpagina-link"
-
-msgid "JSON for home link styling"
-msgstr "JSON voor opmaak startpagina-link"
-
-#. I18N: Home link js
-msgid ""
-"JSON object that can be used to dynamically apply CSS styles for the home "
-"link that match the current theme."
-msgstr ""
-"JSON-object dat kan worden gebruikt om dynamisch CSS-stijlen toe te passen "
-"op de startpagina-link die overeenkomt met het huidige thema."
-
-#. I18N: Home link js
-msgid "Standard CSS class name"
-msgstr "Standaard CSS-klassenaam"
 
 #, php-format
 #~ msgid "File ‘%s’ in the public folder is not an image but '%s'"
