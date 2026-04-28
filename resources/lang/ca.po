@@ -4,9 +4,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-18 10:34+0200\n"
-"PO-Revision-Date: 2026-04-21 08:57+0000\n"
-"Last-Translator: Iberni2 <iberni2@noreply.codeberg.org>\n"
+"POT-Creation-Date: 2026-04-28 17:51+0200\n"
+"PO-Revision-Date: 2026-04-28 18:29+0000\n"
+"Last-Translator: bschwede <bschwede@noreply.codeberg.org>\n"
 "Language-Team: Catalan <https://translate.codeberg.org/projects/linkenhancer/"
 "module/ca/>\n"
 "Language: ca\n"
@@ -376,6 +376,34 @@ msgstr "L'enllaç d'inici JSON amb regles CSS, sembla no ser vàlid."
 msgid "Import registered routes"
 msgstr "Importar rutes registrades"
 
+#. I18N: user defined url
+#. I18N: Settings - section title
+msgid "Home link"
+msgstr "Enllaç d'inici"
+
+#. I18N: see also fancy-research-links
+msgid "Open links in a new tab"
+msgstr "Obre els enllaços en una pestanya nova"
+
+msgid "JSON for home link styling"
+msgstr "JSON per dissenyar els enllaços d'inici"
+
+#. I18N: Home link js
+msgid ""
+"JSON object that can be used to dynamically apply CSS styles for the home "
+"link that match the current theme."
+msgstr ""
+"JSON es pot utilitzar per aplicar dinàmicament estils CSS per al enllaç "
+"d'inici que coincideixin amb el tema actual."
+
+#. I18N: Home link js
+msgid "Standard CSS class name"
+msgstr "Nom de la classe CSS estàndard"
+
+#. I18N: Home link js
+msgid "Example"
+msgstr "Exemple"
+
 msgid "Activate enhanced links?"
 msgstr "Activar enllaços millorats?"
 
@@ -425,6 +453,12 @@ msgstr "Pàgina d'inici de l'arbre actual"
 #. I18N: home link
 msgid "my page of the registered user"
 msgstr "la meva pàgina d'usuari registrat"
+
+#. I18N:
+#. I18N: wthb translate
+#. I18N:
+msgid "user defined"
+msgstr "definit per l'usuari"
 
 msgid ""
 "Webtrees uses a CommonMark implementation and supports a subset of the markup"
@@ -597,14 +631,6 @@ msgstr ""
 msgid "Activate markdown image tweak?"
 msgstr "Activar l'ajust d'imatge Markdown?"
 
-#. I18N: see also fancy-research-links
-msgid "Open links in a new tab"
-msgstr "Obre els enllaços en una pestanya nova"
-
-#. I18N: Home link js
-msgid "Example"
-msgstr "Exemple"
-
 msgid "Table cell height control"
 msgstr "Control de l'alçada de la cel·la de taula"
 
@@ -689,6 +715,9 @@ msgstr "JSON no és vàlid"
 msgid "Javascript is invalid"
 msgstr "JavaScript no és vàlid"
 
+msgid "Input required"
+msgstr "Es necessita entrada"
+
 msgid "JSON export"
 msgstr "Exportació JSON"
 
@@ -766,12 +795,6 @@ msgstr ""
 
 msgid "Additional help links"
 msgstr "Enllaços d'ajuda addicionals"
-
-#. I18N:
-#. I18N: wthb translate
-#. I18N:
-msgid "user defined"
-msgstr "definit per l'usuari"
 
 msgid "Help link for subcontext topics"
 msgstr "Enllaç d'ajuda per a temes de subcontext"
@@ -896,25 +919,6 @@ msgstr "Més opcions"
 
 msgid "Output of debug information on the JS console"
 msgstr "Sortida d'informació de depuració a la consola JS"
-
-#. I18N: Settings - section title
-msgid "Home link"
-msgstr "Enllaç d'inici"
-
-msgid "JSON for home link styling"
-msgstr "JSON per dissenyar els enllaços d'inici"
-
-#. I18N: Home link js
-msgid ""
-"JSON object that can be used to dynamically apply CSS styles for the home "
-"link that match the current theme."
-msgstr ""
-"JSON es pot utilitzar per aplicar dinàmicament estils CSS per al enllaç "
-"d'inici que coincideixin amb el tema actual."
-
-#. I18N: Home link js
-msgid "Standard CSS class name"
-msgstr "Nom de la classe CSS estàndard"
 
 #, php-format
 #~ msgid "File ‘%s’ in the public folder is not an image but '%s'"

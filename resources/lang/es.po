@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-18 10:34+0200\n"
-"PO-Revision-Date: 2026-04-19 10:54+0000\n"
+"POT-Creation-Date: 2026-04-28 17:51+0200\n"
+"PO-Revision-Date: 2026-04-28 18:29+0000\n"
 "Last-Translator: bschwede <bschwede@noreply.codeberg.org>\n"
 "Language-Team: Spanish <https://translate.codeberg.org/projects/linkenhancer/"
 "module/es/>\n"
@@ -66,7 +66,7 @@ msgid "No CSV file was received."
 msgstr "No se ha encontrado ningún archivo CSV."
 
 msgid "Separator is not set."
-msgstr "El separador no está configurado"
+msgstr "El separador no está configurado."
 
 msgid "For the separator is only a single character allowed."
 msgstr "Para delimitar el separador solamente se permite un único carácter."
@@ -376,6 +376,34 @@ msgstr "El enlace de inicio JSON con reglas CSS, parece no ser válido."
 msgid "Import registered routes"
 msgstr "Importar rutas registradas"
 
+#. I18N: user defined url
+#. I18N: Settings - section title
+msgid "Home link"
+msgstr "Enlace de inicio"
+
+#. I18N: see also fancy-research-links
+msgid "Open links in a new tab"
+msgstr "Abrir enlaces en una nueva pestaña"
+
+msgid "JSON for home link styling"
+msgstr "JSON para diseñar los enlaces de inicio"
+
+#. I18N: Home link js
+msgid ""
+"JSON object that can be used to dynamically apply CSS styles for the home "
+"link that match the current theme."
+msgstr ""
+"JSON se puede utilizar para aplicar dinámicamente estilos CSS para el enlace "
+"de inicio que coincidan con el tema actual."
+
+#. I18N: Home link js
+msgid "Standard CSS class name"
+msgstr "Nombre de la clase CSS estándar"
+
+#. I18N: Home link js
+msgid "Example"
+msgstr "Ejemplo"
+
 msgid "Activate enhanced links?"
 msgstr "¿Activar enlaces mejorados?"
 
@@ -425,6 +453,12 @@ msgstr "Página de inicio del árbol actual"
 #. I18N: home link
 msgid "my page of the registered user"
 msgstr "mi página de usuario registrado"
+
+#. I18N:
+#. I18N: wthb translate
+#. I18N:
+msgid "user defined"
+msgstr "sin definir"
 
 msgid ""
 "Webtrees uses a CommonMark implementation and supports a subset of the markup"
@@ -598,14 +632,6 @@ msgstr ""
 msgid "Activate markdown image tweak?"
 msgstr "¿Activar el ajuste de imagen Markdown?"
 
-#. I18N: see also fancy-research-links
-msgid "Open links in a new tab"
-msgstr "Abrir enlaces en una nueva pestaña"
-
-#. I18N: Home link js
-msgid "Example"
-msgstr "Ejemplo"
-
 msgid "Table cell height control"
 msgstr "Control de la altura de las celdas de la tabla"
 
@@ -689,6 +715,9 @@ msgstr "JSON no es válido"
 msgid "Javascript is invalid"
 msgstr "JavaScript no es válido"
 
+msgid "Input required"
+msgstr "Se requiere una entrada"
+
 msgid "JSON export"
 msgstr "Exportación JSON"
 
@@ -765,12 +794,6 @@ msgstr ""
 
 msgid "Additional help links"
 msgstr "Enlaces de ayuda adicionales"
-
-#. I18N:
-#. I18N: wthb translate
-#. I18N:
-msgid "user defined"
-msgstr "sin definir"
 
 msgid "Help link for subcontext topics"
 msgstr "Enlace de ayuda para temas secundarios"
@@ -896,25 +919,6 @@ msgstr "Más opciones"
 
 msgid "Output of debug information on the JS console"
 msgstr "Salida de información de depuración en la consola JS"
-
-#. I18N: Settings - section title
-msgid "Home link"
-msgstr "Enlace de inicio"
-
-msgid "JSON for home link styling"
-msgstr "JSON para diseñar los enlaces de inicio"
-
-#. I18N: Home link js
-msgid ""
-"JSON object that can be used to dynamically apply CSS styles for the home "
-"link that match the current theme."
-msgstr ""
-"JSON se puede utilizar para aplicar dinámicamente estilos CSS para el enlace "
-"de inicio que coincidan con el tema actual."
-
-#. I18N: Home link js
-msgid "Standard CSS class name"
-msgstr "Nombre de la clase CSS estándar"
 
 #, php-format
 #~ msgid "File ‘%s’ in the public folder is not an image but '%s'"
