@@ -329,7 +329,7 @@ In case of discrepancies the context help can be more easily adjusted by activat
 
 <a name="homelink"></a>
 ### Home link
-The site title can be a link to the tree homepage or the user my page.
+The site title can be a link to the tree homepage or the user my page. The webmaster can also set a user defined url.
 
 ![site title as link](resources/img/screenshot_sitetitle-as-link.png)
 
