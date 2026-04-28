@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-18 10:34+0200\n"
+"POT-Creation-Date: 2026-04-28 17:51+0200\n"
 "PO-Revision-Date: 2026-03-28 03:57+0000\n"
 "Last-Translator: RickM <rickm@noreply.codeberg.org>\n"
 "Language-Team: English (Australia) <https://translate.codeberg.org/projects/"
@@ -365,6 +365,32 @@ msgstr ""
 msgid "Import registered routes"
 msgstr ""
 
+#. I18N: user defined url
+#. I18N: Settings - section title
+msgid "Home link"
+msgstr ""
+
+#. I18N: see also fancy-research-links
+msgid "Open links in a new tab"
+msgstr ""
+
+msgid "JSON for home link styling"
+msgstr ""
+
+#. I18N: Home link js
+msgid ""
+"JSON object that can be used to dynamically apply CSS styles for the home "
+"link that match the current theme."
+msgstr ""
+
+#. I18N: Home link js
+msgid "Standard CSS class name"
+msgstr ""
+
+#. I18N: Home link js
+msgid "Example"
+msgstr ""
+
 msgid "Activate enhanced links?"
 msgstr ""
 
@@ -406,6 +432,12 @@ msgstr ""
 
 #. I18N: home link
 msgid "my page of the registered user"
+msgstr ""
+
+#. I18N:
+#. I18N: wthb translate
+#. I18N:
+msgid "user defined"
 msgstr ""
 
 msgid ""
@@ -549,14 +581,6 @@ msgstr ""
 msgid "Activate markdown image tweak?"
 msgstr ""
 
-#. I18N: see also fancy-research-links
-msgid "Open links in a new tab"
-msgstr ""
-
-#. I18N: Home link js
-msgid "Example"
-msgstr ""
-
 msgid "Table cell height control"
 msgstr ""
 
@@ -633,6 +657,9 @@ msgstr ""
 msgid "Javascript is invalid"
 msgstr ""
 
+msgid "Input required"
+msgstr ""
+
 msgid "JSON export"
 msgstr ""
 
@@ -696,12 +723,6 @@ msgid ""
 msgstr ""
 
 msgid "Additional help links"
-msgstr ""
-
-#. I18N:
-#. I18N: wthb translate
-#. I18N:
-msgid "user defined"
 msgstr ""
 
 msgid "Help link for subcontext topics"
@@ -810,21 +831,4 @@ msgid "More options"
 msgstr ""
 
 msgid "Output of debug information on the JS console"
-msgstr ""
-
-#. I18N: Settings - section title
-msgid "Home link"
-msgstr ""
-
-msgid "JSON for home link styling"
-msgstr ""
-
-#. I18N: Home link js
-msgid ""
-"JSON object that can be used to dynamically apply CSS styles for the home "
-"link that match the current theme."
-msgstr ""
-
-#. I18N: Home link js
-msgid "Standard CSS class name"
 msgstr ""
