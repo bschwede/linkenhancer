@@ -147,23 +147,9 @@ $module = Registry::container()->get(LinkEnhancerModule::class);
 
         <h4 class="subdiv">[4] <a name="section4" href="#top"><?= /*I18N: Settings - section title */ I18N::translate('Home link') ?></a></h4>
 <section id="options4">
-        <div class="row">
-            <!-- home link --><?php $prefId = LinkEnhancerModule::PREF_HOME_LINK_JSON; ?>
-            <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
-                <?= I18N::translate('JSON for home link styling') . ' (' . /*I18N: webtrees.pot */ I18N::translate('optional') . ')' ?>
-            </label>
-            <div class="col-sm-9 wt-page-options-value mt-3">
-                <textarea id="<?= $prefId ?>" name="<?= $prefId ?>" class="form-control font-monospace" dir="ltr"
-                    rows="5"><?= e($prefs[$prefId]) ?></textarea>
-                <div class="form-text">
-                    <p><?= /*I18N: Home link js */ I18N::translate('JSON object that can be used to dynamically apply CSS styles for the home link that match the current theme.') ?>
-                    <br>
-                    <?= /*I18N: Home link js */ I18N::translate('Standard CSS class name') ?>: <code><?= LinkEnhancerModule::STDCLASS_HOME_LINK ?></code>
-                    </p>
-                    <p><?= /*I18N: Home link js */ I18N::translate('Example') ?>: <code><?= LinkEnhancerModule::EXAMPLE_HOME_LINK_JSON ?></code></p>
-                </div>
-            </div>
-        </div>
+<?= view($module->name() . '::' . 'settings-home', [
+    'prefs' => $prefs
+]) ?>
 </section>
 
         <p>&nbsp;</p>

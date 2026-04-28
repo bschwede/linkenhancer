@@ -85,7 +85,9 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         self::CUSTOM_MODULE . '/main/latest-version.txt';
 
 
-    public const PREF_HOME_LINK_TYPE = 'HOME_LINK_TYPE'; // home link type: 0=off, 1=tree, 2=my-page
+    public const PREF_HOME_LINK_TYPE = 'HOME_LINK_TYPE'; // home link type: 0=off, 1=tree, 2=my-page, 3=user defined
+    public const PREF_HOME_LINK_URL = 'HOME_LINK_URL'; // user defined url
+    public const PREF_HOME_LINK_OPEN_IN_NEW_TAB = 'HOME_LINK_OPEN_IN_NEW_TAB'; // only relevant for user defined url
     public const PREF_HOME_LINK_JSON = 'HOME_LINK_JS'; // string; javascript object { '*': stylerules-string, 'theme': stylerules-string}
     public const EXAMPLE_HOME_LINK_JSON = '{ "*": ".homelink { color: #039; }",  "colors_nocturnal": ".homelink { color: antiquewhite; }" }';
     public const PREF_WTHB_ACTIVE = 'WTHB_LINK_ACTIVE'; // link to GenWiki "Webtrees Handbuch"
@@ -175,6 +177,8 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         // - parent=PREF_-Keyname 
         // - mode=define how value is overwritten py parent value
         self::PREF_HOME_LINK_TYPE            => [ 'type' => 'int',    'default' => '1' ], // triple-state, 0=off, 1=tree, 2=my-page
+        self::PREF_HOME_LINK_URL             => [ 'type' => 'string', 'default' => ''],
+        self::PREF_HOME_LINK_OPEN_IN_NEW_TAB => [ 'type' => 'bool',   'default' => '1', 'parent' => self::PREF_OPEN_IN_NEW_TAB, 'mode' => OverwriteMode::ParentIsNotOne],
         self::PREF_HOME_LINK_JSON            => [ 'type' => 'string', 'default' => '' ], // json object { '*': stylerules-string, 'theme': stylerules-string}
         self::PREF_WTHB_ACTIVE               => [ 'type' => 'bool',   'default' => '1' ],
         self::PREF_WTHB_SUBCONTEXT           => [ 'type' => 'bool',   'default' => '1' ],
@@ -515,8 +519,22 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         // --- Home Link
         if ($cfg_home_active && $tree != null) {
             $params = [ 'tree' => $tree->name()];
-            $url = $cfg_home_type == 1 ? route(TreePage::class, $params) : route(HomePage::class, $params);
-            $this->docReadyJs .= '$(".wt-site-title").wrapInner(`<a class="' . self::STDCLASS_HOME_LINK .'" href="' . e($url) . '"></a>`);';
+            $url = "#";
+            $target = '';
+            switch ($cfg_home_type) {
+                case 1:
+                    $url = route(TreePage::class, $params);
+                    break;
+                case 2:
+                    $url = route(HomePage::class, $params);
+                    break;
+                case 3:
+                    $url = $this->getPref(self::PREF_HOME_LINK_URL);
+                    $url = $url !== '' ? $url : '#';
+                    $target = $this->getPref(self::PREF_HOME_LINK_OPEN_IN_NEW_TAB, true, true) ? ' target="_blank"' : '';
+                    break;
+            }
+            $this->docReadyJs .= '$(".wt-site-title").wrapInner(`<a class="' . self::STDCLASS_HOME_LINK .'" href="' . e($url) . '"' . $target . '></a>`);';
 
             $cfg_home_link_json = $this->getPref(self::PREF_HOME_LINK_JSON); // getPref returns trimmed string 
             if ($cfg_home_link_json) {

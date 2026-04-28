@@ -67,6 +67,12 @@ $defaults_json = LinkEnhancerModule::getDefaultPrefsAsJson();
         checkJs('<?= LinkEnhancerModule::PREF_WTHB_LINKS_JSON; ?>', true);
         checkJs('<?= LinkEnhancerModule::PREF_HOME_LINK_JSON; ?>', true);
 
+        const homeurl = $("#<?= LinkEnhancerModule::PREF_HOME_LINK_URL; ?>");
+        if (($("[name=<?= LinkEnhancerModule::PREF_HOME_LINK_TYPE; ?>]:checked").val() ?? 0) == 3 && $(homeurl).val() == '') {
+            showError(homeurl, '<?= I18N::translate("Input required") ?>')
+            firstErrElem = firstErrElem ?? homeurl 
+        }
+
         if (firstErrElem) {
             $(firstErrElem).get(0).scrollIntoView({ behavior: 'smooth' });
             return false;
@@ -131,7 +137,7 @@ $defaults_json = LinkEnhancerModule::getDefaultPrefsAsJson();
     function setSettings(cfg) {
         // is cfg object?
         if (!cfg || typeof cfg !== 'object' || Array.isArray(cfg)) {
-            console.warn('setSettings: cfg muss ein Objekt sein');
+            console.warn('setSettings: cfg need to be an objekt');
             return false;
         }
 
@@ -259,6 +265,7 @@ $defaults_json = LinkEnhancerModule::getDefaultPrefsAsJson();
             ['<?= LinkEnhancerModule::PREF_HOME_LINK_TYPE; ?>', '#options4'],
             ['<?= LinkEnhancerModule::PREF_OPEN_IN_NEW_TAB; ?>', '.openinnewtab', [0, 2], 'disabled'],
             ['<?= LinkEnhancerModule::PREF_WTHB_LINKS_TYPE; ?>', '#wthb-links-json', [0, 2], 'disabled'],
+            ['<?= LinkEnhancerModule::PREF_HOME_LINK_TYPE; ?>', '#homeuserurl', [0, 1, 2], 'disabled'],
         ].forEach((sec) => {
             [secName, secSelector, indexes, cname] = sec;
             indexes = (indexes === null || !Array.isArray(indexes) ? [0] : indexes);
