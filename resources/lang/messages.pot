@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-18 10:34+0200\n"
+"POT-Creation-Date: 2026-04-28 17:51+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -358,8 +358,8 @@ msgstr ""
 msgid "start page"
 msgstr ""
 
-#: src/LinkEnhancerUtils.php:172 resources/views/settings-jscss.phtml:294
-#: resources/views/settings-jscss.phtml:297 resources/views/settings.phtml:35
+#: src/LinkEnhancerUtils.php:172 resources/views/settings-jscss.phtml:301
+#: resources/views/settings-jscss.phtml:304 resources/views/settings.phtml:35
 msgid "Settings"
 msgstr ""
 
@@ -459,23 +459,61 @@ msgid "File '%1$s' in the public folder is not an image but '%2$s'"
 msgstr ""
 
 #. I18N: Module title
-#: src/LinkEnhancerModule.php:256
+#: src/LinkEnhancerModule.php:260
 msgid "Link-Enhancer"
 msgstr ""
 
 #. I18N: Module description
-#: src/LinkEnhancerModule.php:266
+#: src/LinkEnhancerModule.php:270
 msgid ""
 "Cross-references to Gedcom datasets, Markdown editor, context-sensitive link "
 "to the GenWiki webtrees manual"
 msgstr ""
 
-#: src/LinkEnhancerModule.php:528
+#: src/LinkEnhancerModule.php:552
 msgid "Home link - JSON with CSS rules seems to be invalid."
 msgstr ""
 
-#: src/LinkEnhancerModule.php:668 resources/views/settings-wthb.phtml:250
+#: src/LinkEnhancerModule.php:692 resources/views/settings-wthb.phtml:250
 msgid "Import registered routes"
+msgstr ""
+
+#. I18N: user defined url
+#. I18N: Settings - section title
+#: resources/views/settings-home.phtml:17 resources/views/settings.phtml:148
+msgid "Home link"
+msgstr ""
+
+#. I18N: see also fancy-research-links
+#: resources/views/settings-home.phtml:32 resources/views/settings-md.phtml:44
+#: resources/views/settings-le.phtml:20 resources/views/settings-wthb.phtml:165
+#: resources/views/settings.phtml:105
+msgid "Open links in a new tab"
+msgstr ""
+
+#: resources/views/settings-home.phtml:45
+msgid "JSON for home link styling"
+msgstr ""
+
+#. I18N: Home link js
+#: resources/views/settings-home.phtml:52
+msgid ""
+"JSON object that can be used to dynamically apply CSS styles for the home "
+"link that match the current theme."
+msgstr ""
+
+#. I18N: Home link js
+#: resources/views/settings-home.phtml:54
+msgid "Standard CSS class name"
+msgstr ""
+
+#. I18N: Home link js
+#: resources/views/settings-home.phtml:58 resources/views/settings-md.phtml:67
+#: resources/views/settings-md.phtml:79 resources/views/settings-md.phtml:252
+#: resources/views/settings-md.phtml:328 resources/views/settings-md.phtml:342
+#: resources/views/settings-md.phtml:357
+#: resources/views/settings-wthb.phtml:114
+msgid "Example"
 msgstr ""
 
 #: resources/views/settings-main.phtml:28
@@ -529,6 +567,15 @@ msgstr ""
 #. I18N: home link
 #: resources/views/settings-main.phtml:98
 msgid "my page of the registered user"
+msgstr ""
+
+#. I18N:
+#. I18N: wthb translate
+#. I18N:
+#: resources/views/settings-main.phtml:99
+#: resources/views/settings-wthb.phtml:100
+#: resources/views/settings-wthb.phtml:151 resources/views/settings.phtml:113
+msgid "user defined"
 msgstr ""
 
 #: resources/views/help-md.phtml:18
@@ -708,20 +755,6 @@ msgstr ""
 msgid "Activate markdown image tweak?"
 msgstr ""
 
-#. I18N: see also fancy-research-links
-#: resources/views/settings-md.phtml:44 resources/views/settings-le.phtml:20
-#: resources/views/settings-wthb.phtml:165 resources/views/settings.phtml:105
-msgid "Open links in a new tab"
-msgstr ""
-
-#. I18N: Home link js
-#: resources/views/settings-md.phtml:67 resources/views/settings-md.phtml:79
-#: resources/views/settings-md.phtml:252 resources/views/settings-md.phtml:328
-#: resources/views/settings-md.phtml:342 resources/views/settings-md.phtml:357
-#: resources/views/settings-wthb.phtml:114 resources/views/settings.phtml:163
-msgid "Example"
-msgstr ""
-
 #: resources/views/settings-md.phtml:107
 msgid "Table cell height control"
 msgstr ""
@@ -821,15 +854,19 @@ msgstr ""
 msgid "Javascript is invalid"
 msgstr ""
 
-#: resources/views/settings-jscss.phtml:294 resources/views/settings.phtml:40
+#: resources/views/settings-jscss.phtml:72
+msgid "Input required"
+msgstr ""
+
+#: resources/views/settings-jscss.phtml:301 resources/views/settings.phtml:40
 msgid "JSON export"
 msgstr ""
 
-#: resources/views/settings-jscss.phtml:297 resources/views/settings.phtml:41
+#: resources/views/settings-jscss.phtml:304 resources/views/settings.phtml:41
 msgid "JSON import"
 msgstr ""
 
-#: resources/views/settings-jscss.phtml:377
+#: resources/views/settings-jscss.phtml:384
 msgid "Enable for more options"
 msgstr ""
 
@@ -900,14 +937,6 @@ msgstr ""
 
 #: resources/views/settings-wthb.phtml:92
 msgid "Additional help links"
-msgstr ""
-
-#. I18N:
-#. I18N: wthb translate
-#. I18N:
-#: resources/views/settings-wthb.phtml:100
-#: resources/views/settings-wthb.phtml:151 resources/views/settings.phtml:113
-msgid "user defined"
 msgstr ""
 
 #: resources/views/settings-wthb.phtml:131
@@ -1044,26 +1073,5 @@ msgstr ""
 
 #: resources/views/settings.phtml:91
 msgid "Output of debug information on the JS console"
-msgstr ""
-
-#. I18N: Settings - section title
-#: resources/views/settings.phtml:148
-msgid "Home link"
-msgstr ""
-
-#: resources/views/settings.phtml:153
-msgid "JSON for home link styling"
-msgstr ""
-
-#. I18N: Home link js
-#: resources/views/settings.phtml:159
-msgid ""
-"JSON object that can be used to dynamically apply CSS styles for the home "
-"link that match the current theme."
-msgstr ""
-
-#. I18N: Home link js
-#: resources/views/settings.phtml:161
-msgid "Standard CSS class name"
 msgstr ""
 
