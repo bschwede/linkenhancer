@@ -1,0 +1,63 @@
+<?php
+
+declare(strict_types=1);
+
+use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
+
+/**
+ * @var array<string>           $prefs                  list of chapter objects
+ */
+?>
+<section id="homeuserurl">
+        <div class="row">
+            <!-- genwiki std link --><?php $prefId = LinkEnhancerModule::PREF_HOME_LINK_URL; ?>
+            <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
+                <?= /*I18N: user defined url */ I18N::translate('Home link') ?>
+            </label>
+            <div class="col-sm-9 wt-page-options-value">
+                <input class="form-control" id="<?= $prefId ?>" name="<?= $prefId ?>" type="text"
+                    value="<?= e($prefs[$prefId]) ?>">
+                <div class="form-text">
+                </div>
+            </div>
+        </div>
+
+    <section class="openinnewtab">
+            <!-- wthb open in new tab --><?php $prefId = LinkEnhancerModule::PREF_HOME_LINK_OPEN_IN_NEW_TAB; ?>
+        <fieldset class="form-group mb-3">
+            <div class="row">
+                <legend class="col-form-label col-sm-3 wt-page-options-label">
+                    <?= /*I18N: see also fancy-research-links */ I18N::translate('Open links in a new tab') ?>
+                </legend>
+                <div class="col-sm-9 wt-page-options-value mt-2">
+                    <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                </div>
+            </div>
+        </fieldset>
+    </section>
+</section>    
+
+        <div class="row">
+            <!-- home link --><?php $prefId = LinkEnhancerModule::PREF_HOME_LINK_JSON; ?>
+            <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
+                <?= I18N::translate('JSON for home link styling') . ' (' . /*I18N: webtrees.pot */ I18N::translate('optional') . ')' ?>
+            </label>
+            <div class="col-sm-9 wt-page-options-value mt-3">
+                <textarea id="<?= $prefId ?>" name="<?= $prefId ?>" class="form-control font-monospace" dir="ltr"
+                    rows="5"><?= e($prefs[$prefId]) ?></textarea>
+                <div class="form-text">
+                    <p>
+                        <?= /*I18N: Home link js */ I18N::translate('JSON object that can be used to dynamically apply CSS styles for the home link that match the current theme.') ?>
+                        <br>
+                        <?= /*I18N: Home link js */ I18N::translate('Standard CSS class name') ?>:
+                        <code><?= LinkEnhancerModule::STDCLASS_HOME_LINK ?></code>
+                    </p>
+                    <p>
+                        <?= /*I18N: Home link js */ I18N::translate('Example') ?>:
+                        <code><?= LinkEnhancerModule::EXAMPLE_HOME_LINK_JSON ?></code>
+                    </p>
+                </div>
+            </div>
+        </div>
