@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Schwendinger\Webtrees\Module\LinkEnhancer;
 
+use Exception;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Webtrees;
 use Illuminate\Database\Capsule\Manager as DB;
@@ -54,7 +55,15 @@ if ($vesta_installed) {
         ) === 'enabled'
     );
     if ($vesta_active) {
-        $module = new LinkEnhancerModuleExt(true);
+        $placeholder = Registry::container()->get("Vesta\PlaceholderModule");
+        $versionCheck = false;
+        try {
+            $versionCheck = $placeholder ? $placeholder->ifIncompatible() === null : false;
+        } catch (Exception $e) {}
+
+        if ($versionCheck) {
+            $module = new LinkEnhancerModuleExt(true);
+        }
     }
 }
 $module = $module ?? new LinkEnhancerModule();
