@@ -15,6 +15,7 @@ use Fisharebest\Webtrees\Media;
 use Fisharebest\Webtrees\Module\ModuleChartInterface;
 use Fisharebest\Webtrees\Module\ModuleInterface;
 use Fisharebest\Webtrees\Module\RelationshipsChartModule;
+use Fisharebest\Webtrees\Note;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Services\ModuleService;
 use Fisharebest\Webtrees\Services\RelationshipService;
@@ -76,8 +77,8 @@ if ($tag === 'MARR') {
     <th scope="row">
         <div class="wt-fact-label ut">
             <?php // shared note label as link to record
-            if (str_ends_with($tag, 'NOTE') && preg_match('/^@(' . Gedcom::REGEX_XREF . ')@$/', $value, $match)): ?>
-                <?php $note = Registry::noteFactory()->make($match[1], $tree);
+            if ($fact->target() instanceof Note) : ?>
+                <?php $note = $fact->target();
 
                 if ($note !== null && $note->canShow()): ?>
                     <a href="<?= e($note->url()); ?>"><?= $label ?></a>

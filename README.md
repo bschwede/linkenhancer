@@ -366,8 +366,8 @@ These are minor bug fixes or functional enhancements — usually in a single fil
 
 | #    | Description | applies to version |
 | :--: | :----       | :---:   |
-| P001 | Backlink for level 1 shared notes [#5181](https://github.com/fisharebest/webtrees/issues/5181) <br> */app/Fact.php* | 2.2.1 - |
-| P002 | Enable headContent/bodyContent for this module on admin backend in order to show the context help link [#5214](https://github.com/fisharebest/webtrees/issues/5214)<br> *resources/views/layouts/administration.phtml* | 2.2.1 - |
+| P001 | Backlink for level 1 shared notes [#5181](https://github.com/fisharebest/webtrees/issues/5181) - not necessary anymore except you would like to have an additional edit link <br> */app/Fact.php* | 2.2.1 - 2.2.6 |
+| P002 | Enable headContent/bodyContent for this module on admin backend in order to show the context help link [#5214](https://github.com/fisharebest/webtrees/issues/5214)<br> *resources/views/layouts/administration.phtml* | 2.2.1 - 2.2.6 |
 | ~~P003~~ | Record has multiple uid fields [#4828](https://github.com/fisharebest/webtrees/issues/4828) <br> *app/Services/GedcomEditService.php* | 2.2.1 |
 
 
