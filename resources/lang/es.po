@@ -1,12 +1,13 @@
 # Iberni2 <iberni2@noreply.codeberg.org>, 2026.
 # bschwede <bschwede@noreply.codeberg.org>, 2026.
+# gallegonovato <gallegonovato@noreply.codeberg.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-28 17:51+0200\n"
-"PO-Revision-Date: 2026-04-28 18:29+0000\n"
-"Last-Translator: bschwede <bschwede@noreply.codeberg.org>\n"
+"PO-Revision-Date: 2026-04-29 18:12+0000\n"
+"Last-Translator: gallegonovato <gallegonovato@noreply.codeberg.org>\n"
 "Language-Team: Spanish <https://translate.codeberg.org/projects/linkenhancer/"
 "module/es/>\n"
 "Language: es\n"
@@ -25,7 +26,7 @@ msgid "Webtrees manual"
 msgstr "Manual Webtrees"
 
 msgid "Error occurred"
-msgstr "Se ha producido un error"
+msgstr "Se produjo un error"
 
 #. I18N: csv import
 msgid "empty rows"
@@ -44,7 +45,7 @@ msgid "rows in which the maximum field value length has been exceeded"
 msgstr "filas en las que se ha superado la longitud máxima del valor del campo"
 
 msgid "Routes imported"
-msgstr "Las rutas se importaron"
+msgstr "Rutas importadas"
 
 #. I18N: wthb import skipped rows
 msgid "Skipped"
@@ -54,44 +55,44 @@ msgid "CSV-Import"
 msgstr "Importar CSV"
 
 msgid "Table for context help is missing - fallback to standard url"
-msgstr "Falta la tabla de ayuda contextual - se vuelve a la URL estándar"
+msgstr "Falta la tabla de ayuda contextual; se utilizará la url estándar"
 
 msgid "Table for context help is missing - nothing to do."
-msgstr "Falta la tabla de ayuda contextual - no se puede hacer nada."
+msgstr "Falta la tabla de ayuda contextual; no hay nada que hacer."
 
 msgid "No data available for export."
-msgstr "No hay datos disponibles para la exportación."
+msgstr "Sin datos para exportar."
 
 msgid "No CSV file was received."
-msgstr "No se ha encontrado ningún archivo CSV."
+msgstr "No se recibió ningún archivo CSV."
 
 msgid "Separator is not set."
 msgstr "El separador no está configurado."
 
 msgid "For the separator is only a single character allowed."
-msgstr "Para delimitar el separador solamente se permite un único carácter."
+msgstr "Para el separador solo se permite un único carácter."
 
 msgid "webtrees FAQ"
-msgstr "webtrees PF"
+msgstr "Preguntas frecuentes"
 
 msgid "webtrees Forum"
 msgstr "Foro de webtrees"
 
 msgid "ask a question (account necessary)"
-msgstr "Hacer una pregunta (es necesario tener una cuenta)"
+msgstr "Haz una pregunta (cuenta necesaria)"
 
 msgid "CompGen Discourse"
 msgstr "Discusión en CompGen"
 
 msgid "GitHub - webtrees issues"
-msgstr "GitHub - Incidencias de webtrees"
+msgstr "GitHub - Problemas con webtrees"
 
 msgid "GitHub - webtrees related projects"
 msgstr "GitHub: proyectos relacionados con webtrees"
 
 #. I18N: JS MDE
 msgid "bold"
-msgstr "en negrita"
+msgstr "negrita"
 
 #. I18N: JS MDE
 msgid "italic"
@@ -103,7 +104,7 @@ msgstr "tachado"
 
 #. I18N: JS MDE
 msgid "format as code"
-msgstr "formato de código"
+msgstr "formato como código"
 
 #. I18N: JS MDE
 msgid "highlight"
@@ -112,11 +113,11 @@ msgstr "destacar"
 #. I18N: JS MDE
 #, php-format
 msgid "Level %s heading"
-msgstr "Nivel %s para el encabezamiento"
+msgstr "Nivel %s: del título"
 
 #. I18N: JS MDE
 msgid "Bulleted list"
-msgstr "Listado con viñetas"
+msgstr "Lista con viñetas"
 
 #. I18N: JS MDE
 msgid "Numbered list"
@@ -305,7 +306,7 @@ msgid "Insert just before the very first heading"
 msgstr "Insertar justo antes del primer encabezado"
 
 msgid "Location is manually defined by a placeholder"
-msgstr "La ubicación se define manualmente mediante un marcador de posición."
+msgstr "La ubicación se define manualmente por un marcador de posición"
 
 msgid "applies nesting, but handles edge cases"
 msgstr "aplica el anidamiento, pero gestiona los casos extremos"
@@ -458,7 +459,7 @@ msgstr "mi página de usuario registrado"
 #. I18N: wthb translate
 #. I18N:
 msgid "user defined"
-msgstr "sin definir"
+msgstr "definido por el usuario"
 
 msgid ""
 "Webtrees uses a CommonMark implementation and supports a subset of the markup"
@@ -716,7 +717,7 @@ msgid "Javascript is invalid"
 msgstr "JavaScript no es válido"
 
 msgid "Input required"
-msgstr "Se requiere una entrada"
+msgstr "Entrada obligatoria"
 
 msgid "JSON export"
 msgstr "Exportación JSON"
@@ -766,7 +767,7 @@ msgstr "¿Abrir la URL del manual de webtrees con Google Translate?"
 
 #. I18N: wthb link user setting epilogue 1
 msgid "This setting can be adjusted at any time."
-msgstr "Esta configuración puede ajustarse en cualquier momento"
+msgstr "Esta configuración se puede cambiar en cualquier momento."
 
 msgid "Top menu"
 msgstr "Menú superior"
@@ -779,7 +780,7 @@ msgstr ""
 "ayuda contextual para la página actual."
 
 msgid "Precede the top menu link with an icon"
-msgstr "Antepon un icono al enlace del menú superior."
+msgstr "Añade un icono delante del enlace del menú superior"
 
 msgid "Split top menu item"
 msgstr "Elemento del menú superior dividido"
@@ -867,7 +868,7 @@ msgid "Table truncate"
 msgstr "Recortar tabla"
 
 msgid "Reset routes to delivery status"
-msgstr "Restablecer rutas al formato de entrega"
+msgstr "Restablecer las rutas a los ajustes iniciales"
 
 msgid "Separator"
 msgstr "Separador"
@@ -880,7 +881,7 @@ msgstr "Archivo CSV de importación"
 
 msgid "Automatically refresh data table when module is updated"
 msgstr ""
-"Actualizar automáticamente la tabla de datos cuando se actualiza el módulo"
+"Actualizar automáticamente la tabla de datos cuando se actualice el módulo"
 
 msgid "reset to default"
 msgstr "restablecer a los valores predeterminados"
