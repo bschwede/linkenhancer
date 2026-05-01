@@ -46,17 +46,17 @@ export const syncVersion = async (txt_file, php_file) => {
 
     let currentPhp = '';
     if (await fileExists(php_file)) {
-        currentPhp = await fs.readFile(VERSION_PHP, 'utf8');
+        currentPhp = await fs.readFile(php_file, 'utf8');
     }
 
     const phpRegex = /(public\s+const\s+CUSTOM_VERSION\s*=\s*["'])([\d.]+)(["']\s*;)/;
     const replacedPhp = currentPhp.replace(phpRegex, `$1${version}$3`);
     
     if (replacedPhp !== currentPhp) {
-        await fs.writeFile(VERSION_PHP, replacedPhp, 'utf8');
-        log(`${VERSION_PHP} updated to ${version}`);
+        await fs.writeFile(php_file, replacedPhp, 'utf8');
+        log(`${php_file} updated to ${version}`);
     } else {
-        log(`${VERSION_PHP} - no change.`);
+        log(`${php_file} - no change.`);
     }
 }
 
