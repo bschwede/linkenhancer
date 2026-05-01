@@ -138,9 +138,9 @@ export const insertMenu = (document, html) => {
 
     if (document.querySelector("li.nav-item.menu-wthb")) return;
 
-    const topmenu = document.querySelector("ul.wt-user-menu, ul.nav.small");
-
-    if (!topmenu) return;
-
-    topmenu.insertAdjacentHTML("afterbegin", html);
+    // standard top menu, admin top menu, justlight secondary menu
+    Array.from(document.querySelectorAll("ul.wt-user-menu, ul.nav.small, ul.nav.wt-genealogy-menu.wt-user-menu-sm"))
+        .forEach(el => {
+            el.insertAdjacentHTML("afterbegin", html);
+        });
 };
