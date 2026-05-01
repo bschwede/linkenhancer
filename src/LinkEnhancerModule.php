@@ -448,13 +448,9 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         $includeRes = '';
         $this->docReadyJs = ''; // init on document ready
         $this->initJs = '';
-
-        $theme = Session::get('theme');
-        $palette = Session::get('palette', '');
-        
+      
         $activeRouteInfo = Utils::getActiveRoute($request);
         if ($cfg_js_debug_console) {
-            $this->docReadyJs .= "console.debug('LE-Mod theme:', '$theme'" . ($palette ? ", 'palette=$palette'" : '') . ");";
             $this->docReadyJs .= "console.debug('LE-Mod active route:', " . json_encode($activeRouteInfo) .");";
         }
 
@@ -517,7 +513,8 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         //    $includeRes .= "<script>window.I18N = " . Utils::getJsI18N() . "; </script>";
         //}
         // --- Home Link
-        if ($cfg_home_active && $tree != null) {
+        $isHomeLinkActive = $cfg_home_active && $tree != null;
+        if ($isHomeLinkActive) {
             $params = [ 'tree' => $tree->name()];
             $url = "#";
             $target = '';
@@ -535,25 +532,6 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                     break;
             }
             $this->docReadyJs .= '$(".wt-site-title").wrapInner(`<a class="' . self::STDCLASS_HOME_LINK .'" href="' . e($url) . '"' . $target . '></a>`);';
-
-            $cfg_home_link_json = $this->getPref(self::PREF_HOME_LINK_JSON); // getPref returns trimmed string 
-            if ($cfg_home_link_json) {
-                $theme_palette = $theme . ($palette ? "_{$palette}" : ''); // palette is also set with other themes than colors
-                $json = json_decode($cfg_home_link_json, true);
-                if ($json) {
-                    $stylerules = $json[$theme_palette] ?? $json[$theme] ?? $json['*'] ?? null;
-                    if ($stylerules) {
-                        $includeRes .= "<style>{$stylerules}</style>";
-                    } elseif ($cfg_js_debug_console) {
-                        $this->docReadyJs .= "console.debug('LE-Mod home link: JSON contains no matching style rule for current theme');";
-                    }
-                } else {
-                    FlashMessages::addMessage(
-                        I18N::translate('Home link - JSON with CSS rules seems to be invalid.'),
-                        'warning'
-                    );
-                }
-            }
         }
         
         // --- Link++
@@ -614,6 +592,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         }
         
         $includeRes .= Utils::getIncludeWebressourceString($this, $this->bundleShortcuts, WebRessource::CssAndJs);
+        $includeRes .= $this->getThemeSpecificCss($cfg_js_debug_console, $isHomeLinkActive);
         $includeRes .= Utils::getJavascriptWrapper($this->docReadyJs, $this->initJs);
         return $includeRes;
     }
@@ -648,6 +627,70 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         return $includeRes . $html;
     }
 
+
+    /**
+     * Compiles theme specific css "patches"
+     * wthb needs some minor modifications with primer and justlight
+     * for home link there could be user defined patches
+     * 
+     * @param bool $jsDebugMsg        log to js debug console
+     * @param bool $isHomeLinkActive  is home link component active
+     * @return string
+     */    
+    private function getThemeSpecificCss(bool $jsDebugMsg, bool $isHomeLinkActive) : string {
+        $theme = Session::get('theme');
+        $palette = Session::get('palette', '');
+        $theme_palette = $theme . ($palette ? "_{$palette}" : ''); // palette is also set with other themes than colors
+
+        $includeRes = "";
+
+        if ($jsDebugMsg) {
+            $this->docReadyJs .= "console.debug('LE-Mod theme:', '$theme'" . ($palette ? ", 'palette=$palette'" : '') . ");";        
+        }
+
+        // webtrees manual
+        if (in_array('wthb', $this->bundleShortcuts)) {
+            $themeStyles = [
+                '_jc-theme-justlight_'    => ".nav-item.dropdown.menu-wthb { line-height: 1.25; }
+                .popover {
+  background-clip: padding-box;
+  background-color: hsl(0, 0%, 100%);;
+  border: 1px solid hwb(0 0% 100% / 0.18);
+  border-radius: 0.2rem;
+  text-align: start;
+  text-shadow: none;
+  z-index:1070;
+}
+.popover-body { padding: 0.5rem 0.5rem;}",
+                '_webtrees-primer-theme_' => ".nav-item.dropdown.menu-wthb { line-height: 1.75; color: var(--fgColor-muted);} .nav-item.dropdown.menu-wthb svg { color: var(--fgColor-muted); }",
+            ];
+            $stylerules = $themeStyles[$theme_palette] ?? $themeStyles[$theme] ?? '';
+            $includeRes .= $stylerules ? "<style>{$stylerules}</style>\n" : '';
+        }
+
+        // home link
+        if ($isHomeLinkActive) {
+            $cfg_home_link_json = $this->getPref(self::PREF_HOME_LINK_JSON); // getPref returns trimmed string 
+            if ($cfg_home_link_json) {
+                $json = json_decode($cfg_home_link_json, true);
+                if ($json) {
+                    $stylerules = $json[$theme_palette] ?? $json[$theme] ?? $json['*'] ?? null;
+                    if ($stylerules) {
+                        $includeRes .= "<style>{$stylerules}</style>\n";
+                    } elseif ($jsDebugMsg) {
+                        $this->docReadyJs .= "console.debug('LE-Mod home link: JSON contains no matching style rule for current theme');";
+                    }
+                } else {
+                    FlashMessages::addMessage(
+                        I18N::translate('Home link - JSON with CSS rules seems to be invalid.'),
+                        'warning'
+                    );
+                }
+            }
+        }
+
+        return $includeRes;
+    }
     
     /**
      * Open control panel page with options
