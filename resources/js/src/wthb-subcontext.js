@@ -26,17 +26,100 @@ export const insertSubcontextLinks = (
 
     if (!Array.isArray(contexts) || contexts.length === 0) return;
 
-    const popovers = [];
+    // delegated event handler
+    const popoverTimeouts = new Map(); // trigger -> timeout-ID
+    const activePopovers = new WeakMap(); // trigger element -> popover instance
 
-    const target = (cfg.openInNewTab ? 'target="_blank" ' : '');
-    contexts.forEach((elem) => {
-        let ctx = elem.ctx;
+    // central delegation: operates on all .popover-trigger
+    const setupDelegation = () => {
+        // Remove existing listeners first (once)
+        document.removeEventListener('show.bs.popover', handleShowPopover);
+        document.removeEventListener('shown.bs.popover', handleShownPopover);
+        document.removeEventListener('hide.bs.popover', handleHidePopover);
+
+        // Bind delegated handlers
+        document.addEventListener('show.bs.popover', handleShowPopover, true);
+        document.addEventListener('shown.bs.popover', handleShownPopover, true);
+        document.addEventListener('hide.bs.popover', handleHidePopover, true);
+    };
+
+    const handleShowPopover = (e) => {
+        const trigger = e.target.closest('.popover-trigger');
+        if (!trigger) return;
+
+        // close all other popovers
+        document.querySelectorAll('.popover-trigger').forEach(otherTrigger => {
+            if (otherTrigger !== trigger) {
+                const otherPopover = activePopovers.get(otherTrigger);
+                if (otherPopover) otherPopover.hide();
+            }
+        });
+    };
+
+    const handleShownPopover = (e) => {
+        const trigger = e.target.closest('.popover-trigger');
+        if (!trigger) return;
+
+        // auto hide timer (5s)
+        const timeoutId = setTimeout(() => {
+            const popover = activePopovers.get(trigger);
+            if (popover) popover.hide();
+            popoverTimeouts.delete(trigger);
+        }, 5000);
+
+        popoverTimeouts.set(trigger, timeoutId);
+    };
+
+    const handleHidePopover = (e) => {
+        const trigger = e.target.closest('.popover-trigger');
+        if (!trigger) return;
+
+        // delete timer
+        const timeoutId = popoverTimeouts.get(trigger);
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+            popoverTimeouts.delete(trigger);
+        }
+    };
+
+    const createPopoverForTrigger = (trigger, url, pos = 'bottom') => {
+        const target = (cfg.openInNewTab ? 'target="_blank" ' : '');
+        const helptitle = getHelpTitle(url, cfg);
+        const wthblink = jQuery(`<a href="${url}" ${target}class="stretched-link d-inline-block p-1 text-decoration-none"><i class="fa-solid fa-circle-question"></i> ${helptitle}</a>`);
+
+        setWthbLinkClickHandler(document, window, bootstrap, jQuery, cfg, wthblink);
+
+        const popover = newPopover(trigger, {
+            placement: pos,
+            content: wthblink[0]
+        });
+
+        activePopovers.set(trigger, popover);
+        return popover;
+    };
+
+    // initial and dynamic rebind
+    const initializeTriggers = () => {
+        document.querySelectorAll('.popover-trigger').forEach(trigger => {
+            if (activePopovers.has(trigger)) return; // already initialized
+
+            // find context via data attribute
+            const ctxData = trigger.dataset?.subcontext;
+            if (!ctxData) return;
+
+            const { url, pos } = JSON.parse(ctxData);
+            createPopoverForTrigger(trigger, url, pos);
+        });
+    };
+
+    contexts.forEach((elem, index) => {
+        let ctx = elem.ctx.trim();
         let url = elem.url;
         if (!ctx || !url) return;
 
         let node = null;
         let pos = "top";
-        ctx = ctx.trim();
+
         if (ctx.startsWith("{")) { // JSON object: {f:filter, e:JS, p:position} e or f needed, p optional
             try {
                 let ctxobj = JSON.parse(ctx);
@@ -62,52 +145,53 @@ export const insertSubcontextLinks = (
 
         let poptrigger = jQuery('<span>', {
             class: 'popover-trigger',
+            'data-subcontext': JSON.stringify({ url, pos }),
             text: 'ⓘ',
         });
         node.append(poptrigger);
 
-        let helptitle = getHelpTitle(url, cfg);
-        let wthblink = jQuery(`<a href="${url}" ${target}class="stretched-link d-inline-block p-1 text-decoration-none"><i class="fa-solid fa-circle-question"></i> ${helptitle}</a>`);
-        setWthbLinkClickHandler(document, window, bootstrap, jQuery, cfg, wthblink);
-        popovers.push(newPopover(poptrigger, {
-            placement: pos,
-            content: wthblink
-        })); // poptrigger.popover() doesn`t work
+        createPopoverForTrigger(poptrigger[0], url, pos);
     });
 
-    popovers.forEach(el => {
-        el._element.addEventListener('show.bs.popover', () => {
-            // Disable popovers within group, except the current one
-            popovers.forEach(otherEl => {
-                if (otherEl !== el) {
-                    otherEl.hide();
-                }
+    // mutation observer
+    const observer = new MutationObserver((mutations) => {
+        let shouldReinit = false;
+        mutations.forEach(mutation => {
+            if (mutation.type === 'childList') {
+                mutation.addedNodes.forEach(node => {
+                    if (node.nodeType === Node.ELEMENT_NODE &&
+                        node.querySelector?.('.popover-trigger')) {
+                        shouldReinit = true;
+                    }
+                });
+            }
+        });
+        if (shouldReinit) {
+            // debounce: wait for 100ms
+            clearTimeout(window.popoverReinitTimeout);
+            window.popoverReinitTimeout = setTimeout(initializeTriggers, 100);
+        }
+    });
+
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+
+    // initial setup
+    setupDelegation();
+    initializeTriggers();
+
+    // cleanup function
+    return {
+        dispose: () => {
+            observer.disconnect();
+            document.querySelectorAll('.popover-trigger').forEach(trigger => {
+                const popover = activePopovers.get(trigger);
+                if (popover) popover.dispose();
+                activePopovers.delete(trigger);
             });
-        });
-
-        el._element.addEventListener('shown.bs.popover', () => {
-            // Automatic fading after 5 seconds
-            onShownBsPopoverHideTimeout(el);
-        });
-
-        el._element.addEventListener('hide.bs.popover', () => {
-            // Delete timer if closed manually
-            onHideBsPopoverHideTimout(el);
-        });
-    });
+            popoverTimeouts.clear();
+        }
+    };
 };
-
-const onShownBsPopoverHideTimeout = (el, timersec = 5000) => {
-    // Automatic fading after timersec seconds
-    if (el.hideTimeout) clearTimeout(el.hideTimeout);
-    el.hideTimeout = setTimeout(() => {
-        el.hide();
-    }, timersec);
-}
-const onHideBsPopoverHideTimout = (el) => {
-    // Delete timer if closed manually
-    if (el.hideTimeout) {
-        clearTimeout(el.hideTimeout);
-        el.hideTimeout = null;
-    }
-}
