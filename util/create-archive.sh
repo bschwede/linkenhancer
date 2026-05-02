@@ -34,6 +34,7 @@ util/wthb-toc
 .weblate
 requirements.txt
 .venv
+.env
 EOT
 
 cd "$SRCDIR" || exit 1
