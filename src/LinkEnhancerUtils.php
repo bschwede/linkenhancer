@@ -324,36 +324,6 @@ class LinkEnhancerUtils { // misc helper functions
 
 
     /**
-     * is it a request for an edit page
-     *
-     * @param ServerRequestInterface $request
-     * @return bool
-     */
-    public static function isEditPage(ServerRequestInterface|null $request = null): bool
-    {
-        if (!$request) {
-            $request = Registry::container()->get(ServerRequestInterface::class);
-        }
-        $route = Validator::attributes($request)->route();
-        $routename = basename(strtr($route->name ?? '/', ['\\' => '/']));
-
-        return in_array($routename, [
-            'EditFactPage',
-            'EditMainFieldsPage',
-            'EditNotePage',
-            'EditRecordPage',
-            'AddChildToFamilyPage',
-            'AddChildToIndividualPage',
-            'AddNewFact',
-            'AddParentToIndividualPage',
-            'AddSpouseToFamilyPage',
-            'AddSpouseToIndividualPage',
-            'AddUnlinkedPage'
-        ]);
-    } 
-
-
-    /**
      * is it a request for an admin backend page
      *
      * @param ServerRequestInterface $request

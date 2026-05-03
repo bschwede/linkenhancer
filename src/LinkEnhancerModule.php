@@ -26,24 +26,14 @@ declare(strict_types=1);
 
 namespace Schwendinger\Webtrees\Module\LinkEnhancer;
 
-use Schwendinger\Webtrees\Module\LinkEnhancer\Factories\CustomMarkdownFactory;
-use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
-use Schwendinger\Webtrees\Module\LinkEnhancer\Services\WthbService;
-use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoXrefAction;
-use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpMdAction;
-use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpWtCoreAction;
-use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpWthbAction;
+use Aura\Router\Map;
+use Exception;
 use Fisharebest\Localization\Translation;
 use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\FlashMessages;
-use Fisharebest\Webtrees\I18N;
-use Fisharebest\Webtrees\Registry;
-use Fisharebest\Webtrees\Session;
-use Fisharebest\Webtrees\Validator;
-use Fisharebest\Webtrees\View;
-use Fisharebest\Webtrees\Webtrees;
 use Fisharebest\Webtrees\Http\RequestHandlers\HomePage;
 use Fisharebest\Webtrees\Http\RequestHandlers\TreePage;
+use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Module\AbstractModule;
 use Fisharebest\Webtrees\Module\ModuleConfigInterface;
 use Fisharebest\Webtrees\Module\ModuleConfigTrait;
@@ -51,13 +41,23 @@ use Fisharebest\Webtrees\Module\ModuleCustomInterface;
 use Fisharebest\Webtrees\Module\ModuleCustomTrait;
 use Fisharebest\Webtrees\Module\ModuleGlobalInterface;
 use Fisharebest\Webtrees\Module\ModuleGlobalTrait;
+use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Services\TreeService;
+use Fisharebest\Webtrees\Session;
+use Fisharebest\Webtrees\Validator;
+use Fisharebest\Webtrees\View;
+use Illuminate\Database\Capsule\Manager as DB;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Illuminate\Database\Capsule\Manager as DB;
-use Aura\Router\Map;
-
-use Exception;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Factories\CustomMarkdownFactory;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoXrefAction;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpMdAction;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpWtCoreAction;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpWthbAction;
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Services\MarkdownEditorActivationService;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Services\WthbService;
+use Schwendinger\Webtrees\Module\LinkEnhancer\SettingInterface;
 
 enum OverwriteMode
 { // pref schema cascading setting - overwrite setting value with parent if...
@@ -65,7 +65,7 @@ enum OverwriteMode
     case ParentIsNotOne; // parent is int triple state
 }
 
-class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface, ModuleGlobalInterface, ModuleConfigInterface {
+class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface, ModuleGlobalInterface, ModuleConfigInterface, SettingInterface {
 
 
     // For every module interface that is implemented, the corresponding trait *should* also use be used.
@@ -118,7 +118,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public const PREF_MD_IMG_TITLE_STDCLASS = 'MD_IMG_TITLE_STDCLASS'; // standard classname(s) for picture subtitle
     public const PREF_MD_IMG_OPEN_IN_NEW_TAB = 'MD_IMG_OPEN_IN_NEW_TAB';
     public const PREF_MDE_ACTIVE = 'MDE_ACTIVE'; // enable markdown editor for note textareas
-
+    public const PREF_MDE_RULES = 'MDE_RULES'; // serialized array of rules (handler and element filter) that define where to apply the mde
     public const PREF_MD_TD_H_CTRL_TYPE = 'MD_TD_H_CTRL_ACTIVE'; // enable table cell height control
     public const PREF_MD_TD_H_CB_VISIBLE = 'MD_TD_H_CB_VISIBLE'; // set checkbox visiblity: always or on th:hover
 
@@ -207,6 +207,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         self::PREF_MD_IMG_TITLE_STDCLASS     => [ 'type' => 'string', 'default' => self::STDCLASS_MD_IMG_TITLE ], // css class name
         self::PREF_MD_IMG_OPEN_IN_NEW_TAB    => [ 'type' => 'bool',   'default' => '1', 'parent' => self::PREF_OPEN_IN_NEW_TAB, 'mode' => OverwriteMode::ParentIsNotOne ],
         self::PREF_MDE_ACTIVE                => [ 'type' => 'bool',   'default' => '1', 'parent' => self::PREF_MD_ACTIVE, 'mode' => OverwriteMode::ParentIsZero ],
+        self::PREF_MDE_RULES                 => [ 'type' => 'string'], // no default needed, internal setting
         self::PREF_MD_TD_H_CTRL_TYPE         => [ 'type' => 'int',    'default' => '1' ], // triple-state. 0=off, 1=available (default=off), 2=available (default=ON)
         self::PREF_MD_TD_H_CB_VISIBLE        => [ 'type' => 'bool',   'default' => '1' ],
         // markdown extensions
@@ -229,6 +230,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     private array|null $prefs_cache = null;
 
     protected WthbService $wthb;
+    protected MarkdownEditorActivationService $mde;
 
     // JavaScript is composed in headContent and can be injected in bodyContent, after vendor and webtrees js is included
     protected array $bundleShortcuts;
@@ -248,6 +250,8 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             $std_url,
             $wiki_url
         );
+
+        $this->mde = new MarkdownEditorActivationService($this); // register in boot method, so it's only available if module is enabled
     }    
   
     /**
@@ -373,6 +377,8 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             },
             86400
         );
+
+        Registry::container()->set(MarkdownEditorActivationService::class, $this->mde);
 
         // Register a namespace for our views.
         View::registerNamespace($this->name(), $this->resourcesFolder() . 'views/');
@@ -572,19 +578,19 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
             if ($cfg_md_editor_active) {
                 // --- TinyMDE -- only nessary on edit pages        
-                if (Utils::isEditPage($request)) {
+                if ($this->mde->isEditPage($request)) {
                     $this->bundleShortcuts[] = 'mde';
 
                     $options = [
-                        'I18N'       => Utils::getJsI18N('mde', $this),    
-                        'href'       => $cfg_link_active,
-                        'src'        => $cfg_md_img_active,
-                        'ext'        => $cfg_md_ext_active,
-                        'ext_mark'   => $this->canActivateHighlightExtension(),
-                        'ext_fn'     => $this->getPref(self::PREF_MD_EXT_FN_ACTIVE, true),
-                        'ext_strike' => $this->getPref(self::PREF_MD_EXT_STRIKE_ACTIVE, true),
-                        'todo'       => version_compare(Webtrees::VERSION, '2.2.5', '>='),
-                        'helpmd_url' => route(HelpMdAction::class, ['language' => I18N::languageTag()]),
+                        'I18N'         => Utils::getJsI18N('mde', $this),    
+                        'href'         => $cfg_link_active,
+                        'src'          => $cfg_md_img_active,
+                        'ext'          => $cfg_md_ext_active,
+                        'ext_mark'     => $this->canActivateHighlightExtension(),
+                        'ext_fn'       => $this->getPref(self::PREF_MD_EXT_FN_ACTIVE, true),
+                        'ext_strike'   => $this->getPref(self::PREF_MD_EXT_STRIKE_ACTIVE, true),
+                        'query_filter' => $this->mde->getElementFilter(),
+                        'helpmd_url'   => route(HelpMdAction::class, ['language' => I18N::languageTag()]),
                     ];                    
                     $this->docReadyJs .= "LinkEnhMod.installMDE(" . json_encode($options) . ");";
                 }
@@ -621,7 +627,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             $html .= view($this->name() . '::wthb-modal');
             $needajax = $cfg_wthb_tocnsearch || $cfg_wthb_wtcorehelp;
         }
-        if ($needajax || ($cfg_md_editor_active && Utils::isEditPage())) { // markdown editor is not useful on other pages
+        if ($needajax || ($cfg_md_editor_active && $this->mde->isEditPage())) { // markdown editor is not useful on other pages
             $html .= view($this->name() . '::ajax');
         }
         return $includeRes . $html;
@@ -1031,6 +1037,9 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
 
         $response['vesta_common_enabled'] = $this->vesta_common_enabled;
 
+        $mde_rules = $this->mde->getAllRules();
+        $response['mde_custom'] = $mde_rules['custom'] ?? false ? print_r($mde_rules['custom'], true) : '';
+
         return $response;
     }
 
@@ -1046,4 +1055,33 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         return ((string) json_encode($filtered, JSON_HEX_TAG | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
     }
 
+
+    // SettingInterface
+    public function loadSetting(string $class): mixed
+    {
+        switch ($class) {
+            case MarkdownEditorActivationService::class:
+                $setting = $this->getPref(self::PREF_MDE_RULES);
+                $setting = $setting ? unserialize($setting) : [];
+                return $setting ?? [];
+                break;
+            
+            default:
+                throw new Exception("loadSetting not implemented for class $class");
+                break;
+        }
+    }
+    
+    public function saveSetting(string $class, mixed $data): void
+    {
+        switch ($class) {
+            case MarkdownEditorActivationService::class:
+                $this->setPref(self::PREF_MDE_RULES, serialize($data));
+                break;
+
+            default:
+                throw new Exception("saveSetting not implemented for class $class");
+                break;
+        }
+    }
 }

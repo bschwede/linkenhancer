@@ -183,7 +183,7 @@ Technically the images are packed into a div container together with an image su
 
 <a name="mde"></a>
 #### Markdown editor
-You can also enable a visual **markdown editor** for note textareas. Under the hood the project “TinyMDE - A tiny, dependency-free embeddable HTML/JavaScript Markdown editor” is used - see also: <https://github.com/jefago/tiny-markdown-editor>
+You can also enable a visual **markdown editor** (mde) for note textareas. Under the hood the project “TinyMDE - A tiny, dependency-free embeddable HTML/JavaScript Markdown editor” is used - see also: <https://github.com/jefago/tiny-markdown-editor>
 
 ![Markdown editor](resources/img/screenshot_tinymde-sharednote.png)
 
@@ -193,6 +193,26 @@ Besides syntax highlighting it ships with an icon bar for common format commands
 
 > [!NOTE]
 > Unfortunately, the on-screen keyboard does NOT work as before with the previous text input field. The selected characters end up as an intermediate step in the small text field below the Markdown editor and then must be copied manually to the desired position.
+
+If you as a developer also want to apply mde to text areas on the edit pages of other custom modules, you can do so using the `MarkdownEditorActivationService`:
+
+```php
+// This snippet could, for example, be placed in the boot method of the main module class.
+$class = "Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\MarkdownEditorActivationService";
+if (Registry::container()->has($class)) {
+  /** @var Schwendinger\Webtrees\Module\LinkEnhancer\Services\MarkdownEditorActivationService $mde_service */
+  $mde_service = Registry::container()->get($class);
+  if (!$mde_service->getCustomRule('hh_source_transcription')) {
+      $mde_service->setCustomRule(
+          'hh_source_transcription',  // module name as key
+          ["source-transcription-detail", "source-transcription-create-manual"], // handler: usually the short class name / last part of the route name - see js console with enabled debug info
+          [ "textarea[id=initial_text]" ] // filter: querySelector filter expressions
+      );
+  }
+}
+```
+
+This only works if this feature has been enabled globally and the edit page is associated with a tree that also uses Markdown in its notes.
 
 <a name="mdext"></a>
 #### Markdown Extensions

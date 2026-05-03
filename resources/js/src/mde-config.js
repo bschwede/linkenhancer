@@ -9,7 +9,7 @@ export function getMdeConfig() {
         ext_mark: true,   // highlight extension
         ext_fn: true,     // footnote extension
         ext_strike: true, // striketrough extension
-        todo: true, // with wt 2.2.5 _TODO text fields also support markdown
+        query_filter: "textarea[id$='NOTE'], textarea[id$='note']",
         helpmd_url: '',
     }
 }

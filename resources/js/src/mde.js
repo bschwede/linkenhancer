@@ -18,10 +18,7 @@ export function initMDE(document, options = {}) {
             node.tagName === "TEXTAREA",
 
         collect: node =>
-            node.querySelectorAll?.(
-                "textarea[id$='NOTE'], textarea[id$='note']" +
-                (cfg.todo ? ", textarea[id$='_TODO']" : "")
-            ),
+            node.querySelectorAll?.(cfg.query_filter),
 
         process: textarea =>
             initEditor(document, cfg, textarea),

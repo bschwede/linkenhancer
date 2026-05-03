@@ -67,5 +67,5 @@ if ($vesta_installed) {
     }
 }
 $module = $module ?? new LinkEnhancerModule();
-Registry::container()->set(LinkEnhancerModule::class, $module);
+//Registry::container()->set(LinkEnhancerModule::class, $module); // automatic registered by ModuleService
 return $module;
