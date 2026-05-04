@@ -42,7 +42,7 @@ The main purpose of this module is to make [**links to data records**](#enhanced
 
 Additionally there are some goodies more or less related with links:
 
-- The note textarea can be a [**visual markdown editor**](#mde) with **markdown help**.
+- The note textarea can be a [**visual markdown editor**](#mde) with **markdown help** (can also be utilized by other custom modules).
 - Enabling further [**markdown extensions**](#mdext).
 - Take control over [**table cell height**](#mdtdh) of longer markdown notes.
 - [**Context sensitive help links**](#wthb) to the [german webtrees manual](https://wiki.genealogy.net/Webtrees_Handbuch) can be activated in the small menu at the top of the page and for subcontext topics on the page. Furthermore, full-text search is supported and it is possible to browse the table of contents.
