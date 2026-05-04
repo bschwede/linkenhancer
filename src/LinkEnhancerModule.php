@@ -657,8 +657,10 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         // webtrees manual
         if (in_array('wthb', $this->bundleShortcuts)) {
             $themeStyles = [
-                '_jc-theme-justlight_'    => ".nav-item.dropdown.menu-wthb { line-height: 1.25; }
-                .popover {
+//-- justlight
+                '_jc-theme-justlight_'    =>
+".nav-item.dropdown.menu-wthb { line-height: 1.25; }
+.popover {
   background-clip: padding-box;
   background-color: hsl(0, 0%, 100%);;
   border: 1px solid hwb(0 0% 100% / 0.18);
@@ -667,8 +669,17 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
   text-shadow: none;
   z-index:1070;
 }
-.popover-body { padding: 0.5rem 0.5rem;}",
-                '_webtrees-primer-theme_' => ".nav-item.dropdown.menu-wthb { line-height: 1.75; color: var(--fgColor-muted);} .nav-item.dropdown.menu-wthb svg { color: var(--fgColor-muted); }",
+.popover-body { padding: 0.5rem 0.5rem;}
+.helpsection .linkicon { background-size: 20px 20px !important; }",
+
+//-- primer
+                '_webtrees-primer-theme_' =>
+".nav-item.dropdown.menu-wthb {
+  line-height: 1.75;
+  color: var(--fgColor-muted);
+}
+.nav-item.dropdown.menu-wthb svg { color: var(--fgColor-muted); }
+.helpsection .linkicon { background-size: 20px 20px !important; }",
             ];
             $stylerules = $themeStyles[$theme_palette] ?? $themeStyles[$theme] ?? '';
             $includeRes .= $stylerules ? "<style>{$stylerules}</style>\n" : '';
