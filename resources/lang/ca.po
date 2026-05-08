@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-28 17:51+0200\n"
+"POT-Creation-Date: 2026-05-08 19:27+0200\n"
 "PO-Revision-Date: 2026-05-04 18:00+0000\n"
 "Last-Translator: Iberni2 <iberni2@noreply.codeberg.org>\n"
 "Language-Team: Catalan <https://translate.codeberg.org/projects/linkenhancer/"
@@ -630,6 +630,9 @@ msgstr ""
 
 msgid "Activate markdown image tweak?"
 msgstr "Activar l'ajust d'imatge Markdown?"
+
+msgid "Debug info - registered custom modules"
+msgstr ""
 
 msgid "Table cell height control"
 msgstr "Control de l'alçada de la cel·la de taula"
