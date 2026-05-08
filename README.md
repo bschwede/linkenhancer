@@ -194,7 +194,7 @@ Besides syntax highlighting it ships with an icon bar for common format commands
 > [!NOTE]
 > Unfortunately, the on-screen keyboard does NOT work as before with the previous text input field. The selected characters end up as an intermediate step in the small text field below the Markdown editor and then must be copied manually to the desired position.
 
-If you as a developer also want to apply mde to text areas on the edit pages of other custom modules, you can do so using the `MarkdownEditorActivationService`:
+If you as a developer also want to apply mde to text areas on the edit pages of other custom modules, you can do so using the `MarkdownEditorActivationService` (available since v1.2.11 - details see [#101](https://codeberg.org/bschwede/linkenhancer/issues/101)):
 
 ```php
 // This snippet could, for example, be placed in the boot method of the main module class.
@@ -202,7 +202,7 @@ $class = "Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\MarkdownEditor
 if (Registry::container()->has($class)) {
   /** @var Schwendinger\Webtrees\Module\LinkEnhancer\Services\MarkdownEditorActivationService $mde_service */
   $mde_service = Registry::container()->get($class);
-  if (!$mde_service->getCustomRule('hh_source_transcription')) {
+  if (!$mde_service->getCustomRule('hh_source_transcription')) { // only update if not yet set
       $mde_service->setCustomRule(
           'hh_source_transcription',  // module name as key
           ["source-transcription-detail", "source-transcription-create-manual"], // handler: usually the short class name / last part of the route name - see js console with enabled debug info
