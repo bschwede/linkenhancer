@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-28 17:51+0200\n"
+"POT-Creation-Date: 2026-05-08 19:27+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,7 +21,7 @@ msgstr ""
 #: src/Services/WthbService.php:109 src/Services/WthbService.php:142
 #: src/Services/WthbService.php:271 src/LinkEnhancerUtils.php:166
 #: src/Http/RequestHandlers/HelpWthbAction.php:48
-#: resources/views/help-wt-helptext.phtml:15 resources/views/settings.phtml:138
+#: resources/views/help-wt-helptext.phtml:15 resources/views/settings.phtml:140
 msgid "Webtrees manual"
 msgstr ""
 
@@ -361,7 +361,7 @@ msgid "Full-text search"
 msgstr ""
 
 #: src/LinkEnhancerUtils.php:169 resources/views/md-toc-dropdown.phtml:15
-#: resources/views/help-wthb.phtml:52 resources/views/settings-md.phtml:266
+#: resources/views/help-wthb.phtml:52 resources/views/settings-md.phtml:270
 #: resources/views/settings-wthb.phtml:68
 msgid "Table of contents"
 msgstr ""
@@ -376,8 +376,8 @@ msgstr ""
 msgid "start page"
 msgstr ""
 
-#: src/LinkEnhancerUtils.php:172 resources/views/settings-jscss.phtml:301
-#: resources/views/settings-jscss.phtml:304 resources/views/settings.phtml:35
+#: src/LinkEnhancerUtils.php:172 resources/views/settings-jscss.phtml:302
+#: resources/views/settings-jscss.phtml:305 resources/views/settings.phtml:36
 msgid "Settings"
 msgstr ""
 
@@ -408,17 +408,17 @@ msgid "Footnote text"
 msgstr ""
 
 #. I18N: webtrees.pot
-#: src/LinkEnhancerUtils.php:532 resources/views/settings-main.phtml:96
-#: resources/views/settings-md.phtml:114 resources/views/wthb-modal.phtml:27
+#: src/LinkEnhancerUtils.php:502 resources/views/settings-main.phtml:96
+#: resources/views/settings-md.phtml:118 resources/views/wthb-modal.phtml:27
 #: resources/views/settings-wthb.phtml:99
-#: resources/views/settings-wthb.phtml:150 resources/views/settings.phtml:112
+#: resources/views/settings-wthb.phtml:150 resources/views/settings.phtml:113
 msgid "no"
 msgstr ""
 
 #. I18N: webtrees.pot
-#: src/LinkEnhancerUtils.php:533 resources/views/wthb-modal.phtml:27
+#: src/LinkEnhancerUtils.php:503 resources/views/wthb-modal.phtml:27
 #: resources/views/settings-wthb.phtml:101
-#: resources/views/settings-wthb.phtml:152 resources/views/settings.phtml:114
+#: resources/views/settings-wthb.phtml:152 resources/views/settings.phtml:115
 msgid "yes"
 msgstr ""
 
@@ -508,51 +508,51 @@ msgid "File '%1$s' in the public folder is not an image but '%2$s'"
 msgstr ""
 
 #. I18N: Module title
-#: src/LinkEnhancerModule.php:260
+#: src/LinkEnhancerModule.php:264
 msgid "Link-Enhancer"
 msgstr ""
 
 #. I18N: Module description
-#: src/LinkEnhancerModule.php:270
+#: src/LinkEnhancerModule.php:274
 msgid ""
 "Cross-references to Gedcom datasets, Markdown editor, context-sensitive link "
 "to the GenWiki webtrees manual"
 msgstr ""
 
-#: src/LinkEnhancerModule.php:552
+#: src/LinkEnhancerModule.php:702
 msgid "Home link - JSON with CSS rules seems to be invalid."
 msgstr ""
 
-#: src/LinkEnhancerModule.php:692 resources/views/settings-wthb.phtml:250
+#: src/LinkEnhancerModule.php:752 resources/views/settings-wthb.phtml:250
 msgid "Import registered routes"
 msgstr ""
 
 #. I18N: webtrees.pot
-#: src/LinkEnhancerModule.php:717 src/LinkEnhancerModule.php:739
+#: src/LinkEnhancerModule.php:777 src/LinkEnhancerModule.php:799
 msgid "Export failed"
 msgstr ""
 
 #. I18N: webtrees.pot
-#: src/LinkEnhancerModule.php:758
+#: src/LinkEnhancerModule.php:818
 msgid "Import failed"
 msgstr ""
 
 #. I18N: webtrees.pot
-#: src/LinkEnhancerModule.php:790
+#: src/LinkEnhancerModule.php:850
 #, php-format
 msgid "The preferences for the module “%s” have been updated."
 msgstr ""
 
 #. I18N: user defined url
 #. I18N: Settings - section title
-#: resources/views/settings-home.phtml:17 resources/views/settings.phtml:148
+#: resources/views/settings-home.phtml:17 resources/views/settings.phtml:150
 msgid "Home link"
 msgstr ""
 
 #. I18N: see also fancy-research-links
-#: resources/views/settings-home.phtml:32 resources/views/settings-md.phtml:44
+#: resources/views/settings-home.phtml:32 resources/views/settings-md.phtml:45
 #: resources/views/settings-le.phtml:20 resources/views/settings-wthb.phtml:165
-#: resources/views/settings.phtml:105
+#: resources/views/settings.phtml:106
 msgid "Open links in a new tab"
 msgstr ""
 
@@ -578,10 +578,10 @@ msgid "Standard CSS class name"
 msgstr ""
 
 #. I18N: Home link js
-#: resources/views/settings-home.phtml:58 resources/views/settings-md.phtml:67
-#: resources/views/settings-md.phtml:79 resources/views/settings-md.phtml:252
-#: resources/views/settings-md.phtml:328 resources/views/settings-md.phtml:342
-#: resources/views/settings-md.phtml:357
+#: resources/views/settings-home.phtml:58 resources/views/settings-md.phtml:68
+#: resources/views/settings-md.phtml:80 resources/views/settings-md.phtml:256
+#: resources/views/settings-md.phtml:332 resources/views/settings-md.phtml:346
+#: resources/views/settings-md.phtml:361
 #: resources/views/settings-wthb.phtml:114
 msgid "Example"
 msgstr ""
@@ -598,7 +598,7 @@ msgid ""
 msgstr ""
 
 #. I18N: Settings - section title
-#: resources/views/settings-main.phtml:44 resources/views/settings.phtml:131
+#: resources/views/settings-main.phtml:44 resources/views/settings.phtml:132
 msgid "Markdown enhancements"
 msgstr ""
 
@@ -650,7 +650,7 @@ msgstr ""
 #. I18N:
 #: resources/views/settings-main.phtml:99
 #: resources/views/settings-wthb.phtml:100
-#: resources/views/settings-wthb.phtml:151 resources/views/settings.phtml:113
+#: resources/views/settings-wthb.phtml:151 resources/views/settings.phtml:114
 msgid "user defined"
 msgstr ""
 
@@ -668,8 +668,8 @@ msgid ""
 msgstr ""
 
 #: resources/views/help-md.phtml:19 resources/views/help-md.phtml:51
-#: resources/views/help-md.phtml:61 resources/views/settings-md.phtml:164
-#: resources/views/settings-le.phtml:39 resources/views/settings.phtml:65
+#: resources/views/help-md.phtml:61 resources/views/settings-md.phtml:168
+#: resources/views/settings-le.phtml:39 resources/views/settings.phtml:66
 msgid "See also"
 msgstr ""
 
@@ -685,7 +685,7 @@ msgstr ""
 msgid "For more depth of detail"
 msgstr ""
 
-#: resources/views/help-md.phtml:59 resources/views/settings-md.phtml:91
+#: resources/views/help-md.phtml:59 resources/views/settings-md.phtml:92
 msgid "Markdown editor for note textareas"
 msgstr ""
 
@@ -707,13 +707,13 @@ msgstr ""
 
 #. I18N: help md - section title
 #. I18N: Settings - section title
-#: resources/views/help-md.phtml:69 resources/views/settings.phtml:123
+#: resources/views/help-md.phtml:69 resources/views/settings.phtml:124
 msgid "Enhanced Link Support"
 msgstr ""
 
 #. I18N: Enhanced Links
 #. I18N: Settings - prologue sentence 3
-#: resources/views/help-md.phtml:70 resources/views/settings.phtml:62
+#: resources/views/help-md.phtml:70 resources/views/settings.phtml:63
 msgid ""
 "By linking the notes to the GEDCOM data records (persons, families, sources, "
 "etc.) from the text makes story telling much easier and thus also save this "
@@ -777,12 +777,12 @@ msgid ""
 "classes or additional CSS classes."
 msgstr ""
 
-#: resources/views/help-md.phtml:88 resources/views/settings-md.phtml:54
-#: resources/views/settings-md.phtml:336
+#: resources/views/help-md.phtml:88 resources/views/settings-md.phtml:55
+#: resources/views/settings-md.phtml:340
 msgid "CSS class name(s)"
 msgstr ""
 
-#: resources/views/help-md.phtml:89 resources/views/settings-md.phtml:61
+#: resources/views/help-md.phtml:89 resources/views/settings-md.phtml:62
 msgid "Markdown image container"
 msgstr ""
 
@@ -790,7 +790,7 @@ msgstr ""
 msgid "not defined"
 msgstr ""
 
-#: resources/views/help-md.phtml:92 resources/views/settings-md.phtml:72
+#: resources/views/help-md.phtml:92 resources/views/settings-md.phtml:73
 msgid "Markdown image title container"
 msgstr ""
 
@@ -937,98 +937,102 @@ msgid ""
 "Please visit the website directly."
 msgstr ""
 
-#: resources/views/settings-md.phtml:31
+#: resources/views/settings-md.phtml:32
 msgid "Activate markdown image tweak?"
 msgstr ""
 
-#: resources/views/settings-md.phtml:107
+#: resources/views/settings-md.phtml:98
+msgid "Debug info - registered custom modules"
+msgstr ""
+
+#: resources/views/settings-md.phtml:111
 msgid "Table cell height control"
 msgstr ""
 
 #. I18N:
-#: resources/views/settings-md.phtml:115 resources/views/settings-md.phtml:116
+#: resources/views/settings-md.phtml:119 resources/views/settings-md.phtml:120
 msgid "available"
 msgstr ""
 
-#: resources/views/settings-md.phtml:115
+#: resources/views/settings-md.phtml:119
 msgid "disabled"
 msgstr ""
 
-#: resources/views/settings-md.phtml:116
+#: resources/views/settings-md.phtml:120
 msgid "enabled"
 msgstr ""
 
-#: resources/views/settings-md.phtml:121
+#: resources/views/settings-md.phtml:125
 msgid ""
 "Toggle checkbox in order to set max-height and make longer content scrollable"
 msgstr ""
 
-#: resources/views/settings-md.phtml:132
+#: resources/views/settings-md.phtml:136
 msgid "Checkbox always visible"
 msgstr ""
 
-#: resources/views/settings-md.phtml:149
+#: resources/views/settings-md.phtml:153
 msgid "Markdown extensions"
 msgstr ""
 
-#: resources/views/settings-md.phtml:156
+#: resources/views/settings-md.phtml:160
 msgid "Warning"
 msgstr ""
 
-#: resources/views/settings-md.phtml:159
+#: resources/views/settings-md.phtml:163
 msgid ""
 "Please keep in mind when using this extensions, you are deviating from the "
 "smallest common markdown dialect set."
 msgstr ""
 
-#: resources/views/settings-md.phtml:160
+#: resources/views/settings-md.phtml:164
 msgid ""
 "If the library used to render markdown in HTML needs to be changed for any "
 "reason, there is a possibility that not all of the extended markup used here "
 "will be supported."
 msgstr ""
 
-#: resources/views/settings-md.phtml:176
+#: resources/views/settings-md.phtml:180
 msgid "Strikethrough"
 msgstr ""
 
-#: resources/views/settings-md.phtml:190
+#: resources/views/settings-md.phtml:194
 msgid "Description list"
 msgstr ""
 
-#: resources/views/settings-md.phtml:205
+#: resources/views/settings-md.phtml:209
 msgid "Highlight"
 msgstr ""
 
-#: resources/views/settings-md.phtml:220
+#: resources/views/settings-md.phtml:224
 msgid "Footnotes"
 msgstr ""
 
-#: resources/views/settings-md.phtml:232
+#: resources/views/settings-md.phtml:236
 msgid "Add hr-tag at the beginning of the footnote container"
 msgstr ""
 
-#: resources/views/settings-md.phtml:245
+#: resources/views/settings-md.phtml:249
 msgid "Backreference symbol"
 msgstr ""
 
-#: resources/views/settings-md.phtml:277
+#: resources/views/settings-md.phtml:281
 msgid "Normalize"
 msgstr ""
 
-#: resources/views/settings-md.phtml:292
+#: resources/views/settings-md.phtml:296
 msgid "Style"
 msgstr ""
 
-#: resources/views/settings-md.phtml:307
+#: resources/views/settings-md.phtml:311
 msgid "Position"
 msgstr ""
 
-#: resources/views/settings-md.phtml:322
+#: resources/views/settings-md.phtml:326
 msgid "Placeholder"
 msgstr ""
 
-#: resources/views/settings-md.phtml:349
+#: resources/views/settings-md.phtml:353
 msgid "Permalink symbol"
 msgstr ""
 
@@ -1044,15 +1048,15 @@ msgstr ""
 msgid "Input required"
 msgstr ""
 
-#: resources/views/settings-jscss.phtml:301 resources/views/settings.phtml:40
+#: resources/views/settings-jscss.phtml:302 resources/views/settings.phtml:41
 msgid "JSON export"
 msgstr ""
 
-#: resources/views/settings-jscss.phtml:304 resources/views/settings.phtml:41
+#: resources/views/settings-jscss.phtml:305 resources/views/settings.phtml:42
 msgid "JSON import"
 msgstr ""
 
-#: resources/views/settings-jscss.phtml:384
+#: resources/views/settings-jscss.phtml:385
 msgid "Enable for more options"
 msgstr ""
 
@@ -1233,55 +1237,55 @@ msgid "Automatically refresh data table when module is updated"
 msgstr ""
 
 #. I18N: webtrees.pot
-#: resources/views/settings.phtml:28
+#: resources/views/settings.phtml:29
 msgid "save"
 msgstr ""
 
 #. I18N: webtrees.pot
-#: resources/views/settings.phtml:38
+#: resources/views/settings.phtml:39
 msgid "reset"
 msgstr ""
 
-#: resources/views/settings.phtml:39
+#: resources/views/settings.phtml:40
 msgid "reset to default"
 msgstr ""
 
 #. I18N: webtrees.pot
-#: resources/views/settings.phtml:54
+#: resources/views/settings.phtml:55
 msgid "Control panel"
 msgstr ""
 
 #. I18N: Settings - prologue sentence 1
-#: resources/views/settings.phtml:60
+#: resources/views/settings.phtml:61
 msgid ""
 "The main purpose of this module is to make links to data records stored in "
 "family trees more convenient."
 msgstr ""
 
 #. I18N: Settings - prologue sentence 2
-#: resources/views/settings.phtml:61
+#: resources/views/settings.phtml:62
 msgid ""
 "This avoids having to store fully qualified links, which impairs the "
 "portability of Gedcom data."
 msgstr ""
 
 #. I18N: Settings - prologue sentence 4
-#: resources/views/settings.phtml:63
+#: resources/views/settings.phtml:64
 msgid ""
 "The option of embedding the images already inserted in the family tree in "
 "the notes rounds off this approach."
 msgstr ""
 
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:74
+#: resources/views/settings.phtml:75
 msgid "Activate Support"
 msgstr ""
 
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:84
+#: resources/views/settings.phtml:85
 msgid "More options"
 msgstr ""
 
-#: resources/views/settings.phtml:91
+#: resources/views/settings.phtml:92
 msgid "Output of debug information on the JS console"
 msgstr ""
