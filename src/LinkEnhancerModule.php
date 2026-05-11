@@ -251,7 +251,10 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             $wiki_url
         );
 
-        $this->mde = new MarkdownEditorActivationService($this); // register in boot method, so it's only available if module is enabled
+        $this->mde = new MarkdownEditorActivationService($this);
+        // By registering the service now it is available to other custom module in their boot methods. No impact due to unpredictable boot order of modules.
+        // The service is also available when the module is disabled - however, this should not be a problem, as it only has an effect when this module is enabled.
+        Registry::container()->set(MarkdownEditorActivationService::class, $this->mde);
     }    
   
     /**
@@ -377,8 +380,6 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
             },
             86400
         );
-
-        Registry::container()->set(MarkdownEditorActivationService::class, $this->mde);
 
         // Register a namespace for our views.
         View::registerNamespace($this->name(), $this->resourcesFolder() . 'views/');
