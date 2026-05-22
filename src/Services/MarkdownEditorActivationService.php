@@ -26,11 +26,16 @@ declare(strict_types=1);
 
 namespace Schwendinger\Webtrees\Module\LinkEnhancer\Services;
 
+use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Registry;
+use Fisharebest\Webtrees\Tree;
 use Fisharebest\Webtrees\Validator;
 use Fisharebest\Webtrees\Webtrees;
+use Fisharebest\Webtrees\Services\ModuleService;
 use Psr\Http\Message\ServerRequestInterface;
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\SettingInterface;
+
 
 final class MarkdownEditorActivationService
 {
@@ -161,4 +166,37 @@ final class MarkdownEditorActivationService
         $filter = $this->getEffectiveRules()['filter'];
         return implode(', ', $filter);
     }
+
+    /**
+     * check if all conditions are met to apply the md editor
+     * @return string empty '' if it should be enabled, otherwise localized text info
+     */    
+    public function adminDiagnostics(null|Tree $tree = null) : string {
+        $module_service = Registry::container()->get(ModuleService::class);
+        /**
+         * @var  LinkEnhancerModule $linkenhancer
+         */
+        $linkenhancer = $module_service->findByName('_linkenhancer_', true);
+
+        if (!($linkenhancer !== null && $linkenhancer->isEnabled())) {
+            return /*I18N: webtrees.pot */ I18N::translate('The module “%s” has been disabled.', $linkenhancer->title());
+        } 
+
+        if (!$linkenhancer->getPref(LinkEnhancerModule::PREF_MD_ACTIVE, true)) {
+            return I18N::translate('Option is disabled') . ': ' . I18N::translate('Markdown enhancements');
+        }
+
+        if (!$linkenhancer->getPref(LinkEnhancerModule::PREF_MDE_ACTIVE, true)) {
+            return I18N::translate('Option is disabled') . ': ' . I18N::translate('Markdown editor for note textareas');
+        }
+
+        if ($tree) {
+            if ($tree->getPreference('FORMAT_TEXT') !== 'markdown') {
+                return /*I18N: MDE */ I18N::translate("Precondition: Tree preference '%s' need to be set to markdown.", /*I18N: webtrees.pot */ I18N::translate('Format text and notes'));
+            }
+        }
+        
+        return '';
+    }
+    
 }
