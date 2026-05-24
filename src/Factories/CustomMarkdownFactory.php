@@ -27,6 +27,7 @@ namespace Schwendinger\Webtrees\Module\LinkEnhancer\Factories;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\CommonMark\LeImageRenderer;
 use Schwendinger\Webtrees\Module\LinkEnhancer\CommonMark\LeTableOfContentsRenderer;
+use Schwendinger\Webtrees\Module\LinkEnhancer\CommonMark\SmartPunctHelper;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Tree;
 use Fisharebest\Webtrees\CommonMark\CensusTableExtension;
@@ -41,11 +42,13 @@ use League\CommonMark\Extension\DescriptionList\DescriptionListExtension;
 use League\CommonMark\Extension\Footnote\FootnoteExtension;
 use League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkExtension;
 //use League\CommonMark\Extension\Highlight\HighlightExtension; //v2.8.0
+use League\CommonMark\Extension\SmartPunct\SmartPunctExtension;
 use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
 use League\CommonMark\Extension\Table\TableExtension;
 use League\CommonMark\Extension\TableOfContents\TableOfContentsExtension;
 use League\CommonMark\Extension\TableOfContents\Node\TableOfContents;
 
+use function in_array, is_array;
 
 enum ExtensionSettingOption {
     case TOC_STYLE;
@@ -213,6 +216,25 @@ class CustomMarkdownFactory extends MarkdownFactory {
             ];
         }
         
+        $smart_punct_type = $this->module->getPref(LinkEnhancerModule::PREF_MD_EXT_SMAPU_TYPE, true);
+        if ($smart_punct_type > 0) { // https://commonmark.thephpleague.com/2.x/extensions/smart-punctuation/
+            $extensionclasses[] = SmartPunctExtension::class;
+            
+            $quote_def = match($smart_punct_type) {
+                //user defined,    
+                1 => $this->module->getPref(LinkEnhancerModule::PREF_MD_EXT_SMAPU_DEF),
+                // auto - depending on choosen frontend language
+                2 => SmartPunctHelper::getQuoteDefinition(I18N::languageTag()),
+            };
+            
+            if (!is_array($quote_def)) {
+                $json = json_decode($quote_def, true);
+                $quote_def = is_array($json) ? $json : [];
+            }
+
+            $config['smartpunct'] = SmartPunctHelper::getSmartPunctExtConfig($quote_def);
+        }
+
         $config['_extensions'] = $extensionclasses;
         return $config;
     } 

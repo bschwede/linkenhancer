@@ -77,6 +77,8 @@ $defaults_json = LinkEnhancerModule::getDefaultPrefsAsJson();
             $(firstErrElem).get(0).scrollIntoView({ behavior: 'smooth' });
             return false;
         }
+        
+        implodeSmapuUserDef();
         return true;
     }
 
@@ -148,6 +150,7 @@ $defaults_json = LinkEnhancerModule::getDefaultPrefsAsJson();
                 setCtrlValue(key, value);
             }
         });
+        explodeSmapuUserDef();
         return true;
     }
 
@@ -252,6 +255,34 @@ $defaults_json = LinkEnhancerModule::getDefaultPrefsAsJson();
         return null;  // unknown type
     }
 
+    function explodeSmapuUserDef() {
+        const smapuDefId = "#<?= LinkEnhancerModule::PREF_MD_EXT_SMAPU_DEF; ?>";    
+        const json = $(smapuDefId).val();
+        let quotedef = { do:'', dc:'', so:'', sc:''};
+        try {
+            quotedef = JSON.parse(json);
+        } catch (e) {
+            //console.error(e);
+        }
+        
+        ['do', 'dc', 'so', 'sc'].forEach(key => {
+            $(smapuDefId + '_' + key).val((quotedef[key] ?? ''))
+        })
+    }
+
+    function implodeSmapuUserDef() {
+        const smapuDefId = "#<?= LinkEnhancerModule::PREF_MD_EXT_SMAPU_DEF; ?>";
+
+        let quotedef = { do: '', dc: '', so: '', sc: '' };
+
+        Object.keys(quotedef).forEach(key => {
+            quotedef[key] = ($(smapuDefId + '_' + key).val() ?? '');
+        })
+                
+        const json = JSON.stringify(quotedef);
+        $(smapuDefId).val(json);
+    }    
+
     $(() => {
         [ // pref name, element selector, [indexes of checkbox selected for disable state=standard is 0], disable class name=standard 'disabled-w-text'
             ['<?= LinkEnhancerModule::PREF_LINKSPP_ACTIVE; ?>', '#options1'],
@@ -261,6 +292,8 @@ $defaults_json = LinkEnhancerModule::getDefaultPrefsAsJson();
             ['<?= LinkEnhancerModule::PREF_MD_EXT_ACTIVE; ?>', '#options2_2'],
             ['<?= LinkEnhancerModule::PREF_MD_EXT_FN_ACTIVE; ?>', '#options2_2_fn'],
             ['<?= LinkEnhancerModule::PREF_MD_EXT_TOC_ACTIVE; ?>', '#options2_2_toc'],
+            ['<?= LinkEnhancerModule::PREF_MD_EXT_SMAPU_TYPE; ?>', '#options2_2_smapu', [0, 2], 'disabled'],
+            ['<?= LinkEnhancerModule::PREF_MD_EXT_SMAPU_TYPE; ?>', '#options2_2_smapu_auto', [0, 1], 'disabled'],
             ['<?= LinkEnhancerModule::PREF_WTHB_ACTIVE; ?>', '#options3'],
             ['<?= LinkEnhancerModule::PREF_HOME_LINK_TYPE; ?>', '#options4'],
             ['<?= LinkEnhancerModule::PREF_OPEN_IN_NEW_TAB; ?>', '.openinnewtab', [0, 2], 'disabled'],
@@ -312,6 +345,12 @@ $defaults_json = LinkEnhancerModule::getDefaultPrefsAsJson();
                 console.error(e);
             }
         });
+        
+        explodeSmapuUserDef();
+        const smapuDefId = "#<?= LinkEnhancerModule::PREF_MD_EXT_SMAPU_DEF; ?>";
+        ['do', 'dc', 'so', 'sc'].forEach(key => {
+            $(smapuDefId + '_' + key).on("change", () => { implodeSmapuUserDef() })
+        })
 
     });
 </script>
