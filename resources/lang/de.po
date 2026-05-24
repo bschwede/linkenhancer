@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-08 19:27+0200\n"
-"PO-Revision-Date: 2026-05-08 17:33+0000\n"
+"POT-Creation-Date: 2026-05-24 07:15+0200\n"
+"PO-Revision-Date: 2026-05-24 05:31+0000\n"
 "Last-Translator: bschwede <bschwede@noreply.codeberg.org>\n"
 "Language-Team: German <https://translate.codeberg.org/projects/linkenhancer/"
 "module/de/>\n"
@@ -18,7 +18,23 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17.1\n"
+"X-Generator: Weblate 2026.5\n"
+
+msgid "Option is disabled"
+msgstr "Einstellung ist deaktiviert"
+
+#. I18N: Settings - section title
+msgid "Markdown enhancements"
+msgstr "Markdown Verbesserungen"
+
+msgid "Markdown editor for note textareas"
+msgstr "Markdown-Editor für Notizen-Texteingabefelder"
+
+#. I18N: MDE
+#, php-format
+msgid "Precondition: Tree preference '%s' need to be set to markdown."
+msgstr ""
+"Vorbedingung: Stammbaum-Einstellung '%s' muss auf markdown gesetzt sein."
 
 #. I18N: Settings - section title
 msgid "Webtrees manual"
@@ -420,19 +436,9 @@ msgstr ""
 "Diese Funktion wird über Javascript realisiert und wirkt sich auf Links in "
 "Notizen und HTML-Blöcken nur clientseitig aus."
 
-#. I18N: Settings - section title
-msgid "Markdown enhancements"
-msgstr "Markdown Verbesserungen"
-
 #. I18N: MD img - sentence 1
 msgid "Only works in notes that are formatted with Markdown."
 msgstr "Funktioniert nur in Notizen, die mit Markdown formatiert sind."
-
-#. I18N: MDE
-#, php-format
-msgid "Precondition: Tree preference '%s' need to be set to markdown."
-msgstr ""
-"Vorbedingung: Stammbaum-Einstellung '%s' muss auf markdown gesetzt sein."
 
 msgid "Show Help Link"
 msgstr "Zeige Hilfe-Link"
@@ -482,9 +488,6 @@ msgstr "Gerenderte Ausgabe"
 
 msgid "For more depth of detail"
 msgstr "Für mehr Detailtiefe"
-
-msgid "Markdown editor for note textareas"
-msgstr "Markdown-Editor für Notizen-Texteingabefelder"
 
 #. I18N: MDE
 msgid ""
@@ -715,6 +718,40 @@ msgstr "Platzhalter"
 
 msgid "Permalink symbol"
 msgstr "Permalink-Symbol"
+
+msgid "Punctuation"
+msgstr "Interpunktion"
+
+msgid ""
+"The SmartPunctExtension intelligently converts ASCII quotes, dashes, and "
+"ellipses to their Unicode equivalents."
+msgstr ""
+"Die SmartPunctExtension wandelt ASCII-Anführungszeichen, Bindestriche und "
+"Auslassungspunkte auf intelligente Weise in ihre Unicode-Entsprechungen um."
+
+msgid ""
+"The quotation marks are automatically replaced in accordance with the "
+"conventions of the selected language."
+msgstr ""
+"Die Anführungszeichen werden automatisch regelkonform zur gewählten Sprache "
+"ersetzt."
+
+msgid ""
+"You can specify replacement characters for the beginning and end of the "
+"quoted text."
+msgstr ""
+"Es können Ersatz-Zeichen für den Beginn und das Ende des quotierten Textes "
+"angeben werden."
+
+msgid "Double quotation marks"
+msgstr "Doppelte Anführungszeichen"
+
+#, php-format
+msgid "Replacement for the %s character"
+msgstr "Ersatz für das Zeichen %s"
+
+msgid "Single quotation marks"
+msgstr "Einfache Anführungszeichen"
 
 msgid "JSON is invalid"
 msgstr "JSON ist ungültig"

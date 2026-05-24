@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-08 19:27+0200\n"
+"POT-Creation-Date: 2026-05-24 07:15+0200\n"
 "PO-Revision-Date: 2026-04-01 13:57+0000\n"
 "Last-Translator: MicXDev <micxdev@noreply.codeberg.org>\n"
 "Language-Team: English <https://translate.codeberg.org/projects/linkenhancer/"
@@ -18,6 +18,21 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 5.16.2\n"
+
+msgid "Option is disabled"
+msgstr ""
+
+#. I18N: Settings - section title
+msgid "Markdown enhancements"
+msgstr ""
+
+msgid "Markdown editor for note textareas"
+msgstr ""
+
+#. I18N: MDE
+#, php-format
+msgid "Precondition: Tree preference '%s' need to be set to markdown."
+msgstr ""
 
 #. I18N: Settings - section title
 msgid "Webtrees manual"
@@ -399,17 +414,8 @@ msgid ""
 "and HTML blocks on the client side."
 msgstr ""
 
-#. I18N: Settings - section title
-msgid "Markdown enhancements"
-msgstr ""
-
 #. I18N: MD img - sentence 1
 msgid "Only works in notes that are formatted with Markdown."
-msgstr ""
-
-#. I18N: MDE
-#, php-format
-msgid "Precondition: Tree preference '%s' need to be set to markdown."
 msgstr ""
 
 msgid "Show Help Link"
@@ -453,9 +459,6 @@ msgid "Rendered output"
 msgstr ""
 
 msgid "For more depth of detail"
-msgstr ""
-
-msgid "Markdown editor for note textareas"
 msgstr ""
 
 #. I18N: MDE
@@ -653,6 +656,34 @@ msgid "Placeholder"
 msgstr ""
 
 msgid "Permalink symbol"
+msgstr ""
+
+msgid "Punctuation"
+msgstr ""
+
+msgid ""
+"The SmartPunctExtension intelligently converts ASCII quotes, dashes, and "
+"ellipses to their Unicode equivalents."
+msgstr ""
+
+msgid ""
+"The quotation marks are automatically replaced in accordance with the "
+"conventions of the selected language."
+msgstr ""
+
+msgid ""
+"You can specify replacement characters for the beginning and end of the "
+"quoted text."
+msgstr ""
+
+msgid "Double quotation marks"
+msgstr ""
+
+#, php-format
+msgid "Replacement for the %s character"
+msgstr ""
+
+msgid "Single quotation marks"
 msgstr ""
 
 msgid "JSON is invalid"

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-08 19:27+0200\n"
+"POT-Creation-Date: 2026-05-24 07:15+0200\n"
 "PO-Revision-Date: 2026-05-08 17:33+0000\n"
 "Last-Translator: bschwede <bschwede@noreply.codeberg.org>\n"
 "Language-Team: Spanish <https://translate.codeberg.org/projects/linkenhancer/"
@@ -20,6 +20,25 @@ msgstr ""
 "X-Poedit-SearchPath-0: CustomMarkdownFactory.php\n"
 "X-Poedit-SearchPath-1: LinkEnhancerModule.php\n"
 "X-Poedit-SearchPath-2: module.php\n"
+
+#, fuzzy
+#| msgid "disabled"
+msgid "Option is disabled"
+msgstr "discapacitado"
+
+#. I18N: Settings - section title
+msgid "Markdown enhancements"
+msgstr "Mejoras en Markdown"
+
+msgid "Markdown editor for note textareas"
+msgstr "Editor Markdown para áreas de texto de notas"
+
+#. I18N: MDE
+#, php-format
+msgid "Precondition: Tree preference '%s' need to be set to markdown."
+msgstr ""
+"Condición previa: La preferencia del árbol '%s' debe estar establecida en "
+"Markown."
 
 #. I18N: Settings - section title
 msgid "Webtrees manual"
@@ -416,20 +435,9 @@ msgstr ""
 "Esta función se implementa mediante JavaScript y solamente afecta a los "
 "enlaces de las notas y a los bloques del área del cliente."
 
-#. I18N: Settings - section title
-msgid "Markdown enhancements"
-msgstr "Mejoras en Markdown"
-
 #. I18N: MD img - sentence 1
 msgid "Only works in notes that are formatted with Markdown."
 msgstr "Solamente funciona en notas formateadas con Markdown."
-
-#. I18N: MDE
-#, php-format
-msgid "Precondition: Tree preference '%s' need to be set to markdown."
-msgstr ""
-"Condición previa: La preferencia del árbol '%s' debe estar establecida en "
-"Markown."
 
 msgid "Show Help Link"
 msgstr "Mostrar enlace de ayuda"
@@ -480,9 +488,6 @@ msgstr "Resultado renderizado"
 
 msgid "For more depth of detail"
 msgstr "Para más detalles"
-
-msgid "Markdown editor for note textareas"
-msgstr "Editor Markdown para áreas de texto de notas"
 
 #. I18N: MDE
 msgid ""
@@ -712,6 +717,34 @@ msgstr "Marcador de posición"
 
 msgid "Permalink symbol"
 msgstr "Símbolo de enlace permanente"
+
+msgid "Punctuation"
+msgstr ""
+
+msgid ""
+"The SmartPunctExtension intelligently converts ASCII quotes, dashes, and "
+"ellipses to their Unicode equivalents."
+msgstr ""
+
+msgid ""
+"The quotation marks are automatically replaced in accordance with the "
+"conventions of the selected language."
+msgstr ""
+
+msgid ""
+"You can specify replacement characters for the beginning and end of the "
+"quoted text."
+msgstr ""
+
+msgid "Double quotation marks"
+msgstr ""
+
+#, php-format
+msgid "Replacement for the %s character"
+msgstr ""
+
+msgid "Single quotation marks"
+msgstr ""
 
 msgid "JSON is invalid"
 msgstr "JSON no es válido"
