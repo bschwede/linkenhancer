@@ -227,6 +227,7 @@ The package [League\CommonMarkdown](https://commonmark.thephpleague.com/) used f
 - [Footnotes](https://commonmark.thephpleague.com/2.x/extensions/footnotes/)
 - [Highlight](https://commonmark.thephpleague.com/2.x/extensions/highlight/) (available with CommonMark v2.8.0 / webtrees v2.2.5)
 - [Table of contents](https://commonmark.thephpleague.com/2.x/extensions/table-of-contents/) along with [Heading Permalinks](https://commonmark.thephpleague.com/2.x/extensions/heading-permalinks/)
+- [Smart Punctuation](https://commonmark.thephpleague.com/2.x/extensions/smart-punctuation/)
 
 You can activate all or a few selected of these extensions. As far as possible they are of course integrated with the markdown editor and you find additional information in the markdown help.
 
