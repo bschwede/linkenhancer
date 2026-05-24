@@ -59,6 +59,8 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\Services\MarkdownEditorActivationS
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\WthbService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\SettingInterface;
 
+use function array_key_exists, boolval, count, strval, is_array, intval;
+
 enum OverwriteMode
 { // pref schema cascading setting - overwrite setting value with parent if...
     case ParentIsZero;   // parent is bool - if component is active, subordinated settings can be evaluated
@@ -138,6 +140,9 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     public const PREF_MD_EXT_TOC_POS = 'MD_EXT_TOC_POS'; // markdown extension - table of contents position
     public const PREF_MD_EXT_TOC_PLACEHOLDER = 'MD_EXT_TOC_PLACEHOLDER'; // markdown extension - table of contents placeholder
     public const PREF_MD_EXT_TOC_CSSCLASS = 'MD_EXT_TOC_CSSCLASS'; // markdown extension - table of contents additional css class name
+    public const PREF_MD_EXT_SMAPU_TYPE = 'MD_EXT_SMAPU_TYPE'; // markdown extension - smart punctuation triple-state. 0=off, 1=user defined, 2=on (auto)
+    public const PREF_MD_EXT_SMAPU_DEF = 'MD_EXT_SMAPU_DEF'; // markdown extension - smart punctuation quote definition as json object { do,dc,so,sc }
+    
     
 
     public const STDCLASS_HOME_LINK = 'homelink';
@@ -225,6 +230,8 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         self::PREF_MD_EXT_TOC_POS            => [ 'type' => 'string', 'default' => 'dropdown' ],
         self::PREF_MD_EXT_TOC_PLACEHOLDER    => [ 'type' => 'string', 'default' => '[TOC]'],
         self::PREF_MD_EXT_TOC_CSSCLASS       => [ 'type' => 'string', 'default' => '' ],
+        self::PREF_MD_EXT_SMAPU_TYPE         => [ 'type' => 'int',    'default' => '2', 'parent' => self::PREF_MD_EXT_ACTIVE, 'mode' => OverwriteMode::ParentIsZero], // triple-state. 0=off, 1=user defined, 2=on (auto)
+        self::PREF_MD_EXT_SMAPU_DEF          => [ 'type' => 'string', 'default' => '' ], //JSON
     ];
 
     private array|null $prefs_cache = null;

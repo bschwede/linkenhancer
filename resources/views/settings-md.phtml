@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Fisharebest\Webtrees\I18N;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
+use Schwendinger\Webtrees\Module\LinkEnhancer\CommonMark\SmartPunctHelper;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Factories\CustomMarkdownFactory;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Factories\ExtensionSettingOption;
 use Fisharebest\Webtrees\Webtrees;
@@ -366,5 +367,83 @@ function prefixKeysToValues(array $data, string $separator = ': '): array
                     </div>
                 </div>
             </fieldset>
+
+            <!-- md extension - smart punctuation --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_SMAPU_TYPE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
+                        <?= I18N::translate('Punctuation') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= view('components/radios-inline', [
+                            'id' => $prefId,
+                            'name' => $prefId,
+                            'options' => [
+                                /*I18N: webtrees.pot */ I18N::translate('no'),
+                                /*I18N: */ I18N::translate('user defined'),
+                                /*I18N: webtrees.pot */ I18N::translate('yes')
+                            ],
+                            'selected' => (int) $prefs[$prefId]
+                        ]) ?>
+                        <div class="form-text">
+                            <?= I18N::translate('The SmartPunctExtension intelligently converts ASCII quotes, dashes, and ellipses to their Unicode equivalents.') ?>
+                        </div>
+<section id="options2_2_smapu_auto">
+                        <div class="form-text">
+                            <?= I18N::translate('The quotation marks are automatically replaced in accordance with the conventions of the selected language.') ?>
+                        </div>
+</section>
+<section id="options2_2_smapu">
+                        <div class="form-text">
+                            <?= I18N::translate('You can specify replacement characters for the beginning and end of the quoted text.') ?><br>
+                            <?= I18N::translate('Example') ?>:&nbsp;&nbsp; <code><?= implode(' ', SmartPunctHelper::QUOTE_CHARS) ?></code>
+                        </div>
+
+                        <!-- md extension - smart punctuation definition --><?php $prefId = LinkEnhancerModule::PREF_MD_EXT_SMAPU_DEF; ?>
+                        <input type="hidden" name="<?= e($prefId) ?>" id="<?= e($prefId) ?>" value="<?= e($prefs[$prefId]) ?>">
+
+                        <div class="row mt-2 mb-1">
+                            <div class="col-3 d-flex align-items-center justify-content-start">
+                                <legend class="col-form-label wt-page-options-label">
+                                    <?= I18N::translate('Double quotation marks') ?>
+                                </legend>
+                            </div>
+                            <div class="col-1 d-flex  justify-content-start">
+                                <input class="form-control text-center" type="text" id="<?= e($prefId) ?>_do" name="<?= e($prefId) ?>_do" size="3"
+                                    maxlength="4" value="">
+                            </div>
+                            <div class="col-1 d-flex  justify-content-start">
+                                <input class="form-control text-center" type="text" id="<?= e($prefId) ?>_dc" name="<?= e($prefId) ?>_dc"
+                                    size="3" maxlength="4" value="">
+                            </div>
+                            <div class="col-7 d-flex align-items-start justify-content-start form-text">
+                                <?= I18N::translate('Replacement for the %s character', '"') ?>
+                            </div>
+                        </div>
+
+                        <div class="row mt-2 mb-1">
+                            <div class="col-3 d-flex align-items-center justify-content-start">
+                                <legend class="col-form-label wt-page-options-label">
+                                    <?= I18N::translate('Single quotation marks') ?>
+                                </legend>
+                            </div>
+                            <div class="col-1 d-flex  justify-content-start">
+                                <input class="form-control text-center" type="text" id="<?= e($prefId) ?>_so"
+                                    name="<?= e($prefId) ?>_so" size="3" maxlength="4" value="">
+                            </div>
+                            <div class="col-1 d-flex  justify-content-start">
+                                <input class="form-control text-center" type="text" id="<?= e($prefId) ?>_sc"
+                                    name="<?= e($prefId) ?>_sc" size="3" maxlength="4" value="">
+                            </div>
+                            <div class="col-7 d-flex align-items-start justify-content-start form-text">
+                                <?= I18N::translate('Replacement for the %s character', "'") ?>
+                            </div>
+                        </div>
+</section>
+                    </div>
+
+                </div>
+
+            </fieldset>            
 </section>
         </div>
