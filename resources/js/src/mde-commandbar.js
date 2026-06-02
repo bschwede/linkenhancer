@@ -55,7 +55,7 @@ export function createCommandBar(editor, cfg, showHelp) {
             name: 'insertImage',
             title: cfg.i18n('Insert image'),
             action: editor => {
-                let dest = MdeCfg.src ? "#@id=@@" : '';
+                let dest = cfg.src ? "#@id=@@" : '';
                 editor.wrapSelection('![', `](${dest})`);
             }
         },
