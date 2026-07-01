@@ -3,19 +3,22 @@
 # This file is distributed under the same license as the PACKAGE package.
 # Automatically generated, 2026.
 #
+# bschwede <bschwede@noreply.codeberg.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-24 07:15+0200\n"
-"PO-Revision-Date: 2026-05-24 07:15+0200\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2026-07-01 14:24+0000\n"
+"Last-Translator: bschwede <bschwede@noreply.codeberg.org>\n"
+"Language-Team: French <https://translate.codeberg.org/projects/linkenhancer/"
+"module/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #: src/Services/MarkdownEditorActivationService.php:186
 #: src/Services/MarkdownEditorActivationService.php:190
@@ -985,7 +988,7 @@ msgstr "Cette option permet de déterminer si le lien d'aide figure dans le sous
 
 #: resources/views/settings-wthb.phtml:92
 msgid "Additional help links"
-msgstr ""
+msgstr "Liens d'aide supplémentaires"
 
 #: resources/views/settings-wthb.phtml:131
 msgid "Help link for subcontext topics"
