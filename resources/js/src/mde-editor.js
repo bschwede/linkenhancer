@@ -5,6 +5,26 @@ import { createGrammar } from "./mde-grammar.js"
 import { createCommandBar } from "./mde-commandbar.js"
 
 export const initEditor = (document, cfg, textarea) => {
+    if (!textarea) return
+    const modal = textarea.closest(".modal")
+
+    if (modal && modal.id !== 'wt-ajax-modal') { // standard #wt-ajax-modal also works with instant binding, otherwise on shown.bs.modal
+        // Wait until the modal init is complete, otherwise text might get lost (custom module ortsregister)
+        modal.addEventListener('show.bs.modal', () => {
+            // less flickering, if modal init is already completed at this point
+            bindEditor(document, cfg, textarea)
+        });
+        modal.addEventListener('shown.bs.modal', () => {
+            // call twice to be sure - on the visible modal everything should be initialized
+            // downside: user sees editor replacement
+            bindEditor(document, cfg, textarea)
+        });
+    } else {
+        bindEditor(document, cfg, textarea)
+    }
+}
+
+const bindEditor = (document, cfg, textarea) => {
     const id = `md-${textarea.id}`
 
     if (document.getElementById(id)) return
@@ -35,6 +55,6 @@ export const initEditor = (document, cfg, textarea) => {
     createCommandBar(
         editor,
         cfg,
-        !textarea.closest("#wt-ajax-modal")
+        !textarea.closest(".modal")
     )
 }
