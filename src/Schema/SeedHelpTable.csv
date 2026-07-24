@@ -441,7 +441,7 @@ id;path;handler;method;extras;subcontext;category;order;url
 469;/admin;Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;GET;Fisharebest\Webtrees\Http\Middleware\AuthAdministrator;"{""e"":""$('h2')[5]""}";standard;30;Webtrees_Handbuch/Anleitung_f%C3%BCr_Administratoren/Landkarte
 470;/tree/{tree};Fisharebest\Webtrees\Http\RequestHandlers\TreePage;GET;;div.wt-block-_vesta_extended_relationships_ > div.card-header;custom module;30;https://github.com/vesta-webtrees-2-custom-modules/vesta_extended_relationships
 471;;;GET;;li.nav-item.menu-clippings.CCE_Menue > a;generic;35;Webtrees_Handbuch/Anleitung_für_Webmaster/Erweiterungsmodule/Sammelbehälter
-472;;;GET;;"{""e"":""Array.from(document.querySelectorAll('li.nav-item.menu-clippings:not(.CCE_Menue) > a')).find(a => a.nextElementSibling.querySelector('a[href*=\"vesta_clippings_cart\"]') !== null)""}";generic;35;https://github.com/vesta-webtrees-2-custom-modules/vesta_clippings_cart
+472;;;GET;;"{""e"":""Array.from(document.querySelectorAll('li.nav-item.menu-clippings:not(.CCE_Menue) > a')).find(a => a.nextElementSibling.querySelector('a[href*=vesta_clippings_cart]') !== null)""}";generic;35;https://github.com/vesta-webtrees-2-custom-modules/vesta_clippings_cart
 473;;_news-menu_;GET;;;custom module;20;https://github.com/Tywed/news-menu
 474;;_huhwt-cce_;GET;;;custom module;20;Webtrees_Handbuch/Anleitung_für_Webmaster/Erweiterungsmodule/Sammelbehälter
 475;;_vesta_clippings_cart_;GET;;;custom module;20;https://github.com/vesta-webtrees-2-custom-modules/vesta_clippings_cart
@@ -470,7 +470,7 @@ id;path;handler;method;extras;subcontext;category;order;url
 498;;_vesta_research_suggestions_;GET;;;custom module;15;https://github.com/vesta-webtrees-2-custom-modules/vesta_research_suggestions
 499;;_sosa20_;GET;;;custom module;15;https://github.com/gustine/sosa20
 500;;_hh_extended_family_;GET;;;custom module;15;Webtrees_Handbuch/Anleitung_f%C3%BCr_Webmaster/Erweiterungsmodule/Gro%C3%9Ffamilie
-501;;_hh_legal_notice_;GET;;;custom module;15;Webtrees_Handbuch/Anleitung_f%C3%BCr_Webmaster/Erweiterungsmodule/Impressum
+501;;_hh_legal_notice_;GET;;;custom module;15;Webtrees_Handbuch/Anleitung_f%C3%BCr_Webmaster/Erweiterungsmodule/Legal_Notice
 502;;_mitalteli-show-xref_;GET;;;custom module;15;https://github.com/elysch/webtrees-mitalteli-show-xref
 503;;_webtrees-faces_;GET;;;custom module;15;https://github.com/UksusoFF/webtrees-faces
 504;/admin/faces-admin/{action};faces-admin;GET|POST;;;custom module;10;https://github.com/UksusoFF/webtrees-faces
@@ -483,3 +483,46 @@ id;path;handler;method;extras;subcontext;category;order;url
 511;;_jc-simple-footer_;GET;;;custom module;15;https://github.com/JustCarmen/webtrees-simple-footer
 512;/tree/{tree}/individual/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\IndividualPage;GET;;"a[href^=""#stories""]";custom module;30;Webtrees_Handbuch/Anleitung_für_Besucher#Geschichten
 513;/tree/{tree}/time-travel-map/view;;GET;;;custom module;10;https://github.com/gmarcon/webtrees-time-travel-map
+514;;_tree-explorer_;GET;;;custom module;15;https://github.com/szporwolik/webtrees-tree-explorer
+515;/tree/{tree}/individual/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\IndividualPage;GET;;"a[href^=""#_tree-explorer_""]";custom module;30;https://github.com/szporwolik/webtrees-tree-explorer
+516;/tree/{tree}/full-diagram/{xref};full-diagram;GET|POST;;;custom module;15;https://github.com/AlexBocken/WebtreesFullDiagram
+517;/tree/{tree}/orte;ortsregister.orte;GET;;;custom module;15;https://github.com/thobgg/webtrees-ortsregister
+518;/tree/{tree}/orte/data;ortsregister.orte.data;GET;;;custom module;15;https://github.com/thobgg/webtrees-ortsregister
+519;/tree/{tree}/orte/karte;ortsregister.orte.karte;GET;;;custom module;15;https://github.com/thobgg/webtrees-ortsregister
+520;/tree/{tree}/orte/merge/preview;ortsregister.merge.preview;GET;;;custom module;15;https://github.com/thobgg/webtrees-ortsregister
+521;/tree/{tree}/orte/merge/execute;ortsregister.merge.execute;GET|POST;;;custom module;15;https://github.com/thobgg/webtrees-ortsregister
+522;/tree/{tree}/orte/merge/undo;ortsregister.merge.undo;GET|POST;;;custom module;15;https://github.com/thobgg/webtrees-ortsregister
+523;/tree/{tree}/orte/rename/preview;ortsregister.rename.preview;GET;;;custom module;15;https://github.com/thobgg/webtrees-ortsregister
+524;/tree/{tree}/orte/rename/execute;ortsregister.rename.execute;GET|POST;;;custom module;15;https://github.com/thobgg/webtrees-ortsregister
+525;/tree/{tree}/orte/filter-mode;ortsregister.filter-mode;GET|POST;;;custom module;15;https://github.com/thobgg/webtrees-ortsregister
+526;/tree/{tree}/orte/koordinaten-import;ortsregister.coord.import;GET|POST;;;custom module;15;https://github.com/thobgg/webtrees-ortsregister
+527;/tree/{tree}/orte/gov;ortsregister.gov.link;GET|POST;;;custom module;15;https://github.com/thobgg/webtrees-ortsregister
+528;/tree/{tree}/orte/datei;ortsregister.file;GET;;;custom module;15;https://github.com/thobgg/webtrees-ortsregister
+529;/tree/{tree}/orte/{place_id}/loc-write/preview;ortsregister.loc.preview;GET;;;custom module;15;https://github.com/thobgg/webtrees-ortsregister
+530;/tree/{tree}/orte/{place_id}/loc-events/preview;ortsregister.locev.preview;GET;;;custom module;15;https://github.com/thobgg/webtrees-ortsregister
+531;/tree/{tree}/orte/{place_id};ortsregister.orte.detail;GET;;;custom module;15;https://github.com/thobgg/webtrees-ortsregister
+532;/ortsregister/admin/config;ortsregister.admin.config;GET|POST;;;custom module;15;https://github.com/thobgg/webtrees-ortsregister
+533;;_potts-family-books_-route;GET;;;custom module;15;https://github.com/PottsNet/potts-family-books
+534;;_jc-theme-justlight_;GET;;;custom module;15;https://github.com/JustCarmen/webtrees-theme-justlight
+535;;_potts-family-books_;GET;;;custom module;15;https://github.com/PottsNet/potts-family-books
+536;;_potts-modern-theme_;GET;;;custom module;15;https://github.com/PottsNet/potts-modern-theme
+537;/tree/{tree}/archiv/sammlungen;sammlungen.sammlungen;GET;;;custom module;15;https://github.com/thobgg/webtrees-sammlungen
+538;/tree/{tree}/archiv/media-datei;sammlungen.media-datei;GET;;;custom module;15;https://github.com/thobgg/webtrees-sammlungen
+539;/tree/{tree}/archiv/exif-schreiben;sammlungen.exif-schreiben;GET|POST;;;custom module;15;https://github.com/thobgg/webtrees-sammlungen
+540;/tree/{tree}/archiv/datei-umbenennen;sammlungen.datei-umbenennen;GET|POST;;;custom module;15;https://github.com/thobgg/webtrees-sammlungen
+541;/tree/{tree}/archiv/sammlung-medium;sammlungen.sammlung-medium;GET|POST;;;custom module;15;https://github.com/thobgg/webtrees-sammlungen
+542;/archiv/asset;sammlungen.asset;GET;;;custom module;15;https://github.com/thobgg/webtrees-sammlungen
+543;/archiv/admin/config;sammlungen.admin.config;GET|POST;;;custom module;15;https://github.com/thobgg/webtrees-sammlungen
+544;/archiv/admin/cache-clear;sammlungen.admin.cache-clear;GET|POST;;;custom module;15;https://github.com/thobgg/webtrees-sammlungen
+545;/tree/{tree}/archiv/admin/sammlungen;sammlungen.admin.sammlungen;GET;;;custom module;15;https://github.com/thobgg/webtrees-sammlungen
+546;/tree/{tree}/archiv/admin/sammlung-fotos;sammlungen.admin.sammlung-fotos;GET;;;custom module;15;https://github.com/thobgg/webtrees-sammlungen
+547;/tree/{tree}/archiv/admin/sammlungen/edit;sammlungen.admin.sammlungen.edit;GET|POST;;;custom module;15;https://github.com/thobgg/webtrees-sammlungen
+548;/tree/{tree}/archiv/admin/sammlungen/toggle-aktiv;sammlungen.admin.sammlungen.toggle-aktiv;GET;;;custom module;15;https://github.com/thobgg/webtrees-sammlungen
+549;/tree/{tree}/archiv/admin/sammlungen/delete;sammlungen.admin.sammlungen.delete;GET;;;custom module;15;https://github.com/thobgg/webtrees-sammlungen
+550;/tree/{tree}/tree-page-block-edit/{block_id};Fisharebest\Webtrees\Http\RequestHandlers\TreePageBlockEdit;GET;;;custom module;9;https://github.com/haylau-ronzo/enhanced-charts
+551;/tree/{tree};Fisharebest\Webtrees\Http\RequestHandlers\TreePage;GET;;div.wt-block-_enhanced-charts_ > div.card-header;custom module;30;https://github.com/haylau-ronzo/enhanced-charts
+552;/tree/{tree}/potts-narrative-ancestor-book;;GET;;;custom module;15;https://github.com/PottsNet/potts-narrative-ancestor-book
+553;;_potts-historical-facts_;GET;;;custom module;15;https://github.com/PottsNet/potts-historical-facts
+554;;_potts-hero-slideshow_;GET;;;custom module;15;https://github.com/PottsNet/potts-hero-slideshow
+555;/tree/{tree}/individual/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\IndividualPage;GET;;"a[href^=""#_potts_fact_ages_""]";custom module;30;https://github.com/PottsNet/potts_fact_ages
+556;;_data-check_;GET;;;custom module;15;https://github.com/Vulfharban/webtrees-datencheck-plugin
