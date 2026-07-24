@@ -22,6 +22,8 @@ export function setupLineNumbers(editorEl) {
         document.body.appendChild(measurer)
     }
 
+    const isPlaceholderSet = editorEl.getAttribute('data-placeholder') || editorEl.getAttribute('placeholder')
+
     const update = () => { // update line numbering & dynamic padding
 
         const paras =
@@ -47,6 +49,14 @@ export function setupLineNumbers(editorEl) {
             "--line-num-width",
             `${width}px`
         )
+
+        if (isPlaceholderSet) {
+            if (paras.length === 1 && paras[0].className == 'TMBlankLine') {
+                editorEl.classList.add('emptyed')
+            } else {
+                editorEl.classList.remove('emptyed')
+            }
+        }
     }
 
     update()
