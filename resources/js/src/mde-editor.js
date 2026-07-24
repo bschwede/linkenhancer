@@ -10,15 +10,21 @@ export const initEditor = (document, cfg, textarea) => {
 
     if (modal && modal.id !== 'wt-ajax-modal') { // standard #wt-ajax-modal also works with instant binding, otherwise on shown.bs.modal
         // Wait until the modal init is complete, otherwise text might get lost (custom module ortsregister)
-        modal.addEventListener('show.bs.modal', () => {
-            // less flickering, if modal init is already completed at this point
-            bindEditor(document, cfg, textarea)
-        });
-        modal.addEventListener('shown.bs.modal', () => {
-            // call twice to be sure - on the visible modal everything should be initialized
-            // downside: user sees editor replacement
-            bindEditor(document, cfg, textarea)
-        });
+        let mdeditor = null
+        const initModal = () => {
+            mdeditor = mdeditor ?? bindEditor(document, cfg, textarea)
+            if (mdeditor && mdeditor.textarea) {
+                // ensure that the editor continues to run synchronously after it was closed/canceled before (ortsregister)
+                mdeditor.setContent(mdeditor.textarea.value)
+            }
+        }
+
+        // less flickering, if modal init is already completed at this point
+        modal.addEventListener('show.bs.modal', initModal); 
+
+        // call twice to be sure - on the visible modal everything should be initialized
+        // downside: user sees editor replacement       
+        modal.addEventListener('shown.bs.modal', initModal);
     } else {
         bindEditor(document, cfg, textarea)
     }
@@ -27,7 +33,7 @@ export const initEditor = (document, cfg, textarea) => {
 const bindEditor = (document, cfg, textarea) => {
     const id = `md-${textarea.id}`
 
-    if (document.getElementById(id)) return
+    if (document.getElementById(id)) return null
 
     const editor = new TinyMDE.Editor({
         element: textarea,
@@ -57,4 +63,5 @@ const bindEditor = (document, cfg, textarea) => {
         cfg,
         !textarea.closest(".modal")
     )
+    return editor
 }
