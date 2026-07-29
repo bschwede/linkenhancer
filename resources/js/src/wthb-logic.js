@@ -25,13 +25,12 @@ export const setWthbLinkClickHandler = (
         document,
         window,
         bootstrap,
-        jQuery,
         cfg,
         wthblink) => 
     {
-        jQuery(wthblink).on('click', (e) => { // help link handler
+        wthblink.addEventListener('click', (e) => { // help link handler
             if (cfg.lang?.substr(0, 2).toLowerCase() == 'de' || 
-                !isWthbLink(jQuery(wthblink).attr('href'), cfg.wiki_url) || 
+                !isWthbLink(wthblink.getAttribute('href'), cfg.wiki_url) || 
                 !cfg.dotranslate) return; // open url directly
 
             if (cfg.dotranslate === 1) { // user defined behaviour
@@ -39,7 +38,8 @@ export const setWthbLinkClickHandler = (
                 switch (cfg.doTranslateUser) {
                     case undefined:
                         toggleModal(document, bootstrap, true);
-                        jQuery("#wthb-epilogue").show();
+                        const epilogue = document.getElementById("wthb-epilogue");
+                        if (epilogue) epilogue.style.display = 'block';
                         e.preventDefault();
                         return;
 
@@ -49,7 +49,7 @@ export const setWthbLinkClickHandler = (
                 }
             }
 
-            const url = buildTranslateUrl(jQuery(wthblink).attr('href'), cfg.lang) 
+            const url = buildTranslateUrl(wthblink.getAttribute('href'), cfg.lang) 
             window.open(url, '_blank');
             e.preventDefault();
         });
