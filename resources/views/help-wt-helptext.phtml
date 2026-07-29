@@ -150,6 +150,8 @@ foreach ($help_topics as $key => $attribs):
 endforeach;
 ?>
 <script>
-    $('.modal-reload-link').on('click', eventLeAjaxModalLoad);
+    document.querySelectorAll('.modal-reload-link').forEach(el => {
+        el.addEventListener('click', eventLeAjaxModalLoad);
+    });
     LinkEnhMod.initWtHelp('a.wtreflink');
 </script>

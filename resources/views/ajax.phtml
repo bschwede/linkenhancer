@@ -26,16 +26,25 @@
     modal_content.dataset.wtSelectId = target.dataset.wtSelectId;
 
     // Clear existing content (to prevent FOUC) and load new content.
-    $(modal_content)
-      .empty()
-      .load(target.dataset.wtHref, function () {
-        // Activate autocomplete fields
-        this.querySelectorAll('.tom-select').forEach(element => webtrees.initializeTomSelect(element));
-      });
+    modal_content.innerHTML = ''; // empty()
+    const fetchUrl = target.dataset.wtHref;
+    fetch(fetchUrl)
+      .then(response => response.text())
+      .then(html => {
+        modal_content.innerHTML = html;
+        modal_content.querySelectorAll('.tom-select').forEach(element => {
+          if (typeof webtrees !== 'undefined' && webtrees.initializeTomSelect) {
+            webtrees.initializeTomSelect(element);
+          }
+        });
+      })
+      .catch(err => console.error('LE-Mod AJAX load error:', err));
   }
 
   document.addEventListener('DOMContentLoaded', function () {
-    $('#le-ajax-modal')
-      .on('show.bs.modal', eventLeAjaxModalLoad);
+    const modal = document.querySelector('#le-ajax-modal');
+    if (modal) {
+        modal.addEventListener('show.bs.modal', eventLeAjaxModalLoad);
+    }
   });
 </script>
