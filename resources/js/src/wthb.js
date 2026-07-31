@@ -7,8 +7,17 @@ import { getUserSetting, setUserSetting } from "./wthb-storage.js";
 
 export function createWthb(env) {
 
-    //const { document, window, bootstrap, jQuery } = env; // if js is included in head, bootstrap and jQuery aren't loaded yet, so those two objects are null
-    const { document, window, bootstrap } = env; // inclusion in the header has a better timing, otherwise if included in body the top menu item is flickering
+    let bootstrapRef = null;
+    let _env = env;
+
+    const getBootstrap = () => {
+        if (!bootstrapRef) {
+            bootstrapRef = (_env && _env.bootstrap) || (typeof window !== 'undefined' ? window.bootstrap : null);
+        }
+        return bootstrapRef;
+    };
+
+    const { document, window } = env;
 
     let cfg = getDefaultConfig();
 
@@ -41,7 +50,7 @@ export function createWthb(env) {
             insertSubcontextLinks(
                 document,
                 window,
-                bootstrap, // on doc loaded vendor modules are initialized 
+                getBootstrap(),
                 cfg
             );
 
@@ -59,13 +68,13 @@ export function createWthb(env) {
         // translation settings only needed for non german language
         if (cfg.lang?.substr(0, 2).toLowerCase() == 'de') return;
 
-        setWthbLinkClickHandler(document,window, bootstrap,cfg, wthblink);
+        setWthbLinkClickHandler(document,window, getBootstrap(),cfg, wthblink);
 
         if (cfg.dotranslate !== 1) return; // no user setting 
 
         let wthbcfg = document.getElementById("wthb-link-cfg");
         if (wthbcfg) {
-            wthbcfg.addEventListener('click', () => toggleModal(document, bootstrap, true));
+            wthbcfg.addEventListener('click', () => toggleModal(document, getBootstrap(), true));
             if (cfg.i18n('cfg_title')) wthbcfg.setAttribute('title', cfg.i18n('cfg_title'));
         }
 
@@ -97,7 +106,7 @@ export function createWthb(env) {
                 let doTranslateUser = checkedRadio ? checkedRadio.value : undefined;
                 setUserSetting(localStorage, WTHB_USER_SETTING.translate, doTranslateUser, true);
                 cfg.doTranslateUser = getUserSetting(localStorage, WTHB_USER_SETTING.translate, true); // used in setWthbLinkClickHandler
-                toggleModal(document, bootstrap, false);
+                toggleModal(document, getBootstrap(), false);
                 if (isEpilogueVisible) wthblink.click();
             });
         }
@@ -108,8 +117,8 @@ export function createWthb(env) {
         init,
 
         initHelp: (searchengines) => // webtrees manual toc and search
-            initHelp(document, window, bootstrap, cfg, searchengines),
+            initHelp(document, window, getBootstrap(), cfg, searchengines),
 
-        initWtHelp: (aselector) => prepareWthbLinks(document, window, bootstrap, cfg, aselector) // webtrees core help topics
+        initWtHelp: (aselector) => prepareWthbLinks(document, window, getBootstrap(), cfg, aselector) // webtrees core help topics
     };
 }
