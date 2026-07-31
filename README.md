@@ -197,19 +197,37 @@ Besides syntax highlighting it ships with an icon bar for common format commands
 If you as a developer also want to apply mde to text areas on the edit pages of other custom modules, you can do so using the `MarkdownEditorActivationService` (available since v1.2.11 - details see [#101](https://codeberg.org/bschwede/linkenhancer/issues/101)):
 
 ```php
-// This snippet could, for example, be placed in the boot method of the main module class.
-$class = "Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\MarkdownEditorActivationService";
-if (Registry::container()->has($class)) {
-  /** @var Schwendinger\Webtrees\Module\LinkEnhancer\Services\MarkdownEditorActivationService $mde_service */
-  $mde_service = Registry::container()->get($class);
-  if (!$mde_service->getCustomRule('hh_source_transcription')) { // only update if not yet set
-      $mde_service->setCustomRule(
-          'hh_source_transcription',  // module name as key
-          ["source-transcription-detail", "source-transcription-create-manual"], // handler: usually the short class name / last part of the route name - see js console with enabled debug info
-          [ "textarea[id=initial_text]" ] // filter: querySelector filter expressions
-      );
-  }
-}
+    // This snippet could, for example, be placed in the main module class and invoked in the boot method.
+    /**
+     * toggles registration for using markdown editor on note fields provided by linkenhancer custom module
+     * registration is persisted by linkenhancer custom module so it's not necessary to force registering again each time
+     *
+     * @param bool $enable
+     * @param bool $force
+     * @return void
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    private function toggleTinyMde(bool $enable, bool $force = false): void
+    {
+        $class = "Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\MarkdownEditorActivationService";
+        if (Registry::container()->has($class)) {
+            /** @var Schwendinger\Webtrees\Module\LinkEnhancer\Services\MarkdownEditorActivationService $mde_service */
+            $mde_service = Registry::container()->get($class);
+            $existingRule = $mde_service->getCustomRule(self::CUSTOM_TITLE);
+            if (
+                $force ||
+                $enable && !$existingRule ||
+                !$enable && $existingRule
+            ) {
+                $mde_service->setCustomRule(
+                    self::CUSTOM_TITLE,  // module name as key
+                    $enable ? ["source-transcription-detail", "source-transcription-create-manual"] : [], // handler: usually the short class name / last part of the route name - see js console with enabled debug info
+                    $enable ? ["textarea[id$='_text']"] : [] // filter: querySelector filter expressions; here: textarea id ends with "_text"
+                );
+            }
+        }
+    }
 ```
 
 This only works if this feature has been enabled globally and the edit page is associated with a tree that also uses Markdown in its notes.
