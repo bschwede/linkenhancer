@@ -121,7 +121,7 @@ export const initHelp = (document, window, bootstrap, cfg, searchengines) => {
     }
 
     //https://stackoverflow.com/questions/2180326/jquery-event-model-and-preventing-duplicate-handlers
-    const leAjaxModal = document.getElementById('le-ajax-modal');
+    const leAjaxModal = document.getElementById('wt-ajax-modal');
     if (leAjaxModal && tocheads.length > 0) {
         const handleModalShown = function () {
             tocheads[0].scrollIntoView();
