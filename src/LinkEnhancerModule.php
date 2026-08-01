@@ -545,7 +545,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                     $target = $this->getPref(self::PREF_HOME_LINK_OPEN_IN_NEW_TAB, true, true) ? ' target="_blank"' : '';
                     break;
             }
-            $this->docReadyJs .= 'document.querySelectorAll(".wt-site-title").forEach(el => el.insertAdjacentHTML("afterbegin", `<a class="' . self::STDCLASS_HOME_LINK .'" href="' . e($url) . '"' . $target . '></a>`));';
+            $this->docReadyJs .= 'document.querySelectorAll(".wt-site-title").forEach(el => el.innerHTML = `<a class="' . self::STDCLASS_HOME_LINK . '" href="' . e($url) . '"' . $target . '>` + el.innerHTML + "</a>");';
         }
         
         // --- Link++
