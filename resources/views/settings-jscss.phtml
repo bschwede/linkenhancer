@@ -14,8 +14,8 @@ $defaults_json = LinkEnhancerModule::getDefaultPrefsAsJson();
         let firstErrElem = null;
 
         const checkJs = (elemId, isJson = true) => { // validate syntax of JavaScript object or JSON string
-            let elem = $(`#${elemId}`);
-            let code = elem && (elem.val() ?? false) ? elem.val().trim() : null;
+            const elem = document.getElementById(elemId);
+            let code = elem && (elem.value ?? false) ? elem.value.trim() : null;
             let okay = false;
             if (code) {
                 try {
@@ -44,22 +44,22 @@ $defaults_json = LinkEnhancerModule::getDefaultPrefsAsJson();
         }
 
         const clearError = (elemId) => {
-            let errElem = $(`#error-${elemId}`);
-            if (errElem.length > 0) {
-                $(errElem).remove();
+            const errElem = document.getElementById('error-' + elemId);
+            if (errElem) {
+                errElem.remove();
             }
         }
 
         const showError = (elem, msg, e) => {
-            let errId = 'error-' + elem.attr('id');
-            let errElem = $(`#${errId}`);
-            let errMsg = (e && (e.message ?? false) ? e.message : '');
+            const errId = 'error-' + (elem?.id || '');
+            const errElem = document.getElementById(errId);
+            const errMsg = (e && (e.message ?? false) ? e.message : '');
             console.warn('showError e', e)
-            let html = `<div id="${errId}" class="error">${msg}<br><code>${errMsg}</code></div>`;
-            if (errElem.length == 1) {
-                $(errElem).html(html);
+            const html = `<div id="${errId}" class="error">${msg}<br><code>${errMsg}</code></div>`;
+            if (errElem) {
+                errElem.innerHTML = html;
             } else {
-                $(elem).after(html);
+                elem.insertAdjacentHTML('beforeend', html);
             }
         }
 
@@ -67,14 +67,16 @@ $defaults_json = LinkEnhancerModule::getDefaultPrefsAsJson();
         checkJs('<?= LinkEnhancerModule::PREF_WTHB_LINKS_JSON; ?>', true);
         checkJs('<?= LinkEnhancerModule::PREF_HOME_LINK_JSON; ?>', true);
 
-        const homeurl = $("#<?= LinkEnhancerModule::PREF_HOME_LINK_URL; ?>");
-        if (($("[name=<?= LinkEnhancerModule::PREF_HOME_LINK_TYPE; ?>]:checked").val() ?? 0) == 3 && $(homeurl).val() == '') {
+        const homeurl = document.getElementById("<?= LinkEnhancerModule::PREF_HOME_LINK_URL; ?>");
+        const homeTypeChecked = document.querySelector("[name=<?= LinkEnhancerModule::PREF_HOME_LINK_TYPE; ?>]:checked");
+        const homeTypeVal = homeTypeChecked ? parseInt(homeTypeChecked.value) : 0;
+        if (homeTypeVal == 3 && (homeurl?.value ?? '') == '') {
             showError(homeurl, '<?= I18N::translate("Input required") ?>')
             firstErrElem = firstErrElem ?? homeurl 
         }
 
         if (firstErrElem) {
-            $(firstErrElem).get(0).scrollIntoView({ behavior: 'smooth' });
+            firstErrElem.scrollIntoView({ behavior: 'smooth' });
             return false;
         }
         
@@ -95,29 +97,32 @@ $defaults_json = LinkEnhancerModule::getDefaultPrefsAsJson();
     });
 
     function toggleSectionByRadio(secSelector, radioGroupname, cname, indexes) {
-        let section = $(secSelector);
-        if (!section || section.length == 0) {
+        const section = document.querySelector(secSelector);
+        if (!section) {
             return;
         }
 
         for (const idx of indexes) {
-            if ($(`#${radioGroupname}-${idx}:checked`).length == 1) { // radio is selected - disable
-                $(section).addClass(cname);
+            if (document.getElementById(`${radioGroupname}-${idx}`)?.checked) { // radio is selected - disable
+                section.classList.add(cname);
                 return;
             }
         }
-        $(section).removeClass(cname);
+        section.classList.remove(cname);
     }
 
     function toggleSectionBySelectSingle(secId, selectName, cname, checkvalues, disableifincluded = true) {
-        let section = $(`#${secId}`);
-        let selectvalue = $(`select[name="${selectName}"]`).val();
+        const id = secId.startsWith('#') ? secId.slice(1) : secId;
+        const section = document.getElementById(id);
+        if (!section) return;
+        const selectEl = document.querySelector(`select[name="${selectName}"]`);
+        const selectvalue = selectEl ? selectEl.value : '';
         checkvalues = Array.isArray(checkvalues) ? checkvalues : [checkvalues];
-        invalues = checkvalues.includes(selectvalue);
+        const invalues = checkvalues.includes(selectvalue);
         if (disableifincluded && invalues || !disableifincluded && !invalues) {
-            $(section).addClass(cname);
+            section.classList.add(cname);
         } else {
-            $(section).removeClass(cname);
+            section.classList.remove(cname);
         }
     }
 
@@ -256,8 +261,8 @@ $defaults_json = LinkEnhancerModule::getDefaultPrefsAsJson();
     }
 
     function explodeSmapuUserDef() {
-        const smapuDefId = "#<?= LinkEnhancerModule::PREF_MD_EXT_SMAPU_DEF; ?>";    
-        const json = $(smapuDefId).val();
+        const smapuDefId = "<?= LinkEnhancerModule::PREF_MD_EXT_SMAPU_DEF; ?>";
+        const json = document.getElementById(smapuDefId).value;
         let quotedef = { do:'', dc:'', so:'', sc:''};
         try {
             quotedef = JSON.parse(json);
@@ -266,24 +271,24 @@ $defaults_json = LinkEnhancerModule::getDefaultPrefsAsJson();
         }
         
         ['do', 'dc', 'so', 'sc'].forEach(key => {
-            $(smapuDefId + '_' + key).val((quotedef[key] ?? ''))
-        })
+            document.getElementById(smapuDefId + '_' + key).value = (quotedef[key] ?? '')
+        });
     }
 
     function implodeSmapuUserDef() {
-        const smapuDefId = "#<?= LinkEnhancerModule::PREF_MD_EXT_SMAPU_DEF; ?>";
+        const smapuDefId = "<?= LinkEnhancerModule::PREF_MD_EXT_SMAPU_DEF; ?>";
 
         let quotedef = { do: '', dc: '', so: '', sc: '' };
 
         Object.keys(quotedef).forEach(key => {
-            quotedef[key] = ($(smapuDefId + '_' + key).val() ?? '');
-        })
+            quotedef[key] = (document.getElementById(smapuDefId + '_' + key)?.value ?? '');
+        });
                 
         const json = JSON.stringify(quotedef);
-        $(smapuDefId).val(json);
+        document.getElementById(smapuDefId).value = json;
     }    
 
-    $(() => {
+    document.addEventListener('DOMContentLoaded', () => {
         [ // pref name, element selector, [indexes of checkbox selected for disable state=standard is 0], disable class name=standard 'disabled-w-text'
             ['<?= LinkEnhancerModule::PREF_LINKSPP_ACTIVE; ?>', '#options1'],
             ['<?= LinkEnhancerModule::PREF_MD_ACTIVE; ?>', '#options2'],
@@ -305,7 +310,9 @@ $defaults_json = LinkEnhancerModule::getDefaultPrefsAsJson();
             indexes = (indexes === null || !Array.isArray(indexes) ? [0] : indexes);
             cname = (cname ?? 'disabled-w-text');
             ((name, selector, idx, cname) => {
-                $(`input[type=radio][name='${name}']`).on("change", () => { toggleSectionByRadio(selector, name, cname, idx) });
+                document.querySelectorAll(`input[type=radio][name='${name}']`).forEach(el => {
+                    el.addEventListener('change', () => { toggleSectionByRadio(selector, name, cname, idx); });
+                });
             })(secName, secSelector, indexes, cname);
             toggleSectionByRadio(secSelector, secName, cname, indexes);
         });
@@ -315,42 +322,51 @@ $defaults_json = LinkEnhancerModule::getDefaultPrefsAsJson();
         ].forEach((elem) => {
             [selname, secId, cvalues, dii] = elem;
             ((selname, secId, cvalues, dii = true) => {
-                $(`select[name='${selname}']`).on("change", () => { toggleSectionBySelectSingle(secId, selname, 'disabled', cvalues, dii) });
+                document.querySelectorAll(`select[name='${selname}']`).forEach(el => {
+                    el.addEventListener('change', () => { toggleSectionBySelectSingle(secId, selname, 'disabled', cvalues, dii); });
+                });
             })(selname, secId, cvalues, dii);
             toggleSectionBySelectSingle(secId, selname, 'disabled', cvalues, dii);
         });
 
         const settings = getSettings();
-        $('.settings-reset').on('click', (e) => { setSettings(settings); });
-        $('.settings-reset-to-default').on('click', (e) => {
-            const defaults = {};
-            const config = getDefaultSettings();
-            Object.keys(config).forEach(key => {
-                defaults[key] = config[key].default;
+        document.querySelectorAll('.settings-reset').forEach(el => { el.addEventListener('click', (e) => { setSettings(settings); }); });
+        document.querySelectorAll('.settings-reset-to-default').forEach(el => {
+            el.addEventListener('click', (e) => {
+                const defaults = {};
+                const config = getDefaultSettings();
+                Object.keys(config).forEach(key => {
+                    defaults[key] = config[key].default;
+                });
+                setSettings(defaults);
             });
-            setSettings(defaults);
         });
-        $('.settings-json-export').on('click', (e) => {
-            const json = JSON.stringify(getSettings());
-            prompt("<?= I18N::translate('Settings') ?> - <?= I18N::translate('JSON export') ?>", json);
+        document.querySelectorAll('.settings-json-export').forEach(el => {
+            el.addEventListener('click', (e) => {
+                const json = JSON.stringify(getSettings());
+                prompt("<?= I18N::translate('Settings') ?> - <?= I18N::translate('JSON export') ?>", json);
+            });
         });
-        $('.settings-json-import').on('click', (e) => {
-            const json = prompt("<?= I18N::translate('Settings') ?> - <?= I18N::translate('JSON import') ?>", '');
-            if (json === null || json === '') return;
-            try {
-                const import_settings = JSON.parse(json);
-                setSettings(import_settings);
-            } catch (e) {
-                alert("Error on JSON parsing");
-                console.error(e);
-            }
+        document.querySelectorAll('.settings-json-import').forEach(el => {
+            el.addEventListener('click', (e) => {
+                const json = prompt("<?= I18N::translate('Settings') ?> - <?= I18N::translate('JSON import') ?>", '');
+                if (json === null || json === '') return;
+                try {
+                    const import_settings = JSON.parse(json);
+                    setSettings(import_settings);
+                } catch (e) {
+                    alert("Error on JSON parsing");
+                    console.error(e);
+                }
+            });
         });
         
         explodeSmapuUserDef();
-        const smapuDefId = "#<?= LinkEnhancerModule::PREF_MD_EXT_SMAPU_DEF; ?>";
+        const smapuDefId = "<?= LinkEnhancerModule::PREF_MD_EXT_SMAPU_DEF; ?>";
         ['do', 'dc', 'so', 'sc'].forEach(key => {
-            $(smapuDefId + '_' + key).on("change", () => { implodeSmapuUserDef() })
-        })
+            const el = document.getElementById(smapuDefId + '_' + key);
+            if (el) el.addEventListener('change', () => { implodeSmapuUserDef(); });
+        });
 
     });
 </script>

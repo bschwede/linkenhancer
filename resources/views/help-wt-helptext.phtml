@@ -144,12 +144,27 @@ foreach ($help_topics as $key => $attribs):
         // important: links on a visible modal that should load other content into this modal 
         // must not set the attribute data-bs-toggle="modal", otherwise bootstrap toggles visibility of the modal
 ?>
-<p><a class="modal-reload-link" href="#" data-bs-backdrop="static" data-bs-target="#le-ajax-modal" data-wt-href="<?= e($route)?>"><?= I18N::translate('Further information can be found on a separate help page.') ?></a></p>
+<p><a class="modal-reload-link" href="#" data-bs-backdrop="static" data-bs-target="#wt-ajax-modal" data-wt-href="<?= e($route)?>"><?= I18N::translate('Further information can be found on a separate help page.') ?></a></p>
 <?php
     }
 endforeach;
 ?>
 <script>
-    $('.modal-reload-link').on('click', eventLeAjaxModalLoad);
+    document.querySelectorAll('.modal-reload-link').forEach(el => {
+        el.addEventListener('click', (event) => {
+            const link = event.target;
+            const modal = link.closest('.modal');
+            let modalContent = modal.querySelector('.modal-content');
+
+            modalContent.replaceChildren(); //.innerHTML = ''; // empty()
+            const url = link.dataset.wtHref;
+            fetch(url)
+                .then(response => response.text())
+                // doesn't init scripts - see resources/js/webtrees/pages/ajax-modal.js
+                .then(html => modalContent.innerHTML = html)
+                .catch(err => console.error('LE-Mod AJAX reload error:', err));
+        });
+    });
+
     LinkEnhMod.initWtHelp('a.wtreflink');
 </script>

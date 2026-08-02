@@ -23,7 +23,7 @@ export const buildMenuHtml = (cfg, locationHref) => {
             href="#"
             data-bs-backdrop="static"
             data-bs-toggle="modal"
-            data-bs-target="#le-ajax-modal"
+            data-bs-target="#wt-ajax-modal"
             data-wt-href="${cfg.tocnsearch_url}">
             ${cfg.i18n('tocnsearch')}
         </a>`;
@@ -46,7 +46,7 @@ export const buildMenuHtml = (cfg, locationHref) => {
             href="#"
             data-bs-backdrop="static"
             data-bs-toggle="modal"
-            data-bs-target="#le-ajax-modal"
+            data-bs-target="#wt-ajax-modal"
             data-wt-href="${cfg.wtcorehelp_url}">
             ${cfg.i18n('wtcorehelp')}
         </a>`;

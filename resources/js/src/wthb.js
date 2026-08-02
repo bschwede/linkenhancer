@@ -7,8 +7,17 @@ import { getUserSetting, setUserSetting } from "./wthb-storage.js";
 
 export function createWthb(env) {
 
-    //const { document, window, bootstrap, jQuery } = env; // if js is included in head, bootstrap and jQuery aren't loaded yet, so those two objects are null
-    const { document, window } = env; // inclusion in the header has a better timing, otherwise if included in body the top menu item is flickering
+    let bootstrapRef = null;
+    let _env = env;
+
+    const getBootstrap = () => {
+        if (!bootstrapRef) {
+            bootstrapRef = (_env && _env.bootstrap) || (typeof window !== 'undefined' ? window.bootstrap : null);
+        }
+        return bootstrapRef;
+    };
+
+    const { document, window } = env;
 
     let cfg = getDefaultConfig();
 
@@ -41,8 +50,7 @@ export function createWthb(env) {
             insertSubcontextLinks(
                 document,
                 window,
-                bootstrap, // on doc loaded vendor modules are initialized 
-                jQuery,
+                getBootstrap(),
                 cfg
             );
 
@@ -52,41 +60,56 @@ export function createWthb(env) {
 
     const bindEvents = () => {
 
-        let wthblink = jQuery("#wthb-link");
-        if (jQuery(wthblink).length === 0) { // not all pages have a top menu (e.g. note edit page)
+        let wthblink = document.getElementById("wthb-link");
+        if (!wthblink) { // not all pages have a top menu (e.g. note edit page)
             return;
         }
 
         // translation settings only needed for non german language
         if (cfg.lang?.substr(0, 2).toLowerCase() == 'de') return;
 
-        setWthbLinkClickHandler(document,window, bootstrap, jQuery,cfg, wthblink);
+        setWthbLinkClickHandler(document,window, getBootstrap(),cfg, wthblink);
 
         if (cfg.dotranslate !== 1) return; // no user setting 
 
-        let wthbcfg = jQuery("#wthb-link-cfg").on('click', () => toggleModal(document, bootstrap, true));
-        if (cfg.i18n('cfg_title')) $(wthbcfg).attr('title', cfg.i18n('cfg_title'));
+        let wthbcfg = document.getElementById("wthb-link-cfg");
+        if (wthbcfg) {
+            wthbcfg.addEventListener('click', () => toggleModal(document, getBootstrap(), true));
+            if (cfg.i18n('cfg_title')) wthbcfg.setAttribute('title', cfg.i18n('cfg_title'));
+        }
 
-        jQuery('#wthb-modal').on('show.bs.modal', (e) => {
-            jQuery("#wthb-epilogue").hide(); // standard - should be only visible if user has not yet made decission for translation, because the dialog is opened automatically
+        const wthbModal = document.getElementById('wthb-modal');
+        if (wthbModal) {
+            wthbModal.addEventListener('show.bs.modal', (e) => {
+                const epilogue = document.getElementById("wthb-epilogue");
+                if (epilogue) epilogue.style.display = 'none'; // standard - should be only visible if user has not yet made decission for translation, because the dialog is opened automatically
 
-            // set radio buttons
-            jQuery('input[name=wthb-translate]').prop('checked', false) //clear first
-            let setting = getUserSetting(localStorage, WTHB_USER_SETTING.translate, true);
-            if (setting !== undefined) {
-                try {
-                    jQuery(`#wthb-translate-${setting}`).prop('checked', true);
-                } catch (e) { }
-            }
-        });
-        jQuery('#wthb-modal .btn-primary').on('click', () => { //save setting
-            const doClickHelplink = jQuery("#wthb-epilogue").is(":visible");
-            let doTranslateUser = jQuery('input[name=wthb-translate]:checked').val();
-            setUserSetting(localStorage, WTHB_USER_SETTING.translate, doTranslateUser, true);
-            cfg.doTranslateUser = getUserSetting(localStorage, WTHB_USER_SETTING.translate, true); // used in setWthbLinkClickHandler
-            toggleModal(document, bootstrap, false);
-            if (doClickHelplink) jQuery("#wthb-link").click();
-        });
+                // set radio buttons
+                const radios = wthbModal.querySelectorAll('input[name=wthb-translate]');
+                radios.forEach(r => r.checked = false); //clear first
+                let setting = getUserSetting(localStorage, WTHB_USER_SETTING.translate, true);
+                if (setting !== undefined) {
+                    try {
+                        const radio = document.getElementById(`wthb-translate-${setting}`);
+                        if (radio) radio.checked = true;
+                    } catch (e) { }
+                }
+            });
+        }
+
+        const btnPrimary = wthbModal?.querySelector('.btn-primary');
+        if (btnPrimary) {
+            btnPrimary.addEventListener('click', () => { //save setting
+                const epilogue = document.getElementById("wthb-epilogue");
+                const isEpilogueVisible = epilogue && epilogue.style.display !== 'none' && epilogue.offsetParent !== null;
+                const checkedRadio = wthbModal?.querySelector('input[name=wthb-translate]:checked');
+                let doTranslateUser = checkedRadio ? checkedRadio.value : undefined;
+                setUserSetting(localStorage, WTHB_USER_SETTING.translate, doTranslateUser, true);
+                cfg.doTranslateUser = getUserSetting(localStorage, WTHB_USER_SETTING.translate, true); // used in setWthbLinkClickHandler
+                toggleModal(document, getBootstrap(), false);
+                if (isEpilogueVisible) wthblink.click();
+            });
+        }
     };
 
     return {
@@ -94,8 +117,8 @@ export function createWthb(env) {
         init,
 
         initHelp: (searchengines) => // webtrees manual toc and search
-            initHelp(document, window, bootstrap, jQuery, cfg, searchengines),
+            initHelp(document, window, getBootstrap(), cfg, searchengines),
 
-        initWtHelp: (aselector) => prepareWthbLinks(document, window, bootstrap, jQuery, cfg, aselector) // webtrees core help topics
+        initWtHelp: (aselector) => prepareWthbLinks(document, window, getBootstrap(), cfg, aselector) // webtrees core help topics
     };
 }

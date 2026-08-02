@@ -5,7 +5,6 @@ export const insertSubcontextLinks = (
     document,
     window,
     bootstrap,
-    jQuery,
     cfg
 ) => {
     const is_touch_device = ('ontouchstart' in window) || (window.DocumentTouch && document instanceof DocumentTouch);
@@ -85,13 +84,18 @@ export const insertSubcontextLinks = (
     const createPopoverForTrigger = (trigger, url, pos = 'bottom') => {
         const target = (cfg.openInNewTab ? 'target="_blank" ' : '');
         const helptitle = getHelpTitle(url, cfg);
-        const wthblink = jQuery(`<a href="${url}" ${target}class="stretched-link d-inline-block p-1 text-decoration-none"><i class="fa-solid fa-circle-question"></i> ${helptitle}</a>`);
+        
+        const aEl = document.createElement('a');
+        aEl.href = url;
+        aEl.target = cfg.openInNewTab ? '_blank' : '';
+        aEl.className = 'stretched-link d-inline-block p-1 text-decoration-none';
+        aEl.innerHTML = '<i class="fa-solid fa-circle-question"></i> ' + helptitle;
 
-        setWthbLinkClickHandler(document, window, bootstrap, jQuery, cfg, wthblink);
+        setWthbLinkClickHandler(document, window, bootstrap, cfg, aEl);
 
         const popover = newPopover(trigger, {
             placement: pos,
-            content: wthblink[0]
+            content: aEl
         });
 
         activePopovers.set(trigger, popover);
@@ -126,9 +130,9 @@ export const insertSubcontextLinks = (
                 if (ctxobj?.e ?? null) {
                     const filterFn = createSafeFilter(document, ctxobj.e);
                     const result = filterFn();
-                    node = jQuery(Array.isArray(result) ? result[0] : result);
+                    node = Array.isArray(result) ? (result[0] ?? null) : (result ?? null);
                 } else {
-                    node = jQuery((ctxobj?.f ?? null));
+                    node = ctxobj?.f ? document.querySelector(ctxobj.f) : null;
                 }
                 pos = ctxobj?.p ?? pos;
             } catch (e) {
@@ -136,21 +140,20 @@ export const insertSubcontextLinks = (
                 return;
             }
         } else { // must be a filter expression
-            node = jQuery(ctx);
+            node = document.querySelector(ctx);
         }
 
-        if (jQuery.isEmptyObject(node) || node.length === 0) {
+        if (!node) {
             return;
         }
 
-        let poptrigger = jQuery('<span>', {
-            class: 'popover-trigger',
-            'data-subcontext': JSON.stringify({ url, pos }),
-            text: 'ⓘ',
-        });
-        node.append(poptrigger);
+        const poptrigger = document.createElement('span');
+        poptrigger.className = 'popover-trigger';
+        poptrigger.dataset.subcontext = JSON.stringify({ url, pos });
+        poptrigger.textContent = 'ⓘ';
+        node.appendChild(poptrigger);
 
-        createPopoverForTrigger(poptrigger[0], url, pos);
+        createPopoverForTrigger(poptrigger, url, pos);
     });
 
     // mutation observer

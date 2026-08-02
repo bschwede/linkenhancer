@@ -97,7 +97,7 @@
 .md-example .right { text-align:right;}
 
 /* #30 fix display order with GVExport - defined in mde + wthb */
-#le-ajax-modal, #wthb-modal {
+#wt-ajax-modal, #wthb-modal {
   display:none;
   z-index:1060; /* div.modal-backdrop has z-index:1050 */
 }

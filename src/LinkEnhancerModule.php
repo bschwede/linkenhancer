@@ -47,8 +47,11 @@ use Fisharebest\Webtrees\Session;
 use Fisharebest\Webtrees\Validator;
 use Fisharebest\Webtrees\View;
 use Illuminate\Database\Capsule\Manager as DB;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Nyholm\Psr7\Stream;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Factories\CustomMarkdownFactory;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoXrefAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpMdAction;
@@ -67,7 +70,13 @@ enum OverwriteMode
     case ParentIsNotOne; // parent is int triple state
 }
 
-class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface, ModuleGlobalInterface, ModuleConfigInterface, SettingInterface {
+class LinkEnhancerModule extends AbstractModule implements 
+    MiddlewareInterface,
+    ModuleCustomInterface,
+    ModuleGlobalInterface,
+    ModuleConfigInterface, 
+    SettingInterface 
+{
 
 
     // For every module interface that is implemented, the corresponding trait *should* also use be used.
@@ -244,6 +253,8 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
     protected string $docReadyJs;
     protected string $initJs;
 
+    protected bool $needajax;
+
 
     public function __construct(public readonly bool $vesta_common_enabled = false)
     {
@@ -262,6 +273,8 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         // By registering the service now it is available to other custom module in their boot methods. No impact due to unpredictable boot order of modules.
         // The service is also available when the module is disabled - however, this should not be a problem, as it only has an effect when this module is enabled.
         Registry::container()->set(MarkdownEditorActivationService::class, $this->mde);
+
+        $this->needajax = false;
     }    
   
     /**
@@ -545,7 +558,7 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                     $target = $this->getPref(self::PREF_HOME_LINK_OPEN_IN_NEW_TAB, true, true) ? ' target="_blank"' : '';
                     break;
             }
-            $this->docReadyJs .= '$(".wt-site-title").wrapInner(`<a class="' . self::STDCLASS_HOME_LINK .'" href="' . e($url) . '"' . $target . '></a>`);';
+            $this->docReadyJs .= 'document.querySelectorAll(".wt-site-title").forEach(el => el.innerHTML = `<a class="' . self::STDCLASS_HOME_LINK . '" href="' . e($url) . '"' . $target . '>` + el.innerHTML + "</a>");';
         }
         
         // --- Link++
@@ -629,15 +642,16 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
         //$includeRes .= Utils::getJavascriptWrapper($this->docReadyJs, $this->initJs);
 
         $html = '';
-        $needajax = false;
+        $this->needajax = false;
         
         if ($cfg_wthb_active) {
             $html .= view($this->name() . '::wthb-modal');
-            $needajax = $cfg_wthb_tocnsearch || $cfg_wthb_wtcorehelp;
+            $this->needajax = $cfg_wthb_tocnsearch || $cfg_wthb_wtcorehelp;
         }
-        if ($needajax || ($cfg_md_editor_active && $this->mde->isEditPage())) { // markdown editor is not useful on other pages
-            $html .= view($this->name() . '::ajax');
-        }
+
+        // wt-ajax-modal is included if necessary in process method via MiddleWareInterface
+        $this->needajax = ($this->needajax || ($cfg_md_editor_active && $this->mde->isEditPage())); // markdown editor is not useful on other pages
+
         return $includeRes . $html;
     }
 
@@ -1103,4 +1117,34 @@ class LinkEnhancerModule extends AbstractModule implements ModuleCustomInterface
                 break;
         }
     }
+
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    {
+        $response = $handler->handle($request);
+
+        // include wt-ajax-modal if needed and not already present
+        // only helpful on html pages requested by GET method
+        if (!$this->needajax || strtoupper($request->getMethod()) !== 'GET') {
+            return $response;
+        }
+
+        $contentType = $response->getHeaderLine('Content-Type');
+        if (!str_contains($contentType, 'text/html')) {
+            return $response;
+        }
+
+        $body = (string) $response->getBody();
+
+        $block = view('modals/ajax');
+        if (!str_contains($body, $block)) {
+
+            if (str_contains($body, '</body>')) {
+                $body = str_replace('</body>', '<!-- ajax modal supplemented -->' . $block . '</body>', $body);
+            }
+
+            $response = $response->withBody(Stream::create($body));
+        }
+
+        return $response;
+    }    
 }
