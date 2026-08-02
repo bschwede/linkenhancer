@@ -151,7 +151,20 @@ endforeach;
 ?>
 <script>
     document.querySelectorAll('.modal-reload-link').forEach(el => {
-        el.addEventListener('click', eventLeAjaxModalLoad);
+        el.addEventListener('click', (event) => {
+            const link = event.target;
+            const modal = link.closest('.modal');
+            let modalContent = modal.querySelector('.modal-content');
+
+            modalContent.replaceChildren(); //.innerHTML = ''; // empty()
+            const url = link.dataset.wtHref;
+            fetch(url)
+                .then(response => response.text())
+                // doesn't init scripts - see resources/js/webtrees/pages/ajax-modal.js
+                .then(html => modalContent.innerHTML = html)
+                .catch(err => console.error('LE-Mod AJAX reload error:', err));
+        });
     });
+
     LinkEnhMod.initWtHelp('a.wtreflink');
 </script>
