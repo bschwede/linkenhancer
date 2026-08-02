@@ -526,3 +526,9 @@ id;path;handler;method;extras;subcontext;category;order;url
 554;;_potts-hero-slideshow_;GET;;;custom module;15;https://github.com/PottsNet/potts-hero-slideshow
 555;/tree/{tree}/individual/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\IndividualPage;GET;;"a[href^=""#_potts_fact_ages_""]";custom module;30;https://github.com/PottsNet/potts_fact_ages
 556;;_data-check_;GET;;;custom module;15;https://github.com/Vulfharban/webtrees-datencheck-plugin
+557;/tree/{tree}/individual/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\IndividualPage;GET;;"a[href^=""#_hh-change-log_""]";custom module;30;https://github.com/hartenthaler/hh-change-log
+558;;_hh-change-log_;GET;;;custom module;15;https://github.com/hartenthaler/hh-change-log
+559;/tree/{tree}/individual/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\IndividualPage;GET;;"a[href^=""#_potts-family-books_""]";custom module;30;https://github.com/PottsNet/potts-family-books
+560;;_potts_member_help_;GET;;;custom module;15;https://github.com/PottsNet/potts-help-centre
+561;/tree/{tree}/individual/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\IndividualPage;GET;;"a[href^=""#_full-diagram_""]";custom module;30;https://github.com/AlexBocken/WebtreesFullDiagram
+562;;_translate-notes_;GET;;;custom module;15;https://github.com/Aengelking/webtrees-translate
