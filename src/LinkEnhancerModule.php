@@ -28,7 +28,6 @@ namespace Schwendinger\Webtrees\Module\LinkEnhancer;
 
 use Aura\Router\Map;
 use Exception;
-use Fisharebest\Localization\Translation;
 use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\FlashMessages;
 use Fisharebest\Webtrees\Http\RequestHandlers\HomePage;
@@ -364,7 +363,37 @@ class LinkEnhancerModule extends AbstractModule implements
                 break;
             }
         }
-        return $file ? (new Translation($file))->asArray() : [];
+
+        // webtrees 2.2 still provides the former file-based localization package.
+        if (class_exists('\\Fisharebest\\Localization\\Translation')) {
+            return $file ? (new \Fisharebest\Localization\Translation($file))->asArray() : [];
+        }
+
+        // webtrees 2.3 replaced fisharebest/localization with its own stream-based loader.
+        if (class_exists('\\Fisharebest\\Webtrees\\I18N\\Translation')) {
+            if (str_ends_with($file, '.po')) {
+                $stream = fopen($file, 'rb');
+
+                if ($stream === false) {
+                    return [];
+                }
+
+                try {
+                    $translation = \Fisharebest\Webtrees\I18N\Translation::fromPoStream($stream);
+
+                    return $translation->toArray();
+                } finally {
+                    fclose($stream);
+                }
+
+            } else {
+                $translation = \Fisharebest\Webtrees\I18N\Translation::fromPhpFile($file);
+
+                return $translation->toArray();
+            }
+            
+        }        
+        return [];
     }
 
 
