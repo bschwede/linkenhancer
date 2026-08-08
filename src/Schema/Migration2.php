@@ -28,9 +28,9 @@ use Illuminate\Database\Schema\Blueprint;
 use Fisharebest\Webtrees\Schema\MigrationInterface;
 
 /**
- * Upgrade the database schema from version 1 to version 2.
+ * Upgrade the database schema from version 2 to version 3. 
  */
-class Migration1 implements MigrationInterface
+class Migration2 implements MigrationInterface
 {
 
     public function upgrade(): void
@@ -39,9 +39,9 @@ class Migration1 implements MigrationInterface
         $tablename = 'route_help_map';
 
         // add 'context' column
-        if (!DB::schema()->hasColumn($tablename, 'subcontext')) {
+        if (DB::schema()->hasColumn($tablename, 'path')) {
             DB::schema()->table($tablename, static function (Blueprint $table): void {
-                $table->string('subcontext', 250)->default('')->after('extras');
+                $table->string('path', 255)->change();
             });
         }
     }

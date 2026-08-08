@@ -34,7 +34,7 @@ class SeedHelpTable implements SeedInterface
 {
     private const array HEADER = [
     //  fieldname    => max length of string; getting info from schema is not directly supported
-        'path'       => 100,
+        'path'       => 255,
         'handler'    => 150,
         'method'     => 20,
         'extras'     => 60,

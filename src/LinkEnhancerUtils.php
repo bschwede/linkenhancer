@@ -372,29 +372,42 @@ class LinkEnhancerUtils { // misc helper functions
 
         $updates_applied = false;
 
-        // Update the schema, one version at a time.
-        while ($current_version < $target_version) {
+        $connection = DB::schema()->getConnection();
 
-            $class = $namespace . '\\Migration' . $current_version;
-            /** @var MigrationInterface $migration */
-            $migration = new $class();
-            $migration->upgrade();
-            $current_version++;
-
-            //when a module is first installed, we may not be able to setPreference at this point
-            ////(if this is called e.g. from SetName())
-            //because of foreign key constraints:
-            //the module may not have been inserted in the 'module' table at this point!
-            //cf. ModuleService.all()
-            //
-            //not that critical, we can just set the preference next time
-            //
-            //let's just check this directly (using ModuleService at this point may lead to looping, if we're indirectly called from there)
-            if (DB::table('module')->where('module_name', '=', $module->name())->exists()) {
-                $module->setPreference($schema_name, (string) $current_version);
-            }
-            $updates_applied = true;
+        if ($connection->transactionLevel() > 0) {
+            $connection->commit();
         }
+
+        try {
+
+            // Update the schema, one version at a time.
+            while ($current_version < $target_version) {
+
+                $class = $namespace . '\\Migration' . $current_version;
+                /** @var MigrationInterface $migration */
+                $migration = new $class();
+                $migration->upgrade();
+                $current_version++;
+
+                //when a module is first installed, we may not be able to setPreference at this point
+                ////(if this is called e.g. from SetName())
+                //because of foreign key constraints:
+                //the module may not have been inserted in the 'module' table at this point!
+                //cf. ModuleService.all()
+                //
+                //not that critical, we can just set the preference next time
+                //
+                //let's just check this directly (using ModuleService at this point may lead to looping, if we're indirectly called from there)
+                if (DB::table('module')->where('module_name', '=', $module->name())->exists()) {
+                    $module->setPreference($schema_name, (string) $current_version);
+                }
+                $updates_applied = true;
+            }
+        } finally {
+            // Re-open a transaction for webtrees' middleware to commit, even if
+            // the DDL above failed.
+            $connection->beginTransaction();
+        }            
 
         return $updates_applied;
     }

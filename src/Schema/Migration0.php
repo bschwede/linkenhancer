@@ -28,20 +28,17 @@ use Illuminate\Database\Schema\Blueprint;
 use Fisharebest\Webtrees\Schema\MigrationInterface;
 
 /**
- * Upgrade the database schema from version 0 (empty database) to version 1.
- * 
- * Known issue: with MySQL an exception is thrown - "PDO error - There is no active transaction"
- * it happens only once, if the table needs to be created. This operation finishs successfully.
- * see also: "[PHP8] PdoException with Transactions and MySQL implicit commits #3856" https://github.com/fisharebest/webtrees/issues/3856
- */
+ * Upgrade the database schema from version 0 (empty database) to version 1. 
+*/
 class Migration0 implements MigrationInterface
 {
 
     public function upgrade(): void
     {
+        $tablename = 'route_help_map';
 
-        if (!DB::schema()->hasTable('route_help_map')) {
-            DB::schema()->create('route_help_map', function (Blueprint $table): void {
+        if (!DB::schema()->hasTable($tablename)) {
+            DB::schema()->create($tablename, function (Blueprint $table): void {
                 $table->integer('id', true);
                 $table->string('path', 100)->default('');
                 $table->string('handler', 150)->default('');
