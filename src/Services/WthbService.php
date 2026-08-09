@@ -412,11 +412,6 @@ class WthbService { // stuff related to webtrees manual link handling
         $class = self::CMM_CFG_CLASS;
         $cmmConfig = $class::getModuleUpdateServiceConfig(); //getLocalConfiguration(); //MODULE_UPDATE_SERVICE_CONFIG;
 
-        $headers = [
-            'Content-Type' => 'text/csv; charset=utf-8',
-            'Content-Disposition' => 'attachment; filename="' . addcslashes($filename, '"') . '"',
-        ];
-
         try {
             $separator = $this->getSeparator($request);
         } catch(Exception $ex) {
@@ -454,20 +449,13 @@ class WthbService { // stuff related to webtrees manual link handling
         fclose($file);
         $csv = ob_get_clean();
 
-        return response(
-            content: $csv, 
-            headers: $headers
-        );
+        return response($csv)
+            ->withHeader('Content-Type', 'text/csv; charset=utf-8')
+            ->withHeader('Content-Disposition', 'attachment; filename="' . addcslashes($filename, '"') . '"');
     }
 
     public function exportCsvAction(string $filename, ServerRequestInterface $request): ResponseInterface
     {
-        $headers = [
-            'Content-Type' => 'text/csv; charset=utf-8',
-            'Content-Disposition' => 'attachment; filename="' . addcslashes($filename, '"') . '"',
-        ];
-
-
         $separator = $this->getSeparator($request);
         if (!DB::schema()->hasTable($this->help_table)) {
             throw new Exception(I18N::translate('Table for context help is missing - nothing to do.'));
@@ -493,10 +481,9 @@ class WthbService { // stuff related to webtrees manual link handling
         fclose($file);
         $csv = ob_get_clean();
 
-        return response(
-            content: $csv,
-            headers: $headers
-        );
+        return response($csv)
+            ->withHeader('Content-Type', 'text/csv; charset=utf-8')
+            ->withHeader('Content-Disposition', 'attachment; filename="' . addcslashes($filename, '"') . '"');
     }
 
     public function importCsvAction(ServerRequestInterface $request): void
