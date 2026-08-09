@@ -47,7 +47,6 @@ use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Tree;
 use Fisharebest\Webtrees\Validator;
 use Fisharebest\Webtrees\Webtrees;
-use Fisharebest\Webtrees\Http\Exceptions\HttpAccessDeniedException;
 use Psr\Http\Message\ServerRequestInterface;
 
 use League\CommonMark\Extension\CommonMark\Node\Inline\Image;
@@ -151,11 +150,19 @@ final class LeImageRenderer implements NodeRendererInterface, XmlNodeRendererInt
                 if ($record instanceof Media) {
                     try {
                         $record = Auth::checkMediaAccess($record);
-                    } catch (HttpAccessDeniedException $e) {
-                        return view($this->module->name() . '::error-img-svg', [
-                            'text' => $e->getMessage() . " - XREF $xref",
-                            'classnames' => $classnames,
-                        ]);
+                    } catch (\Throwable $exception) {
+                        foreach ([
+                            'Fisharebest\\Webtrees\\Http\\Exceptions\\HttpAccessDeniedException', // until wt2.2.x
+                            'Fisharebest\\Webtrees\\Http\\Exceptions\\HttpForbiddenException',    // since wt2.3.0
+                        ] as $class) {
+                            if (class_exists($class) && $exception instanceof $class) {                    
+                                return view($this->module->name() . '::error-img-svg', [
+                                    'text' => $exception->getMessage() . " - XREF $xref",
+                                    'classnames' => $classnames,
+                                ]);
+                            }
+                            throw $exception;
+                        }
                     }
 
                     $media_file = $record->firstImageFile();
