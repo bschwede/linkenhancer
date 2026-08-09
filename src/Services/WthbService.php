@@ -454,7 +454,10 @@ class WthbService { // stuff related to webtrees manual link handling
         fclose($file);
         $csv = ob_get_clean();
 
-        return response($csv, 200, $headers);
+        return response(
+            content: $csv, 
+            headers: $headers
+        );
     }
 
     public function exportCsvAction(string $filename, ServerRequestInterface $request): ResponseInterface
@@ -490,7 +493,10 @@ class WthbService { // stuff related to webtrees manual link handling
         fclose($file);
         $csv = ob_get_clean();
 
-        return response($csv, 200, $headers);
+        return response(
+            content: $csv,
+            headers: $headers
+        );
     }
 
     public function importCsvAction(ServerRequestInterface $request): void
