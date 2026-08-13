@@ -232,6 +232,10 @@ If you as a developer also want to apply mde to text areas on the edit pages of 
 
 This only works if this feature has been enabled globally and the edit page is associated with a tree that also uses Markdown in its notes.
 
+Known custom modules that make use of this feature:
+- [Source Transcriptions](https://github.com/hartenthaler/hh_source_transcription)
+- [Ortsregister](https://github.com/thobgg/webtrees-ortsregister)
+
 <a name="mdext"></a>
 #### Markdown Extensions
 > [!WARNING]
