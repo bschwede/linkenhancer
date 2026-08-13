@@ -66,6 +66,21 @@ $module = Registry::container()->get(LinkEnhancerModule::class);
     <?= I18N::translate('See also') ?>: <a target="_blank" href="<?= LinkEnhancerModule::CUSTOM_WEBSITE ?>">GitHub README</a>
 </p>
 
+<!-- XREF Overview link -->
+<div class="row">
+    <div class="col-sm-12">
+        <h4><?= /*I18N: XREF Overview */ I18N::translate('XREF Overview') ?></h4>
+        <p>
+            <a href="<?= route('module', ['module' => $module->name(), 'action' => 'AdminXrefOverview']) ?>" class="btn btn-outline-primary">
+                <?= I18N::translate('Open XREF Overview') ?>
+            </a>
+        </p>
+        <p class="text-muted">
+            <?= I18N::translate('List all cross-references (XREFs) found in GEDCOM records and HTML blocks across all accessible trees. Broken links are highlighted.') ?>
+        </p>
+    </div>
+</div>
+
 <div class="linkenhancer mb-5">
     <form method="post" enctype="multipart/form-data" onsubmit="return checkForm();">
         <?= csrf_field() ?>
