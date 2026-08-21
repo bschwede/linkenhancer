@@ -28,10 +28,29 @@ namespace Schwendinger\Webtrees\Module\LinkEnhancer\Services;
 
 use Fisharebest\Webtrees\DB;
 use Fisharebest\Webtrees\Gedcom;
+use Fisharebest\Webtrees\GedcomRecord;
 use Fisharebest\Webtrees\Tree;
 use Illuminate\Database\Query\Builder;
+use InvalidArgumentException;
 
-class XrefsService { // stuff related with handling cross references
+final class XrefsService { // stuff related with handling cross references
+
+    /**
+     * Valid linkenhancer link: [text](#@param1&paramN) / ![pic](#@...)
+     * with a non-empty URL part starting at "#@".
+     */
+    public const RE_LE_LINK = '/(!?\[[^\]]+\]\(#@[^)]+\))/';
+
+    /**
+     * Pass 2 residuals: defective LE remainder "](#@" and classic @XREF@.
+     */
+    public const RE_REMAINDER = '/(\]\(#@[^)]*|@[A-Za-z0-9:_.-]{1,20}@)/';
+
+    /**
+     * The "wt" parameter at a parameter boundary - it may occur multiple
+     * times per link and does not have to be the first parameter.
+     */
+    private const RE_WT_PARAM = '/(?:^|&)wt=/';
 
     
     public const GEDCOM_TABLES = [
@@ -64,7 +83,7 @@ class XrefsService { // stuff related with handling cross references
 
     public const GEDCOM_OTHER_SUBTYPES = [ "NOTE", "REPO", "_LOC" ];
 
-    private function getGedcomRecTypeSubquery(array $params, string $xref = Gedcom::REGEX_XREF, int|null $file = null): Builder {
+    private static function getGedcomRecTypeSubquery(array $params, string $xref = Gedcom::REGEX_XREF, int|null $file = null): Builder {
         $query = DB::table($params['table'])
             ->select(
                 DB::raw("`{$params['prefix']}_id` AS xref"),
@@ -107,13 +126,13 @@ class XrefsService { // stuff related with handling cross references
     }
 
     
-    public function supportedGedcomTableKeys() : array {
+    public static function supportedGedcomTableKeys() : array {
         return array_keys(self::GEDCOM_TABLES);
     }
 
-    public function supportedGedcomRecordKeys(): array
+    public static function supportedGedcomRecordKeys(): array
     {
-        return array_merge($this->supportedGedcomTableKeys(), self::GEDCOM_OTHER_SUBTYPES);
+        return array_merge(self::supportedGedcomTableKeys(), self::GEDCOM_OTHER_SUBTYPES);
     }
 
     /**
@@ -124,19 +143,23 @@ class XrefsService { // stuff related with handling cross references
      *
      * @return Builder
      */
-    public function getRecordsQuery(Tree|null $tree = null, string|null $xref = null, array $rectypes = []): Builder
+    public static function getRecordsQuery(Tree|null $tree = null, string|null $xref = null, array $rectypes = []): Builder
     {
-        $gedcom_table_keys = $this->supportedGedcomTableKeys();
-        $gedcom_record_keys = $this->supportedGedcomRecordKeys();
+        $gedcom_table_keys = self::supportedGedcomTableKeys();
+        $gedcom_record_keys = self::supportedGedcomRecordKeys();
         $rectypes = array_map('strtoupper', $rectypes);
-        $rectypes = array_filter($rectypes, fn($s) => in_array($s, $gedcom_record_keys));
+        $rectypes = array_values(array_filter($rectypes, fn($s) => in_array($s, $gedcom_record_keys)));
         $rectypes = count($rectypes) === 0 ?
             $gedcom_table_keys :
             $rectypes;
-        $other_subtypes_filter = in_array('OTHER', $rectypes) ? 
-            self::GEDCOM_OTHER_SUBTYPES : 
-            array_filter($rectypes, fn($s) => in_array($s, self::GEDCOM_OTHER_SUBTYPES));
-        $rectypes_filter = array_filter($rectypes, fn($s) => in_array($s, $gedcom_table_keys));
+        $other_subtypes_filter = in_array('OTHER', $rectypes) ?
+            self::GEDCOM_OTHER_SUBTYPES :
+            array_values(array_filter($rectypes, fn($s) => in_array($s, self::GEDCOM_OTHER_SUBTYPES)));
+        // NOTE/REPO/_LOC live in the "other" table - make sure it is part of the union
+        if ($other_subtypes_filter !== [] && !in_array('OTHER', $rectypes)) {
+            $rectypes[] = 'OTHER';
+        }
+        $rectypes_filter = array_values(array_filter($rectypes, fn($s) => in_array($s, $gedcom_table_keys)));
 
         $xref ??= Gedcom::REGEX_XREF;
 
@@ -145,13 +168,17 @@ class XrefsService { // stuff related with handling cross references
         $unionQuery = null;
         foreach ($rectypes_filter as $rectype) {
             $params = self::GEDCOM_TABLES[$rectype];
-            $subquery = $this->getGedcomRecTypeSubquery($params, $xref, $file);
+            $subquery = self::getGedcomRecTypeSubquery($params, $xref, $file);
 
-            if ($rectype == 'OTHER') {
+            if ($rectype === 'OTHER') {
                 $subquery->whereIn('o_type', $other_subtypes_filter);
             }
 
             $unionQuery = $unionQuery ? $unionQuery->unionAll($subquery) : $subquery;
+        }
+
+        if ($unionQuery === null) {
+            throw new InvalidArgumentException('No valid GEDCOM record types given.');
         }
 
         $query = DB::query()
@@ -161,6 +188,103 @@ class XrefsService { // stuff related with handling cross references
             ->orderBy('u.xref');
 
         return $query;
+    }
+
+    /**
+     * Classify all link tokens in a single text value.
+     *
+     * Two-pass scan (A2): pass 1 matches the complete valid LE links first
+     * and masks them (same length, offsets stay stable), so pass 2 can never
+     * steal fragments of an already classified link.
+     *
+     * Buckets (mutually exclusive, every link is counted exactly once):
+     *  - le       [text](#@…) without a wt= parameter
+     *  - lepic    ![pic](#@…) without a wt= parameter
+     *  - enhanced LE link whose URL part contains at least one wt= parameter
+     *  - classic  plain @XREF@ cross-reference
+     *  - other    defective LE remainder "](#@"
+     *
+     * @return array<int, array{class: string, token: string, snippet: string}>
+     *         In offset order. snippet = token plus up to 10 chars of surrounding context.
+     */
+    public static function classifyTextLinks(string $text): array {
+        $found  = [];
+        $masked = $text;
+
+        // Pass 1: valid LE links.
+        if (preg_match_all(self::RE_LE_LINK, $text, $m1, PREG_OFFSET_CAPTURE) !== false) {
+            foreach ($m1[0] as $match) {
+                $token  = $match[0];
+                $offset = $match[1];
+
+                // URL part: after the last "(#@" up to the closing bracket.
+                $pos = strrpos($token, '(#@');
+                $url = $pos === false ? '' : substr($token, $pos + 3, -1);
+
+                $class = preg_match(self::RE_WT_PARAM, $url) === 1
+                    ? 'enhanced'
+                    : (str_starts_with($token, '![') ? 'lepic' : 'le');
+
+                $found[$offset] = [
+                    'class'   => $class,
+                    'token'   => $token,
+                    'snippet' => self::snippet($text, $offset, $token),
+                ];
+
+                $masked = substr_replace($masked, str_repeat(' ', strlen($token)), $offset, strlen($token));
+            }
+        }
+
+        // Pass 2: defective LE remainders and classic xrefs in the residual.
+        if (preg_match_all(self::RE_REMAINDER, $masked, $m2, PREG_OFFSET_CAPTURE) !== false) {
+            foreach ($m2[0] as $match) {
+                $found[$match[1]] = [
+                    'class'   => str_starts_with($match[0], '](#@') ? 'other' : 'classic',
+                    'token'   => $match[0],
+                    'snippet' => self::snippet($text, $match[1], $match[0]),
+                ];
+            }
+        }
+
+        ksort($found);
+
+        return array_values($found);
+    }
+
+    /**
+     * Full link inventory of one record: every TextTagCollector value
+     * classified per entry.
+     *
+     * @param array<int,string> $tags
+     *
+     * @return array{
+     *     entries: array<int, array{path: string, class: string, token: string, snippet: string}>,
+     *     counts: array{le: int, lepic: int, enhanced: int, classic: int, other: int}
+     * }
+     */
+    public static function classifyRecordLinks(GedcomRecord $record, array $tags = TextTagCollector::DEFAULT_TAGS): array {
+        $counts = ['le' => 0, 'lepic' => 0, 'enhanced' => 0, 'classic' => 0, 'other' => 0];
+        $links  = [];
+        foreach (TextTagCollector::collectForRecord($record, $tags) as $entry) {
+            foreach (self::classifyTextLinks($entry['value']) as $link) {
+                $counts[$link['class']]++;
+                $links[] = [
+                    'path'    => $entry['path'],
+                    'class'   => $link['class'],
+                    'token'   => $link['token'],
+                    'snippet' => $link['snippet'],
+                ];
+            }
+        }
+
+        return ['entries' => $links, 'counts' => $counts];
+    }
+
+    /**
+     * Display context: up to 10 characters before and after the token.
+     */
+    private static function snippet(string $text, int $offset, string $token): string {
+        return substr($text, max(0, $offset - 10), 20 + strlen($token));
     }
 
 }

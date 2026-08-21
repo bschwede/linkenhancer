@@ -8,7 +8,6 @@ use Fisharebest\Webtrees\Services\TreeService;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Tree;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
-use Schwendinger\Webtrees\Module\LinkEnhancer\Services\TextTagCollector;
 
 /**
  * @var string                  $title
@@ -19,7 +18,6 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\Services\TextTagCollector;
 $totalCount = count($data);
 $treeService = Registry::container()->get(TreeService::class);
 $tree = null;
-$xrefService = new XrefsService();
 ?>
 
 <?= view('components/breadcrumbs', [
@@ -35,6 +33,10 @@ $xrefService = new XrefsService();
     <?= I18N::translate('This page lists all cross-references (XREFs) found in GEDCOM records and HTML blocks across all accessible trees.') ?>
 </p>
 
+<details class="mb-3">
+    <summary class="text-muted"><?= I18N::translate('SQL') ?></summary>
+    <pre><?= e($sql) ?></pre>
+</details>
 
 <div class="mb-3">
     <strong><?= $totalCount ?></strong>
@@ -63,10 +65,17 @@ $xrefService = new XrefsService();
             <?php foreach ($data as $row):
                 $xref = $row['xref'];
                 $file = (int) $row['file'];
-                $tree = $tree instanceof Tree && $tree->id() === $file ? $tree : $treeService->find($file);
+                if (!($tree instanceof Tree && $tree->id() === $file)) {
+                    try {
+                        $tree = $treeService->find($file);
+                    } catch (DomainException) {
+                        // Orphaned row - the tree no longer exists, skip it.
+                        continue;
+                    }
+                }
                 $record = Registry::gedcomRecordFactory()->make($xref, $tree, $row['gedcom']);
                 $displayname = $record->fullName();
-            
+
             ?>
                 <?php $i++; ?>
                 <tr>
@@ -79,57 +88,18 @@ $xrefService = new XrefsService();
                     <td><?= e($row['file']) ?></td>
                     <td><?= e($row['type']) ?></td>
                     <td>
-                        <a href="<?= $record->url() ?>"><?= $displayname ?></a>
+                        <a href="<?= $record->url() ?>"><?= e($displayname) ?></a>
+<?php $inventory = XrefsService::classifyRecordLinks($record); ?>
+                        <?php if ($inventory['entries'] !== []): ?>
                         <ol>
-<?php
-                $cnt_le = 0;
-                $cnt_lepic = 0;
-                $cnt_classicxref = 0;
-                $cnt_other = 0;
-                foreach (TextTagCollector::collectForRecord($record) as $entry) {
-                    $links = preg_match_all('/(?:(!?\[)[^\]]+\]\(#@[^\)]+\)|[^@]{0,10}@([A-Za-z0-9:_.-]{1,20})@[^@]{0,10}|.{0,10}(\]\(#@).{0,10})/', $entry['value'], $m);
-                    //$links = preg_match_all('/(?:(!?\[)[^\]]+?\]\(#@[^\)]+?\)|[^@]{0,10}@([A-Za-z0-9:_.-]{1,20})@[^@]{0,10})/', $entry['value'], $m);
-                      
-                    if ($links > 0) {
-                        for ($idx = 0; $idx < $links; $idx++) {
-                            switch ($m[1][$idx]) {
-                                case '![':
-                                    $cnt_lepic++;
-                                    break;
-                                case '[':
-                                    $cnt_le++;
-                                    break;
-                                case '](#@':
-                                    $cnt_other++;
-                                    break;
-                                default:
-                                    $cnt_classicxref++;
-                            }
-    /*
-                                if ($m[1][$idx] === '') {
-                                    if (substr($m[0][$idx], 0, 1) === '[') { // le xref
-                                        $cnt_le++;
-                                    } elseif (substr($m[0][$idx], 0, 2) === '![') { // le pic
-                                        $cnt_lepic++;
-                                    } else {
-                                        $cnt_other++;
-                                    }
-                                } elseif ($m[1][$idx] === '](#@') { // other - le syntax but not valid
-                                    $cnt_other++;
-                                } else { //classic xref
-                                    $cnt_classicxref++;
-                                }
-    */
-                            echo('<li>' . ($entry['path'] !== 'NOTE' ? $entry['path'] . ': ' : '') . '<pre>' . e($m[0][$idx]) . '</pre></li>');
-                        }
-                    }
-                    
-                }
-?>
+                            <?php foreach ($inventory['entries'] as $link): ?>
+                                <li><?= e($link['path'] !== 'NOTE' ? $link['path'] . ': ' : '') ?><pre><?= e($link['snippet']) ?></pre></li>
+                            <?php endforeach; ?>
                         </ol>
+                        <?php endif; ?>
                     </td>
                     <td>
-                        le: <?= $cnt_le ?> / le-pic: <?= $cnt_lepic ?> / classic: <?= $cnt_classicxref ?> / other: <?= $cnt_other ?>
+                        le: <?= $inventory['counts']['le'] ?> / le-pic: <?= $inventory['counts']['lepic'] ?> / enhanced: <?= $inventory['counts']['enhanced'] ?> / classic: <?= $inventory['counts']['classic'] ?> / other: <?= $inventory['counts']['other'] ?>
                     </td>
                 </tr>
             <?php endforeach; ?>

@@ -916,8 +916,7 @@ class LinkEnhancerModule extends AbstractModule implements
     public function getAdminXrefOverviewAction(ServerRequestInterface $request): ResponseInterface
     {
         $this->layout = 'layouts/administration';
-        $service = new XrefsService();
-        $query = $service->getRecordsQuery();
+        $query = XrefsService::getRecordsQuery();
 
         $data = $query->get()
             ->map(static fn (object $row): array => (array) $row)
