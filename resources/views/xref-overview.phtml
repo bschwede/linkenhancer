@@ -4,19 +4,22 @@ declare(strict_types=1);
 
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
+use Fisharebest\Webtrees\Services\TreeService;
+use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Tree;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Services\TextTagCollector;
 
 /**
  * @var string                  $title
- * @var array<int, Tree>        $trees
- * @var array                   $recordTypes
- * @var array                   $xrefData
- * @var int                     $totalCount
- * @var string                  $xref_filter
- * @var string                  $source_xref_filter
- * @var bool                    $broken_only
- * @var bool                    $show_all
+ * @var string                  $sql
+ * @var array                   $data
  */
+
+$totalCount = count($data);
+$treeService = Registry::container()->get(TreeService::class);
+$tree = null;
+$xrefService = new XrefsService();
 ?>
 
 <?= view('components/breadcrumbs', [
@@ -32,50 +35,13 @@ use Fisharebest\Webtrees\Tree;
     <?= I18N::translate('This page lists all cross-references (XREFs) found in GEDCOM records and HTML blocks across all accessible trees.') ?>
 </p>
 
-<div class="mb-3">
-    <form method="get" action="<?= route('module', ['module' => 'linkenhancer', 'action' => 'XrefOverview']) ?>">
-        <div class="row g-2 align-items-end">
-
-            <!-- Show: all or broken only -->
-            <div class="col-auto">
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="show_all" id="show_all" value="1" <?= $show_all ? 'checked' : '' ?>>
-                    <label class="form-check-label" for="show_all"><?= I18N::translate('All') ?></label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="show_all" id="broken_only" value="0" <?= !$show_all ? 'checked' : '' ?>>
-                    <label class="form-check-label" for="broken_only"><?= I18N::translate('Broken links only') ?></label>
-                </div>
-            </div>
-
-            <!-- Filter by record xref -->
-            <div class="col-auto">
-                <label class="form-label" for="xref_filter"><?= I18N::translate('Filter by record XREF') ?></label>
-                <input class="form-control form-control-sm" type="text" id="xref_filter" name="xref_filter"
-                       value="<?= e($xref_filter) ?>" placeholder="@I1@,@F2@">
-            </div>
-
-            <!-- Filter by source xref in content -->
-            <div class="col-auto">
-                <label class="form-label" for="source_xref_filter"><?= I18N::translate('Filter by source XREF') ?></label>
-                <input class="form-control form-control-sm" type="text" id="source_xref_filter" name="source_xref_filter"
-                       value="<?= e($source_xref_filter) ?>" placeholder="@I1@">
-            </div>
-
-            <div class="col-auto">
-                <button type="submit" class="btn btn-primary btn-sm"><?= I18N::translate('Search') ?></button>
-                <a href="<?= route('module', ['module' => 'linkenhancer', 'action' => 'XrefOverview']) ?>" class="btn btn-secondary btn-sm"><?= I18N::translate('Reset') ?></a>
-            </div>
-        </div>
-    </form>
-</div>
 
 <div class="mb-3">
     <strong><?= $totalCount ?></strong>
     <?= $totalCount === 1 ? I18N::translate('XREF found') : I18N::translate('XREFs found') ?>.
 </div>
 
-<?php if (count($xrefData) === 0): ?>
+<?php if ($totalCount === 0): ?>
     <div class="alert alert-info">
         <?= I18N::translate('No XREFs found matching the current filter criteria.') ?>
     </div>
@@ -85,60 +51,85 @@ use Fisharebest\Webtrees\Tree;
         <thead>
             <tr>
                 <th>#</th>
-                <th><?= I18N::translate('Tree') ?></th>
-                <th><?= I18N::translate('Record Type') ?></th>
-                <th><?= I18N::translate('Record XREF') ?></th>
-                <th><?= I18N::translate('Found In') ?></th>
-                <th><?= I18N::translate('Target XREF') ?></th>
-                <th><?= I18N::translate('Target Tree') ?></th>
-                <th><?= I18N::translate('Type') ?></th>
-                <th><?= I18N::translate('Link Type') ?></th>
-                <th><?= I18N::translate('Valid') ?></th>
+                <th><?= I18N::translate('xref') ?></th>
+                <th><?= I18N::translate('file') ?></th>
+                <th><?= I18N::translate('type') ?></th>
+                <th><?= I18N::translate('gedcom') ?></th>
+                <th><?= I18N::translate('count') ?></th>
             </tr>
         </thead>
         <tbody>
             <?php $i = 0; ?>
-            <?php foreach ($xrefData as $row): ?>
+            <?php foreach ($data as $row):
+                $xref = $row['xref'];
+                $file = (int) $row['file'];
+                $tree = $tree instanceof Tree && $tree->id() === $file ? $tree : $treeService->find($file);
+                $record = Registry::gedcomRecordFactory()->make($xref, $tree, $row['gedcom']);
+                $displayname = $record->fullName();
+            
+            ?>
                 <?php $i++; ?>
-                <tr class="<?= $row['has_type_mismatch'] ? 'table-warning' : ($row['is_valid'] ? '' : 'table-danger') ?>">
+                <tr>
                     <td><?= $i ?></td>
-                    <td><?= e($row['tree_name']) ?></td>
-                    <td><?= e($row['xref']) ?></td>
                     <td>
-                        <a href="<?= e($row['link']) ?>" target="_blank"><?= e($row['record_xref']) ?></a>
+                        <a href="<?= $record->url() ?>"><?= e($xref) ?></a>
+                        <p class="text-muted"><?= e($tree->name()) ?></p>
+                        
                     </td>
-                    <td><?= e($row['found_in']) ?></td>
+                    <td><?= e($row['file']) ?></td>
+                    <td><?= e($row['type']) ?></td>
                     <td>
-                        <strong><?= e($row['xref_target']) ?></strong>
+                        <a href="<?= $record->url() ?>"><?= $displayname ?></a>
+                        <ol>
+<?php
+                $cnt_le = 0;
+                $cnt_lepic = 0;
+                $cnt_classicxref = 0;
+                $cnt_other = 0;
+                foreach (TextTagCollector::collectForRecord($record) as $entry) {
+                    $links = preg_match_all('/(?:(!?\[)[^\]]+\]\(#@[^\)]+\)|[^@]{0,10}@([A-Za-z0-9:_.-]{1,20})@[^@]{0,10}|.{0,10}(\]\(#@).{0,10})/', $entry['value'], $m);
+                    //$links = preg_match_all('/(?:(!?\[)[^\]]+?\]\(#@[^\)]+?\)|[^@]{0,10}@([A-Za-z0-9:_.-]{1,20})@[^@]{0,10})/', $entry['value'], $m);
+                      
+                    if ($links > 0) {
+                        for ($idx = 0; $idx < $links; $idx++) {
+                            switch ($m[1][$idx]) {
+                                case '![':
+                                    $cnt_lepic++;
+                                    break;
+                                case '[':
+                                    $cnt_le++;
+                                    break;
+                                case '](#@':
+                                    $cnt_other++;
+                                    break;
+                                default:
+                                    $cnt_classicxref++;
+                            }
+    /*
+                                if ($m[1][$idx] === '') {
+                                    if (substr($m[0][$idx], 0, 1) === '[') { // le xref
+                                        $cnt_le++;
+                                    } elseif (substr($m[0][$idx], 0, 2) === '![') { // le pic
+                                        $cnt_lepic++;
+                                    } else {
+                                        $cnt_other++;
+                                    }
+                                } elseif ($m[1][$idx] === '](#@') { // other - le syntax but not valid
+                                    $cnt_other++;
+                                } else { //classic xref
+                                    $cnt_classicxref++;
+                                }
+    */
+                            echo('<li>' . ($entry['path'] !== 'NOTE' ? $entry['path'] . ': ' : '') . '<pre>' . e($m[0][$idx]) . '</pre></li>');
+                        }
+                    }
+                    
+                }
+?>
+                        </ol>
                     </td>
                     <td>
-                        <?php if ($row['target_tree_name'] !== null && $row['target_tree_name'] !== ''): ?>
-                            <?= e($row['target_tree_name']) ?>
-                        <?php else: ?>
-                            <em class="text-muted"><?= I18N::translate('same tree') ?></em>
-                        <?php endif; ?>
-                    </td>
-                    <td>
-                        <?php if ($row['xref_type'] === 'enhanced'): ?>
-                            <span class="badge bg-info"><?= I18N::translate('Enhanced') ?></span>
-                        <?php else: ?>
-                            <span class="badge bg-secondary"><?= I18N::translate('Plain') ?></span>
-                        <?php endif; ?>
-                    </td>
-                    <td>
-                        <?php if ($row['has_type_mismatch']): ?>
-                            <span class="text-warning" 
-                                  title="<?= e(I18N::translate('Declared %1$s but actual %2$s', $row['type_declared'], $row['type_actual'])) ?>">
-                                ⚠
-                            </span>
-                        <?php endif; ?>
-                    </td>
-                    <td>
-                        <?php if ($row['is_valid']): ?>
-                            <span class="text-success">✓</span>
-                        <?php else: ?>
-                            <span class="text-danger">✗</span>
-                        <?php endif; ?>
+                        le: <?= $cnt_le ?> / le-pic: <?= $cnt_lepic ?> / classic: <?= $cnt_classicxref ?> / other: <?= $cnt_other ?>
                     </td>
                 </tr>
             <?php endforeach; ?>

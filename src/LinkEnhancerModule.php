@@ -59,7 +59,7 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpWthbActio
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\MarkdownEditorActivationService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\WthbService;
-use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefOverviewService;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\SettingInterface;
 
 use function array_key_exists, boolval, count, strval, is_array, intval;
@@ -916,35 +916,17 @@ class LinkEnhancerModule extends AbstractModule implements
     public function getAdminXrefOverviewAction(ServerRequestInterface $request): ResponseInterface
     {
         $this->layout = 'layouts/administration';
-        $service = new XrefOverviewService();
-        $trees = $service->getTrees();
+        $service = new XrefsService();
+        $query = $service->getRecordsQuery();
 
-        $parsedBody = Validator::parsedBody($request);
-        $xref_filter = $parsedBody->string('xref_filter');
-        $source_xref_filter = $parsedBody->string('source_xref_filter');
-        $broken_only = $parsedBody->boolean('broken_only', false);
-        $show_all = $parsedBody->boolean('show_all', false);
-
-        $params = [
-            'xref_filter'         => $show_all ? '' : ($xref_filter ?? ''),
-            'source_xref_filter'  => $source_xref_filter,
-            'broken_only'         => $broken_only ? '1' : '0',
-        ];
-
-        $xrefData = $service->searchXrefs($params);
-        $totalCount = $service->countXrefs($params);
-        $recordTypes = $service->getRecordTypes();
+        $data = $query->get()
+            ->map(static fn (object $row): array => (array) $row)
+            ->all();
 
         return $this->viewResponse($this->name() . '::xref-overview', [
-            'title'            => I18N::translate('XREF Overview'),
-            'trees'            => $trees,
-            'recordTypes'      => $recordTypes,
-            'xrefData'         => $xrefData,
-            'totalCount'       => $totalCount,
-            'xref_filter'      => $xref_filter ?? '',
-            'source_xref_filter' => $source_xref_filter ?? '',
-            'broken_only'      => $broken_only,
-            'show_all'         => $show_all,
+            'title' => I18N::translate('XREF Overview'),
+            'sql' => $query->toSql(),
+            'data' => $data,
         ]);
     }
 

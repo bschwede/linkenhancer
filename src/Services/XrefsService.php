@@ -27,76 +27,138 @@ declare(strict_types=1);
 namespace Schwendinger\Webtrees\Module\LinkEnhancer\Services;
 
 use Fisharebest\Webtrees\DB;
-use Fisharebest\Webtrees\Family;
 use Fisharebest\Webtrees\Gedcom;
-use Fisharebest\Webtrees\Individual;
-use Fisharebest\Webtrees\Location;
-use Fisharebest\Webtrees\Media;
-use Fisharebest\Webtrees\Note;
-use Fisharebest\Webtrees\Repository;
-use Fisharebest\Webtrees\Source;
 use Fisharebest\Webtrees\Tree;
 use Illuminate\Database\Query\Builder;
 
-
-enum RecType : string { // enum name = class name, value = table name
-    case Individual = 'individuals';
-    case Family = 'families';
-    case Note = 'other';
-    case Source = 'sources';
-    case Repository = 'other '; //enum need unique values, so we add whitespaces
-    case Media = 'media';
-    case Location = 'other  '; //enum need unique values, so we add whitespaces
-    case Html = 'html';
-}
-
 class XrefsService { // stuff related with handling cross references
+
+    
+    public const GEDCOM_TABLES = [
+        'INDI' => [
+            'table'      => 'individuals',
+            'prefix'     => 'i',
+            'typestr'    => "'INDI'",
+        ],
+        'FAM' => [
+            'table'      => 'families',
+            'prefix'     => 'f',
+            'typestr'    => "'FAM'",
+        ],
+        'MEDIA' => [
+            'table'      => 'media',
+            'prefix'     => 'm',
+            'typestr'    => "'MEDIA'",
+        ],
+        'SOUR' => [
+            'table'      => 'sources',
+            'prefix'     => 's',
+            'typestr'    => "'SOUR'",
+        ],
+        'OTHER' => [ // NOTE, REPO, _LOC
+            'table'      => 'other',
+            'prefix'     => 'o',
+            'typestr'    => '`o_type`',
+        ]
+    ];
+
+    public const GEDCOM_OTHER_SUBTYPES = [ "NOTE", "REPO", "_LOC" ];
+
+    private function getGedcomRecTypeSubquery(array $params, string $xref = Gedcom::REGEX_XREF, int|null $file = null): Builder {
+        $query = DB::table($params['table'])
+            ->select(
+                DB::raw("`{$params['prefix']}_id` AS xref"),
+                DB::raw("`{$params['prefix']}_file` AS file"), 
+                DB::raw("{$params['typestr']} AS type"), 
+                DB::raw("`{$params['prefix']}_gedcom` AS gedcom")
+            );
+
+        if ($file !== null) {
+            $query->where("`{$params['prefix']}_file`", "=", $file);
+        }
+
+        $re_pattern = [];
+        if ($params['table'] === 'other') { // makes only sense in other table for shared notes
+            $re_pattern[] = "0 @" . Gedcom::REGEX_XREF . "@ NOTE .*@{$xref}@";
+            $re_pattern[] = "0 @" . Gedcom::REGEX_XREF . "@ NOTE .+\\]\\(#@";
+        }
+        array_push($re_pattern, ...[
+            // search for @XREF@ - so also classic cross-references supported by webtrees are covered
+            "[1-9] NOTE .+@{$xref}@",
+            "[1-9] NOTE @{$xref}@.+",
+            "[1-9] CON[CT] .*@{$xref}@",
+            "[1-9] TEXT .*@{$xref}@",
+            "[1-9] _TODO .*@{$xref}@",
+            // search for linkenhancer syntax "](#@"
+            "[1-9] NOTE .+\\]\\(#@",
+            "[1-9] CON[CT] .+\\]\\(#@",
+            "[1-9] TEXT .+\\]\\(#@",
+            "[1-9] _TODO .+\\]\\(#@"            
+        ]);
+
+        $field = "{$params['prefix']}_gedcom";
+        $query->where(function ($q) use ($re_pattern, $field) {
+            foreach ($re_pattern as $pattern) {
+                $q->orWhere($field, DB::regexOperator(), $pattern);
+            }
+        });
+
+        return $query;
+    }
+
+    
+    public function supportedGedcomTableKeys() : array {
+        return array_keys(self::GEDCOM_TABLES);
+    }
+
+    public function supportedGedcomRecordKeys(): array
+    {
+        return array_merge($this->supportedGedcomTableKeys(), self::GEDCOM_OTHER_SUBTYPES);
+    }
 
     /**
      * sql query for records of a specific type which containing a given or any xref
-     * @param Tree                 $tree
-     * @param array<string,string> $params
+     * @param Tree|null                 $tree
+     * @param string|null $xref
+     * @param array<string> $rectypes
      *
      * @return Builder
      */
-    public function getRecordsQuery(Tree $tree, RecType $rectype, array $params): Builder
+    public function getRecordsQuery(Tree|null $tree = null, string|null $xref = null, array $rectypes = []): Builder
     {
-        $query = null;
-        $xref  = isset($params['xref']) ? $params['xref'] : Gedcom::REGEX_XREF;
-        switch ($rectype) {
-            case RecType::Html:
-            //  SELECT bs.*  FROM `block` AS b INNER JOIN `block_setting` AS bs ON b.`block_id` = bs.`block_id` WHERE b.`gedcom_id` = 1 AND b.`module_name` = 'html' AND bs.`setting_name` = 'html';
-                break;
+        $gedcom_table_keys = $this->supportedGedcomTableKeys();
+        $gedcom_record_keys = $this->supportedGedcomRecordKeys();
+        $rectypes = array_map('strtoupper', $rectypes);
+        $rectypes = array_filter($rectypes, fn($s) => in_array($s, $gedcom_record_keys));
+        $rectypes = count($rectypes) === 0 ?
+            $gedcom_table_keys :
+            $rectypes;
+        $other_subtypes_filter = in_array('OTHER', $rectypes) ? 
+            self::GEDCOM_OTHER_SUBTYPES : 
+            array_filter($rectypes, fn($s) => in_array($s, self::GEDCOM_OTHER_SUBTYPES));
+        $rectypes_filter = array_filter($rectypes, fn($s) => in_array($s, $gedcom_table_keys));
 
-            default:
-                $table = trim($rectype->value);
-                $prefix = $table[0];
-                
-                $query = DB::table($table);
-                if ($table == 'other') {
-                    $type_classname = $rectype->name;
-                    $query->where('o_type', '=', $type_classname::RECORD_TYPE);
-                }
-                
-                $fieldname = $prefix . '_gedcom';
-                $query
-                    ->where($prefix . '_file', '=', $tree->id())
-                    ->where(function ($query2) use ($fieldname, $xref) {
-                        $query2
-                            ->where($fieldname, DB::regexOperator(), '0 @' . Gedcom::REGEX_XREF . `@ NOTE .*@{$xref}@`)
-                            ->orWhere($fieldname, DB::regexOperator(), `[1-9] NOTE .+@{$xref}@`)
-                            ->orWhere($fieldname, DB::regexOperator(), `[1-9] NOTE @{$xref}@.+`)
-                            ->orWhere($fieldname, DB::regexOperator(), `[1-9] CON[CT] .*@{$xref}@`)
-                            ->orWhere($fieldname, DB::regexOperator(), `[1-9] TEXT .*@{$xref}@`);
-                    });
+        $xref ??= Gedcom::REGEX_XREF;
 
+        $file = $tree instanceof Tree ? $tree->id() : null;
 
+        $unionQuery = null;
+        foreach ($rectypes_filter as $rectype) {
+            $params = self::GEDCOM_TABLES[$rectype];
+            $subquery = $this->getGedcomRecTypeSubquery($params, $xref, $file);
 
-                //if (isset($params['start'], $params['end'])) {
-                //    $query->whereBetween($prefix . '_id', [$params['start'], $params['end']]);
-                //}
-                break;
+            if ($rectype == 'OTHER') {
+                $subquery->whereIn('o_type', $other_subtypes_filter);
             }
+
+            $unionQuery = $unionQuery ? $unionQuery->unionAll($subquery) : $subquery;
+        }
+
+        $query = DB::query()
+            ->fromSub($unionQuery, 'u')
+            ->select('u.*')
+            ->orderBy('u.file')
+            ->orderBy('u.xref');
 
         return $query;
     }
