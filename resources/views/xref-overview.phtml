@@ -7,6 +7,9 @@ use Fisharebest\Webtrees\I18N;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 
+use function parse_str;
+use function parse_url;
+
 /**
  * @var string                                        $title
  * @var LinkEnhancerModule                            $module
@@ -24,6 +27,16 @@ $page_url = route('module', ['module' => $module->name(), 'action' => 'AdminXref
 $sql = $index_status['fresh']
     ? XrefsService::getIndexQuery()->toSql()
     : XrefsService::getRecordsQuery()->toSql();
+
+// In the default (non-pretty) URL mode the action URL is
+// "index.php?route=…" - and a GET form submission REPLACES that query
+// string with the form fields, losing the route. Re-inject every query
+// parameter of the action URL as hidden fields so the submission keeps
+// working. In pretty mode the action URL has no query string, so nothing
+// is rendered and the behaviour is unchanged.
+$action_query  = (string) (parse_url($page_url, PHP_URL_QUERY) ?: '');
+$hidden_params = [];
+parse_str($action_query, $hidden_params);
 ?>
 
 <?= view('components/breadcrumbs', [
@@ -56,6 +69,9 @@ $sql = $index_status['fresh']
 <?php endif ?>
 
 <form class="row g-2 mb-3" method="get" action="<?= e($page_url) ?>">
+    <?php foreach ($hidden_params as $hidden_name => $hidden_value): ?>
+        <input type="hidden" name="<?= e($hidden_name) ?>" value="<?= e($hidden_value) ?>">
+    <?php endforeach; ?>
     <div class="col-auto">
         <input class="form-control" type="text" name="xref" value="<?= e($xref) ?>" placeholder="<?= I18N::translate('referencing XREF') ?>">
     </div>
