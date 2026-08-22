@@ -112,6 +112,31 @@ final class XrefsService { // stuff related with handling cross references
      */
     public const LINK_CLASSES = ['le', 'lepic', 'enhanced', 'classic', 'other'];
 
+    /**
+     * Default cap of tokens shown per class in the link inventory cell.
+     *
+     * @var int
+     */
+    public const LINKS_PER_CLASS_DEFAULT = 5;
+
+    /**
+     * The selectable caps (0 = show all tokens).
+     *
+     * @var array<int,int>
+     */
+    public const LINKS_PER_CLASS_OPTIONS = [0, 5, 10, 20];
+
+    /**
+     * Clamp an arbitrary input to the selectable caps - the single source
+     * of truth for the allowlist (page select AND data endpoint policy).
+     */
+    public static function normalizeLinksPerClass(int $value): int
+    {
+        return in_array($value, self::LINKS_PER_CLASS_OPTIONS, true)
+            ? $value
+            : self::LINKS_PER_CLASS_DEFAULT;
+    }
+
     
     public const GEDCOM_TABLES = [
         'INDI' => [
@@ -455,9 +480,12 @@ final class XrefsService { // stuff related with handling cross references
      * HTML for the "link inventory" cell of the XREF overview: up to
      * $max_per_class tokens per class, then an overflow counter.
      *
+     * $max_per_class > 0 = cap per class with an overflow counter;
+     * $max_per_class <= 0 = show every token, no overflow counter.
+     *
      * @param array<int, array{path: string, class: string, token: string, snippet: string}> $entries
      */
-    public static function linkInventoryHtml(array $entries, int $max_per_class = 3): string {
+    public static function linkInventoryHtml(array $entries, int $max_per_class = self::LINKS_PER_CLASS_DEFAULT): string {
         $items = [];
         foreach ($entries as $entry) {
             $items[$entry['class']][] = $entry;
@@ -480,7 +508,7 @@ final class XrefsService { // stuff related with handling cross references
             if ($class_items === []) {
                 continue;
             }
-            $shown = array_slice($class_items, 0, $max_per_class);
+            $shown = ($max_per_class > 0) ? array_slice($class_items, 0, $max_per_class) : $class_items;
 
             $html .= '<li>' . e($class) . ' (' . count($class_items) . ')<ol>';
             foreach ($shown as $entry) {
@@ -489,7 +517,7 @@ final class XrefsService { // stuff related with handling cross references
             }
             $html .= '</ol>';
 
-            if (count($class_items) > $max_per_class) {
+            if ($max_per_class > 0 && count($class_items) > $max_per_class) {
                 $html .= '<em>+' . (count($class_items) - $max_per_class) . '</em>';
             }
             $html .= '</li>';

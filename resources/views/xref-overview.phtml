@@ -17,6 +17,7 @@ use function parse_url;
  * @var string                                        $xref       active "target xref" filter
  * @var string                                        $rectype    active record-type filter
  * @var int                                           $tree_id    active tree filter (0 = all)
+ * @var int                                           $max_links  active inventory cap (0 = all)
  * @var array<int,string>                             $rectypes   selectable record types
  * @var \Illuminate\Support\Collection                $trees      all trees
  * @var array{rows: int, scanned_at: string|null, fresh: bool} $index_status
@@ -92,10 +93,43 @@ parse_str($action_query, $hidden_params);
         </select>
     </div>
     <div class="col-auto">
+        <select class="form-select" name="max_links" title="<?= I18N::translate('links per class') ?>">
+            <?php foreach (XrefsService::LINKS_PER_CLASS_OPTIONS as $option): ?>
+                <option value="<?= $option ?>" <?= $option === $max_links ? 'selected' : '' ?>><?= $option === 0 ? I18N::translate('All') : (string) $option ?></option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+    <div class="col-auto">
         <button class="btn btn-outline-primary" type="submit"><?= I18N::translate('Filter') ?></button>
     </div>
 </form>
 
+<script>
+// Merge the xref and type columns into one colspan cell (client-side, per
+// draw). Runs at parse time - BEFORE the core's DOMContentLoaded init
+// ("new DataTable(el)" without options), so it is picked up as a global
+// default. The type column itself stays a real (hidden) DataTables column:
+// the "type" header remains the sort trigger (server-side sort column 1).
+(function () {
+  try {
+    if (typeof DataTable === 'undefined' || !DataTable.defaults) { return; }
+    var prev = DataTable.defaults.fnCreatedRow;
+    DataTable.defaults.fnCreatedRow = function () {
+      if (prev) { prev.apply(this, arguments); }
+      var tr = null;
+      for (var i = 0; i < arguments.length; i++) { // tr = first TR element (signature-robust)
+        if (arguments[i] && arguments[i].tagName === 'TR') { tr = arguments[i]; break; }
+      }
+      if (!tr) { return; }
+      var table = tr;
+      while (table && table.tagName !== 'TABLE') { table = table.parentNode; }
+      if (!table || table.id !== 'wt-datatables-xref-overview' || tr.children.length < 2) { return; }
+      tr.children[0].colSpan = 2;   // xref cell spans xref+type
+      tr.removeChild(tr.children[1]); // drop the separate type cell
+    };
+  } catch (e) { console.error('LE-Mod xref overview error:', e); }
+})();
+</script>
 <div class="table-responsive">
     <table
         id="wt-datatables-xref-overview"
@@ -103,13 +137,14 @@ parse_str($action_query, $hidden_params);
         <?= view('lists/datatables-attributes') ?>
         data-ajax="<?= e($data_url) ?>"
         data-server-side="true"
+        data-columns='[{}, {}, {"sortable":false}, {"sortable":false}]'
     >
         <thead>
             <tr>
                 <th><?= I18N::translate('xref') ?></th>
                 <th><?= I18N::translate('type') ?></th>
-                <th data-sortable="false"><?= I18N::translate('record') ?></th>
-                <th data-sortable="false"><?= I18N::translate('links') ?></th>
+                <th><?= I18N::translate('record') ?></th>
+                <th><?= I18N::translate('links') ?></th>
             </tr>
         </thead>
     </table>

@@ -930,6 +930,7 @@ class LinkEnhancerModule extends AbstractModule implements
         $xref    = trim((string) $params->string('xref', ''));
         $rectype = (string) $params->string('rectype', '');
         $tree_id = (int) $params->integer('tree', 0);
+        $max_links = XrefsService::normalizeLinksPerClass((int) $params->integer('max_links', XrefsService::LINKS_PER_CLASS_DEFAULT));
 
         $data_params = [];
         if ($xref !== '') {
@@ -941,6 +942,9 @@ class LinkEnhancerModule extends AbstractModule implements
         if ($tree_id > 0) {
             $data_params['tree'] = $tree_id;
         }
+        if ($max_links !== XrefsService::LINKS_PER_CLASS_DEFAULT) {
+            $data_params['max_links'] = $max_links;
+        }
 
         return $this->viewResponse($this->name() . '::xref-overview', [
             'title' => I18N::translate('XREF Overview'),
@@ -949,6 +953,7 @@ class LinkEnhancerModule extends AbstractModule implements
             'xref' => $xref,
             'rectype' => $rectype,
             'tree_id' => $tree_id,
+            'max_links' => $max_links,
             'rectypes' => XrefsService::supportedGedcomRecordKeys(),
             'trees' => Registry::container()->get(TreeService::class)->all(),
             'index_status' => XrefsService::indexStatus(),

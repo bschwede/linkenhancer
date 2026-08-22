@@ -489,7 +489,7 @@ Note: the script runs with the user that may read `data/config.ini.php` and has 
 
 ### The link index (XREF overview)
 
-The XREF overview admin page (Control panel → LinkEnhancer → XREF Overview) is a server-side paginated DataTable. It lists all records that contain classic `@XREF@` cross-references or linkenhancer links, with a per-record link inventory. Optional filters: referenced XREF, record type, tree.
+The XREF overview admin page (Control panel → LinkEnhancer → XREF Overview) is a server-side paginated DataTable. It lists all records that contain classic `@XREF@` cross-references or linkenhancer links, with a per-record link inventory. Optional filters: referenced XREF, record type, tree, and the number of tokens shown per link class (all / 5 / 10 / 20, default 5). The record type is displayed as a second muted line in the XREF cell (`tree · TYPE`); its column header stays sortable.
 
 #### Supported engines
 

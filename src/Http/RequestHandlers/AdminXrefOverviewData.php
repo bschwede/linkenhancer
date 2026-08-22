@@ -91,6 +91,10 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
         $xref      = trim((string) $params->string('xref', ''));
         $rectype   = (string) $params->string('rectype', '');
         $tree_id   = (int) $params->integer('tree', 0);
+        // The endpoint is directly callable - normalize against the
+        // allowlist here, not only on the page (max_links=999999 must not
+        // dump an uncapped token list per row).
+        $max_links = XrefsService::normalizeLinksPerClass((int) $params->integer('max_links', XrefsService::LINKS_PER_CLASS_DEFAULT));
 
         $tree = null;
         if ($tree_id > 0) {
@@ -112,7 +116,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
                 XrefsService::getIndexQuery($tree, $xref !== '' ? $xref : null, $rectypes),
                 ['s.xref', 's.rectype'],
                 [0 => 's.xref', 1 => 's.rectype'],
-                fn (object $row): array => $this->indexRowToColumns($row)
+                fn (object $row): array => $this->indexRowToColumns($row, $max_links)
             );
         }
 
@@ -123,14 +127,14 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
             XrefsService::getRecordsQuery($tree, $xref !== '' ? $xref : null, $rectypes, false),
             ['xref', 'type'],
             [0 => 'xref', 1 => 'type'],
-            fn (object $row): array => $this->liveRowToColumns($row)
+            fn (object $row): array => $this->liveRowToColumns($row, $max_links)
         );
     }
 
     /**
      * Live scan row: the record text is already part of the row (C4).
      */
-    private function liveRowToColumns(object $row): array
+    private function liveRowToColumns(object $row, int $max_links): array
     {
         $gedcom = (string) $row->gedcom;
         $tree   = $this->findTree((int) $row->file);
@@ -142,14 +146,14 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
 
         $inventory = XrefsService::classifyGedcomText($gedcom, TextTagCollector::DEFAULT_TAGS, (string) $row->type);
 
-        return $this->inventoryColumns($row, $tree, $record, $inventory);
+        return $this->inventoryColumns($row, $tree, $record, $inventory, $max_links);
     }
 
     /**
      * Index row: links come from the index, the record is fetched per row
      * (a cheap indexed point lookup) for the display name and the URL.
      */
-    private function indexRowToColumns(object $row): array
+    private function indexRowToColumns(object $row, int $max_links): array
     {
         $tree = $this->findTree((int) $row->file);
 
@@ -179,14 +183,14 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
             $inventory = ['entries' => $entries, 'counts' => $counts];
         }
 
-        return $this->inventoryColumns($row, $tree, $record, $inventory);
+        return $this->inventoryColumns($row, $tree, $record, $inventory, $max_links);
     }
 
     /**
      * @param object $row        row with xref, file, type
      * @param array{entries: array<int, array{path: string, class: string, token: string, snippet: string}>, counts: array<string, int>} $inventory
      */
-    private function inventoryColumns(object $row, ?Tree $tree, ?GedcomRecord $record, array $inventory): array
+    private function inventoryColumns(object $row, ?Tree $tree, ?GedcomRecord $record, array $inventory, int $max_links): array
     {
         $xref = (string) $row->xref;
         $type = (string) $row->type;
@@ -194,16 +198,23 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
 
         $url = $record instanceof GedcomRecord ? $record->url() : null;
 
+        // The type value doubles as the second muted line in the xref cell:
+        // the view merges the xref and type columns into one colspan cell
+        // (fnCreatedRow), while column 1 stays a real (hidden) column so
+        // the "type" header remains the sort trigger. Without JS the table
+        // renders the plain 4-column layout instead (type then visible twice).
         $xref_html = '<a href="' . e($url ?? '#') . '">' . e($xref) . '</a>'
             . '<br><small class="text-muted">'
             . e($tree !== null ? $tree->name() : (I18N::translate('tree') . ' #' . $file))
+            . ' &middot; '
+            . e($type)
             . '</small>';
 
         $name = $record instanceof GedcomRecord ? $record->fullName() : $xref;
         $name_html = $record instanceof GedcomRecord
             ? '<a href="' . e($url) . '">' . $name . '</a>' // name contains html, so no escape needed
             : e($name);
-        $name_html .= XrefsService::linkInventoryHtml($inventory['entries']);
+        $name_html .= XrefsService::linkInventoryHtml($inventory['entries'], $max_links);
 
         return [
             $xref_html,

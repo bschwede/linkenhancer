@@ -288,5 +288,51 @@ check(
     ['<strong>3</strong> <small>le: 2 / enhanced: 1</small>']
 );
 
+// max_links (inventory cap) - semantics: >0 = cap + overflow counter, <=0 = all
+$inv_entries = [];
+for ($i = 1; $i <= 6; $i++) {
+    $inv_entries[] = ['path' => '', 'class' => 'le', 'token' => '@I' . $i . '@', 'snippet' => 'sn' . $i];
+}
+$inv_two = array_slice($inv_entries, 0, 2);
+check(
+    'T23 inventory cap 0 shows all tokens, no overflow',
+    [XrefsService::linkInventoryHtml($inv_two, 0)],
+    ['<ul class="le-xref-inventory"><li>le (2)<ol><li><code>sn1</code></li><li><code>sn2</code></li></ol></li></ul>']
+);
+check(
+    'T23b inventory negative cap shows all tokens, no overflow',
+    [XrefsService::linkInventoryHtml($inv_two, -1)],
+    ['<ul class="le-xref-inventory"><li>le (2)<ol><li><code>sn1</code></li><li><code>sn2</code></li></ol></li></ul>']
+);
+check(
+    'T24 inventory cap 1 keeps one token + overflow counter',
+    [XrefsService::linkInventoryHtml($inv_two, 1)],
+    ['<ul class="le-xref-inventory"><li>le (2)<ol><li><code>sn1</code></li></ol><em>+1</em></li></ul>']
+);
+check(
+    'T25 inventory default cap is 5 (6 tokens -> 5 + "+1")',
+    [XrefsService::linkInventoryHtml($inv_entries)],
+    ['<ul class="le-xref-inventory"><li>le (6)<ol><li><code>sn1</code></li><li><code>sn2</code></li><li><code>sn3</code></li><li><code>sn4</code></li><li><code>sn5</code></li></ol><em>+1</em></li></ul>']
+);
+check(
+    'T26 normalizeLinksPerClass allowlist passthrough (0,5,10,20)',
+    [
+        XrefsService::normalizeLinksPerClass(0),
+        XrefsService::normalizeLinksPerClass(5),
+        XrefsService::normalizeLinksPerClass(10),
+        XrefsService::normalizeLinksPerClass(20),
+    ],
+    [0, 5, 10, 20]
+);
+check(
+    'T26b normalizeLinksPerClass out-of-range falls back to default',
+    [
+        XrefsService::normalizeLinksPerClass(3),
+        XrefsService::normalizeLinksPerClass(-2),
+        XrefsService::normalizeLinksPerClass(1000000),
+    ],
+    [5, 5, 5]
+);
+
 echo "\n{$total} tests, {$failures} failure(s)\n";
 exit($failures === 0 ? 0 : 1);
