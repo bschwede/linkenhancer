@@ -36,7 +36,6 @@ use Fisharebest\Webtrees\Services\DatatablesService;
 use Fisharebest\Webtrees\Services\TimeoutService;
 use Fisharebest\Webtrees\Services\TreeService;
 use Fisharebest\Webtrees\Tree;
-use Fisharebest\Webtrees\User;
 use Fisharebest\Webtrees\Validator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -78,8 +77,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $user = Registry::container()->get(User::class);
-        if (!Auth::isAdmin($user)) {
+        if (!Auth::isAdmin()) {
             throw new HttpAccessDeniedException(/*I18N: webtrees.pot*/ I18N::translate('Admin only.'));
         }
 
@@ -203,7 +201,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
 
         $name = $record instanceof GedcomRecord ? $record->fullName() : $xref;
         $name_html = $record instanceof GedcomRecord
-            ? '<a href="' . e($url) . '">' . e($name) . '</a>'
+            ? '<a href="' . e($url) . '">' . $name . '</a>' // name contains html, so no escape needed
             : e($name);
         $name_html .= XrefsService::linkInventoryHtml($inventory['entries']);
 
