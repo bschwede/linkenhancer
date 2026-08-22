@@ -474,7 +474,7 @@ final class XrefsService { // stuff related with handling cross references
             return '';
         }
 
-        $html = '<ol class="le-xref-inventory">';
+        $html = '<ul class="le-xref-inventory">';
         foreach (self::LINK_CLASSES as $class) {
             $class_items = $items[$class] ?? [];
             if ($class_items === []) {
@@ -494,7 +494,7 @@ final class XrefsService { // stuff related with handling cross references
             }
             $html .= '</li>';
         }
-        $html .= '</ol>';
+        $html .= '</ul>';
 
         return $html;
     }
