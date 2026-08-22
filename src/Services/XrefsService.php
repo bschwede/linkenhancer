@@ -26,12 +26,18 @@ declare(strict_types=1);
 
 namespace Schwendinger\Webtrees\Module\LinkEnhancer\Services;
 
+use DomainException;
 use Fisharebest\Webtrees\DB;
 use Fisharebest\Webtrees\Gedcom;
 use Fisharebest\Webtrees\GedcomRecord;
 use Fisharebest\Webtrees\Tree;
 use Illuminate\Database\Query\Builder;
 use InvalidArgumentException;
+use Throwable;
+
+use function e;
+use function strtotime;
+use function time;
 
 final class XrefsService { // stuff related with handling cross references
 
@@ -51,6 +57,60 @@ final class XrefsService { // stuff related with handling cross references
      * times per link and does not have to be the first parameter.
      */
     private const RE_WT_PARAM = '/(?:^|&)wt=/';
+
+    /**
+     * A classic cross-reference: @XREF@
+     */
+    private const RE_CLASSIC_XREF = '/^@([A-Za-z0-9][A-Za-z0-9:_.-]{0,19})@$/';
+
+    /**
+     * One "wt" parameter value: wt=[type]@XREF@[tree] - the optional type
+     * letter may be absent, the "@tree" part may be empty (same tree).
+     */
+    private const RE_WT_TARGET = '/(?:^|[?&])wt=(?:[a-z])?@([A-Za-z0-9][A-Za-z0-9:_.-]{0,19})@([^&\s]*)/';
+
+    /**
+     * Link index tables (Phase 2) and the default freshness threshold.
+     * le_index_meta holds the state of the last COMPLETE index run
+     * (single row, id = 1) and is what makes the index "fresh".
+     */
+    public const INDEX_SCAN_TABLE    = 'le_record_scan';
+    public const INDEX_LINK_TABLE    = 'le_link_index';
+    public const INDEX_META_TABLE    = 'le_index_meta';
+    public const INDEX_FRESH_SECONDS = 7200;
+
+    /**
+     * Engines with a regex operator that works for the link pre-filter.
+     * SQLite never registers a REGEXP user function and SQL Server's
+     * T-SQL has no REGEXP operator at all - on those (and any future
+     * driver) the live overview runs in limited LIKE mode.
+     *
+     * @var array<int,string>
+     */
+    public const REGEXP_DRIVERS = [DB::MARIADB, DB::MYSQL, DB::POSTGRESQL];
+
+    /**
+     * Limited mode (no REGEXP support): coarse LIKE over-approximation of
+     * "the text contains an @xref-like pair". The PHP link classifier
+     * stays the source of truth - this only decides which records are
+     * fetched as candidates.
+     */
+    public const LIKE_XREF_PREDICATE = '%@%@';
+
+    /**
+     * Mirror of Fisharebest\Webtrees\Gedcom::REGEX_XREF - the XREF format
+     * is part of webtrees' data contract and stable. A local mirror keeps
+     * the pure pattern helpers testable in the standalone test harness
+     * (the core class uses PHP 8.3-only syntax and is not loadable there).
+     */
+    public const RE_XREF_CLASS = '[A-Za-z0-9:_.-]{1,20}';
+
+    /**
+     * The link buckets, in display order.
+     *
+     * @var array<int,string>
+     */
+    public const LINK_CLASSES = ['le', 'lepic', 'enhanced', 'classic', 'other'];
 
     
     public const GEDCOM_TABLES = [
@@ -84,45 +144,110 @@ final class XrefsService { // stuff related with handling cross references
     public const GEDCOM_OTHER_SUBTYPES = [ "NOTE", "REPO", "_LOC" ];
 
     private static function getGedcomRecTypeSubquery(array $params, string $xref = Gedcom::REGEX_XREF, int|null $file = null): Builder {
+        // Identifiers are wrapped per grammar (backticks on M/M, double
+        // quotes on PG/SQLite, [] on SQL Server) - the live overview must
+        // work on every engine, also in limited LIKE mode.
+        $grammar = DB::connection()->getQueryGrammar();
+
         $query = DB::table($params['table'])
             ->select(
-                DB::raw("`{$params['prefix']}_id` AS xref"),
-                DB::raw("`{$params['prefix']}_file` AS file"), 
-                DB::raw("{$params['typestr']} AS type"), 
-                DB::raw("`{$params['prefix']}_gedcom` AS gedcom")
+                DB::raw($grammar->wrap($params['prefix'] . '_id') . ' AS xref'),
+                DB::raw($grammar->wrap($params['prefix'] . '_file') . ' AS file'),
+                $params['table'] === 'other'
+                    ? DB::raw($grammar->wrap('o_type') . ' AS type')
+                    : DB::raw($params['typestr'] . ' AS type'),
+                DB::raw($grammar->wrap($params['prefix'] . '_gedcom') . ' AS gedcom')
             );
 
         if ($file !== null) {
-            $query->where("`{$params['prefix']}_file`", "=", $file);
+            $query->where($params['prefix'] . '_file', '=', $file);
         }
-
-        $re_pattern = [];
-        if ($params['table'] === 'other') { // makes only sense in other table for shared notes
-            $re_pattern[] = "0 @" . Gedcom::REGEX_XREF . "@ NOTE .*@{$xref}@";
-            $re_pattern[] = "0 @" . Gedcom::REGEX_XREF . "@ NOTE .+\\]\\(#@";
-        }
-        array_push($re_pattern, ...[
-            // search for @XREF@ - so also classic cross-references supported by webtrees are covered
-            "[1-9] NOTE .+@{$xref}@",
-            "[1-9] NOTE @{$xref}@.+",
-            "[1-9] CON[CT] .*@{$xref}@",
-            "[1-9] TEXT .*@{$xref}@",
-            "[1-9] _TODO .*@{$xref}@",
-            // search for linkenhancer syntax "](#@"
-            "[1-9] NOTE .+\\]\\(#@",
-            "[1-9] CON[CT] .+\\]\\(#@",
-            "[1-9] TEXT .+\\]\\(#@",
-            "[1-9] _TODO .+\\]\\(#@"            
-        ]);
 
         $field = "{$params['prefix']}_gedcom";
-        $query->where(function ($q) use ($re_pattern, $field) {
-            foreach ($re_pattern as $pattern) {
-                $q->orWhere($field, DB::regexOperator(), $pattern);
-            }
-        });
+        if (self::supportsRegexp()) {
+            $patterns = self::linkPrefilterPatterns($xref, $params['table'] === 'other');
+            $query->where(function ($q) use ($patterns, $field) {
+                foreach ($patterns as $pattern) {
+                    $q->orWhere($field, DB::regexOperator(), $pattern);
+                }
+            });
+        } else {
+            // Limited mode (F9): no working REGEXP operator on this engine.
+            // Coarse over-approximation - the PHP classifier is the source
+            // of truth, this only decides which records are fetched.
+            $query->where($field, 'like', self::LIKE_XREF_PREDICATE);
+        }
 
         return $query;
+    }
+
+    /**
+     * The strict link pre-filter patterns - single source for the live
+     * overview gate (SQL) and the CLI index gate (PHP/SQL).
+     *
+     * Consolidated to three (five for the shared-note table) patterns with
+     * the exact semantics of the former ten:
+     *  - NOTE requires content before OR after the xref on the same line -
+     *    a naked "1 NOTE @X@" is a GEDCOM shared-note pointer, not a link
+     *  - CON[CT]/TEXT/_TODO: a naked xref IS a link
+     *  - linkenhancer syntax "](#@" requires preceding content
+     *  - a shared note's own level-0 text is matched explicitly
+     *
+     * Deliberately the most conservative regex core (plain groups,
+     * no anchors/modifiers) so the same strings behave identically on
+     * MariaDB/MySQL (PCRE) and PostgreSQL (ARE) and across engine
+     * versions.
+     *
+     * The "no cross-line" class is written with a LITERAL newline inside
+     * the bracket expression (PHP "\n" in the double-quoted strings
+     * below), not the two-character escape: a literal newline as a
+     * bracket-expression member is unambiguous in every dialect, while
+     * escape handling inside bracket expressions differs (ARE vs PCRE).
+     *
+     * @return array<int,string>
+     */
+    public static function linkPrefilterPatterns(string $xref, bool $shared_note): array
+    {
+        $patterns = [
+            "[1-9] NOTE ([^\n]+@{$xref}@|@{$xref}@[^\n]+)",
+            "[1-9] (CON[CT]|TEXT|_TODO) [^\n]*@{$xref}@",
+            "[1-9] (NOTE|CON[CT]|TEXT|_TODO) [^\n]+\\]\\(#@",
+        ];
+        if ($shared_note) { // makes only sense in other table for shared notes
+            $patterns[] = "0 @" . self::RE_XREF_CLASS . "@ NOTE [^\n]*@{$xref}@";
+            $patterns[] = "0 @" . self::RE_XREF_CLASS . "@ NOTE [^\n]+\\]\\(#@";
+        }
+
+        return $patterns;
+    }
+
+    /**
+     * Does this engine have a regex operator that works for the pre-filter?
+     * (SQLite: REGEXP function never registered; SQL Server: no operator.)
+     */
+    public static function supportsRegexp(): bool
+    {
+        try {
+            return in_array(DB::driverName(), self::REGEXP_DRIVERS, true);
+        } catch (Throwable) {
+            return false;
+        }
+    }
+
+    /**
+     * The PHP twin of the SQL link pre-filter (same pattern source): the
+     * index contains exactly the records the live overview shows, also on
+     * incremental runs where changed records are decided in PHP.
+     */
+    public static function hasLinkCandidate(string $gedcom, string $rectype, string $xref = self::RE_XREF_CLASS): bool
+    {
+        foreach (self::linkPrefilterPatterns($xref, $rectype === 'NOTE') as $pattern) {
+            if (@preg_match('/' . $pattern . '/', $gedcom) === 1) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     
@@ -140,10 +265,12 @@ final class XrefsService { // stuff related with handling cross references
      * @param Tree|null                 $tree
      * @param string|null $xref
      * @param array<string> $rectypes
+     * @param bool $ordered add the default file/xref ordering (disable for
+     *                      datatables, which applies its own ordering)
      *
      * @return Builder
      */
-    public static function getRecordsQuery(Tree|null $tree = null, string|null $xref = null, array $rectypes = []): Builder
+    public static function getRecordsQuery(Tree|null $tree = null, string|null $xref = null, array $rectypes = [], bool $ordered = true): Builder
     {
         $gedcom_table_keys = self::supportedGedcomTableKeys();
         $gedcom_record_keys = self::supportedGedcomRecordKeys();
@@ -183,9 +310,11 @@ final class XrefsService { // stuff related with handling cross references
 
         $query = DB::query()
             ->fromSub($unionQuery, 'u')
-            ->select('u.*')
-            ->orderBy('u.file')
-            ->orderBy('u.xref');
+            ->select('u.*');
+
+        if ($ordered) {
+            $query->orderBy('u.file')->orderBy('u.xref');
+        }
 
         return $query;
     }
@@ -263,12 +392,33 @@ final class XrefsService { // stuff related with handling cross references
      * }
      */
     public static function classifyRecordLinks(GedcomRecord $record, array $tags = TextTagCollector::DEFAULT_TAGS): array {
-        $counts = ['le' => 0, 'lepic' => 0, 'enhanced' => 0, 'classic' => 0, 'other' => 0];
-        $links  = [];
-        foreach (TextTagCollector::collectForRecord($record, $tags) as $entry) {
+        return self::classifyGedcomText($record->gedcom(), $tags, $record->tag());
+    }
+
+    /**
+     * Link inventory of a raw GEDCOM record text - no GedcomRecord needed.
+     *
+     * C4: used by the paginated data handler, where the record text is
+     * already part of the query row and building a full record object
+     * would mean a second fetch.
+     *
+     * @param array<int,string> $tags
+     *
+     * @return array{
+     *     entries: array<int, array{path: string, class: string, token: string, snippet: string}>,
+     *     counts: array{le: int, lepic: int, enhanced: int, classic: int, other: int}
+     * }
+     */
+    public static function classifyGedcomText(string $gedcom, array $tags = TextTagCollector::DEFAULT_TAGS, ?string $record_type = null): array {
+        $counts  = self::emptyCounts();
+        $entries = [];
+        foreach (TextTagCollector::collect($gedcom, $tags, $record_type) as $entry) {
+            if (self::isSharedNotePointer($entry)) {
+                continue; // structural reference, not a text link
+            }
             foreach (self::classifyTextLinks($entry['value']) as $link) {
                 $counts[$link['class']]++;
-                $links[] = [
+                $entries[] = [
                     'path'    => $entry['path'],
                     'class'   => $link['class'],
                     'token'   => $link['token'],
@@ -277,7 +427,245 @@ final class XrefsService { // stuff related with handling cross references
             }
         }
 
-        return ['entries' => $links, 'counts' => $counts];
+        return ['entries' => $entries, 'counts' => $counts];
+    }
+
+    /**
+     * @return array{le: int, lepic: int, enhanced: int, classic: int, other: int}
+     */
+    public static function emptyCounts(): array {
+        return array_fill_keys(self::LINK_CLASSES, 0);
+    }
+
+    /**
+     * F7: a NOTE tag (level >= 1) whose value is exactly one classic
+     * reference is a GEDCOM shared-note pointer - a structural reference,
+     * not a text link. Silently skipped (no bucket). The level-0 text of
+     * a shared-note record itself (level 0) is NOT a pointer and stays
+     * classified.
+     */
+    private static function isSharedNotePointer(array $entry): bool
+    {
+        return $entry['tag'] === 'NOTE'
+            && $entry['level'] >= 1
+            && preg_match(self::RE_CLASSIC_XREF, trim($entry['value'])) === 1;
+    }
+
+    /**
+     * HTML for the "link inventory" cell of the XREF overview: up to
+     * $max_per_class tokens per class, then an overflow counter.
+     *
+     * @param array<int, array{path: string, class: string, token: string, snippet: string}> $entries
+     */
+    public static function linkInventoryHtml(array $entries, int $max_per_class = 3): string {
+        $items = [];
+        foreach ($entries as $entry) {
+            $items[$entry['class']][] = $entry;
+        }
+
+        $has_any = false;
+        foreach ($items as $class_items) {
+            if ($class_items !== []) {
+                $has_any = true;
+                break;
+            }
+        }
+        if (!$has_any) {
+            return '';
+        }
+
+        $html = '<ol class="le-xref-inventory">';
+        foreach (self::LINK_CLASSES as $class) {
+            $class_items = $items[$class] ?? [];
+            if ($class_items === []) {
+                continue;
+            }
+            $shown = array_slice($class_items, 0, $max_per_class);
+
+            $html .= '<li>' . e($class) . ' (' . count($class_items) . ')<ol>';
+            foreach ($shown as $entry) {
+                $prefix = ($entry['path'] !== '' && $entry['path'] !== 'NOTE') ? e($entry['path']) . ': ' : '';
+                $html   .= '<li>' . $prefix . '<code>' . e($entry['snippet']) . '</code></li>';
+            }
+            $html .= '</ol>';
+
+            if (count($class_items) > $max_per_class) {
+                $html .= '<em>+' . (count($class_items) - $max_per_class) . '</em>';
+            }
+            $html .= '</li>';
+        }
+        $html .= '</ol>';
+
+        return $html;
+    }
+
+    /**
+     * HTML for the "count" column: total plus the per-class breakdown.
+     *
+     * @param array<string, int> $counts
+     */
+    public static function linkCountSummary(array $counts): string {
+        $total = 0;
+        $parts = [];
+        foreach (self::LINK_CLASSES as $class) {
+            $n = $counts[$class] ?? 0;
+            $total += $n;
+            if ($n > 0) {
+                $parts[] = $class . ': ' . $n;
+            }
+        }
+        if ($total === 0) {
+            return '0';
+        }
+
+        return '<strong>' . $total . '</strong> <small>' . e(implode(' / ', $parts)) . '</small>';
+    }
+
+    /**
+     * Best-effort extraction of the target(s) a link token points to -
+     * the foundation for the planned Backlink feature.
+     *
+     *  - classic:  @XREF@                 → one target, same tree
+     *  - LE links: every "wt" parameter in the URL part
+     *              (wt=[type]@XREF@[tree]) → one target each
+     *
+     * Anything else (external URL without wt=, classic in a URL, ...)
+     * yields no target.
+     *
+     * @return array<int, array{xref: string, tree: string|null}>
+     */
+    public static function extractLinkTargets(string $token): array {
+        if (preg_match(self::RE_CLASSIC_XREF, $token, $match) === 1) {
+            return [['xref' => $match[1], 'tree' => null]];
+        }
+
+        $targets = [];
+        $pos     = strrpos($token, '(#@');
+        if ($pos !== false) {
+            // The URL part ends at the closing bracket of the token.
+            $url = substr($token, $pos + 3, -1);
+            if (preg_match_all(self::RE_WT_TARGET, $url, $matches, PREG_SET_ORDER) !== false) {
+                foreach ($matches as $m) {
+                    $targets[] = [
+                        'xref' => $m[1],
+                        'tree' => $m[2] !== '' ? $m[2] : null,
+                    ];
+                }
+            }
+        }
+
+        return $targets;
+    }
+
+    /**
+     * Status of the link index (Phase 2): row count, last COMPLETE
+     * verification and whether the index is considered fresh.
+     *
+     * Freshness comes from le_index_meta (written by the CLI at the end of
+     * a full, untruncated run) - not from MAX(scanned_at), which would
+     * go stale on a quiet database where changed records are re-scanned
+     * but no new rows appear.
+     *
+     * @return array{rows: int, scanned_at: string|null, fresh: bool}
+     */
+    public static function indexStatus(int $fresh_seconds = self::INDEX_FRESH_SECONDS): array {
+        try {
+            if (!DB::schema()->hasTable(self::INDEX_META_TABLE)
+                || !DB::schema()->hasTable(self::INDEX_SCAN_TABLE)
+            ) {
+                return ['rows' => 0, 'scanned_at' => null, 'fresh' => false];
+            }
+            $meta = DB::table(self::INDEX_META_TABLE)->first(['last_run', 'rows']);
+
+            $rows       = (int) ($meta->rows ?? 0);
+            $scanned_at = $meta->last_run !== null ? (string) $meta->last_run : null;
+            $fresh      = $scanned_at !== null
+                && strtotime($scanned_at) > time() - $fresh_seconds;
+
+            return ['rows' => $rows, 'scanned_at' => $scanned_at, 'fresh' => $fresh];
+        } catch (Throwable) {
+            return ['rows' => 0, 'scanned_at' => null, 'fresh' => false];
+        }
+    }
+
+    /**
+     * The XREF-overview query backed by the link index (Phase 2) instead
+     * of a live regex scan. One row per (file, xref, rectype) that has at
+     * least one indexed link.
+     *
+     * @param string|null      $target_xref limit to records referencing this XREF
+     * @param array<int,string> $rectypes    record types (OTHER = all subtypes)
+     */
+    public static function getIndexQuery(Tree|null $tree = null, ?string $target_xref = null, array $rectypes = []): Builder {
+        $query = DB::table(self::INDEX_SCAN_TABLE . ' AS s')
+            ->join(self::INDEX_LINK_TABLE . ' AS l', static function ($join): void {
+                $join->on('l.file', '=', 's.file')
+                    ->on('l.xref', '=', 's.xref')
+                    ->on('l.rectype', '=', 's.rectype');
+            })
+            ->distinct()
+            ->select(['s.file', 's.xref', DB::raw('s.rectype AS type')])
+            ->whereIn('s.rectype', self::normalizeIndexRectypes($rectypes))
+            ->orderBy('s.file')
+            ->orderBy('s.xref');
+
+        if ($target_xref !== null && $target_xref !== '') {
+            $query->where('l.target_xref', '=', $target_xref);
+        }
+        if ($tree instanceof Tree) {
+            $query->where('s.file', '=', $tree->id());
+        }
+
+        return $query;
+    }
+
+    /**
+     * The indexed link tokens of one record, deduplicated per (class, token) -
+     * a link with several wt= parameters is counted once.
+     *
+     * @return array<int, array{tag_path: string, class: string, token: string}>
+     */
+    public static function indexRowLinks(int $file, string $xref, string $rectype): array {
+        $links = [];
+        foreach (DB::table(self::INDEX_LINK_TABLE)
+            ->where('file', '=', $file)
+            ->where('xref', '=', $xref)
+            ->where('rectype', '=', $rectype)
+            ->get(['tag_path', 'link_class', 'token']) as $row) {
+            $key = $row->link_class . "\0" . $row->token;
+            if (!isset($links[$key])) {
+                $links[$key] = [
+                    'tag_path' => (string) $row->tag_path,
+                    'class'    => (string) $row->link_class,
+                    'token'    => (string) $row->token,
+                ];
+            }
+        }
+
+        return array_values($links);
+    }
+
+    /**
+     * Map the UI record-type filter to the concrete rectype values stored
+     * in the index (OTHER expands to its subtypes, which are stored as the
+     * actual o_type values).
+     *
+     * @param  array<int,string> $rectypes
+     * @return array<int,string>
+     */
+    private static function normalizeIndexRectypes(array $rectypes): array {
+        $record_keys = self::supportedGedcomRecordKeys();
+        $rectypes    = array_map('strtoupper', $rectypes);
+        $rectypes    = array_values(array_filter($rectypes, static fn (string $s): bool => in_array($s, $record_keys, true)));
+        if ($rectypes === []) {
+            $rectypes = self::supportedGedcomTableKeys();
+        }
+        $expanded = array_values(array_filter($rectypes, static fn (string $s): bool => $s !== 'OTHER'));
+        if (in_array('OTHER', $rectypes, true)) {
+            $expanded = array_merge($expanded, self::GEDCOM_OTHER_SUBTYPES);
+        }
+
+        return array_values(array_unique($expanded));
     }
 
     /**

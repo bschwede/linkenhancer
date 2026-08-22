@@ -52,6 +52,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Nyholm\Psr7\Stream;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Factories\CustomMarkdownFactory;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\AdminXrefOverviewData;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoXrefAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpMdAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpWtCoreAction;
@@ -62,7 +63,7 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\Services\WthbService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\SettingInterface;
 
-use function array_key_exists, boolval, count, strval, is_array, intval;
+use function array_key_exists, boolval, count, strval, is_array, intval, route, trim;
 
 enum OverwriteMode
 { // pref schema cascading setting - overwrite setting value with parent if...
@@ -181,7 +182,7 @@ class LinkEnhancerModule extends AbstractModule implements
 
     public const HELP_CSV = __DIR__ . DIRECTORY_SEPARATOR . 'Schema' . DIRECTORY_SEPARATOR . 'SeedHelpTable.csv';
 
-    public const int HELP_SCHEMA_TARGET_VERSION = 3;
+    public const int HELP_SCHEMA_TARGET_VERSION = 4;
 
     public const PREFERENCES_SCHEMA = [
         // required settings:
@@ -472,6 +473,11 @@ class LinkEnhancerModule extends AbstractModule implements
                 $router->get(GotoXrefAction::class, '/goto-xref/{xref}');
             });
         }
+
+        // XREF overview - server-side DataTables data endpoint (admin only)
+        $router->attach('', '', static function (Map $router): void {
+            $router->get(AdminXrefOverviewData::class, '/admin-xref-overview-data');
+        });
     }
  
 
@@ -908,7 +914,10 @@ class LinkEnhancerModule extends AbstractModule implements
 
 
     /**
-     * XREF Overview — admin page listing all XREFs found in Gedcom records and HTML blocks.
+     * XREF Overview — admin page (server-side DataTables) listing all
+     * records containing XREFs / linkenhancer links, with optional
+     * filters (target XREF, record type, tree). The data endpoint is
+     * AdminXrefOverviewData; the page itself stays cheap.
      *
      * @param ServerRequestInterface $request
      * @return ResponseInterface
@@ -916,16 +925,34 @@ class LinkEnhancerModule extends AbstractModule implements
     public function getAdminXrefOverviewAction(ServerRequestInterface $request): ResponseInterface
     {
         $this->layout = 'layouts/administration';
-        $query = XrefsService::getRecordsQuery();
 
-        $data = $query->get()
-            ->map(static fn (object $row): array => (array) $row)
-            ->all();
+        $params  = Validator::queryParams($request);
+        $xref    = trim((string) $params->string('xref', ''));
+        $rectype = (string) $params->string('rectype', '');
+        $tree_id = (int) $params->integer('tree', 0);
+
+        $data_params = [];
+        if ($xref !== '') {
+            $data_params['xref'] = $xref;
+        }
+        if ($rectype !== '') {
+            $data_params['rectype'] = $rectype;
+        }
+        if ($tree_id > 0) {
+            $data_params['tree'] = $tree_id;
+        }
 
         return $this->viewResponse($this->name() . '::xref-overview', [
             'title' => I18N::translate('XREF Overview'),
-            'sql' => $query->toSql(),
-            'data' => $data,
+            'module' => $this,
+            'data_url' => route(AdminXrefOverviewData::class, $data_params),
+            'xref' => $xref,
+            'rectype' => $rectype,
+            'tree_id' => $tree_id,
+            'rectypes' => XrefsService::supportedGedcomRecordKeys(),
+            'trees' => Registry::container()->get(TreeService::class)->all(),
+            'index_status' => XrefsService::indexStatus(),
+            'limited_mode' => !XrefsService::supportsRegexp(),
         ]);
     }
 

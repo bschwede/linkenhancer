@@ -2,22 +2,28 @@
 
 declare(strict_types=1);
 
-use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
-use Fisharebest\Webtrees\Services\TreeService;
-use Fisharebest\Webtrees\Registry;
-use Fisharebest\Webtrees\Tree;
+use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 
 /**
- * @var string                  $title
- * @var string                  $sql
- * @var array                   $data
+ * @var string                                        $title
+ * @var LinkEnhancerModule                            $module
+ * @var string                                        $data_url   server-side data endpoint (incl. active filters)
+ * @var string                                        $xref       active "target xref" filter
+ * @var string                                        $rectype    active record-type filter
+ * @var int                                           $tree_id    active tree filter (0 = all)
+ * @var array<int,string>                             $rectypes   selectable record types
+ * @var \Illuminate\Support\Collection                $trees      all trees
+ * @var array{rows: int, scanned_at: string|null, fresh: bool} $index_status
+ * @var bool                                          $limited_mode no REGEXP support (SQLite/SQL Server)
  */
 
-$totalCount = count($data);
-$treeService = Registry::container()->get(TreeService::class);
-$tree = null;
+$page_url = route('module', ['module' => $module->name(), 'action' => 'AdminXrefOverview']);
+$sql = $index_status['fresh']
+    ? XrefsService::getIndexQuery()->toSql()
+    : XrefsService::getRecordsQuery()->toSql();
 ?>
 
 <?= view('components/breadcrumbs', [
@@ -30,80 +36,70 @@ $tree = null;
 <h1 id="top"><?= e($title) ?></h1>
 
 <p class="text-muted">
-    <?= I18N::translate('This page lists all cross-references (XREFs) found in GEDCOM records and HTML blocks across all accessible trees.') ?>
+    <?= I18N::translate('This page lists all records that contain cross-references (XREFs) or linkenhancer links.') ?>
 </p>
 
-<details class="mb-3">
+<?php if (!empty($limited_mode)): ?>
+    <div class="alert alert-warning">
+        <?= I18N::translate('Limited mode: this database engine has no regex support - the table is scanned live with a LIKE filter on every request, which can be slow on large trees. The link index is not available on this engine.') ?>
+    </div>
+<?php endif ?>
+
+<?php if ($index_status['fresh']): ?>
+    <div class="alert alert-success">
+        <?= I18N::translate('Link index active: %1$s scanned records, last verified %2$s.', $index_status['rows'], $index_status['scanned_at']) ?>
+    </div>
+<?php else: ?>
+    <div class="alert alert-info">
+        <?= I18N::translate('No fresh link index - the table below scans the GEDCOM tables live, which can be slow on large trees. Build the index with the CLI script (see README.md, "CLI scripts & maintenance").') ?>
+    </div>
+<?php endif ?>
+
+<form class="row g-2 mb-3" method="get" action="<?= e($page_url) ?>">
+    <div class="col-auto">
+        <input class="form-control" type="text" name="xref" value="<?= e($xref) ?>" placeholder="<?= I18N::translate('referencing XREF') ?>">
+    </div>
+    <div class="col-auto">
+        <select class="form-select" name="rectype">
+            <option value=""><?= I18N::translate('all types') ?></option>
+            <?php foreach ($rectypes as $key): ?>
+                <option value="<?= e($key) ?>" <?= $key === $rectype ? 'selected' : '' ?>><?= e($key) ?></option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+    <div class="col-auto">
+        <select class="form-select" name="tree">
+            <option value=""><?= I18N::translate('all trees') ?></option>
+            <?php foreach ($trees as $tree): ?>
+                <option value="<?= $tree->id() ?>" <?= $tree->id() === $tree_id ? 'selected' : '' ?>><?= e($tree->name()) ?></option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+    <div class="col-auto">
+        <button class="btn btn-outline-primary" type="submit"><?= I18N::translate('Filter') ?></button>
+    </div>
+</form>
+
+<div class="table-responsive">
+    <table
+        id="wt-datatables-xref-overview"
+        class="table table-bordered table-sm datatables d-none"
+        <?= view('lists/datatables-attributes') ?>
+        data-ajax="<?= e($data_url) ?>"
+        data-server-side="true"
+    >
+        <thead>
+            <tr>
+                <th><?= I18N::translate('xref') ?></th>
+                <th><?= I18N::translate('type') ?></th>
+                <th data-sortable="false"><?= I18N::translate('record') ?></th>
+                <th data-sortable="false"><?= I18N::translate('links') ?></th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<details class="mt-3">
     <summary class="text-muted"><?= I18N::translate('SQL') ?></summary>
     <pre><?= e($sql) ?></pre>
 </details>
-
-<div class="mb-3">
-    <strong><?= $totalCount ?></strong>
-    <?= $totalCount === 1 ? I18N::translate('XREF found') : I18N::translate('XREFs found') ?>.
-</div>
-
-<?php if ($totalCount === 0): ?>
-    <div class="alert alert-info">
-        <?= I18N::translate('No XREFs found matching the current filter criteria.') ?>
-    </div>
-<?php else: ?>
-<div class="table-responsive">
-    <table class="table table-striped table-sm table-hover fs-6">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th><?= I18N::translate('xref') ?></th>
-                <th><?= I18N::translate('file') ?></th>
-                <th><?= I18N::translate('type') ?></th>
-                <th><?= I18N::translate('gedcom') ?></th>
-                <th><?= I18N::translate('count') ?></th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php $i = 0; ?>
-            <?php foreach ($data as $row):
-                $xref = $row['xref'];
-                $file = (int) $row['file'];
-                if (!($tree instanceof Tree && $tree->id() === $file)) {
-                    try {
-                        $tree = $treeService->find($file);
-                    } catch (DomainException) {
-                        // Orphaned row - the tree no longer exists, skip it.
-                        continue;
-                    }
-                }
-                $record = Registry::gedcomRecordFactory()->make($xref, $tree, $row['gedcom']);
-                $displayname = $record->fullName();
-
-            ?>
-                <?php $i++; ?>
-                <tr>
-                    <td><?= $i ?></td>
-                    <td>
-                        <a href="<?= $record->url() ?>"><?= e($xref) ?></a>
-                        <p class="text-muted"><?= e($tree->name()) ?></p>
-                        
-                    </td>
-                    <td><?= e($row['file']) ?></td>
-                    <td><?= e($row['type']) ?></td>
-                    <td>
-                        <a href="<?= $record->url() ?>"><?= e($displayname) ?></a>
-<?php $inventory = XrefsService::classifyRecordLinks($record); ?>
-                        <?php if ($inventory['entries'] !== []): ?>
-                        <ol>
-                            <?php foreach ($inventory['entries'] as $link): ?>
-                                <li><?= e($link['path'] !== 'NOTE' ? $link['path'] . ': ' : '') ?><pre><?= e($link['snippet']) ?></pre></li>
-                            <?php endforeach; ?>
-                        </ol>
-                        <?php endif; ?>
-                    </td>
-                    <td>
-                        le: <?= $inventory['counts']['le'] ?> / le-pic: <?= $inventory['counts']['lepic'] ?> / enhanced: <?= $inventory['counts']['enhanced'] ?> / classic: <?= $inventory['counts']['classic'] ?> / other: <?= $inventory['counts']['other'] ?>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-</div>
-<?php endif; ?>
