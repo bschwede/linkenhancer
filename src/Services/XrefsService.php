@@ -67,13 +67,31 @@ final class XrefsService { // stuff related with handling cross references
      * One "wt" parameter value: wt=[type]@XREF@[tree] - the optional type
      * letter may be absent, the "@tree" part may be empty (same tree).
      */
-    private const RE_WT_TARGET = '/(?:^|[?&])wt=(?:[a-z])?@([A-Za-z0-9][A-Za-z0-9:_.-]{0,19})@([^&\s]*)/';
+    private const RE_WT_TARGET = '/(?:^|[?&])wt=(?P<type>[a-z])?@(?P<xref>[A-Za-z0-9][A-Za-z0-9:_.-]{0,19})@(?P<tree>[^&\s]*)/';
 
     /**
      * The optional "id" parameter: id=@XREF@ - at most one per link, the
      * position among the parameters does not matter, no tree part.
      */
     private const RE_ID_TARGET = '/(?:^|[?&])id=@([A-Za-z0-9][A-Za-z0-9:_.-]{0,19})@/';
+
+    /**
+     * The "wt" type letter (README "available record types") mapped to the
+     * GEDCOM record tag that GedcomRecord::tag() returns for that type. Used
+     * to flag a wt= target whose declared type does not match the resolved
+     * record. All six are verified against the record classes' raw tags
+     * (Location/RECORD_TYPE = '_LOC', Media/RECORD_TYPE = 'OBJE', ...).
+     *
+     * @var array<string,string>
+     */
+    public const WT_TYPE_TAGS = [
+        'i' => 'INDI',
+        'f' => 'FAM',
+        's' => 'SOUR',
+        'r' => 'REPO',
+        'n' => 'NOTE',
+        'l' => '_LOC',
+    ];
 
     /**
      * Link index tables (Phase 2) and the default freshness threshold.
@@ -565,32 +583,48 @@ final class XrefsService { // stuff related with handling cross references
     }
 
     /**
-     * The reference link(s) shown below the snippet of an xref/classic token:
-     * the referenced record(s), labelled with their full name (a cross-tree
-     * target is prefixed with its tree name). Unresolvable targets render as
-     * the raw, muted XREF. $target_linker = null (or a non-xref/classic class)
-     * yields no links. The full name is trusted HTML (privacy-aware, may hold
-     * markup) and is embedded unescaped, matching the record-name column.
+     * The reference link(s) shown below the snippet of an xref/classic/pic
+     * token: the referenced record(s), labelled with their full name (a
+     * cross-tree target is prefixed with its tree name). For an xref target
+     * the declared "wt" type letter is checked against the resolved record's
+     * tag (a pic target must be a Media); a mismatch keeps the link and adds
+     * a findable "⚠" hint. Unresolvable targets render as "✗" + the raw XREF
+     * (findable via the browser's search). $target_linker = null (or a
+     * non-xref/classic/pic class) yields no links. The full name is trusted
+     * HTML (privacy-aware, may hold markup) and is embedded unescaped,
+     * matching the record-name column.
      *
      * @param array{class: string, token: string} $entry
-     * @param callable(string, ?string): (array{name: string, url: string, tree_label: string}|null)|null $target_linker
+     * @param callable(string, ?string): (array{name: string, url: string, tree_label: string, actual: string}|null)|null $target_linker
      */
     private static function targetLinksHtml(array $entry, ?callable $target_linker): string {
-        if ($target_linker === null || !in_array($entry['class'], ['xref', 'classic'], true)) {
+        if ($target_linker === null || !in_array($entry['class'], ['xref', 'classic', 'pic'], true)) {
             return '';
         }
 
         $links = [];
         foreach (self::extractLinkTargets($entry['token']) as $target) {
+            // Declared target type: the wt= letter (xref), or Media for a pic
+            // link's id= target. classic / unknown letter = nothing to check.
+            $expected_tag = $target['type'] !== null
+                ? (self::WT_TYPE_TAGS[$target['type']] ?? null)
+                : ($entry['class'] === 'pic' ? 'OBJE' : null);
+
             $resolved = $target_linker($target['xref'], $target['tree']);
             if ($resolved === null) {
-                $links[] = '<span class="le-target-missing">@' . e($target['xref']) . '@</span>';
-            } else {
-                $label = ($resolved['tree_label'] !== '')
-                    ? e($resolved['tree_label']) . ': ' . $resolved['name']
-                    : $resolved['name'];
-                $links[] = '<a href="' . e($resolved['url']) . '">' . $label . '</a>';
+                $links[] = '<span class="le-target-missing" title="target not found">✗ @' . e($target['xref']) . '@</span>';
+                continue;
             }
+
+            $label  = ($resolved['tree_label'] !== '')
+                ? e($resolved['tree_label']) . ': ' . $resolved['name']
+                : $resolved['name'];
+            $anchor = '<a href="' . e($resolved['url']) . '">' . $label . '</a>';
+            if ($expected_tag !== null && $resolved['actual'] !== $expected_tag) {
+                $hint = 'expected ' . $expected_tag . ', is ' . $resolved['actual'];
+                $anchor .= ' <span class="le-target-type-mismatch" title="' . e($hint) . '">⚠</span>';
+            }
+            $links[] = $anchor;
         }
         if ($links === []) {
             return '';
@@ -634,13 +668,14 @@ final class XrefsService { // stuff related with handling cross references
      *              parameters
      *
      * Anything else (external URL without wt= or id=, classic in a URL, ...)
-     * yields no target.
+     * yields no target. Each target carries its declared "wt" type letter
+     * (null when absent / for id= and classic targets).
      *
-     * @return array<int, array{xref: string, tree: string|null}>
+     * @return array<int, array{xref: string, tree: string|null, type: string|null}>
      */
     public static function extractLinkTargets(string $token): array {
         if (preg_match(self::RE_CLASSIC_XREF, $token, $match) === 1) {
-            return [['xref' => $match[1], 'tree' => null]];
+            return [['xref' => $match[1], 'tree' => null, 'type' => null]];
         }
 
         $targets = [];
@@ -651,8 +686,9 @@ final class XrefsService { // stuff related with handling cross references
             if (preg_match_all(self::RE_WT_TARGET, $url, $matches, PREG_SET_ORDER) !== false) {
                 foreach ($matches as $m) {
                     $targets[] = [
-                        'xref' => $m[1],
-                        'tree' => $m[2] !== '' ? $m[2] : null,
+                        'xref' => $m['xref'],
+                        'tree' => $m['tree'] !== '' ? $m['tree'] : null,
+                        'type' => $m['type'] !== '' ? $m['type'] : null,
                     ];
                 }
             }
@@ -661,6 +697,7 @@ final class XrefsService { // stuff related with handling cross references
                 $targets[] = [
                     'xref' => $m[1],
                     'tree' => null,
+                    'type' => null,
                 ];
             }
         }

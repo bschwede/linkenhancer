@@ -252,13 +252,15 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
     }
 
     /**
-     * Resolve a referenced record (the target of an xref/classic link) to a
-     * display label + URL. The target tree is the explicit @tree (a tree NAME
-     * carried by the link) when present, else the source record's own tree.
-     * Cached per request, keyed by resolved tree id + xref (so a same-tree
-     * target from different source rows does not collide).
+     * Resolve a referenced record (the target of an xref/classic/pic link) to
+     * a display label + URL. The target tree is the explicit @tree (a tree
+     * NAME carried by the link) when present, else the source record's own
+     * tree. Also returns the record's actual GEDCOM tag ("actual") so the
+     * caller can check a declared wt= type / Media expectation. Cached per
+     * request, keyed by resolved tree id + xref (so a same-tree target from
+     * different source rows does not collide).
      *
-     * @return array{name: string, url: string, tree_label: string}|null
+     * @return array{name: string, url: string, tree_label: string, actual: string}|null
      */
     private function resolveTarget(string $xref, ?string $target_tree_name, ?Tree $source_tree, int $source_tree_id): ?array
     {
@@ -285,6 +287,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
             'name'       => $record->fullName(),
             'url'        => $record->url(),
             'tree_label' => ($tree_id !== $source_tree_id) ? $tree->name() : '',
+            'actual'     => $record->tag(),
         ];
         $this->target_cache[$cache_key] = $label;
 

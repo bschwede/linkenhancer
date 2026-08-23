@@ -180,21 +180,21 @@ check(
 // extractLinkTargets (backlink foundation)
 // ---------------------------------------------------------------------------
 $target_fixtures = [
-    'T19 classic xref'                     => ['@I1@',                    [['xref' => 'I1', 'tree' => null]]],
-    'T19b classic xref with dot'           => ['@I1.2@',                  [['xref' => 'I1.2', 'tree' => null]]],
+    'T19 classic xref'                     => ['@I1@',                    [['xref' => 'I1', 'tree' => null, 'type' => null]]],
+    'T19b classic xref with dot'           => ['@I1.2@',                  [['xref' => 'I1.2', 'tree' => null, 'type' => null]]],
     'T19c LE link without wt='             => ['[x](#@I2@)',              []],
     'T19d LE link external target'         => ['[x](#@wp=de/Artikel)',    []],
-    'T19e xref single target'          => ['[x](#@wt=i@I2@tree1)',    [['xref' => 'I2', 'tree' => 'tree1']]],
-    'T19f xref without type letter'    => ['[x](#@wt=@I2@)',          [['xref' => 'I2', 'tree' => null]]],
-    'T19g xref without tree'           => ['[x](#@wt=i@I2@)',         [['xref' => 'I2', 'tree' => null]]],
-    'T19h xref multiple targets'       => ['[x](#@wt=i@I1@t&wt=n@N1@)', [['xref' => 'I1', 'tree' => 't'], ['xref' => 'N1', 'tree' => null]]],
-    'T19i xref wt= not first'          => ['[x](#@fsft=1&wt=s@R1@)',  [['xref' => 'R1', 'tree' => null]]],
-    'T19j xref pic link'               => ['![p](#@wt=n@N1@)',        [['xref' => 'N1', 'tree' => null]]],
+    'T19e xref single target'          => ['[x](#@wt=i@I2@tree1)',    [['xref' => 'I2', 'tree' => 'tree1', 'type' => 'i']]],
+    'T19f xref without type letter'    => ['[x](#@wt=@I2@)',          [['xref' => 'I2', 'tree' => null, 'type' => null]]],
+    'T19g xref without tree'           => ['[x](#@wt=i@I2@)',         [['xref' => 'I2', 'tree' => null, 'type' => 'i']]],
+    'T19h xref multiple targets'       => ['[x](#@wt=i@I1@t&wt=n@N1@)', [['xref' => 'I1', 'tree' => 't', 'type' => 'i'], ['xref' => 'N1', 'tree' => null, 'type' => 'n']]],
+    'T19i xref wt= not first'          => ['[x](#@fsft=1&wt=s@R1@)',  [['xref' => 'R1', 'tree' => null, 'type' => 's']]],
+    'T19j xref pic link'               => ['![p](#@wt=n@N1@)',        [['xref' => 'N1', 'tree' => null, 'type' => 'n']]],
     'T19k defective LE remainder'          => ['](#@I2@',                 []],
-    'T31 id= single target'                => ['[x](#@id=@I1@)',          [['xref' => 'I1', 'tree' => null]]],
-    'T32 id= not first parameter'          => ['[x](#@a=1&id=@I1@&b=2)',  [['xref' => 'I1', 'tree' => null]]],
-    'T33 id= combined with wt='            => ['[x](#@wt=i@I2@&id=@M1@)', [['xref' => 'I2', 'tree' => null], ['xref' => 'M1', 'tree' => null]]],
-    'T34 double id= (spec violation)'      => ['[x](#@id=@I1@&id=@I2@)',  [['xref' => 'I1', 'tree' => null]]],
+    'T31 id= single target'                => ['[x](#@id=@I1@)',          [['xref' => 'I1', 'tree' => null, 'type' => null]]],
+    'T32 id= not first parameter'          => ['[x](#@a=1&id=@I1@&b=2)',  [['xref' => 'I1', 'tree' => null, 'type' => null]]],
+    'T33 id= combined with wt='            => ['[x](#@wt=i@I2@&id=@M1@)', [['xref' => 'I2', 'tree' => null, 'type' => 'i'], ['xref' => 'M1', 'tree' => null, 'type' => null]]],
+    'T34 double id= (spec violation)'      => ['[x](#@id=@I1@&id=@I2@)',  [['xref' => 'I1', 'tree' => null, 'type' => null]]],
 ];
 foreach ($target_fixtures as $name => [$token, $expected]) {
     check($name, XrefsService::extractLinkTargets($token), $expected);
@@ -390,13 +390,15 @@ check(
     [5, 5, 5]
 );
 
-// T37 - reference links below the snippet for xref/classic tokens (4th arg =
-// the target resolver, fn($xref, ?$target_tree) => ?{name,url,tree_label}).
+// T37 - reference links below the snippet for xref/classic/pic tokens (4th
+// arg = the target resolver, fn($xref, ?$target_tree) => ?{name,url,tree_label,actual}).
 $target_linker = static function (string $xref, ?string $tree): ?array {
     $known = [
-        'I2' => ['name' => 'Max Mustermann', 'url' => '/tree/t/individual/I2', 'tree_label' => ''],
-        'F3' => ['name' => 'Fam XY', 'url' => '/tree/t/family/F3', 'tree_label' => ''],
-        'I5' => ['name' => 'Cross Person', 'url' => '/tree/t2/individual/I5', 'tree_label' => 'other-tree'],
+        'I2' => ['name' => 'Max Mustermann', 'url' => '/tree/t/individual/I2', 'tree_label' => '', 'actual' => 'INDI'],
+        'F3' => ['name' => 'Fam XY', 'url' => '/tree/t/family/F3', 'tree_label' => '', 'actual' => 'FAM'],
+        'I5' => ['name' => 'Cross Person', 'url' => '/tree/t2/individual/I5', 'tree_label' => 'other-tree', 'actual' => 'INDI'],
+        'I9' => ['name' => 'Max', 'url' => '/tree/t/individual/I9', 'tree_label' => '', 'actual' => 'FAM'],
+        'M1' => ['name' => 'Foto', 'url' => '/tree/t/media/M1', 'tree_label' => '', 'actual' => 'OBJE'],
     ];
     return $known[$xref] ?? null;
 };
@@ -421,9 +423,9 @@ check(
     ['<ul class="le-xref-inventory"><li>ext (1)<ol><li><code><strong>[x](#@I2@)</strong></code></li></ol></li></ul>']
 );
 check(
-    'T37e inventory shows a muted raw XREF for an unresolvable target',
+    'T37e inventory marks an unresolvable target with a findable broken marker',
     [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=i@I404@)', 'snippet' => '[see](#@wt=i@I404@)']], 0, '', $target_linker)],
-    ['<ul class="le-xref-inventory"><li>xref (1)<ol><li><code><strong>[see](#@wt=i@I404@)</strong></code><div class="le-target-links"><span class="le-target-missing">@I404@</span></div></li></ol></li></ul>']
+    ['<ul class="le-xref-inventory"><li>xref (1)<ol><li><code><strong>[see](#@wt=i@I404@)</strong></code><div class="le-target-links"><span class="le-target-missing" title="target not found">✗ @I404@</span></div></li></ol></li></ul>']
 );
 check(
     'T37f inventory prefixes the tree name for a cross-tree target',
@@ -434,6 +436,34 @@ check(
     'T37g inventory no reference links when the linker is null (default)',
     [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=i@I2@)', 'snippet' => '[see](#@wt=i@I2@)']], 0)],
     ['<ul class="le-xref-inventory"><li>xref (1)<ol><li><code><strong>[see](#@wt=i@I2@)</strong></code></li></ol></li></ul>']
+);
+// T38 - pic links (id=@XREF@ media) also get a reference link; a media target
+// (actual=OBJE) matches the expected OBJE, so no type hint.
+check(
+    'T38 inventory shows a reference link for a pic (media) token',
+    [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'pic', 'token' => '![p](#@id=@M1@)', 'snippet' => '![p](#@id=@M1@)']], 0, '', $target_linker)],
+    ['<ul class="le-xref-inventory"><li>pic (1)<ol><li><code><strong>![p](#@id=@M1@)</strong></code><div class="le-target-links"><a href="/tree/t/media/M1">Foto</a></div></li></ol></li></ul>']
+);
+// T39 - xref type mismatch: wt=i (expected INDI) but the record is a FAM ->
+// the link stays, plus a findable "⚠" hint with a tooltip.
+check(
+    'T39 inventory keeps the link and adds a hint on a wt= type mismatch',
+    [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=i@I9@)', 'snippet' => '[see](#@wt=i@I9@)']], 0, '', $target_linker)],
+    ['<ul class="le-xref-inventory"><li>xref (1)<ol><li><code><strong>[see](#@wt=i@I9@)</strong></code><div class="le-target-links"><a href="/tree/t/individual/I9">Max</a> <span class="le-target-type-mismatch" title="expected INDI, is FAM">⚠</span></div></li></ol></li></ul>']
+);
+// T40 - xref without a type letter (wt=@XREF@) is not type-checked, even when
+// the resolved record type differs.
+check(
+    'T40 inventory does not type-check an xref without a wt= letter',
+    [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=@I2@)', 'snippet' => '[see](#@wt=@I2@)']], 0, '', $target_linker)],
+    ['<ul class="le-xref-inventory"><li>xref (1)<ol><li><code><strong>[see](#@wt=@I2@)</strong></code><div class="le-target-links"><a href="/tree/t/individual/I2">Max Mustermann</a></div></li></ol></li></ul>']
+);
+// T41 - pic target that is not a media (id= points to an INDI) -> mismatch
+// hint (expected OBJE, is INDI), the link is still shown.
+check(
+    'T41 inventory hints when a pic target is not a media',
+    [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'pic', 'token' => '![p](#@id=@I2@)', 'snippet' => '![p](#@id=@I2@)']], 0, '', $target_linker)],
+    ['<ul class="le-xref-inventory"><li>pic (1)<ol><li><code><strong>![p](#@id=@I2@)</strong></code><div class="le-target-links"><a href="/tree/t/individual/I2">Max Mustermann</a> <span class="le-target-type-mismatch" title="expected OBJE, is INDI">⚠</span></div></li></ol></li></ul>']
 );
 
 echo "\n{$total} tests, {$failures} failure(s)\n";
