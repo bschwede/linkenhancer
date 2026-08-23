@@ -166,6 +166,15 @@ check(
     [XrefsService::classifyTextLinks($text)[0]['snippet']],
     ['sah @I1@ heute']
 );
+// T18c - a multi-byte char at the window edge must not be split. 'Ü' (2 bytes)
+// is positioned so the window start (byte offset - 10) lands on its second
+// byte; the old byte-based substr orphaned that byte and it rendered as "?".
+$text = 'Üaaaaaaaaa@X1@1234567890';
+check(
+    'T18c snippet does not split a multi-byte char at the window start',
+    [XrefsService::classifyTextLinks($text)[0]['snippet']],
+    ['Üaaaaaaaaa@X1@1234567890']
+);
 
 // ---------------------------------------------------------------------------
 // extractLinkTargets (backlink foundation)

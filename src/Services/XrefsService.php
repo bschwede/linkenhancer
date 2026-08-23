@@ -736,10 +736,31 @@ final class XrefsService { // stuff related with handling cross references
     }
 
     /**
-     * Display context: up to 10 characters before and after the token.
+     * Display context: a window of up to ~10 characters around the token.
+     *
+     * The window is measured in bytes ($offset is a PREG_OFFSET_CAPTURE byte
+     * offset) and then snapped onto UTF-8 character boundaries so a multi-byte
+     * character is never cut in half at an edge — a stray continuation byte
+     * would render as "?". A split edge character is completed (kept whole),
+     * not dropped. Pure byte/ord logic, so no mbstring dependency is needed.
      */
     private static function snippet(string $text, int $offset, string $token): string {
-        return substr($text, max(0, $offset - 10), 20 + strlen($token));
+        $length = strlen($text);
+        $start  = max(0, $offset - 10);
+        $end    = min($length, $offset + 10 + strlen($token));
+
+        // Left edge: if it lands inside a multi-byte sequence, back up to the
+        // sequence's lead byte so the whole character is kept.
+        while ($start > 0 && (ord($text[$start]) & 0xC0) === 0x80) {
+            $start--;
+        }
+        // Right edge: if the next byte is a continuation byte, the window ends
+        // mid-character — extend it to complete that character.
+        while ($end < $length && (ord($text[$end]) & 0xC0) === 0x80) {
+            $end++;
+        }
+
+        return substr($text, $start, $end - $start);
     }
 
 }
