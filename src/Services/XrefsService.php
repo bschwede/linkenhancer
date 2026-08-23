@@ -546,7 +546,7 @@ final class XrefsService { // stuff related with handling cross references
             return '0';
         }
 
-        return '<strong>' . $total . '</strong> <small>' . e(implode(' / ', $parts)) . '</small>';
+        return '<strong>' . $total . '</strong><div class="text-muted"><small>' . implode('<br/>', $parts) . '</small></div>';
     }
 
     /**
