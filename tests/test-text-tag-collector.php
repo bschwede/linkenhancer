@@ -88,8 +88,8 @@ $fixtures = [
         ],
     ],
 
-    // T4b - an enhanced link split across a CONC boundary is reassembled
-    'T4b enhanced link reassembled across CONC boundary' => [
+    // T4b - an xref-class link split across a CONC boundary is reassembled
+    'T4b xref-class link reassembled across CONC boundary' => [
         'gedcom'   => "0 @I9@ INDI\n1 NOTE Link #@wt=i@I1@\n1 CONC @tree+dia Ende",
         'expected' => [
             ['tag' => 'NOTE', 'level' => 1, 'path' => 'INDI:NOTE', 'value' => 'Link #@wt=i@I1@@tree+dia Ende'],
@@ -192,10 +192,10 @@ foreach ($fixtures as $name => $fixture) {
     check($name, $actual, $fixture['expected']);
 }
 
-// Extra: the reassembled T4b value must match the enhanced-link regex (XrefOverviewService pattern)
+// Extra: the reassembled T4b value must match the xref-class (wt= parameter) regex
 $reassembled = TextTagCollector::collect("0 @I9@ INDI\n1 NOTE Link #@wt=i@I1@\n1 CONC @tree+dia Ende")[0]['value'];
 check(
-    'T4b enhanced-link regex matches reassembled value',
+    'T4b xref-class regex matches reassembled value',
     [preg_match('/#@wt=([ifsnrl])?@([A-Za-z0-9:_.-]+)@([^@\s&]*)/', $reassembled)],
     [1]
 );

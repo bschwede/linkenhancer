@@ -200,6 +200,7 @@ $write_links = static function (object $row, string $rectype_val) use (&$links):
                 'tag_path'      => mb_substr($entry['path'], 0, 255),
                 'link_class'    => $entry['class'],
                 'token'         => $entry['token'],
+                'snippet'       => $entry['snippet'],
                 'target_xref'   => $target['xref'],
                 'target_tree'   => $target['tree'],
             ];

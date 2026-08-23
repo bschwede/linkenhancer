@@ -70,6 +70,12 @@ final class XrefsService { // stuff related with handling cross references
     private const RE_WT_TARGET = '/(?:^|[?&])wt=(?:[a-z])?@([A-Za-z0-9][A-Za-z0-9:_.-]{0,19})@([^&\s]*)/';
 
     /**
+     * The optional "id" parameter: id=@XREF@ - at most one per link, the
+     * position among the parameters does not matter, no tree part.
+     */
+    private const RE_ID_TARGET = '/(?:^|[?&])id=@([A-Za-z0-9][A-Za-z0-9:_.-]{0,19})@/';
+
+    /**
      * Link index tables (Phase 2) and the default freshness threshold.
      * le_index_meta holds the state of the last COMPLETE index run
      * (single row, id = 1) and is what makes the index "fresh".
@@ -110,7 +116,7 @@ final class XrefsService { // stuff related with handling cross references
      *
      * @var array<int,string>
      */
-    public const LINK_CLASSES = ['le', 'lepic', 'enhanced', 'classic', 'other'];
+    public const LINK_CLASSES = ['xref', 'ext', 'pic', 'classic', 'other'];
 
     /**
      * Default cap of tokens shown per class in the link inventory cell.
@@ -352,9 +358,9 @@ final class XrefsService { // stuff related with handling cross references
      * steal fragments of an already classified link.
      *
      * Buckets (mutually exclusive, every link is counted exactly once):
-     *  - le       [text](#@…) without a wt= parameter
-     *  - lepic    ![pic](#@…) without a wt= parameter
-     *  - enhanced LE link whose URL part contains at least one wt= parameter
+     *  - ext      [text](#@…) without a wt= parameter
+     *  - pic      ![pic](#@…) without a wt= parameter
+     *  - xref     LE link whose URL part contains at least one wt= parameter
      *  - classic  plain @XREF@ cross-reference
      *  - other    defective LE remainder "](#@"
      *
@@ -376,8 +382,8 @@ final class XrefsService { // stuff related with handling cross references
                 $url = $pos === false ? '' : substr($token, $pos + 3, -1);
 
                 $class = preg_match(self::RE_WT_PARAM, $url) === 1
-                    ? 'enhanced'
-                    : (str_starts_with($token, '![') ? 'lepic' : 'le');
+                    ? 'xref'
+                    : (str_starts_with($token, '![') ? 'pic' : 'ext');
 
                 $found[$offset] = [
                     'class'   => $class,
@@ -413,7 +419,7 @@ final class XrefsService { // stuff related with handling cross references
      *
      * @return array{
      *     entries: array<int, array{path: string, class: string, token: string, snippet: string}>,
-     *     counts: array{le: int, lepic: int, enhanced: int, classic: int, other: int}
+     *     counts: array{ext: int, pic: int, xref: int, classic: int, other: int}
      * }
      */
     public static function classifyRecordLinks(GedcomRecord $record, array $tags = TextTagCollector::DEFAULT_TAGS): array {
@@ -431,7 +437,7 @@ final class XrefsService { // stuff related with handling cross references
      *
      * @return array{
      *     entries: array<int, array{path: string, class: string, token: string, snippet: string}>,
-     *     counts: array{le: int, lepic: int, enhanced: int, classic: int, other: int}
+     *     counts: array{ext: int, pic: int, xref: int, classic: int, other: int}
      * }
      */
     public static function classifyGedcomText(string $gedcom, array $tags = TextTagCollector::DEFAULT_TAGS, ?string $record_type = null): array {
@@ -456,7 +462,7 @@ final class XrefsService { // stuff related with handling cross references
     }
 
     /**
-     * @return array{le: int, lepic: int, enhanced: int, classic: int, other: int}
+     * @return array{ext: int, pic: int, xref: int, classic: int, other: int}
      */
     public static function emptyCounts(): array {
         return array_fill_keys(self::LINK_CLASSES, 0);
@@ -513,7 +519,15 @@ final class XrefsService { // stuff related with handling cross references
             $html .= '<li>' . e($class) . ' (' . count($class_items) . ')<ol>';
             foreach ($shown as $entry) {
                 $prefix = ($entry['path'] !== '' && $entry['path'] !== 'NOTE') ? e($entry['path']) . ': ' : '';
-                $html   .= '<li>' . $prefix . '<code>' . e($entry['snippet']) . '</code></li>';
+                // Highlight the token inside the snippet: the snippet is
+                // built around the token (token fallback: snippet = token),
+                // so every part around the token(s) is escaped separately.
+                $parts = explode($entry['token'], $entry['snippet']);
+                $hl    = e(array_shift($parts));
+                foreach ($parts as $part) {
+                    $hl .= '<strong>' . e($entry['token']) . '</strong>' . e($part);
+                }
+                $html  .= '<li>' . $prefix . '<code>' . $hl . '</code></li>';
             }
             $html .= '</ol>';
 
@@ -556,8 +570,12 @@ final class XrefsService { // stuff related with handling cross references
      *  - classic:  @XREF@                 → one target, same tree
      *  - LE links: every "wt" parameter in the URL part
      *              (wt=[type]@XREF@[tree]) → one target each
+     *  - LE links: the optional "id" parameter (id=@XREF@, at most one,
+     *              position among the parameters does not matter, no tree
+     *              part) → one target, same tree - checked after the "wt"
+     *              parameters
      *
-     * Anything else (external URL without wt=, classic in a URL, ...)
+     * Anything else (external URL without wt= or id=, classic in a URL, ...)
      * yields no target.
      *
      * @return array<int, array{xref: string, tree: string|null}>
@@ -579,6 +597,13 @@ final class XrefsService { // stuff related with handling cross references
                         'tree' => $m[2] !== '' ? $m[2] : null,
                     ];
                 }
+            }
+            // The optional "id" parameter - at most one, any position.
+            if (preg_match(self::RE_ID_TARGET, $url, $m) === 1) {
+                $targets[] = [
+                    'xref' => $m[1],
+                    'tree' => null,
+                ];
             }
         }
 
@@ -623,22 +648,33 @@ final class XrefsService { // stuff related with handling cross references
      *
      * @param string|null      $target_xref limit to records referencing this XREF
      * @param array<int,string> $rectypes    record types (OTHER = all subtypes)
+     * @param bool             $ordered     default order (file, xref) - false when
+     *                                      the caller (datatables) applies its own
      */
-    public static function getIndexQuery(Tree|null $tree = null, ?string $target_xref = null, array $rectypes = []): Builder {
+    public static function getIndexQuery(Tree|null $tree = null, ?string $target_xref = null, array $rectypes = [], bool $ordered = true): Builder {
+        // Deduplicated link rows as a subquery: the join becomes at most
+        // 1:1 on (file, xref, rectype), so the plain count(*) the datatables
+        // service issues (it drops the outer DISTINCT) already equals the
+        // number of source records - not of links.
+        $links = DB::table(self::INDEX_LINK_TABLE)
+            ->distinct()
+            ->select('file', 'xref', 'rectype');
+        if ($target_xref !== null && $target_xref !== '') {
+            $links->where('target_xref', '=', $target_xref);
+        }
+
         $query = DB::table(self::INDEX_SCAN_TABLE . ' AS s')
-            ->join(self::INDEX_LINK_TABLE . ' AS l', static function ($join): void {
+            ->joinSub($links, 'l', static function ($join): void {
                 $join->on('l.file', '=', 's.file')
                     ->on('l.xref', '=', 's.xref')
                     ->on('l.rectype', '=', 's.rectype');
             })
             ->distinct()
             ->select(['s.file', 's.xref', DB::raw('s.rectype AS type')])
-            ->whereIn('s.rectype', self::normalizeIndexRectypes($rectypes))
-            ->orderBy('s.file')
-            ->orderBy('s.xref');
+            ->whereIn('s.rectype', self::normalizeIndexRectypes($rectypes));
 
-        if ($target_xref !== null && $target_xref !== '') {
-            $query->where('l.target_xref', '=', $target_xref);
+        if ($ordered) {
+            $query->orderBy('s.file')->orderBy('s.xref');
         }
         if ($tree instanceof Tree) {
             $query->where('s.file', '=', $tree->id());
@@ -649,9 +685,11 @@ final class XrefsService { // stuff related with handling cross references
 
     /**
      * The indexed link tokens of one record, deduplicated per (class, token) -
-     * a link with several wt= parameters is counted once.
+     * a link with several wt= parameters is counted once. The snippet is the
+     * display context captured at build time (NULL on rows created before
+     * the snippet column existed - the caller falls back to the token).
      *
-     * @return array<int, array{tag_path: string, class: string, token: string}>
+     * @return array<int, array{tag_path: string, class: string, token: string, snippet: string|null}>
      */
     public static function indexRowLinks(int $file, string $xref, string $rectype): array {
         $links = [];
@@ -659,13 +697,14 @@ final class XrefsService { // stuff related with handling cross references
             ->where('file', '=', $file)
             ->where('xref', '=', $xref)
             ->where('rectype', '=', $rectype)
-            ->get(['tag_path', 'link_class', 'token']) as $row) {
+            ->get(['tag_path', 'link_class', 'token', 'snippet']) as $row) {
             $key = $row->link_class . "\0" . $row->token;
             if (!isset($links[$key])) {
                 $links[$key] = [
                     'tag_path' => (string) $row->tag_path,
                     'class'    => (string) $row->link_class,
                     'token'    => (string) $row->token,
+                    'snippet'  => $row->snippet !== null ? (string) $row->snippet : null,
                 ];
             }
         }

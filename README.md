@@ -489,7 +489,7 @@ Note: the script runs with the user that may read `data/config.ini.php` and has 
 
 ### The link index (XREF overview)
 
-The XREF overview admin page (Control panel → LinkEnhancer → XREF Overview) is a server-side paginated DataTable. It lists all records that contain classic `@XREF@` cross-references or linkenhancer links, with a per-record link inventory. Optional filters: referenced XREF, record type, tree, and the number of tokens shown per link class (all / 5 / 10 / 20, default 5). The record type is displayed as a second muted line in the XREF cell (`tree · TYPE`); its column header stays sortable.
+The XREF overview admin page (Control panel → LinkEnhancer → XREF Overview) is a server-side paginated DataTable. It lists all records that contain classic `@XREF@` cross-references or linkenhancer links, with a per-record link inventory. Optional filters: referenced XREF (only available while a fresh link index is active - in live-scan mode the field is hidden, because it would only be a coarse pre-filter there), record type, tree, and the number of tokens shown per link class (all / 5 / 10 / 20, default 5). The XREF cell shows the tree name as a second muted line; the type is its own sortable column. Each inventory token is displayed as a short display context (snippet) with the link token itself in bold.
 
 #### Supported engines
 
@@ -504,7 +504,7 @@ The XREF overview admin page (Control panel → LinkEnhancer → XREF Overview) 
 On large trees the live regex scan over the GEDCOM tables can be slow, so the page can instead read a **link index** made of three module tables (created automatically by the module schema migration):
 
 - `le_record_scan` - one row per scanned record with an MD5 fingerprint of the record text (`file`, `xref`, `rectype`, `hash`, `scanned_at`)
-- `le_link_index` - one row per (link, target) found in the record (`tag_path`, `link_class`, `token`, `target_xref`, `target_tree`) - the foundation for the planned Backlink feature
+- `le_link_index` - one row per (link, target) found in the record (`tag_path`, `link_class`, `token`, `snippet` - the display context captured at build time, `target_xref`, `target_tree`) - the foundation for the planned Backlink feature
 - `le_index_meta` - single row (`id`, `last_run`, `rows`) - the state of the last **complete** index run
 
 The index is maintained by `cli/build-link-index.php`:
@@ -537,6 +537,7 @@ The overview and the index use one shared pre-filter (single source: `XrefsServi
 
 - `NOTE` (level >= 1) with an `@XREF@` **or** a `](#@` link, with content on the same line. A NOTE value that is *exactly one reference* (`1 NOTE @N5@`) is a GEDCOM **shared-note pointer** - a structural reference, not a text link, and is not listed.
 - `CONC`/`CONT`/`TEXT`/`_TODO` with an `@XREF@` (naked is a link) or a `](#@` link
+- an LE link may carry an optional `id=@XREF@` parameter (at most one, the position among the parameters does not matter) - like the `wt=` parameters it is indexed as a link target
 - a shared note's own level-0 text (`0 @N1@ NOTE …`)
 - matching is line-based (no cross-line matches), on the same lines the collector reads
 

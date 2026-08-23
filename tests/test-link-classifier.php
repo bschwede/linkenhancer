@@ -67,15 +67,15 @@ $fixtures = [
     // malformed-LE alternative of the old single-pass regex
     'T1 short LE link' => [
         'text'     => '[I1](#@I2@)',
-        'expected' => [['le', '[I1](#@I2@)']],
+        'expected' => [['ext', '[I1](#@I2@)']],
     ],
     'T2 long LE link' => [
         'text'     => '[LangerTextHier](#@I2@)',
-        'expected' => [['le', '[LangerTextHier](#@I2@)']],
+        'expected' => [['ext', '[LangerTextHier](#@I2@)']],
     ],
-    'T3 LE pic link' => [
+    'T3 pic link' => [
         'text'     => '![Bild](#@M1@)',
-        'expected' => [['lepic', '![Bild](#@M1@)']],
+        'expected' => [['pic', '![Bild](#@M1@)']],
     ],
     'T4 classic xref' => [
         'text'     => 'sah @I1@ heute',
@@ -85,7 +85,7 @@ $fixtures = [
     // swallowed the link into two "classic" matches
     'T5 classic xref adjacent to LE link' => [
         'text'     => '@I1@[x](#@I2@)',
-        'expected' => [['classic', '@I1@'], ['le', '[x](#@I2@)']],
+        'expected' => [['classic', '@I1@'], ['ext', '[x](#@I2@)']],
     ],
     // T6 - defective LE (missing closing bracket): one "other", the xref
     // inside the remainder must not be counted as classic
@@ -100,36 +100,36 @@ $fixtures = [
     // T8 - xref inside the link label belongs to the link, no extra classic
     'T8 xref inside LE label' => [
         'text'     => '[see @I1@](#@I2@)',
-        'expected' => [['le', '[see @I1@](#@I2@)']],
+        'expected' => [['ext', '[see @I1@](#@I2@)']],
     ],
-    // T9 - enhanced: wt= parameter, target xref not counted additionally
-    'T9 enhanced link (wt= first parameter)' => [
+    // T9 - xref: wt= parameter, target xref not counted additionally
+    'T9 xref link (wt= first parameter)' => [
         'text'     => '[x](#@wt=i@I2@tree1)',
-        'expected' => [['enhanced', '[x](#@wt=i@I2@tree1)']],
+        'expected' => [['xref', '[x](#@wt=i@I2@tree1)']],
     ],
-    // T10 - enhanced: wt= does not have to be the first parameter
-    'T10 enhanced link (wt= not first)' => [
+    // T10 - xref: wt= does not have to be the first parameter
+    'T10 xref link (wt= not first)' => [
         'text'     => '[x](#@fsft=123&wt=s@R1@)',
-        'expected' => [['enhanced', '[x](#@fsft=123&wt=s@R1@)']],
+        'expected' => [['xref', '[x](#@fsft=123&wt=s@R1@)']],
     ],
-    // T11 - enhanced: wt= may occur multiple times per link - still ONE link
-    'T11 enhanced link with multiple wt= parameters' => [
+    // T11 - xref: wt= may occur multiple times per link - still ONE link
+    'T11 xref link with multiple wt= parameters' => [
         'text'     => '[x](#@wt=i@I1@t&wt=n@N1@)',
-        'expected' => [['enhanced', '[x](#@wt=i@I1@t&wt=n@N1@)']],
+        'expected' => [['xref', '[x](#@wt=i@I1@t&wt=n@N1@)']],
     ],
     // T12 - external target without wt= stays a plain LE link
     'T12 external target only' => [
         'text'     => '[x](#@wp=de/Artikel)',
-        'expected' => [['le', '[x](#@wp=de/Artikel)']],
+        'expected' => [['ext', '[x](#@wp=de/Artikel)']],
     ],
-    'T13 enhanced pic link' => [
+    'T13 xref pic link' => [
         'text'     => '![p](#@wt=n@N1@)',
-        'expected' => [['enhanced', '![p](#@wt=n@N1@)']],
+        'expected' => [['xref', '![p](#@wt=n@N1@)']],
     ],
     // T14 - mixed sentence, offset order
     'T14 mixed sentence' => [
         'text'     => 'Text @I1@ und [I2](#@I3@) Ende',
-        'expected' => [['classic', '@I1@'], ['le', '[I2](#@I3@)']],
+        'expected' => [['classic', '@I1@'], ['ext', '[I2](#@I3@)']],
     ],
     'T15 empty text' => [
         'text'     => '',
@@ -175,13 +175,17 @@ $target_fixtures = [
     'T19b classic xref with dot'           => ['@I1.2@',                  [['xref' => 'I1.2', 'tree' => null]]],
     'T19c LE link without wt='             => ['[x](#@I2@)',              []],
     'T19d LE link external target'         => ['[x](#@wp=de/Artikel)',    []],
-    'T19e enhanced single target'          => ['[x](#@wt=i@I2@tree1)',    [['xref' => 'I2', 'tree' => 'tree1']]],
-    'T19f enhanced without type letter'    => ['[x](#@wt=@I2@)',          [['xref' => 'I2', 'tree' => null]]],
-    'T19g enhanced without tree'           => ['[x](#@wt=i@I2@)',         [['xref' => 'I2', 'tree' => null]]],
-    'T19h enhanced multiple targets'       => ['[x](#@wt=i@I1@t&wt=n@N1@)', [['xref' => 'I1', 'tree' => 't'], ['xref' => 'N1', 'tree' => null]]],
-    'T19i enhanced wt= not first'          => ['[x](#@fsft=1&wt=s@R1@)',  [['xref' => 'R1', 'tree' => null]]],
-    'T19j enhanced pic link'               => ['![p](#@wt=n@N1@)',        [['xref' => 'N1', 'tree' => null]]],
+    'T19e xref single target'          => ['[x](#@wt=i@I2@tree1)',    [['xref' => 'I2', 'tree' => 'tree1']]],
+    'T19f xref without type letter'    => ['[x](#@wt=@I2@)',          [['xref' => 'I2', 'tree' => null]]],
+    'T19g xref without tree'           => ['[x](#@wt=i@I2@)',         [['xref' => 'I2', 'tree' => null]]],
+    'T19h xref multiple targets'       => ['[x](#@wt=i@I1@t&wt=n@N1@)', [['xref' => 'I1', 'tree' => 't'], ['xref' => 'N1', 'tree' => null]]],
+    'T19i xref wt= not first'          => ['[x](#@fsft=1&wt=s@R1@)',  [['xref' => 'R1', 'tree' => null]]],
+    'T19j xref pic link'               => ['![p](#@wt=n@N1@)',        [['xref' => 'N1', 'tree' => null]]],
     'T19k defective LE remainder'          => ['](#@I2@',                 []],
+    'T31 id= single target'                => ['[x](#@id=@I1@)',          [['xref' => 'I1', 'tree' => null]]],
+    'T32 id= not first parameter'          => ['[x](#@a=1&id=@I1@&b=2)',  [['xref' => 'I1', 'tree' => null]]],
+    'T33 id= combined with wt='            => ['[x](#@wt=i@I2@&id=@M1@)', [['xref' => 'I2', 'tree' => null], ['xref' => 'M1', 'tree' => null]]],
+    'T34 double id= (spec violation)'      => ['[x](#@id=@I1@&id=@I2@)',  [['xref' => 'I1', 'tree' => null]]],
 ];
 foreach ($target_fixtures as $name => [$token, $expected]) {
     check($name, XrefsService::extractLinkTargets($token), $expected);
@@ -195,18 +199,23 @@ $inventory = XrefsService::classifyGedcomText($gedcom, TextTagCollector::DEFAULT
 check(
     'T20 classifyGedcomText counts',
     $inventory['counts'],
-    ['le' => 0, 'lepic' => 0, 'enhanced' => 1, 'classic' => 2, 'other' => 0]
+    ['ext' => 0, 'pic' => 0, 'xref' => 1, 'classic' => 2, 'other' => 0]
 );
 check(
     'T20b classifyGedcomText entries',
     array_map(static fn (array $e): array => [$e['path'], $e['class'], $e['token']], $inventory['entries']),
     [
-        ['INDI:NOTE', 'enhanced', '[I2](#@wt=i@I3@tree1)'],
+        ['INDI:NOTE', 'xref', '[I2](#@wt=i@I3@tree1)'],
         ['INDI:NOTE', 'classic', '@I4@'],
         ['INDI:NOTE', 'classic', '@I5@'],
     ]
 );
 check('T20c classifyGedcomText without links', XrefsService::classifyGedcomText("0 @I1@ INDI\n1 NAME x")['counts'], XrefsService::emptyCounts());
+check(
+    'T30 pic link with id= parameter is classified as pic',
+    XrefsService::classifyGedcomText("0 @I1@ INDI\n1 NOTE see ![pic](#@id=@M1@)", TextTagCollector::DEFAULT_TAGS, 'INDI')['counts'],
+    ['ext' => 0, 'pic' => 1, 'xref' => 0, 'classic' => 0, 'other' => 0]
+);
 
 // ---------------------------------------------------------------------------
 // F7: shared-note pointer rule (classifyGedcomText)
@@ -221,32 +230,32 @@ check(
 check(
     'F7 NOTE with content before the pointer',
     XrefsService::classifyGedcomText("0 @I1@ INDI\n1 NOTE see @N5@", TextTagCollector::DEFAULT_TAGS, 'INDI')['counts'],
-    ['le' => 0, 'lepic' => 0, 'enhanced' => 0, 'classic' => 1, 'other' => 0]
+    ['ext' => 0, 'pic' => 0, 'xref' => 0, 'classic' => 1, 'other' => 0]
 );
 check(
     'F7 NOTE with content after the pointer',
     XrefsService::classifyGedcomText("0 @I1@ INDI\n1 NOTE @N5@ and more", TextTagCollector::DEFAULT_TAGS, 'INDI')['counts'],
-    ['le' => 0, 'lepic' => 0, 'enhanced' => 0, 'classic' => 1, 'other' => 0]
+    ['ext' => 0, 'pic' => 0, 'xref' => 0, 'classic' => 1, 'other' => 0]
 );
 check(
     'F7 naked TEXT ref stays a link',
     XrefsService::classifyGedcomText("0 @I1@ INDI\n1 TEXT @I2@", TextTagCollector::DEFAULT_TAGS, 'INDI')['counts'],
-    ['le' => 0, 'lepic' => 0, 'enhanced' => 0, 'classic' => 1, 'other' => 0]
+    ['ext' => 0, 'pic' => 0, 'xref' => 0, 'classic' => 1, 'other' => 0]
 );
 check(
     'F7 naked _TODO ref stays a link',
     XrefsService::classifyGedcomText("0 @I1@ INDI\n1 _TODO @I2@", TextTagCollector::DEFAULT_TAGS, 'INDI')['counts'],
-    ['le' => 0, 'lepic' => 0, 'enhanced' => 0, 'classic' => 1, 'other' => 0]
+    ['ext' => 0, 'pic' => 0, 'xref' => 0, 'classic' => 1, 'other' => 0]
 );
 check(
     'F7 shared-note level-0 text is not a pointer',
     XrefsService::classifyGedcomText("0 @N1@ NOTE @I5@", TextTagCollector::DEFAULT_TAGS, 'NOTE')['counts'],
-    ['le' => 0, 'lepic' => 0, 'enhanced' => 0, 'classic' => 1, 'other' => 0]
+    ['ext' => 0, 'pic' => 0, 'xref' => 0, 'classic' => 1, 'other' => 0]
 );
 check(
     'F7 pointer with CONT is classified on the PHP side (known R4 quirk)',
     XrefsService::classifyGedcomText("0 @I1@ INDI\n1 NOTE @N5@\n2 CONT x", TextTagCollector::DEFAULT_TAGS, 'INDI')['counts'],
-    ['le' => 0, 'lepic' => 0, 'enhanced' => 0, 'classic' => 1, 'other' => 0]
+    ['ext' => 0, 'pic' => 0, 'xref' => 0, 'classic' => 1, 'other' => 0]
 );
 
 // ---------------------------------------------------------------------------
@@ -284,35 +293,47 @@ check('F6b candidate without links', [XrefsService::hasLinkCandidate("0 @I1@ IND
 check('T21 empty inventory html', [XrefsService::linkInventoryHtml([])], ['']);
 check(
     'T21b count summary html',
-    [XrefsService::linkCountSummary(['le' => 2, 'lepic' => 0, 'enhanced' => 1, 'classic' => 0, 'other' => 0])],
-    ['<strong>3</strong> <small>le: 2 / enhanced: 1</small>']
+    [XrefsService::linkCountSummary(['ext' => 2, 'pic' => 0, 'xref' => 1, 'classic' => 0, 'other' => 0])],
+    ['<strong>3</strong><div class="text-muted"><small>ext: 2<br/>xref: 1</small></div>']
 );
 
 // max_links (inventory cap) - semantics: >0 = cap + overflow counter, <=0 = all
 $inv_entries = [];
 for ($i = 1; $i <= 6; $i++) {
-    $inv_entries[] = ['path' => '', 'class' => 'le', 'token' => '@I' . $i . '@', 'snippet' => 'sn' . $i];
+    $inv_entries[] = ['path' => '', 'class' => 'ext', 'token' => '@I' . $i . '@', 'snippet' => 'sn' . $i];
 }
 $inv_two = array_slice($inv_entries, 0, 2);
 check(
     'T23 inventory cap 0 shows all tokens, no overflow',
     [XrefsService::linkInventoryHtml($inv_two, 0)],
-    ['<ul class="le-xref-inventory"><li>le (2)<ol><li><code>sn1</code></li><li><code>sn2</code></li></ol></li></ul>']
+    ['<ul class="le-xref-inventory"><li>ext (2)<ol><li><code>sn1</code></li><li><code>sn2</code></li></ol></li></ul>']
 );
 check(
     'T23b inventory negative cap shows all tokens, no overflow',
     [XrefsService::linkInventoryHtml($inv_two, -1)],
-    ['<ul class="le-xref-inventory"><li>le (2)<ol><li><code>sn1</code></li><li><code>sn2</code></li></ol></li></ul>']
+    ['<ul class="le-xref-inventory"><li>ext (2)<ol><li><code>sn1</code></li><li><code>sn2</code></li></ol></li></ul>']
 );
 check(
     'T24 inventory cap 1 keeps one token + overflow counter',
     [XrefsService::linkInventoryHtml($inv_two, 1)],
-    ['<ul class="le-xref-inventory"><li>le (2)<ol><li><code>sn1</code></li></ol><em>+1</em></li></ul>']
+    ['<ul class="le-xref-inventory"><li>ext (2)<ol><li><code>sn1</code></li></ol><em>+1</em></li></ul>']
 );
 check(
     'T25 inventory default cap is 5 (6 tokens -> 5 + "+1")',
     [XrefsService::linkInventoryHtml($inv_entries)],
-    ['<ul class="le-xref-inventory"><li>le (6)<ol><li><code>sn1</code></li><li><code>sn2</code></li><li><code>sn3</code></li><li><code>sn4</code></li><li><code>sn5</code></li></ol><em>+1</em></li></ul>']
+    ['<ul class="le-xref-inventory"><li>ext (6)<ol><li><code>sn1</code></li><li><code>sn2</code></li><li><code>sn3</code></li><li><code>sn4</code></li><li><code>sn5</code></li></ol><em>+1</em></li></ul>']
+);
+// token highlighting: the token is wrapped in <strong> inside the snippet,
+// the surrounding context stays escaped
+check(
+    'T35 inventory highlights the token in the snippet',
+    [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'ext', 'token' => '[x](#@I2@)', 'snippet' => 'see <b>[x](#@I2@)</b> ok']], 0)],
+    ['<ul class="le-xref-inventory"><li>ext (1)<ol><li><code>see &lt;b&gt;<strong>[x](#@I2@)</strong>&lt;/b&gt; ok</code></li></ol></li></ul>']
+);
+check(
+    'T35b inventory token fallback (snippet = token)',
+    [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'pic', 'token' => '![p](#@M1@)', 'snippet' => '![p](#@M1@)']], 0)],
+    ['<ul class="le-xref-inventory"><li>pic (1)<ol><li><code><strong>![p](#@M1@)</strong></code></li></ol></li></ul>']
 );
 check(
     'T26 normalizeLinksPerClass allowlist passthrough (0,5,10,20)',

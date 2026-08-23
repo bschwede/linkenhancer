@@ -113,7 +113,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
             // tables and would be ambiguous in search/sort.
             return $this->datatables_service->handleQuery(
                 $request,
-                XrefsService::getIndexQuery($tree, $xref !== '' ? $xref : null, $rectypes),
+                XrefsService::getIndexQuery($tree, $xref !== '' ? $xref : null, $rectypes, false),
                 ['s.xref', 's.rectype'],
                 [0 => 's.xref', 1 => 's.rectype'],
                 fn (object $row): array => $this->indexRowToColumns($row, $max_links)
@@ -121,10 +121,11 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
         }
 
         // Live scan (Phase 1 behaviour). The query is unordered on purpose:
-        // datatables applies the ordering itself.
+        // datatables applies the ordering itself. The xref filter is
+        // index-only - in live mode it would be a coarse gate, not a filter.
         return $this->datatables_service->handleQuery(
             $request,
-            XrefsService::getRecordsQuery($tree, $xref !== '' ? $xref : null, $rectypes, false),
+            XrefsService::getRecordsQuery($tree, null, $rectypes, false),
             ['xref', 'type'],
             [0 => 'xref', 1 => 'type'],
             fn (object $row): array => $this->liveRowToColumns($row, $max_links)
@@ -177,7 +178,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
                     'path'    => $link['tag_path'],
                     'class'   => $link['class'],
                     'token'   => $link['token'],
-                    'snippet' => $link['token'],
+                    'snippet' => $link['snippet'] ?? $link['token'],
                 ];
             }
             $inventory = ['entries' => $entries, 'counts' => $counts];
@@ -198,11 +199,8 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
 
         $url = $record instanceof GedcomRecord ? $record->url() : null;
 
-        // The type value doubles as the second muted line in the xref cell:
-        // the view merges the xref and type columns into one colspan cell
-        // (fnCreatedRow), while column 1 stays a real (hidden) column so
-        // the "type" header remains the sort trigger. Without JS the table
-        // renders the plain 4-column layout instead (type then visible twice).
+        // The xref cell shows the tree name as a second muted line; the
+        // type stays its own (sortable) column.
         $xref_html = '<a href="' . e($url ?? '#') . '">' . e($xref) . '</a>'
             . '<br><small class="text-muted">'
             . e($tree !== null ? $tree->name() : (I18N::translate('tree') . ' #' . $file))

@@ -69,6 +69,7 @@ class Migration3 implements MigrationInterface
                 $table->string('tag_path', 255)->default('');
                 $table->string('link_class', 10);
                 $table->text('token');
+                $table->text('snippet')->nullable();
                 $table->string('target_xref', 20)->nullable();
                 $table->string('target_tree', 255)->nullable();
                 $table->index(['file', 'xref', 'rectype']);

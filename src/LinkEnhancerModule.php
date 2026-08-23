@@ -932,8 +932,13 @@ class LinkEnhancerModule extends AbstractModule implements
         $tree_id = (int) $params->integer('tree', 0);
         $max_links = XrefsService::normalizeLinksPerClass((int) $params->integer('max_links', XrefsService::LINKS_PER_CLASS_DEFAULT));
 
+        $index_status = XrefsService::indexStatus();
+
         $data_params = [];
-        if ($xref !== '') {
+        // The "referencing XREF" filter is precise only against the index
+        // (target_xref =). In live mode it would degenerate into a coarse
+        // regex gate, so it is only forwarded with a fresh index.
+        if ($xref !== '' && $index_status['fresh']) {
             $data_params['xref'] = $xref;
         }
         if ($rectype !== '') {
@@ -956,7 +961,7 @@ class LinkEnhancerModule extends AbstractModule implements
             'max_links' => $max_links,
             'rectypes' => XrefsService::supportedGedcomRecordKeys(),
             'trees' => Registry::container()->get(TreeService::class)->all(),
-            'index_status' => XrefsService::indexStatus(),
+            'index_status' => $index_status,
             'limited_mode' => !XrefsService::supportsRegexp(),
         ]);
     }

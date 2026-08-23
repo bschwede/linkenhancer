@@ -71,11 +71,15 @@ parse_str($action_query, $hidden_params);
 
 <form class="row g-2 mb-3" method="get" action="<?= e($page_url) ?>">
     <?php foreach ($hidden_params as $hidden_name => $hidden_value): ?>
-        <input type="hidden" name="<?= e($hidden_name) ?>" value="<?= e($hidden_value) ?>">
+        <?php if ($hidden_name !== 'xref' || $index_status['fresh']): ?>
+            <input type="hidden" name="<?= e($hidden_name) ?>" value="<?= e($hidden_value) ?>">
+        <?php endif; ?>
     <?php endforeach; ?>
-    <div class="col-auto">
-        <input class="form-control" type="text" name="xref" value="<?= e($xref) ?>" placeholder="<?= I18N::translate('referencing XREF') ?>">
-    </div>
+    <?php if ($index_status['fresh']): ?>
+        <div class="col-auto">
+            <input class="form-control" type="text" name="xref" value="<?= e($xref) ?>" placeholder="<?= I18N::translate('referencing XREF') ?>">
+        </div>
+    <?php endif; ?>
     <div class="col-auto">
         <select class="form-select" name="rectype">
             <option value=""><?= I18N::translate('all types') ?></option>
