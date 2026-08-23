@@ -489,9 +489,15 @@ final class XrefsService { // stuff related with handling cross references
      * $max_per_class > 0 = cap per class with an overflow counter;
      * $max_per_class <= 0 = show every token, no overflow counter.
      *
+     * $highlight_xref: when non-empty (the active "referencing XREF" filter),
+     * the XREF is additionally wrapped in a <mark> inside token/snippet so its
+     * occurrence stands out from the generic token <strong>. Boundary-aware
+     * (I1 must not match I12) and case-sensitive (matches the utf8mb4_bin SQL
+     * filter). Empty = no extra highlight (default).
+     *
      * @param array<int, array{path: string, class: string, token: string, snippet: string}> $entries
      */
-    public static function linkInventoryHtml(array $entries, int $max_per_class = self::LINKS_PER_CLASS_DEFAULT): string {
+    public static function linkInventoryHtml(array $entries, int $max_per_class = self::LINKS_PER_CLASS_DEFAULT, string $highlight_xref = ''): string {
         $items = [];
         foreach ($entries as $entry) {
             $items[$entry['class']][] = $entry;
@@ -526,6 +532,14 @@ final class XrefsService { // stuff related with handling cross references
                 $hl    = e(array_shift($parts));
                 foreach ($parts as $part) {
                     $hl .= '<strong>' . e($entry['token']) . '</strong>' . e($part);
+                }
+                // When the "referencing XREF" filter is active, additionally
+                // mark the XREF itself so its occurrence stands out. Boundary-
+                // aware (I1 must not match I12) and case-sensitive, matching
+                // the utf8mb4_bin target_xref SQL filter.
+                if ($highlight_xref !== '') {
+                    $pattern = '/(?<![A-Za-z0-9])' . preg_quote($highlight_xref, '/') . '(?![A-Za-z0-9])/';
+                    $hl      = (string) preg_replace($pattern, '<mark class="le-xref-target">$0</mark>', $hl);
                 }
                 $html  .= '<li>' . $prefix . '<code>' . $hl . '</code></li>';
             }

@@ -344,6 +344,32 @@ check(
     [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'pic', 'token' => '![p](#@M1@)', 'snippet' => '![p](#@M1@)']], 0)],
     ['<ul class="le-xref-inventory"><li>pic (1)<ol><li><code><strong>![p](#@M1@)</strong></code></li></ol></li></ul>']
 );
+// T36 - with an active "referencing XREF" filter (3rd arg), the XREF is
+// additionally wrapped in <mark> inside the token, on top of <strong>
+check(
+    'T36 inventory marks the referencing XREF when the filter is active',
+    [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'classic', 'token' => '@I1@', 'snippet' => 'sah @I1@ heute']], 0, 'I1')],
+    ['<ul class="le-xref-inventory"><li>classic (1)<ol><li><code>sah <strong>@<mark class="le-xref-target">I1</mark>@</strong> heute</code></li></ol></li></ul>']
+);
+// T36b - the mark is boundary-aware: filter "I1" must not match inside "I12"
+check(
+    'T36b inventory XREF mark is boundary-aware (I1 does not match I12)',
+    [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'classic', 'token' => '@I12@', 'snippet' => 'sah @I12@ heute']], 0, 'I1')],
+    ['<ul class="le-xref-inventory"><li>classic (1)<ol><li><code>sah <strong>@I12@</strong> heute</code></li></ol></li></ul>']
+);
+// T36c - empty filter (default) = no <mark>, identical to the pre-change output
+check(
+    'T36c inventory no XREF mark when the filter is empty (default)',
+    [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'ext', 'token' => '[x](#@I2@)', 'snippet' => 'see <b>[x](#@I2@)</b> ok']], 0)],
+    ['<ul class="le-xref-inventory"><li>ext (1)<ol><li><code>see &lt;b&gt;<strong>[x](#@I2@)</strong>&lt;/b&gt; ok</code></li></ol></li></ul>']
+);
+// T36d - the XREF is marked everywhere it occurs: in the token AND in the
+// surrounding snippet context
+check(
+    'T36d inventory marks the XREF in snippet context too (outside the token)',
+    [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'classic', 'token' => '@I1@', 'snippet' => 'von I1 zu @I1@']], 0, 'I1')],
+    ['<ul class="le-xref-inventory"><li>classic (1)<ol><li><code>von <mark class="le-xref-target">I1</mark> zu <strong>@<mark class="le-xref-target">I1</mark>@</strong></code></li></ol></li></ul>']
+);
 check(
     'T26 normalizeLinksPerClass allowlist passthrough (0,5,10,20)',
     [

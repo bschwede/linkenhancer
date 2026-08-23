@@ -21,13 +21,13 @@ use function parse_url;
  * @var array<int,string>                             $rectypes   selectable record types
  * @var \Illuminate\Support\Collection                $trees      all trees
  * @var array{rows: int, scanned_at: string|null, fresh: bool} $index_status
+ * @var bool                                          $live         force live scan (index bypass)
  * @var bool                                          $limited_mode no REGEXP support (SQLite/SQL Server)
  */
 
 $page_url = route('module', ['module' => $module->name(), 'action' => 'AdminXrefOverview']);
-$sql = $index_status['fresh']
-    ? XrefsService::getIndexQuery()->toSql()
-    : XrefsService::getRecordsQuery()->toSql();
+// The index is used only when it is fresh AND a live scan is not forced.
+$use_index = $index_status['fresh'] && !$live;
 
 // In the default (non-pretty) URL mode the action URL is
 // "index.php?route=…" - and a GET form submission REPLACES that query
@@ -59,9 +59,13 @@ parse_str($action_query, $hidden_params);
     </div>
 <?php endif ?>
 
-<?php if ($index_status['fresh']): ?>
+<?php if ($use_index): ?>
     <div class="alert alert-success">
         <?= I18N::translate('Link index active: %1$s scanned records, last verified %2$s.', $index_status['rows'], $index_status['scanned_at']) ?>
+    </div>
+<?php elseif ($index_status['fresh'] && $live): ?>
+    <div class="alert alert-warning">
+        <?= I18N::translate('Live scan forced - the link index is bypassed for this view, which can be slow on large trees.') ?>
     </div>
 <?php else: ?>
     <div class="alert alert-info">
@@ -75,9 +79,15 @@ parse_str($action_query, $hidden_params);
             <input type="hidden" name="<?= e($hidden_name) ?>" value="<?= e($hidden_value) ?>">
         <?php endif; ?>
     <?php endforeach; ?>
-    <?php if ($index_status['fresh']): ?>
+    <?php if ($use_index): ?>
         <div class="col-auto">
             <input class="form-control" type="text" name="xref" value="<?= e($xref) ?>" placeholder="<?= I18N::translate('referencing XREF') ?>">
+        </div>
+    <?php endif; ?>
+    <?php if ($index_status['fresh']): ?>
+        <div class="col-auto form-check">
+            <input class="form-check-input" type="checkbox" name="live" value="1" id="le-force-live" <?= $live ? 'checked' : '' ?>>
+            <label class="form-check-label" for="le-force-live" title="<?= I18N::translate('Bypass the link index and scan the GEDCOM tables live') ?>"><?= I18N::translate('Force live scan') ?></label>
         </div>
     <?php endif; ?>
     <div class="col-auto">
@@ -108,6 +118,10 @@ parse_str($action_query, $hidden_params);
     </div>
 </form>
 
+<!-- The global DataTables search box offers little value here (the dedicated
+     filters above cover it); hide it for this table only. -->
+<style>#wt-datatables-xref-overview_wrapper .dt-search { display: none; }</style>
+
 <div class="table-responsive">
     <table
         id="wt-datatables-xref-overview"
@@ -127,8 +141,3 @@ parse_str($action_query, $hidden_params);
         </thead>
     </table>
 </div>
-
-<details class="mt-3">
-    <summary class="text-muted"><?= I18N::translate('SQL') ?></summary>
-    <pre><?= e($sql) ?></pre>
-</details>

@@ -106,9 +106,13 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
         }
 
         $rectypes = $rectype !== '' ? [$rectype] : [];
+        // live=1 = "force live scan" checkbox: a deliberate index bypass for
+        // comparison/debugging, only offered while a fresh index exists.
+        $live = $params->boolean('live', false);
 
-        // Phase 2: prefer the link index when it is present and fresh.
-        if (XrefsService::indexStatus()['fresh']) {
+        // Phase 2: prefer the link index when it is present and fresh, unless
+        // a live scan is explicitly forced.
+        if (XrefsService::indexStatus()['fresh'] && !$live) {
             // Qualified column names: the plain names exist in both joined
             // tables and would be ambiguous in search/sort.
             return $this->datatables_service->handleQuery(
@@ -116,7 +120,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
                 XrefsService::getIndexQuery($tree, $xref !== '' ? $xref : null, $rectypes, false),
                 ['s.xref', 's.rectype'],
                 [0 => 's.xref', 1 => 's.rectype'],
-                fn (object $row): array => $this->indexRowToColumns($row, $max_links)
+                fn (object $row): array => $this->indexRowToColumns($row, $max_links, $xref)
             );
         }
 
@@ -153,8 +157,10 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
     /**
      * Index row: links come from the index, the record is fetched per row
      * (a cheap indexed point lookup) for the display name and the URL.
+     * $highlight_xref is the active "referencing XREF" filter (empty = none);
+     * it is forwarded so the inventory can mark that XREF's occurrence.
      */
-    private function indexRowToColumns(object $row, int $max_links): array
+    private function indexRowToColumns(object $row, int $max_links, string $highlight_xref = ''): array
     {
         $tree = $this->findTree((int) $row->file);
 
@@ -184,14 +190,15 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
             $inventory = ['entries' => $entries, 'counts' => $counts];
         }
 
-        return $this->inventoryColumns($row, $tree, $record, $inventory, $max_links);
+        return $this->inventoryColumns($row, $tree, $record, $inventory, $max_links, $highlight_xref);
     }
 
     /**
      * @param object $row        row with xref, file, type
      * @param array{entries: array<int, array{path: string, class: string, token: string, snippet: string}>, counts: array<string, int>} $inventory
+     * @param string $highlight_xref active "referencing XREF" filter (index path only; empty = none)
      */
-    private function inventoryColumns(object $row, ?Tree $tree, ?GedcomRecord $record, array $inventory, int $max_links): array
+    private function inventoryColumns(object $row, ?Tree $tree, ?GedcomRecord $record, array $inventory, int $max_links, string $highlight_xref = ''): array
     {
         $xref = (string) $row->xref;
         $type = (string) $row->type;
@@ -210,7 +217,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
         $name_html = $record instanceof GedcomRecord
             ? '<a href="' . e($url) . '">' . $name . '</a>' // name contains html, so no escape needed
             : e($name);
-        $name_html .= XrefsService::linkInventoryHtml($inventory['entries'], $max_links);
+        $name_html .= XrefsService::linkInventoryHtml($inventory['entries'], $max_links, $highlight_xref);
 
         return [
             $xref_html,
