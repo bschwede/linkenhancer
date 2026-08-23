@@ -206,8 +206,6 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
         $xref_html = '<a href="' . e($url ?? '#') . '">' . e($xref) . '</a>'
             . '<br><small class="text-muted">'
             . e($tree !== null ? $tree->name() : (I18N::translate('tree') . ' #' . $file))
-            . ' &middot; '
-            . e($type)
             . '</small>';
 
         $name = $record instanceof GedcomRecord ? $record->fullName() : $xref;
