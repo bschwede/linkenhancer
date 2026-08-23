@@ -119,8 +119,13 @@ parse_str($action_query, $hidden_params);
 </form>
 
 <!-- The global DataTables search box offers little value here (the dedicated
-     filters above cover it); hide it for this table only. -->
-<style>#wt-datatables-xref-overview_wrapper .dt-search { display: none; }</style>
+     filters above cover it); hide it for this table only. The admin layout
+     loads no module CSS, so the reference-link styles are inlined here too. -->
+<style>
+#wt-datatables-xref-overview_wrapper .dt-search { display: none; }
+.le-target-links { margin-top: 0.15em; font-size: 0.9em; color: #555; }
+.le-target-missing { color: #999; font-style: italic; }
+</style>
 
 <div class="table-responsive">
     <table

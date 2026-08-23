@@ -390,5 +390,51 @@ check(
     [5, 5, 5]
 );
 
+// T37 - reference links below the snippet for xref/classic tokens (4th arg =
+// the target resolver, fn($xref, ?$target_tree) => ?{name,url,tree_label}).
+$target_linker = static function (string $xref, ?string $tree): ?array {
+    $known = [
+        'I2' => ['name' => 'Max Mustermann', 'url' => '/tree/t/individual/I2', 'tree_label' => ''],
+        'F3' => ['name' => 'Fam XY', 'url' => '/tree/t/family/F3', 'tree_label' => ''],
+        'I5' => ['name' => 'Cross Person', 'url' => '/tree/t2/individual/I5', 'tree_label' => 'other-tree'],
+    ];
+    return $known[$xref] ?? null;
+};
+check(
+    'T37 inventory shows a reference link for an xref token (same tree)',
+    [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=i@I2@)', 'snippet' => '[see](#@wt=i@I2@)']], 0, '', $target_linker)],
+    ['<ul class="le-xref-inventory"><li>xref (1)<ol><li><code><strong>[see](#@wt=i@I2@)</strong></code><div class="le-target-links"><a href="/tree/t/individual/I2">Max Mustermann</a></div></li></ol></li></ul>']
+);
+check(
+    'T37b inventory shows all targets of a multi-target LE token',
+    [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=i@I2@&wt=f@F3@)', 'snippet' => '[see](#@wt=i@I2@&wt=f@F3@)']], 0, '', $target_linker)],
+    ['<ul class="le-xref-inventory"><li>xref (1)<ol><li><code><strong>[see](#@wt=i@I2@&amp;wt=f@F3@)</strong></code><div class="le-target-links"><a href="/tree/t/individual/I2">Max Mustermann</a><br><a href="/tree/t/family/F3">Fam XY</a></div></li></ol></li></ul>']
+);
+check(
+    'T37c inventory shows a reference link for a classic xref token',
+    [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'classic', 'token' => '@I2@', 'snippet' => 'sah @I2@']], 0, '', $target_linker)],
+    ['<ul class="le-xref-inventory"><li>classic (1)<ol><li><code>sah <strong>@I2@</strong></code><div class="le-target-links"><a href="/tree/t/individual/I2">Max Mustermann</a></div></li></ol></li></ul>']
+);
+check(
+    'T37d inventory shows no reference link for a non-xref/classic class (ext)',
+    [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'ext', 'token' => '[x](#@I2@)', 'snippet' => '[x](#@I2@)']], 0, '', $target_linker)],
+    ['<ul class="le-xref-inventory"><li>ext (1)<ol><li><code><strong>[x](#@I2@)</strong></code></li></ol></li></ul>']
+);
+check(
+    'T37e inventory shows a muted raw XREF for an unresolvable target',
+    [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=i@I404@)', 'snippet' => '[see](#@wt=i@I404@)']], 0, '', $target_linker)],
+    ['<ul class="le-xref-inventory"><li>xref (1)<ol><li><code><strong>[see](#@wt=i@I404@)</strong></code><div class="le-target-links"><span class="le-target-missing">@I404@</span></div></li></ol></li></ul>']
+);
+check(
+    'T37f inventory prefixes the tree name for a cross-tree target',
+    [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=i@I5@other-tree)', 'snippet' => '[see](#@wt=i@I5@other-tree)']], 0, '', $target_linker)],
+    ['<ul class="le-xref-inventory"><li>xref (1)<ol><li><code><strong>[see](#@wt=i@I5@other-tree)</strong></code><div class="le-target-links"><a href="/tree/t2/individual/I5">other-tree: Cross Person</a></div></li></ol></li></ul>']
+);
+check(
+    'T37g inventory no reference links when the linker is null (default)',
+    [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=i@I2@)', 'snippet' => '[see](#@wt=i@I2@)']], 0)],
+    ['<ul class="le-xref-inventory"><li>xref (1)<ol><li><code><strong>[see](#@wt=i@I2@)</strong></code></li></ol></li></ul>']
+);
+
 echo "\n{$total} tests, {$failures} failure(s)\n";
 exit($failures === 0 ? 0 : 1);

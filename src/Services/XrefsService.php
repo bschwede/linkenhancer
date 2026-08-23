@@ -495,9 +495,17 @@ final class XrefsService { // stuff related with handling cross references
      * (I1 must not match I12) and case-sensitive (matches the utf8mb4_bin SQL
      * filter). Empty = no extra highlight (default).
      *
+     * $target_linker: when non-null, each xref/classic token additionally gets
+     * a reference link below its snippet - the referenced record, labelled with
+     * its full name (a cross-tree target is prefixed with its tree name).
+     * Signature: fn(string $xref, ?string $target_tree_name):
+     * ?array{name: string, url: string, tree_label: string}. null (default) =
+     * no reference links.
+     *
      * @param array<int, array{path: string, class: string, token: string, snippet: string}> $entries
+     * @param callable(string, ?string): (array{name: string, url: string, tree_label: string}|null)|null $target_linker
      */
-    public static function linkInventoryHtml(array $entries, int $max_per_class = self::LINKS_PER_CLASS_DEFAULT, string $highlight_xref = ''): string {
+    public static function linkInventoryHtml(array $entries, int $max_per_class = self::LINKS_PER_CLASS_DEFAULT, string $highlight_xref = '', ?callable $target_linker = null): string {
         $items = [];
         foreach ($entries as $entry) {
             $items[$entry['class']][] = $entry;
@@ -541,7 +549,8 @@ final class XrefsService { // stuff related with handling cross references
                     $pattern = '/(?<![A-Za-z0-9])' . preg_quote($highlight_xref, '/') . '(?![A-Za-z0-9])/';
                     $hl      = (string) preg_replace($pattern, '<mark class="le-xref-target">$0</mark>', $hl);
                 }
-                $html  .= '<li>' . $prefix . '<code>' . $hl . '</code></li>';
+                $target_html = self::targetLinksHtml($entry, $target_linker);
+                $html  .= '<li>' . $prefix . '<code>' . $hl . '</code>' . $target_html . '</li>';
             }
             $html .= '</ol>';
 
@@ -553,6 +562,41 @@ final class XrefsService { // stuff related with handling cross references
         $html .= '</ul>';
 
         return $html;
+    }
+
+    /**
+     * The reference link(s) shown below the snippet of an xref/classic token:
+     * the referenced record(s), labelled with their full name (a cross-tree
+     * target is prefixed with its tree name). Unresolvable targets render as
+     * the raw, muted XREF. $target_linker = null (or a non-xref/classic class)
+     * yields no links. The full name is trusted HTML (privacy-aware, may hold
+     * markup) and is embedded unescaped, matching the record-name column.
+     *
+     * @param array{class: string, token: string} $entry
+     * @param callable(string, ?string): (array{name: string, url: string, tree_label: string}|null)|null $target_linker
+     */
+    private static function targetLinksHtml(array $entry, ?callable $target_linker): string {
+        if ($target_linker === null || !in_array($entry['class'], ['xref', 'classic'], true)) {
+            return '';
+        }
+
+        $links = [];
+        foreach (self::extractLinkTargets($entry['token']) as $target) {
+            $resolved = $target_linker($target['xref'], $target['tree']);
+            if ($resolved === null) {
+                $links[] = '<span class="le-target-missing">@' . e($target['xref']) . '@</span>';
+            } else {
+                $label = ($resolved['tree_label'] !== '')
+                    ? e($resolved['tree_label']) . ': ' . $resolved['name']
+                    : $resolved['name'];
+                $links[] = '<a href="' . e($resolved['url']) . '">' . $label . '</a>';
+            }
+        }
+        if ($links === []) {
+            return '';
+        }
+
+        return '<div class="le-target-links">' . implode('<br>', $links) . '</div>';
     }
 
     /**

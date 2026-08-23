@@ -43,6 +43,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\TextTagCollector;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 
+use function array_key_exists;
 use function e;
 use function trim;
 
@@ -64,6 +65,9 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
     private TimeoutService $timeout_service;
 
     private TreeService $tree_service;
+
+    /** Per-request cache for referenced-record lookups: "tree_id\0xref" => label|null. */
+    private array $target_cache = [];
 
     public function __construct(
         DatatablesService $datatables_service,
@@ -217,7 +221,9 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
         $name_html = $record instanceof GedcomRecord
             ? '<a href="' . e($url) . '">' . $name . '</a>' // name contains html, so no escape needed
             : e($name);
-        $name_html .= XrefsService::linkInventoryHtml($inventory['entries'], $max_links, $highlight_xref);
+        // Resolve referenced records (xref/classic targets) for the inventory;
+        // the source tree is this row's tree, the resolver is cached per request.
+        $name_html .= XrefsService::linkInventoryHtml($inventory['entries'], $max_links, $highlight_xref, $this->makeTargetLinker($tree, $file));
 
         return [
             $xref_html,
@@ -235,6 +241,54 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
             // Orphaned row - the tree no longer exists.
             return null;
         }
+    }
+
+    /**
+     * @return callable(string, ?string): (array{name: string, url: string, tree_label: string}|null)
+     */
+    private function makeTargetLinker(?Tree $source_tree, int $source_tree_id): callable
+    {
+        return fn (string $xref, ?string $target_tree_name): ?array => $this->resolveTarget($xref, $target_tree_name, $source_tree, $source_tree_id);
+    }
+
+    /**
+     * Resolve a referenced record (the target of an xref/classic link) to a
+     * display label + URL. The target tree is the explicit @tree (a tree NAME
+     * carried by the link) when present, else the source record's own tree.
+     * Cached per request, keyed by resolved tree id + xref (so a same-tree
+     * target from different source rows does not collide).
+     *
+     * @return array{name: string, url: string, tree_label: string}|null
+     */
+    private function resolveTarget(string $xref, ?string $target_tree_name, ?Tree $source_tree, int $source_tree_id): ?array
+    {
+        $tree = ($target_tree_name !== null && $target_tree_name !== '')
+            ? $this->tree_service->all()->get($target_tree_name)
+            : $source_tree;
+        if (!$tree instanceof Tree) {
+            return null;
+        }
+
+        $tree_id   = (int) $tree->id();
+        $cache_key = $tree_id . "\0" . $xref;
+        if (array_key_exists($cache_key, $this->target_cache)) {
+            return $this->target_cache[$cache_key];
+        }
+
+        $record = Registry::gedcomRecordFactory()->make($xref, $tree);
+        if (!$record instanceof GedcomRecord) {
+            $this->target_cache[$cache_key] = null;
+            return null;
+        }
+
+        $label = [
+            'name'       => $record->fullName(),
+            'url'        => $record->url(),
+            'tree_label' => ($tree_id !== $source_tree_id) ? $tree->name() : '',
+        ];
+        $this->target_cache[$cache_key] = $label;
+
+        return $label;
     }
 
     private function emptyResponse(ServerRequestInterface $request): ResponseInterface
