@@ -104,32 +104,6 @@ parse_str($action_query, $hidden_params);
     </div>
 </form>
 
-<script>
-// Merge the xref and type columns into one colspan cell (client-side, per
-// draw). Runs at parse time - BEFORE the core's DOMContentLoaded init
-// ("new DataTable(el)" without options), so it is picked up as a global
-// default. The type column itself stays a real (hidden) DataTables column:
-// the "type" header remains the sort trigger (server-side sort column 1).
-(function () {
-  try {
-    if (typeof DataTable === 'undefined' || !DataTable.defaults) { return; }
-    var prev = DataTable.defaults.fnCreatedRow;
-    DataTable.defaults.fnCreatedRow = function () {
-      if (prev) { prev.apply(this, arguments); }
-      var tr = null;
-      for (var i = 0; i < arguments.length; i++) { // tr = first TR element (signature-robust)
-        if (arguments[i] && arguments[i].tagName === 'TR') { tr = arguments[i]; break; }
-      }
-      if (!tr) { return; }
-      var table = tr;
-      while (table && table.tagName !== 'TABLE') { table = table.parentNode; }
-      if (!table || table.id !== 'wt-datatables-xref-overview' || tr.children.length < 2) { return; }
-      tr.children[0].colSpan = 2;   // xref cell spans xref+type
-      tr.removeChild(tr.children[1]); // drop the separate type cell
-    };
-  } catch (e) { console.error('LE-Mod xref overview error:', e); }
-})();
-</script>
 <div class="table-responsive">
     <table
         id="wt-datatables-xref-overview"
