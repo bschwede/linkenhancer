@@ -27,6 +27,7 @@ declare(strict_types=1);
 namespace Schwendinger\Webtrees\Module\LinkEnhancer\Services;
 
 use DomainException;
+use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\DB;
 use Fisharebest\Webtrees\Gedcom;
 use Fisharebest\Webtrees\GedcomRecord;
@@ -149,6 +150,10 @@ final class XrefsService { // stuff related with handling cross references
      * @var array<int,int>
      */
     public const LINKS_PER_CLASS_OPTIONS = [0, 5, 10, 20];
+
+
+    public const TARGET_NOT_FOUND_GLYPH = "✗";
+    public const TARGET_TYPE_MISMATCH_GLYPH = "⚠";
 
     /**
      * Clamp an arbitrary input to the selectable caps - the single source
@@ -612,17 +617,17 @@ final class XrefsService { // stuff related with handling cross references
 
             $resolved = $target_linker($target['xref'], $target['tree']);
             if ($resolved === null) {
-                $links[] = '<span class="le-target-missing" title="target not found">✗ @' . e($target['xref']) . '@</span>';
+                $links[] = '<span class="le-target-missing" title="' . e(I18N::translate("target not found")). '">' . self::TARGET_NOT_FOUND_GLYPH . ' @' . e($target['xref']) . '@</span>';
                 continue;
             }
 
             $label  = ($resolved['tree_label'] !== '')
                 ? e($resolved['tree_label']) . ': ' . $resolved['name']
                 : $resolved['name'];
-            $anchor = '<a href="' . e($resolved['url']) . '">' . $label . '</a>';
+            $anchor = '<span class="le-cross-ref" title="' . e(I18N::translate('cross reference')) . '">↪</span> <a href="' . e($resolved['url']) . '">' . $label . '</a>';
             if ($expected_tag !== null && $resolved['actual'] !== $expected_tag) {
-                $hint = 'expected ' . $expected_tag . ', is ' . $resolved['actual'];
-                $anchor .= ' <span class="le-target-type-mismatch" title="' . e($hint) . '">⚠</span>';
+                $hint = I18N::translate('expected %1$s, is %2$s', $expected_tag, $resolved['actual']);
+                $anchor .= ' <span class="le-target-type-mismatch" title="' . e($hint) . '">' . self::TARGET_TYPE_MISMATCH_GLYPH . '</span>';
             }
             $links[] = $anchor;
         }

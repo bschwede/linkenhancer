@@ -218,9 +218,11 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
             . '</small>';
 
         $name = $record instanceof GedcomRecord ? $record->fullName() : $xref;
-        $name_html = $record instanceof GedcomRecord
-            ? '<a href="' . e($url) . '">' . $name . '</a>' // name contains html, so no escape needed
-            : e($name);
+        $name_html = '<strong>' . (
+                $record instanceof GedcomRecord
+                ? '<a href="' . e($url) . '">' . $name . '</a>' // name contains html, so no escape needed
+                : e($name)
+            ) . '</strong>';
         // Resolve referenced records (xref/classic targets) for the inventory;
         // the source tree is this row's tree, the resolver is cached per request.
         $name_html .= XrefsService::linkInventoryHtml($inventory['entries'], $max_links, $highlight_xref, $this->makeTargetLinker($tree, $file));
