@@ -64,15 +64,6 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\Services\CliBootstrap;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\TextTagCollector;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 
-use function date;
-use function fclose;
-use function fopen;
-use function flock;
-use function microtime;
-use function sprintf;
-use function str_starts_with;
-use function substr;
-
 CliBootstrap::guard();
 
 // ---------------------------------------------------------------- arguments
