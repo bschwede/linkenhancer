@@ -505,6 +505,19 @@ final class XrefsService { // stuff related with handling cross references
             && preg_match(self::RE_CLASSIC_XREF, trim($entry['value'])) === 1;
     }
 
+
+    public static function getClassLabel(string $class): string
+    {
+        return match($class) {
+            'xref'    => I18N::translate('Cross references'),
+            'ext'     => I18N::translate('External links'),
+            'pic'     => I18N::translate('Pictures'),
+            'classic' => I18N::translate('Classic cross references'),
+            'other'   => I18N::translate('Other - maybe damaged - links'),
+            default   => $class
+        };
+    }
+
     /**
      * HTML for the "link inventory" cell of the XREF overview: up to
      * $max_per_class tokens per class, then an overflow counter.
@@ -552,8 +565,8 @@ final class XrefsService { // stuff related with handling cross references
                 continue;
             }
             $shown = ($max_per_class > 0) ? array_slice($class_items, 0, $max_per_class) : $class_items;
-
-            $html .= '<li>' . e($class) . ' (' . count($class_items) . ')<ol>';
+            $class_label = self::getClassLabel($class);
+            $html .= '<li><u>' . e($class_label) . ' (' . ($class !== $class_label ? e($class) . ': ' : '') . count($class_items) . ')</u><ol>';
             foreach ($shown as $entry) {
                 $prefix = ($entry['path'] !== '' && $entry['path'] !== 'NOTE') ? e($entry['path']) . ': ' : '';
                 // Highlight the token inside the snippet: the snippet is
