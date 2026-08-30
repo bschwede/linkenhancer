@@ -40,7 +40,7 @@ use function e;
 use function strtotime;
 use function time;
 
-final class XrefsService { // stuff related with handling cross references
+final class XrefsService { // stuff related with handling cross-references
 
     /**
      * Valid linkenhancer link: [text](#@param1&paramN) / ![pic](#@...)
@@ -68,7 +68,7 @@ final class XrefsService { // stuff related with handling cross references
      * One "wt" parameter value: wt=[type]@XREF@[tree] - the optional type
      * letter may be absent, the "@tree" part may be empty (same tree).
      */
-    private const RE_WT_TARGET = '/(?:^|[?&])wt=(?P<type>[a-z])?@(?P<xref>[A-Za-z0-9][A-Za-z0-9:_.-]{0,19})@(?P<tree>[^&\s]*)/';
+    private const RE_WT_TARGET = '/(?:^|[?&])wt=(?P<type>[a-z])?@(?P<xref>[A-Za-z0-9][A-Za-z0-9:_.-]{0,19})@(?P<tree>[^&\s+]*)/';
 
     /**
      * The optional "id" parameter: id=@XREF@ - at most one per link, the
@@ -509,10 +509,10 @@ final class XrefsService { // stuff related with handling cross references
     public static function getClassLabel(string $class): string
     {
         return match($class) {
-            'xref'    => I18N::translate('Cross references'),
+            'xref'    => I18N::translate('Cross-references'),
             'ext'     => I18N::translate('External links'),
             'pic'     => I18N::translate('Pictures'),
-            'classic' => I18N::translate('Classic cross references'),
+            'classic' => I18N::translate('Classic cross-references'),
             'other'   => I18N::translate('Other - maybe damaged - links'),
             default   => $class
         };
@@ -630,14 +630,14 @@ final class XrefsService { // stuff related with handling cross references
 
             $resolved = $target_linker($target['xref'], $target['tree']);
             if ($resolved === null) {
-                $links[] = '<span class="le-target-missing" title="' . e(I18N::translate("target not found")). '">' . self::TARGET_NOT_FOUND_GLYPH . ' @' . e($target['xref']) . '@</span>';
+                $links[] = '<span class="le-target-missing" title="' . e(I18N::translate("target not found")). '">' . self::TARGET_NOT_FOUND_GLYPH . ($target['tree'] ? ' ' . $target['tree'] . ': ' : '') . ' @' . e($target['xref']) . '@</span>';
                 continue;
             }
 
             $label  = ($resolved['tree_label'] !== '')
                 ? e($resolved['tree_label']) . ': ' . $resolved['name']
                 : $resolved['name'];
-            $anchor = '<span class="le-cross-ref" title="' . e(I18N::translate('cross reference')) . '">↪</span> <a href="' . e($resolved['url']) . '">' . $label . '</a>';
+            $anchor = '<span class="le-cross-ref" title="' . e(I18N::translate('Cross-reference')) . '">↪</span> <a href="' . e($resolved['url']) . '">' . $label . '</a>';
             if ($expected_tag !== null && $resolved['actual'] !== $expected_tag) {
                 $hint = I18N::translate('expected %1$s, is %2$s', $expected_tag, $resolved['actual']);
                 $anchor .= ' <span class="le-target-type-mismatch" title="' . e($hint) . '">' . self::TARGET_TYPE_MISMATCH_GLYPH . '</span>';
@@ -663,7 +663,7 @@ final class XrefsService { // stuff related with handling cross references
             $n = $counts[$class] ?? 0;
             $total += $n;
             if ($n > 0) {
-                $parts[] = $class . ': ' . $n;
+                $parts[] = $class . ':&nbsp;' . $n;
             }
         }
         if ($total === 0) {
