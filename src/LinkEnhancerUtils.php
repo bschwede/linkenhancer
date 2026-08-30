@@ -136,7 +136,7 @@ class LinkEnhancerUtils { // misc helper functions
 
             'le' => [
                     // enhanced links 
-                    'cross reference'  => /*I18N: JS enhanced link */ I18N::translate('cross reference'),
+                    'cross-reference'  => /*I18N: JS enhanced link */ I18N::translate('Cross-reference'),
                     'oofb'             => /*I18N: JS enhanced link, %s name of location */ I18N::translate('Online Local heritage book of %s at CompGen', '%s'),
                     'gov'              => /*I18N: JS enhanced link */ I18N::translate('Historic Geo Information System (GOV)'),
                     'gedbas'           => /*I18N: JS enhanced link */ I18N::translate('GEDBAS (Genealogical Database - collected personal data)'),

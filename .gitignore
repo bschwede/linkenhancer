@@ -10,5 +10,3 @@ resources/views/*.phtml.~*
 .venv/*
 resources/lang/*.php
 .env
-.opencode/*
-.codegraph/*

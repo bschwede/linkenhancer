@@ -957,7 +957,7 @@ class LinkEnhancerModule extends AbstractModule implements
         }
 
         return $this->viewResponse($this->name() . '::xref-overview', [
-            'title' => I18N::translate('XREF Overview'),
+            'title' => I18N::translate('Cross-Reference Overview'),
             'module' => $this,
             'data_url' => route(AdminXrefOverviewData::class, $data_params),
             'xref' => $xref,
