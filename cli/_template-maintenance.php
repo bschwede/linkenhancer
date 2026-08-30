@@ -52,6 +52,11 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\Services\CliBootstrap;
 
 CliBootstrap::guard();
 
+if (CliBootstrap::siteIsOffline()) {
+    fwrite(STDOUT, 'site offline (data/offline.txt) - skipped' . PHP_EOL);
+    exit(0);
+}
+
 // ---------------------------------------------------------------- arguments
 $limit = 500;
 foreach (array_slice($argv, 1) as $arg) {

@@ -66,6 +66,11 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 
 CliBootstrap::guard();
 
+if (CliBootstrap::siteIsOffline()) {
+    fwrite(STDOUT, 'site offline (data/offline.txt) - skipped' . PHP_EOL);
+    exit(0);
+}
+
 // ---------------------------------------------------------------- arguments
 $limit   = 1000;
 $tree_id = 0;

@@ -34,6 +34,9 @@ use Throwable;
 use function file_exists;
 use function fwrite;
 use function http_response_code;
+use function is_dir;
+use function is_file;
+use function is_link;
 use function parse_ini_file;
 
 /**
@@ -49,7 +52,7 @@ use function parse_ini_file;
 final class CliBootstrap {
 
     /** webtrees root: src/Services is four levels below it */
-    public const APP_ROOT = __DIR__ . '/../../../../';
+    public const WEBTREES_ROOT = __DIR__ . '/../../../../';
 
     /**
      * Aborts when the script is not running from the command line.
@@ -60,6 +63,29 @@ final class CliBootstrap {
             http_response_code(403);
             exit('CLI only.');
         }
+    }
+
+    /**
+     * Loads only the webtrees (core) vendor autoloader. Needed to make
+     * the Webtrees class constants available for the offline check
+     * WITHOUT connecting to the database.
+     */
+    public static function autoload(): void
+    {
+        require_once self::WEBTREES_ROOT . '/vendor/autoload.php';
+    }
+
+    /**
+     * Site offline flag, 1:1 semantics of the core
+     * MaintenanceModeService::isOffline()
+     * (app/Services/MaintenanceModeService.php).
+     */
+    public static function siteIsOffline(): bool
+    {
+        self::autoload();
+        $file = Webtrees::DATA_DIR . 'offline.txt';
+
+        return is_file($file) || is_link($file) || is_dir($file);
     }
 
     /**
@@ -78,7 +104,7 @@ final class CliBootstrap {
      * @return array<string,string> the parsed contents of Webtrees::CONFIG_FILE
      */
     public static function boot(): array {
-        require_once self::APP_ROOT . '/vendor/autoload.php';
+        self::autoload();
 
         Webtrees::new()->bootstrap();
         I18N::init(code: 'en-US', setup: true);

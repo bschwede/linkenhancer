@@ -43,6 +43,10 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\Services\CliBootstrap;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\TextTagCollector;
 
 CliBootstrap::guard();
+if (CliBootstrap::siteIsOffline()) {
+    fwrite(STDOUT, 'site offline (data/offline.txt) - skipped' . PHP_EOL);
+    exit(0);
+}
 CliBootstrap::boot();
 
 $limit = (int) ($argv[1] ?? 10);
