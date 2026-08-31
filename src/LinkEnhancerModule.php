@@ -1191,7 +1191,7 @@ class LinkEnhancerModule extends AbstractModule implements
         switch ($class) {
             case MarkdownEditorActivationService::class:
                 $setting = $this->getPref(self::PREF_MDE_RULES);
-                $setting = $setting ? unserialize($setting) : [];
+                $setting = $setting ? (unserialize($setting, ['allowed_classes' => false]) ?: []) : [];
                 return $setting ?? [];
                 break;
             

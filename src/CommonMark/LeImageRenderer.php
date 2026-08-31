@@ -122,6 +122,10 @@ final class LeImageRenderer implements NodeRendererInterface, XmlNodeRendererInt
         parse_str($hashvalue, $params);
 
         $classnames = isset($params['cname']) ? explode(' ', urldecode($params['cname'])) : [];
+        $classnames = array_values(array_filter(array_map(
+            static fn (string $c): string => (string) preg_replace('/[^A-Za-z0-9_-]/', '', $c),
+            $classnames
+        )));
         $classnames = array_merge($classnames, $this->img_stdclassnames);
         $classnames = implode(' ', array_unique($classnames));
 
@@ -214,7 +218,7 @@ final class LeImageRenderer implements NodeRendererInterface, XmlNodeRendererInt
                 ]);
             }
 
-            if (!strstr($public_file, $public_basedir)) {
+            if (!str_starts_with($public_file, $public_basedir . DIRECTORY_SEPARATOR)) {
                 return view($this->module->name() . '::error-img-svg', [
                     'text' => /*I18N: MD img error public file */ I18N::translate("Only files within the public folder are supported") . " - '$public_relpath'",
                     'classnames' => $classnames,

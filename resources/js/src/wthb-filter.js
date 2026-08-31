@@ -1,6 +1,12 @@
 export const createSafeFilter = (document, expr) => { // a bit better than using eval - rollup doesn't like eval
     // https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/Function/Function
 
+    const BLOCKED_EXPR = /\b(window|globalThis|self|top|parent|frames|fetch|XMLHttpRequest|WebSocket|Worker|postMessage|eval|Function|import|localStorage|sessionStorage|indexedDB|crypto|navigator|location|cookie|constructor|prototype|__proto__|atob|btoa)\b|\bnew\b|=>|`/i;
+    if (typeof expr !== 'string' || expr.trim() === '' || BLOCKED_EXPR.test(expr)) {
+        console.warn('LE-mod wthb subcontext filter: expression blocked', expr);
+        return null;
+    }
+
     const safeGlobals = {
 
         document,
