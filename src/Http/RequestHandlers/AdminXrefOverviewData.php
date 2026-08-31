@@ -31,6 +31,7 @@ use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\GedcomRecord;
 use Fisharebest\Webtrees\Http\Exceptions\HttpAccessDeniedException;
 use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Module\LinkEnhancer\MoreI18N;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Services\DatatablesService;
 use Fisharebest\Webtrees\Services\TimeoutService;
@@ -82,7 +83,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         if (!Auth::isAdmin()) {
-            throw new HttpAccessDeniedException(/*I18N: webtrees.pot*/ I18N::translate('Admin only.'));
+            throw new HttpAccessDeniedException(MoreI18N::xlate('Admin only.'));
         }
 
         // D1: do not stack a heavy scan onto a request that is already

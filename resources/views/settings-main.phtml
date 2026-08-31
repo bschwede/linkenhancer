@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Module\LinkEnhancer\MoreI18N;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
 
@@ -48,7 +49,7 @@ $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li>
                         <div class="form-text">
                             <p><?= /*I18N: MD img - sentence 1 */ I18N::translate('Only works in notes that are formatted with Markdown.') ?>
                             </p>
-                            <p style="color: gray;"><strong><?= /*I18N: MDE */ I18N::translate("Precondition: Tree preference '%s' need to be set to markdown.", /*I18N: webtrees.pot */ I18N::translate('Format text and notes')) ?></strong>
+                            <p style="color: gray;"><strong><?= /*I18N: MDE */ I18N::translate("Precondition: Tree preference '%s' need to be set to markdown.", MoreI18N::xlate('Format text and notes')) ?></strong>
                             <table style="color: gray;">
                               <thead><tr>
                                 <th style="background-color: lightgreen; min-width:150px; text-align: center;">markdown <small>(<?= $trees_w_md_cnt ?>)</small></th>
@@ -93,7 +94,7 @@ $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li>
                             'id' => $prefId,
                             'name' => $prefId,
                             'options' => [
-                                /*I18N: webtrees.pot */ I18N::translate('no'),
+                                MoreI18N::xlate('no'),
                                 /*I18N: home link */ I18N::translate('home page of the current tree'),
                                 /*I18N: home link */ I18N::translate('my page of the registered user'),
                                 /*I18N: */ I18N::translate('user defined')

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Module\LinkEnhancer\MoreI18N;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils As Utils;
 use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
@@ -26,7 +27,7 @@ function getFormButtons(string $idSuffix):string {
             <div class="col-6 d-flex align-items-center justify-content-start">
                 <button type="submit" class="btn btn-primary">
                     <?= view('icons/save') ?>
-                    <?= /*I18N: webtrees.pot */ I18N::translate('save') ?>
+                    <?= MoreI18N::xlate('save') ?>
                 </button>
             </div>
 
@@ -36,7 +37,7 @@ function getFormButtons(string $idSuffix):string {
                         <?= I18N::translate('Settings') ?>...
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="settings-dropdown<?= $idSuffix ?>">
-                        <li><a class="dropdown-item settings-reset" href="#"><?= /*I18N: webtrees.pot */ I18N::translate('reset') ?></a></li>
+                        <li><a class="dropdown-item settings-reset" href="#"><?= MoreI18N::xlate('reset') ?></a></li>
                         <li><a class="dropdown-item settings-reset-to-default" href="#"><?= I18N::translate('reset to default') ?></a></li>
                         <li><a class="dropdown-item settings-json-export" href="#"><?= I18N::translate('JSON export') ?></a></li>
                         <li><a class="dropdown-item settings-json-import" href="#"><?= I18N::translate('JSON import') ?></a></li>
@@ -52,7 +53,7 @@ $module = Registry::container()->get(LinkEnhancerModule::class);
 ?>
 
 <?= view('components/breadcrumbs', [
-        'links' => [route(ControlPanel::class) => /*I18N: webtrees.pot */I18N::translate('Control panel'), $title]]) ?>
+        'links' => [route(ControlPanel::class) => MoreI18N::xlate('Control panel'), $title]]) ?>
 
 <h1 id="top"><?= e($title) ?></h1>
 <p><?= e($description) ?></p>
@@ -125,9 +126,9 @@ $module = Registry::container()->get(LinkEnhancerModule::class);
                             'id' => $prefId,
                             'name' => $prefId,
                             'options' => [
-                                /*I18N: webtrees.pot */ I18N::translate('no'),
+                                MoreI18N::xlate('no'),
                                 /*I18N: */ I18N::translate('user defined'),
-                                /*I18N: webtrees.pot */ I18N::translate('yes')
+                                MoreI18N::xlate('yes')
                             ],
                             'selected' => (int) $prefs[$prefId]
                         ]) ?>

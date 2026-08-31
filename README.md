@@ -570,6 +570,27 @@ Beside English the following languages are available:
 * Español (by Bernat Josep Banyuls i Sala)
 * German
 
+### How the POT is generated
+
+All user-facing strings are extracted with `xgettext` (no manual PO entries) by
+`util/update-po-files.sh`:
+
+- View/service strings use `I18N::translate()` as usual.
+- Strings that are **already provided by the webtrees core** (e.g. `Help`, `yes`/`no`,
+  `Control panel`) are wrapped in `MoreI18N::xlate()` instead: functionally identical at
+  runtime, but the different call name is invisible to xgettext - so they are never
+  extracted into the module POT and their translations come from the core POT.
+- **Manifest literals** (`cron-jobs.php` is pure data, loaded by the cronjob module in
+  tick/CLI context where no UI language is active) are wrapped in `MoreI18N::translate()`,
+  an *identity* marker whose last qualified-name component matches xgettext's
+  `--keyword=translate`. Nothing is translated at manifest load time.
+- **Pipeline:** `util/update-po-files.sh` runs xgettext over the module
+  (`util/`/`vendor/`/`node_modules/`/`tests/` excluded) into `resources/lang/messages.pot`.
+  PO files are maintained via Weblate and land in `resources/lang/<language>.po`;
+  `LinkEnhancerModule::customTranslations()` feeds them into webtrees' `I18N`, so the calls
+  find them **at render time**.
+- **After a core update:** if core newly covers a module string, mask it with
+  `MoreI18N::xlate()` so it is not double-translated.
 
 
 

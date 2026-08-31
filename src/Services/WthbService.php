@@ -30,6 +30,7 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Schema\SeedHelpTable;
 use Fisharebest\Webtrees\FlashMessages;
 use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Module\LinkEnhancer\MoreI18N;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Validator;
 use Fisharebest\Webtrees\GedcomFilters\GedcomEncodingFilter;
@@ -140,7 +141,7 @@ class WthbService { // stuff related to webtrees manual link handling
         $result['total'] = (!isset($result['total']) && isset($result['total_seeder']) ? $result['total_seeder'] : $result['total'] ?? 0);
 
         $message = '<strong>' . I18N::translate('Webtrees manual') . '</strong>: ' . $title . ' - ' . I18N::translate('Routes imported') 
-            . '<dl><dt>' . /*I18N: webtrees.pot */I18N::translate('Total') . ':</dt><dd>' . $result['total'] . '</dd></dl>';
+            . '<dl><dt>' . MoreI18N::xlate('Total') . ':</dt><dd>' . $result['total'] . '</dd></dl>';
         $status = 'success';
         if ($skippedcnt > 0) {
             $message .= '<dl style="color:red;"><dt>' . /*I18N: wthb import skipped rows */I18N::translate('Skipped') . ':</dt><dd>' . $skippedcnt . '</dd></dl>';

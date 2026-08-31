@@ -1,7 +1,7 @@
 <?php
 
 /*
- * webtrees - cronjob (custom module)
+ * webtrees - linkenhancer (custom module)
  *
  * Copyright (C) 2026 Bernd Schwendinger
  *
@@ -43,8 +43,8 @@ final class MoreI18N {
      * applies sprintf() to its result). Wrapping a literal in
      * MoreI18N::translate() marks it for extraction (the last qualified name
      * component "translate" matches the xgettext keyword) while returning the
-     * string unchanged. Actual translation happens at render time in the views
-     * (I18N::translate() / CronjobUtils::translateJobTitle()).
+     * string unchanged. Actual translation happens at render time
+     * (I18N::translate() in the views/services).
      *
      * Identity function: returns the argument unchanged.
      */

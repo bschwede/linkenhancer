@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Module\LinkEnhancer\MoreI18N;
 use Fisharebest\Webtrees\DB;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils As Utils;
@@ -96,9 +97,9 @@ $link_cmm = $links['csvexportcmm'] ?? '';
                             'id' => $prefId,
                             'name' => $prefId,
                             'options' => [
-                                /*I18N: webtrees.pot */ I18N::translate('no'),
+                                MoreI18N::xlate('no'),
                                 /*I18N: */ I18N::translate('user defined'),
-                                /*I18N: webtrees.pot */ I18N::translate('yes')
+                                MoreI18N::xlate('yes')
                             ],
                             'selected' => (int) $prefs[$prefId]
                         ]) ?>
@@ -147,9 +148,9 @@ $link_cmm = $links['csvexportcmm'] ?? '';
                             'id' => $prefId,
                             'name' => $prefId,
                             'options' => [
-                                /*I18N: webtrees.pot */ I18N::translate('no'),
+                                MoreI18N::xlate('no'),
                                 /*I18N: wthb translate */ I18N::translate('user defined'),
-                                /*I18N: webtrees.pot */ I18N::translate('yes')
+                                MoreI18N::xlate('yes')
                             ],
                             'selected' => (int) $prefs[$prefId]
                         ]) ?>
@@ -298,11 +299,11 @@ $link_cmm = $links['csvexportcmm'] ?? '';
                 </div>
                 <div class="row mt-1 mb-3">
                     <label for="encoding" class="col-sm-3 mt-2">
-                        <?= /*I18N: webtrees.pot */ I18N::translate('Character encoding') ?>
+                        <?= MoreI18N::xlate('Character encoding') ?>
                     </label>
                     
                     <div class="col-sm-9">
-                        <?= view('components/select', ['name' => 'encoding', 'selected' => '', 'options' => ['' => /*I18N: webtrees.pot */I18N::translate('automatic')] + Registry::encodingFactory()->list()]) ?>
+                        <?= view('components/select', ['name' => 'encoding', 'selected' => '', 'options' => ['' => MoreI18N::xlate('automatic')] + Registry::encodingFactory()->list()]) ?>
                     </div>
                 </div>
             </div>

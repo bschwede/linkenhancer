@@ -33,6 +33,7 @@ use Fisharebest\Webtrees\FlashMessages;
 use Fisharebest\Webtrees\Http\RequestHandlers\HomePage;
 use Fisharebest\Webtrees\Http\RequestHandlers\TreePage;
 use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Module\LinkEnhancer\MoreI18N;
 use Fisharebest\Webtrees\Module\AbstractModule;
 use Fisharebest\Webtrees\Module\ModuleConfigInterface;
 use Fisharebest\Webtrees\Module\ModuleConfigTrait;
@@ -832,7 +833,7 @@ class LinkEnhancerModule extends AbstractModule implements
 
         } catch (Exception $ex) {
             FlashMessages::addMessage(
-                /*I18N: webtrees.pot */ I18N::translate('Export failed') . ' - Custom Module Manager config<hr><samp dir="ltr">' . $ex->getMessage() . '</samp>',
+                MoreI18N::xlate('Export failed') . ' - Custom Module Manager config<hr><samp dir="ltr">' . $ex->getMessage() . '</samp>',
                 'danger'
             );
             return redirect($this->getConfigLink());
@@ -854,7 +855,7 @@ class LinkEnhancerModule extends AbstractModule implements
 
         } catch (Exception $ex) {
             FlashMessages::addMessage(
-                /*I18N: webtrees.pot */I18N::translate('Export failed') . '<hr><samp dir="ltr">' . $ex->getMessage() . '</samp>',
+                MoreI18N::xlate('Export failed') . '<hr><samp dir="ltr">' . $ex->getMessage() . '</samp>',
                 'danger'
             );
             return redirect($this->getConfigLink());
@@ -873,7 +874,7 @@ class LinkEnhancerModule extends AbstractModule implements
             $this->wthb->importCsvAction($request);
         } catch (Exception $ex) {
             FlashMessages::addMessage(
-                /*I18N: webtrees.pot */ I18N::translate('Import failed') . '<hr><samp dir="ltr">' . $ex->getMessage() . '</samp>',
+                MoreI18N::xlate('Import failed') . '<hr><samp dir="ltr">' . $ex->getMessage() . '</samp>',
                 'danger'
             );
         }
@@ -904,7 +905,7 @@ class LinkEnhancerModule extends AbstractModule implements
                 }
             }
 
-            FlashMessages::addMessage(/*I18N: webtrees.pot */ I18N::translate(
+            FlashMessages::addMessage(MoreI18N::xlate(
                 'The preferences for the module “%s” have been updated.',
                 $this->title()
             ), 'success');

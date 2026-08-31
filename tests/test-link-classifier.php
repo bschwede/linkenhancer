@@ -24,6 +24,21 @@
 
 declare(strict_types=1);
 
+namespace Fisharebest\Webtrees {
+    // Stand-in for the core I18N class so the inventory/count helpers (which
+    // call I18N::translate for class labels + the "target not found" /
+    // "expected %1$s, is %2$s" hints) run in this standalone, bootstrap-free
+    // test. Identity when no args; vsprintf when args are passed (the real
+    // I18N::translate() applies sprintf to its result).
+    class I18N {
+        public static function translate(string $message, ...$args): string {
+            return $args ? vsprintf($message, $args) : $message;
+        }
+    }
+}
+
+namespace {
+
 // Standalone CLI test for XrefsService::classifyTextLinks() - pure function,
 // no webtrees bootstrap required.
 // Run: php modules_v4/linkenhancer/tests/test-link-classifier.php
@@ -315,60 +330,60 @@ $inv_two = array_slice($inv_entries, 0, 2);
 check(
     'T23 inventory cap 0 shows all tokens, no overflow',
     [XrefsService::linkInventoryHtml($inv_two, 0)],
-    ['<ul class="le-xref-inventory"><li>ext (2)<ol><li><code>sn1</code></li><li><code>sn2</code></li></ol></li></ul>']
+    ['<ul class="le-xref-inventory"><li><u>External links (ext: 2)</u><ol><li><code>sn1</code></li><li><code>sn2</code></li></ol></li></ul>']
 );
 check(
     'T23b inventory negative cap shows all tokens, no overflow',
     [XrefsService::linkInventoryHtml($inv_two, -1)],
-    ['<ul class="le-xref-inventory"><li>ext (2)<ol><li><code>sn1</code></li><li><code>sn2</code></li></ol></li></ul>']
+    ['<ul class="le-xref-inventory"><li><u>External links (ext: 2)</u><ol><li><code>sn1</code></li><li><code>sn2</code></li></ol></li></ul>']
 );
 check(
     'T24 inventory cap 1 keeps one token + overflow counter',
     [XrefsService::linkInventoryHtml($inv_two, 1)],
-    ['<ul class="le-xref-inventory"><li>ext (2)<ol><li><code>sn1</code></li></ol><em>+1</em></li></ul>']
+    ['<ul class="le-xref-inventory"><li><u>External links (ext: 2)</u><ol><li><code>sn1</code></li></ol><em>+1</em></li></ul>']
 );
 check(
     'T25 inventory default cap is 5 (6 tokens -> 5 + "+1")',
     [XrefsService::linkInventoryHtml($inv_entries)],
-    ['<ul class="le-xref-inventory"><li>ext (6)<ol><li><code>sn1</code></li><li><code>sn2</code></li><li><code>sn3</code></li><li><code>sn4</code></li><li><code>sn5</code></li></ol><em>+1</em></li></ul>']
+    ['<ul class="le-xref-inventory"><li><u>External links (ext: 6)</u><ol><li><code>sn1</code></li><li><code>sn2</code></li><li><code>sn3</code></li><li><code>sn4</code></li><li><code>sn5</code></li></ol><em>+1</em></li></ul>']
 );
 // token highlighting: the token is wrapped in <strong> inside the snippet,
 // the surrounding context stays escaped
 check(
     'T35 inventory highlights the token in the snippet',
     [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'ext', 'token' => '[x](#@I2@)', 'snippet' => 'see <b>[x](#@I2@)</b> ok']], 0)],
-    ['<ul class="le-xref-inventory"><li>ext (1)<ol><li><code>see &lt;b&gt;<strong>[x](#@I2@)</strong>&lt;/b&gt; ok</code></li></ol></li></ul>']
+    ['<ul class="le-xref-inventory"><li><u>External links (ext: 1)</u><ol><li><code>see &lt;b&gt;<strong>[x](#@I2@)</strong>&lt;/b&gt; ok</code></li></ol></li></ul>']
 );
 check(
     'T35b inventory token fallback (snippet = token)',
     [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'pic', 'token' => '![p](#@M1@)', 'snippet' => '![p](#@M1@)']], 0)],
-    ['<ul class="le-xref-inventory"><li>pic (1)<ol><li><code><strong>![p](#@M1@)</strong></code></li></ol></li></ul>']
+    ['<ul class="le-xref-inventory"><li><u>Pictures (pic: 1)</u><ol><li><code><strong>![p](#@M1@)</strong></code></li></ol></li></ul>']
 );
 // T36 - with an active "referencing XREF" filter (3rd arg), the XREF is
 // additionally wrapped in <mark> inside the token, on top of <strong>
 check(
     'T36 inventory marks the referencing XREF when the filter is active',
     [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'classic', 'token' => '@I1@', 'snippet' => 'sah @I1@ heute']], 0, 'I1')],
-    ['<ul class="le-xref-inventory"><li>classic (1)<ol><li><code>sah <strong>@<mark class="le-xref-target">I1</mark>@</strong> heute</code></li></ol></li></ul>']
+    ['<ul class="le-xref-inventory"><li><u>Classic cross-references (classic: 1)</u><ol><li><code>sah <strong>@<mark class="le-xref-target">I1</mark>@</strong> heute</code></li></ol></li></ul>']
 );
 // T36b - the mark is boundary-aware: filter "I1" must not match inside "I12"
 check(
     'T36b inventory XREF mark is boundary-aware (I1 does not match I12)',
     [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'classic', 'token' => '@I12@', 'snippet' => 'sah @I12@ heute']], 0, 'I1')],
-    ['<ul class="le-xref-inventory"><li>classic (1)<ol><li><code>sah <strong>@I12@</strong> heute</code></li></ol></li></ul>']
+    ['<ul class="le-xref-inventory"><li><u>Classic cross-references (classic: 1)</u><ol><li><code>sah <strong>@I12@</strong> heute</code></li></ol></li></ul>']
 );
 // T36c - empty filter (default) = no <mark>, identical to the pre-change output
 check(
     'T36c inventory no XREF mark when the filter is empty (default)',
     [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'ext', 'token' => '[x](#@I2@)', 'snippet' => 'see <b>[x](#@I2@)</b> ok']], 0)],
-    ['<ul class="le-xref-inventory"><li>ext (1)<ol><li><code>see &lt;b&gt;<strong>[x](#@I2@)</strong>&lt;/b&gt; ok</code></li></ol></li></ul>']
+    ['<ul class="le-xref-inventory"><li><u>External links (ext: 1)</u><ol><li><code>see &lt;b&gt;<strong>[x](#@I2@)</strong>&lt;/b&gt; ok</code></li></ol></li></ul>']
 );
 // T36d - the XREF is marked everywhere it occurs: in the token AND in the
 // surrounding snippet context
 check(
     'T36d inventory marks the XREF in snippet context too (outside the token)',
     [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'classic', 'token' => '@I1@', 'snippet' => 'von I1 zu @I1@']], 0, 'I1')],
-    ['<ul class="le-xref-inventory"><li>classic (1)<ol><li><code>von <mark class="le-xref-target">I1</mark> zu <strong>@<mark class="le-xref-target">I1</mark>@</strong></code></li></ol></li></ul>']
+    ['<ul class="le-xref-inventory"><li><u>Classic cross-references (classic: 1)</u><ol><li><code>von <mark class="le-xref-target">I1</mark> zu <strong>@<mark class="le-xref-target">I1</mark>@</strong></code></li></ol></li></ul>']
 );
 check(
     'T26 normalizeLinksPerClass allowlist passthrough (0,5,10,20)',
@@ -405,66 +420,67 @@ $target_linker = static function (string $xref, ?string $tree): ?array {
 check(
     'T37 inventory shows a reference link for an xref token (same tree)',
     [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=i@I2@)', 'snippet' => '[see](#@wt=i@I2@)']], 0, '', $target_linker)],
-    ['<ul class="le-xref-inventory"><li>xref (1)<ol><li><code><strong>[see](#@wt=i@I2@)</strong></code><div class="le-target-links"><a href="/tree/t/individual/I2">Max Mustermann</a></div></li></ol></li></ul>']
+    ['<ul class="le-xref-inventory"><li><u>Cross-references (xref: 1)</u><ol><li><code><strong>[see](#@wt=i@I2@)</strong></code><div class="le-target-links"><span class="le-cross-ref" title="Cross-reference">↪</span> <a href="/tree/t/individual/I2">Max Mustermann</a></div></li></ol></li></ul>']
 );
 check(
     'T37b inventory shows all targets of a multi-target LE token',
     [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=i@I2@&wt=f@F3@)', 'snippet' => '[see](#@wt=i@I2@&wt=f@F3@)']], 0, '', $target_linker)],
-    ['<ul class="le-xref-inventory"><li>xref (1)<ol><li><code><strong>[see](#@wt=i@I2@&amp;wt=f@F3@)</strong></code><div class="le-target-links"><a href="/tree/t/individual/I2">Max Mustermann</a><br><a href="/tree/t/family/F3">Fam XY</a></div></li></ol></li></ul>']
+    ['<ul class="le-xref-inventory"><li><u>Cross-references (xref: 1)</u><ol><li><code><strong>[see](#@wt=i@I2@&amp;wt=f@F3@)</strong></code><div class="le-target-links"><span class="le-cross-ref" title="Cross-reference">↪</span> <a href="/tree/t/individual/I2">Max Mustermann</a><br><span class="le-cross-ref" title="Cross-reference">↪</span> <a href="/tree/t/family/F3">Fam XY</a></div></li></ol></li></ul>']
 );
 check(
     'T37c inventory shows a reference link for a classic xref token',
     [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'classic', 'token' => '@I2@', 'snippet' => 'sah @I2@']], 0, '', $target_linker)],
-    ['<ul class="le-xref-inventory"><li>classic (1)<ol><li><code>sah <strong>@I2@</strong></code><div class="le-target-links"><a href="/tree/t/individual/I2">Max Mustermann</a></div></li></ol></li></ul>']
+    ['<ul class="le-xref-inventory"><li><u>Classic cross-references (classic: 1)</u><ol><li><code>sah <strong>@I2@</strong></code><div class="le-target-links"><span class="le-cross-ref" title="Cross-reference">↪</span> <a href="/tree/t/individual/I2">Max Mustermann</a></div></li></ol></li></ul>']
 );
 check(
     'T37d inventory shows no reference link for a non-xref/classic class (ext)',
     [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'ext', 'token' => '[x](#@I2@)', 'snippet' => '[x](#@I2@)']], 0, '', $target_linker)],
-    ['<ul class="le-xref-inventory"><li>ext (1)<ol><li><code><strong>[x](#@I2@)</strong></code></li></ol></li></ul>']
+    ['<ul class="le-xref-inventory"><li><u>External links (ext: 1)</u><ol><li><code><strong>[x](#@I2@)</strong></code></li></ol></li></ul>']
 );
 check(
     'T37e inventory marks an unresolvable target with a findable broken marker',
     [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=i@I404@)', 'snippet' => '[see](#@wt=i@I404@)']], 0, '', $target_linker)],
-    ['<ul class="le-xref-inventory"><li>xref (1)<ol><li><code><strong>[see](#@wt=i@I404@)</strong></code><div class="le-target-links"><span class="le-target-missing" title="target not found">✗ @I404@</span></div></li></ol></li></ul>']
+    ['<ul class="le-xref-inventory"><li><u>Cross-references (xref: 1)</u><ol><li><code><strong>[see](#@wt=i@I404@)</strong></code><div class="le-target-links"><span class="le-target-missing" title="target not found">✗ @I404@</span></div></li></ol></li></ul>']
 );
 check(
     'T37f inventory prefixes the tree name for a cross-tree target',
     [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=i@I5@other-tree)', 'snippet' => '[see](#@wt=i@I5@other-tree)']], 0, '', $target_linker)],
-    ['<ul class="le-xref-inventory"><li>xref (1)<ol><li><code><strong>[see](#@wt=i@I5@other-tree)</strong></code><div class="le-target-links"><a href="/tree/t2/individual/I5">other-tree: Cross Person</a></div></li></ol></li></ul>']
+    ['<ul class="le-xref-inventory"><li><u>Cross-references (xref: 1)</u><ol><li><code><strong>[see](#@wt=i@I5@other-tree)</strong></code><div class="le-target-links"><span class="le-cross-ref" title="Cross-reference">↪</span> <a href="/tree/t2/individual/I5">other-tree: Cross Person</a></div></li></ol></li></ul>']
 );
 check(
     'T37g inventory no reference links when the linker is null (default)',
     [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=i@I2@)', 'snippet' => '[see](#@wt=i@I2@)']], 0)],
-    ['<ul class="le-xref-inventory"><li>xref (1)<ol><li><code><strong>[see](#@wt=i@I2@)</strong></code></li></ol></li></ul>']
+    ['<ul class="le-xref-inventory"><li><u>Cross-references (xref: 1)</u><ol><li><code><strong>[see](#@wt=i@I2@)</strong></code></li></ol></li></ul>']
 );
 // T38 - pic links (id=@XREF@ media) also get a reference link; a media target
 // (actual=OBJE) matches the expected OBJE, so no type hint.
 check(
     'T38 inventory shows a reference link for a pic (media) token',
     [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'pic', 'token' => '![p](#@id=@M1@)', 'snippet' => '![p](#@id=@M1@)']], 0, '', $target_linker)],
-    ['<ul class="le-xref-inventory"><li>pic (1)<ol><li><code><strong>![p](#@id=@M1@)</strong></code><div class="le-target-links"><a href="/tree/t/media/M1">Foto</a></div></li></ol></li></ul>']
+    ['<ul class="le-xref-inventory"><li><u>Pictures (pic: 1)</u><ol><li><code><strong>![p](#@id=@M1@)</strong></code><div class="le-target-links"><span class="le-cross-ref" title="Cross-reference">↪</span> <a href="/tree/t/media/M1">Foto</a></div></li></ol></li></ul>']
 );
 // T39 - xref type mismatch: wt=i (expected INDI) but the record is a FAM ->
 // the link stays, plus a findable "⚠" hint with a tooltip.
 check(
     'T39 inventory keeps the link and adds a hint on a wt= type mismatch',
     [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=i@I9@)', 'snippet' => '[see](#@wt=i@I9@)']], 0, '', $target_linker)],
-    ['<ul class="le-xref-inventory"><li>xref (1)<ol><li><code><strong>[see](#@wt=i@I9@)</strong></code><div class="le-target-links"><a href="/tree/t/individual/I9">Max</a> <span class="le-target-type-mismatch" title="expected INDI, is FAM">⚠</span></div></li></ol></li></ul>']
+    ['<ul class="le-xref-inventory"><li><u>Cross-references (xref: 1)</u><ol><li><code><strong>[see](#@wt=i@I9@)</strong></code><div class="le-target-links"><span class="le-cross-ref" title="Cross-reference">↪</span> <a href="/tree/t/individual/I9">Max</a> <span class="le-target-type-mismatch" title="expected INDI, is FAM">⚠</span></div></li></ol></li></ul>']
 );
 // T40 - xref without a type letter (wt=@XREF@) is not type-checked, even when
 // the resolved record type differs.
 check(
     'T40 inventory does not type-check an xref without a wt= letter',
     [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=@I2@)', 'snippet' => '[see](#@wt=@I2@)']], 0, '', $target_linker)],
-    ['<ul class="le-xref-inventory"><li>xref (1)<ol><li><code><strong>[see](#@wt=@I2@)</strong></code><div class="le-target-links"><a href="/tree/t/individual/I2">Max Mustermann</a></div></li></ol></li></ul>']
+    ['<ul class="le-xref-inventory"><li><u>Cross-references (xref: 1)</u><ol><li><code><strong>[see](#@wt=@I2@)</strong></code><div class="le-target-links"><span class="le-cross-ref" title="Cross-reference">↪</span> <a href="/tree/t/individual/I2">Max Mustermann</a></div></li></ol></li></ul>']
 );
 // T41 - pic target that is not a media (id= points to an INDI) -> mismatch
 // hint (expected OBJE, is INDI), the link is still shown.
 check(
     'T41 inventory hints when a pic target is not a media',
     [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'pic', 'token' => '![p](#@id=@I2@)', 'snippet' => '![p](#@id=@I2@)']], 0, '', $target_linker)],
-    ['<ul class="le-xref-inventory"><li>pic (1)<ol><li><code><strong>![p](#@id=@I2@)</strong></code><div class="le-target-links"><a href="/tree/t/individual/I2">Max Mustermann</a> <span class="le-target-type-mismatch" title="expected OBJE, is INDI">⚠</span></div></li></ol></li></ul>']
+    ['<ul class="le-xref-inventory"><li><u>Pictures (pic: 1)</u><ol><li><code><strong>![p](#@id=@I2@)</strong></code><div class="le-target-links"><span class="le-cross-ref" title="Cross-reference">↪</span> <a href="/tree/t/individual/I2">Max Mustermann</a> <span class="le-target-type-mismatch" title="expected OBJE, is INDI">⚠</span></div></li></ol></li></ul>']
 );
 
 echo "\n{$total} tests, {$failures} failure(s)\n";
 exit($failures === 0 ? 0 : 1);
+}

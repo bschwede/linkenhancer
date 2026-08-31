@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Module\LinkEnhancer\MoreI18N;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
 use Schwendinger\Webtrees\Module\LinkEnhancer\CommonMark\SmartPunctHelper;
@@ -116,7 +117,7 @@ function prefixKeysToValues(array $data, string $separator = ': '): array
                             'id' => $prefId,
                             'name' => $prefId,
                             'options' => [
-                                /*I18N: webtrees.pot */ I18N::translate('no'),
+                                MoreI18N::xlate('no'),
                                 /*I18N: */ I18N::translate('available') . ' (' . I18N::translate('disabled') . ')',
                                 /*I18N: */ I18N::translate('available') . ' (' . I18N::translate('enabled') . ')',
                             ],
@@ -379,9 +380,9 @@ function prefixKeysToValues(array $data, string $separator = ': '): array
                             'id' => $prefId,
                             'name' => $prefId,
                             'options' => [
-                                /*I18N: webtrees.pot */ I18N::translate('no'),
+                                MoreI18N::xlate('no'),
                                 /*I18N: */ I18N::translate('user defined'),
-                                /*I18N: webtrees.pot */ I18N::translate('yes')
+                                MoreI18N::xlate('yes')
                             ],
                             'selected' => (int) $prefs[$prefId]
                         ]) ?>

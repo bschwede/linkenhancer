@@ -27,6 +27,7 @@ declare(strict_types=1);
 namespace Schwendinger\Webtrees\Module\LinkEnhancer;
 
 use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Module\LinkEnhancer\MoreI18N;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Session;
 use Fisharebest\Webtrees\Validator;
@@ -128,7 +129,7 @@ class LinkEnhancerUtils { // misc helper functions
                     'hr'               => /*I18N: JS MDE */ I18N::translate('Horizontal rule'),
                     'Undo'             => /*I18N: JS MDE */ I18N::translate('Undo'),
                     'Redo'             => /*I18N: JS MDE */ I18N::translate('Redo'),
-                    'Help'             => /*I18N: webtrees.pot */ I18N::translate('Help'),
+                    'Help'             => MoreI18N::xlate('Help'),
                     'Link destination' => /*I18N: JS MDE */ I18N::translate('Link destination'),
                     'Insert table'     => /*I18N: JS MDE */ I18N::translate('Insert table'),
                     'queryTableCnR'    => /*I18N: JS MDE */ I18N::translate('How many columns and rows should the table have (input: [number] [number])?'),
@@ -142,7 +143,7 @@ class LinkEnhancerUtils { // misc helper functions
                     'gedbas'           => /*I18N: JS enhanced link */ I18N::translate('GEDBAS (Genealogical Database - collected personal data)'),
                     'www'              => /*I18N: JS enhanced link */ I18N::translate('wer-wir-waren.at'),
                     'ewp'              => /*I18N: JS enhanced link */ I18N::translate('Residents database - Family research in West Prussia'),
-                    'Interactive tree' => /*I18N: webtrees.pot */ I18N::translate('Interactive tree'),
+                    'Interactive tree' => MoreI18N::xlate('Interactive tree'),
                     'syntax error'     => /*I18N: JS enhanced link */ I18N::translate('Syntax error'),
                     'param error'      => /*I18N: JS enhanced link */ I18N::translate('Unknown parameter keys'),
                     'wt-help1'         => /*I18N: JS enhanced link wt1 - %s=rectypes*/ I18N::translate('standard link to note (available record types: %s) with XREF in active tree', '%s'),
@@ -164,7 +165,7 @@ class LinkEnhancerUtils { // misc helper functions
             
             'wthb' => [
                     'help_title_wthb'   => I18N::translate('Webtrees manual'),
-                    'help_title_ext'    => /*I18N: webtrees.pot */ I18N::translate('Help'),
+                    'help_title_ext'    => MoreI18N::xlate('Help'),
                     'cfg_title'         => /*I18N: wthb link user setting title */ I18N::translate('Webtrees manual link - user setting'),
                     'tocnsearch'        => I18N::translate("Full-text search") . ' / ' . I18N::translate('Table of contents'),
                     'wtcorehelp'        => I18N::translate("webtrees help topics (included)"),
@@ -254,9 +255,9 @@ class LinkEnhancerUtils { // misc helper functions
             array_push($mdsyntax,
                 [
                     'md' => I18N::translate('Term') . "\n: "
-                        . /*I18N: webtrees.pot */I18N::translate('Definition'),
+                        . MoreI18N::xlate('Definition'),
                     'html' => "<dl>\n  <dt>" . I18N::translate('Term') . "</dt>\n  <dd>" 
-                        . /*I18N: webtrees.pot */I18N::translate('Definition') . "</dd>\n</dl>"
+                        . MoreI18N::xlate('Definition') . "</dd>\n</dl>"
                 ]
             );
         }
@@ -512,8 +513,8 @@ class LinkEnhancerUtils { // misc helper functions
             'id' => $id,
             'name' => $id,
             'options' => [
-                /*I18N: webtrees.pot */ I18N::translate('no'),
-                /*I18N: webtrees.pot */ I18N::translate('yes')
+                MoreI18N::xlate('no'),
+                MoreI18N::xlate('yes')
             ],
             'selected' => (int) $value
         ]);

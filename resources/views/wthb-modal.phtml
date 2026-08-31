@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Module\LinkEnhancer\MoreI18N;
 ?>
 <div class="modal fade" data-bs-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true" id="wthb-modal" 
   aria-labelledby="wthb-modal-title">
@@ -10,7 +11,7 @@ use Fisharebest\Webtrees\I18N;
                 <h3 class="modal-title" id="wthb-modal-title">
                     <?= /*I18N: wthb link user setting title */ I18N::translate('Webtrees manual link - user setting') ?>
                 </h3>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<?= /*I18N: webtrees.pot */ I18N::translate('close') ?>">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<?= MoreI18N::xlate('close') ?>">
                 </button>
             </div>
             <div class="modal-body">
@@ -24,7 +25,7 @@ use Fisharebest\Webtrees\I18N;
                         <?= view('components/radios-inline', [
                             'id' => 'wthb-translate',
                             'name' => 'wthb-translate',
-                            'options' => [ /*I18N: webtrees.pot */ I18N::translate('no'), /*I18N: webtrees.pot */ I18N::translate('yes')],
+                            'options' => [ MoreI18N::xlate('no'), MoreI18N::xlate('yes')],
                             'selected' => null
                         ]) ?>
                     </div>

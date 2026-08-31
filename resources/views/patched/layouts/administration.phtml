@@ -7,6 +7,7 @@ use Fisharebest\Webtrees\Http\RequestHandlers\Logout;
 use Fisharebest\Webtrees\Http\RequestHandlers\HomePage;
 use Fisharebest\Webtrees\Http\RequestHandlers\SelectLanguage;
 use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Module\LinkEnhancer\MoreI18N;
 use Fisharebest\Webtrees\Module\CustomCssJsModule;
 use Fisharebest\Webtrees\Module\ModuleCustomInterface;
 use Fisharebest\Webtrees\Module\ModuleGlobalInterface;
@@ -46,17 +47,17 @@ use Fisharebest\Webtrees\View;
             <div class="wt-accessibility-links position-fixed">
                 <a class="visually-hidden visually-hidden-focusable btn btn-info btn-sm" href="#content">
                     <?= /* I18N: Skip over the headers and menus, to the main content of the page */
-                        /*I18N: webtrees.pot */ I18N::translate('Skip to content') ?>
+                        MoreI18N::xlate('Skip to content') ?>
                 </a>
             </div>
 
             <ul class="nav small d-flex justify-content-end">
                 <li class="nav-item menu-mypage">
-                    <a class="nav-link active" href="<?= e(route(HomePage::class)) ?>"><?= /*I18N: webtrees.pot */ I18N::translate('My page') ?></a>
+                    <a class="nav-link active" href="<?= e(route(HomePage::class)) ?>"><?= MoreI18N::xlate('My page') ?></a>
                 </li>
                 <li class="nav-item dropdown menu-language">
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                        <?= /*I18N: webtrees.pot */ I18N::translate('Language') ?>
+                        <?= MoreI18N::xlate('Language') ?>
                     </a>
                     <div class="dropdown-menu">
                         <?php foreach (I18N::activeLocales() as $locale): ?>
@@ -65,7 +66,7 @@ use Fisharebest\Webtrees\View;
                     </div>
                 </li>
                 <li class="nav-item menu-logout">
-                    <a class="nav-link" href="#" data-wt-post-url="<?= e(route(Logout::class)) ?>" data-wt-reload-url="<?= e(route(HomePage::class)) ?>"><?= /*I18N: webtrees.pot */ I18N::translate('Sign out') ?></a>
+                    <a class="nav-link" href="#" data-wt-post-url="<?= e(route(Logout::class)) ?>" data-wt-reload-url="<?= e(route(HomePage::class)) ?>"><?= MoreI18N::xlate('Sign out') ?></a>
                 </li>
             </ul>
         </header>
@@ -73,7 +74,7 @@ use Fisharebest\Webtrees\View;
         <main id="content">
             <?php foreach (FlashMessages::getMessages() as $message): ?>
                     <div class="alert alert-<?= $message->status ?> alert-dismissible" role="alert">
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="<?= /*I18N: webtrees.pot */ I18N::translate('close') ?>">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="<?= MoreI18N::xlate('close') ?>">
                         </button>
                         <?= $message->text ?>
                     </div>

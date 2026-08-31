@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Module\LinkEnhancer\MoreI18N;
 use Fisharebest\Webtrees\Http\RequestHandlers\HelpText;
 
 /**
@@ -17,77 +18,77 @@ $idprefix = 'wtchlp_';
 
 $help_topics = [ // see: app/Http/RequestHandlers/HelpText.php
     'NAMES' => [
-        'title' => /*I18N: webtrees.pot */ I18N::translate('Names'),
+        'title' => MoreI18N::xlate('Names'),
         'text' => '',
         'level' => 1,
         'notoc' => true,
     ],
     
     'NAME' => [
-        'title' => /*I18N: webtrees.pot */ I18N::translate('Name'),
+        'title' => MoreI18N::xlate('Name'),
         'text' => view('help/name'),
         'level' => 2,
         'wthb' => 'Webtrees_Handbuch/Genealogischer_Prozess#Namen',
     ],
 
     'SURN' => [
-        'title' => /*I18N: webtrees.pot */ I18N::translate('Surname'),
+        'title' => MoreI18N::xlate('Surname'),
         'text' => view('help/surname'),
         'level' => 2,
         'wthb' => 'Webtrees_Handbuch/Genealogischer_Prozess#Familiennamen',
     ],
 
     'ROMN' => [
-        'title' => /*I18N: webtrees.pot */ I18N::translate('Romanized'),
+        'title' => MoreI18N::xlate('Romanized'),
         'text' => view('help/romanized'),
         'level' => 2,
         'wthb' => '',
     ],
 
     '_HEB' => [
-        'title' => /*I18N: webtrees.pot */ I18N::translate('Hebrew'),
+        'title' => MoreI18N::xlate('Hebrew'),
         'text' => view('help/hebrew'),
         'level' => 2,
         'wthb' => 'Webtrees_Handbuch/Genealogischer_Prozess#Namen_in_verschiedenen_Alphabeten',
     ],
 
     'DATE' => [
-        'title' => /*I18N: webtrees.pot */ I18N::translate('Date'),
+        'title' => MoreI18N::xlate('Date'),
         //'text' => not set - link to original help route; view needs parameter
         'level' => 1,
         'wthb' => 'Webtrees_Handbuch/Anleitung_f%C3%BCr_Bearbeiter#Datumsangaben',
     ],
 
     'OBJE' => [
-        'title' => /*I18N: webtrees.pot */ I18N::translate('Media object'),
+        'title' => MoreI18N::xlate('Media object'),
         'text' => view('help/media-object'),
         'level' => 1,
         'wthb' => 'Webtrees_Handbuch/Genealogischer_Prozess#Medien',
     ],
 
     'PLAC' => [
-        'title' => /*I18N: webtrees.pot */ I18N::translate('Place'),
+        'title' => MoreI18N::xlate('Place'),
         'text' => view('help/place'),
         'level' => 1,
         'wthb' => 'Webtrees_Handbuch/Genealogischer_Prozess#Orte',
     ],
 
     'data-fixes' => [
-        'title' => /*I18N: webtrees.pot */ I18N::translate('Data fixes'),
+        'title' => MoreI18N::xlate('Data fixes'),
         'text' => view('help/data-fixes'),
         'level' => 1,
         'wthb' => 'Webtrees_Handbuch/Anleitung_f%C3%BCr_Verwalter#Datenkorrekturen',        
     ],
 
     'edit_SOUR_EVEN' => [
-        'title' => /*I18N: webtrees.pot */ I18N::translate('Associate events with this source'),
+        'title' => MoreI18N::xlate('Associate events with this source'),
         'text' => view('help/source-events'),
         'level' => 1,
         'wthb' => 'Webtrees_Handbuch/Genealogischer_Prozess#Quellen_und_Archive',        
     ],
 
     'pending_changes' => [
-        'title' => /*I18N: webtrees.pot */ I18N::translate('Pending changes'),
+        'title' => MoreI18N::xlate('Pending changes'),
         'text' => view('help/pending-changes', [
                         'is_admin' => Auth::isAdmin(),
                     ]),
@@ -96,14 +97,14 @@ $help_topics = [ // see: app/Http/RequestHandlers/HelpText.php
     ],
 
     'relationship-privacy' => [
-        'title' => /*I18N: webtrees.pot */ I18N::translate('Restrict to immediate family'),
+        'title' => MoreI18N::xlate('Restrict to immediate family'),
         'text' => view('help/relationship-privacy'),
         'level' => 1,
         'wthb' => 'Webtrees_Handbuch/Anleitung_für_Administratoren/Benutzer#Benutzerverwaltung',
     ],
 
     'RESN' => [
-        'title' => /*I18N: webtrees.pot */ I18N::translate('Restriction'),
+        'title' => MoreI18N::xlate('Restriction'),
         'text' => view('help/restriction'),
         'level' => 1,
         'wthb' => 'Webtrees_Handbuch/Allgemeine_Erl%C3%A4uterung_des_Programms#Datenschutz',

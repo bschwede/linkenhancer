@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Module\LinkEnhancer\MoreI18N;
 
 /**
  * @var string                $toc_html
@@ -37,13 +38,13 @@ $tocselect = view('components/select', [
 <div class="col-sm-12">
     <div class="row">
         <div class="col-sm-4 pb-2">
-            <input class="form-control" id="wthbsearchfilter" type="text" placeholder="<?= e(/*I18N: webtrees.pot */ I18N::translate('Search filters')) ?>">
+            <input class="form-control" id="wthbsearchfilter" type="text" placeholder="<?= e(MoreI18N::xlate('Search filters')) ?>">
         </div>
         <div class="col-sm-4 pb-3">
             <?= $searchselect ?>
         </div>
         <div class="col-sm-4">
-            <button type="button" id="wthbsearchsubmit" class="btn btn-secondary"><?= view('icons/search') ?> <?= /*I18N: webtrees.pot */ I18N::translate('Search') ?></button>
+            <button type="button" id="wthbsearchsubmit" class="btn btn-secondary"><?= view('icons/search') ?> <?= MoreI18N::xlate('Search') ?></button>
         </div>
     </div>
 </div>
@@ -52,7 +53,7 @@ $tocselect = view('components/select', [
 <h4 class="helpsection"><a class="gwlink" target="_blank" href="<?= e($toc_url) ?>"><?= I18N::translate('Table of contents') ?></a> <span class="linkicon icon-compgen"></span></h4>
 <?php if ($toc_html) : ?>
 <p><?= $tocselect ?></p>
-<p><input class="form-control" id="wthbtocfilter" type="text" placeholder="<?= e(/*I18N: webtrees.pot */I18N::translate('Search filters')) ?>"> <em><span id="wthbtocfiltercnt"></span></em></p>
+<p><input class="form-control" id="wthbtocfilter" type="text" placeholder="<?= e(MoreI18N::xlate('Search filters')) ?>"> <em><span id="wthbtocfiltercnt"></span></em></p>
 
 <?= $toc_html ?>
 

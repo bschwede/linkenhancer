@@ -41,6 +41,7 @@ namespace Schwendinger\Webtrees\Module\LinkEnhancer\CommonMark;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Module\LinkEnhancer\MoreI18N;
 use Fisharebest\Webtrees\Media;
 use Fisharebest\Webtrees\MediaFile;
 use Fisharebest\Webtrees\Registry;
@@ -183,7 +184,7 @@ final class LeImageRenderer implements NodeRendererInterface, XmlNodeRendererInt
                     }
                 } else {
                     return view($this->module->name() . '::error-img-svg', [
-                        'text' => /*I18N: webtrees.pot */ I18N::translate('This media object does not exist or you do not have permission to view it.') . " - XREF $xref",
+                        'text' => MoreI18N::xlate('This media object does not exist or you do not have permission to view it.') . " - XREF $xref",
                         'classnames' => $classnames,
                     ]);
                 }

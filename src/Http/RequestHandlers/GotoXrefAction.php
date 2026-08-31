@@ -20,6 +20,7 @@ declare(strict_types=1);
 namespace Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers;
 
 use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Module\LinkEnhancer\MoreI18N;
 use Fisharebest\Webtrees\GedcomRecord;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Validator;
@@ -51,6 +52,6 @@ class GotoXrefAction implements RequestHandlerInterface
             return redirect($record->url());
         }
 
-        throw new HttpNotFoundException(/*I18N: webtrees.pot */I18N::translate('This record does not exist or you do not have permission to view it.'));
+        throw new HttpNotFoundException(MoreI18N::xlate('This record does not exist or you do not have permission to view it.'));
     }
 }

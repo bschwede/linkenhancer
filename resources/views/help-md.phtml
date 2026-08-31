@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Module\LinkEnhancer\MoreI18N;
 
 /**
  * @var bool                  $link_active             enhanced links activated
@@ -14,7 +15,7 @@ use Fisharebest\Webtrees\I18N;
 ?>
 
 
-<p><?= /*I18N: webtrees.pot */I18N::translate("Markdown is a simple system of formatting, used on websites such as Wikipedia. It uses unobtrusive punctuation characters to create headings and sub-headings, bold and italic text, lists, tables, etc.") ?></p>
+<p><?= MoreI18N::xlate("Markdown is a simple system of formatting, used on websites such as Wikipedia. It uses unobtrusive punctuation characters to create headings and sub-headings, bold and italic text, lists, tables, etc.") ?></p>
 <p><?= I18N::translate("Webtrees uses a CommonMark implementation and supports a subset of the markup") ?> 
  - <?= lcfirst(I18N::translate('See also')) ?> <a href="https://commonmark.thephpleague.com/">https://commonmark.thephpleague.com/</a>
 </p>
