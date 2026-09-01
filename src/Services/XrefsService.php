@@ -398,7 +398,7 @@ final class XrefsService { // stuff related with handling cross-references
         if (preg_match_all(self::RE_LE_LINK, $text, $m1, PREG_OFFSET_CAPTURE) !== false) {
             foreach ($m1[0] as $match) {
                 $token  = $match[0];
-                $offset = $match[1];
+                $offset = (int) $match[1];
 
                 // URL part: after the last "(#@" up to the closing bracket.
                 $pos = strrpos($token, '(#@');
@@ -424,7 +424,7 @@ final class XrefsService { // stuff related with handling cross-references
                 $found[$match[1]] = [
                     'class'   => str_starts_with($match[0], '](#@') ? 'other' : 'classic',
                     'token'   => $match[0],
-                    'snippet' => self::snippet($text, $match[1], $match[0]),
+                    'snippet' => self::snippet($text, (int) $match[1], $match[0]),
                 ];
             }
         }
