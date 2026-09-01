@@ -162,31 +162,39 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
      * with a missing/mismatch target, then let handleCollection() count, sort
      * and paginate the filtered set. Target resolution is memoised per request
      * (resolveTarget cache), so the column build below re-resolves cheaply.
+     *
+     * handleCollection() sorts/filters through closures typed (array $row), so
+     * the object rows from the query are cast to arrays before it runs; the
+     * column builders still expect objects, so the callback casts back. The
+     * rows only carry scalar properties (file/xref/type[/gedcom]), so the
+     * (array)/(object) round-trip is lossless.
      */
     private function problemsResponse(ServerRequestInterface $request, Builder $query, bool $index_fresh, string $xref, int $max_links): ResponseInterface
     {
-        $rows = $query->get();
-
         if ($index_fresh) {
-            $rows = $rows->filter(fn (object $row): bool => $this->indexRowHasProblem($row));
+            $rows = $query->get()
+                ->filter(fn (object $row): bool => $this->indexRowHasProblem($row))
+                ->map(static fn (object $row): array => (array) $row);
 
             return $this->datatables_service->handleCollection(
                 $request,
                 $rows,
                 ['xref', 'type'],
                 [0 => 'xref', 1 => 'type'],
-                fn (object $row): array => $this->indexRowToColumns($row, $max_links, $xref, true)
+                fn (array $row): array => $this->indexRowToColumns((object) $row, $max_links, $xref, true)
             );
         }
 
-        $rows = $rows->filter(fn (object $row): bool => $this->liveRowHasProblem($row));
+        $rows = $query->get()
+            ->filter(fn (object $row): bool => $this->liveRowHasProblem($row))
+            ->map(static fn (object $row): array => (array) $row);
 
         return $this->datatables_service->handleCollection(
             $request,
             $rows,
             ['xref', 'type'],
             [0 => 'xref', 1 => 'type'],
-            fn (object $row): array => $this->liveRowToColumns($row, $max_links, true)
+            fn (array $row): array => $this->liveRowToColumns((object) $row, $max_links, true)
         );
     }
 
