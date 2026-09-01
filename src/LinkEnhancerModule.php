@@ -933,6 +933,7 @@ class LinkEnhancerModule extends AbstractModule implements
         $tree_id = (int) $params->integer('tree', 0);
         $max_links = XrefsService::normalizeLinksPerClass((int) $params->integer('max_links', XrefsService::LINKS_PER_CLASS_DEFAULT));
         $live      = $params->boolean('live', false);
+        $target    = $params->string('target', '');
 
         $index_status = XrefsService::indexStatus();
 
@@ -956,6 +957,11 @@ class LinkEnhancerModule extends AbstractModule implements
         if ($max_links !== XrefsService::LINKS_PER_CLASS_DEFAULT) {
             $data_params['max_links'] = $max_links;
         }
+        // The "only broken targets" filter applies to both the index and the
+        // live-scan path, so it is always forwarded when active.
+        if ($target === 'problems') {
+            $data_params['target'] = 'problems';
+        }
 
         return $this->viewResponse($this->name() . '::xref-overview', [
             'title' => I18N::translate('Cross-Reference Overview'),
@@ -966,6 +972,7 @@ class LinkEnhancerModule extends AbstractModule implements
             'tree_id' => $tree_id,
             'max_links' => $max_links,
             'live' => $live,
+            'target' => $target,
             'rectypes' => XrefsService::supportedGedcomRecordKeys(),
             'trees' => Registry::container()->get(TreeService::class)->all(),
             'index_status' => $index_status,

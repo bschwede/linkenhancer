@@ -26,6 +26,7 @@ use function parse_url;
  * @var \Illuminate\Support\Collection                $trees      all trees
  * @var array{rows: int, scanned_at: string|null, fresh: bool} $index_status
  * @var bool                                          $live         force live scan (index bypass)
+ * @var string                                        $target     active "only broken targets" filter ('' or 'problems')
  * @var bool                                          $limited_mode no REGEXP support (SQLite/SQL Server)
  */
 
@@ -83,6 +84,12 @@ if ($index_status_ts) {
     </div>
 <?php endif ?>
 
+<?php if ($target === 'problems'): ?>
+    <div class="alert alert-warning">
+        <?= I18N::translate('Only broken targets: every matching record is loaded and its targets resolved on the server, which can be slow on large trees. Combine with the type/tree filters to narrow the scan.') ?>
+    </div>
+<?php endif ?>
+
 <form class="row g-2 mb-3" method="get" action="<?= e($page_url) ?>">
     <?php foreach ($hidden_params as $hidden_name => $hidden_value): ?>
         <?php if ($hidden_name !== 'xref' || $index_status['fresh']): ?>
@@ -123,6 +130,10 @@ if ($index_status_ts) {
             <?php endforeach; ?>
         </select>
     </div>
+    <div class="col-auto form-check">
+        <input class="form-check-input" type="checkbox" name="target" value="problems" id="le-only-problems" <?= $target === 'problems' ? 'checked' : '' ?>>
+        <label class="form-check-label" for="le-only-problems" title="<?= I18N::translate('Only rows with a missing or wrong-type target are shown') ?>"><?= I18N::translate('Only broken targets') ?></label>
+    </div>
     <div class="col-auto">
         <button class="btn btn-outline-primary" type="submit"><?= I18N::translate('Filter') ?></button>
     </div>
@@ -136,6 +147,7 @@ if ($index_status_ts) {
 .le-target-links { margin-top: 0.15em; font-size: 0.9em; color: #555; }
 .le-target-missing { color: #b02a37; font-style: italic; }
 .le-target-type-mismatch { color: #b8860b; font-weight: bold; cursor: help; }
+.le-target-links mark.le-problem-mark { background: #fff3cd; padding: 0 0.2em; border-radius: 2px; }
 </style>
 
 <div class="table-responsive">

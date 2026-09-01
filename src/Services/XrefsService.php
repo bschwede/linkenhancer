@@ -538,10 +538,15 @@ final class XrefsService { // stuff related with handling cross-references
      * ?array{name: string, url: string, tree_label: string}. null (default) =
      * no reference links.
      *
+     * $highlight_problems: when true, each missing/mismatch target is wrapped
+     * in a <mark class="le-problem-mark"> so it stands out (the admin "only
+     * broken targets" filter). false (default) = no mark, unchanged output.
+     *
      * @param array<int, array{path: string, class: string, token: string, snippet: string}> $entries
      * @param callable(string, ?string): (array{name: string, url: string, tree_label: string}|null)|null $target_linker
+     * @param bool $highlight_problems wrap missing/mismatch targets in a <mark>
      */
-    public static function linkInventoryHtml(array $entries, int $max_per_class = self::LINKS_PER_CLASS_DEFAULT, string $highlight_xref = '', ?callable $target_linker = null): string {
+    public static function linkInventoryHtml(array $entries, int $max_per_class = self::LINKS_PER_CLASS_DEFAULT, string $highlight_xref = '', ?callable $target_linker = null, bool $highlight_problems = false): string {
         $items = [];
         foreach ($entries as $entry) {
             $items[$entry['class']][] = $entry;
@@ -585,7 +590,7 @@ final class XrefsService { // stuff related with handling cross-references
                     $pattern = '/(?<![A-Za-z0-9])' . preg_quote($highlight_xref, '/') . '(?![A-Za-z0-9])/';
                     $hl      = (string) preg_replace($pattern, '<mark class="le-xref-target">$0</mark>', $hl);
                 }
-                $target_html = self::targetLinksHtml($entry, $target_linker);
+                $target_html = self::targetLinksHtml($entry, $target_linker, $highlight_problems);
                 $html  .= '<li>' . $prefix . '<code>' . $hl . '</code>' . $target_html . '</li>';
             }
             $html .= '</ol>';
@@ -615,7 +620,7 @@ final class XrefsService { // stuff related with handling cross-references
      * @param array{class: string, token: string} $entry
      * @param callable(string, ?string): (array{name: string, url: string, tree_label: string, actual: string}|null)|null $target_linker
      */
-    private static function targetLinksHtml(array $entry, ?callable $target_linker): string {
+    private static function targetLinksHtml(array $entry, ?callable $target_linker, bool $highlight_problems = false): string {
         if ($target_linker === null || !in_array($entry['class'], ['xref', 'classic', 'pic'], true)) {
             return '';
         }
@@ -624,13 +629,13 @@ final class XrefsService { // stuff related with handling cross-references
         foreach (self::extractLinkTargets($entry['token']) as $target) {
             // Declared target type: the wt= letter (xref), or Media for a pic
             // link's id= target. classic / unknown letter = nothing to check.
-            $expected_tag = $target['type'] !== null
-                ? (self::WT_TYPE_TAGS[$target['type']] ?? null)
-                : ($entry['class'] === 'pic' ? 'OBJE' : null);
+            $expected_tag = self::expectedTagFor($target, $entry['class']);
+            $resolved     = $target_linker($target['xref'], $target['tree']);
+            $status       = self::targetStatus($resolved, $expected_tag);
 
-            $resolved = $target_linker($target['xref'], $target['tree']);
-            if ($resolved === null) {
-                $links[] = '<span class="le-target-missing" title="' . e(I18N::translate("target not found")). '">' . self::TARGET_NOT_FOUND_GLYPH . ($target['tree'] ? ' ' . $target['tree'] . ': ' : '') . ' @' . e($target['xref']) . '@</span>';
+            if ($status === 'missing') {
+                $problem = '<span class="le-target-missing" title="' . e(I18N::translate("target not found")). '">' . self::TARGET_NOT_FOUND_GLYPH . ($target['tree'] ? ' ' . $target['tree'] . ': ' : '') . ' @' . e($target['xref']) . '@</span>';
+                $links[] = $highlight_problems ? '<mark class="le-problem-mark">' . $problem . '</mark>' : $problem;
                 continue;
             }
 
@@ -638,9 +643,10 @@ final class XrefsService { // stuff related with handling cross-references
                 ? e($resolved['tree_label']) . ': ' . $resolved['name']
                 : $resolved['name'];
             $anchor = '<span class="le-cross-ref" title="' . e(I18N::translate('Cross-reference')) . '">↪</span> <a href="' . e($resolved['url']) . '">' . $label . '</a>';
-            if ($expected_tag !== null && $resolved['actual'] !== $expected_tag) {
-                $hint = I18N::translate('expected %1$s, is %2$s', $expected_tag, $resolved['actual']);
-                $anchor .= ' <span class="le-target-type-mismatch" title="' . e($hint) . '">' . self::TARGET_TYPE_MISMATCH_GLYPH . '</span>';
+            if ($status === 'mismatch') {
+                $hint    = I18N::translate('expected %1$s, is %2$s', $expected_tag, $resolved['actual']);
+                $problem = '<span class="le-target-type-mismatch" title="' . e($hint) . '">' . self::TARGET_TYPE_MISMATCH_GLYPH . '</span>';
+                $anchor .= ' ' . ($highlight_problems ? '<mark class="le-problem-mark">' . $problem . '</mark>' : $problem);
             }
             $links[] = $anchor;
         }
@@ -649,6 +655,63 @@ final class XrefsService { // stuff related with handling cross-references
         }
 
         return '<div class="le-target-links">' . implode('<br>', $links) . '</div>';
+    }
+
+    /**
+     * The GEDCOM tag a link target is declared to be: the "wt" type letter
+     * mapped to its tag, "OBJE" for a pic link's id= target, null when there
+     * is nothing to check (classic / unknown letter / other classes).
+     */
+    private static function expectedTagFor(array $target, string $class): ?string {
+        return $target['type'] !== null
+            ? (self::WT_TYPE_TAGS[$target['type']] ?? null)
+            : ($class === 'pic' ? 'OBJE' : null);
+    }
+
+    /**
+     * Classify one resolved target: "missing" (the XREF could not be
+     * resolved), "mismatch" (the declared type differs from the actual
+     * record tag) or "ok". Shared by the reference-link renderer and the
+     * "only broken targets" filter.
+     */
+    private static function targetStatus(?array $resolved, ?string $expected_tag): string {
+        if ($resolved === null) {
+            return 'missing';
+        }
+        if ($expected_tag !== null && $resolved['actual'] !== $expected_tag) {
+            return 'mismatch';
+        }
+
+        return 'ok';
+    }
+
+    /**
+     * True when any resolvable target of the given inventory is "missing"
+     * (unresolvable XREF) or a "mismatch" (declared type differs from the
+     * actual record tag). Shares its decision with targetLinksHtml() via
+     * expectedTagFor()/targetStatus(). A null $target_linker (or an inventory
+     * without xref/classic/pic targets) yields false.
+     *
+     * @param array<int, array{path: string, class: string, token: string, snippet: string}> $entries
+     * @param callable(string, ?string): (array{name: string, url: string, tree_label: string, actual: string}|null)|null $target_linker
+     */
+    public static function inventoryHasProblem(array $entries, ?callable $target_linker): bool {
+        if ($target_linker === null) {
+            return false;
+        }
+
+        foreach ($entries as $entry) {
+            if (!in_array($entry['class'], ['xref', 'classic', 'pic'], true)) {
+                continue;
+            }
+            foreach (self::extractLinkTargets($entry['token']) as $target) {
+                if (self::targetStatus($target_linker($target['xref'], $target['tree']), self::expectedTagFor($target, $entry['class'])) !== 'ok') {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**

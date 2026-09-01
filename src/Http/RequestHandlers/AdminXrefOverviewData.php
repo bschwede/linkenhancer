@@ -38,6 +38,7 @@ use Fisharebest\Webtrees\Services\TimeoutService;
 use Fisharebest\Webtrees\Services\TreeService;
 use Fisharebest\Webtrees\Tree;
 use Fisharebest\Webtrees\Validator;
+use Illuminate\Database\Query\Builder;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -114,15 +115,31 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
         // live=1 = "force live scan" checkbox: a deliberate index bypass for
         // comparison/debugging, only offered while a fresh index exists.
         $live = $params->boolean('live', false);
+        // target=problems = "only broken targets": keep only rows that carry a
+        // missing or type-mismatch target. That state is derived by resolving
+        // every target (not a plain column), so it runs as a PHP-side
+        // collection filter with correct count/pagination, not a SQL LIKE.
+        $only_problems = $params->string('target', '') === 'problems';
 
         // Phase 2: prefer the link index when it is present and fresh, unless
-        // a live scan is explicitly forced.
-        if (XrefsService::indexStatus()['fresh'] && !$live) {
+        // a live scan is explicitly forced. In live mode the "referencing
+        // XREF" filter is index-only and would be a coarse gate, so it is not
+        // applied there.
+        $index_fresh = XrefsService::indexStatus()['fresh'] && !$live;
+        $query       = $index_fresh
+            ? XrefsService::getIndexQuery($tree, $xref !== '' ? $xref : null, $rectypes, false)
+            : XrefsService::getRecordsQuery($tree, null, $rectypes, false);
+
+        if ($only_problems) {
+            return $this->problemsResponse($request, $query, $index_fresh, $xref, $max_links);
+        }
+
+        if ($index_fresh) {
             // Qualified column names: the plain names exist in both joined
             // tables and would be ambiguous in search/sort.
             return $this->datatables_service->handleQuery(
                 $request,
-                XrefsService::getIndexQuery($tree, $xref !== '' ? $xref : null, $rectypes, false),
+                $query,
                 ['s.xref', 's.rectype'],
                 [0 => 's.xref', 1 => 's.rectype'],
                 fn (object $row): array => $this->indexRowToColumns($row, $max_links, $xref)
@@ -130,11 +147,10 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
         }
 
         // Live scan (Phase 1 behaviour). The query is unordered on purpose:
-        // datatables applies the ordering itself. The xref filter is
-        // index-only - in live mode it would be a coarse gate, not a filter.
+        // datatables applies the ordering itself.
         return $this->datatables_service->handleQuery(
             $request,
-            XrefsService::getRecordsQuery($tree, null, $rectypes, false),
+            $query,
             ['xref', 'type'],
             [0 => 'xref', 1 => 'type'],
             fn (object $row): array => $this->liveRowToColumns($row, $max_links)
@@ -142,9 +158,63 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
     }
 
     /**
+     * "Only broken targets": load the coarse-filtered rows, keep only those
+     * with a missing/mismatch target, then let handleCollection() count, sort
+     * and paginate the filtered set. Target resolution is memoised per request
+     * (resolveTarget cache), so the column build below re-resolves cheaply.
+     */
+    private function problemsResponse(ServerRequestInterface $request, Builder $query, bool $index_fresh, string $xref, int $max_links): ResponseInterface
+    {
+        $rows = $query->get();
+
+        if ($index_fresh) {
+            $rows = $rows->filter(fn (object $row): bool => $this->indexRowHasProblem($row));
+
+            return $this->datatables_service->handleCollection(
+                $request,
+                $rows,
+                ['xref', 'type'],
+                [0 => 'xref', 1 => 'type'],
+                fn (object $row): array => $this->indexRowToColumns($row, $max_links, $xref, true)
+            );
+        }
+
+        $rows = $rows->filter(fn (object $row): bool => $this->liveRowHasProblem($row));
+
+        return $this->datatables_service->handleCollection(
+            $request,
+            $rows,
+            ['xref', 'type'],
+            [0 => 'xref', 1 => 'type'],
+            fn (object $row): array => $this->liveRowToColumns($row, $max_links, true)
+        );
+    }
+
+    /**
+     * True when this index row references at least one missing/mismatch target.
+     */
+    private function indexRowHasProblem(object $row): bool
+    {
+        $tree = $this->findTree((int) $row->file);
+
+        return XrefsService::inventoryHasProblem($this->indexInventory($row, $tree)['entries'], $this->makeTargetLinker($tree, (int) $row->file));
+    }
+
+    /**
+     * True when this live-scan row references at least one missing/mismatch target.
+     */
+    private function liveRowHasProblem(object $row): bool
+    {
+        $tree      = $this->findTree((int) $row->file);
+        $inventory = XrefsService::classifyGedcomText((string) $row->gedcom, TextTagCollector::DEFAULT_TAGS, (string) $row->type);
+
+        return XrefsService::inventoryHasProblem($inventory['entries'], $this->makeTargetLinker($tree, (int) $row->file));
+    }
+
+    /**
      * Live scan row: the record text is already part of the row (C4).
      */
-    private function liveRowToColumns(object $row, int $max_links): array
+    private function liveRowToColumns(object $row, int $max_links, bool $highlight_problems = false): array
     {
         $gedcom = (string) $row->gedcom;
         $tree   = $this->findTree((int) $row->file);
@@ -156,31 +226,20 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
 
         $inventory = XrefsService::classifyGedcomText($gedcom, TextTagCollector::DEFAULT_TAGS, (string) $row->type);
 
-        return $this->inventoryColumns($row, $tree, $record, $inventory, $max_links);
+        return $this->inventoryColumns($row, $tree, $record, $inventory, $max_links, '', $highlight_problems);
     }
 
     /**
-     * Index row: links come from the index, the record is fetched per row
-     * (a cheap indexed point lookup) for the display name and the URL.
-     * $highlight_xref is the active "referencing XREF" filter (empty = none);
-     * it is forwarded so the inventory can mark that XREF's occurrence.
+     * The link inventory of one index row. When the index entry has vanished
+     * it falls back to a live scan of the record. Shared by the column builder
+     * and the "only broken targets" filter so both see the same links.
+     *
+     * @return array{entries: array<int, array{path: string, class: string, token: string, snippet: string}>, counts: array<string, int>}
      */
-    private function indexRowToColumns(object $row, int $max_links, string $highlight_xref = ''): array
+    private function indexInventory(object $row, ?Tree $tree): array
     {
-        $tree = $this->findTree((int) $row->file);
-
-        $record = null;
-        if ($tree !== null) {
-            $record = Registry::gedcomRecordFactory()->make((string) $row->xref, $tree);
-        }
-
         $links = XrefsService::indexRowLinks((int) $row->file, (string) $row->xref, (string) $row->type);
-        if ($links === []) {
-            // Index entry vanished - fall back to the live scan of this record.
-            $inventory = $record instanceof GedcomRecord
-                ? XrefsService::classifyRecordLinks($record)
-                : ['entries' => [], 'counts' => XrefsService::emptyCounts()];
-        } else {
+        if ($links !== []) {
             $counts  = XrefsService::emptyCounts();
             $entries = [];
             foreach ($links as $link) {
@@ -192,10 +251,37 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
                     'snippet' => $link['snippet'] ?? $link['token'],
                 ];
             }
-            $inventory = ['entries' => $entries, 'counts' => $counts];
+
+            return ['entries' => $entries, 'counts' => $counts];
         }
 
-        return $this->inventoryColumns($row, $tree, $record, $inventory, $max_links, $highlight_xref);
+        // Index entry vanished - fall back to the live scan of this record.
+        $record = null;
+        if ($tree !== null) {
+            $record = Registry::gedcomRecordFactory()->make((string) $row->xref, $tree);
+        }
+
+        return $record instanceof GedcomRecord
+            ? XrefsService::classifyRecordLinks($record)
+            : ['entries' => [], 'counts' => XrefsService::emptyCounts()];
+    }
+
+    /**
+     * Index row: links come from the index, the record is fetched per row
+     * (a cheap indexed point lookup) for the display name and the URL.
+     * $highlight_xref is the active "referencing XREF" filter (empty = none);
+     * it is forwarded so the inventory can mark that XREF's occurrence.
+     */
+    private function indexRowToColumns(object $row, int $max_links, string $highlight_xref = '', bool $highlight_problems = false): array
+    {
+        $tree = $this->findTree((int) $row->file);
+
+        $record = null;
+        if ($tree !== null) {
+            $record = Registry::gedcomRecordFactory()->make((string) $row->xref, $tree);
+        }
+
+        return $this->inventoryColumns($row, $tree, $record, $this->indexInventory($row, $tree), $max_links, $highlight_xref, $highlight_problems);
     }
 
     /**
@@ -203,7 +289,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
      * @param array{entries: array<int, array{path: string, class: string, token: string, snippet: string}>, counts: array<string, int>} $inventory
      * @param string $highlight_xref active "referencing XREF" filter (index path only; empty = none)
      */
-    private function inventoryColumns(object $row, ?Tree $tree, ?GedcomRecord $record, array $inventory, int $max_links, string $highlight_xref = ''): array
+    private function inventoryColumns(object $row, ?Tree $tree, ?GedcomRecord $record, array $inventory, int $max_links, string $highlight_xref = '', bool $highlight_problems = false): array
     {
         $xref = (string) $row->xref;
         $type = (string) $row->type;
@@ -226,7 +312,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
             ) . '</strong>';
         // Resolve referenced records (xref/classic targets) for the inventory;
         // the source tree is this row's tree, the resolver is cached per request.
-        $name_html .= XrefsService::linkInventoryHtml($inventory['entries'], $max_links, $highlight_xref, $this->makeTargetLinker($tree, $file));
+        $name_html .= XrefsService::linkInventoryHtml($inventory['entries'], $max_links, $highlight_xref, $this->makeTargetLinker($tree, $file), $highlight_problems);
 
         return [
             $xref_html,

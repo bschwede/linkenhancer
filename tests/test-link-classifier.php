@@ -480,6 +480,32 @@ check(
     [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'pic', 'token' => '![p](#@id=@I2@)', 'snippet' => '![p](#@id=@I2@)']], 0, '', $target_linker)],
     ['<ul class="le-xref-inventory"><li><u>Pictures (pic: 1)</u><ol><li><code><strong>![p](#@id=@I2@)</strong></code><div class="le-target-links"><span class="le-cross-ref" title="Cross-reference">↪</span> <a href="/tree/t/individual/I2">Max Mustermann</a> <span class="le-target-type-mismatch" title="expected OBJE, is INDI">⚠</span></div></li></ol></li></ul>']
 );
+// T42 - "only broken targets" highlight: a missing target is wrapped in a
+// <mark> when $highlight_problems (5th arg) is set.
+check(
+    'T42 mark wraps a missing target when highlight_problems is set',
+    [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=i@I404@)', 'snippet' => '[see](#@wt=i@I404@)']], 0, '', $target_linker, true)],
+    ['<ul class="le-xref-inventory"><li><u>Cross-references (xref: 1)</u><ol><li><code><strong>[see](#@wt=i@I404@)</strong></code><div class="le-target-links"><mark class="le-problem-mark"><span class="le-target-missing" title="target not found">✗ @I404@</span></mark></div></li></ol></li></ul>']
+);
+// T43 - a type-mismatch target is wrapped in a <mark> (the link stays).
+check(
+    'T43 mark wraps a mismatch target when highlight_problems is set',
+    [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=i@I9@)', 'snippet' => '[see](#@wt=i@I9@)']], 0, '', $target_linker, true)],
+    ['<ul class="le-xref-inventory"><li><u>Cross-references (xref: 1)</u><ol><li><code><strong>[see](#@wt=i@I9@)</strong></code><div class="le-target-links"><span class="le-cross-ref" title="Cross-reference">↪</span> <a href="/tree/t/individual/I9">Max</a> <mark class="le-problem-mark"><span class="le-target-type-mismatch" title="expected INDI, is FAM">⚠</span></mark></div></li></ol></li></ul>']
+);
+// T44 - a healthy target is NOT marked, even with highlight_problems set.
+check(
+    'T44 a healthy target is not marked when highlight_problems is set',
+    [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=i@I2@)', 'snippet' => '[see](#@wt=i@I2@)']], 0, '', $target_linker, true)],
+    ['<ul class="le-xref-inventory"><li><u>Cross-references (xref: 1)</u><ol><li><code><strong>[see](#@wt=i@I2@)</strong></code><div class="le-target-links"><span class="le-cross-ref" title="Cross-reference">↪</span> <a href="/tree/t/individual/I2">Max Mustermann</a></div></li></ol></li></ul>']
+);
+// T45 - inventoryHasProblem(): the "only broken targets" filter predicate.
+check('T45a inventoryHasProblem true for a missing target', [XrefsService::inventoryHasProblem([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=i@I404@)', 'snippet' => '']], $target_linker)], [true]);
+check('T45b inventoryHasProblem true for a type mismatch', [XrefsService::inventoryHasProblem([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=i@I9@)', 'snippet' => '']], $target_linker)], [true]);
+check('T45c inventoryHasProblem false for a healthy target', [XrefsService::inventoryHasProblem([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=i@I2@)', 'snippet' => '']], $target_linker)], [false]);
+check('T45d inventoryHasProblem false when no wt= letter (not type-checked)', [XrefsService::inventoryHasProblem([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=@I2@)', 'snippet' => '']], $target_linker)], [false]);
+check('T45e inventoryHasProblem false for a non-xref/classic/pic class', [XrefsService::inventoryHasProblem([['path' => '', 'class' => 'ext', 'token' => '[x](#@I2@)', 'snippet' => '']], $target_linker)], [false]);
+check('T45f inventoryHasProblem false when the target linker is null', [XrefsService::inventoryHasProblem([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=i@I404@)', 'snippet' => '']], null)], [false]);
 
 echo "\n{$total} tests, {$failures} failure(s)\n";
 exit($failures === 0 ? 0 : 1);
