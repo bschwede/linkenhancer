@@ -9,6 +9,7 @@ use Fisharebest\Webtrees\Contracts\UserInterface;
 use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
 use Fisharebest\Webtrees\I18N;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
+use Schwendinger\Webtrees\Module\LinkEnhancer\MoreI18N;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 
 use function parse_str;
@@ -54,6 +55,7 @@ if ($index_status_ts) {
 <?= view('components/breadcrumbs', [
     'links' => [
         route(ControlPanel::class) => I18N::translate('Control panel'),
+        $module->getConfigLink() => $module->title(),
         $title,
     ],
 ]) ?>
@@ -108,7 +110,7 @@ if ($index_status_ts) {
         </div>
     <?php endif; ?>
     <div class="col-auto">
-        <select class="form-select" name="rectype">
+        <select class="form-select" name="rectype" title="<?= e(I18N::translate('Record types')) ?>">
             <option value=""><?= I18N::translate('all types') ?></option>
             <?php foreach ($rectypes as $key): ?>
                 <option value="<?= e($key) ?>" <?= $key === $rectype ? 'selected' : '' ?>><?= e($key) ?></option>
@@ -116,7 +118,7 @@ if ($index_status_ts) {
         </select>
     </div>
     <div class="col-auto">
-        <select class="form-select" name="tree">
+        <select class="form-select" name="tree" title="<?= e(MoreI18N::xlate('Family trees')) ?>">
             <option value=""><?= I18N::translate('all trees') ?></option>
             <?php foreach ($trees as $tree): ?>
                 <option value="<?= $tree->id() ?>" <?= $tree->id() === $tree_id ? 'selected' : '' ?>><?= e($tree->name()) ?></option>
@@ -132,7 +134,11 @@ if ($index_status_ts) {
     </div>
     <div class="col-auto form-check">
         <input class="form-check-input" type="checkbox" name="target" value="problems" id="le-only-problems" <?= $target === 'problems' ? 'checked' : '' ?>>
-        <label class="form-check-label" for="le-only-problems" title="<?= I18N::translate('Only rows with a missing or wrong-type target are shown') ?>"><?= I18N::translate('Only broken targets') ?></label>
+        <label class="form-check-label" for="le-only-problems" title="<?= I18N::translate('Only rows with a missing or wrong-type target are shown') ?>">
+            <?= I18N::translate('Only broken targets') ?>
+            (<span title="<?= e(I18N::translate("target not found")) ?>"><?= XrefsService::TARGET_NOT_FOUND_GLYPH ?></span> 
+            / <span title="<?= e(I18N::translate("The target type differs from the declaration")) ?>"><?= XrefsService::TARGET_TYPE_MISMATCH_GLYPH ?></span>)
+        </label>
     </div>
     <div class="col-auto">
         <button class="btn btn-outline-primary" type="submit"><?= I18N::translate('Filter') ?></button>
@@ -161,10 +167,10 @@ if ($index_status_ts) {
     >
         <thead>
             <tr>
-                <th><?= I18N::translate('xref') ?></th>
-                <th><?= I18N::translate('type') ?></th>
-                <th><?= I18N::translate('record') ?></th>
-                <th><?= I18N::translate('links') ?></th>
+                <th><?= I18N::translate('XREF') ?></th>
+                <th><?= MoreI18N::xlate('Type') ?></th>
+                <th><?= MoreI18N::xlate('Record') ?></th>
+                <th><?= MoreI18N::xlate('Links') ?></th>
             </tr>
         </thead>
     </table>
