@@ -507,6 +507,21 @@ check('T45d inventoryHasProblem false when no wt= letter (not type-checked)', [X
 check('T45e inventoryHasProblem false for a non-xref/classic/pic class', [XrefsService::inventoryHasProblem([['path' => '', 'class' => 'ext', 'token' => '[x](#@I2@)', 'snippet' => '']], $target_linker)], [false]);
 check('T45f inventoryHasProblem false when the target linker is null', [XrefsService::inventoryHasProblem([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=i@I404@)', 'snippet' => '']], null)], [false]);
 
+// T46+: Block module support
+check('T46a blockTextSettings faq returns only text settings', XrefsService::blockTextSettings('faq'), ['faqbody']);
+check('T46b blockTextSettings html returns only text settings', XrefsService::blockTextSettings('html'), ['html']);
+check('T46c blockTextSettings stories returns only text settings', XrefsService::blockTextSettings('stories'), ['story_body']);
+check('T46d blockTextSettings vesta returns only text settings', XrefsService::blockTextSettings('_vesta_classic_look_and_feel_'), ['snippet']);
+check('T46e blockTextSettings unknown module returns empty', XrefsService::blockTextSettings('nonexistent'), []);
+check('T46f blockModuleNames returns all 4 modules', XrefsService::blockModuleNames(), ['html', 'faq', 'stories', '_vesta_classic_look_and_feel_']);
+check('T47a BLOCK_LE_PREFILTER matches LE link syntax', [preg_match('/' . XrefsService::BLOCK_LE_PREFILTER . '/', 'See [person](#@wt=i@I123@) here')], [1]);
+check('T47b BLOCK_LE_PREFILTER matches pic LE link', [preg_match('/' . XrefsService::BLOCK_LE_PREFILTER . '/', '![alt](#@path/to/img)')], [1]);
+check('T47c BLOCK_LE_PREFILTER does not match plain text', [preg_match('/' . XrefsService::BLOCK_LE_PREFILTER . '/', 'No links here at all')], [0]);
+check('T47d BLOCK_LE_PREFILTER does not match classic xref', [preg_match('/' . XrefsService::BLOCK_LE_PREFILTER . '/', 'See @I42@ for info')], [0]);
+check('T48a classifyTextLinks on block text with LE xref link', XrefsService::classifyTextLinks('<p>See [person](#@wt=i@I123@) here</p>'), [['class' => 'xref', 'token' => '[person](#@wt=i@I123@)', 'snippet' => '<p>See [person](#@wt=i@I123@) here</p>']]);
+check('T48b classifyTextLinks on block text without links', XrefsService::classifyTextLinks('<p>Just a <strong>bold</strong> paragraph</p>'), []);
+check('T48c classifyTextLinks on block text with pic link', XrefsService::classifyTextLinks('<p>![photo](#@media/m123)</p>'), [['class' => 'pic', 'token' => '![photo](#@media/m123)', 'snippet' => '<p>![photo](#@media/m123)</p>']]);
+
 echo "\n{$total} tests, {$failures} failure(s)\n";
 exit($failures === 0 ? 0 : 1);
 }

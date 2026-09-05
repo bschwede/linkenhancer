@@ -24,6 +24,7 @@ use function parse_url;
  * @var int                                           $tree_id    active tree filter (0 = all)
  * @var int                                           $max_links  active inventory cap (0 = all)
  * @var array<int,string>                             $rectypes   selectable record types
+ * @var array<string, array{title: string, settings: array<string, string>}> $block_rectypes
  * @var \Illuminate\Support\Collection                $trees      all trees
  * @var array{rows: int, scanned_at: string|null, fresh: bool} $index_status
  * @var bool                                          $live         force live scan (index bypass)
@@ -112,9 +113,16 @@ if ($index_status_ts) {
     <div class="col-auto">
         <select class="form-select" name="rectype" title="<?= e(I18N::translate('Record types')) ?>">
             <option value=""><?= I18N::translate('all types') ?></option>
-            <?php foreach ($rectypes as $key): ?>
-                <option value="<?= e($key) ?>" <?= $key === $rectype ? 'selected' : '' ?>><?= e($key) ?></option>
-            <?php endforeach; ?>
+            <optgroup label="<?= I18N::translate('GEDCOM records') ?>">
+                <?php foreach ($rectypes as $key): ?>
+                    <option value="<?= e($key) ?>" <?= $key === $rectype ? 'selected' : '' ?>><?= e($key) ?></option>
+                <?php endforeach; ?>
+            </optgroup>
+            <optgroup label="<?= MoreI18N::xlate('Blocks') ?>">
+                <?php foreach ($block_rectypes as $module_name => $block_def): ?>
+                    <option value="<?= e($module_name) ?>" <?= $module_name === $rectype ? 'selected' : '' ?>><?= e(MoreI18N::xlate($block_def['title'])) ?></option>
+                <?php endforeach; ?>
+            </optgroup>
         </select>
     </div>
     <div class="col-auto">

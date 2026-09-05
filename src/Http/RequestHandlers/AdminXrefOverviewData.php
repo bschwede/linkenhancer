@@ -28,6 +28,7 @@ namespace Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers;
 
 use DomainException;
 use Fisharebest\Webtrees\Auth;
+use Fisharebest\Webtrees\DB;
 use Fisharebest\Webtrees\GedcomRecord;
 use Fisharebest\Webtrees\Http\Exceptions\HttpAccessDeniedException;
 use Fisharebest\Webtrees\I18N;
@@ -47,6 +48,7 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 
 use function array_key_exists;
 use function e;
+use function route;
 use function trim;
 
 /**
@@ -130,30 +132,31 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
             ? XrefsService::getIndexQuery($tree, $xref !== '' ? $xref : null, $rectypes, false)
             : XrefsService::getRecordsQuery($tree, null, $rectypes, false);
 
+        $block_query = XrefsService::getBlockQuery($tree, $rectypes, $index_fresh);
+        if ($block_query !== null) {
+            $query = $query->unionAll($block_query);
+        }
+
         if ($only_problems) {
             return $this->problemsResponse($request, $query, $index_fresh, $xref, $max_links);
         }
 
         if ($index_fresh) {
-            // Qualified column names: the plain names exist in both joined
-            // tables and would be ambiguous in search/sort.
             return $this->datatables_service->handleQuery(
                 $request,
                 $query,
-                ['s.xref', 's.rectype'],
-                [0 => 's.xref', 1 => 's.rectype'],
-                fn (object $row): array => $this->indexRowToColumns($row, $max_links, $xref)
+                ['xref', 'type'],
+                [0 => 'xref', 1 => 'type'],
+                fn (object $row): array => $this->dispatchRow($row, $max_links, $xref, true)
             );
         }
 
-        // Live scan (Phase 1 behaviour). The query is unordered on purpose:
-        // datatables applies the ordering itself.
         return $this->datatables_service->handleQuery(
             $request,
             $query,
             ['xref', 'type'],
             [0 => 'xref', 1 => 'type'],
-            fn (object $row): array => $this->liveRowToColumns($row, $max_links)
+            fn (object $row): array => $this->dispatchRow($row, $max_links, '', false)
         );
     }
 
@@ -181,7 +184,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
                 $rows,
                 ['xref', 'type'],
                 [0 => 'xref', 1 => 'type'],
-                fn (array $row): array => $this->indexRowToColumns((object) $row, $max_links, $xref, true)
+                fn (array $row): array => $this->dispatchRow((object) $row, $max_links, $xref, true)
             );
         }
 
@@ -194,7 +197,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
             $rows,
             ['xref', 'type'],
             [0 => 'xref', 1 => 'type'],
-            fn (array $row): array => $this->liveRowToColumns((object) $row, $max_links, true)
+            fn (array $row): array => $this->dispatchRow((object) $row, $max_links, '', false)
         );
     }
 
@@ -203,6 +206,11 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
      */
     private function indexRowHasProblem(object $row): bool
     {
+        $block_id = property_exists($row, 'block_id') ? (int) $row->block_id : 0;
+        if ($block_id > 0) {
+            return $this->blockRowHasProblem($row);
+        }
+
         $tree = $this->findTree((int) $row->file);
 
         return XrefsService::inventoryHasProblem($this->indexInventory($row, $tree)['entries'], $this->makeTargetLinker($tree, (int) $row->file));
@@ -213,10 +221,52 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
      */
     private function liveRowHasProblem(object $row): bool
     {
+        $block_id = property_exists($row, 'block_id') ? (int) $row->block_id : 0;
+        if ($block_id > 0) {
+            return $this->blockRowHasProblem($row);
+        }
+
         $tree      = $this->findTree((int) $row->file);
         $inventory = XrefsService::classifyGedcomText((string) $row->gedcom, TextTagCollector::DEFAULT_TAGS, (string) $row->type);
 
         return XrefsService::inventoryHasProblem($inventory['entries'], $this->makeTargetLinker($tree, (int) $row->file));
+    }
+
+    private function blockRowHasProblem(object $row): bool
+    {
+        $module_name = (string) $row->type;
+        $file        = (int) ($row->file ?? 0);
+        $tree        = $file > 0 ? $this->findTree($file) : null;
+
+        $block_def = XrefsService::BLOCKS[$module_name] ?? null;
+        if ($block_def === null) {
+            return false;
+        }
+
+        $settings = DB::table('block_setting')
+            ->where('block_id', '=', (int) $row->block_id)
+            ->pluck('setting_value', 'setting_name');
+
+        $entries = [];
+        foreach ($block_def['settings'] as $name => $class) {
+            if ($class !== 'text') {
+                continue;
+            }
+            $text = (string) ($settings[$name] ?? '');
+            if ($text === '') {
+                continue;
+            }
+            foreach (XrefsService::classifyTextLinks($text) as $link) {
+                $entries[] = [
+                    'path'    => $name,
+                    'class'   => $link['class'],
+                    'token'   => $link['token'],
+                    'snippet' => $link['snippet'],
+                ];
+            }
+        }
+
+        return XrefsService::inventoryHasProblem($entries, $this->makeTargetLinker($tree, $file));
     }
 
     /**
@@ -235,6 +285,104 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
         $inventory = XrefsService::classifyGedcomText($gedcom, TextTagCollector::DEFAULT_TAGS, (string) $row->type);
 
         return $this->inventoryColumns($row, $tree, $record, $inventory, $max_links, '', $highlight_problems);
+    }
+
+    private function dispatchRow(object $row, int $max_links, string $highlight_xref, bool $index_fresh): array
+    {
+        $block_id = property_exists($row, 'block_id') ? (int) $row->block_id : 0;
+        if ($block_id > 0) {
+            return $this->blockRowToColumns($row, $max_links, $highlight_xref);
+        }
+        if ($index_fresh) {
+            return $this->indexRowToColumns($row, $max_links, $highlight_xref);
+        }
+
+        return $this->liveRowToColumns($row, $max_links);
+    }
+
+    /**
+     * Block row: fetch settings (PK point lookup), classify "text" settings
+     * for LE links, build the same 4-column output as GEDCOM rows.
+     */
+    private function blockRowToColumns(object $row, int $max_links, string $highlight_xref = '', bool $highlight_problems = false): array
+    {
+        $block_id    = (int) $row->block_id;
+        $module_name = (string) $row->type;
+        $file        = (int) ($row->file ?? 0);
+        $tree        = $file > 0 ? $this->findTree($file) : null;
+
+        $block_def = XrefsService::BLOCKS[$module_name] ?? null;
+        if ($block_def === null) {
+            return [e($row->xref), e($module_name), '', '0'];
+        }
+
+        $settings = DB::table('block_setting')
+            ->where('block_id', '=', $block_id)
+            ->pluck('setting_value', 'setting_name');
+
+        $title_setting = '';
+        foreach ($block_def['settings'] as $name => $class) {
+            if ($class === 'title') {
+                $title_setting = (string) ($settings[$name] ?? '');
+                break;
+            }
+        }
+
+        $entries = [];
+        $counts  = XrefsService::emptyCounts();
+        foreach ($block_def['settings'] as $name => $class) {
+            if ($class !== 'text') {
+                continue;
+            }
+            $text = (string) ($settings[$name] ?? '');
+            if ($text === '') {
+                continue;
+            }
+            foreach (XrefsService::classifyTextLinks($text) as $link) {
+                $counts[$link['class']] = ($counts[$link['class']] ?? 0) + 1;
+                $entries[] = [
+                    'path'    => $name,
+                    'class'   => $link['class'],
+                    'token'   => $link['token'],
+                    'snippet' => $link['snippet'],
+                ];
+            }
+        }
+
+        $xref_label = (string) $row->xref;
+        $xref_html  = '<a href="' . e($this->blockEditUrl($tree, $module_name, $block_id)) . '">' . e($xref_label) . '</a>'
+            . '<br><small class="text-muted">'
+            . e($tree !== null ? $tree->name() : MoreI18N::xlate('Global'))
+            . '</small>';
+
+        $type_html = e(MoreI18N::xlate($block_def['title']));
+
+        $name_html = '<strong>' . e($title_setting !== '' ? $title_setting : $xref_label) . '</strong>';
+        $name_html .= XrefsService::linkInventoryHtml(
+            $entries, $max_links, $highlight_xref,
+            $this->makeTargetLinker($tree, $file), $highlight_problems
+        );
+
+        return [
+            $xref_html,
+            $type_html,
+            $name_html,
+            XrefsService::linkCountSummary($counts),
+        ];
+    }
+
+    private function blockEditUrl(?Tree $tree, string $module_name, int $block_id): string
+    {
+        if ($tree === null) {
+            return '#';
+        }
+
+        return route('module', [
+            'module' => $module_name,
+            'action' => 'edit-block',
+            'tree'   => $tree->id(),
+            'block'  => $block_id,
+        ]);
     }
 
     /**

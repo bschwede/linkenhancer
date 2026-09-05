@@ -974,6 +974,7 @@ class LinkEnhancerModule extends AbstractModule implements
             'live' => $live,
             'target' => $target,
             'rectypes' => XrefsService::supportedGedcomRecordKeys(),
+            'block_rectypes' => XrefsService::BLOCKS,
             'trees' => Registry::container()->get(TreeService::class)->all(),
             'index_status' => $index_status,
             'limited_mode' => !XrefsService::supportsRegexp(),

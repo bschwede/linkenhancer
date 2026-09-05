@@ -197,6 +197,62 @@ final class XrefsService { // stuff related with handling cross-references
 
     public const GEDCOM_OTHER_SUBTYPES = [ "NOTE", "REPO", "_LOC" ];
 
+    /**
+     * Block modules whose "text" settings may contain LE links / XREFs.
+     * Key = block.module_name.
+     *
+     * @var array<string, array{title: string, settings: array<string, string>}>
+     */
+    public const BLOCKS = [
+        'html' => [
+            'title'    => 'HTML',
+            'settings' => ['title' => 'title', 'html' => 'text', 'languages' => 'info'],
+        ],
+        'faq' => [
+            'title'    => 'FAQ',
+            'settings' => ['header' => 'title', 'faqbody' => 'text', 'languages' => 'info'],
+        ],
+        'stories' => [
+            'title'    => 'Stories',
+            'settings' => ['title' => 'title', 'story_body' => 'text', 'languages' => 'info'],
+        ],
+        '_vesta_classic_look_and_feel_' => [
+            'title'    => 'Name badges (vesta)',
+            'settings' => ['header' => 'title', 'snippet' => 'text', 'regex' => 'info', 'access' => 'access'],
+        ],
+    ];
+
+    /**
+     * Block pre-filter: the setting value contains an LE link in the
+     * standard "[text](#@...)" syntax.
+     */
+    public const BLOCK_LE_PREFILTER = '\\]\\(#@';
+
+    /** LIKE fallback for engines without REGEXP support. */
+    public const BLOCK_LE_LIKE = '%](#@%';
+
+    /**
+     * Setting names classified as 'text' for a given block module.
+     *
+     * @return array<int,string>
+     */
+    public static function blockTextSettings(string $module_name): array {
+        $block = self::BLOCKS[$module_name] ?? null;
+        if ($block === null) {
+            return [];
+        }
+        return array_values(array_filter(array_keys($block['settings']), static fn (string $name): bool => $block['settings'][$name] === 'text'));
+    }
+
+    /**
+     * All block module names (for the rectype filter dropdown).
+     *
+     * @return array<int,string>
+     */
+    public static function blockModuleNames(): array {
+        return array_keys(self::BLOCKS);
+    }
+
     private static function getGedcomRecTypeSubquery(array $params, string $xref = Gedcom::REGEX_XREF, int|null $file = null): Builder {
         // Identifiers are wrapped per grammar (backticks on M/M, double
         // quotes on PG/SQLite, [] on SQL Server) - the live overview must
@@ -210,7 +266,8 @@ final class XrefsService { // stuff related with handling cross-references
                 $params['table'] === 'other'
                     ? DB::raw($grammar->wrap('o_type') . ' AS type')
                     : DB::raw($params['typestr'] . ' AS type'),
-                DB::raw($grammar->wrap($params['prefix'] . '_gedcom') . ' AS gedcom')
+                DB::raw($grammar->wrap($params['prefix'] . '_gedcom') . ' AS gedcom'),
+                DB::raw('NULL AS block_id')
             );
 
         if ($file !== null) {
@@ -371,6 +428,84 @@ final class XrefsService { // stuff related with handling cross-references
         }
 
         return $query;
+    }
+
+    /**
+     * Subquery for block entries containing LE links. One subquery per module,
+     * UNION ALL'd. Always a live scan (no index).
+     *
+     * @param Tree|null        $tree       restrict to one tree (global blocks always included)
+     * @param array<int,string> $rectypes  active rectype filter (empty = all)
+     * @param bool             $index_mode true = index column shape (file, xref, type, block_id)
+     *                                    false = live column shape (xref, file, type, gedcom, block_id)
+     *
+     * @return Builder|null null when no block module matches the rectype filter
+     */
+    public static function getBlockQuery(Tree|null $tree, array $rectypes, bool $index_mode = false): ?Builder {
+        $module_names = self::blockModuleNames();
+
+        if ($rectypes !== []) {
+            $module_names = array_values(array_intersect($module_names, $rectypes));
+            if ($module_names === []) {
+                return null;
+            }
+        }
+
+        $union = null;
+        foreach ($module_names as $module_name) {
+            $text_settings = self::blockTextSettings($module_name);
+            if ($text_settings === []) {
+                continue;
+            }
+
+            if ($index_mode) {
+                $select = [
+                    DB::raw('b.gedcom_id AS file'),
+                    DB::raw("CONCAT('BLOCK-', b.block_id) AS xref"),
+                    DB::raw("'" . $module_name . "' AS type"),
+                    DB::raw('b.block_id AS block_id'),
+                ];
+            } else {
+                $select = [
+                    DB::raw("CONCAT('BLOCK-', b.block_id) AS xref"),
+                    DB::raw('b.gedcom_id AS file'),
+                    DB::raw("'" . $module_name . "' AS type"),
+                    DB::raw('NULL AS gedcom'),
+                    DB::raw('b.block_id AS block_id'),
+                ];
+            }
+
+            $subquery = DB::table('block AS b')
+                ->select($select)
+                ->where('b.module_name', '=', $module_name);
+
+            if ($tree instanceof Tree) {
+                $subquery->where(static function ($q) use ($tree): void {
+                    $q->where('b.gedcom_id', '=', $tree->id())
+                        ->orWhereNull('b.gedcom_id');
+                });
+            }
+
+            $subquery->where(static function ($q) use ($text_settings): void {
+                foreach ($text_settings as $setting_name) {
+                    $q->orWhereExists(static function ($sub) use ($setting_name): void {
+                        $sub->select(DB::raw(1))
+                            ->from('block_setting')
+                            ->whereColumn('block_setting.block_id', 'b.block_id')
+                            ->where('block_setting.setting_name', '=', $setting_name);
+                        if (self::supportsRegexp()) {
+                            $sub->where('block_setting.setting_value', DB::regexOperator(), self::BLOCK_LE_PREFILTER);
+                        } else {
+                            $sub->where('block_setting.setting_value', 'like', self::BLOCK_LE_LIKE);
+                        }
+                    });
+                }
+            });
+
+            $union = $union ? $union->unionAll($subquery) : $subquery;
+        }
+
+        return $union;
     }
 
     /**
@@ -846,7 +981,7 @@ final class XrefsService { // stuff related with handling cross-references
                     ->on('l.rectype', '=', 's.rectype');
             })
             ->distinct()
-            ->select(['s.file', 's.xref', DB::raw('s.rectype AS type')])
+            ->select(['s.file', 's.xref', DB::raw('s.rectype AS type'), DB::raw('NULL AS block_id')])
             ->whereIn('s.rectype', self::normalizeIndexRectypes($rectypes));
 
         if ($ordered) {
