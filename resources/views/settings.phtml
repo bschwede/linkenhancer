@@ -68,18 +68,15 @@ $module = Registry::container()->get(LinkEnhancerModule::class);
 </p>
 
 <!-- XREF Overview link -->
-<div class="row">
-    <div class="col-sm-12">
-        <h4><?= /*I18N: XREF Overview */ I18N::translate('XREF Overview') ?></h4>
-        <p>
-            <a href="<?= route('module', ['module' => $module->name(), 'action' => 'AdminXrefOverview']) ?>" class="btn btn-outline-primary">
-                <?= I18N::translate('Open XREF Overview') ?>
-            </a>
-        </p>
-        <p class="text-muted">
-            <?= I18N::translate('List all cross-references (XREFs) found in GEDCOM records and HTML blocks across all accessible trees. Broken links are highlighted.') ?>
-        </p>
-    </div>
+<div class="row mt-5">
+    <p class="col-sm-3 text-center">
+        <a href="<?= route('module', ['module' => $module->name(), 'action' => 'AdminXrefOverview']) ?>" class="btn btn-outline-primary">
+            <?= I18N::translate('Cross-Reference Overview') ?>
+        </a>
+    </p>
+    <p class="col-sm-9 text-start text-muted">
+        <?= I18N::translate('List all records that contain cross-references (XREFs) or linkenhancer links.') ?>
+    </p>
 </div>
 
 <div class="linkenhancer mb-5">
