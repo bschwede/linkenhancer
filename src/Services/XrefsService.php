@@ -49,6 +49,12 @@ final class XrefsService { // stuff related with handling cross-references
     public const RE_LE_LINK = '/(!?\[[^\]]+\]\(#@[^)]+\))/';
 
     /**
+     * LE link in HTML block content: <a ... href="#@params@...">text</a>
+     * (single or double quotes around the href value).
+     */
+    public const RE_LE_HTML_LINK = '/<a\s[^>]*?href=["\']#@[^"\']*["\'][^>]*>[^<]*<\/a>/i';
+
+    /**
      * Pass 2 residuals: defective LE remainder "](#@" and classic @XREF@.
      */
     public const RE_REMAINDER = '/(\]\(#@[^)]*|@[A-Za-z0-9:_.-]{1,20}@)/';
@@ -223,13 +229,13 @@ final class XrefsService { // stuff related with handling cross-references
     ];
 
     /**
-     * Block pre-filter: the setting value contains an LE link in the
-     * standard "[text](#@...)" syntax.
+     * Block pre-filter: the setting value contains an LE link in HTML href
+     * syntax: <a ... href="#@...">.
      */
-    public const BLOCK_LE_PREFILTER = '\\]\\(#@';
+    public const BLOCK_LE_PREFILTER = 'href=["\']#@';
 
     /** LIKE fallback for engines without REGEXP support. */
-    public const BLOCK_LE_LIKE = '%](#@%';
+    public const BLOCK_LE_LIKE = '%#@%';
 
     /**
      * Setting names classified as 'text' for a given block module.
@@ -560,6 +566,51 @@ final class XrefsService { // stuff related with handling cross-references
                     'class'   => str_starts_with($match[0], '](#@') ? 'other' : 'classic',
                     'token'   => $match[0],
                     'snippet' => self::snippet($text, (int) $match[1], $match[0]),
+                ];
+            }
+        }
+
+        ksort($found);
+
+        return array_values($found);
+    }
+
+    /**
+     * Classify LE links in HTML block content (<a href="#@...">text</a>).
+     * No pic class, no classic @XREF@ pass.
+     *
+     * @return array<int, array{class: string, token: string, snippet: string}>
+     */
+    public static function classifyHtmlLinks(string $text): array {
+        $found = [];
+
+        if (preg_match_all(self::RE_LE_HTML_LINK, $text, $m1, PREG_OFFSET_CAPTURE) !== false) {
+            foreach ($m1[0] as $match) {
+                $token  = $match[0];
+                $offset = (int) $match[1];
+
+                $href_pos = stripos($token, 'href="');
+                $quote    = '"';
+                if ($href_pos === false) {
+                    $href_pos = stripos($token, "href='");
+                    $quote    = "'";
+                }
+                if ($href_pos === false) {
+                    continue;
+                }
+                $href_start = $href_pos + 6;
+                $href_end   = strpos($token, $quote, $href_start);
+                $href_val = $href_end !== false
+                    ? substr($token, $href_start, $href_end - $href_start)
+                    : substr($token, $href_start);
+
+                $le_params = str_starts_with($href_val, '#@') ? substr($href_val, 2) : $href_val;
+                $class     = preg_match(self::RE_WT_PARAM, $le_params) === 1 ? 'xref' : 'ext';
+
+                $found[$offset] = [
+                    'class'   => $class,
+                    'token'   => $token,
+                    'snippet' => self::snippet($text, $offset, $token),
                 ];
             }
         }

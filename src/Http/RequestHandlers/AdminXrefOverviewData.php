@@ -128,13 +128,20 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
         // XREF" filter is index-only and would be a coarse gate, so it is not
         // applied there.
         $index_fresh = XrefsService::indexStatus()['fresh'] && !$live;
-        $query       = $index_fresh
-            ? XrefsService::getIndexQuery($tree, $xref !== '' ? $xref : null, $rectypes, false)
-            : XrefsService::getRecordsQuery($tree, null, $rectypes, false);
 
-        $block_query = XrefsService::getBlockQuery($tree, $rectypes, $index_fresh);
-        if ($block_query !== null) {
-            $query = $query->unionAll($block_query);
+        $is_block_rectype = $rectype !== '' && in_array($rectype, XrefsService::blockModuleNames(), true);
+
+        $query = null;
+        if (!$is_block_rectype) {
+            $query = $index_fresh
+                ? XrefsService::getIndexQuery($tree, $xref !== '' ? $xref : null, $rectypes, false)
+                : XrefsService::getRecordsQuery($tree, null, $rectypes, false);
+        }
+        if ($rectype === '' || $is_block_rectype) {
+            $block_query = XrefsService::getBlockQuery($tree, $rectypes, $index_fresh);
+            if ($block_query !== null) {
+                $query = $query === null ? $block_query : $query->unionAll($block_query);
+            }
         }
 
         if ($only_problems) {
@@ -256,7 +263,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
             if ($text === '') {
                 continue;
             }
-            foreach (XrefsService::classifyTextLinks($text) as $link) {
+            foreach (XrefsService::classifyHtmlLinks($text) as $link) {
                 $entries[] = [
                     'path'    => $name,
                     'class'   => $link['class'],
@@ -338,7 +345,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
             if ($text === '') {
                 continue;
             }
-            foreach (XrefsService::classifyTextLinks($text) as $link) {
+            foreach (XrefsService::classifyHtmlLinks($text) as $link) {
                 $counts[$link['class']] = ($counts[$link['class']] ?? 0) + 1;
                 $entries[] = [
                     'path'    => $name,
