@@ -523,6 +523,14 @@ check('T48b classifyHtmlLinks without LE links', XrefsService::classifyHtmlLinks
 check('T48c classifyHtmlLinks ext link (no wt= param)', XrefsService::classifyHtmlLinks('<a href="#@ext_url">ext</a>'), [['class' => 'ext', 'token' => '<a href="#@ext_url">ext</a>', 'snippet' => '<a href="#@ext_url">ext</a>']]);
 check('T48d classifyHtmlLinks multiple links', XrefsService::classifyHtmlLinks('<a href="#@wt=i@I1@">a</a> and <a href="#@other">b</a>'), [['class' => 'xref', 'token' => '<a href="#@wt=i@I1@">a</a>', 'snippet' => '<a href="#@wt=i@I1@">a</a> and <a hr'], ['class' => 'ext', 'token' => '<a href="#@other">b</a>', 'snippet' => 'a</a> and <a href="#@other">b</a>']]);
 
+// T49: extractLinkTargets with HTML tokens
+check('T49a extractLinkTargets HTML xref link', XrefsService::extractLinkTargets('<a href="#@wt=i@I123@">person</a>'), [['xref' => 'I123', 'tree' => null, 'type' => 'i']]);
+check('T49b extractLinkTargets HTML with type letter', XrefsService::extractLinkTargets('<a href="#@wt=f@F45@&l=marriage">x</a>'), [['xref' => 'F45', 'tree' => null, 'type' => 'f']]);
+check('T49c extractLinkTargets HTML ext link (no wt=)', XrefsService::extractLinkTargets('<a href="#@some_ext">x</a>'), []);
+check('T49d extractLinkTargets HTML multiple wt= params', XrefsService::extractLinkTargets('<a href="#@wt=i@I1@&wt=f@F2@">x</a>'), [['xref' => 'I1', 'tree' => null, 'type' => 'i'], ['xref' => 'F2', 'tree' => null, 'type' => 'f']]);
+check('T49e extractLinkTargets Markdown still works', XrefsService::extractLinkTargets('[text](#@wt=i@I99@)'), [['xref' => 'I99', 'tree' => null, 'type' => 'i']]);
+check('T49f extractLinkTargets classic still works', XrefsService::extractLinkTargets('@I42@'), [['xref' => 'I42', 'tree' => null, 'type' => null]]);
+
 echo "\n{$total} tests, {$failures} failure(s)\n";
 exit($failures === 0 ? 0 : 1);
 }

@@ -38,6 +38,8 @@ use Fisharebest\Webtrees\Services\DatatablesService;
 use Fisharebest\Webtrees\Services\TimeoutService;
 use Fisharebest\Webtrees\Services\TreeService;
 use Fisharebest\Webtrees\Tree;
+use Fisharebest\Webtrees\Http\RequestHandlers\TreePageBlockEdit;
+use Fisharebest\Webtrees\Http\RequestHandlers\UserPageBlockEdit;
 use Fisharebest\Webtrees\Validator;
 use Illuminate\Database\Query\Builder;
 use Psr\Http\Message\ResponseInterface;
@@ -145,7 +147,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
         }
 
         if ($only_problems) {
-            return $this->problemsResponse($request, $query, $index_fresh, $xref, $max_links);
+            return $this->problemsResponse($request, $query, $index_fresh, $xref, $max_links, $tree);
         }
 
         if ($index_fresh) {
@@ -154,7 +156,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
                 $query,
                 ['xref', 'type'],
                 [0 => 'xref', 1 => 'type'],
-                fn (object $row): array => $this->dispatchRow($row, $max_links, $xref, true)
+                fn (object $row): array => $this->dispatchRow($row, $max_links, $xref, true, $tree)
             );
         }
 
@@ -163,7 +165,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
             $query,
             ['xref', 'type'],
             [0 => 'xref', 1 => 'type'],
-            fn (object $row): array => $this->dispatchRow($row, $max_links, '', false)
+            fn (object $row): array => $this->dispatchRow($row, $max_links, '', false, $tree)
         );
     }
 
@@ -179,7 +181,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
      * rows only carry scalar properties (file/xref/type[/gedcom]), so the
      * (array)/(object) round-trip is lossless.
      */
-    private function problemsResponse(ServerRequestInterface $request, Builder $query, bool $index_fresh, string $xref, int $max_links): ResponseInterface
+    private function problemsResponse(ServerRequestInterface $request, Builder $query, bool $index_fresh, string $xref, int $max_links, ?Tree $tree = null): ResponseInterface
     {
         if ($index_fresh) {
             $rows = $query->get()
@@ -191,7 +193,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
                 $rows,
                 ['xref', 'type'],
                 [0 => 'xref', 1 => 'type'],
-                fn (array $row): array => $this->dispatchRow((object) $row, $max_links, $xref, true)
+                fn (array $row): array => $this->dispatchRow((object) $row, $max_links, $xref, true, $tree)
             );
         }
 
@@ -204,7 +206,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
             $rows,
             ['xref', 'type'],
             [0 => 'xref', 1 => 'type'],
-            fn (array $row): array => $this->dispatchRow((object) $row, $max_links, '', false)
+            fn (array $row): array => $this->dispatchRow((object) $row, $max_links, '', false, $tree)
         );
     }
 
@@ -294,11 +296,11 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
         return $this->inventoryColumns($row, $tree, $record, $inventory, $max_links, '', $highlight_problems);
     }
 
-    private function dispatchRow(object $row, int $max_links, string $highlight_xref, bool $index_fresh): array
+    private function dispatchRow(object $row, int $max_links, string $highlight_xref, bool $index_fresh, ?Tree $context_tree = null): array
     {
         $block_id = property_exists($row, 'block_id') ? (int) $row->block_id : 0;
         if ($block_id > 0) {
-            return $this->blockRowToColumns($row, $max_links, $highlight_xref);
+            return $this->blockRowToColumns($row, $max_links, $highlight_xref, false, $context_tree);
         }
         if ($index_fresh) {
             return $this->indexRowToColumns($row, $max_links, $highlight_xref);
@@ -311,12 +313,13 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
      * Block row: fetch settings (PK point lookup), classify "text" settings
      * for LE links, build the same 4-column output as GEDCOM rows.
      */
-    private function blockRowToColumns(object $row, int $max_links, string $highlight_xref = '', bool $highlight_problems = false): array
+    private function blockRowToColumns(object $row, int $max_links, string $highlight_xref = '', bool $highlight_problems = false, ?Tree $context_tree = null): array
     {
         $block_id    = (int) $row->block_id;
         $module_name = (string) $row->type;
         $file        = (int) ($row->file ?? 0);
         $tree        = $file > 0 ? $this->findTree($file) : null;
+        $user_id     = isset($row->user_id) ? ($row->user_id !== null ? (int) $row->user_id : null) : null;
 
         $block_def = XrefsService::BLOCKS[$module_name] ?? null;
         if ($block_def === null) {
@@ -357,7 +360,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
         }
 
         $xref_label = (string) $row->xref;
-        $xref_html  = '<a href="' . e($this->blockEditUrl($tree, $module_name, $block_id)) . '">' . e($xref_label) . '</a>'
+        $xref_html  = '<a href="' . e($this->blockEditUrl($tree, $module_name, $block_id, $user_id, $context_tree)) . '">' . e($xref_label) . '</a>'
             . '<br><small class="text-muted">'
             . e($tree !== null ? $tree->name() : MoreI18N::xlate('Global'))
             . '</small>';
@@ -378,17 +381,29 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
         ];
     }
 
-    private function blockEditUrl(?Tree $tree, string $module_name, int $block_id): string
+    private function blockEditUrl(?Tree $tree, string $module_name, int $block_id, int|null $user_id, ?Tree $context_tree = null): string
     {
+        if ($module_name === 'html') {
+            $url_tree = $tree ?? $context_tree ?? $this->tree_service->all()->first();
+            if ($url_tree === null) {
+                return '#';
+            }
+            $route = $user_id !== null ? UserPageBlockEdit::class : TreePageBlockEdit::class;
+
+            return route($route, ['tree' => $url_tree->name(), 'block_id' => $block_id]);
+        }
+
         if ($tree === null) {
             return '#';
         }
 
-        return route('module', [
-            'module' => $module_name,
-            'action' => 'edit-block',
-            'tree'   => $tree->id(),
-            'block'  => $block_id,
+        $action = $module_name === '_vesta_classic_look_and_feel_' ? 'Admin2Edit' : 'AdminEdit';
+
+        return route('module-tree', [
+            'module'   => $module_name,
+            'action'   => $action,
+            'tree'     => $tree->name(),
+            'block_id' => $block_id,
         ]);
     }
 

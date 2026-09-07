@@ -273,7 +273,8 @@ final class XrefsService { // stuff related with handling cross-references
                     ? DB::raw($grammar->wrap('o_type') . ' AS type')
                     : DB::raw($params['typestr'] . ' AS type'),
                 DB::raw($grammar->wrap($params['prefix'] . '_gedcom') . ' AS gedcom'),
-                DB::raw('NULL AS block_id')
+                DB::raw('NULL AS block_id'),
+                DB::raw('NULL AS user_id')
             );
 
         if ($file !== null) {
@@ -470,6 +471,7 @@ final class XrefsService { // stuff related with handling cross-references
                     DB::raw("CONCAT('BLOCK-', b.block_id) AS xref"),
                     DB::raw("'" . $module_name . "' AS type"),
                     DB::raw('b.block_id AS block_id'),
+                    DB::raw('b.user_id'),
                 ];
             } else {
                 $select = [
@@ -478,6 +480,7 @@ final class XrefsService { // stuff related with handling cross-references
                     DB::raw("'" . $module_name . "' AS type"),
                     DB::raw('NULL AS gedcom'),
                     DB::raw('b.block_id AS block_id'),
+                    DB::raw('b.user_id'),
                 ];
             }
 
@@ -967,6 +970,38 @@ final class XrefsService { // stuff related with handling cross-references
                     'type' => null,
                 ];
             }
+        } elseif (str_contains($token, 'href="') || str_contains($token, "href='")) {
+            $href_pos = strpos($token, 'href="');
+            $quote    = '"';
+            if ($href_pos === false) {
+                $href_pos = strpos($token, "href='");
+                $quote    = "'";
+            }
+            if ($href_pos !== false) {
+                $href_start = $href_pos + 6;
+                $href_end   = strpos($token, $quote, $href_start);
+                $href_val   = $href_end !== false
+                    ? substr($token, $href_start, $href_end - $href_start)
+                    : substr($token, $href_start);
+                $url = str_starts_with($href_val, '#@') ? substr($href_val, 2) : $href_val;
+
+                if (preg_match_all(self::RE_WT_TARGET, $url, $matches, PREG_SET_ORDER) !== false) {
+                    foreach ($matches as $m) {
+                        $targets[] = [
+                            'xref' => $m['xref'],
+                            'tree' => $m['tree'] !== '' ? $m['tree'] : null,
+                            'type' => $m['type'] !== '' ? $m['type'] : null,
+                        ];
+                    }
+                }
+                if (preg_match(self::RE_ID_TARGET, $url, $m) === 1) {
+                    $targets[] = [
+                        'xref' => $m[1],
+                        'tree' => null,
+                        'type' => null,
+                    ];
+                }
+            }
         }
 
         return $targets;
@@ -1032,7 +1067,7 @@ final class XrefsService { // stuff related with handling cross-references
                     ->on('l.rectype', '=', 's.rectype');
             })
             ->distinct()
-            ->select(['s.file', 's.xref', DB::raw('s.rectype AS type'), DB::raw('NULL AS block_id')])
+            ->select(['s.file', 's.xref', DB::raw('s.rectype AS type'), DB::raw('NULL AS block_id'), DB::raw('NULL AS user_id')])
             ->whereIn('s.rectype', self::normalizeIndexRectypes($rectypes));
 
         if ($ordered) {
