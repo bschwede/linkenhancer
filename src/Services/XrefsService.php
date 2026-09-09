@@ -238,6 +238,16 @@ final class XrefsService { // stuff related with handling cross-references
     public const BLOCK_LE_LIKE = '%#@%';
 
     /**
+     * Record-type filter sentinels (see xref-overview.phtml). They are not a
+     * real GEDCOM record type or block module name - the double-underscore
+     * form cannot collide with either (GEDCOM keys are 2-letter tags, block
+     * module names are single tokens). "__all_gedcom__" = every GEDCOM record
+     * type, no blocks; "__all_blocks__" = every block module, no GEDCOM.
+     */
+    public const RECTYPE_ALL_GEDCOM = '__all_gedcom__';
+    public const RECTYPE_ALL_BLOCKS = '__all_blocks__';
+
+    /**
      * Setting names classified as 'text' for a given block module.
      *
      * @return array<int,string>
@@ -257,6 +267,33 @@ final class XrefsService { // stuff related with handling cross-references
      */
     public static function blockModuleNames(): array {
         return array_keys(self::BLOCKS);
+    }
+
+    /**
+     * Which data sources back a record-type filter value, and with which
+     * type list. Centralized so the data endpoint and the tests share one
+     * definition of the "all GEDCOM records" / "all Blocks" sentinels.
+     *
+     * @return array{gedcom: bool, blocks: bool, rectypes: array<int,string>}
+     *         rectypes = GEDCOM record types for the GEDCOM query (empty =
+     *         every type) when gedcom is true, or the block module names for
+     *         the block query when blocks is true.
+     */
+    public static function rectypeSources(string $rectype): array {
+        $is_all_gedcom    = $rectype === self::RECTYPE_ALL_GEDCOM;
+        $is_all_blocks    = $rectype === self::RECTYPE_ALL_BLOCKS;
+        $is_block_rectype = $rectype !== '' && in_array($rectype, self::blockModuleNames(), true);
+
+        $gedcom = !$is_block_rectype && !$is_all_blocks;
+        $blocks = !$is_all_gedcom && ($rectype === '' || $is_block_rectype || $is_all_blocks);
+
+        $rectypes = $is_all_gedcom
+            ? []
+            : ($is_all_blocks
+                ? self::blockModuleNames()
+                : ($rectype !== '' ? [$rectype] : []));
+
+        return ['gedcom' => $gedcom, 'blocks' => $blocks, 'rectypes' => $rectypes];
     }
 
     private static function getGedcomRecTypeSubquery(array $params, string $xref = Gedcom::REGEX_XREF, int|null $file = null): Builder {

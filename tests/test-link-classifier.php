@@ -531,6 +531,31 @@ check('T49d extractLinkTargets HTML multiple wt= params', XrefsService::extractL
 check('T49e extractLinkTargets Markdown still works', XrefsService::extractLinkTargets('[text](#@wt=i@I99@)'), [['xref' => 'I99', 'tree' => null, 'type' => 'i']]);
 check('T49f extractLinkTargets classic still works', XrefsService::extractLinkTargets('@I42@'), [['xref' => 'I42', 'tree' => null, 'type' => null]]);
 
+// T50: record-type filter routing (all types / all GEDCOM / all Blocks / single)
+check('T50a rectypeSources empty = all GEDCOM + all Blocks',
+    [XrefsService::rectypeSources('')],
+    [['gedcom' => true, 'blocks' => true, 'rectypes' => []]]);
+check('T50b rectypeSources single GEDCOM type',
+    [XrefsService::rectypeSources('INDI')],
+    [['gedcom' => true, 'blocks' => false, 'rectypes' => ['INDI']]]);
+check('T50c rectypeSources single block module',
+    [XrefsService::rectypeSources('html')],
+    [['gedcom' => false, 'blocks' => true, 'rectypes' => ['html']]]);
+check('T50d rectypeSources all-GEDCOM sentinel',
+    [XrefsService::rectypeSources(XrefsService::RECTYPE_ALL_GEDCOM)],
+    [['gedcom' => true, 'blocks' => false, 'rectypes' => []]]);
+check('T50e rectypeSources all-Blocks sentinel',
+    [XrefsService::rectypeSources(XrefsService::RECTYPE_ALL_BLOCKS)],
+    [['gedcom' => false, 'blocks' => true, 'rectypes' => XrefsService::blockModuleNames()]]);
+// A sentinel must never match a real GEDCOM type or block module name, or the
+// routing above would silently misroute that category.
+check('T50f sentinels do not collide with GEDCOM record keys',
+    array_values(array_intersect([XrefsService::RECTYPE_ALL_GEDCOM, XrefsService::RECTYPE_ALL_BLOCKS], XrefsService::supportedGedcomRecordKeys())),
+    []);
+check('T50g sentinels do not collide with block module names',
+    array_values(array_intersect([XrefsService::RECTYPE_ALL_GEDCOM, XrefsService::RECTYPE_ALL_BLOCKS], XrefsService::blockModuleNames())),
+    []);
+
 echo "\n{$total} tests, {$failures} failure(s)\n";
 exit($failures === 0 ? 0 : 1);
 }

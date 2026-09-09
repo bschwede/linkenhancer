@@ -113,6 +113,8 @@ if ($index_status_ts) {
     <div class="col-auto">
         <select class="form-select" name="rectype" title="<?= e(I18N::translate('Record types')) ?>">
             <option value=""><?= I18N::translate('all types') ?></option>
+            <option value="<?= XrefsService::RECTYPE_ALL_GEDCOM ?>" <?= XrefsService::RECTYPE_ALL_GEDCOM === $rectype ? 'selected' : '' ?>><?= I18N::translate('All GEDCOM records') ?></option>
+            <option value="<?= XrefsService::RECTYPE_ALL_BLOCKS ?>" <?= XrefsService::RECTYPE_ALL_BLOCKS === $rectype ? 'selected' : '' ?>><?= MoreI18N::xlate('All Blocks') ?></option>
             <optgroup label="<?= I18N::translate('GEDCOM records') ?>">
                 <?php foreach ($rectypes as $key): ?>
                     <option value="<?= e($key) ?>" <?= $key === $rectype ? 'selected' : '' ?>><?= e($key) ?></option>

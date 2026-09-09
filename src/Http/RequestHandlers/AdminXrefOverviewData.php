@@ -115,7 +115,9 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
             }
         }
 
-        $rectypes = $rectype !== '' ? [$rectype] : [];
+        // Which data sources back the record-type filter, and with which type
+        // list (sentinels select a whole category - see rectypeSources()).
+        $sources = XrefsService::rectypeSources($rectype);
         // live=1 = "force live scan" checkbox: a deliberate index bypass for
         // comparison/debugging, only offered while a fresh index exists.
         $live = $params->boolean('live', false);
@@ -131,16 +133,14 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
         // applied there.
         $index_fresh = XrefsService::indexStatus()['fresh'] && !$live;
 
-        $is_block_rectype = $rectype !== '' && in_array($rectype, XrefsService::blockModuleNames(), true);
-
         $query = null;
-        if (!$is_block_rectype) {
+        if ($sources['gedcom']) {
             $query = $index_fresh
-                ? XrefsService::getIndexQuery($tree, $xref !== '' ? $xref : null, $rectypes, false)
-                : XrefsService::getRecordsQuery($tree, null, $rectypes, false);
+                ? XrefsService::getIndexQuery($tree, $xref !== '' ? $xref : null, $sources['rectypes'], false)
+                : XrefsService::getRecordsQuery($tree, null, $sources['rectypes'], false);
         }
-        if ($rectype === '' || $is_block_rectype) {
-            $block_query = XrefsService::getBlockQuery($tree, $rectypes, $index_fresh);
+        if ($sources['blocks']) {
+            $block_query = XrefsService::getBlockQuery($tree, $sources['rectypes'], $index_fresh);
             if ($block_query !== null) {
                 $query = $query === null ? $block_query : $query->unionAll($block_query);
             }
@@ -360,14 +360,16 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
         }
 
         $xref_label = (string) $row->xref;
-        $xref_html  = '<a href="' . e($this->blockEditUrl($tree, $module_name, $block_id, $user_id, $context_tree)) . '">' . e($xref_label) . '</a>'
+        $edit_url   = $this->blockEditUrl($tree, $module_name, $block_id, $user_id, $context_tree);
+        $xref_html  = '<a href="' . e($edit_url) . '">' . e($xref_label) . '</a>'
             . '<br><small class="text-muted">'
             . e($tree !== null ? $tree->name() : MoreI18N::xlate('Global'))
             . '</small>';
 
         $type_html = e(MoreI18N::xlate($block_def['title']));
 
-        $name_html = '<strong>' . e($title_setting !== '' ? $title_setting : $xref_label) . '</strong>';
+        $display_title = $title_setting !== '' ? $title_setting : $xref_label;
+        $name_html = '<strong><a href="' . e($edit_url) . '">' . e($display_title) . '</a></strong>';
         $name_html .= XrefsService::linkInventoryHtml(
             $entries, $max_links, $highlight_xref,
             $this->makeTargetLinker($tree, $file), $highlight_problems
