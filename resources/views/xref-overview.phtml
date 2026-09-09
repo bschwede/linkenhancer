@@ -185,3 +185,67 @@ if ($index_status_ts) {
         </thead>
     </table>
 </div>
+
+<script>
+// Applying a filter above submits a GET form, so the page reloads with a
+// (usually) smaller result set. DataTables remembers the current page in
+// localStorage (data-state-save) under a key built from location.pathname -
+// which ignores the query string - so it restores a page that no longer
+// exists in the filtered set and the table stays empty until a valid page is
+// picked. Drop that stale state before the table is initialised, and force
+// the first page once DataTables reports init as a fallback.
+(function () {
+    var TABLE_ID = 'wt-datatables-xref-overview';
+
+    function isFiltered() {
+        var q = new URLSearchParams(window.location.search);
+        return (q.get('xref') || '').length > 0
+            || (q.get('rectype') || '').length > 0
+            || ((q.get('tree') || '') !== '' && q.get('tree') !== '0')
+            || (q.get('target') || '') === 'problems'
+            || (q.get('live') || '') === '1';
+    }
+
+    function clearSavedPage() {
+        if (!isFiltered()) {
+            return;
+        }
+        try {
+            var prefix = 'DataTables_';
+            var suffix = '_' + window.location.pathname;
+            for (var i = window.localStorage.length - 1; i >= 0; i--) {
+                var key = window.localStorage.key(i);
+                if (key && key.indexOf(prefix) === 0 && key.indexOf(suffix) !== -1) {
+                    window.localStorage.removeItem(key);
+                }
+            }
+        } catch (e) {
+            // Storage unavailable - the init.dt fallback still applies.
+        }
+    }
+
+    function bindReset() {
+        // Only for filtered views - an unfiltered reload must keep the user's
+        // remembered page (normal pagination memory).
+        if (!isFiltered()) {
+            return;
+        }
+        var tableEl = document.getElementById(TABLE_ID);
+        var jq = window.jQuery;
+        if (!tableEl || !jq) {
+            return;
+        }
+        // DataTables triggers init.dt through jQuery, so it must be bound via
+        // jQuery (a native listener would never fire).
+        jq(tableEl).one('init.dt', function () {
+            var api = jq(tableEl).DataTable();
+            if (api && typeof api.page === 'function' && api.page() !== 0) {
+                api.page(0).draw();
+            }
+        });
+    }
+
+    clearSavedPage();
+    bindReset();
+})();
+</script>
