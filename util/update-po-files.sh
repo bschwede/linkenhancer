@@ -28,6 +28,7 @@ echo "📦 Generate POT-File: $POT_FILE"
 xgettext -L PHP \
   --keyword=translate \
   --keyword=plural:1,2 \
+  --keyword=translateContext:1c,2 \
   --add-comments=I18N \
   --from-code=utf-8 \
   --output="$POT_FILE" \
