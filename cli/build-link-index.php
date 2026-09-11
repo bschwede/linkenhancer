@@ -65,11 +65,7 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\Services\TextTagCollector;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 
 CliBootstrap::guard();
-
-if (CliBootstrap::siteIsOffline()) {
-    fwrite(STDOUT, 'site offline (data/offline.txt) - skipped' . PHP_EOL);
-    exit(0);
-}
+CliBootstrap::exitOnSiteOffline();
 
 // ---------------------------------------------------------------- arguments
 $limit   = 1000;

@@ -51,11 +51,7 @@ use Fisharebest\Webtrees\Webtrees;
 use Schwendinger\Webtrees\Services\CliBootstrap;
 
 CliBootstrap::guard();
-
-if (CliBootstrap::siteIsOffline()) {
-    fwrite(STDOUT, 'site offline (data/offline.txt) - skipped' . PHP_EOL);
-    exit(0);
-}
+CliBootstrap::exitOnSiteOffline();
 
 // ---------------------------------------------------------------- arguments
 $limit = 500;
