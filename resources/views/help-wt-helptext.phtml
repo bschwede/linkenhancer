@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\I18N;
 use Schwendinger\Webtrees\Helpers\MoreI18N;
-use Fisharebest\Webtrees\Http\RequestHandlers\HelpText;
+use Schwendinger\Webtrees\Helpers\ClassName;
 
 /**
  * @ var bool
@@ -141,7 +141,7 @@ foreach ($help_topics as $key => $attribs):
             echo($attribs['text']);
         }
     } else {
-        $route = route(HelpText::class, ['topic' => $key]);
+        $route = route(ClassName::get(ClassName::HELP_TEXT), ['topic' => $key]);
         // important: links on a visible modal that should load other content into this modal 
         // must not set the attribute data-bs-toggle="modal", otherwise bootstrap toggles visibility of the modal
 ?>

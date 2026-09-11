@@ -6,7 +6,7 @@ use DateTimeImmutable;
 use DateTimeZone;
 use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\Contracts\UserInterface;
-use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
+use Schwendinger\Webtrees\Helpers\ClassName;
 use Fisharebest\Webtrees\I18N;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Helpers\MoreI18N;
@@ -55,7 +55,7 @@ if ($index_status_ts) {
 
 <?= view('components/breadcrumbs', [
     'links' => [
-        route(ControlPanel::class) => I18N::translate('Control panel'),
+        route(ClassName::get(ClassName::CONTROL_PANEL)) => I18N::translate('Control panel'),
         $module->getConfigLink() => $module->title(),
         $title,
     ],

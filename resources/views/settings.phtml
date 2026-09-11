@@ -6,7 +6,7 @@ use Fisharebest\Webtrees\I18N;
 use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils As Utils;
-use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
+use Schwendinger\Webtrees\Helpers\ClassName;
 use Fisharebest\Webtrees\Registry;
 
 /**
@@ -53,7 +53,7 @@ $module = Registry::container()->get(LinkEnhancerModule::class);
 ?>
 
 <?= view('components/breadcrumbs', [
-        'links' => [route(ControlPanel::class) => MoreI18N::xlate('Control panel'), $title]]) ?>
+        'links' => [route(ClassName::get(ClassName::CONTROL_PANEL)) => MoreI18N::xlate('Control panel'), $title]]) ?>
 
 <h1 id="top"><?= e($title) ?></h1>
 <p><?= e($description) ?></p>
