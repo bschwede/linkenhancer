@@ -32,12 +32,9 @@ use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Session;
 use Fisharebest\Webtrees\Validator;
 use Fisharebest\Webtrees\Module\AbstractModule;
-use Fisharebest\Webtrees\Schema\MigrationInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Illuminate\Database\Capsule\Manager as DB;
 use Exception;
-use PDOException;
 
 enum WebRessource
 {
@@ -349,68 +346,6 @@ class LinkEnhancerUtils { // misc helper functions
             || (str_starts_with($activeRouteInfo['path'], '/module') && str_starts_with($action, 'admin')));
         }
         return false;
-    }
-
-
-    /**
-     * applies Migrate# class files (zero based) to the database until target_version -1
-     * same as Database::getSchema, but use module settings instead of site settings (Issue #3 in personal_facts_with_hooks)
-     * taken from modules_v4/vesta_common/VestaModuleTrait.php
-     * @param AbstractModule $module
-     * @param string $namespace      namespace of Migration class
-     * @param string $schema_name    setting name of current schema version
-     * @param int $target_version
-     * @return bool                  true if updates upplied
-     */
-    public static function updateSchema(AbstractModule $module, string $namespace, string $schema_name, int $target_version): bool
-    {
-        try {
-            $current_version = intval($module->getPreference($schema_name));
-        } catch (PDOException $ex) {
-            // During initial installation, the site_preference table won’t exist.
-            $current_version = 0;
-        }
-
-        $updates_applied = false;
-
-        $connection = DB::schema()->getConnection();
-
-        if ($connection->transactionLevel() > 0) {
-            $connection->commit();
-        }
-
-        try {
-
-            // Update the schema, one version at a time.
-            while ($current_version < $target_version) {
-
-                $class = $namespace . '\\Migration' . $current_version;
-                /** @var MigrationInterface $migration */
-                $migration = new $class();
-                $migration->upgrade();
-                $current_version++;
-
-                //when a module is first installed, we may not be able to setPreference at this point
-                ////(if this is called e.g. from SetName())
-                //because of foreign key constraints:
-                //the module may not have been inserted in the 'module' table at this point!
-                //cf. ModuleService.all()
-                //
-                //not that critical, we can just set the preference next time
-                //
-                //let's just check this directly (using ModuleService at this point may lead to looping, if we're indirectly called from there)
-                if (DB::table('module')->where('module_name', '=', $module->name())->exists()) {
-                    $module->setPreference($schema_name, (string) $current_version);
-                }
-                $updates_applied = true;
-            }
-        } finally {
-            // Re-open a transaction for webtrees' middleware to commit, even if
-            // the DDL above failed.
-            $connection->beginTransaction();
-        }            
-
-        return $updates_applied;
     }
 
 
