@@ -35,6 +35,7 @@ util/wthb-toc
 requirements.txt
 .venv
 .env
+tests
 EOT
 
 cd "$SRCDIR" || exit 1
