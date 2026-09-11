@@ -12,7 +12,7 @@
             "dist": {
                 "type": "path",
                 "url": "../wt-shared-libs",
-                "reference": "e316704defcd7e0f4652ef03d34975b1f1d1d111"
+                "reference": "2d1c02ec1226761f858bea50ae97875e5e6ed6ae"
             },
             "require": {
                 "php": ">=8.3"
