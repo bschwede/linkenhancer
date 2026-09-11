@@ -114,6 +114,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
                 // unknown tree - treat as "all trees"
             }
         }
+        $context_tree = $tree ?? $this->tree_service->all()->first();
 
         // Which data sources back the record-type filter, and with which type
         // list (sentinels select a whole category - see rectypeSources()).
@@ -147,7 +148,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
         }
 
         if ($only_problems) {
-            return $this->problemsResponse($request, $query, $index_fresh, $xref, $max_links, $tree);
+            return $this->problemsResponse($request, $query, $index_fresh, $xref, $max_links, $context_tree);
         }
 
         if ($index_fresh) {
@@ -156,7 +157,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
                 $query,
                 ['xref', 'type'],
                 [0 => 'xref', 1 => 'type'],
-                fn (object $row): array => $this->dispatchRow($row, $max_links, $xref, true, $tree)
+                fn (object $row): array => $this->dispatchRow($row, $max_links, $xref, true, $context_tree)
             );
         }
 
@@ -165,7 +166,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
             $query,
             ['xref', 'type'],
             [0 => 'xref', 1 => 'type'],
-            fn (object $row): array => $this->dispatchRow($row, $max_links, '', false, $tree)
+            fn (object $row): array => $this->dispatchRow($row, $max_links, '', false, $context_tree)
         );
     }
 
@@ -181,8 +182,9 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
      * rows only carry scalar properties (file/xref/type[/gedcom]), so the
      * (array)/(object) round-trip is lossless.
      */
-    private function problemsResponse(ServerRequestInterface $request, Builder $query, bool $index_fresh, string $xref, int $max_links, ?Tree $tree = null): ResponseInterface
+    private function problemsResponse(ServerRequestInterface $request, Builder $query, bool $index_fresh, string $xref, int $max_links, ?Tree $context_tree = null): ResponseInterface
     {
+        $context_tree = $context_tree ?? $this->tree_service->all()->first();
         if ($index_fresh) {
             $rows = $query->get()
                 ->filter(fn (object $row): bool => $this->indexRowHasProblem($row))
@@ -193,7 +195,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
                 $rows,
                 ['xref', 'type'],
                 [0 => 'xref', 1 => 'type'],
-                fn (array $row): array => $this->dispatchRow((object) $row, $max_links, $xref, true, $tree)
+                fn (array $row): array => $this->dispatchRow((object) $row, $max_links, $xref, true, $context_tree)
             );
         }
 
@@ -206,7 +208,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
             $rows,
             ['xref', 'type'],
             [0 => 'xref', 1 => 'type'],
-            fn (array $row): array => $this->dispatchRow((object) $row, $max_links, '', false, $tree)
+            fn (array $row): array => $this->dispatchRow((object) $row, $max_links, '', false, $context_tree)
         );
     }
 
@@ -361,7 +363,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
 
         $xref_label = (string) $row->xref;
         $edit_url   = $this->blockEditUrl($tree, $module_name, $block_id, $user_id, $context_tree);
-        $xref_html  = '<a href="' . e($edit_url) . '">' . e($xref_label) . '</a>'
+        $xref_html  = ($edit_url ? '<a href="' . e($edit_url) . '">' . e($xref_label) . '</a>' : e($xref_label))
             . '<br><small class="text-muted">'
             . e($tree !== null ? $tree->name() : MoreI18N::xlate('Global'))
             . '</small>';
@@ -369,7 +371,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
         $type_html = e(MoreI18N::xlate($block_def['title']));
 
         $display_title = $title_setting !== '' ? $title_setting : $xref_label;
-        $name_html = '<strong><a href="' . e($edit_url) . '">' . e($display_title) . '</a></strong>';
+        $name_html = '<strong>' .  ($edit_url ? '<a href="' . e($edit_url) . '">' . e($display_title) . '</a>' : e($display_title) ) . '</strong>';
         $name_html .= XrefsService::linkInventoryHtml(
             $entries, $max_links, $highlight_xref,
             $this->makeTargetLinker($tree, $file), $highlight_problems
@@ -385,18 +387,22 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
 
     private function blockEditUrl(?Tree $tree, string $module_name, int $block_id, int|null $user_id, ?Tree $context_tree = null): string
     {
-        if ($module_name === 'html') {
-            $url_tree = $tree ?? $context_tree ?? $this->tree_service->all()->first();
-            if ($url_tree === null) {
-                return '#';
-            }
-            $route = $user_id !== null ? UserPageBlockEdit::class : TreePageBlockEdit::class;
-
-            return route($route, ['tree' => $url_tree->name(), 'block_id' => $block_id]);
+        $url_tree = $tree ?? $context_tree ?? $this->tree_service->all()->first();
+        if ($url_tree === null) {
+            return '';
         }
 
-        if ($tree === null) {
-            return '#';
+        if ($module_name === 'html') {
+            $route = TreePageBlockEdit::class;
+            if ($user_id !== null) {
+                if ($user_id === Auth::id()) { // also admins are not allowed to edit personal html blocks owned by other users
+                    $route = UserPageBlockEdit::class;
+                } else {
+                    return '';
+                }
+            }
+
+            return route($route, ['tree' => $url_tree->name(), 'block_id' => $block_id]);
         }
 
         $action = $module_name === '_vesta_classic_look_and_feel_' ? 'Admin2Edit' : 'AdminEdit';
@@ -404,7 +410,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
         return route('module-tree', [
             'module'   => $module_name,
             'action'   => $action,
-            'tree'     => $tree->name(),
+            'tree'     => $url_tree->name(),
             'block_id' => $block_id,
         ]);
     }
