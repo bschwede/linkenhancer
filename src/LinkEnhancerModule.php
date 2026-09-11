@@ -33,12 +33,12 @@ use Fisharebest\Webtrees\FlashMessages;
 use Fisharebest\Webtrees\Http\RequestHandlers\HomePage;
 use Fisharebest\Webtrees\Http\RequestHandlers\TreePage;
 use Fisharebest\Webtrees\I18N;
-use Schwendinger\Webtrees\Module\LinkEnhancer\MoreI18N;
+use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Fisharebest\Webtrees\Module\AbstractModule;
 use Fisharebest\Webtrees\Module\ModuleConfigInterface;
 use Fisharebest\Webtrees\Module\ModuleConfigTrait;
 use Fisharebest\Webtrees\Module\ModuleCustomInterface;
-use Fisharebest\Webtrees\Module\ModuleCustomTrait;
+use Schwendinger\Webtrees\Traits\ModuleCustomTrait;
 use Fisharebest\Webtrees\Module\ModuleGlobalInterface;
 use Fisharebest\Webtrees\Module\ModuleGlobalTrait;
 use Fisharebest\Webtrees\Registry;
@@ -298,107 +298,6 @@ class LinkEnhancerModule extends AbstractModule implements
     {
         return /*I18N: Module description */I18N::translate('Cross-references to Gedcom datasets, Markdown editor, context-sensitive link to the GenWiki webtrees manual');
     }
-
-    /**
-     * The person or organisation who created this module.
-     *
-     * @return string
-     */
-    public function customModuleAuthorName(): string
-    {
-        return self::CUSTOM_AUTHOR;
-    }
-
-    /**
-     * The version of this module.
-     *
-     * @return string
-     */
-    public function customModuleVersion(): string
-    {
-        return self::CUSTOM_VERSION; 
-    }
-
-    /**
-     * A URL that will provide the latest version of this module.
-     *
-     * @return string
-     */
-    public function customModuleLatestVersionUrl(): string
-    {
-        return self::CUSTOM_LAST;
-    }
-
-    /**
-     * Where to get support for this module.  Perhaps a github repository?
-     *
-     * @return string
-     */
-    public function customModuleSupportUrl(): string
-    {
-        return self::CUSTOM_WEBSITE;
-    }
-
-    /**
-     * Where does this module store its resources?
-     *
-     * @return string
-     */
-    public function resourcesFolder(): string
-    {
-        return dirname(__DIR__, 1) . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR;
-    }
-
-    /**
-     * Additional/updated translations.
-     *
-     * @param string $language
-     *
-     * @return array<string>
-     */
-    public function customTranslations(string $language): array
-    {
-        $file_base = $this->resourcesFolder() . 'lang' . DIRECTORY_SEPARATOR . $language;
-        $file = null;
-        foreach (['.php', '.po'] as $ext) {
-            if (is_readable($file_base . $ext)) {
-                $file = $file_base . $ext;
-                break;
-            }
-        }
-
-        // webtrees 2.2 still provides the former file-based localization package.
-        if (class_exists('\\Fisharebest\\Localization\\Translation')) {
-            return $file ? (new \Fisharebest\Localization\Translation($file))->asArray() : [];
-        }
-
-        // webtrees 2.3 replaced fisharebest/localization with its own stream-based loader.
-        if (class_exists('\\Fisharebest\\Webtrees\\I18N\\Translation')) {
-            if (str_ends_with($file, '.po')) {
-                $stream = fopen($file, 'rb');
-
-                if ($stream === false) {
-                    return [];
-                }
-
-                try {
-                    $translation = \Fisharebest\Webtrees\I18N\Translation::fromPoStream($stream);
-
-                    return $translation->toArray();
-                } finally {
-                    fclose($stream);
-                }
-
-            } else {
-                $translation = \Fisharebest\Webtrees\I18N\Translation::fromPhpFile($file);
-
-                return $translation->toArray();
-            }
-            
-        }        
-        return [];
-    }
-
 
     /**
      * Called for all *enabled* modules.

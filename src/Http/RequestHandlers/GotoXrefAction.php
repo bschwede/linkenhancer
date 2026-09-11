@@ -20,7 +20,7 @@ declare(strict_types=1);
 namespace Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers;
 
 use Fisharebest\Webtrees\I18N;
-use Schwendinger\Webtrees\Module\LinkEnhancer\MoreI18N;
+use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Fisharebest\Webtrees\GedcomRecord;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Validator;

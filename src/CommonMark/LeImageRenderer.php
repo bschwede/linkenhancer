@@ -41,7 +41,7 @@ namespace Schwendinger\Webtrees\Module\LinkEnhancer\CommonMark;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\I18N;
-use Schwendinger\Webtrees\Module\LinkEnhancer\MoreI18N;
+use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Fisharebest\Webtrees\Media;
 use Fisharebest\Webtrees\MediaFile;
 use Fisharebest\Webtrees\Registry;

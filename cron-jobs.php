@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 // manifest is sourced by cronjob module
-use Schwendinger\Webtrees\Module\Cronjob\MoreI18N; // better use corresponding class of cronjob module
+use Schwendinger\Webtrees\Helpers\MoreI18N;
 
 return [
     'jobs' => [

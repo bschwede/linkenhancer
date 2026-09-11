@@ -60,7 +60,7 @@ require __DIR__ . '/../autoload.php';
 use Fisharebest\Webtrees\DB;
 use Fisharebest\Webtrees\Gedcom;
 use Fisharebest\Webtrees\Webtrees;
-use Schwendinger\Webtrees\Module\LinkEnhancer\Services\CliBootstrap;
+use Schwendinger\Webtrees\Services\CliBootstrap;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\TextTagCollector;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 

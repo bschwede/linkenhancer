@@ -59,9 +59,9 @@ namespace Fisharebest\Webtrees {
 
 namespace {
 
-    require __DIR__ . '/../src/MoreI18N.php';
+    require __DIR__ . '/../vendor/bschwede/wt-shared-libs/src/Helpers/MoreI18N.php';
 
-    use Schwendinger\Webtrees\Module\LinkEnhancer\MoreI18N;
+    use Schwendinger\Webtrees\Helpers\MoreI18N;
 
     $failures = 0;
 

@@ -48,7 +48,7 @@ require __DIR__ . '/../../../vendor/autoload.php';
 require __DIR__ . '/../autoload.php';
 
 use Fisharebest\Webtrees\Webtrees;
-use Schwendinger\Webtrees\Module\LinkEnhancer\Services\CliBootstrap;
+use Schwendinger\Webtrees\Services\CliBootstrap;
 
 CliBootstrap::guard();
 

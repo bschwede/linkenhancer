@@ -39,7 +39,7 @@ require_once __DIR__ . '/../autoload.php';
 use Fisharebest\Webtrees\DB;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Services\TreeService;
-use Schwendinger\Webtrees\Module\LinkEnhancer\Services\CliBootstrap;
+use Schwendinger\Webtrees\Services\CliBootstrap;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\TextTagCollector;
 
 CliBootstrap::guard();
