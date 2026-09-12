@@ -40,7 +40,7 @@ namespace Schwendinger\Webtrees\Module\LinkEnhancer\CommonMark;
 
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Fisharebest\Webtrees\Auth;
-use Schwendinger\Webtrees\Helpers\ExceptionName;
+use Schwendinger\Webtrees\Helpers\ClassName;
 use Fisharebest\Webtrees\I18N;
 use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Fisharebest\Webtrees\Media;
@@ -50,7 +50,6 @@ use Fisharebest\Webtrees\Tree;
 use Fisharebest\Webtrees\Validator;
 use Fisharebest\Webtrees\Webtrees;
 use Psr\Http\Message\ServerRequestInterface;
-
 use League\CommonMark\Extension\CommonMark\Node\Inline\Image;
 use League\CommonMark\Node\Inline\Newline;
 use League\CommonMark\Node\Node;
@@ -157,7 +156,7 @@ final class LeImageRenderer implements NodeRendererInterface, XmlNodeRendererInt
                     try {
                         $record = Auth::checkMediaAccess($record);
                     } catch (\Throwable $exception) {
-                        if (ExceptionName::isInstanceOf($exception, ExceptionName::HTTP_FORBIDDEN)) {
+                        if (ClassName::isInstanceOf($exception, ClassName::EXCEPTION_HTTP_FORBIDDEN)) {
                             return view($this->module->name() . '::error-img-svg', [
                                 'text' => $exception->getMessage() . " - XREF $xref",
                                 'classnames' => $classnames,

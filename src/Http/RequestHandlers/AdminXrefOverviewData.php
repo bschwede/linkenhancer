@@ -29,7 +29,6 @@ namespace Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers;
 use DomainException;
 use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\DB;
-use Schwendinger\Webtrees\Helpers\ExceptionName;
 use Fisharebest\Webtrees\GedcomRecord;
 use Fisharebest\Webtrees\I18N;
 use Schwendinger\Webtrees\Helpers\MoreI18N;
@@ -87,7 +86,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         if (!Auth::isAdmin()) {
-            $class = ExceptionName::get(ExceptionName::HTTP_FORBIDDEN);
+            $class = ClassName::get(ClassName::EXCEPTION_HTTP_FORBIDDEN);
             throw new $class(MoreI18N::xlate('Admin only action')); // in ModuleAction without translation
         }
 
