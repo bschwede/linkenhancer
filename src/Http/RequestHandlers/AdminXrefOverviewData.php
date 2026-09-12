@@ -38,13 +38,12 @@ use Fisharebest\Webtrees\Services\DatatablesService;
 use Fisharebest\Webtrees\Services\TimeoutService;
 use Fisharebest\Webtrees\Services\TreeService;
 use Fisharebest\Webtrees\Tree;
-use Fisharebest\Webtrees\Http\RequestHandlers\TreePageBlockEdit;
-use Fisharebest\Webtrees\Http\RequestHandlers\UserPageBlockEdit;
 use Fisharebest\Webtrees\Validator;
 use Illuminate\Database\Query\Builder;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Schwendinger\Webtrees\Helpers\ClassName;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\TextTagCollector;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 
@@ -393,10 +392,10 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
         }
 
         if ($module_name === 'html') {
-            $route = TreePageBlockEdit::class;
+            $route = ClassName::get(ClassName::TREE_PAGE_BLOCK_EDIT);
             if ($user_id !== null) {
                 if ($user_id === Auth::id()) { // also admins are not allowed to edit personal html blocks owned by other users
-                    $route = UserPageBlockEdit::class;
+                    $route = ClassName::get(ClassName::USER_PAGE_BLOCK_EDIT);
                 } else {
                     return '';
                 }
