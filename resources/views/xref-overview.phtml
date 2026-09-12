@@ -55,7 +55,7 @@ if ($index_status_ts) {
 
 <?= view('components/breadcrumbs', [
     'links' => [
-        route(ClassName::get(ClassName::CONTROL_PANEL)) => I18N::translate('Control panel'),
+        route(ClassName::get(ClassName::CONTROL_PANEL)) => MoreI18N::xlate('Control panel'),
         $module->getConfigLink() => $module->title(),
         $title,
     ],
@@ -93,7 +93,7 @@ if ($index_status_ts) {
     </div>
 <?php endif ?>
 
-<form class="row g-2 mb-3" method="get" action="<?= e($page_url) ?>">
+<form class="row g-2 mt-2 mb-3 gx-3 ps-2" method="get" action="<?= e($page_url) ?>">
     <?php foreach ($hidden_params as $hidden_name => $hidden_value): ?>
         <?php if ($hidden_name !== 'xref' || $index_status['fresh']): ?>
             <input type="hidden" name="<?= e($hidden_name) ?>" value="<?= e($hidden_value) ?>">
@@ -112,9 +112,9 @@ if ($index_status_ts) {
     <?php endif; ?>
     <div class="col-auto">
         <select class="form-select" name="rectype" title="<?= e(I18N::translate('Record types')) ?>">
-            <option value=""><?= I18N::translate('all types') ?></option>
+            <option value=""><?= I18N::translate('All types') ?></option>
             <option value="<?= XrefsService::RECTYPE_ALL_GEDCOM ?>" <?= XrefsService::RECTYPE_ALL_GEDCOM === $rectype ? 'selected' : '' ?>><?= I18N::translate('All GEDCOM records') ?></option>
-            <option value="<?= XrefsService::RECTYPE_ALL_BLOCKS ?>" <?= XrefsService::RECTYPE_ALL_BLOCKS === $rectype ? 'selected' : '' ?>><?= MoreI18N::xlate('All Blocks') ?></option>
+            <option value="<?= XrefsService::RECTYPE_ALL_BLOCKS ?>" <?= XrefsService::RECTYPE_ALL_BLOCKS === $rectype ? 'selected' : '' ?>><?= I18N::translate('All Block records') ?></option>
             <optgroup label="<?= I18N::translate('GEDCOM records') ?>">
                 <?php foreach ($rectypes as $key): ?>
                     <option value="<?= e($key) ?>" <?= $key === $rectype ? 'selected' : '' ?>><?= e($key) ?></option>
@@ -129,7 +129,7 @@ if ($index_status_ts) {
     </div>
     <div class="col-auto">
         <select class="form-select" name="tree" title="<?= e(MoreI18N::xlate('Family trees')) ?>">
-            <option value=""><?= I18N::translate('all trees') ?></option>
+            <option value=""><?= I18N::translate('All trees') ?></option>
             <?php foreach ($trees as $tree): ?>
                 <option value="<?= $tree->id() ?>" <?= $tree->id() === $tree_id ? 'selected' : '' ?>><?= e($tree->name()) ?></option>
             <?php endforeach; ?>
@@ -138,7 +138,7 @@ if ($index_status_ts) {
     <div class="col-auto">
         <select class="form-select" name="max_links" title="<?= I18N::translate('links per class') ?>">
             <?php foreach (XrefsService::LINKS_PER_CLASS_OPTIONS as $option): ?>
-                <option value="<?= $option ?>" <?= $option === $max_links ? 'selected' : '' ?>><?= $option === 0 ? I18N::translate('All') : (string) $option ?></option>
+                <option value="<?= $option ?>" <?= $option === $max_links ? 'selected' : '' ?>><?= $option === 0 ? MoreI18N::xlate('All') : (string) $option ?></option>
             <?php endforeach; ?>
         </select>
     </div>
@@ -151,7 +151,7 @@ if ($index_status_ts) {
         </label>
     </div>
     <div class="col-auto">
-        <button class="btn btn-outline-primary" type="submit"><?= I18N::translate('Filter') ?></button>
+        <button class="btn btn-outline-primary" type="submit"><?= MoreI18N::xlate('Filter') ?></button>
     </div>
 </form>
 
@@ -166,7 +166,7 @@ if ($index_status_ts) {
 .le-target-links mark.le-problem-mark { background: #fff3cd; padding: 0 0.2em; border-radius: 2px; }
 </style>
 
-<div class="table-responsive">
+<div class="table-responsive pt-2 pb-4">
     <table
         id="wt-datatables-xref-overview"
         class="table table-bordered table-sm datatables d-none"
