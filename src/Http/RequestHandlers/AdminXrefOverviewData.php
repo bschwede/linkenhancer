@@ -29,8 +29,8 @@ namespace Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers;
 use DomainException;
 use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\DB;
+use Schwendinger\Webtrees\Helpers\ExceptionName;
 use Fisharebest\Webtrees\GedcomRecord;
-use Fisharebest\Webtrees\Http\Exceptions\HttpAccessDeniedException;
 use Fisharebest\Webtrees\I18N;
 use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Fisharebest\Webtrees\Registry;
@@ -87,7 +87,8 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         if (!Auth::isAdmin()) {
-            throw new HttpAccessDeniedException(MoreI18N::xlate('Admin only.'));
+            $class = ExceptionName::get(ExceptionName::HTTP_FORBIDDEN);
+            throw new $class(MoreI18N::xlate('Admin only action')); // in ModuleAction without translation
         }
 
         // D1: do not stack a heavy scan onto a request that is already
