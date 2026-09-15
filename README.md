@@ -12,7 +12,7 @@
 >
 > - ✅ Issues → [Open on Codeberg](https://codeberg.org/bschwede/linkenhancer/issues)
 > - ✅ Pull Requests → [Open on Codeberg](https://codeberg.org/bschwede/linkenhancer/pulls)
-> - ✅ Translations → [Contribute on Codeberg Weblate](https://translate.codeberg.org/projects/linkenhancer/)
+> - ✅ Translations → [Contribute on Codeberg Weblate](https://translate.codeberg.org/projects/wt-modules/linkenhancer/)
 >
 > Mirror Repository: <https://github.com/bschwede/linkenhancer>
 
@@ -39,6 +39,8 @@ Here are the available options that can be set on the admin page of this module:
 This module wraps up some [examples mentioned in the German Webtrees Manual](https://wiki.genealogy.net/Webtrees_Handbuch/Entwicklungsumgebung#Beispiel_-_Querverweise_zu_Datens.C3.A4tzen) and improves the application of these features - each component can be activated individually.
 
 The main purpose of this module is to make [**links to data records**](#enhancedlinks) stored in family trees more convenient. This avoids having to store fully qualified links, which impairs the portability of Gedcom data. By linking the notes to the GEDCOM data records (persons, families, sources, etc.) from the text makes story telling much easier and thus also save this information in the GEDCOM file (maybe this is an alternative for the [stories module](https://wiki.genealogy.net/Webtrees_Handbuch/Anleitung_f%C3%BCr_Besucher#Geschichten)). The option of embedding the [**images**](#mdimg) already inserted in the family tree in the notes rounds off this approach. The link function is controlled via the [anchor part of the URI](https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Web_mechanics/What_is_a_URL), so it's no problem, if this module is not active - the url just points to the current webtrees page.
+
+For the admin there is an [**overview of cross-references**](#xref-overview), that lists all GEDCOM records and html based records stored in the `block / block_setting` tables (like html, faq, stories and vesta classig look and feel badges) which contain linkenhancer cross-references, classic cross-references and embedded picture references. The latter two references are only supported in GEDCOM records.
 
 Additionally there are some goodies more or less related with links:
 
@@ -414,87 +416,15 @@ These are minor bug fixes or functional enhancements — usually in a single fil
 | ~~P003~~ | Record has multiple uid fields [#4828](https://github.com/fisharebest/webtrees/issues/4828) <br> *app/Services/GedcomEditService.php* | 2.2.1 |
 
 
+<a name="xref-overview"></a>
+### Cross-reference overview
 
-<a name="webtrees"></a>
-## webtrees
-
-**[webtrees](https://webtrees.net/)** is an online collaborative genealogy application.
-This can be hosted on your own server by following the [Install instructions](https://webtrees.net/install/).
-
-
-<a name="requirements"></a>
-## Requirements
-
-This module requires **webtrees** version 2.2.
-This module has the same requirements as [webtrees#system-requirements](https://github.com/fisharebest/webtrees#system-requirements).
-
-This module was tested with **webtrees** version 2.2.4
-and build-in themes and some other custom modules.
-
-<a name="installation"></a>
-## Installation
-- Install and use [Custom Module Manager](https://github.com/Jefferson49/CustomModuleManager) for an easy and convenient installation of webtrees custom modules.
-- Open the Custom Module Manager view in webtrees, select "linkenhancer", and click on the "Install Module" button.
-
-**Manual installation**:
-1. Download the [latest release](https://github.com/bschwede/linkenhancer/releases/latest) of the module.
-2. Upload the downloaded file to your web server.
-3. Unzip the package into your ``modules_v4`` directory.
-4. Rename the folder to ``linkenhancer``
-
-If everything was successful, you should see a subdirectory ``linkenhancer`` with the unpacked content in the ``modules_v4`` directory.
-
-During the initial installation, the following problem may occur: "PDO error - There is no active transaction" - for more details see [known issues](https://codeberg.org/bschwede/linkenhancer/issues?q=&type=all&labels=1288213&milestone=0&assignee=0&poster=0).
-
-<a name="cli-scripts"></a>
-## CLI scripts & maintenance
-
-The module ships CLI-only scripts. They are guarded: requested over HTTP (the `modules_v4` directory is inside the web root) they answer `403` instead of running.
-
-| Script | Purpose | Needs a webtrees install + DB? |
-|---|---|---|
-| `tests/test-text-tag-collector.php` | standalone unit tests for the text-tag collector | no |
-| `tests/test-link-classifier.php` | standalone unit tests for the link classifier (incl. target extraction) | no |
-| `tests/smoke-text-tag-collector.php [limit]` | scan records containing enhanced links, print every captured `TEXT`/`NOTE`/`_TODO` value with its location | yes |
-| `tests/p1-measure.php [--tree=<id>]` | read-only scaling measurement for the XREF overview (query costs, table sizes, PHP limits) | yes |
-| `cli/build-link-index.php [--limit=N] [--tree=<id>] [--rebuild] [--flush]` | build/update the link index for the XREF overview (see below) | yes |
-| `cli/...` | maintenance scripts (template in `cli/_template-maintenance.php`) | yes |
-
-Run them from the webtrees root with the **same PHP version** the instance runs on (webtrees requires PHP 8.3+):
-
-```
-php modules_v4/linkenhancer/tests/test-text-tag-collector.php
-php modules_v4/linkenhancer/tests/smoke-text-tag-collector.php 10
-```
-
-### Writing maintenance scripts
-
-`cli/_template-maintenance.php` is a copy-paste template for longer-running maintenance jobs. The conventions:
-
-- **SAPI guard**: every script starts with `CliBootstrap::guard()` - the directory is URL-addressable, the guard answers `403` instead of running.
-- **Bootstrap**: use `CliBootstrap::boot()` - the core CLI bootstrap sequence (app bootstrap, i18n, config, database) with a hard failure on missing config or DB connection.
-- **Arguments**: plain `$argv` (`--limit=N`, `--help`).
-- **Lock**: `flock()` on `data/linkenhancer-<name>.lock` so overlapping cron runs do not collide; a held lock is not an error (exit 0).
-- **Idempotent batches**: design the job so one run finishes in roughly 5-10 minutes and the next run continues where the last one stopped.
-- **Logging**: plain stdout lines (cron mail / log file). Never print personal data - counters and XREFs, never names.
-- **Exit codes**: `0` = ok (incl. "nothing to do", "lock held"), `1` = error.
-
-Cron example (every 2 hours, 500 records per run):
-
-```
-15 */2 * * * cd /path/to/webtrees && php modules_v4/linkenhancer/cli/<name>.php --limit=500 >> /var/log/linkenhancer-<name>.log 2>&1
-```
-
-Note: the script runs with the user that may read `data/config.ini.php` and has database access (usually the web server user or root).
-
-### The link index (XREF overview)
-
-The XREF overview admin page (Control panel → LinkEnhancer → XREF Overview) is a server-side paginated DataTable. It lists all records that contain classic `@XREF@` cross-references or linkenhancer links, with a per-record link inventory. Optional filters: referenced XREF (only available while a fresh link index is active - in live-scan mode the field is hidden, because it would only be a coarse pre-filter there), record type, tree, and the number of tokens shown per link class (all / 5 / 10 / 20, default 5). The XREF cell shows the tree name as a second muted line; the type is its own sortable column. Each inventory token is displayed as a short display context (snippet) with the link token itself in bold.
+The cross-reference overview admin page (Control panel → LinkEnhancer → Cross-reference overview) is a server-side paginated DataTable. It lists all records that contain classic `@XREF@` cross-references or linkenhancer links, with a per-record link inventory. Optional filters: referenced XREF (only available while a fresh link index is active - in live-scan mode the field is hidden, because it would only be a coarse pre-filter there), record type, tree, and the number of tokens shown per link class (all / 5 / 10 / 20, default 5). The XREF cell shows the tree name as a second muted line; the type is its own sortable column. Each inventory token is displayed as a short display context (snippet) with the link token itself in bold.
 
 #### Supported engines
 
 | | Live overview | Link index (CLI) |
-|---|---|---|
+| --- | --- | --- |
 | MariaDB / MySQL | yes (REGEXP gate) | yes |
 | PostgreSQL | yes (REGEXP gate) | yes |
 | SQLite / SQL Server | **limited mode** - automatic fallback to a coarse `LIKE` gate + full table scan per request (banner on the page); the exact classification still happens in PHP | **not available** (needs REGEXP + `MD5`) - the CLI exits with an error |
@@ -549,6 +479,39 @@ The page shows which source it uses:
 
 Use `tests/p1-measure.php` (read-only) on your instance to check how expensive the live scan is for your data and to calibrate the cron schedule.
 
+
+<a name="webtrees"></a>
+## webtrees
+
+**[webtrees](https://webtrees.net/)** is an online collaborative genealogy application.
+This can be hosted on your own server by following the [Install instructions](https://webtrees.net/install/).
+
+
+<a name="requirements"></a>
+## Requirements
+
+This module requires **webtrees** version 2.2.
+This module has the same requirements as [webtrees#system-requirements](https://github.com/fisharebest/webtrees#system-requirements).
+
+This module was tested with **webtrees** version 2.2.4
+and build-in themes and some other custom modules.
+
+<a name="installation"></a>
+## Installation
+- Install and use [Custom Module Manager](https://github.com/Jefferson49/CustomModuleManager) for an easy and convenient installation of webtrees custom modules.
+- Open the Custom Module Manager view in webtrees, select "linkenhancer", and click on the "Install Module" button.
+
+**Manual installation**:
+1. Download the [latest release](https://github.com/bschwede/linkenhancer/releases/latest) of the module.
+2. Upload the downloaded file to your web server.
+3. Unzip the package into your ``modules_v4`` directory.
+4. Rename the folder to ``linkenhancer``
+
+If everything was successful, you should see a subdirectory ``linkenhancer`` with the unpacked content in the ``modules_v4`` directory.
+
+During the initial installation, the following problem may occur: "PDO error - There is no active transaction" - for more details see [known issues](https://codeberg.org/bschwede/linkenhancer/issues?q=&type=all&labels=1288213&milestone=0&assignee=0&poster=0).
+
+
 <a name="contributing"></a>
 ## Contributing
 
@@ -569,29 +532,6 @@ Beside English the following languages are available:
 * Dutch (by TheDutchJewel)
 * Español (by Bernat Josep Banyuls i Sala)
 * German
-
-### How the POT is generated
-
-All user-facing strings are extracted with `xgettext` (no manual PO entries) by
-`util/update-po-files.sh`:
-
-- View/service strings use `I18N::translate()` as usual.
-- Strings that are **already provided by the webtrees core** (e.g. `Help`, `yes`/`no`,
-  `Control panel`) are wrapped in `MoreI18N::xlate()` instead: functionally identical at
-  runtime, but the different call name is invisible to xgettext - so they are never
-  extracted into the module POT and their translations come from the core POT.
-- **Manifest literals** (`cron-jobs.php` is pure data, loaded by the cronjob module in
-  tick/CLI context where no UI language is active) are wrapped in `MoreI18N::translate()`,
-  an *identity* marker whose last qualified-name component matches xgettext's
-  `--keyword=translate`. Nothing is translated at manifest load time.
-- **Pipeline:** `util/update-po-files.sh` runs xgettext over the module
-  (`util/`/`vendor/`/`node_modules/`/`tests/` excluded) into `resources/lang/messages.pot`.
-  PO files are maintained via Weblate and land in `resources/lang/<language>.po`;
-  `LinkEnhancerModule::customTranslations()` feeds them into webtrees' `I18N`, so the calls
-  find them **at render time**.
-- **After a core update:** if core newly covers a module string, mask it with
-  `MoreI18N::xlate()` so it is not double-translated.
-
 
 
 <a name="support"></a>
