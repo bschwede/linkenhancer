@@ -316,14 +316,7 @@ class LinkEnhancerUtils { // misc helper functions
 
         if (version_compare(Webtrees::VERSION, '2.3', '>=')) {
             // 2.3: matched route tokens live on the request (Router middleware), not on the route
-            if (preg_match_all('/\{([a-zA-Z_]\w*)\}/', $route->url, $m)) {
-                foreach ($m[1] as $token) {
-                    $value = $request->getAttribute($token);
-                    if ($value !== null && !is_object($value)) {
-                        $info['attr'][$token] = $value;
-                    }
-                }
-            }
+            $info['attr'] = Functions::routeParams($route, $request);
         }
 
         return $info;
