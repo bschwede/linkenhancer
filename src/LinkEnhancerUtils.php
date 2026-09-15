@@ -27,6 +27,8 @@ declare(strict_types=1);
 namespace Schwendinger\Webtrees\Module\LinkEnhancer;
 
 use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\Webtrees;
+use Schwendinger\Webtrees\Helpers\Functions;
 use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Session;
@@ -306,18 +308,25 @@ class LinkEnhancerUtils { // misc helper functions
         $request ??= Registry::container()->get(ServerRequestInterface::class);
 
         $route = $request->getAttribute('route');
-        if ($route) {
-            $extras = is_array($route->extras) && isset($route->extras['middleware']) ? implode('|', $route->extras['middleware']) : '';
-            return [
-                'path' => $route->path,
-                'handler' => $route->name,
-                'method' => implode('|', $route->allows),
-                'extras' => $extras,
-                'attr' => $route->attributes
-            ];
-
+        if (!$route) {
+            return [];
         }
-        return [];
+
+        $info = Functions::describeRoute($route);
+
+        if (version_compare(Webtrees::VERSION, '2.3', '>=')) {
+            // 2.3: matched route tokens live on the request (Router middleware), not on the route
+            if (preg_match_all('/\{([a-zA-Z_]\w*)\}/', $route->url, $m)) {
+                foreach ($m[1] as $token) {
+                    $value = $request->getAttribute($token);
+                    if ($value !== null && !is_object($value)) {
+                        $info['attr'][$token] = $value;
+                    }
+                }
+            }
+        }
+
+        return $info;
     }
 
 

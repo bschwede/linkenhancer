@@ -26,7 +26,6 @@ declare(strict_types=1);
 
 namespace Schwendinger\Webtrees\Module\LinkEnhancer;
 
-use Aura\Router\Map;
 use Exception;
 use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\FlashMessages;
@@ -335,7 +334,6 @@ class LinkEnhancerModule extends AbstractModule implements
 
         // Register a namespace for our views.
         View::registerNamespace($this->name(), $this->resourcesFolder() . 'views/');
-        $router = Registry::routeFactory()->routeMap();
 
         if ($this->getPref(self::PREF_WTHB_ACTIVE, true)) {
             if ($this->getPref(self::PREF_WTHB_ADMINVIEWPATCH, true)
@@ -346,15 +344,11 @@ class LinkEnhancerModule extends AbstractModule implements
             }
 
             if ($this->getPref(self::PREF_WTHB_TOCNSEARCH, true)) { // webtrees manual help (search and toc)
-                $router->attach('', '', static function (Map $router): void {
-                    $router->get(HelpWthbAction::class, '/helpwthb/{language}');
-                });
+                Functions::registerRoute('/helpwthb/{language}', HelpWthbAction::class);
 
             }
             if ($this->getPref(self::PREF_WTHB_WTCOREHELP, true)) { // webtrees core help overview
-                $router->attach('', '', static function (Map $router): void {
-                    $router->get(HelpWtCoreAction::class, '/helpwtcore/{language}');
-                });
+                Functions::registerRoute('/helpwtcore/{language}', HelpWtCoreAction::class);
             }            
         }
 
@@ -362,23 +356,17 @@ class LinkEnhancerModule extends AbstractModule implements
             Registry::markdownFactory(new CustomMarkdownFactory($this));
             
             if ($this->getPref(self::PREF_MDE_ACTIVE, true)) { // markdown and links++ help
-                $router->attach('', '', static function (Map $router): void {
-                    $router->get(HelpMdAction::class, '/helpmd/{language}');
-                });
+                Functions::registerRoute('/helpmd/{language}', HelpMdAction::class);
             }
         }
 
         
         if ($this->getPref(self::PREF_LINKSPP_ACTIVE, true)) {
-            $router->attach('', '/tree/{tree}', static function (Map $router) {
-                $router->get(GotoXrefAction::class, '/goto-xref/{xref}');
-            });
+            Functions::registerRoute('/tree/{tree}/goto-xref/{xref}', GotoXrefAction::class);
         }
 
         // XREF overview - server-side DataTables data endpoint (admin only)
-        $router->attach('', '', static function (Map $router): void {
-            $router->get(AdminXrefOverviewData::class, '/admin-xref-overview-data');
-        });
+        Functions::registerRoute('/admin-xref-overview-data', AdminXrefOverviewData::class);
     }
  
 
