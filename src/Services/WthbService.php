@@ -316,7 +316,7 @@ class WthbService { // stuff related to webtrees manual link handling
                 ->when(!$withSubcontext, function ($query1) {
                     $query1->where('subcontext', '=', '');
                 })
-                ->where(function ($query2) use ($module, $activeroute, $withSubcontext) {
+                ->where(function ($query2) use ($module, $activeroute, $withSubcontext, $hkey) {
                     $query2
                         ->where('path', '=', $activeroute['path'])
                         ->where('handler_key', '=', $hkey)
