@@ -26,6 +26,7 @@ namespace Schwendinger\Webtrees\Module\LinkEnhancer\Schema;
 
 use Fisharebest\Webtrees\DB;
 use Fisharebest\Webtrees\Schema\SeedInterface;
+use Schwendinger\Webtrees\Helpers\Functions;
 
 /**
  * Populate the route_hel_map table
@@ -36,6 +37,7 @@ class SeedHelpTable implements SeedInterface
     //  fieldname    => max length of string; getting info from schema is not directly supported
         'path'       => 255,
         'handler'    => 150,
+        'handler_key' => 150,
         'method'     => 20,
         'extras'     => 60,
         'subcontext' => 250,
@@ -84,6 +86,8 @@ class SeedHelpTable implements SeedInterface
         $row['extras'] ??= '';
         $row['subcontext'] ??= '';
         $row['url'] ??= '';
+        // handler_key it's a function of handler (version-independent) -> derive anew each time
+        $row['handler_key'] = Functions::canonicalHandlerKey((string) $row['handler']);
        
         $handler = $row['handler'] ?? null;
         $category = $row['category'] ?? '';
@@ -142,7 +146,7 @@ class SeedHelpTable implements SeedInterface
 
                 if (!$this->skipRow($row, $skipreason)) {
                     $updateValues = [];
-                    foreach (['category', 'order', 'url'] as $attr) {
+                    foreach (['category', 'order', 'url', 'handler_key'] as $attr) {
                         if ($row[$attr]) {
                             $updateValues[$attr] = $row[$attr];
                         }

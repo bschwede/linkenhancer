@@ -298,11 +298,14 @@ class WthbService { // stuff related to webtrees manual link handling
                     ? $activeroute['attr']['data_fix']
                     : '');
 
+            // version independent, canonical handler form (2.2.6 + 2.3)
+            $hkey = Functions::canonicalHandlerKey((string) $activeroute['handler']);
+
             // WHERE url is not null AND
             // (
-            //      (path = route[path] AND handler = route[handler]) 
-            //   OR (path = route[path] AND handler = '')
-            //   OR (path = '' AND handler = route[handler])
+            //      (path = route[path] AND handler_key = key(route[handler]))
+            //   OR (path = route[path] AND handler_key = '')
+            //   OR (path = '' AND handler_key = key(route[handler]))
             //   OR (path = route[path] AND handler = module)         #if route.path ^=/module/
             //   OR (handler = module)                                #if route.path ^=/module/
             //   OR (category=generic AND extras=route[extras])       #last try by Auth-Level
@@ -316,11 +319,11 @@ class WthbService { // stuff related to webtrees manual link handling
                 ->where(function ($query2) use ($module, $activeroute, $withSubcontext) {
                     $query2
                         ->where('path', '=', $activeroute['path'])
-                        ->where('handler', '=', $activeroute['handler'])
+                        ->where('handler_key', '=', $hkey)
                         ->orWhere('path', '=', $activeroute['path'])
-                        ->where('handler', '=', '')
+                        ->where('handler_key', '=', '')
                         ->orWhere('path', '=', '')
-                        ->where('handler', '=', $activeroute['handler'])
+                        ->where('handler_key', '=', $hkey)
                         ->when($module != '', function ($query3) use ($module, $activeroute) {
                             $query3
                                 ->orWhere('path', '=', $activeroute['path'])
