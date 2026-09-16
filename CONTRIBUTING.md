@@ -32,6 +32,9 @@ git push codeberg your-branch-name
 Join us on the real FLOSS platform! 🎉
 
 ## Additional details
+### Dependencies
+This module requires shared code, which is managed in the [wt-shared-libs](https://codeberg.org/bschwede/wt-shared-libs) package. Just clone that repo into a folder named `wt-shared-libs` beside this module, in order to include it via `composer update`.
+
 ### How the POT is generated
 
 All user-facing strings are extracted with `xgettext` (no manual PO entries) by
