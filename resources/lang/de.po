@@ -8,17 +8,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-24 07:15+0200\n"
-"PO-Revision-Date: 2026-05-24 05:31+0000\n"
+"POT-Creation-Date: 2026-09-12 11:40+0200\n"
+"PO-Revision-Date: 2026-09-16 13:53+0000\n"
 "Last-Translator: bschwede <bschwede@noreply.codeberg.org>\n"
-"Language-Team: German <https://translate.codeberg.org/projects/linkenhancer/"
-"module/de/>\n"
+"Language-Team: German <https://translate.codeberg.org/projects/wt-modules/"
+"linkenhancer/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.5\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 msgid "Option is disabled"
 msgstr "Einstellung ist deaktiviert"
@@ -35,6 +35,32 @@ msgstr "Markdown-Editor für Notizen-Texteingabefelder"
 msgid "Precondition: Tree preference '%s' need to be set to markdown."
 msgstr ""
 "Vorbedingung: Stammbaum-Einstellung '%s' muss auf markdown gesetzt sein."
+
+msgid "Cross-references"
+msgstr "Querverweise"
+
+msgid "External links"
+msgstr "Externe Links"
+
+msgid "Pictures"
+msgstr "Bilder"
+
+msgid "Classic cross-references"
+msgstr "Klassische Querverweise"
+
+msgid "Other - maybe damaged - links"
+msgstr "Andere - möglicherweise defekte - Links"
+
+msgid "target not found"
+msgstr "Ziel nicht gefunden"
+
+#. I18N: JS enhanced link
+msgid "Cross-reference"
+msgstr "Querverweis"
+
+#, php-format
+msgid "expected %1$s, is %2$s"
+msgstr "erwartet wurde %1$s, es ist jedoch %2$s"
 
 #. I18N: Settings - section title
 msgid "Webtrees manual"
@@ -175,10 +201,6 @@ msgid ""
 "How many columns and rows should the table have (input: [number] [number])?"
 msgstr ""
 "Wie viele Spalten und Zeilen soll die Tabelle haben (Eingabe: [Zahl] [Zahl])?"
-
-#. I18N: JS enhanced link
-msgid "cross reference"
-msgstr "Querverweis"
 
 #. I18N: JS enhanced link, %s name of location
 #, php-format
@@ -343,6 +365,9 @@ msgstr "genau so verschachtelt, wie die Überschriften im Dokument vorkommen"
 msgid "Permalink"
 msgstr "Dauerhafter Link"
 
+msgid "tree"
+msgstr "Stammbaum"
+
 #. I18N: MD img error precondition
 msgid ""
 "Neither a media object nor a file from the public directory was specified."
@@ -396,6 +421,24 @@ msgstr "Home-Link - JSON mit CSS-Regeln scheint ungültig zu sein."
 
 msgid "Import registered routes"
 msgstr "Registrierte Routen importieren"
+
+msgid "Cross-Reference Overview"
+msgstr "Querverweis-Übersicht"
+
+msgid "Update the link index"
+msgstr "Link-Index aktualisieren"
+
+msgid "Rebuild the link index incrementally."
+msgstr "Den Link-Index schrittweise neu aufbauen."
+
+msgid "max records per run"
+msgstr "maximale Anzahl an Datensätzen pro Durchlauf"
+
+msgid "only changes since this timestamp"
+msgstr "nur Änderungen seit diesem Zeitstempel"
+
+msgid "The link index is out of date."
+msgstr "Der Link-Index ist veraltet."
 
 #. I18N: user defined url
 #. I18N: Settings - section title
@@ -619,6 +662,95 @@ msgstr ""
 
 msgid "Further information can be found on a separate help page."
 msgstr "Weitere Informationen finden Sie auf einer separaten Hilfeseite."
+
+msgid ""
+"List all records that contain cross-references (XREFs) or linkenhancer links."
+msgstr ""
+"Liste aller Datensätze, die Querverweise (XREFs) oder „Linkenhancer“-Links "
+"enthalten."
+
+msgid ""
+"Limited mode: this database engine has no regex support - the table is "
+"scanned live with a LIKE filter on every request, which can be slow on large "
+"trees. The link index is not available on this engine."
+msgstr ""
+"Eingeschränkter Modus: Diese Datenbank-Engine bietet keine Unterstützung für "
+"reguläre Ausdrücke – die Tabelle wird bei jeder Abfrage live mit einem LIKE-"
+"Filter durchsucht, was bei großen Bäumen zu Verzögerungen führen kann. Der "
+"Link-Index ist bei dieser Engine nicht verfügbar."
+
+#, php-format
+msgid "Link index active: %1$s scanned records, last verified %2$s."
+msgstr "Link-Index aktiv: %1$s Datensätze gescannt, zuletzt überprüft am %2$s."
+
+msgid ""
+"Live scan forced - the link index is bypassed for this view, which can be "
+"slow on large trees."
+msgstr ""
+"Live-Scan erzwungen – Der Link-Index wird bei dieser Ansicht umgangen, was "
+"bei großen Stammbäumen zu Verzögerungen führen kann."
+
+msgid ""
+"No fresh link index - the table below scans the GEDCOM tables live, which "
+"can be slow on large trees. Build the index with the CLI script (see "
+"README.md, \"CLI scripts & maintenance\")."
+msgstr ""
+"Kein aktueller Link-Index – die folgende Tabelle durchsucht die GEDCOM-"
+"Tabellen in Echtzeit, was bei großen Stammbäumen langsam sein kann. "
+"Erstellen Sie den Index mit dem CLI-Skript (siehe README.md, „CLI-Skripte & "
+"Wartung“)."
+
+msgid ""
+"Only broken targets: every matching record is loaded and its targets "
+"resolved on the server, which can be slow on large trees. Combine with the "
+"type/tree filters to narrow the scan."
+msgstr ""
+"Nur fehlerhafte Ziele: Jeder passende Datensatz wird geladen und seine Ziele "
+"auf dem Server aufgelöst, was bei großen Bäumen langsam sein kann. "
+"Kombinieren Sie diese Option mit den Typ- und Baumfiltern, um die Suche "
+"einzugrenzen."
+
+msgid "referencing XREF"
+msgstr "Verweis auf XREF"
+
+msgid "Bypass the link index and scan the GEDCOM tables live"
+msgstr "Den Verzeichnisindex umgehen und die GEDCOM-Tabellen direkt durchsuchen"
+
+msgid "Force live scan"
+msgstr "Live-Scan erzwingen"
+
+msgid "Record types"
+msgstr "Datensatz-Typen"
+
+msgid "All types"
+msgstr "Alle Typen"
+
+msgid "All GEDCOM records"
+msgstr "Alle GEDCOM-Datensätze"
+
+msgid "All Block records"
+msgstr "Alle Block-Datensätze"
+
+msgid "GEDCOM records"
+msgstr "GEDCOM-Datensätze"
+
+msgid "All trees"
+msgstr "Alle Stammbäume"
+
+msgid "links per class"
+msgstr "Anzahl Links pro Klasse"
+
+msgid "Only rows with a missing or wrong-type target are shown"
+msgstr "Nur Zeilen anzeigen, bei denen das Ziel fehlt oder vom falschen Typ ist"
+
+msgid "Only broken targets"
+msgstr "Nur defekte Ziele"
+
+msgid "The target type differs from the declaration"
+msgstr "Der Zieltyp weicht von der Deklaration ab"
+
+msgid "XREF"
+msgstr "XREF"
 
 msgid "Goto top of cell content"
 msgstr "Zum Anfang des Zellinhalts gehen"

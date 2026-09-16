@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-24 07:15+0200\n"
+"POT-Creation-Date: 2026-09-12 11:40+0200\n"
 "PO-Revision-Date: 2026-04-01 13:57+0000\n"
 "Last-Translator: MicXDev <micxdev@noreply.codeberg.org>\n"
 "Language-Team: English <https://translate.codeberg.org/projects/linkenhancer/"
@@ -32,6 +32,32 @@ msgstr ""
 #. I18N: MDE
 #, php-format
 msgid "Precondition: Tree preference '%s' need to be set to markdown."
+msgstr ""
+
+msgid "Cross-references"
+msgstr ""
+
+msgid "External links"
+msgstr ""
+
+msgid "Pictures"
+msgstr ""
+
+msgid "Classic cross-references"
+msgstr ""
+
+msgid "Other - maybe damaged - links"
+msgstr ""
+
+msgid "target not found"
+msgstr ""
+
+#. I18N: JS enhanced link
+msgid "Cross-reference"
+msgstr ""
+
+#, php-format
+msgid "expected %1$s, is %2$s"
 msgstr ""
 
 #. I18N: Settings - section title
@@ -171,10 +197,6 @@ msgstr ""
 #. I18N: JS MDE
 msgid ""
 "How many columns and rows should the table have (input: [number] [number])?"
-msgstr ""
-
-#. I18N: JS enhanced link
-msgid "cross reference"
 msgstr ""
 
 #. I18N: JS enhanced link, %s name of location
@@ -331,6 +353,9 @@ msgstr ""
 msgid "Permalink"
 msgstr ""
 
+msgid "tree"
+msgstr ""
+
 #. I18N: MD img error precondition
 msgid ""
 "Neither a media object nor a file from the public directory was specified."
@@ -377,6 +402,24 @@ msgid "Home link - JSON with CSS rules seems to be invalid."
 msgstr ""
 
 msgid "Import registered routes"
+msgstr ""
+
+msgid "Cross-Reference Overview"
+msgstr ""
+
+msgid "Update the link index"
+msgstr ""
+
+msgid "Rebuild the link index incrementally."
+msgstr ""
+
+msgid "max records per run"
+msgstr ""
+
+msgid "only changes since this timestamp"
+msgstr ""
+
+msgid "The link index is out of date."
 msgstr ""
 
 #. I18N: user defined url
@@ -566,6 +609,79 @@ msgid "The context help topics provided by webtrees are listed below."
 msgstr ""
 
 msgid "Further information can be found on a separate help page."
+msgstr ""
+
+msgid ""
+"List all records that contain cross-references (XREFs) or linkenhancer links."
+msgstr ""
+
+msgid ""
+"Limited mode: this database engine has no regex support - the table is "
+"scanned live with a LIKE filter on every request, which can be slow on large "
+"trees. The link index is not available on this engine."
+msgstr ""
+
+#, php-format
+msgid "Link index active: %1$s scanned records, last verified %2$s."
+msgstr ""
+
+msgid ""
+"Live scan forced - the link index is bypassed for this view, which can be "
+"slow on large trees."
+msgstr ""
+
+msgid ""
+"No fresh link index - the table below scans the GEDCOM tables live, which "
+"can be slow on large trees. Build the index with the CLI script (see "
+"README.md, \"CLI scripts & maintenance\")."
+msgstr ""
+
+msgid ""
+"Only broken targets: every matching record is loaded and its targets "
+"resolved on the server, which can be slow on large trees. Combine with the "
+"type/tree filters to narrow the scan."
+msgstr ""
+
+msgid "referencing XREF"
+msgstr ""
+
+msgid "Bypass the link index and scan the GEDCOM tables live"
+msgstr ""
+
+msgid "Force live scan"
+msgstr ""
+
+msgid "Record types"
+msgstr ""
+
+msgid "All types"
+msgstr ""
+
+msgid "All GEDCOM records"
+msgstr ""
+
+msgid "All Block records"
+msgstr ""
+
+msgid "GEDCOM records"
+msgstr ""
+
+msgid "All trees"
+msgstr ""
+
+msgid "links per class"
+msgstr ""
+
+msgid "Only rows with a missing or wrong-type target are shown"
+msgstr ""
+
+msgid "Only broken targets"
+msgstr ""
+
+msgid "The target type differs from the declaration"
+msgstr ""
+
+msgid "XREF"
 msgstr ""
 
 msgid "Goto top of cell content"
