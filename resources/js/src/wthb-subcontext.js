@@ -82,6 +82,9 @@ export const insertSubcontextLinks = (
     };
 
     const createPopoverForTrigger = (trigger, url, pos = 'bottom') => {
+        if (typeof url !== 'string' || !/^(https?:)?\/\//i.test(url)) {
+            return;
+        }
         const target = (cfg.openInNewTab ? 'target="_blank" ' : '');
         const helptitle = getHelpTitle(url, cfg);
         

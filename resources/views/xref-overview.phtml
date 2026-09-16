@@ -1,0 +1,251 @@
+<?php
+
+declare(strict_types=1);
+
+use DateTimeImmutable;
+use DateTimeZone;
+use Fisharebest\Webtrees\Auth;
+use Fisharebest\Webtrees\Contracts\UserInterface;
+use Schwendinger\Webtrees\Helpers\ClassName;
+use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
+use Schwendinger\Webtrees\Helpers\MoreI18N;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
+
+use function parse_str;
+use function parse_url;
+
+/**
+ * @var string                                        $title
+ * @var LinkEnhancerModule                            $module
+ * @var string                                        $data_url   server-side data endpoint (incl. active filters)
+ * @var string                                        $xref       active "target xref" filter
+ * @var string                                        $rectype    active record-type filter
+ * @var int                                           $tree_id    active tree filter (0 = all)
+ * @var int                                           $max_links  active inventory cap (0 = all)
+ * @var array<int,string>                             $rectypes   selectable record types
+ * @var array<string, array{title: string, settings: array<string, string>}> $block_rectypes
+ * @var \Illuminate\Support\Collection                $trees      all trees
+ * @var array{rows: int, scanned_at: string|null, fresh: bool} $index_status
+ * @var bool                                          $live         force live scan (index bypass)
+ * @var string                                        $target     active "only broken targets" filter ('' or 'problems')
+ * @var bool                                          $limited_mode no REGEXP support (SQLite/SQL Server)
+ */
+
+$page_url = route('module', ['module' => $module->name(), 'action' => 'AdminXrefOverview']);
+// The index is used only when it is fresh AND a live scan is not forced.
+$use_index = $index_status['fresh'] && !$live;
+
+// In the default (non-pretty) URL mode the action URL is
+// "index.php?route=…" - and a GET form submission REPLACES that query
+// string with the form fields, losing the route. Re-inject every query
+// parameter of the action URL as hidden fields so the submission keeps
+// working. In pretty mode the action URL has no query string, so nothing
+// is rendered and the behaviour is unchanged.
+$action_query  = (string) (parse_url($page_url, PHP_URL_QUERY) ?: '');
+$hidden_params = [];
+parse_str($action_query, $hidden_params);
+$index_status_ts = $index_status['scanned_at'] ?? '';
+if ($index_status_ts) {
+    $index_status_ts = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $index_status_ts, new DateTimeZone('UTC'))
+        ->setTimezone(new DateTimeZone(Auth::user()->getPreference(UserInterface::PREF_TIME_ZONE, 'UTC')))
+        ->format(strtr(I18N::dateFormat(), ['%' => '']) . ' ' . strtr(I18N::timeFormat(), ['%' => '']));
+}
+?>
+
+<?= view('components/breadcrumbs', [
+    'links' => [
+        route(ClassName::get(ClassName::CONTROL_PANEL)) => MoreI18N::xlate('Control panel'),
+        $module->getConfigLink() => $module->title(),
+        $title,
+    ],
+]) ?>
+
+<h1 id="top"><?= e($title) ?></h1>
+
+<p class="text-muted">
+    <?= I18N::translate('List all records that contain cross-references (XREFs) or linkenhancer links.') ?>
+</p>
+
+<?php if (!empty($limited_mode)): ?>
+    <div class="alert alert-warning">
+        <?= I18N::translate('Limited mode: this database engine has no regex support - the table is scanned live with a LIKE filter on every request, which can be slow on large trees. The link index is not available on this engine.') ?>
+    </div>
+<?php endif ?>
+
+<?php if ($use_index): ?>
+    <div class="alert alert-success">
+        <?= I18N::translate('Link index active: %1$s scanned records, last verified %2$s.', I18N::number((float) $index_status['rows']), $index_status_ts) ?>
+    </div>
+<?php elseif ($index_status['fresh'] && $live): ?>
+    <div class="alert alert-warning">
+        <?= I18N::translate('Live scan forced - the link index is bypassed for this view, which can be slow on large trees.') ?>
+    </div>
+<?php else: ?>
+    <div class="alert alert-info">
+        <?= I18N::translate('No fresh link index - the table below scans the GEDCOM tables live, which can be slow on large trees. Build the index with the CLI script (see README.md, "CLI scripts & maintenance").') ?>
+    </div>
+<?php endif ?>
+
+<?php if ($target === 'problems'): ?>
+    <div class="alert alert-warning">
+        <?= I18N::translate('Only broken targets: every matching record is loaded and its targets resolved on the server, which can be slow on large trees. Combine with the type/tree filters to narrow the scan.') ?>
+    </div>
+<?php endif ?>
+
+<form class="row g-2 mt-2 mb-3 gx-3 ps-2" method="get" action="<?= e($page_url) ?>">
+    <?php foreach ($hidden_params as $hidden_name => $hidden_value): ?>
+        <?php if ($hidden_name !== 'xref' || $index_status['fresh']): ?>
+            <input type="hidden" name="<?= e($hidden_name) ?>" value="<?= e($hidden_value) ?>">
+        <?php endif; ?>
+    <?php endforeach; ?>
+    <?php if ($use_index): ?>
+        <div class="col-auto">
+            <input class="form-control" type="text" name="xref" value="<?= e($xref) ?>" placeholder="<?= I18N::translate('referencing XREF') ?>">
+        </div>
+    <?php endif; ?>
+    <?php if ($index_status['fresh']): ?>
+        <div class="col-auto form-check">
+            <input class="form-check-input" type="checkbox" name="live" value="1" id="le-force-live" <?= $live ? 'checked' : '' ?>>
+            <label class="form-check-label" for="le-force-live" title="<?= I18N::translate('Bypass the link index and scan the GEDCOM tables live') ?>"><?= I18N::translate('Force live scan') ?></label>
+        </div>
+    <?php endif; ?>
+    <div class="col-auto">
+        <select class="form-select" name="rectype" title="<?= e(I18N::translate('Record types')) ?>">
+            <option value=""><?= I18N::translate('All types') ?></option>
+            <option value="<?= XrefsService::RECTYPE_ALL_GEDCOM ?>" <?= XrefsService::RECTYPE_ALL_GEDCOM === $rectype ? 'selected' : '' ?>><?= I18N::translate('All GEDCOM records') ?></option>
+            <option value="<?= XrefsService::RECTYPE_ALL_BLOCKS ?>" <?= XrefsService::RECTYPE_ALL_BLOCKS === $rectype ? 'selected' : '' ?>><?= I18N::translate('All Block records') ?></option>
+            <optgroup label="<?= I18N::translate('GEDCOM records') ?>">
+                <?php foreach ($rectypes as $key): ?>
+                    <option value="<?= e($key) ?>" <?= $key === $rectype ? 'selected' : '' ?>><?= e($key) ?></option>
+                <?php endforeach; ?>
+            </optgroup>
+            <optgroup label="<?= MoreI18N::xlate('Blocks') ?>">
+                <?php foreach ($block_rectypes as $module_name => $block_def): ?>
+                    <option value="<?= e($module_name) ?>" <?= $module_name === $rectype ? 'selected' : '' ?>><?= e(MoreI18N::xlate($block_def['title'])) ?></option>
+                <?php endforeach; ?>
+            </optgroup>
+        </select>
+    </div>
+    <div class="col-auto">
+        <select class="form-select" name="tree" title="<?= e(MoreI18N::xlate('Family trees')) ?>">
+            <option value=""><?= I18N::translate('All trees') ?></option>
+            <?php foreach ($trees as $tree): ?>
+                <option value="<?= $tree->id() ?>" <?= $tree->id() === $tree_id ? 'selected' : '' ?>><?= e($tree->name()) ?></option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+    <div class="col-auto">
+        <select class="form-select" name="max_links" title="<?= I18N::translate('links per class') ?>">
+            <?php foreach (XrefsService::LINKS_PER_CLASS_OPTIONS as $option): ?>
+                <option value="<?= $option ?>" <?= $option === $max_links ? 'selected' : '' ?>><?= $option === 0 ? MoreI18N::xlate('All') : (string) $option ?></option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+    <div class="col-auto form-check">
+        <input class="form-check-input" type="checkbox" name="target" value="problems" id="le-only-problems" <?= $target === 'problems' ? 'checked' : '' ?>>
+        <label class="form-check-label" for="le-only-problems" title="<?= I18N::translate('Only rows with a missing or wrong-type target are shown') ?>">
+            <?= I18N::translate('Only broken targets') ?>
+            (<span title="<?= e(I18N::translate("target not found")) ?>"><?= XrefsService::TARGET_NOT_FOUND_GLYPH ?></span> 
+            / <span title="<?= e(I18N::translate("The target type differs from the declaration")) ?>"><?= XrefsService::TARGET_TYPE_MISMATCH_GLYPH ?></span>)
+        </label>
+    </div>
+    <div class="col-auto">
+        <button class="btn btn-outline-primary" type="submit"><?= MoreI18N::xlate('Filter') ?></button>
+    </div>
+</form>
+
+<!-- The global DataTables search box offers little value here (the dedicated
+     filters above cover it); hide it for this table only. The admin layout
+     loads no module CSS, so the reference-link styles are inlined here too. -->
+<style>
+#wt-datatables-xref-overview_wrapper .dt-search { display: none; }
+.le-target-links { margin-top: 0.15em; font-size: 0.9em; color: #555; }
+.le-target-missing { color: #b02a37; font-style: italic; }
+.le-target-type-mismatch { color: #b8860b; font-weight: bold; cursor: help; }
+.le-target-links mark.le-problem-mark { background: #fff3cd; padding: 0 0.2em; border-radius: 2px; }
+</style>
+
+<div class="table-responsive pt-2 pb-4">
+    <table
+        id="wt-datatables-xref-overview"
+        class="table table-bordered table-sm datatables d-none"
+        <?= view('lists/datatables-attributes') ?>
+        data-ajax="<?= e($data_url) ?>"
+        data-server-side="true"
+        data-columns='[{}, {}, {"sortable":false}, {"sortable":false}]'
+    >
+        <thead>
+            <tr>
+                <th><?= I18N::translate('XREF') ?></th>
+                <th><?= MoreI18N::xlate('Type') ?></th>
+                <th><?= MoreI18N::xlate('Record') ?></th>
+                <th><?= MoreI18N::xlate('Links') ?></th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<script>
+// Applying a filter above submits a GET form, so the page reloads with a
+// (usually) smaller result set. DataTables remembers the current page in
+// localStorage (data-state-save) under a key built from location.pathname -
+// which ignores the query string - so it restores a page that no longer
+// exists in the filtered set and the table stays empty until a valid page is
+// picked. Drop that stale state before the table is initialised, and force
+// the first page once DataTables reports init as a fallback.
+(function () {
+    var TABLE_ID = 'wt-datatables-xref-overview';
+
+    function isFiltered() {
+        var q = new URLSearchParams(window.location.search);
+        return (q.get('xref') || '').length > 0
+            || (q.get('rectype') || '').length > 0
+            || ((q.get('tree') || '') !== '' && q.get('tree') !== '0')
+            || (q.get('target') || '') === 'problems'
+            || (q.get('live') || '') === '1';
+    }
+
+    function clearSavedPage() {
+        if (!isFiltered()) {
+            return;
+        }
+        try {
+            var prefix = 'DataTables_';
+            var suffix = '_' + window.location.pathname;
+            for (var i = window.localStorage.length - 1; i >= 0; i--) {
+                var key = window.localStorage.key(i);
+                if (key && key.indexOf(prefix) === 0 && key.indexOf(suffix) !== -1) {
+                    window.localStorage.removeItem(key);
+                }
+            }
+        } catch (e) {
+            // Storage unavailable - the init.dt fallback still applies.
+        }
+    }
+
+    function bindReset() {
+        // Only for filtered views - an unfiltered reload must keep the user's
+        // remembered page (normal pagination memory).
+        if (!isFiltered()) {
+            return;
+        }
+        var tableEl = document.getElementById(TABLE_ID);
+        var jq = window.jQuery;
+        if (!tableEl || !jq) {
+            return;
+        }
+        // DataTables triggers init.dt through jQuery, so it must be bound via
+        // jQuery (a native listener would never fire).
+        jq(tableEl).one('init.dt', function () {
+            var api = jq(tableEl).DataTable();
+            if (api && typeof api.page === 'function' && api.page() !== 0) {
+                api.page(0).draw();
+            }
+        });
+    }
+
+    clearSavedPage();
+    bindReset();
+})();
+</script>

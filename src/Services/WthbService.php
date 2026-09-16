@@ -30,6 +30,8 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Schema\SeedHelpTable;
 use Fisharebest\Webtrees\FlashMessages;
 use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Helpers\Functions;
+use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Validator;
 use Fisharebest\Webtrees\GedcomFilters\GedcomEncodingFilter;
@@ -140,7 +142,7 @@ class WthbService { // stuff related to webtrees manual link handling
         $result['total'] = (!isset($result['total']) && isset($result['total_seeder']) ? $result['total_seeder'] : $result['total'] ?? 0);
 
         $message = '<strong>' . I18N::translate('Webtrees manual') . '</strong>: ' . $title . ' - ' . I18N::translate('Routes imported') 
-            . '<dl><dt>' . /*I18N: webtrees.pot */I18N::translate('Total') . ':</dt><dd>' . $result['total'] . '</dd></dl>';
+            . '<dl><dt>' . MoreI18N::xlate('Total') . ':</dt><dd>' . $result['total'] . '</dd></dl>';
         $status = 'success';
         if ($skippedcnt > 0) {
             $message .= '<dl style="color:red;"><dt>' . /*I18N: wthb import skipped rows */I18N::translate('Skipped') . ':</dt><dd>' . $skippedcnt . '</dd></dl>';
@@ -227,18 +229,16 @@ class WthbService { // stuff related to webtrees manual link handling
      */
     public function importRoutesAction(ServerRequestInterface $request): array
     {
-        $router = Registry::routeFactory()->routeMap();
-        $existingRoutes = $router->getRoutes();
         $data = [];
 
-        foreach ($existingRoutes as $route) {
-            $extras = is_array($route->extras) && isset($route->extras['middleware']) ? implode('|', $route->extras['middleware']) : '';
+        foreach (Functions::allRoutes() as $route) {
+            $info = Functions::describeRoute($route);
             $data[] = [
-                'path' => $route->path,
-                'handler' => $route->name,
-                'method' => implode('|', $route->allows),
-                'extras' => $extras,
-                'attr' => $route->attributes
+                'path' => $info['path'],
+                'handler' => $info['handler'],
+                'method' => $info['method'],
+                'extras' => $info['extras'],
+                'attr' => $info['attr'],
             ];
         }
 
@@ -298,11 +298,14 @@ class WthbService { // stuff related to webtrees manual link handling
                     ? $activeroute['attr']['data_fix']
                     : '');
 
+            // version independent, canonical handler form (2.2.6 + 2.3)
+            $hkey = Functions::canonicalHandlerKey((string) $activeroute['handler']);
+
             // WHERE url is not null AND
             // (
-            //      (path = route[path] AND handler = route[handler]) 
-            //   OR (path = route[path] AND handler = '')
-            //   OR (path = '' AND handler = route[handler])
+            //      (path = route[path] AND handler_key = key(route[handler]))
+            //   OR (path = route[path] AND handler_key = '')
+            //   OR (path = '' AND handler_key = key(route[handler]))
             //   OR (path = route[path] AND handler = module)         #if route.path ^=/module/
             //   OR (handler = module)                                #if route.path ^=/module/
             //   OR (category=generic AND extras=route[extras])       #last try by Auth-Level
@@ -313,14 +316,14 @@ class WthbService { // stuff related to webtrees manual link handling
                 ->when(!$withSubcontext, function ($query1) {
                     $query1->where('subcontext', '=', '');
                 })
-                ->where(function ($query2) use ($module, $activeroute, $withSubcontext) {
+                ->where(function ($query2) use ($module, $activeroute, $withSubcontext, $hkey) {
                     $query2
                         ->where('path', '=', $activeroute['path'])
-                        ->where('handler', '=', $activeroute['handler'])
+                        ->where('handler_key', '=', $hkey)
                         ->orWhere('path', '=', $activeroute['path'])
-                        ->where('handler', '=', '')
+                        ->where('handler_key', '=', '')
                         ->orWhere('path', '=', '')
-                        ->where('handler', '=', $activeroute['handler'])
+                        ->where('handler_key', '=', $hkey)
                         ->when($module != '', function ($query3) use ($module, $activeroute) {
                             $query3
                                 ->orWhere('path', '=', $activeroute['path'])

@@ -27,16 +27,16 @@ declare(strict_types=1);
 namespace Schwendinger\Webtrees\Module\LinkEnhancer;
 
 use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\Webtrees;
+use Schwendinger\Webtrees\Helpers\Functions;
+use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Session;
 use Fisharebest\Webtrees\Validator;
 use Fisharebest\Webtrees\Module\AbstractModule;
-use Fisharebest\Webtrees\Schema\MigrationInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Illuminate\Database\Capsule\Manager as DB;
 use Exception;
-use PDOException;
 
 enum WebRessource
 {
@@ -128,7 +128,7 @@ class LinkEnhancerUtils { // misc helper functions
                     'hr'               => /*I18N: JS MDE */ I18N::translate('Horizontal rule'),
                     'Undo'             => /*I18N: JS MDE */ I18N::translate('Undo'),
                     'Redo'             => /*I18N: JS MDE */ I18N::translate('Redo'),
-                    'Help'             => /*I18N: webtrees.pot */ I18N::translate('Help'),
+                    'Help'             => MoreI18N::xlate('Help'),
                     'Link destination' => /*I18N: JS MDE */ I18N::translate('Link destination'),
                     'Insert table'     => /*I18N: JS MDE */ I18N::translate('Insert table'),
                     'queryTableCnR'    => /*I18N: JS MDE */ I18N::translate('How many columns and rows should the table have (input: [number] [number])?'),
@@ -136,13 +136,13 @@ class LinkEnhancerUtils { // misc helper functions
 
             'le' => [
                     // enhanced links 
-                    'cross reference'  => /*I18N: JS enhanced link */ I18N::translate('cross reference'),
+                    'cross-reference'  => /*I18N: JS enhanced link */ I18N::translate('Cross-reference'),
                     'oofb'             => /*I18N: JS enhanced link, %s name of location */ I18N::translate('Online Local heritage book of %s at CompGen', '%s'),
                     'gov'              => /*I18N: JS enhanced link */ I18N::translate('Historic Geo Information System (GOV)'),
                     'gedbas'           => /*I18N: JS enhanced link */ I18N::translate('GEDBAS (Genealogical Database - collected personal data)'),
                     'www'              => /*I18N: JS enhanced link */ I18N::translate('wer-wir-waren.at'),
                     'ewp'              => /*I18N: JS enhanced link */ I18N::translate('Residents database - Family research in West Prussia'),
-                    'Interactive tree' => /*I18N: webtrees.pot */ I18N::translate('Interactive tree'),
+                    'Interactive tree' => MoreI18N::xlate('Interactive tree'),
                     'syntax error'     => /*I18N: JS enhanced link */ I18N::translate('Syntax error'),
                     'param error'      => /*I18N: JS enhanced link */ I18N::translate('Unknown parameter keys'),
                     'wt-help1'         => /*I18N: JS enhanced link wt1 - %s=rectypes*/ I18N::translate('standard link to note (available record types: %s) with XREF in active tree', '%s'),
@@ -164,7 +164,7 @@ class LinkEnhancerUtils { // misc helper functions
             
             'wthb' => [
                     'help_title_wthb'   => I18N::translate('Webtrees manual'),
-                    'help_title_ext'    => /*I18N: webtrees.pot */ I18N::translate('Help'),
+                    'help_title_ext'    => MoreI18N::xlate('Help'),
                     'cfg_title'         => /*I18N: wthb link user setting title */ I18N::translate('Webtrees manual link - user setting'),
                     'tocnsearch'        => I18N::translate("Full-text search") . ' / ' . I18N::translate('Table of contents'),
                     'wtcorehelp'        => I18N::translate("webtrees help topics (included)"),
@@ -254,9 +254,9 @@ class LinkEnhancerUtils { // misc helper functions
             array_push($mdsyntax,
                 [
                     'md' => I18N::translate('Term') . "\n: "
-                        . /*I18N: webtrees.pot */I18N::translate('Definition'),
+                        . MoreI18N::xlate('Definition'),
                     'html' => "<dl>\n  <dt>" . I18N::translate('Term') . "</dt>\n  <dd>" 
-                        . /*I18N: webtrees.pot */I18N::translate('Definition') . "</dd>\n</dl>"
+                        . MoreI18N::xlate('Definition') . "</dd>\n</dl>"
                 ]
             );
         }
@@ -308,18 +308,18 @@ class LinkEnhancerUtils { // misc helper functions
         $request ??= Registry::container()->get(ServerRequestInterface::class);
 
         $route = $request->getAttribute('route');
-        if ($route) {
-            $extras = is_array($route->extras) && isset($route->extras['middleware']) ? implode('|', $route->extras['middleware']) : '';
-            return [
-                'path' => $route->path,
-                'handler' => $route->name,
-                'method' => implode('|', $route->allows),
-                'extras' => $extras,
-                'attr' => $route->attributes
-            ];
-
+        if (!$route) {
+            return [];
         }
-        return [];
+
+        $info = Functions::describeRoute($route);
+
+        if (version_compare(Webtrees::VERSION, '2.3', '>=')) {
+            // 2.3: matched route tokens live on the request (Router middleware), not on the route
+            $info['attr'] = Functions::routeParams($route, $request);
+        }
+
+        return $info;
     }
 
 
@@ -348,68 +348,6 @@ class LinkEnhancerUtils { // misc helper functions
             || (str_starts_with($activeRouteInfo['path'], '/module') && str_starts_with($action, 'admin')));
         }
         return false;
-    }
-
-
-    /**
-     * applies Migrate# class files (zero based) to the database until target_version -1
-     * same as Database::getSchema, but use module settings instead of site settings (Issue #3 in personal_facts_with_hooks)
-     * taken from modules_v4/vesta_common/VestaModuleTrait.php
-     * @param AbstractModule $module
-     * @param string $namespace      namespace of Migration class
-     * @param string $schema_name    setting name of current schema version
-     * @param int $target_version
-     * @return bool                  true if updates upplied
-     */
-    public static function updateSchema(AbstractModule $module, string $namespace, string $schema_name, int $target_version): bool
-    {
-        try {
-            $current_version = intval($module->getPreference($schema_name));
-        } catch (PDOException $ex) {
-            // During initial installation, the site_preference table won’t exist.
-            $current_version = 0;
-        }
-
-        $updates_applied = false;
-
-        $connection = DB::schema()->getConnection();
-
-        if ($connection->transactionLevel() > 0) {
-            $connection->commit();
-        }
-
-        try {
-
-            // Update the schema, one version at a time.
-            while ($current_version < $target_version) {
-
-                $class = $namespace . '\\Migration' . $current_version;
-                /** @var MigrationInterface $migration */
-                $migration = new $class();
-                $migration->upgrade();
-                $current_version++;
-
-                //when a module is first installed, we may not be able to setPreference at this point
-                ////(if this is called e.g. from SetName())
-                //because of foreign key constraints:
-                //the module may not have been inserted in the 'module' table at this point!
-                //cf. ModuleService.all()
-                //
-                //not that critical, we can just set the preference next time
-                //
-                //let's just check this directly (using ModuleService at this point may lead to looping, if we're indirectly called from there)
-                if (DB::table('module')->where('module_name', '=', $module->name())->exists()) {
-                    $module->setPreference($schema_name, (string) $current_version);
-                }
-                $updates_applied = true;
-            }
-        } finally {
-            // Re-open a transaction for webtrees' middleware to commit, even if
-            // the DDL above failed.
-            $connection->beginTransaction();
-        }            
-
-        return $updates_applied;
     }
 
 
@@ -512,8 +450,8 @@ class LinkEnhancerUtils { // misc helper functions
             'id' => $id,
             'name' => $id,
             'options' => [
-                /*I18N: webtrees.pot */ I18N::translate('no'),
-                /*I18N: webtrees.pot */ I18N::translate('yes')
+                MoreI18N::xlate('no'),
+                MoreI18N::xlate('yes')
             ],
             'selected' => (int) $value
         ]);

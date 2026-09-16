@@ -22,6 +22,7 @@ namespace Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
 use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Fisharebest\Webtrees\Registry;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -45,7 +46,7 @@ class HelpWthbAction implements RequestHandlerInterface
 
         $module = Registry::container()->get(LinkEnhancerModule::class);
         
-        $title = /*I18N: webtrees.pot */ I18N::translate('Help') . ' - ' . I18N::translate('Webtrees manual');
+        $title = MoreI18N::xlate('Help') . ' - ' . I18N::translate('Webtrees manual');
         $tochtml = view($module->name() . '::help-wthb-toc');
         $text = view($module->name() . '::help-wthb', [
             'toc_url' => LinkEnhancerModule::STDLINK_WTHB_TOC,

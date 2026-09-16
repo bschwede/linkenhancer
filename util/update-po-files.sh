@@ -1,68 +1,40 @@
 #!/bin/bash
-# I18N - Update PO-/POT-files from source code
-#pushd .
+# I18N - Update PO-/POT-files from source code (linkenhancer module)
+#
+# Translatable literals in cron-jobs.php are wrapped in
+# MoreI18N::translate() (identity marker - the last qualified name component
+# "translate" matches --keyword=translate below, so xgettext extracts them
+# without translating at manifest load time).
+#
+# Strings already covered by the webtrees core POT are NOT extracted: the
+# code wraps them in MoreI18N::xlate() (same runtime behaviour, different
+# name -> invisible to xgettext). After a core update, compare
+# resources/lang/messages.pot with the core POT and mask any newly
+# covered msgids with MoreI18N::xlate() in the code.
 SCRIPTDIR=$(dirname "$(realpath -s "${BASH_SOURCE:-$0}")")
 
 PROJECT_ROOT=$(realpath "${SCRIPTDIR}/..")
 LANG_DIR="$PROJECT_ROOT/resources/lang"
-POT_FILE_ALL="$LANG_DIR/messages.all.pot"
-POT_FILE_FILTERED="$LANG_DIR/messages.pot"
+POT_FILE="$LANG_DIR/messages.pot"
 
+mkdir -p "$LANG_DIR"
 cd "$PROJECT_ROOT" || exit 1
 
-echo "📦 Generate POT-File: $POT_FILE_ALL"
+echo "📦 Generate POT-File: $POT_FILE"
 
 # Erzeuge messages.pot mit relativen Pfaden
+# (util/* = dieses Skript/Binary, vendor/* + node_modules/* = Fremdcode, tests/* = Tests)
+# Der Core-Dedup lebt im Code (MoreI18N::xlate), daher kein Filter-/awk-Schritt mehr.
 xgettext -L PHP \
   --keyword=translate \
   --keyword=plural:1,2 \
+  --keyword=translateContext:1c,2 \
   --add-comments=I18N \
   --from-code=utf-8 \
-  --output="$POT_FILE_ALL" \
-  $(find . -not -path "./util/*" \( -name "*.php" -o -name "*.phtml" \))
+  --output="$POT_FILE" \
+  $(find . -not -path "./util/*" -not -path "./vendor/*" -not -path "./node_modules/*" -not -path "./tests/*" \( -name "*.php" -o -name "*.phtml" \))
 
 echo "✅ POT-file created."
-
-
-awk '
-BEGIN {
-  in_block = 0;
-  skip_block = 0;
-  block = "";
-}
-# blank line marks end of block
-/^$/ {
-  if (!skip_block) {
-    printf "%s\n", block;
-  }
-  block = "";
-  in_block = 0;
-  skip_block = 0;
-  next;
-}
-{
-  # begin of new block
-  if (!in_block) {
-    in_block = 1;
-    block = "";
-  }
-
-  # check if specific filter comment is present - we do not need to translate standard webtrees entries again
-  if ($0 ~ /^#. I18N: webtrees.pot/) {
-    skip_block = 1;
-  }
-
-  # add line to block
-  block = block $0 "\n";
-}
-END {
-  # Letzter Block ohne abschließende Leerzeile behandeln
-  if (in_block && !skip_block) {
-    printf "%s\n", block;
-  }
-}
-' "$POT_FILE_ALL" > "$POT_FILE_FILTERED"
-POT_FILE="$POT_FILE_FILTERED"
 
 exit 0
 ## po files are updated via Weblate to prevent conflicts
@@ -80,5 +52,4 @@ for PO_FILE in "$LANG_DIR"/*.po; do
 done
 
 echo "✅ All language files are up to date."
-#popd || exit 1
 exit 0

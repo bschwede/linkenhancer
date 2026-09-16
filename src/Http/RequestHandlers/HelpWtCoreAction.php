@@ -22,6 +22,7 @@ namespace Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
 use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Fisharebest\Webtrees\Registry;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -44,7 +45,7 @@ class HelpWtCoreAction implements RequestHandlerInterface
        
         $module = Registry::container()->get(LinkEnhancerModule::class);
         
-        $title = /*I18N: webtrees.pot */ I18N::translate('Help')
+        $title = MoreI18N::xlate('Help')
             . ' - '
             . I18N::translate("webtrees help topics (included)");
         $text = view($module->name() . '::help-wt-helptext');

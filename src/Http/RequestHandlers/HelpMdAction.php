@@ -22,6 +22,7 @@ namespace Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
 use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Validator;
 use Psr\Http\Message\ResponseInterface;
@@ -48,7 +49,7 @@ class HelpMdAction implements RequestHandlerInterface
         // resources/views/edit/shared-note.phtml doesn't include < ?= view('modals/ajax') ? >
         // see also app/Http/RequestHandlers/HelpText.php
         //$topic = $request->getAttribute('topic');
-        $title = /*I18N: webtrees.pot */ I18N::translate('Help') . ' - Markdown';
+        $title = MoreI18N::xlate('Help') . ' - Markdown';
         $mdsyntax = Utils::getMarkdownHelpExamples(
             Validator::attributes($request)->string('base_url'),
             $module->getPref(LinkEnhancerModule::PREF_MD_EXT_ACTIVE, true),

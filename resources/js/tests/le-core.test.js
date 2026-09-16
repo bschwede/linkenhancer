@@ -57,7 +57,7 @@ describe("Enhanced Links core tests", () => {
        XREF PARSER
     --------------------------- */
 
-    it("parses cross reference", () => {
+    it("parses cross-reference", () => {
 
         const rectypes =
             getLErecTypes()

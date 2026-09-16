@@ -27,6 +27,7 @@ declare(strict_types=1);
 namespace Schwendinger\Webtrees\Module\LinkEnhancer\Services;
 
 use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Tree;
 use Fisharebest\Webtrees\Validator;
@@ -179,7 +180,7 @@ final class MarkdownEditorActivationService
         $linkenhancer = $module_service->findByName('_linkenhancer_', true);
 
         if (!($linkenhancer !== null && $linkenhancer->isEnabled())) {
-            return /*I18N: webtrees.pot */ I18N::translate('The module “%s” has been disabled.', $linkenhancer->title());
+            return MoreI18N::xlate('The module “%s” has been disabled.', $linkenhancer->title());
         } 
 
         if (!$linkenhancer->getPref(LinkEnhancerModule::PREF_MD_ACTIVE, true)) {
@@ -192,7 +193,7 @@ final class MarkdownEditorActivationService
 
         if ($tree) {
             if ($tree->getPreference('FORMAT_TEXT') !== 'markdown') {
-                return /*I18N: MDE */ I18N::translate("Precondition: Tree preference '%s' need to be set to markdown.", /*I18N: webtrees.pot */ I18N::translate('Format text and notes'));
+                return /*I18N: MDE */ I18N::translate("Precondition: Tree preference '%s' need to be set to markdown.", MoreI18N::xlate('Format text and notes'));
             }
         }
         

@@ -1,0 +1,11 @@
+{
+    "name": "bschwede/linkenhancer",
+    "description": "webtrees custom module: link enhancements (linkenhancer)",
+    "license": "GPL-3.0-or-later",
+    "repositories": [
+        { "type": "path", "url": "../wt-shared-libs", "options": { "symlink": false } }
+    ],
+    "require": {
+        "bschwede/wt-shared-libs": "^1.0"
+    }
+}

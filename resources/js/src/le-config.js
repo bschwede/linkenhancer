@@ -21,7 +21,7 @@ export const getLETargetCfg = (options, getLErecTypes) => {
     // - cname = css class name(s) whitespace separated
     // - help = [{n:'', e:''},..] - optional parameter examples (in e) with explanation (in n)
     "wt": { // placeholder - is always the first link
-        name: 'webtrees ' + options.i18n('cross reference'),
+        name: 'webtrees ' + options.i18n('cross-reference'),
         help: [
             { n: options.i18n('wt-help1').replace(/%s/, getLErecTypes(1)), e: 'n@XREF@' },
             { n: options.i18n('wt-help2') + ' ' + options.i18n('Interactive tree'), e: 'i@XREF@othertree+dia' },

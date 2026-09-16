@@ -26,18 +26,19 @@ declare(strict_types=1);
 
 namespace Schwendinger\Webtrees\Module\LinkEnhancer;
 
-use Aura\Router\Map;
 use Exception;
 use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\FlashMessages;
 use Fisharebest\Webtrees\Http\RequestHandlers\HomePage;
 use Fisharebest\Webtrees\Http\RequestHandlers\TreePage;
 use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Helpers\Functions;
+use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Fisharebest\Webtrees\Module\AbstractModule;
 use Fisharebest\Webtrees\Module\ModuleConfigInterface;
 use Fisharebest\Webtrees\Module\ModuleConfigTrait;
 use Fisharebest\Webtrees\Module\ModuleCustomInterface;
-use Fisharebest\Webtrees\Module\ModuleCustomTrait;
+use Schwendinger\Webtrees\Traits\ModuleCustomTrait;
 use Fisharebest\Webtrees\Module\ModuleGlobalInterface;
 use Fisharebest\Webtrees\Module\ModuleGlobalTrait;
 use Fisharebest\Webtrees\Registry;
@@ -52,6 +53,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Nyholm\Psr7\Stream;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Factories\CustomMarkdownFactory;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\AdminXrefOverviewData;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoXrefAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpMdAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpWtCoreAction;
@@ -59,9 +61,10 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpWthbActio
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\MarkdownEditorActivationService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\WthbService;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\SettingInterface;
 
-use function array_key_exists, boolval, count, strval, is_array, intval;
+use function array_key_exists, boolval, count, strval, is_array, intval, route, trim;
 
 enum OverwriteMode
 { // pref schema cascading setting - overwrite setting value with parent if...
@@ -180,7 +183,7 @@ class LinkEnhancerModule extends AbstractModule implements
 
     public const HELP_CSV = __DIR__ . DIRECTORY_SEPARATOR . 'Schema' . DIRECTORY_SEPARATOR . 'SeedHelpTable.csv';
 
-    public const int HELP_SCHEMA_TARGET_VERSION = 3;
+    public const int HELP_SCHEMA_TARGET_VERSION = 5;
 
     public const PREFERENCES_SCHEMA = [
         // required settings:
@@ -297,112 +300,11 @@ class LinkEnhancerModule extends AbstractModule implements
     }
 
     /**
-     * The person or organisation who created this module.
-     *
-     * @return string
-     */
-    public function customModuleAuthorName(): string
-    {
-        return self::CUSTOM_AUTHOR;
-    }
-
-    /**
-     * The version of this module.
-     *
-     * @return string
-     */
-    public function customModuleVersion(): string
-    {
-        return self::CUSTOM_VERSION; 
-    }
-
-    /**
-     * A URL that will provide the latest version of this module.
-     *
-     * @return string
-     */
-    public function customModuleLatestVersionUrl(): string
-    {
-        return self::CUSTOM_LAST;
-    }
-
-    /**
-     * Where to get support for this module.  Perhaps a github repository?
-     *
-     * @return string
-     */
-    public function customModuleSupportUrl(): string
-    {
-        return self::CUSTOM_WEBSITE;
-    }
-
-    /**
-     * Where does this module store its resources?
-     *
-     * @return string
-     */
-    public function resourcesFolder(): string
-    {
-        return dirname(__DIR__, 1) . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR;
-    }
-
-    /**
-     * Additional/updated translations.
-     *
-     * @param string $language
-     *
-     * @return array<string>
-     */
-    public function customTranslations(string $language): array
-    {
-        $file_base = $this->resourcesFolder() . 'lang' . DIRECTORY_SEPARATOR . $language;
-        $file = null;
-        foreach (['.php', '.po'] as $ext) {
-            if (is_readable($file_base . $ext)) {
-                $file = $file_base . $ext;
-                break;
-            }
-        }
-
-        // webtrees 2.2 still provides the former file-based localization package.
-        if (class_exists('\\Fisharebest\\Localization\\Translation')) {
-            return $file ? (new \Fisharebest\Localization\Translation($file))->asArray() : [];
-        }
-
-        // webtrees 2.3 replaced fisharebest/localization with its own stream-based loader.
-        if (class_exists('\\Fisharebest\\Webtrees\\I18N\\Translation')) {
-            if (str_ends_with($file, '.po')) {
-                $stream = fopen($file, 'rb');
-
-                if ($stream === false) {
-                    return [];
-                }
-
-                try {
-                    $translation = \Fisharebest\Webtrees\I18N\Translation::fromPoStream($stream);
-
-                    return $translation->toArray();
-                } finally {
-                    fclose($stream);
-                }
-
-            } else {
-                $translation = \Fisharebest\Webtrees\I18N\Translation::fromPhpFile($file);
-
-                return $translation->toArray();
-            }
-            
-        }        
-        return [];
-    }
-
-
-    /**
      * Called for all *enabled* modules.
      */
     public function boot(): void
     {
-        Utils::updateSchema($this, '\Schwendinger\Webtrees\Module\LinkEnhancer\Schema', 'SCHEMA_VERSION', self::HELP_SCHEMA_TARGET_VERSION);
+        Functions::updateSchema($this, '\Schwendinger\Webtrees\Module\LinkEnhancer\Schema', 'SCHEMA_VERSION', self::HELP_SCHEMA_TARGET_VERSION);
 
         // check for csv updates once a day and if schema was updated
         Registry::cache()->file()->remember(
@@ -432,7 +334,6 @@ class LinkEnhancerModule extends AbstractModule implements
 
         // Register a namespace for our views.
         View::registerNamespace($this->name(), $this->resourcesFolder() . 'views/');
-        $router = Registry::routeFactory()->routeMap();
 
         if ($this->getPref(self::PREF_WTHB_ACTIVE, true)) {
             if ($this->getPref(self::PREF_WTHB_ADMINVIEWPATCH, true)
@@ -443,15 +344,11 @@ class LinkEnhancerModule extends AbstractModule implements
             }
 
             if ($this->getPref(self::PREF_WTHB_TOCNSEARCH, true)) { // webtrees manual help (search and toc)
-                $router->attach('', '', static function (Map $router): void {
-                    $router->get(HelpWthbAction::class, '/helpwthb/{language}');
-                });
+                Functions::registerRoute('/helpwthb/{language}', HelpWthbAction::class);
 
             }
             if ($this->getPref(self::PREF_WTHB_WTCOREHELP, true)) { // webtrees core help overview
-                $router->attach('', '', static function (Map $router): void {
-                    $router->get(HelpWtCoreAction::class, '/helpwtcore/{language}');
-                });
+                Functions::registerRoute('/helpwtcore/{language}', HelpWtCoreAction::class);
             }            
         }
 
@@ -459,18 +356,17 @@ class LinkEnhancerModule extends AbstractModule implements
             Registry::markdownFactory(new CustomMarkdownFactory($this));
             
             if ($this->getPref(self::PREF_MDE_ACTIVE, true)) { // markdown and links++ help
-                $router->attach('', '', static function (Map $router): void {
-                    $router->get(HelpMdAction::class, '/helpmd/{language}');
-                });
+                Functions::registerRoute('/helpmd/{language}', HelpMdAction::class);
             }
         }
 
         
         if ($this->getPref(self::PREF_LINKSPP_ACTIVE, true)) {
-            $router->attach('', '/tree/{tree}', static function (Map $router) {
-                $router->get(GotoXrefAction::class, '/goto-xref/{xref}');
-            });
+            Functions::registerRoute('/tree/{tree}/goto-xref/{xref}', GotoXrefAction::class);
         }
+
+        // XREF overview - server-side DataTables data endpoint (admin only)
+        Functions::registerRoute('/admin-xref-overview-data', AdminXrefOverviewData::class);
     }
  
 
@@ -825,7 +721,7 @@ class LinkEnhancerModule extends AbstractModule implements
 
         } catch (Exception $ex) {
             FlashMessages::addMessage(
-                /*I18N: webtrees.pot */ I18N::translate('Export failed') . ' - Custom Module Manager config<hr><samp dir="ltr">' . $ex->getMessage() . '</samp>',
+                MoreI18N::xlate('Export failed') . ' - Custom Module Manager config<hr><samp dir="ltr">' . $ex->getMessage() . '</samp>',
                 'danger'
             );
             return redirect($this->getConfigLink());
@@ -847,7 +743,7 @@ class LinkEnhancerModule extends AbstractModule implements
 
         } catch (Exception $ex) {
             FlashMessages::addMessage(
-                /*I18N: webtrees.pot */I18N::translate('Export failed') . '<hr><samp dir="ltr">' . $ex->getMessage() . '</samp>',
+                MoreI18N::xlate('Export failed') . '<hr><samp dir="ltr">' . $ex->getMessage() . '</samp>',
                 'danger'
             );
             return redirect($this->getConfigLink());
@@ -866,7 +762,7 @@ class LinkEnhancerModule extends AbstractModule implements
             $this->wthb->importCsvAction($request);
         } catch (Exception $ex) {
             FlashMessages::addMessage(
-                /*I18N: webtrees.pot */ I18N::translate('Import failed') . '<hr><samp dir="ltr">' . $ex->getMessage() . '</samp>',
+                MoreI18N::xlate('Import failed') . '<hr><samp dir="ltr">' . $ex->getMessage() . '</samp>',
                 'danger'
             );
         }
@@ -897,7 +793,7 @@ class LinkEnhancerModule extends AbstractModule implements
                 }
             }
 
-            FlashMessages::addMessage(/*I18N: webtrees.pot */ I18N::translate(
+            FlashMessages::addMessage(MoreI18N::xlate(
                 'The preferences for the module “%s” have been updated.',
                 $this->title()
             ), 'success');
@@ -905,6 +801,73 @@ class LinkEnhancerModule extends AbstractModule implements
         return redirect($this->getConfigLink());
     }
 
+
+    /**
+     * XREF Overview — admin page (server-side DataTables) listing all
+     * records containing XREFs / linkenhancer links, with optional
+     * filters (target XREF, record type, tree). The data endpoint is
+     * AdminXrefOverviewData; the page itself stays cheap.
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    public function getAdminXrefOverviewAction(ServerRequestInterface $request): ResponseInterface
+    {
+        $this->layout = 'layouts/administration';
+
+        $params  = Validator::queryParams($request);
+        $xref    = trim((string) $params->string('xref', ''));
+        $rectype = (string) $params->string('rectype', '');
+        $tree_id = (int) $params->integer('tree', 0);
+        $max_links = XrefsService::normalizeLinksPerClass((int) $params->integer('max_links', XrefsService::LINKS_PER_CLASS_DEFAULT));
+        $live      = $params->boolean('live', false);
+        $target    = $params->string('target', '');
+
+        $index_status = XrefsService::indexStatus();
+
+        $data_params = [];
+        // The "referencing XREF" filter is precise only against the index
+        // (target_xref =). In live mode it would degenerate into a coarse
+        // regex gate, so it is only forwarded with a fresh index - and never
+        // when a live scan is explicitly forced (it would be a no-op there).
+        if ($xref !== '' && $index_status['fresh'] && !$live) {
+            $data_params['xref'] = $xref;
+        }
+        if ($live) {
+            $data_params['live'] = 1;
+        }
+        if ($rectype !== '') {
+            $data_params['rectype'] = $rectype;
+        }
+        if ($tree_id > 0) {
+            $data_params['tree'] = $tree_id;
+        }
+        if ($max_links !== XrefsService::LINKS_PER_CLASS_DEFAULT) {
+            $data_params['max_links'] = $max_links;
+        }
+        // The "only broken targets" filter applies to both the index and the
+        // live-scan path, so it is always forwarded when active.
+        if ($target === 'problems') {
+            $data_params['target'] = 'problems';
+        }
+
+        return $this->viewResponse($this->name() . '::xref-overview', [
+            'title' => I18N::translate('Cross-Reference Overview'),
+            'module' => $this,
+            'data_url' => route(AdminXrefOverviewData::class, $data_params),
+            'xref' => $xref,
+            'rectype' => $rectype,
+            'tree_id' => $tree_id,
+            'max_links' => $max_links,
+            'live' => $live,
+            'target' => $target,
+            'rectypes' => XrefsService::supportedGedcomRecordKeys(),
+            'block_rectypes' => XrefsService::BLOCKS,
+            'trees' => Registry::container()->get(TreeService::class)->all(),
+            'index_status' => $index_status,
+            'limited_mode' => !XrefsService::supportsRegexp(),
+        ]);
+    }
 
     /**
      * import shipped csv route mapping
@@ -1124,7 +1087,7 @@ class LinkEnhancerModule extends AbstractModule implements
         switch ($class) {
             case MarkdownEditorActivationService::class:
                 $setting = $this->getPref(self::PREF_MDE_RULES);
-                $setting = $setting ? unserialize($setting) : [];
+                $setting = $setting ? (unserialize($setting, ['allowed_classes' => false]) ?: []) : [];
                 return $setting ?? [];
                 break;
             

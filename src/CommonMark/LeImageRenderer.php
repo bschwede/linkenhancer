@@ -40,7 +40,9 @@ namespace Schwendinger\Webtrees\Module\LinkEnhancer\CommonMark;
 
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Fisharebest\Webtrees\Auth;
+use Schwendinger\Webtrees\Helpers\ClassName;
 use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Fisharebest\Webtrees\Media;
 use Fisharebest\Webtrees\MediaFile;
 use Fisharebest\Webtrees\Registry;
@@ -48,7 +50,6 @@ use Fisharebest\Webtrees\Tree;
 use Fisharebest\Webtrees\Validator;
 use Fisharebest\Webtrees\Webtrees;
 use Psr\Http\Message\ServerRequestInterface;
-
 use League\CommonMark\Extension\CommonMark\Node\Inline\Image;
 use League\CommonMark\Node\Inline\Newline;
 use League\CommonMark\Node\Node;
@@ -121,6 +122,10 @@ final class LeImageRenderer implements NodeRendererInterface, XmlNodeRendererInt
         parse_str($hashvalue, $params);
 
         $classnames = isset($params['cname']) ? explode(' ', urldecode($params['cname'])) : [];
+        $classnames = array_values(array_filter(array_map(
+            static fn (string $c): string => (string) preg_replace('/[^A-Za-z0-9_-]/', '', $c),
+            $classnames
+        )));
         $classnames = array_merge($classnames, $this->img_stdclassnames);
         $classnames = implode(' ', array_unique($classnames));
 
@@ -151,18 +156,13 @@ final class LeImageRenderer implements NodeRendererInterface, XmlNodeRendererInt
                     try {
                         $record = Auth::checkMediaAccess($record);
                     } catch (\Throwable $exception) {
-                        foreach ([
-                            'Fisharebest\\Webtrees\\Http\\Exceptions\\HttpAccessDeniedException', // until wt2.2.x
-                            'Fisharebest\\Webtrees\\Http\\Exceptions\\HttpForbiddenException',    // since wt2.3.0
-                        ] as $class) {
-                            if (class_exists($class) && $exception instanceof $class) {                    
-                                return view($this->module->name() . '::error-img-svg', [
-                                    'text' => $exception->getMessage() . " - XREF $xref",
-                                    'classnames' => $classnames,
-                                ]);
-                            }
-                            throw $exception;
+                        if (ClassName::isInstanceOf($exception, ClassName::EXCEPTION_HTTP_FORBIDDEN)) {
+                            return view($this->module->name() . '::error-img-svg', [
+                                'text' => $exception->getMessage() . " - XREF $xref",
+                                'classnames' => $classnames,
+                            ]);
                         }
+                        throw $exception;
                     }
 
                     $media_file = $record->firstImageFile();
@@ -183,7 +183,7 @@ final class LeImageRenderer implements NodeRendererInterface, XmlNodeRendererInt
                     }
                 } else {
                     return view($this->module->name() . '::error-img-svg', [
-                        'text' => /*I18N: webtrees.pot */ I18N::translate('This media object does not exist or you do not have permission to view it.') . " - XREF $xref",
+                        'text' => MoreI18N::xlate('This media object does not exist or you do not have permission to view it.') . " - XREF $xref",
                         'classnames' => $classnames,
                     ]);
                 }
@@ -213,7 +213,7 @@ final class LeImageRenderer implements NodeRendererInterface, XmlNodeRendererInt
                 ]);
             }
 
-            if (!strstr($public_file, $public_basedir)) {
+            if (!str_starts_with($public_file, $public_basedir . DIRECTORY_SEPARATOR)) {
                 return view($this->module->name() . '::error-img-svg', [
                     'text' => /*I18N: MD img error public file */ I18N::translate("Only files within the public folder are supported") . " - '$public_relpath'",
                     'classnames' => $classnames,

@@ -12,7 +12,7 @@
 >
 > - ✅ Issues → [Open on Codeberg](https://codeberg.org/bschwede/linkenhancer/issues)
 > - ✅ Pull Requests → [Open on Codeberg](https://codeberg.org/bschwede/linkenhancer/pulls)
-> - ✅ Translations → [Contribute on Codeberg Weblate](https://translate.codeberg.org/projects/linkenhancer/)
+> - ✅ Translations → [Contribute on Codeberg Weblate](https://translate.codeberg.org/projects/wt-modules/linkenhancer/)
 >
 > Mirror Repository: <https://github.com/bschwede/linkenhancer>
 
@@ -39,6 +39,8 @@ Here are the available options that can be set on the admin page of this module:
 This module wraps up some [examples mentioned in the German Webtrees Manual](https://wiki.genealogy.net/Webtrees_Handbuch/Entwicklungsumgebung#Beispiel_-_Querverweise_zu_Datens.C3.A4tzen) and improves the application of these features - each component can be activated individually.
 
 The main purpose of this module is to make [**links to data records**](#enhancedlinks) stored in family trees more convenient. This avoids having to store fully qualified links, which impairs the portability of Gedcom data. By linking the notes to the GEDCOM data records (persons, families, sources, etc.) from the text makes story telling much easier and thus also save this information in the GEDCOM file (maybe this is an alternative for the [stories module](https://wiki.genealogy.net/Webtrees_Handbuch/Anleitung_f%C3%BCr_Besucher#Geschichten)). The option of embedding the [**images**](#mdimg) already inserted in the family tree in the notes rounds off this approach. The link function is controlled via the [anchor part of the URI](https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Web_mechanics/What_is_a_URL), so it's no problem, if this module is not active - the url just points to the current webtrees page.
+
+For the admin there is an [**overview of cross-references**](#xref-overview), that lists all GEDCOM records and html based records stored in the `block / block_setting` tables (like html, faq, stories and vesta classig look and feel badges) which contain linkenhancer cross-references, classic cross-references and embedded picture references. The latter two references are only supported in GEDCOM records.
 
 Additionally there are some goodies more or less related with links:
 
@@ -414,6 +416,69 @@ These are minor bug fixes or functional enhancements — usually in a single fil
 | ~~P003~~ | Record has multiple uid fields [#4828](https://github.com/fisharebest/webtrees/issues/4828) <br> *app/Services/GedcomEditService.php* | 2.2.1 |
 
 
+<a name="xref-overview"></a>
+### Cross-reference overview
+
+The cross-reference overview admin page (Control panel → LinkEnhancer → Cross-reference overview) is a server-side paginated DataTable. It lists all records that contain classic `@XREF@` cross-references or linkenhancer links, with a per-record link inventory. Optional filters: referenced XREF (only available while a fresh link index is active - in live-scan mode the field is hidden, because it would only be a coarse pre-filter there), record type, tree, and the number of tokens shown per link class (all / 5 / 10 / 20, default 5). The XREF cell shows the tree name as a second muted line; the type is its own sortable column. Each inventory token is displayed as a short display context (snippet) with the link token itself in bold.
+
+#### Supported engines
+
+| | Live overview | Link index (CLI) |
+| --- | --- | --- |
+| MariaDB / MySQL | yes (REGEXP gate) | yes |
+| PostgreSQL | yes (REGEXP gate) | yes |
+| SQLite / SQL Server | **limited mode** - automatic fallback to a coarse `LIKE` gate + full table scan per request (banner on the page); the exact classification still happens in PHP | **not available** (needs REGEXP + `MD5`) - the CLI exits with an error |
+
+#### How it works
+
+On large trees the live regex scan over the GEDCOM tables can be slow, so the page can instead read a **link index** made of three module tables (created automatically by the module schema migration):
+
+- `le_record_scan` - one row per scanned record with an MD5 fingerprint of the record text (`file`, `xref`, `rectype`, `hash`, `scanned_at`)
+- `le_link_index` - one row per (link, target) found in the record (`tag_path`, `link_class`, `token`, `snippet` - the display context captured at build time, `target_xref`, `target_tree`) - the foundation for the planned Backlink feature
+- `le_index_meta` - single row (`id`, `last_run`, `rows`) - the state of the last **complete** index run
+
+The index is maintained by `cli/build-link-index.php`:
+
+- **Initial build** (first run, or `--rebuild`): both index tables are reset, all scan rows are created server-side in one bulk statement per GEDCOM table (fast, zero row transfer), and only the records that pass the link pre-filter are scanned in PHP. The initial build is a one-time cost - use a higher `--limit` for it. If it is interrupted by `--limit`, the next run converges (the build is idempotent).
+- **Incremental runs** (the normal cron case): only records whose MD5 fingerprint changed - or which were added/removed - are re-scanned (cursor chunked), so the job stays cheap even on large sites.
+
+Cron example (every 30 minutes, up to 2000 records per run):
+
+```
+*/30 * * * * cd /path/to/webtrees && php modules_v4/linkenhancer/cli/build-link-index.php --limit=2000 >> /var/log/linkenhancer-index.log 2>&1
+```
+
+Only a **full run** (without `--tree`) that is **not cut by `--limit`** marks the index fresh (`le_index_meta.last_run`). A run cut by `--limit` continues where it stopped; a `--tree` run only refreshes that tree.
+
+#### Flushing
+
+`--flush` empties the index tables and exits (no rebuild) - for testing (force the page onto the live scan) and maintenance (clean restart, broken index):
+
+```
+php modules_v4/linkenhancer/cli/build-link-index.php --flush            # all trees
+php modules_v4/linkenhancer/cli/build-link-index.php --flush --tree=5   # only tree 5
+```
+
+The freshness flag is always reset, so the page reliably falls back to the live scan afterwards. The next full run is an **initial build** again (full re-scan cost). `--flush` combined with `--rebuild` is redundant - `--rebuild` already resets and rebuilds.
+
+#### What counts as a link
+
+The overview and the index use one shared pre-filter (single source: `XrefsService::linkPrefilterPatterns()`):
+
+- `NOTE` (level >= 1) with an `@XREF@` **or** a `](#@` link, with content on the same line. A NOTE value that is *exactly one reference* (`1 NOTE @N5@`) is a GEDCOM **shared-note pointer** - a structural reference, not a text link, and is not listed.
+- `CONC`/`CONT`/`TEXT`/`_TODO` with an `@XREF@` (naked is a link) or a `](#@` link
+- an LE link may carry an optional `id=@XREF@` parameter (at most one, the position among the parameters does not matter) - like the `wt=` parameters it is indexed as a link target
+- a shared note's own level-0 text (`0 @N1@ NOTE …`)
+- matching is line-based (no cross-line matches), on the same lines the collector reads
+
+The page shows which source it uses:
+
+- **index active** (green note): a full, complete index run finished less than 2 hours ago (default; `XrefsService::INDEX_FRESH_SECONDS`)
+- **live scan** (blue note): no fresh index - the page falls back to the live scan
+- **limited mode** (yellow note, SQLite/SQL Server): see the engine table above
+
+Use `tests/p1-measure.php` (read-only) on your instance to check how expensive the live scan is for your data and to calibrate the cron schedule.
+
 
 <a name="webtrees"></a>
 ## webtrees
@@ -446,6 +511,7 @@ If everything was successful, you should see a subdirectory ``linkenhancer`` wit
 
 During the initial installation, the following problem may occur: "PDO error - There is no active transaction" - for more details see [known issues](https://codeberg.org/bschwede/linkenhancer/issues?q=&type=all&labels=1288213&milestone=0&assignee=0&poster=0).
 
+
 <a name="contributing"></a>
 ## Contributing
 
@@ -466,8 +532,6 @@ Beside English the following languages are available:
 * Dutch (by TheDutchJewel)
 * Español (by Bernat Josep Banyuls i Sala)
 * German
-
-
 
 
 <a name="support"></a>

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
 
@@ -42,7 +43,7 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
         <div class="row">
             <!-- home link --><?php $prefId = LinkEnhancerModule::PREF_HOME_LINK_JSON; ?>
             <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
-                <?= I18N::translate('JSON for home link styling') . ' (' . /*I18N: webtrees.pot */ I18N::translate('optional') . ')' ?>
+                <?= I18N::translate('JSON for home link styling') . ' (' . MoreI18N::xlate('optional') . ')' ?>
             </label>
             <div class="col-sm-9 wt-page-options-value mt-3">
                 <textarea id="<?= $prefId ?>" name="<?= $prefId ?>" class="form-control font-monospace" dir="ltr"
