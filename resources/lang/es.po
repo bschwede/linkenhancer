@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-24 07:15+0200\n"
+"POT-Creation-Date: 2026-09-12 11:40+0200\n"
 "PO-Revision-Date: 2026-05-25 08:07+0000\n"
 "Last-Translator: gallegonovato <gallegonovato@noreply.codeberg.org>\n"
 "Language-Team: Spanish <https://translate.codeberg.org/projects/linkenhancer/"
@@ -37,6 +37,40 @@ msgid "Precondition: Tree preference '%s' need to be set to markdown."
 msgstr ""
 "Condición previa: La preferencia del árbol '%s' debe estar establecida en "
 "Markown."
+
+#, fuzzy
+#| msgid "cross reference"
+msgid "Cross-references"
+msgstr "referencia"
+
+#, fuzzy
+#| msgid "Permalink"
+msgid "External links"
+msgstr "Enlace permanente"
+
+msgid "Pictures"
+msgstr ""
+
+#, fuzzy
+#| msgid "cross reference"
+msgid "Classic cross-references"
+msgstr "referencia"
+
+msgid "Other - maybe damaged - links"
+msgstr ""
+
+msgid "target not found"
+msgstr ""
+
+#. I18N: JS enhanced link
+#, fuzzy
+#| msgid "cross reference"
+msgid "Cross-reference"
+msgstr "referencia"
+
+#, php-format
+msgid "expected %1$s, is %2$s"
+msgstr ""
 
 #. I18N: Settings - section title
 msgid "Webtrees manual"
@@ -177,10 +211,6 @@ msgid ""
 "How many columns and rows should the table have (input: [number] [number])?"
 msgstr ""
 "¿Cuántas columnas y filas debe tener la tabla (entrada: [número] [número])?"
-
-#. I18N: JS enhanced link
-msgid "cross reference"
-msgstr "referencia"
 
 #. I18N: JS enhanced link, %s name of location
 #, php-format
@@ -340,6 +370,9 @@ msgstr "anidant exactament com els encapçalaments apareixen dins del document"
 msgid "Permalink"
 msgstr "Enlace permanente"
 
+msgid "tree"
+msgstr ""
+
 #. I18N: MD img error precondition
 msgid ""
 "Neither a media object nor a file from the public directory was specified."
@@ -393,6 +426,26 @@ msgstr "El enlace de inicio JSON con reglas CSS, parece no ser válido."
 
 msgid "Import registered routes"
 msgstr "Importar rutas registradas"
+
+#, fuzzy
+#| msgid "cross reference"
+msgid "Cross-Reference Overview"
+msgstr "referencia"
+
+msgid "Update the link index"
+msgstr ""
+
+msgid "Rebuild the link index incrementally."
+msgstr ""
+
+msgid "max records per run"
+msgstr ""
+
+msgid "only changes since this timestamp"
+msgstr ""
+
+msgid "The link index is out of date."
+msgstr ""
 
 #. I18N: user defined url
 #. I18N: Settings - section title
@@ -616,6 +669,79 @@ msgstr ""
 
 msgid "Further information can be found on a separate help page."
 msgstr "Para más información, consulte la página de ayuda independiente."
+
+msgid ""
+"List all records that contain cross-references (XREFs) or linkenhancer links."
+msgstr ""
+
+msgid ""
+"Limited mode: this database engine has no regex support - the table is "
+"scanned live with a LIKE filter on every request, which can be slow on large "
+"trees. The link index is not available on this engine."
+msgstr ""
+
+#, php-format
+msgid "Link index active: %1$s scanned records, last verified %2$s."
+msgstr ""
+
+msgid ""
+"Live scan forced - the link index is bypassed for this view, which can be "
+"slow on large trees."
+msgstr ""
+
+msgid ""
+"No fresh link index - the table below scans the GEDCOM tables live, which "
+"can be slow on large trees. Build the index with the CLI script (see "
+"README.md, \"CLI scripts & maintenance\")."
+msgstr ""
+
+msgid ""
+"Only broken targets: every matching record is loaded and its targets "
+"resolved on the server, which can be slow on large trees. Combine with the "
+"type/tree filters to narrow the scan."
+msgstr ""
+
+msgid "referencing XREF"
+msgstr ""
+
+msgid "Bypass the link index and scan the GEDCOM tables live"
+msgstr ""
+
+msgid "Force live scan"
+msgstr ""
+
+msgid "Record types"
+msgstr ""
+
+msgid "All types"
+msgstr ""
+
+msgid "All GEDCOM records"
+msgstr ""
+
+msgid "All Block records"
+msgstr ""
+
+msgid "GEDCOM records"
+msgstr ""
+
+msgid "All trees"
+msgstr ""
+
+msgid "links per class"
+msgstr ""
+
+msgid "Only rows with a missing or wrong-type target are shown"
+msgstr ""
+
+msgid "Only broken targets"
+msgstr ""
+
+msgid "The target type differs from the declaration"
+msgstr ""
+
+msgid "XREF"
+msgstr ""
 
 msgid "Goto top of cell content"
 msgstr "Ir al inicio del contenido de la celda"
