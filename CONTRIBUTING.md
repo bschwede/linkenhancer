@@ -65,9 +65,13 @@ The module ships CLI-only scripts. They are guarded: requested over HTTP (the `m
 | --- | --- | --- |
 | `tests/test-text-tag-collector.php` | standalone unit tests for the text-tag collector | no |
 | `tests/test-link-classifier.php` | standalone unit tests for the link classifier (incl. target extraction) | no |
+| `tests/test-uid-tag-collector.php` | standalone unit tests for the UID tag collector | no |
+| `tests/test-uid-index-service.php` | standalone unit tests for the UID index service (pre-filter, candidate check) | no |
 | `tests/smoke-text-tag-collector.php [limit]` | scan records containing enhanced links, print every captured `TEXT`/`NOTE`/`_TODO` value with its location | yes |
+| `tests/smoke-migration5.php` | SQLite smoke test for Migration5 (UID index schema) | yes |
 | `tests/p1-measure.php [--tree=<id>]` | read-only scaling measurement for the XREF overview (query costs, table sizes, PHP limits) | yes |
 | `cli/build-link-index.php [--limit=N] [--tree=<id>] [--rebuild] [--flush]` | build/update the link index for the XREF overview (see below) | yes |
+| `cli/build-uid-index.php [--limit=N] [--tree=<id>] [--rebuild] [--flush]` | build/update the UID index for UID lookup | yes |
 | `cli/...` | maintenance scripts (template in `cli/_template-maintenance.php`) | yes |
 
 Run them from the webtrees root with the **same PHP version** the instance runs on (webtrees requires PHP 8.3+):

@@ -44,6 +44,7 @@ For the admin there is an [**overview of cross-references**](#xref-overview), th
 
 Additionally there are some goodies more or less related with links:
 
+- [**UID lookup**](#uid-lookup) — navigate to a record by its persistent UID (`_UID` / `UID` tag), surviving XREF renumbering.
 - The note textarea can be a [**visual markdown editor**](#mde) with **markdown help** (can also be utilized by other custom modules).
 - Enabling further [**markdown extensions**](#mdext).
 - Take control over [**table cell height**](#mdtdh) of longer markdown notes.
@@ -146,11 +147,40 @@ Any CSS rules required are best added via the [“CSS and JS” module](https://
 For example: `.icon-whatever { background-image: url(...) }`
 
 
+<a name="uid-lookup"></a>
+### UID lookup
+
+A **UID** (`_UID` in GEDCOM 5.5.1, `UID` in GEDCOM 7.0) is a persistent identifier assigned to a record by external software (e.g. a GEDCOM import from Ancestry, MyHeritage, or a research tool). The UID survives XREF renumbering and tree migrations, making it a stable reference point.
+
+This feature allows navigating directly to a record by its UID. The URL pattern is:
+
+- `/tree/{tree}/goto-uid/{uid}` — scoped to one tree
+- `/goto-uid/{uid}` — global (searches all trees)
+
+**Behavior:**
+- **0 hits** → 404
+- **1 visible hit** → redirect to the record
+- **>1 visible hit** → selection list (case-variant UIDs or the same UID in multiple records)
+
+UID comparison is **case-insensitive** (GEDCOM specs do not define UID as case-sensitive). The stored value is verbatim; matching is done case-insensitively so that case-variant UIDs return a selection list rather than a possibly-wrong single redirect.
+
+#### Index
+
+The UID index is stored in the `le_uid_index` table (one row per UID tag occurrence, distinguished by `tag_path`). It is maintained exclusively by `cli/build-uid-index.php` (no live scan on request).
+
+- **Initial build** (first run, or `--rebuild`): full scan of all GEDCOM tables, extracting all UID tags via `UidTagCollector`.
+- **Incremental runs**: only records whose MD5 fingerprint changed (or were added/removed) are re-scanned.
+
+Cron example (every 10 minutes, up to 5000 records per run):
+
+```
+*/10 * * * * cd /path/to/webtrees && php modules_v4/linkenhancer/cli/build-uid-index.php --limit=5000 >> /var/log/linkenhancer-uid-index.log 2>&1
+```
+
+The feature can be toggled on/off in the module admin page ("Activate Support" → [5] UID lookup). The current index status (row count, last build time) is shown there.
+
 > [!NOTE]
-> When Webtrees provides better support for UID, referencing via UID will probably also be implemented in this module, as this will make links more fail-safe.
-> See also:
-> - Forum post [Feature Request: Improved support for UID / _UID](https://www.webtrees.net/index.php/forum/9-request-for-new-feature/39942-feature-request-improved-support-for-uid-uid)
-> - PR [UID References in notes and text #5145](https://github.com/fisharebest/webtrees/pull/5145)
+> UID tags at any nesting level are indexed (e.g. `0 @I1@ INDI`, `1 _UID`, `1 FAMF`, `2 _UID`). The tag path is stored per row so duplicates are distinguishable in the selection list.
 
 ### Markdown
 Markdown is a simple system of formatting, used on websites such as Wikipedia or Github. It uses unobtrusive punctuation characters to create headings and sub-headings, bold and italic text, lists, tables, etc.
