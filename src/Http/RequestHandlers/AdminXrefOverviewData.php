@@ -43,6 +43,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Schwendinger\Webtrees\Helpers\ClassName;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Services\IdResolver;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\TextTagCollector;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 
@@ -526,13 +527,15 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
     }
 
     /**
-     * Resolve a referenced record (the target of an xref/classic/pic link) to
-     * a display label + URL. The target tree is the explicit @tree (a tree
-     * NAME carried by the link) when present, else the source record's own
-     * tree. Also returns the record's actual GEDCOM tag ("actual") so the
-     * caller can check a declared wt= type / Media expectation. Cached per
-     * request, keyed by resolved tree id + xref (so a same-tree target from
-     * different source rows does not collide).
+     * Resolve a referenced target (an XREF or a UID, the target of an
+     * xref/classic/pic link) to a display label + URL, via the shared
+     * IdResolver (length-aware XREF/UID, global fallback for tree-less
+     * targets). The target tree is the explicit @tree (a tree NAME carried by
+     * the link) when present, else the source record's own tree; a tree-less
+     * target is resolved globally (UID only). Also returns the record's actual
+     * GEDCOM tag ("actual") so the caller can check a declared wt= type / Media
+     * expectation. Cached per request, keyed by resolved tree id (or GLOBAL) +
+     * id (so a same-tree target from different source rows does not collide).
      *
      * @return array{name: string, url: string, tree_label: string, actual: string}|null
      */
@@ -541,27 +544,24 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
         $tree = ($target_tree_name !== null && $target_tree_name !== '')
             ? $this->tree_service->all()->get($target_tree_name)
             : $source_tree;
-        if (!$tree instanceof Tree) {
-            return null;
-        }
 
-        $tree_id   = (int) $tree->id();
-        $cache_key = $tree_id . "\0" . $xref;
+        $cache_key = (($tree instanceof Tree) ? (int) $tree->id() : 'GLOBAL') . "\0" . $xref;
         if (array_key_exists($cache_key, $this->target_cache)) {
             return $this->target_cache[$cache_key];
         }
 
-        $record = Registry::gedcomRecordFactory()->make($xref, $tree);
-        if (!$record instanceof GedcomRecord) {
+        $candidates = IdResolver::candidates($xref, $tree, $source_tree_id);
+        if ($candidates === []) {
             $this->target_cache[$cache_key] = null;
             return null;
         }
 
-        $label = [
-            'name'       => $record->fullName(),
-            'url'        => $record->url(),
-            'tree_label' => ($tree_id !== $source_tree_id) ? $tree->name() : '',
-            'actual'     => $record->tag(),
+        $candidate = $candidates[0];
+        $label     = [
+            'name'       => $candidate['record']->fullName(),
+            'url'        => $candidate['record']->url(),
+            'tree_label' => $candidate['tree_label'],
+            'actual'     => $candidate['record']->tag(),
         ];
         $this->target_cache[$cache_key] = $label;
 

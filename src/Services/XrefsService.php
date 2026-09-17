@@ -71,16 +71,27 @@ final class XrefsService { // stuff related with handling cross-references
     private const RE_CLASSIC_XREF = '/^@([A-Za-z0-9][A-Za-z0-9:_.-]{0,19})@$/';
 
     /**
-     * One "wt" parameter value: wt=[type]@XREF@[tree] - the optional type
-     * letter may be absent, the "@tree" part may be empty (same tree).
+     * The reference carried between the @...@ of a wt=/id= target. XREFs are
+     * short (max 20) but UIDs can reach 36+ chars - so the class is widened to
+     * 255 to also accept UID-length values. RE_CLASSIC_XREF and RE_XREF_CLASS
+     * (the pre-filter candidate selection) stay at 20: a classic ref is
+     * XREF-only and the pre-filter does not depend on the ref length.
      */
-    private const RE_WT_TARGET = '/(?:^|[?&])wt=(?P<type>[a-z])?@(?P<xref>[A-Za-z0-9][A-Za-z0-9:_.-]{0,19})@(?P<tree>[^&\s+]*)/';
+    private const RE_REF_CLASS = '[A-Za-z0-9][A-Za-z0-9:_.-]{0,254}';
 
     /**
-     * The optional "id" parameter: id=@XREF@ - at most one per link, the
-     * position among the parameters does not matter, no tree part.
+     * One "wt" parameter value: wt=[type]@REF@[tree] - the optional type
+     * letter may be absent, the "@tree" part may be empty (same tree). REF is
+     * an XREF or a UID (RE_REF_CLASS).
      */
-    private const RE_ID_TARGET = '/(?:^|[?&])id=@([A-Za-z0-9][A-Za-z0-9:_.-]{0,19})@/';
+    private const RE_WT_TARGET = '/(?:^|[?&])wt=(?P<type>[a-z])?@(?P<xref>' . self::RE_REF_CLASS . ')@(?P<tree>[^&\s+]*)/';
+
+    /**
+     * The optional "id" parameter: id=@REF@ - at most one per link, the
+     * position among the parameters does not matter, no tree part. REF is an
+     * XREF or a UID (RE_REF_CLASS).
+     */
+    private const RE_ID_TARGET = '/(?:^|[?&])id=@(' . self::RE_REF_CLASS . ')@/';
 
     /**
      * The "wt" type letter (README "available record types") mapped to the
@@ -895,10 +906,10 @@ final class XrefsService { // stuff related with handling cross-references
     }
 
     /**
-     * Classify one resolved target: "missing" (the XREF could not be
-     * resolved), "mismatch" (the declared type differs from the actual
-     * record tag) or "ok". Shared by the reference-link renderer and the
-     * "only broken targets" filter.
+     * Classify one resolved target: "missing" (the target - XREF or UID -
+     * could not be resolved), "mismatch" (the declared type differs from the
+     * actual record tag) or "ok". Shared by the reference-link renderer and
+     * the "only broken targets" filter.
      */
     private static function targetStatus(?array $resolved, ?string $expected_tag): string {
         if ($resolved === null) {
@@ -913,8 +924,9 @@ final class XrefsService { // stuff related with handling cross-references
 
     /**
      * True when any resolvable target of the given inventory is "missing"
-     * (unresolvable XREF) or a "mismatch" (declared type differs from the
-     * actual record tag). Shares its decision with targetLinksHtml() via
+     * (unresolvable target, XREF or UID) or a "mismatch" (declared type
+     * differs from the actual record tag). Shares its decision with
+     * targetLinksHtml() via
      * expectedTagFor()/targetStatus(). A null $target_linker (or an inventory
      * without xref/classic/pic targets) yields false.
      *
@@ -977,6 +989,10 @@ final class XrefsService { // stuff related with handling cross-references
      * Anything else (external URL without wt= or id=, classic in a URL, ...)
      * yields no target. Each target carries its declared "wt" type letter
      * (null when absent / for id= and classic targets).
+     *
+     * The "xref" key carries the target reference - a record XREF or a UID.
+     * The wt=/id= classes are widened via RE_REF_CLASS to accept UID-length
+     * values; a classic @XREF@ stays XREF-only (RE_CLASSIC_XREF).
      *
      * @return array<int, array{xref: string, tree: string|null, type: string|null}>
      */

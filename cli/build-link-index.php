@@ -61,6 +61,7 @@ use Fisharebest\Webtrees\DB;
 use Fisharebest\Webtrees\Gedcom;
 use Fisharebest\Webtrees\Webtrees;
 use Schwendinger\Webtrees\Services\CliBootstrap;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Services\IdResolver;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\TextTagCollector;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 
@@ -185,6 +186,12 @@ $write_links = static function (object $row, string $rectype_val) use (&$links):
             $targets = [['xref' => null, 'tree' => null]];
         }
         foreach ($targets as $target) {
+            // Split the target reference by length (offline, no lookup): UID-length
+            // values (>= IdResolver::UID_MIN_LENGTH) go to target_uid, short XREFs
+            // stay in target_xref (see linkenhancer-uid-link-target-cross-tree-goto.md).
+            $ref     = $target['xref'];
+            $ref_str = ($ref === null) ? null : (string) $ref;
+            $is_uid  = ($ref_str !== null && strlen($ref_str) >= IdResolver::UID_MIN_LENGTH);
             $link_rows[] = [
                 'file'          => $file,
                 'xref'          => $xref,
@@ -193,8 +200,9 @@ $write_links = static function (object $row, string $rectype_val) use (&$links):
                 'link_class'    => $entry['class'],
                 'token'         => $entry['token'],
                 'snippet'       => $entry['snippet'],
-                'target_xref'   => $target['xref'],
+                'target_xref'   => $is_uid ? null : $ref,
                 'target_tree'   => $target['tree'],
+                'target_uid'    => $is_uid ? $ref_str : null,
             ];
         }
     }
