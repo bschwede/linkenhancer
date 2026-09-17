@@ -1,0 +1,38 @@
+<?php
+
+declare(strict_types=1);
+
+use Fisharebest\Webtrees\GedcomRecord;
+use Fisharebest\Webtrees\I18N;
+
+/**
+ * Selection list rendered by GotoUidAction when a UID matches more than one
+ * visible record (D2). Only records the user may see are passed in (R3).
+ *
+ * @var string $title
+ * @var string $uid
+ * @var array<int, array{record: GedcomRecord, uid: string, rectype: string, tag_path: string, label: string}> $hits
+ */
+?>
+
+<h1 id="top"><?= e($title) ?></h1>
+
+<p class="text-muted">
+    <?= e(I18N::translate('Multiple records match UID %s. Please choose the one you are looking for.', $uid)) ?>
+</p>
+
+<ul class="list-group">
+    <?php foreach ($hits as $hit): ?>
+        <?php $record = $hit['record']; ?>
+        <li class="list-group-item">
+            <a href="<?= e($record->url()) ?>">
+                <strong><?= e($hit['label']) ?></strong>
+                <span class="text-muted">— <?= e($record->tree()->title()) ?> (<?= e($hit['rectype']) ?>)</span>
+            </a>
+            <div class="small text-muted">
+                <code><?= e($hit['uid']) ?></code>
+                <?php if ($hit['tag_path'] !== ''): ?> · <?= e($hit['tag_path']) ?><?php endif; ?>
+            </div>
+        </li>
+    <?php endforeach; ?>
+</ul>

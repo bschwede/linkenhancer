@@ -44,7 +44,7 @@ use function time;
  * D4). The fingerprint/candidate source is reused from the link index (D1);
  * the freshness metadata lives in the shared le_index_meta single row under
  * its own columns (D5). The uid value is stored verbatim (no normalization)
- * and compared binarily - letter case is significant (R5).
+ * and compared case-insensitively (R5).
  */
 final class UidIndexService
 {
@@ -134,35 +134,45 @@ final class UidIndexService
     }
 
     /**
-     * Global lookup of a UID (case-sensitive, R5).
+     * Global lookup of a UID. The stored value is verbatim (no normalization,
+     * R5), but the match is case-insensitive - UID letter case is not
+     * semantically significant (GEDCOM 5.5.1/7 do not define it as
+     * case-sensitive). Case-insensitive matching is also safer: a case-variant
+     * UID returns a selection list (D2) rather than a possibly-wrong single
+     * redirect.
      *
-     * @param string $uid  the UID value, verbatim
+     * @param string $uid  the UID value (compared case-insensitively)
      * @param int    $tree limit to one tree (file) when given
      *
-     * @return Collection<int,object> rows with file, xref, rectype, tag_path
+     * @return Collection<int,object> rows with file, xref, rectype, tag_path, uid
+     *         (empty if the index is missing/unreadable - D4, no live scan)
      */
     public static function lookup(string $uid, ?int $tree = null): Collection
     {
-        $query = DB::table(self::UID_INDEX_TABLE);
+        try {
+            $query = DB::table(self::UID_INDEX_TABLE);
 
-        // R5: MySQL/MariaDB default collation is case-insensitive - force a
-        // binary (case-sensitive) comparison. PostgreSQL/SQLite compare text
-        // case-sensitively already.
-        if (in_array(DB::driverName(), [DB::MARIADB, DB::MYSQL], true)) {
-            $query->whereRaw('BINARY uid = ?', [$uid]);
-        } else {
-            $query->where('uid', '=', $uid);
+            // R5: case-insensitive match. The MariaDB/MySQL default collation is
+            // already case-insensitive (index-friendly); PostgreSQL/SQLite
+            // compare text case-sensitively, so fold both sides to lower-case.
+            if (in_array(DB::driverName(), [DB::MARIADB, DB::MYSQL], true)) {
+                $query->where('uid', '=', $uid);
+            } else {
+                $query->whereRaw('lower(uid) = lower(?)', [$uid]);
+            }
+
+            if ($tree !== null) {
+                $query->where('file', '=', $tree);
+            }
+
+            return $query
+                ->orderBy('file')
+                ->orderBy('xref')
+                ->orderBy('tag_path')
+                ->get(['file', 'xref', 'rectype', 'tag_path', 'uid']);
+        } catch (Throwable) {
+            return new Collection();
         }
-
-        if ($tree !== null) {
-            $query->where('file', '=', $tree);
-        }
-
-        return $query
-            ->orderBy('file')
-            ->orderBy('xref')
-            ->orderBy('tag_path')
-            ->get(['file', 'xref', 'rectype', 'tag_path']);
     }
 
     /**
