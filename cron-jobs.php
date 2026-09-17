@@ -19,6 +19,17 @@ return [
             // 'enabled'      => false,  // default: created disabled (opt-in)
             // 'timeout_sec'  => 300,    // default
         ],
+        [
+            'name'         => 'uid-index',
+            'title'        => MoreI18N::translate('Update the UID index'),
+            'triggers' => [
+                ['type' => 'time', 'cron' => '*/10 * * * *'],
+                ['type' => 'event', 'event' => 'linkenhancer:uid-index-dirty'],
+            ],
+            'command_type' => 'module',
+            'command'      => 'modules_v4/linkenhancer/cli/build-uid-index.php',
+            'args'         => '--limit=5000',
+        ],
     ],
     'commands' => [
         [
@@ -30,8 +41,18 @@ return [
                 ['name' => '--since', 'optional' => true, 'description' => MoreI18N::translate('only changes since this timestamp')],
             ],
         ],
+        [
+            'command' => 'modules_v4/linkenhancer/cli/build-uid-index.php',
+            'description' => MoreI18N::translate('Rebuild the UID index incrementally.'),
+            'params' => [
+                ['name' => '--limit', 'optional' => true, 'default' => '5000', 'description' => MoreI18N::translate('max records per run')],
+                ['name' => '--rebuild', 'optional' => true, 'description' => MoreI18N::translate('force a full rebuild')],
+                ['name' => '--flush', 'optional' => true, 'description' => MoreI18N::translate('empty the UID index and exit')],
+            ],
+        ],
     ],
     'events' => [
         ['name' => 'index-dirty', 'description' => MoreI18N::translate('The link index is out of date.'), 'payload' => []],
-    ],    
+        ['name' => 'uid-index-dirty', 'description' => MoreI18N::translate('The UID index is out of date.'), 'payload' => []],
+    ],
 ];
