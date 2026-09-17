@@ -494,7 +494,32 @@ class LinkEnhancerModule extends AbstractModule implements
             }
             $this->docReadyJs .= 'document.querySelectorAll(".wt-site-title").forEach(el => el.innerHTML = `<a class="' . self::STDCLASS_HOME_LINK . '" href="' . e($url) . '"' . $target . '>` + el.innerHTML + "</a>");';
         }
-        
+
+        // --- UID search in quick search field
+        if ($this->getPref(self::PREF_UID_ACTIVE, true) && $tree !== null) {
+            $uid_route = route(GotoUidAction::class, ['tree' => $tree->name(), 'uid' => '__UID__']);
+            $this->docReadyJs .= '
+(function(){
+    var f = document.querySelector("form.wt-header-search-form");
+    if (!f) return;
+    f.addEventListener("submit", function(e) {
+        var q = (f.querySelector("input[name=query]") || {}).value || "";
+        q = q.trim();
+        if (!q) return;
+        var uid = null;
+        if (q.toLowerCase().startsWith("uid:")) {
+            uid = q.slice(4).trim();
+        } else if (/^[0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12}$/i.test(q)) {
+            uid = q;
+        }
+        if (uid) {
+            e.preventDefault();
+            window.location.href = "' . e($uid_route) . '".replace("__UID__", encodeURIComponent(uid));
+        }
+    });
+})();';
+        }
+
         // --- Link++
         if ($cfg_link_active) {
             $this->bundleShortcuts[] = 'le';
