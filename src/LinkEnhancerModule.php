@@ -54,6 +54,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Nyholm\Psr7\Stream;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Factories\CustomMarkdownFactory;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\AdminXrefOverviewData;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoIdAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoUidAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoXrefAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpMdAction;
@@ -372,6 +373,8 @@ class LinkEnhancerModule extends AbstractModule implements
         if ($this->getPref(self::PREF_UID_ACTIVE, true)) {
             Functions::registerRoute('/tree/{tree}/goto-uid/{uid}', GotoUidAction::class);
             Functions::registerRoute('/goto-uid/{uid}', GotoUidAction::class);
+            Functions::registerRoute('/tree/{tree}/goto-id/{id}', GotoIdAction::class);
+            Functions::registerRoute('/goto-id/{id}', GotoIdAction::class);
         }
 
         // XREF overview - server-side DataTables data endpoint (admin only)
@@ -532,6 +535,7 @@ class LinkEnhancerModule extends AbstractModule implements
                 'I18N'         => Utils::getJsI18N('le', $this),
                 'thisXref'     => Validator::attributes($request)->isXref()->string('xref', ''),
                 'openInNewTab' => $this->getPref(self::PREF_LINKSPP_OPEN_IN_NEW_TAB, true),
+                'uidActive'    => $this->getPref(self::PREF_UID_ACTIVE, true),
                 'tree'         => $treename,
                 'baseurl'      => route(TreePage::class, [ 'tree' => $treename ]),
                 'urlmode'      => (Validator::attributes($request)->boolean('rewrite_urls', false) ? 'pretty' : 'default'),

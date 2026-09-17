@@ -6,6 +6,7 @@ export const getLEOptions = () => ({
     ...i18nMixin,
     thisXref: '',
     openInNewTab: true,
+    uidActive: false,
     tree: '',
     baseurl: '',
     urlmode: 'standard',

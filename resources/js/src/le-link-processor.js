@@ -95,10 +95,15 @@ export const processLinks = (
                         thisXrefShown = true;
                     }
 
+                    const route =
+                        LEoptions.uidActive
+                            ? 'goto-id'
+                            : (type !== '' ? rectypes[type] : 'goto-xref');
+
                     const urlxref =
                         url +
                         separator[LEoptions.urlmode].path +
-                        (type !== '' ? rectypes[type] : 'goto-xref') +
+                        route +
                         separator[LEoptions.urlmode].path +
                         xref;
 
