@@ -27,6 +27,7 @@ declare(strict_types=1);
 namespace Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers;
 
 use Fisharebest\Webtrees\Auth;
+use Fisharebest\Webtrees\FlashMessages;
 use Fisharebest\Webtrees\GedcomRecord;
 use Fisharebest\Webtrees\Http\Exceptions\HttpException;
 use Fisharebest\Webtrees\Http\Exceptions\HttpNotFoundException;
@@ -56,7 +57,9 @@ use function trim;
  * before counting, so a hidden record is neither leaked nor counted (R3). The
  * UID index is read-only here - there is no live scan (D4). The {uid} route
  * parameter is read verbatim; the Aura router default [^/]+ already covers
- * every UID form, so no extra validation is needed (R2).
+ * every UID form, so no extra validation is needed (R2). A tree-scoped request
+ * that finds nothing in the tree falls back to a global lookup and reports the
+ * cross-tree hit with a flash message (A1).
  */
 class GotoUidAction implements RequestHandlerInterface
 {
@@ -68,6 +71,15 @@ class GotoUidAction implements RequestHandlerInterface
         $uid  = Validator::attributes($request)->string('uid');
 
         $visible = $this->visibleRecords(UidIndexService::lookup($uid, $tree?->id()));
+        $cross   = false;
+
+        // A1: a tree-scoped request that finds nothing in the tree falls back to
+        // a global lookup so a hit living in another tree is not lost. The
+        // global route already searches all trees, so no fallback applies there.
+        if ($visible === [] && $tree !== null) {
+            $visible = $this->visibleRecords(UidIndexService::lookup($uid, null));
+            $cross   = true;
+        }
 
         if ($visible === []) {
             throw new HttpNotFoundException(
@@ -76,6 +88,10 @@ class GotoUidAction implements RequestHandlerInterface
         }
 
         if (count($visible) === 1) {
+            if ($cross) {
+                FlashMessages::addMessage(I18N::translate('UID %s was found in another tree.', $uid));
+            }
+
             return redirect($visible[0]['record']->url());
         }
 
