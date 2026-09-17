@@ -54,12 +54,14 @@ use Psr\Http\Message\ServerRequestInterface;
 use Nyholm\Psr7\Stream;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Factories\CustomMarkdownFactory;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\AdminXrefOverviewData;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoUidAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoXrefAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpMdAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpWtCoreAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpWthbAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\MarkdownEditorActivationService;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Services\UidIndexService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\WthbService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\SettingInterface;
@@ -119,6 +121,7 @@ class LinkEnhancerModule extends AbstractModule implements
     public const PREF_WTHB_LINKS_JSON = 'WTHB_LINKS_JSON'; // additional links for webtrees manual top menu
     public const PREF_JS_DEBUG_CONSOLE = 'JS_DEBUG_CONSOLE'; // console.debug with active route info; 0=off, 1=on
     public const PREF_OPEN_IN_NEW_TAB = 'OPEN_IN_NEW_TAB'; // triple-state, 0=off, 1=user defined, 2=on
+    public const PREF_UID_ACTIVE = 'UID_ACTIVE'; // activate UID lookup
     public const PREF_GENWIKI_LINK = 'GENWIKI_LINK'; // base link to GenWiki
     
     public const PREF_LINKSPP_ACTIVE = 'LINKSPP_ACTIVE'; // enable links++
@@ -183,7 +186,7 @@ class LinkEnhancerModule extends AbstractModule implements
 
     public const HELP_CSV = __DIR__ . DIRECTORY_SEPARATOR . 'Schema' . DIRECTORY_SEPARATOR . 'SeedHelpTable.csv';
 
-    public const int HELP_SCHEMA_TARGET_VERSION = 5;
+    public const int HELP_SCHEMA_TARGET_VERSION = 6;
 
     public const PREFERENCES_SCHEMA = [
         // required settings:
@@ -216,6 +219,7 @@ class LinkEnhancerModule extends AbstractModule implements
         self::PREF_LINKSPP_ACTIVE            => [ 'type' => 'bool',   'default' => '1' ],
         self::PREF_LINKSPP_JS                => [ 'type' => 'string', 'default' => '' ],
         self::PREF_LINKSPP_OPEN_IN_NEW_TAB   => [ 'type' => 'bool',   'default' => '1', 'parent' => self::PREF_OPEN_IN_NEW_TAB, 'mode' => OverwriteMode::ParentIsNotOne ],
+        self::PREF_UID_ACTIVE                => [ 'type' => 'bool',   'default' => '1' ],
         // markdown
         self::PREF_MD_ACTIVE                 => [ 'type' => 'bool',   'default' => '1' ],
         self::PREF_MD_IMG_ACTIVE             => [ 'type' => 'bool',   'default' => '1', 'parent' => self::PREF_MD_ACTIVE, 'mode' => OverwriteMode::ParentIsZero ],
@@ -363,6 +367,11 @@ class LinkEnhancerModule extends AbstractModule implements
         
         if ($this->getPref(self::PREF_LINKSPP_ACTIVE, true)) {
             Functions::registerRoute('/tree/{tree}/goto-xref/{xref}', GotoXrefAction::class);
+        }
+
+        if ($this->getPref(self::PREF_UID_ACTIVE, true)) {
+            Functions::registerRoute('/tree/{tree}/goto-uid/{uid}', GotoUidAction::class);
+            Functions::registerRoute('/goto-uid/{uid}', GotoUidAction::class);
         }
 
         // XREF overview - server-side DataTables data endpoint (admin only)
@@ -1061,6 +1070,8 @@ class LinkEnhancerModule extends AbstractModule implements
         ];
 
         $response['vesta_common_enabled'] = $this->vesta_common_enabled;
+
+        $response['uid_index_status'] = UidIndexService::indexStatus();
 
         $mde_rules = $this->mde->getAllRules();
         $response['mde_custom'] = $mde_rules['custom'] ?? false ? print_r($mde_rules['custom'], true) : '';

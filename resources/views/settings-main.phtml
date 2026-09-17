@@ -10,6 +10,7 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
 /**
  * @var array<string>           $prefs                  list of chapter objects
  * @var array                   $mdcfg                  [int total, int activated, array<string> trees_wo_md]
+ * @var array                   $uid_index_status       [int rows, string|null last_run, bool fresh, bool source_available]
  */
 
 $trees_w_md = join('</li><li>', $mdcfg['trees_w_md']);
@@ -101,6 +102,29 @@ $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li>
                             ],
                             'selected' => (int) $prefs[$prefId]
                         ]) ?>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- UID lookup --><?php $prefId = LinkEnhancerModule::PREF_UID_ACTIVE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                        [5] <?= I18N::translate('UID lookup') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                        <div class="form-text">
+                            <p><?= I18N::translate('Allow resolving UID tags (%s) to the corresponding records.', '_UID / UID') ?></p>
+                            <?php if (!empty($uid_index_status)): ?>
+                            <p class="text-muted small">
+                                <?= I18N::translate('Index status: %1$s rows, last built: %2$s', number_format($uid_index_status['rows']), $uid_index_status['last_run'] ?? '—') ?>
+                                <?php if (!$uid_index_status['source_available']): ?>
+                                    <br><em><?= I18N::translate('Index source (link-index scan) not available.') ?></em>
+                                <?php endif; ?>
+                            </p>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
             </fieldset>
