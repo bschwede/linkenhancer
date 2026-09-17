@@ -164,6 +164,17 @@ This feature allows navigating directly to a record by its UID. The URL pattern 
 
 UID comparison is **case-insensitive** (GEDCOM specs do not define UID as case-sensitive). The stored value is verbatim; matching is done case-insensitively so that case-variant UIDs return a selection list rather than a possibly-wrong single redirect.
 
+#### Standard navigation (`goto-id`)
+
+`goto-id` is the standard navigation target for **every** linkenhancer link — both untyped (`wt=@REF@`) and typed (`wt=<type>@REF@`) — and resolves a reference that is either a record **XREF** or a **UID**. The URL pattern is:
+
+- `/tree/{tree}/goto-id/{id}` — scoped to one tree (falls back to a global lookup when nothing is found in the tree, with a flash notice)
+- `/goto-id/{id}` — global (searches all trees)
+
+**Behavior** (shared `IdResolver`): the id is tried length-aware and bidirectionally — a long id (≥ 18 chars) as a UID first, a short one as an XREF first — and falls back to the other when the first yields nothing, so a resolution is never lost. 0 hits → 404, 1 visible hit → redirect, >1 → selection list.
+
+A typed `wt=<type>@REF@` link is a **legacy** form: the type letter is no longer used for routing (all links go through `goto-id`) and is only documentary — it still drives the diagram link for individuals and the type-mismatch hint in the cross-reference overview. New links should use the untyped `wt=@REF@` form.
+
 #### Index
 
 The UID index is stored in the `le_uid_index` table (one row per UID tag occurrence, distinguished by `tag_path`). It is maintained exclusively by `cli/build-uid-index.php` (no live scan on request).
