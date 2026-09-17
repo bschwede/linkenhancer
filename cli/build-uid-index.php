@@ -52,7 +52,7 @@ declare(strict_types=1);
 //
 // Engine: requires MariaDB, MySQL or PostgreSQL (REGEXP + MD5).
 //
-// Conventions: see cli/_template-maintenance.php and README.md
+// Conventions: see modules_v4/cronjob/cli/_template-maintenance.php and README.md
 // ("CLI scripts & maintenance").
 
 require __DIR__ . '/../../../vendor/autoload.php';

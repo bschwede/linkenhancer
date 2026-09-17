@@ -51,7 +51,7 @@ declare(strict_types=1);
 // overview itself also works on SQLite/SQL Server in a limited LIKE mode,
 // but the index is not available there.
 //
-// Conventions: see cli/_template-maintenance.php and README.md
+// Conventions: see modules_v4/cronjob/cli/_template-maintenance.php and README.md
 // ("CLI scripts & maintenance").
 
 require __DIR__ . '/../../../vendor/autoload.php';

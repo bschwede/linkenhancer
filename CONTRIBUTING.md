@@ -72,7 +72,7 @@ The module ships CLI-only scripts. They are guarded: requested over HTTP (the `m
 | `tests/p1-measure.php [--tree=<id>]` | read-only scaling measurement for the XREF overview (query costs, table sizes, PHP limits) | yes |
 | `cli/build-link-index.php [--limit=N] [--tree=<id>] [--rebuild] [--flush]` | build/update the link index for the XREF overview (see below) | yes |
 | `cli/build-uid-index.php [--limit=N] [--tree=<id>] [--rebuild] [--flush]` | build/update the UID index for UID lookup | yes |
-| `cli/...` | maintenance scripts (template in `cli/_template-maintenance.php`) | yes |
+| `cli/...` | maintenance scripts (template in `modules_v4/cronjob/cli/_template-maintenance.php`) | yes |
 
 Run them from the webtrees root with the **same PHP version** the instance runs on (webtrees requires PHP 8.3+):
 
@@ -83,7 +83,7 @@ php modules_v4/linkenhancer/tests/smoke-text-tag-collector.php 10
 
 #### Writing maintenance scripts
 
-`cli/_template-maintenance.php` is a copy-paste template for longer-running maintenance jobs. The conventions:
+`modules_v4/cronjob/cli/_template-maintenance.php` is a copy-paste template for longer-running maintenance jobs. The conventions:
 
 - **SAPI guard**: every script starts with `CliBootstrap::guard()` - the directory is URL-addressable, the guard answers `403` instead of running.
 - **Bootstrap**: use `CliBootstrap::boot()` - the core CLI bootstrap sequence (app bootstrap, i18n, config, database) with a hard failure on missing config or DB connection.
