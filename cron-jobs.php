@@ -38,7 +38,9 @@ return [
             'description' => MoreI18N::translate('Rebuild the link index incrementally.'),
             'params' => [
                 ['name' => '--limit', 'optional' => true, 'default' => '5000', 'description' => MoreI18N::translate('max records per run')],
-                ['name' => '--since', 'optional' => true, 'description' => MoreI18N::translate('only changes since this timestamp')],
+                ['name' => '--tree', 'optional' => true, 'description' => MoreI18N::translate('id of the tree to be scanned - all if not set')],
+                ['name' => '--rebuild', 'optional' => true, 'description' => MoreI18N::translate('force a full rebuild')],
+                ['name' => '--flush', 'optional' => true, 'description' => MoreI18N::translate('empty the UID index and exit')],
             ],
         ],
         [
@@ -46,6 +48,7 @@ return [
             'description' => MoreI18N::translate('Rebuild the UID index incrementally.'),
             'params' => [
                 ['name' => '--limit', 'optional' => true, 'default' => '5000', 'description' => MoreI18N::translate('max records per run')],
+                ['name' => '--tree', 'optional' => true, 'description' => MoreI18N::translate('id of the tree to be scanned - all if not set')],
                 ['name' => '--rebuild', 'optional' => true, 'description' => MoreI18N::translate('force a full rebuild')],
                 ['name' => '--flush', 'optional' => true, 'description' => MoreI18N::translate('empty the UID index and exit')],
             ],
