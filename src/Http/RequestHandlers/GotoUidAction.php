@@ -113,7 +113,9 @@ class GotoUidAction implements RequestHandlerInterface
         $visible      = [];
 
         foreach ($hits as $hit) {
-            $tree = $tree_service->find((int) $hit->file);
+            // find() throws (non-nullable) on a missing/inaccessible tree; use a
+            // null-safe scan so a stale index row is skipped, not fatal (R3).
+            $tree = $tree_service->all()->first(static fn (Tree $t): bool => $t->id() === (int) $hit->file);
             if (!$tree instanceof Tree) {
                 continue;
             }
