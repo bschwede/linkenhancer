@@ -30,7 +30,7 @@ use Fisharebest\Webtrees\Schema\MigrationInterface;
 /**
  * Upgrade the database schema from version 5 to version 6.
  *
- * Creates the UID index (see .opencode/plans/linkenhancer-uid-implementation.md):
+ * Creates the UID index (see linkenhancer-uid-implementation.md):
  *  - le_uid_index: one row per UID tag found in a record - record-level AND
  *    fact-level (_UID v5 / UID v7), per the multi-level decision (D6). Carries
  *    the parsed UID value verbatim (no normalization), the finding location
@@ -46,6 +46,16 @@ use Fisharebest\Webtrees\Schema\MigrationInterface;
  * default (portable) collation; the exact, case-preserving match is enforced in
  * the query layer (UidIndexService::lookup) so the schema stays portable across
  * MariaDB/MySQL/PostgreSQL.
+ * 
+ * Adds le_link_index.target_uid (see linkenhancer-uid-link-target-cross-tree-goto.md):
+ * a separate column for UID link targets. The builder (cli/build-link-index.php)
+ * fills it via a length heuristic - short XREFs stay in target_xref, UID-length values
+ * (>= 18 chars) go here. Kept separate from target_xref so the planned
+ * Backlink feature can answer "which records link to UID X?" with a clean,
+ * indexed query, while target_xref keeps its XREF-only semantics.
+ *
+ * Additive and idempotent. Existing rows keep target_uid NULL until the next
+ * index build re-writes them. 
  */
 class Migration5 implements MigrationInterface
 {
@@ -75,6 +85,15 @@ class Migration5 implements MigrationInterface
             DB::schema()->table($meta_table, static function (Blueprint $t): void {
                 $t->timestamp('uid_last_run', 0)->nullable()->after('rows');
                 $t->integer('uid_rows')->default(0)->after('uid_last_run');
+            });
+        }
+
+        $link_table = 'le_link_index';
+
+        if (DB::schema()->hasTable($link_table) && !DB::schema()->hasColumn($link_table, 'target_uid')) {
+            DB::schema()->table($link_table, static function (Blueprint $table): void {
+                $table->string('target_uid', 255)->nullable()->after('target_tree');
+                $table->index('target_uid');
             });
         }
     }

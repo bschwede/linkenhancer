@@ -187,7 +187,7 @@ class LinkEnhancerModule extends AbstractModule implements
 
     public const HELP_CSV = __DIR__ . DIRECTORY_SEPARATOR . 'Schema' . DIRECTORY_SEPARATOR . 'SeedHelpTable.csv';
 
-    public const int HELP_SCHEMA_TARGET_VERSION = 7;
+    public const int HELP_SCHEMA_TARGET_VERSION = 6;
 
     public const PREFERENCES_SCHEMA = [
         // required settings:
