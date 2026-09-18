@@ -7,5 +7,8 @@
     ],
     "require": {
         "bschwede/wt-shared-libs": "^1.0"
+    },
+    "config": {
+        "prepend-autoloader": false
     }
 }
