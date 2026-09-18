@@ -2,10 +2,6 @@
 
 declare(strict_types=1);
 
-use DateTimeImmutable;
-use DateTimeZone;
-use Fisharebest\Webtrees\Auth;
-use Fisharebest\Webtrees\Contracts\UserInterface;
 use Schwendinger\Webtrees\Helpers\ClassName;
 use Fisharebest\Webtrees\I18N;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
@@ -47,9 +43,7 @@ $hidden_params = [];
 parse_str($action_query, $hidden_params);
 $index_status_ts = $index_status['scanned_at'] ?? '';
 if ($index_status_ts) {
-    $index_status_ts = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $index_status_ts, new DateTimeZone('UTC'))
-        ->setTimezone(new DateTimeZone(Auth::user()->getPreference(UserInterface::PREF_TIME_ZONE, 'UTC')))
-        ->format(strtr(I18N::dateFormat(), ['%' => '']) . ' ' . strtr(I18N::timeFormat(), ['%' => '']));
+    $index_status_ts = MoreI18N::localizedDatetimeString($index_status_ts);
 }
 ?>
 
