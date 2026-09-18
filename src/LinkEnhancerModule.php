@@ -371,10 +371,11 @@ class LinkEnhancerModule extends AbstractModule implements
         }
 
         if ($this->getPref(self::PREF_UID_ACTIVE, true)) {
-            Functions::registerRoute('/tree/{tree}/goto-uid/{uid}', GotoUidAction::class);
-            Functions::registerRoute('/goto-uid/{uid}', GotoUidAction::class);
-            Functions::registerRoute('/tree/{tree}/goto-id/{id}', GotoIdAction::class);
-            Functions::registerRoute('/goto-id/{id}', GotoIdAction::class);
+            // use unique custom name, if different routes use the same handler class
+            Functions::registerRoute('/tree/{tree}/goto-uid/{uid}', 'le.goto-uid.tree', GotoUidAction::class);
+            Functions::registerRoute('/goto-uid/{uid}', 'le.goto-uid.global', GotoUidAction::class);
+            Functions::registerRoute('/tree/{tree}/goto-id/{id}', 'le.goto-id.tree', GotoIdAction::class);
+            Functions::registerRoute('/goto-id/{id}', 'le.goto-id.global', GotoIdAction::class);
         }
 
         // XREF overview - server-side DataTables data endpoint (admin only)
@@ -500,7 +501,7 @@ class LinkEnhancerModule extends AbstractModule implements
 
         // --- UID search in quick search field
         if ($this->getPref(self::PREF_UID_ACTIVE, true) && $tree !== null) {
-            $uid_route = route(GotoUidAction::class, ['tree' => $tree->name(), 'uid' => '__UID__']);
+            $uid_route = route('le.goto-uid.tree', ['tree' => $tree->name(), 'uid' => '__UID__']);
             $this->docReadyJs .= '
 (function(){
     var f = document.querySelector("form.wt-header-search-form");
@@ -512,7 +513,7 @@ class LinkEnhancerModule extends AbstractModule implements
         var uid = null;
         if (q.toLowerCase().startsWith("uid:")) {
             uid = q.slice(4).trim();
-        } else if (/^[0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12}$/i.test(q)) {
+        } else if (/^(?:[0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12}|[0-9a-f]{36,38})$/i.test(q)) {
             uid = q;
         }
         if (uid) {
