@@ -36,6 +36,7 @@ requirements.txt
 .venv
 .env
 tests
+.npmrc
 EOT
 
 cd "$SRCDIR" || exit 1
