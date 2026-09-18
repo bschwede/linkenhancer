@@ -6,6 +6,7 @@ use Fisharebest\Webtrees\I18N;
 use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Services\UidTagCollector;
 
 /**
  * @var array<string>           $prefs                  list of chapter objects
@@ -115,10 +116,10 @@ $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li>
                     <div class="col-sm-9 wt-page-options-value mt-2">
                         <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
                         <div class="form-text">
-                            <p><?= I18N::translate('Allow resolving UID tags (%s) to the corresponding records.', '_UID / UID') ?></p>
+                            <p><?= I18N::translate('Allow resolving UID tags (%s) to the corresponding records.', implode(' / ', UidTagCollector::DEFAULT_TAGS)) ?></p>
                             <?php if (!empty($uid_index_status)): ?>
                             <p class="text-muted small">
-                                <?= I18N::translate('Index status: %1$s rows, last built: %2$s', number_format($uid_index_status['rows']), $uid_index_status['last_run'] ?? '—') ?>
+                                <?= I18N::translate('Index status: %1$s rows, last built: %2$s', I18N::number($uid_index_status['rows']), $uid_index_status['last_run'] ? MoreI18N::localizedDatetimeString($uid_index_status['last_run']) : '—') ?>
                                 <?php if (!$uid_index_status['source_available']): ?>
                                     <br><em><?= I18N::translate('Index source (link-index scan) not available.') ?></em>
                                 <?php endif; ?>

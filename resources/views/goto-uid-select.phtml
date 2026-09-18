@@ -26,7 +26,7 @@ use Fisharebest\Webtrees\I18N;
         <?php $record = $hit['record']; ?>
         <li class="list-group-item">
             <a href="<?= e($record->url()) ?>">
-                <strong><?= e($hit['label']) ?></strong>
+                <strong><?= $hit['label'] ?></strong>
                 <span class="text-muted">— <?= e($record->tree()->title()) ?> (<?= e($hit['rectype']) ?>)</span>
             </a>
             <div class="small text-muted">

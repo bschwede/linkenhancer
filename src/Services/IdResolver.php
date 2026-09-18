@@ -123,7 +123,7 @@ final class IdResolver
         $candidates   = [];
 
         foreach (UidIndexService::lookup($id, $tree_id) as $hit) {
-            $tree = $tree_service->get((int) $hit->file);
+            $tree = $tree_service->find((int) $hit->file);
             if (!$tree instanceof Tree) {
                 continue;
             }

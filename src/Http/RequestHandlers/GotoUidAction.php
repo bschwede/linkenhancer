@@ -95,7 +95,7 @@ class GotoUidAction implements RequestHandlerInterface
             return redirect($visible[0]['record']->url());
         }
 
-        return $this->viewResponse('linkenhancer::goto-uid-select', [
+        return $this->viewResponse('_linkenhancer_::goto-uid-select', [
             'title' => I18N::translate('Multiple records for UID %s', $uid),
             'uid'   => $uid,
             'hits'  => $visible,
@@ -113,7 +113,7 @@ class GotoUidAction implements RequestHandlerInterface
         $visible      = [];
 
         foreach ($hits as $hit) {
-            $tree = $tree_service->get((int) $hit->file);
+            $tree = $tree_service->find((int) $hit->file);
             if (!$tree instanceof Tree) {
                 continue;
             }

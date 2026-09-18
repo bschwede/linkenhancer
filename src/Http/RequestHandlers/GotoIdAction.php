@@ -102,7 +102,7 @@ class GotoIdAction implements RequestHandlerInterface
             $candidates
         );
 
-        return $this->viewResponse('linkenhancer::goto-uid-select', [
+        return $this->viewResponse('_linkenhancer_::goto-uid-select', [
             'title' => I18N::translate('Multiple records for %s', $id),
             'uid'   => $id,
             'hits'  => $hits,
