@@ -35,6 +35,7 @@ use Fisharebest\Webtrees\Http\ViewResponseTrait;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Services\TreeService;
+use Fisharebest\Webtrees\Site;
 use Fisharebest\Webtrees\Tree;
 use Fisharebest\Webtrees\Validator;
 use Illuminate\Support\Collection;
@@ -97,9 +98,28 @@ class GotoUidAction implements RequestHandlerInterface
 
         return $this->viewResponse('_linkenhancer_::goto-uid-select', [
             'title' => I18N::translate('Multiple records for UID %s', $uid),
+            'tree'  => $this->headerTree($tree),
             'uid'   => $uid,
             'hits'  => $visible,
         ]);
+    }
+
+    /**
+     * The tree the page layout shows in its header (genealogy menu, tree
+     * title, header search): the tree-scoped route's tree, otherwise the
+     * site's default tree (HomePage pattern) so the global selection page
+     * still gets a full header. Null when the user can see no tree at all.
+     */
+    private function headerTree(?Tree $request_tree): ?Tree
+    {
+        if ($request_tree instanceof Tree) {
+            return $request_tree;
+        }
+
+        $trees   = Registry::container()->get(TreeService::class)->all();
+        $default = Site::getPreference('DEFAULT_GEDCOM');
+
+        return $trees->get($default) ?? $trees->first();
     }
 
     /**
