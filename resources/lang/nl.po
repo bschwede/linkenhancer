@@ -5,16 +5,16 @@ msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-12 11:40+0200\n"
-"PO-Revision-Date: 2026-05-25 08:07+0000\n"
+"PO-Revision-Date: 2026-09-19 10:35+0000\n"
 "Last-Translator: TheDutchJewel <thedutchjewel@noreply.codeberg.org>\n"
-"Language-Team: Dutch <https://translate.codeberg.org/projects/linkenhancer/"
-"module/nl/>\n"
+"Language-Team: Dutch <https://translate.codeberg.org/projects/wt-modules/"
+"linkenhancer/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.5\n"
+"X-Generator: Weblate 2026.9.1\n"
 "X-Poedit-Basepath: ../..\n"
 "X-Poedit-SearchPath-0: CustomMarkdownFactory.php\n"
 "X-Poedit-SearchPath-1: LinkEnhancerModule.php\n"
@@ -36,39 +36,31 @@ msgid "Precondition: Tree preference '%s' need to be set to markdown."
 msgstr ""
 "Voorwaarde: De stamboomvoorkeur ‘%s’ moet worden ingesteld op markdown."
 
-#, fuzzy
-#| msgid "cross reference"
 msgid "Cross-references"
-msgstr "kruisverwijzing"
+msgstr "Kruisverwijzingen"
 
-#, fuzzy
-#| msgid "Permalink"
 msgid "External links"
-msgstr "Permalink"
+msgstr "Externe links"
 
 msgid "Pictures"
-msgstr ""
+msgstr "Afbeeldingen"
 
-#, fuzzy
-#| msgid "cross reference"
 msgid "Classic cross-references"
-msgstr "kruisverwijzing"
+msgstr "Klassieke kruisverwijzingen"
 
 msgid "Other - maybe damaged - links"
-msgstr ""
+msgstr "Overige - mogelijk beschadigde - links"
 
 msgid "target not found"
-msgstr ""
+msgstr "doel niet gevonden"
 
 #. I18N: JS enhanced link
-#, fuzzy
-#| msgid "cross reference"
 msgid "Cross-reference"
-msgstr "kruisverwijzing"
+msgstr "Kruisverwijzing"
 
 #, php-format
 msgid "expected %1$s, is %2$s"
-msgstr ""
+msgstr "verwacht: %1$s, is: %2$s"
 
 #. I18N: Settings - section title
 msgid "Webtrees manual"
@@ -368,7 +360,7 @@ msgid "Permalink"
 msgstr "Permalink"
 
 msgid "tree"
-msgstr ""
+msgstr "stamboom"
 
 #. I18N: MD img error precondition
 msgid ""
@@ -422,25 +414,23 @@ msgstr "Startpagina-link - JSON met CSS-regels lijkt ongeldig te zijn."
 msgid "Import registered routes"
 msgstr "Geregistreerde routes importeren"
 
-#, fuzzy
-#| msgid "cross reference"
 msgid "Cross-Reference Overview"
-msgstr "kruisverwijzing"
+msgstr "Kruisverwijzingsoverzicht"
 
 msgid "Update the link index"
-msgstr ""
+msgstr "Linkindex bijwerken"
 
 msgid "Rebuild the link index incrementally."
-msgstr ""
+msgstr "Bouw de linkindex stapsgewijs opnieuw op."
 
 msgid "max records per run"
-msgstr ""
+msgstr "maximaal aantal records per keer"
 
 msgid "only changes since this timestamp"
-msgstr ""
+msgstr "alleen wijzigingen sinds deze tijdstempel"
 
 msgid "The link index is out of date."
-msgstr ""
+msgstr "De linkindex is verouderd."
 
 #. I18N: user defined url
 #. I18N: Settings - section title
@@ -667,75 +657,92 @@ msgstr "Meer informatie vindt u op een aparte helppagina."
 msgid ""
 "List all records that contain cross-references (XREFs) or linkenhancer links."
 msgstr ""
+"Toon alle records die kruisverwijzingen (XREF's) of LinkEnhancer-links "
+"bevatten."
 
 msgid ""
 "Limited mode: this database engine has no regex support - the table is "
 "scanned live with a LIKE filter on every request, which can be slow on large "
 "trees. The link index is not available on this engine."
 msgstr ""
+"Beperkte modus: deze database-engine heeft geen regexondersteuning - de "
+"tabel wordt bij elke aanvraag direct doorzocht met een LIKE-filter, wat bij "
+"grote stambomen traag kan zijn. De linkindex is niet beschikbaar voor deze "
+"database-engine."
 
 #, php-format
 msgid "Link index active: %1$s scanned records, last verified %2$s."
-msgstr ""
+msgstr "Linkindex actief: %1$s gescande records, laatst gecontroleerd op %2$s."
 
 msgid ""
 "Live scan forced - the link index is bypassed for this view, which can be "
 "slow on large trees."
 msgstr ""
+"Live-scan afgedwongen - de linkindex wordt voor deze weergave niet gebruikt, "
+"wat bij grote stambomen traag kan zijn."
 
 msgid ""
 "No fresh link index - the table below scans the GEDCOM tables live, which "
 "can be slow on large trees. Build the index with the CLI script (see "
 "README.md, \"CLI scripts & maintenance\")."
 msgstr ""
+"Geen actuele linkindex - de onderstaande tabel scant de GEDCOM-tabellen "
+"live, wat bij grote stambomen traag kan zijn. Bouw de index op met het CLI-"
+"script (zie README.md, \"CLI scripts & maintenance\")."
 
 msgid ""
 "Only broken targets: every matching record is loaded and its targets "
 "resolved on the server, which can be slow on large trees. Combine with the "
 "type/tree filters to narrow the scan."
 msgstr ""
+"Alleen defecte doelen: elk overeenkomend record wordt geladen en de "
+"verwijzingsdoelen ervan worden op de server opgezocht, wat bij grote "
+"stambomen traag kan zijn. Combineer dit met de type/stamboomfilters om de "
+"scan te beperken."
 
 msgid "referencing XREF"
-msgstr ""
+msgstr "verwijzing naar XREF"
 
 msgid "Bypass the link index and scan the GEDCOM tables live"
-msgstr ""
+msgstr "Sla de linkindex over en scan de GEDCOM-tabellen direct"
 
 msgid "Force live scan"
-msgstr ""
+msgstr "Live-scan forceren"
 
 msgid "Record types"
-msgstr ""
+msgstr "Recordtypen"
 
 msgid "All types"
-msgstr ""
+msgstr "Alle typen"
 
 msgid "All GEDCOM records"
-msgstr ""
+msgstr "Alle GEDCOM-records"
 
 msgid "All Block records"
-msgstr ""
+msgstr "Alle Block-records"
 
 msgid "GEDCOM records"
-msgstr ""
+msgstr "GEDCOM-records"
 
 msgid "All trees"
-msgstr ""
+msgstr "Alle stambomen"
 
 msgid "links per class"
-msgstr ""
+msgstr "links per klasse"
 
 msgid "Only rows with a missing or wrong-type target are shown"
 msgstr ""
+"Alleen rijen met een ontbrekend doel of een doel van een onjuist type worden "
+"weergegeven"
 
 msgid "Only broken targets"
-msgstr ""
+msgstr "Alleen defecte doelen"
 
 msgid "The target type differs from the declaration"
-msgstr ""
+msgstr "Het doeltype komt niet overeen met de declaratie"
 
 msgid "XREF"
-msgstr ""
+msgstr "XREF"
 
 msgid "Goto top of cell content"
 msgstr "Ga naar bovenaan de celinhoud"
