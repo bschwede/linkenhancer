@@ -80,16 +80,16 @@ Each parameter key can be specified multiple times – but you shouldn’t overd
 
 **Syntax:**
 
-* **Markdown**: In general, an enhanced link looks like this `[Link display title](#@param1&paramN)` so that one or more targets can be addressed at once. For cross-references in webtrees a record type and the XREF is expected, the parameter looks as follows
-  - `wt=n@XREF@` - standard link to note with XREF in the current tree<br>available record types:
+* **Markdown**: In general, an enhanced link looks like this `[Link display title](#@param1&paramN)` so that one or more targets can be addressed at once. For cross-references in webtrees a record reference (REF can be the XREF or a UID) is expected, the parameter looks as follows
+  - `wt=@REF@` or `wt=@REF@othertree` - standard link - access to record page via redirect url
+  - `wt=n@REF@` - legacy link with given record type - here: to a note with REF in the current tree<br>available record types:
     - i=individual
     - f=family
     - s=source
     - r=repository
     - n=note
     - l=sharedPlace
-  - `wt=i@XREF@othertree+dia` - link to record type individual with XREF from tree "othertree" and also link to Interactive tree of this person
-  - `wt=@XREF@` - simplified standard link without given record type - access to record page via redirect url
+  - `wt=i@REF@othertree+dia` - link to record type individual with REF from tree "othertree" and also link to Interactive tree of this person
 * **HTML**: The same applies to html links: `<a href="#@wt=i@I1@">Link display title</a>`
   So this is also useable in cooperation with the name badge function of the [“⚶ Vesta Classic Look & Feel” module](https://github.com/vesta-webtrees-2-custom-modules/vesta_classic_laf) in the HTML snippet field: `<a href="#@fsft=<ref/>"></a>` for linking to a record in the Family Search Family Tree. It's also possible to embed those links in news articles of Tywed's [news-menu module](https://github.com/Tywed/news-menu) or in [FAQ](https://wiki.genealogy.net/Webtrees_Handbuch/Anleitung_für_Besucher#H.C3.A4ufige_Fragen_.28FAQ.29) articles.
 
@@ -163,6 +163,8 @@ This feature allows navigating directly to a record by its UID. The URL pattern 
 - **>1 visible hit** → selection list (case-variant UIDs or the same UID in multiple records)
 
 UID comparison is **case-insensitive** (GEDCOM specs do not define UID as case-sensitive). The stored value is verbatim; matching is done case-insensitively so that case-variant UIDs return a selection list rather than a possibly-wrong single redirect.
+
+You can lookup uids via the **quick search** input. For shorter uids, that can be regarded as XREF, the prefix `uid:` can be added to the search value.
 
 #### Standard navigation (`goto-id`)
 
