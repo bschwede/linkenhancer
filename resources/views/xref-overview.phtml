@@ -141,7 +141,9 @@ if ($index_status_ts) {
         <label class="form-check-label" for="le-only-problems" title="<?= I18N::translate('Only rows with a missing or wrong-type target are shown') ?>">
             <?= I18N::translate('Only broken targets') ?>
             (<span title="<?= e(I18N::translate("target not found")) ?>"><?= XrefsService::TARGET_NOT_FOUND_GLYPH ?></span> 
-            / <span title="<?= e(I18N::translate("The target type differs from the declaration")) ?>"><?= XrefsService::TARGET_TYPE_MISMATCH_GLYPH ?></span>)
+            / <span title="<?= e(I18N::translate("The target type differs from the declaration")) ?>"><?= XrefsService::TARGET_TYPE_MISMATCH_GLYPH ?></span>
+            / <span title="<?= e(I18N::translate("target not unique")) ?>"><?= XrefsService::TARGET_AMBIGUOUS_GLYPH ?></span>
+            )
         </label>
     </div>
     <div class="col-auto">

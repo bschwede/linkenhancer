@@ -927,7 +927,7 @@ final class XrefsService { // stuff related with handling cross-references
     private static function ambiguousTargetHtml(array $ambiguous, string $uid): string {
         $count = (int) $ambiguous['count'];
         $html  = '<span class="le-target-ambiguous" title="'
-            . e(I18N::translate('target not unique - %1$d matches in other trees', $count))
+            . e(I18N::translate('%1$s - %2$d matches in other trees', I18N::translate('target not unique'), $count))
             . '">' . self::TARGET_AMBIGUOUS_GLYPH . ' ' . $count . ' @' . e($uid) . '@</span>';
 
         if ($count <= 3) {
