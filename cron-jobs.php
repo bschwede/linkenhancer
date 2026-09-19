@@ -40,7 +40,7 @@ return [
                 ['name' => '--limit', 'optional' => true, 'default' => '5000', 'description' => MoreI18N::translate('max records per run')],
                 ['name' => '--tree=ID', 'optional' => true, 'description' => MoreI18N::translate('number of the tree to be scanned - all if not set')],
                 ['name' => '--rebuild', 'optional' => true, 'description' => MoreI18N::translate('force a full rebuild')],
-                ['name' => '--flush', 'optional' => true, 'description' => MoreI18N::translate('empty the UID index and exit')],
+                ['name' => '--flush', 'optional' => true, 'description' => MoreI18N::translate('empty the index and exit')],
             ],
         ],
         [
@@ -50,7 +50,7 @@ return [
                 ['name' => '--limit', 'optional' => true, 'default' => '5000', 'description' => MoreI18N::translate('max records per run')],
                 ['name' => '--tree=ID', 'optional' => true, 'description' => MoreI18N::translate('number of the tree to be scanned - all if not set')],
                 ['name' => '--rebuild', 'optional' => true, 'description' => MoreI18N::translate('force a full rebuild')],
-                ['name' => '--flush', 'optional' => true, 'description' => MoreI18N::translate('empty the UID index and exit')],
+                ['name' => '--flush', 'optional' => true, 'description' => MoreI18N::translate('empty the index and exit')],
             ],
         ],
     ],
