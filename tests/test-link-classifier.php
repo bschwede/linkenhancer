@@ -499,6 +499,64 @@ check(
     [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=i@I2@)', 'snippet' => '[see](#@wt=i@I2@)']], 0, '', $target_linker, true)],
     ['<ul class="le-xref-inventory"><li><u>Cross-references (xref: 1)</u><ol><li><code><strong>[see](#@wt=i@I2@)</strong></code><div class="le-target-links"><span class="le-cross-ref" title="Cross-reference">↪</span> <a href="/tree/t/individual/I2">Max Mustermann</a></div></li></ol></li></ul>']
 );
+// T51 - "not unique" rendering: a missing UID-length, tree-less target that the
+// ambiguous_linker (6th arg) resolves to global matches is shown as not-unique
+// (blue) with the count, not as "target not found". D1 (no explicit tree),
+// D3 (off => no linker => classic missing), D4 (<= 3 list, > 3 goto link).
+$ambiguous_2 = static function (string $id, ?string $tree): ?array {
+    return [
+        'count'    => 2,
+        'hits'     => [
+            ['name' => 'Person A', 'url' => '/tree/t1/individual/I10', 'tree_label' => 'tree-a'],
+            ['name' => 'Person B', 'url' => '/tree/t2/individual/I20', 'tree_label' => 'tree-b'],
+        ],
+        'goto_url' => '/goto-id/' . $id,
+    ];
+};
+$ambiguous_4 = static function (string $id, ?string $tree): ?array {
+    return [
+        'count'    => 4,
+        'hits'     => [
+            ['name' => 'Person A', 'url' => '/tree/t1/individual/I10', 'tree_label' => 'tree-a'],
+            ['name' => 'Person B', 'url' => '/tree/t2/individual/I20', 'tree_label' => 'tree-b'],
+            ['name' => 'Person C', 'url' => '/tree/t3/individual/I30', 'tree_label' => 'tree-c'],
+        ],
+        'goto_url' => '/goto-id/' . $id,
+    ];
+};
+check(
+    'T51a a missing UID target found in other trees is shown as not-unique with links (<= 3)',
+    [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=@aaaaaaaaaaaaaaaaaaaa@)', 'snippet' => '[see](#@wt=@aaaaaaaaaaaaaaaaaaaa@)']], 0, '', $target_linker, false, $ambiguous_2)],
+    ['<ul class="le-xref-inventory"><li><u>Cross-references (xref: 1)</u><ol><li><code><strong>[see](#@wt=@aaaaaaaaaaaaaaaaaaaa@)</strong></code><div class="le-target-links"><span class="le-target-ambiguous" title="target not unique - 2 matches in other trees">? 2 @aaaaaaaaaaaaaaaaaaaa@</span><br><span class="le-cross-ref" title="Cross-reference">↪</span> <a href="/tree/t1/individual/I10">tree-a: Person A</a><br><span class="le-cross-ref" title="Cross-reference">↪</span> <a href="/tree/t2/individual/I20">tree-b: Person B</a></div></li></ol></li></ul>']
+);
+check(
+    'T51b a not-unique target with > 3 matches shows only a goto-id link (title = UID)',
+    [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=@aaaaaaaaaaaaaaaaaaaa@)', 'snippet' => '[see](#@wt=@aaaaaaaaaaaaaaaaaaaa@)']], 0, '', $target_linker, false, $ambiguous_4)],
+    ['<ul class="le-xref-inventory"><li><u>Cross-references (xref: 1)</u><ol><li><code><strong>[see](#@wt=@aaaaaaaaaaaaaaaaaaaa@)</strong></code><div class="le-target-links"><span class="le-target-ambiguous" title="target not unique - 4 matches in other trees">? 4 @aaaaaaaaaaaaaaaaaaaa@</span><br><span class="le-cross-ref" title="Cross-reference">↪</span> <a href="/goto-id/aaaaaaaaaaaaaaaaaaaa">@aaaaaaaaaaaaaaaaaaaa@ (4)</a></div></li></ol></li></ul>']
+);
+check(
+    'T51c a missing UID target stays "target not found" when the ambiguous linker is absent (uid_active off)',
+    [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=@aaaaaaaaaaaaaaaaaaaa@)', 'snippet' => '[see](#@wt=@aaaaaaaaaaaaaaaaaaaa@)']], 0, '', $target_linker)],
+    ['<ul class="le-xref-inventory"><li><u>Cross-references (xref: 1)</u><ol><li><code><strong>[see](#@wt=@aaaaaaaaaaaaaaaaaaaa@)</strong></code><div class="le-target-links"><span class="le-target-missing" title="target not found">✗ @aaaaaaaaaaaaaaaaaaaa@</span></div></li></ol></li></ul>']
+);
+check(
+    'T51d a short XREF is not treated as not-unique (the guarded linker returns null)',
+    [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=@I404@)', 'snippet' => '[see](#@wt=@I404@)']], 0, '', $target_linker, false, static function (string $id, ?string $tree): ?array {
+        if ($tree !== null && $tree !== '') {
+            return null;
+        }
+        if (strlen($id) < 18) {
+            return null;
+        }
+        return $ambiguous_2($id, $tree);
+    })],
+    ['<ul class="le-xref-inventory"><li><u>Cross-references (xref: 1)</u><ol><li><code><strong>[see](#@wt=@I404@)</strong></code><div class="le-target-links"><span class="le-target-missing" title="target not found">✗ @I404@</span></div></li></ol></li></ul>']
+);
+check(
+    'T51e the not-unique state is not wrapped in a problem mark even with highlight_problems',
+    [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=@aaaaaaaaaaaaaaaaaaaa@)', 'snippet' => '[see](#@wt=@aaaaaaaaaaaaaaaaaaaa@)']], 0, '', $target_linker, true, $ambiguous_2)],
+    ['<ul class="le-xref-inventory"><li><u>Cross-references (xref: 1)</u><ol><li><code><strong>[see](#@wt=@aaaaaaaaaaaaaaaaaaaa@)</strong></code><div class="le-target-links"><span class="le-target-ambiguous" title="target not unique - 2 matches in other trees">? 2 @aaaaaaaaaaaaaaaaaaaa@</span><br><span class="le-cross-ref" title="Cross-reference">↪</span> <a href="/tree/t1/individual/I10">tree-a: Person A</a><br><span class="le-cross-ref" title="Cross-reference">↪</span> <a href="/tree/t2/individual/I20">tree-b: Person B</a></div></li></ol></li></ul>']
+);
 // T45 - inventoryHasProblem(): the "only broken targets" filter predicate.
 check('T45a inventoryHasProblem true for a missing target', [XrefsService::inventoryHasProblem([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=i@I404@)', 'snippet' => '']], $target_linker)], [true]);
 check('T45b inventoryHasProblem true for a type mismatch', [XrefsService::inventoryHasProblem([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=i@I9@)', 'snippet' => '']], $target_linker)], [true]);

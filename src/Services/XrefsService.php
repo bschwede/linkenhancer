@@ -171,6 +171,7 @@ final class XrefsService { // stuff related with handling cross-references
 
     public const TARGET_NOT_FOUND_GLYPH = "✗";
     public const TARGET_TYPE_MISMATCH_GLYPH = "⚠";
+    public const TARGET_AMBIGUOUS_GLYPH = "?";
 
     /**
      * Clamp an arbitrary input to the selectable caps - the single source
@@ -775,15 +776,24 @@ final class XrefsService { // stuff related with handling cross-references
      * ?array{name: string, url: string, tree_label: string}. null (default) =
      * no reference links.
      *
-     * $highlight_problems: when true, each missing/mismatch target is wrapped
-     * in a <mark class="le-problem-mark"> so it stands out (the admin "only
-     * broken targets" filter). false (default) = no mark, unchanged output.
-     *
-     * @param array<int, array{path: string, class: string, token: string, snippet: string}> $entries
-     * @param callable(string, ?string): (array{name: string, url: string, tree_label: string}|null)|null $target_linker
-     * @param bool $highlight_problems wrap missing/mismatch targets in a <mark>
-     */
-    public static function linkInventoryHtml(array $entries, int $max_per_class = self::LINKS_PER_CLASS_DEFAULT, string $highlight_xref = '', ?callable $target_linker = null, bool $highlight_problems = false): string {
+      * $highlight_problems: when true, each missing/mismatch target is wrapped
+      * in a <mark class="le-problem-mark"> so it stands out (the admin "only
+      * broken targets" filter). false (default) = no mark, unchanged output.
+      *
+      * $ambiguous_linker: when non-null, a "missing" UID-length target with no
+      * explicit tree is additionally resolved against the other trees. The
+      * linker returns the global matches ("not unique" state) or null when the
+      * id is not such a case (see XrefsService::ambiguousTargetHtml).
+      * Signature: fn(string $id, ?string $target_tree_name):
+      * ?array{count: int, hits: array<int, array{name: string, url: string, tree_label: string}>, goto_url: string}.
+      * null (default) = no ambiguous resolution, unchanged output.
+      *
+      * @param array<int, array{path: string, class: string, token: string, snippet: string}> $entries
+      * @param callable(string, ?string): (array{name: string, url: string, tree_label: string}|null)|null $target_linker
+      * @param bool $highlight_problems wrap missing/mismatch targets in a <mark>
+      * @param callable(string, ?string): array{count: int, hits: array<int, array{name: string, url: string, tree_label: string}>, goto_url: string}|null $ambiguous_linker
+      */
+    public static function linkInventoryHtml(array $entries, int $max_per_class = self::LINKS_PER_CLASS_DEFAULT, string $highlight_xref = '', ?callable $target_linker = null, bool $highlight_problems = false, ?callable $ambiguous_linker = null): string {
         $items = [];
         foreach ($entries as $entry) {
             $items[$entry['class']][] = $entry;
@@ -827,7 +837,7 @@ final class XrefsService { // stuff related with handling cross-references
                     $pattern = '/(?<![A-Za-z0-9])' . preg_quote($highlight_xref, '/') . '(?![A-Za-z0-9])/';
                     $hl      = (string) preg_replace($pattern, '<mark class="le-xref-target">$0</mark>', $hl);
                 }
-                $target_html = self::targetLinksHtml($entry, $target_linker, $highlight_problems);
+                $target_html = self::targetLinksHtml($entry, $target_linker, $highlight_problems, $ambiguous_linker);
                 $html  .= '<li>' . $prefix . '<code>' . $hl . '</code>' . $target_html . '</li>';
             }
             $html .= '</ol>';
@@ -856,8 +866,9 @@ final class XrefsService { // stuff related with handling cross-references
      *
      * @param array{class: string, token: string} $entry
      * @param callable(string, ?string): (array{name: string, url: string, tree_label: string, actual: string}|null)|null $target_linker
+     * @param callable(string, ?string): array{count: int, hits: array<int, array{name: string, url: string, tree_label: string}>, goto_url: string}|null $ambiguous_linker
      */
-    private static function targetLinksHtml(array $entry, ?callable $target_linker, bool $highlight_problems = false): string {
+    private static function targetLinksHtml(array $entry, ?callable $target_linker, bool $highlight_problems = false, ?callable $ambiguous_linker = null): string {
         if ($target_linker === null || !in_array($entry['class'], ['xref', 'classic', 'pic'], true)) {
             return '';
         }
@@ -871,6 +882,17 @@ final class XrefsService { // stuff related with handling cross-references
             $status       = self::targetStatus($resolved, $expected_tag);
 
             if ($status === 'missing') {
+                // A UID-length target with no explicit tree that exists in other
+                // trees is "not unique", not "missing" (D1). The linker decides -
+                // it returns null for anything that is not such a case (D1/D3).
+                $ambiguous = ($ambiguous_linker !== null)
+                    ? $ambiguous_linker($target['xref'], $target['tree'])
+                    : null;
+                if ($ambiguous !== null) {
+                    $links[] = self::ambiguousTargetHtml($ambiguous, $target['xref']);
+                    continue;
+                }
+
                 $problem = '<span class="le-target-missing" title="' . e(I18N::translate("target not found")). '">' . self::TARGET_NOT_FOUND_GLYPH . ($target['tree'] ? ' ' . $target['tree'] . ': ' : '') . ' @' . e($target['xref']) . '@</span>';
                 $links[] = $highlight_problems ? '<mark class="le-problem-mark">' . $problem . '</mark>' : $problem;
                 continue;
@@ -892,6 +914,32 @@ final class XrefsService { // stuff related with handling cross-references
         }
 
         return '<div class="le-target-links">' . implode('<br>', $links) . '</div>';
+    }
+
+    /**
+     * HTML for a target that is "not unique" (D1): a UID-length reference with
+     * no explicit tree that was not found in the source tree but exists in
+     * other trees. Shows the match count; lists the matches as links when there
+     * are few (<= 3), otherwise a single goto-id link (title = the UID, D4).
+     *
+     * @param array{count: int, hits: array<int, array{name: string, url: string, tree_label: string}>, goto_url: string} $ambiguous
+     */
+    private static function ambiguousTargetHtml(array $ambiguous, string $uid): string {
+        $count = (int) $ambiguous['count'];
+        $html  = '<span class="le-target-ambiguous" title="'
+            . e(I18N::translate('target not unique - %1$d matches in other trees', $count))
+            . '">' . self::TARGET_AMBIGUOUS_GLYPH . ' ' . $count . ' @' . e($uid) . '@</span>';
+
+        if ($count <= 3) {
+            foreach ($ambiguous['hits'] as $hit) {
+                $label = ($hit['tree_label'] !== '') ? e($hit['tree_label']) . ': ' . $hit['name'] : $hit['name'];
+                $html .= '<br><span class="le-cross-ref" title="' . e(I18N::translate('Cross-reference')) . '">↪</span> <a href="' . e($hit['url']) . '">' . $label . '</a>';
+            }
+        } elseif ($ambiguous['goto_url'] !== '') {
+            $html .= '<br><span class="le-cross-ref" title="' . e(I18N::translate('Cross-reference')) . '">↪</span> <a href="' . e($ambiguous['goto_url']) . '">@' . e($uid) . '@ (' . $count . ')</a>';
+        }
+
+        return $html;
     }
 
     /**

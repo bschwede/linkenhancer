@@ -889,6 +889,9 @@ class LinkEnhancerModule extends AbstractModule implements
         if ($target === 'problems') {
             $data_params['target'] = 'problems';
         }
+        // D3: the "not unique" insight for UID targets (overview) is hard-gated
+        // on the UID feature; the module is the source of truth and forwards it.
+        $data_params['uid_active'] = (int) $this->getPref(self::PREF_UID_ACTIVE, true);
 
         return $this->viewResponse($this->name() . '::xref-overview', [
             'title' => I18N::translate('Cross-Reference Overview'),

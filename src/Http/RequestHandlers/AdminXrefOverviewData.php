@@ -27,6 +27,7 @@ declare(strict_types=1);
 namespace Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers;
 
 use DomainException;
+use Throwable;
 use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\DB;
 use Fisharebest\Webtrees\GedcomRecord;
@@ -48,8 +49,12 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\Services\TextTagCollector;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 
 use function array_key_exists;
+use function array_map;
+use function array_slice;
+use function count;
 use function e;
 use function route;
+use function strlen;
 use function trim;
 
 /**
@@ -73,6 +78,12 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
 
     /** Per-request cache for referenced-record lookups: "tree_id\0xref" => label|null. */
     private array $target_cache = [];
+
+    /** Per-request cache for global UID ("not unique") lookups: "GLOBAL\0uid" => payload|null. */
+    private array $ambiguous_cache = [];
+
+    /** D3: the UID feature pref, forwarded by the page (module is the source of truth). */
+    private bool $uid_active = false;
 
     public function __construct(
         DatatablesService $datatables_service,
@@ -127,6 +138,9 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
         // every target (not a plain column), so it runs as a PHP-side
         // collection filter with correct count/pagination, not a SQL LIKE.
         $only_problems = $params->string('target', '') === 'problems';
+        // D3: the page forwards the module's PREF_UID_ACTIVE; default off so a
+        // directly-called endpoint (no param) never enables the feature.
+        $this->uid_active = $params->boolean('uid_active', false);
 
         // Phase 2: prefer the link index when it is present and fresh, unless
         // a live scan is explicitly forced. In live mode the "referencing
@@ -374,7 +388,8 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
         $name_html = '<strong>' .  ($edit_url ? '<a href="' . e($edit_url) . '">' . e($display_title) . '</a>' : e($display_title) ) . '</strong>';
         $name_html .= XrefsService::linkInventoryHtml(
             $entries, $max_links, $highlight_xref,
-            $this->makeTargetLinker($tree, $file), $highlight_problems
+            $this->makeTargetLinker($tree, $file), $highlight_problems,
+            $this->uid_active ? $this->makeAmbiguousLinker($tree, $file) : null
         );
 
         return [
@@ -498,7 +513,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
             ) . '</strong>';
         // Resolve referenced records (xref/classic targets) for the inventory;
         // the source tree is this row's tree, the resolver is cached per request.
-        $name_html .= XrefsService::linkInventoryHtml($inventory['entries'], $max_links, $highlight_xref, $this->makeTargetLinker($tree, $file), $highlight_problems);
+        $name_html .= XrefsService::linkInventoryHtml($inventory['entries'], $max_links, $highlight_xref, $this->makeTargetLinker($tree, $file), $highlight_problems, $this->uid_active ? $this->makeAmbiguousLinker($tree, $file) : null);
 
         return [
             $xref_html,
@@ -524,6 +539,14 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
     private function makeTargetLinker(?Tree $source_tree, int $source_tree_id): callable
     {
         return fn (string $xref, ?string $target_tree_name): ?array => $this->resolveTarget($xref, $target_tree_name, $source_tree, $source_tree_id);
+    }
+
+    /**
+     * @return callable(string, ?string): array{count: int, hits: array<int, array{name: string, url: string, tree_label: string}>, goto_url: string}|null
+     */
+    private function makeAmbiguousLinker(?Tree $source_tree, int $source_tree_id): callable
+    {
+        return fn (string $id, ?string $target_tree_name): ?array => $this->resolveAmbiguousTarget($id, $target_tree_name, $source_tree, $source_tree_id);
     }
 
     /**
@@ -566,6 +589,63 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
         $this->target_cache[$cache_key] = $label;
 
         return $label;
+    }
+
+    /**
+     * D1/D5: resolve a "missing" UID-length target that has NO explicit @tree
+     * against the other trees (global UID lookup, visibility-filtered). Returns
+     * the match payload (count + up to 3 hits + a goto-id URL) when there is at
+     * least one global match, else null (the caller then keeps the "missing"
+     * rendering). An explicit @tree (a precise reference) or a short XREF never
+     * qualifies. Cached per request.
+     *
+     * @return array{count: int, hits: array<int, array{name: string, url: string, tree_label: string}>, goto_url: string}|null
+     */
+    private function resolveAmbiguousTarget(string $id, ?string $target_tree_name, ?Tree $source_tree, int $source_tree_id): ?array
+    {
+        if ($target_tree_name !== null && $target_tree_name !== '') {
+            return null;
+        }
+        if (strlen($id) < IdResolver::UID_MIN_LENGTH) {
+            return null;
+        }
+
+        $cache_key = 'GLOBAL\0' . $id;
+        if (array_key_exists($cache_key, $this->ambiguous_cache)) {
+            return $this->ambiguous_cache[$cache_key];
+        }
+
+        $hits = IdResolver::candidates($id, null, $source_tree_id);
+        if ($hits === []) {
+            $this->ambiguous_cache[$cache_key] = null;
+            return null;
+        }
+
+        $mapped = array_map(
+            static fn (array $hit): array => [
+                'name'       => $hit['record']->fullName(),
+                'url'        => $hit['record']->url(),
+                'tree_label' => $hit['tree_label'],
+            ],
+            $hits
+        );
+
+        $goto_url = '';
+        try {
+            $goto_url = route('le.goto-id.global', ['id' => $id]);
+        } catch (Throwable) {
+            // route not registered (PREF_UID_ACTIVE off) - the list still works,
+            // only the >3 goto link degrades
+        }
+
+        $payload = [
+            'count'    => count($hits),
+            'hits'     => array_slice($mapped, 0, 3),
+            'goto_url' => $goto_url,
+        ];
+        $this->ambiguous_cache[$cache_key] = $payload;
+
+        return $payload;
     }
 
     private function emptyResponse(ServerRequestInterface $request): ResponseInterface

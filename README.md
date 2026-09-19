@@ -177,6 +177,10 @@ You can lookup uids via the **quick search** input. For shorter uids, that can b
 
 A typed `wt=<type>@REF@` link is a **legacy** form: the type letter is no longer used for routing (all links go through `goto-id`) and is only documentary — it still drives the diagram link for individuals and the type-mismatch hint in the cross-reference overview. New links should use the untyped `wt=@REF@` form.
 
+#### Cross-reference overview: UID targets in other trees
+
+In the admin *Cross-Reference Overview* a link whose UID target is not found in the record's own tree is normally shown as *"target not found"*. When the UID feature is enabled, such a target is additionally resolved **globally** (across the other trees); if matches exist it is rendered as **not unique** (`?`) with the match count instead: up to 3 matches are listed as direct cross-tree links, more than 3 collapse into a single `goto-id` link (title = the UID). This behavior is hard-gated on the UID feature preference and never applies to targets that name an explicit tree.
+
 #### Index
 
 The UID index is stored in the `le_uid_index` table (one row per UID tag occurrence, distinguished by `tag_path`). It is maintained exclusively by `cli/build-uid-index.php` (no live scan on request).
