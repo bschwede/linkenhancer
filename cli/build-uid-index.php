@@ -27,7 +27,7 @@ declare(strict_types=1);
 // Builds / updates the UID index (le_uid_index) for the "goto UID" lookup.
 //
 // Run (from the webtrees root, with the same PHP version as the instance):
-//   php modules_v4/linkenhancer/cli/build-uid-index.php [--limit=N] [--tree=<id>] [--rebuild] [--flush]
+//   php modules_v4/linkenhancer/cli/build-uid-index.php [--limit=N] [--tree=<id>] [--rebuild] [--flush] [--force]
 //
 // How it works:
 //   - the UID index is SELF-CONTAINED (D1): it computes each record's MD5
@@ -49,6 +49,9 @@ declare(strict_types=1);
 //   - --flush (without --rebuild) empties le_uid_index and resets
 //     le_index_meta.uid_last_run - for testing and maintenance; the next run
 //     is an initial build
+//   - the build honors the module's UID feature switch (preference
+//     UID_ACTIVE): with it off the run is skipped (exit 0) unless --force is
+//     given; --flush is not affected
 //
 // Engine: requires MariaDB, MySQL or PostgreSQL (REGEXP + MD5).
 //
@@ -72,9 +75,10 @@ $limit   = 1000;
 $tree_id = 0;
 $rebuild = false;
 $flush   = false;
+$force   = false;
 foreach (array_slice($argv, 1) as $arg) {
     if ($arg === '--help' || $arg === '-h') {
-        echo 'usage: php ' . basename(__FILE__) . ' [--limit=N] [--tree=<id>] [--rebuild] [--flush]' . PHP_EOL;
+        echo 'usage: php ' . basename(__FILE__) . ' [--limit=N] [--tree=<id>] [--rebuild] [--flush] [--force]' . PHP_EOL;
         exit(0);
     }
     if (str_starts_with($arg, '--limit=')) {
@@ -88,6 +92,9 @@ foreach (array_slice($argv, 1) as $arg) {
     }
     if ($arg === '--flush') {
         $flush = true;
+    }
+    if ($arg === '--force') {
+        $force = true;
     }
 }
 
@@ -132,6 +139,17 @@ if ($flush && !$rebuild) {
         ->where('id', '=', 1)
         ->update(['uid_last_run' => null]);
     echo 'uid index flushed' . ($tree_id > 0 ? " (tree {$tree_id})" : '') . PHP_EOL;
+    fclose($lock);
+    exit(0);
+}
+
+// ------------------------------------------------------------- feature gate
+// The build honors the module's UID feature switch (PREF_UID_ACTIVE): with it
+// off the index serves no lookups, so there is nothing to build. The --flush
+// path above already returned, so this only guards (re)builds; --force
+// overrides for maintenance.
+if (!$force && !UidIndexService::uidFeatureEnabled()) {
+    echo 'UID feature disabled (module preference UID_ACTIVE) - nothing to build; use --force to build anyway' . PHP_EOL;
     fclose($lock);
     exit(0);
 }

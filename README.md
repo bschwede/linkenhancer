@@ -196,6 +196,8 @@ Cron example (every 10 minutes, up to 5000 records per run):
 
 The feature can be toggled on/off in the module admin page ("Activate Support" → [5] UID lookup). The current index status (row count, last build time) is shown there.
 
+While the feature is switched off, index builds are skipped automatically (the cron run exits 0 without doing work). `--force` builds the index anyway (e.g. to prepare for re-enabling), and `--flush` works regardless of the switch.
+
 > [!NOTE]
 > UID tags at any nesting level are indexed (e.g. `0 @I1@ INDI`, `1 _UID`, `1 FAMF`, `2 _UID`). The tag path is stored per row so duplicates are distinguishable in the selection list.
 

@@ -71,7 +71,7 @@ The module ships CLI-only scripts. They are guarded: requested over HTTP (the `m
 | `tests/smoke-migration5.php` | SQLite smoke test for Migration5 (UID index schema) | yes |
 | `tests/p1-measure.php [--tree=<id>]` | read-only scaling measurement for the XREF overview (query costs, table sizes, PHP limits) | yes |
 | `cli/build-link-index.php [--limit=N] [--tree=<id>] [--rebuild] [--flush]` | build/update the link index for the XREF overview (see below) | yes |
-| `cli/build-uid-index.php [--limit=N] [--tree=<id>] [--rebuild] [--flush]` | build/update the UID index for UID lookup | yes |
+| `cli/build-uid-index.php [--limit=N] [--tree=<id>] [--rebuild] [--flush] [--force]` | build/update the UID index for UID lookup (skipped while the UID feature is disabled, unless `--force`) | yes |
 | `cli/...` | maintenance scripts (template in `modules_v4/cronjob/cli/_template-maintenance.php`) | yes |
 
 Run them from the webtrees root with the **same PHP version** the instance runs on (webtrees requires PHP 8.3+):

@@ -25,7 +25,8 @@
 declare(strict_types=1);
 
 // Standalone CLI test for the pure-PHP parts of UidIndexService
-// (uidPrefilterPatterns / hasUidCandidate) - no webtrees bootstrap, no DB.
+// (uidPrefilterPatterns / hasUidCandidate / interpretUidPref) - no webtrees
+// bootstrap, no DB.
 // Run: php modules_v4/linkenhancer/tests/test-uid-index-service.php
 
 // Inline SAPI guard (deliberately without CliBootstrap, to stay standalone):
@@ -78,6 +79,18 @@ check('P7 _UIDX tag', UidIndexService::hasUidCandidate("0 @I1@ INDI\n1 _UIDX ABC
 
 // P8 - a tag ending in UID ("SUID") is NOT a candidate
 check('P8 SUID tag', UidIndexService::hasUidCandidate("0 @I1@ INDI\n1 SUID ABC", 'INDI'), false);
+
+// Q1 - no stored row (preference never saved) = schema default = enabled
+check('Q1 pref default-on (null)', UidIndexService::interpretUidPref(null), true);
+
+// Q2 - stored "on"
+check('Q2 pref on (1)', UidIndexService::interpretUidPref('1'), true);
+
+// Q3 - stored "off"
+check('Q3 pref off (0)', UidIndexService::interpretUidPref('0'), false);
+
+// Q4 - stored empty value = off (boolval)
+check('Q4 pref empty', UidIndexService::interpretUidPref(''), false);
 
 echo "\n{$total} tests, {$failures} failure(s)\n";
 exit($failures === 0 ? 0 : 1);

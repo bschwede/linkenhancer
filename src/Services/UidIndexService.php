@@ -29,7 +29,9 @@ namespace Schwendinger\Webtrees\Module\LinkEnhancer\Services;
 use Fisharebest\Webtrees\DB;
 use Illuminate\Support\Collection;
 use Throwable;
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 
+use function boolval;
 use function in_array;
 use function mb_substr;
 use function strtotime;
@@ -219,5 +221,31 @@ final class UidIndexService
         } catch (Throwable) {
             return false;
         }
+    }
+
+    /**
+     * Is the UID feature active (module preference PREF_UID_ACTIVE)? Read from
+     * module_setting directly - the module is not booted in CLI context, so
+     * AbstractModule::getPref() is unavailable. A missing row means the schema
+     * default (on), matching getPref(PREF_UID_ACTIVE, true).
+     */
+    public static function uidFeatureEnabled(): bool
+    {
+        $value = DB::table('module_setting')
+            ->where('module_name', '=', LinkEnhancerModule::MODULE_NAME)
+            ->where('setting_name', '=', LinkEnhancerModule::PREF_UID_ACTIVE)
+            ->value('setting_value');
+
+        return self::interpretUidPref($value);
+    }
+
+    /**
+     * Pure interpretation of a stored UID_ACTIVE value: a missing row is the
+     * schema default (enabled), present values are bool-cast (setPref stores
+     * '1'/'0'). Split out so the default-on semantics are unit-testable.
+     */
+    public static function interpretUidPref(?string $value): bool
+    {
+        return $value === null ? true : boolval($value);
     }
 }

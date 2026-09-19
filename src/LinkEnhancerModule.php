@@ -93,6 +93,7 @@ class LinkEnhancerModule extends AbstractModule implements
      * list of const for module administration
      */
     public const CUSTOM_MODULE = 'linkenhancer';
+    public const MODULE_NAME = '_linkenhancer_'; // webtrees module name (folder name, underscore-wrapped)
     public const CUSTOM_AUTHOR = 'Bernd Schwendinger';
     public const GITHUB_USER = 'bschwede';
     public const CUSTOM_WEBSITE = 'https://github.com/' . self::GITHUB_USER . '/' . self::CUSTOM_MODULE . '/';
