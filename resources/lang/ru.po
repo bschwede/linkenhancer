@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: modules_v 4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-12 11:40+0200\n"
+"POT-Creation-Date: 2026-09-19 21:03+0200\n"
 "PO-Revision-Date: 2026-05-24 07:15+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -57,6 +57,13 @@ msgstr ""
 
 #, php-format
 msgid "expected %1$s, is %2$s"
+msgstr ""
+
+msgid "target not unique"
+msgstr ""
+
+#, php-format
+msgid "%1$s - %2$d matches in other trees"
 msgstr ""
 
 #. I18N: Settings - section title
@@ -355,6 +362,31 @@ msgstr ""
 msgid "tree"
 msgstr ""
 
+#, php-format
+msgid "No record for %s was found."
+msgstr ""
+
+#, php-format
+msgid "%s was found in another tree."
+msgstr ""
+
+#, php-format
+msgid "Multiple records for %s"
+msgstr ""
+
+#, php-format
+msgid ""
+"No record with UID %s was found. The UID index may not be available yet."
+msgstr ""
+
+#, php-format
+msgid "UID %s was found in another tree."
+msgstr ""
+
+#, php-format
+msgid "Multiple records for UID %s"
+msgstr ""
+
 #. I18N: MD img error precondition
 msgid ""
 "Neither a media object nor a file from the public directory was specified."
@@ -409,16 +441,31 @@ msgstr ""
 msgid "Update the link index"
 msgstr ""
 
+msgid "Update the UID index"
+msgstr ""
+
 msgid "Rebuild the link index incrementally."
 msgstr ""
 
 msgid "max records per run"
 msgstr ""
 
-msgid "only changes since this timestamp"
+msgid "number of the tree to be scanned - all if not set"
+msgstr ""
+
+msgid "force a full rebuild"
+msgstr ""
+
+msgid "empty the index and exit"
+msgstr ""
+
+msgid "Rebuild the UID index incrementally."
 msgstr ""
 
 msgid "The link index is out of date."
+msgstr ""
+
+msgid "The UID index is out of date."
 msgstr ""
 
 #. I18N: user defined url
@@ -485,6 +532,25 @@ msgstr ""
 #. I18N: wthb translate
 #. I18N:
 msgid "user defined"
+msgstr ""
+
+msgid "UID lookup"
+msgstr ""
+
+#, php-format
+msgid "Allow resolving UID tags (%s) to the corresponding records."
+msgstr ""
+
+#, php-format
+msgid "Index status: %1$s rows, last built: %2$s"
+msgstr ""
+
+msgid "Index source (link-index scan) not available."
+msgstr ""
+
+#, php-format
+msgid ""
+"Multiple records match UID %s. Please choose the one you are looking for."
 msgstr ""
 
 msgid ""
