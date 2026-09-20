@@ -545,6 +545,9 @@ This module has the same requirements as [webtrees#system-requirements](https://
 This module was tested with **webtrees** version 2.2.4
 and build-in themes and some other custom modules.
 
+It's recommended installing the [Cronjob](https://github.com/bschwede/wt-cronjob) module as well.
+This makes it easy to run the CLI scripts for maintaining the indexes.
+
 <a name="installation"></a>
 ## Installation
 - Install and use [Custom Module Manager](https://github.com/Jefferson49/CustomModuleManager) for an easy and convenient installation of webtrees custom modules.
