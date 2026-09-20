@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-19 21:03+0200\n"
-"PO-Revision-Date: 2026-09-16 13:53+0000\n"
+"PO-Revision-Date: 2026-09-20 08:25+0000\n"
 "Last-Translator: bschwede <bschwede@noreply.codeberg.org>\n"
 "Language-Team: German <https://translate.codeberg.org/projects/wt-modules/"
 "linkenhancer/de/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.9.1\n"
 
 msgid "Option is disabled"
 msgstr "Einstellung ist deaktiviert"
@@ -62,14 +62,12 @@ msgstr "Querverweis"
 msgid "expected %1$s, is %2$s"
 msgstr "erwartet wurde %1$s, es ist jedoch %2$s"
 
-#, fuzzy
-#| msgid "target not found"
 msgid "target not unique"
-msgstr "Ziel nicht gefunden"
+msgstr "Ziel nicht eindeutig"
 
 #, php-format
 msgid "%1$s - %2$d matches in other trees"
-msgstr ""
+msgstr "%1$s - %2$d Treffer in anderen Stammbäumen"
 
 #. I18N: Settings - section title
 msgid "Webtrees manual"
@@ -379,28 +377,30 @@ msgstr "Stammbaum"
 
 #, php-format
 msgid "No record for %s was found."
-msgstr ""
+msgstr "Kein Datensatz für %s gefunden."
 
 #, php-format
 msgid "%s was found in another tree."
-msgstr ""
+msgstr "%s wurde in einem anderen Stammbaum gefunden."
 
 #, php-format
 msgid "Multiple records for %s"
-msgstr ""
+msgstr "Mehrere Datensätze für %s"
 
 #, php-format
 msgid ""
 "No record with UID %s was found. The UID index may not be available yet."
 msgstr ""
+"Kein Datensatz mit UID %s gefunden. Der UID-Index ist möglicherweise noch "
+"nicht verfügbar."
 
 #, php-format
 msgid "UID %s was found in another tree."
-msgstr ""
+msgstr "UID %s wurde in einem anderen Stammbaum gefunden."
 
 #, php-format
 msgid "Multiple records for UID %s"
-msgstr ""
+msgstr "Mehrere Datensätze für UID %s"
 
 #. I18N: MD img error precondition
 msgid ""
@@ -462,10 +462,8 @@ msgstr "Querverweis-Übersicht"
 msgid "Update the link index"
 msgstr "Link-Index aktualisieren"
 
-#, fuzzy
-#| msgid "Update the link index"
 msgid "Update the UID index"
-msgstr "Link-Index aktualisieren"
+msgstr "UID-Index aktualisieren"
 
 msgid "Rebuild the link index incrementally."
 msgstr "Den Link-Index schrittweise neu aufbauen."
@@ -474,28 +472,22 @@ msgid "max records per run"
 msgstr "maximale Anzahl an Datensätzen pro Durchlauf"
 
 msgid "number of the tree to be scanned - all if not set"
-msgstr ""
+msgstr "Nummer des zu durchsuchenden Stammbaums - alle wenn nicht gesetzt"
 
 msgid "force a full rebuild"
-msgstr ""
+msgstr "vollständigen Neuaufbau forcieren"
 
-#, fuzzy
-#| msgid "Update the link index"
 msgid "empty the index and exit"
-msgstr "Link-Index aktualisieren"
+msgstr "Index leeren und beenden"
 
-#, fuzzy
-#| msgid "Rebuild the link index incrementally."
 msgid "Rebuild the UID index incrementally."
-msgstr "Den Link-Index schrittweise neu aufbauen."
+msgstr "Den UID-Index schrittweise neu aufbauen."
 
 msgid "The link index is out of date."
 msgstr "Der Link-Index ist veraltet."
 
-#, fuzzy
-#| msgid "The link index is out of date."
 msgid "The UID index is out of date."
-msgstr "Der Link-Index ist veraltet."
+msgstr "Der UID-Index ist veraltet."
 
 #. I18N: user defined url
 #. I18N: Settings - section title
@@ -571,23 +563,26 @@ msgid "user defined"
 msgstr "benutzerdefiniert"
 
 msgid "UID lookup"
-msgstr ""
+msgstr "UID-Abfrage"
 
 #, php-format
 msgid "Allow resolving UID tags (%s) to the corresponding records."
 msgstr ""
+"Auflösung von UID-Tags (%s) auf die korrespondierenden Datensätze erlauben."
 
 #, php-format
 msgid "Index status: %1$s rows, last built: %2$s"
-msgstr ""
+msgstr "Index-Status: %1$s Zeilen, zuletzt erzeugt: %2$s"
 
 msgid "Index source (link-index scan) not available."
-msgstr ""
+msgstr "Index-Quelle (link-index scan) nicht verfügbar."
 
 #, php-format
 msgid ""
 "Multiple records match UID %s. Please choose the one you are looking for."
 msgstr ""
+"Mehrere Datensätze passen zu der UID %s. Bitte den gewünschten Eintrag "
+"auswählen."
 
 msgid ""
 "Webtrees uses a CommonMark implementation and supports a subset of the markup"
