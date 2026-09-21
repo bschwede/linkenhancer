@@ -562,8 +562,7 @@ final class XrefsService { // stuff related with handling cross-references
                         ->whereColumn('block_setting.block_id', 'b.block_id')
                         ->whereIn('block_setting.setting_name', $text_settings)
                         ->where(static function ($sq) use ($filter_xref): void {
-                            $sq->where('block_setting.setting_value', 'like', '%@' . $filter_xref . '@')
-                                ->orWhere('block_setting.setting_value', 'like', '%xref=' . $filter_xref . '%');
+                            $sq->where('block_setting.setting_value', 'like', '%@' . $filter_xref . '@%');
                         });
                 });
             }
