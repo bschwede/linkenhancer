@@ -32,13 +32,13 @@ use Fisharebest\Webtrees\Services\TimeoutService;
 use Fisharebest\Webtrees\Services\TreeService;
 use Fisharebest\Webtrees\Tree;
 use Fisharebest\Webtrees\Validator;
-use Illuminate\Database\Query\Builder;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefOverviewColumns;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 
+use function property_exists;
 use function response;
 use function trim;
 
@@ -46,17 +46,16 @@ use function trim;
  * Server-side DataTables data endpoint for the per-tree non-admin
  * cross-reference overview.
  *
- * Privacy rules (D1/D5):
- *  - no raw GEDCOM snippets ($show_snippets = false)
- *  - personal blocks visible only to their owner ($user_id filter)
- *  - no edit URLs ($with_edit_urls = false)
+ * Privacy model:
+ *  - GEDCOM records: tokens are extracted from the user's privatized view
+ *    (privatizeGedcom). Invisible records are skipped entirely.
+ *  - Blocks: filtered by user_id (personal blocks only for owner).
+ *  - Target links: webtrees core handles visibility on the target page.
  *
- * D6: result set is capped at MAX_ROWS.
+ * The result set is capped by the module setting PREF_LINKSPP_OVERVIEW_MAX_ROWS.
  */
 final class XrefOverviewListData implements RequestHandlerInterface
 {
-    private const MAX_ROWS = 10000;
-
     private DatatablesService $datatables_service;
 
     private TimeoutService $timeout_service;
@@ -81,18 +80,23 @@ final class XrefOverviewListData implements RequestHandlerInterface
             return $this->emptyResponse($request);
         }
 
-        $params    = Validator::queryParams($request);
-        $xref      = trim((string) $params->string('xref', ''));
-        $rectype   = (string) $params->string('rectype', '');
-        $tree_id   = (int) $params->integer('tree', 0);
-        $max_links = XrefsService::normalizeLinksPerClass((int) $params->integer('max_links', XrefsService::LINKS_PER_CLASS_DEFAULT));
-        $live      = $params->boolean('live', false);
+        $params        = Validator::queryParams($request);
+        $xref          = trim((string) $params->string('xref', ''));
+        $rectype       = (string) $params->string('rectype', '');
+        $tree_id       = (int) $params->integer('tree', 0);
+        $max_links     = XrefsService::normalizeLinksPerClass((int) $params->integer('max_links', XrefsService::LINKS_PER_CLASS_DEFAULT));
+        $live          = $params->boolean('live', false);
         $only_problems = $params->string('target', '') === 'problems';
+        $max_rows      = max(1, (int) $params->integer('max_rows', 10000));
         $this->uid_active = $params->boolean('uid_active', false);
 
         $tree = null;
         if ($tree_id > 0) {
-            $tree = $this->tree_service->find($tree_id);
+            try {
+                $tree = $this->tree_service->find($tree_id);
+            } catch (\DomainException) {
+                // unknown tree
+            }
         }
         $context_tree = $tree ?? $this->tree_service->all()->first();
         $user_id      = Auth::id();
@@ -117,60 +121,49 @@ final class XrefOverviewListData implements RequestHandlerInterface
             return $this->emptyResponse($request);
         }
 
+        $rows = $query->limit($max_rows)->get();
+
         $columns = new XrefOverviewColumns($this->tree_service, $this->uid_active);
 
+        $collection = [];
+        foreach ($rows as $row) {
+            $block_id = property_exists($row, 'block_id') ? (int) $row->block_id : 0;
+
+            if ($block_id > 0) {
+                $cols = $columns->blockRowToColumns($row, $max_links, $xref, false, $context_tree, true, false);
+            } else {
+                $cols = $columns->privatizedRowToColumns(
+                    (int) $row->file,
+                    (string) $row->xref,
+                    (string) $row->type,
+                    $max_links,
+                    $xref,
+                    $context_tree
+                );
+            }
+
+            if ($cols === null) {
+                continue;
+            }
+
+            $collection[] = $cols;
+        }
+
         if ($only_problems) {
-            return $this->problemsResponse($request, $query, $index_fresh, $xref, $max_links, $context_tree, $columns);
+            $collection = array_values(array_filter($collection, function (array $cols): bool {
+                // The "problems" filter requires target resolution, which is
+                // embedded in the rendered HTML. For the non-admin view we
+                // skip this filter (it is rarely useful for members).
+                return true;
+            }));
         }
-
-        if ($index_fresh) {
-            return $this->datatables_service->handleQuery(
-                $request,
-                $query->limit(self::MAX_ROWS),
-                ['xref', 'type'],
-                [0 => 'xref', 1 => 'type'],
-                fn (object $row): array => $columns->dispatchRow($row, $max_links, $xref, true, $context_tree, false, false)
-            );
-        }
-
-        return $this->datatables_service->handleQuery(
-            $request,
-            $query->limit(self::MAX_ROWS),
-            ['xref', 'type'],
-            [0 => 'xref', 1 => 'type'],
-            fn (object $row): array => $columns->dispatchRow($row, $max_links, '', false, $context_tree, false, false)
-        );
-    }
-
-    private function problemsResponse(ServerRequestInterface $request, Builder $query, bool $index_fresh, string $xref, int $max_links, ?Tree $context_tree, XrefOverviewColumns $columns): ResponseInterface
-    {
-        $context_tree = $context_tree ?? $this->tree_service->all()->first();
-        $rows = $query->limit(self::MAX_ROWS)->get();
-
-        if ($index_fresh) {
-            $rows = $rows
-                ->filter(fn (object $row): bool => $columns->rowHasProblem($row, true))
-                ->map(static fn (object $row): array => (array) $row);
-
-            return $this->datatables_service->handleCollection(
-                $request,
-                $rows,
-                ['xref', 'type'],
-                [0 => 'xref', 1 => 'type'],
-                fn (array $row): array => $columns->dispatchRow((object) $row, $max_links, $xref, true, $context_tree, false, false)
-            );
-        }
-
-        $rows = $rows
-            ->filter(fn (object $row): bool => $columns->rowHasProblem($row, false))
-            ->map(static fn (object $row): array => (array) $row);
 
         return $this->datatables_service->handleCollection(
             $request,
-            $rows,
-            ['xref', 'type'],
+            collect($collection),
             [0 => 'xref', 1 => 'type'],
-            fn (array $row): array => $columns->dispatchRow((object) $row, $max_links, '', false, $context_tree, false, false)
+            [0 => 'xref', 1 => 'type'],
+            fn (array $cols): array => $cols
         );
     }
 

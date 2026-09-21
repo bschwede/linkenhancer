@@ -139,6 +139,7 @@ class LinkEnhancerModule extends AbstractModule implements
     public const PREF_LINKSPP_ACTIVE = 'LINKSPP_ACTIVE'; // enable links++
     public const PREF_LINKSPP_JS = 'LINKSPP_JS'; // Javascript
     public const PREF_LINKSPP_OPEN_IN_NEW_TAB = 'LINKSPP_OPEN_IN_NEW_TAB'; // enable open link in new browser tab
+    public const PREF_LINKSPP_OVERVIEW_MAX_ROWS = 'LINKSPP_OVERVIEW_MAX_ROWS'; // max rows for non-admin xref overview
 
     public const PREF_MD_ACTIVE = 'MD_ACTIVE'; // enable markdown enhancements
     public const PREF_MD_IMG_ACTIVE = 'MD_IMG_ACTIVE'; // enable enhanced markdown img syntax
@@ -231,6 +232,7 @@ class LinkEnhancerModule extends AbstractModule implements
         self::PREF_LINKSPP_ACTIVE            => [ 'type' => 'bool',   'default' => '1' ],
         self::PREF_LINKSPP_JS                => [ 'type' => 'string', 'default' => '' ],
         self::PREF_LINKSPP_OPEN_IN_NEW_TAB   => [ 'type' => 'bool',   'default' => '1', 'parent' => self::PREF_OPEN_IN_NEW_TAB, 'mode' => OverwriteMode::ParentIsNotOne ],
+        self::PREF_LINKSPP_OVERVIEW_MAX_ROWS => [ 'type' => 'int',    'default' => '10000' ],
         self::PREF_UID_ACTIVE                => [ 'type' => 'bool',   'default' => '1' ],
         // markdown
         self::PREF_MD_ACTIVE                 => [ 'type' => 'bool',   'default' => '1' ],
@@ -953,20 +955,22 @@ class LinkEnhancerModule extends AbstractModule implements
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function getlistAction(ServerRequestInterface $request): ResponseInterface
+    public function getListAction(ServerRequestInterface $request): ResponseInterface
     {
-        $tree = Validator::attributes($request)->tree();
+        $tree      = Validator::attributes($request)->tree();
         $params    = Validator::queryParams($request);
         $xref      = trim((string) $params->string('xref', ''));
         $rectype   = (string) $params->string('rectype', '');
         $max_links = XrefsService::normalizeLinksPerClass((int) $params->integer('max_links', XrefsService::LINKS_PER_CLASS_DEFAULT));
         $live      = $params->boolean('live', false);
         $target    = $params->string('target', '');
+        $max_rows  = (int) $this->getPref(self::PREF_LINKSPP_OVERVIEW_MAX_ROWS, true);
 
         $index_status = XrefsService::indexStatus();
 
         $data_params = [
             'tree' => $tree->id(),
+            'max_rows' => $max_rows,
         ];
         if ($xref !== '' && $index_status['fresh'] && !$live) {
             $data_params['xref'] = $xref;

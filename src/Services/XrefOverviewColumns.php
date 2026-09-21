@@ -36,6 +36,7 @@ use Fisharebest\Webtrees\Services\TreeService;
 use Fisharebest\Webtrees\Tree;
 use Throwable;
 use Schwendinger\Webtrees\Helpers\ClassName;
+use Schwendinger\Webtrees\Helpers\Functions;
 use Schwendinger\Webtrees\Helpers\MoreI18N;
 
 use function array_key_exists;
@@ -108,6 +109,62 @@ final class XrefOverviewColumns
         }
 
         return $index_fresh ? $this->indexRowHasProblem($row) : $this->liveRowHasProblem($row);
+    }
+
+    /**
+     * Build the four table columns for a GEDCOM row using the user's
+     * privatized view of the record. Returns null when the record is not
+     * visible to the user or contains no visible links.
+     *
+     * Snippets are safe by construction: they come from the privatized text.
+     */
+    public function privatizedRowToColumns(
+        int $file, string $xref, string $type,
+        int $max_links, string $highlight_xref,
+        ?Tree $context_tree
+    ): ?array {
+        $tree = $this->findTree($file);
+        if ($tree === null) {
+            return null;
+        }
+
+        $record = Registry::gedcomRecordFactory()->make($xref, $tree);
+        if (!$record instanceof GedcomRecord) {
+            return null;
+        }
+
+        $access_level = Auth::accessLevel($tree);
+        $priv         = Functions::getPrivatizedGedcom($record, $access_level);
+        if ($priv === '') {
+            return null;
+        }
+
+        $result = XrefsService::classifyGedcomText($priv, TextTagCollector::DEFAULT_TAGS, $type);
+        if ($result['entries'] === []) {
+            return null;
+        }
+
+        $xref_html  = e($xref)
+            . '<br><small class="text-muted">'
+            . e($tree->name())
+            . '</small>';
+
+        $type_html  = e($type);
+
+        $name_html  = '<strong>' . e($record->fullName()) . '</strong>';
+        $name_html .= XrefsService::linkInventoryHtml(
+            $result['entries'], $max_links, $highlight_xref,
+            $this->makeTargetLinker($tree, $file), false,
+            $this->uid_active ? $this->makeAmbiguousLinker($tree, $file) : null,
+            true
+        );
+
+        return [
+            $xref_html,
+            $type_html,
+            $name_html,
+            XrefsService::linkCountSummary($result['counts']),
+        ];
     }
 
     private function indexRowHasProblem(object $row): bool
@@ -184,7 +241,7 @@ final class XrefOverviewColumns
      * Block row: fetch settings (PK point lookup), classify "text" settings
      * for LE links, build the same 4-column output as GEDCOM rows.
      */
-    private function blockRowToColumns(object $row, int $max_links, string $highlight_xref = '', bool $highlight_problems = false, ?Tree $context_tree = null, bool $show_snippets = true, bool $with_edit_urls = true): array
+    public function blockRowToColumns(object $row, int $max_links, string $highlight_xref = '', bool $highlight_problems = false, ?Tree $context_tree = null, bool $show_snippets = true, bool $with_edit_urls = true): array
     {
         $block_id    = (int) $row->block_id;
         $module_name = (string) $row->type;
