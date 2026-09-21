@@ -167,6 +167,33 @@ final class XrefOverviewColumns
         ];
     }
 
+    /**
+     * True when the user's privatized view of this record contains at least
+     * one missing or type-mismatched target. Target resolution is cached per
+     * request, so this is cheap after privatizedRowToColumns() has run.
+     */
+    public function privatizedRowHasProblem(int $file, string $xref, string $type, ?Tree $context_tree): bool
+    {
+        $tree = $this->findTree($file);
+        if ($tree === null) {
+            return false;
+        }
+
+        $record = Registry::gedcomRecordFactory()->make($xref, $tree);
+        if (!$record instanceof GedcomRecord) {
+            return false;
+        }
+
+        $priv = Functions::getPrivatizedGedcom($record, Auth::accessLevel($tree));
+        if ($priv === '') {
+            return false;
+        }
+
+        $result = XrefsService::classifyGedcomText($priv, TextTagCollector::DEFAULT_TAGS, $type);
+
+        return XrefsService::inventoryHasProblem($result['entries'], $this->makeTargetLinker($tree, $file));
+    }
+
     private function indexRowHasProblem(object $row): bool
     {
         $tree = $this->findTree((int) $row->file);

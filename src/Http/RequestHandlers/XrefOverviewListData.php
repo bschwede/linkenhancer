@@ -130,8 +130,16 @@ final class XrefOverviewListData implements RequestHandlerInterface
             $block_id = property_exists($row, 'block_id') ? (int) $row->block_id : 0;
 
             if ($block_id > 0) {
+                if ($only_problems && !$columns->rowHasProblem($row, false)) {
+                    continue;
+                }
                 $cols = $columns->blockRowToColumns($row, $max_links, $xref, false, $context_tree, true, false);
             } else {
+                if ($only_problems && !$columns->privatizedRowHasProblem(
+                    (int) $row->file, (string) $row->xref, (string) $row->type, $context_tree
+                )) {
+                    continue;
+                }
                 $cols = $columns->privatizedRowToColumns(
                     (int) $row->file,
                     (string) $row->xref,
@@ -146,24 +154,19 @@ final class XrefOverviewListData implements RequestHandlerInterface
                 continue;
             }
 
-            $collection[] = $cols;
-        }
-
-        if ($only_problems) {
-            $collection = array_values(array_filter($collection, function (array $cols): bool {
-                // The "problems" filter requires target resolution, which is
-                // embedded in the rendered HTML. For the non-admin view we
-                // skip this filter (it is rarely useful for members).
-                return true;
-            }));
+            $collection[] = [
+                'xref' => (string) $row->xref,
+                'type' => (string) $row->type,
+                'cols' => $cols,
+            ];
         }
 
         return $this->datatables_service->handleCollection(
             $request,
             collect($collection),
+            ['xref', 'type'],
             [0 => 'xref', 1 => 'type'],
-            [0 => 'xref', 1 => 'type'],
-            fn (array $cols): array => $cols
+            fn (array $row): array => $row['cols']
         );
     }
 
