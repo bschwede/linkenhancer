@@ -128,19 +128,20 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
         $columns = new XrefOverviewColumns($this->tree_service, $this->uid_active);
 
         // Phase 2: prefer the link index when it is present and fresh, unless
-        // a live scan is explicitly forced. In live mode the "referencing
-        // XREF" filter is index-only and would be a coarse gate, so it is not
-        // applied there.
+        // a live scan is explicitly forced. The "referencing XREF" filter
+        // narrows the GEDCOM result set at the SQL level in both modes.
+        // Blocks are not filtered by XREF (handleQuery architecture); use
+        // the rectype filter to exclude them.
         $index_fresh = XrefsService::indexStatus()['fresh'] && !$live;
 
         $query = null;
         if ($sources['gedcom']) {
             $query = $index_fresh
                 ? XrefsService::getIndexQuery($tree, $xref !== '' ? $xref : null, $sources['rectypes'], false)
-                : XrefsService::getRecordsQuery($tree, null, $sources['rectypes'], false);
+                : XrefsService::getRecordsQuery($tree, $xref !== '' ? $xref : null, $sources['rectypes'], false);
         }
         if ($sources['blocks']) {
-            $block_query = XrefsService::getBlockQuery($tree, $sources['rectypes'], $index_fresh);
+            $block_query = XrefsService::getBlockQuery($tree, $sources['rectypes'], $index_fresh, null, $xref);
             if ($block_query !== null) {
                 $query = $query === null ? $block_query : $query->unionAll($block_query);
             }

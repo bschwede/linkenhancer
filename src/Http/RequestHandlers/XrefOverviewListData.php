@@ -124,7 +124,7 @@ final class XrefOverviewListData implements RequestHandlerInterface
                 : XrefsService::getRecordsQuery($tree, $xref !== '' ? $xref : null, $sources['rectypes'], false);
         }
         if ($sources['blocks']) {
-            $block_query = XrefsService::getBlockQuery($tree, $sources['rectypes'], $index_fresh, $user_id);
+            $block_query = XrefsService::getBlockQuery($tree, $sources['rectypes'], $index_fresh, $user_id, $xref);
             if ($block_query !== null) {
                 $query = $query === null ? $block_query : $query->unionAll($block_query);
             }

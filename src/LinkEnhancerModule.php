@@ -72,6 +72,7 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\Services\UidIndexService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\WthbService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\SettingInterface;
+use Schwendinger\Webtrees\Helpers\ClassName;
 
 use function array_key_exists, boolval, count, strval, is_array, intval, route, trim;
 
@@ -879,11 +880,9 @@ class LinkEnhancerModule extends AbstractModule implements
         $index_status = XrefsService::indexStatus();
 
         $data_params = [];
-        // The "referencing XREF" filter is precise only against the index
-        // (target_xref =). In live mode it would degenerate into a coarse
-        // regex gate, so it is only forwarded with a fresh index - and never
-        // when a live scan is explicitly forced (it would be a no-op there).
-        if ($xref !== '' && $index_status['fresh'] && !$live) {
+        // The "referencing XREF" filter narrows the GEDCOM result set at the
+        // SQL level (precise via index target_xref, coarse via regex in live).
+        if ($xref !== '') {
             $data_params['xref'] = $xref;
         }
         if ($live) {

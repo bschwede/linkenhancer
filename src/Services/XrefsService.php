@@ -496,10 +496,12 @@ final class XrefsService { // stuff related with handling cross-references
      *                                    false = live column shape (xref, file, type, gedcom, block_id)
      * @param int|null         $user_id    when set, restrict to tree-level blocks (user_id IS NULL)
      *                                    and personal blocks owned by this user (D5)
+     * @param string           $filter_xref coarse SQL pre-filter: only blocks whose text
+     *                                    settings contain this XREF (LIKE-based)
      *
      * @return Builder|null null when no block module matches the rectype filter
      */
-    public static function getBlockQuery(Tree|null $tree, array $rectypes, bool $index_mode = false, int|null $user_id = null): ?Builder {
+    public static function getBlockQuery(Tree|null $tree, array $rectypes, bool $index_mode = false, int|null $user_id = null, string $filter_xref = ''): ?Builder {
         $module_names = self::blockModuleNames();
 
         if ($rectypes !== []) {
@@ -550,6 +552,19 @@ final class XrefsService { // stuff related with handling cross-references
                 $subquery->where(static function ($q) use ($user_id): void {
                     $q->whereNull('b.user_id')
                         ->orWhere('b.user_id', '=', $user_id);
+                });
+            }
+
+            if ($filter_xref !== '') {
+                $subquery->whereExists(static function ($q) use ($filter_xref, $text_settings): void {
+                    $q->select(DB::raw(1))
+                        ->from('block_setting')
+                        ->whereColumn('block_setting.block_id', 'b.block_id')
+                        ->whereIn('block_setting.setting_name', $text_settings)
+                        ->where(static function ($sq) use ($filter_xref): void {
+                            $sq->where('block_setting.setting_value', 'like', '%@' . $filter_xref . '@')
+                                ->orWhere('block_setting.setting_value', 'like', '%xref=' . $filter_xref . '%');
+                        });
                 });
             }
 
