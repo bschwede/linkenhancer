@@ -201,6 +201,39 @@ final class XrefOverviewColumns
         return XrefsService::inventoryHasProblem($result['entries'], $this->makeTargetLinker($tree, $file));
     }
 
+    /**
+     * True when the user's privatized view of this record contains at least
+     * one link token that references the given XREF.
+     */
+    public function privatizedRowReferencesXref(int $file, string $xref, string $type, string $filter_xref, ?Tree $context_tree): bool
+    {
+        $tree = $this->findTree($file);
+        if ($tree === null) {
+            return false;
+        }
+
+        $record = Registry::gedcomRecordFactory()->make($xref, $tree);
+        if (!$record instanceof GedcomRecord) {
+            return false;
+        }
+
+        $priv = Functions::getPrivatizedGedcom($record, Auth::accessLevel($tree));
+        if ($priv === '') {
+            return false;
+        }
+
+        $result = XrefsService::classifyGedcomText($priv, TextTagCollector::DEFAULT_TAGS, $type);
+        foreach ($result['entries'] as $entry) {
+            foreach (XrefsService::extractLinkTargets($entry['token']) as $target) {
+                if ($target['xref'] === $filter_xref) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     private function indexRowHasProblem(object $row): bool
     {
         $tree = $this->findTree((int) $row->file);
@@ -275,7 +308,7 @@ final class XrefOverviewColumns
      * Block row: fetch settings (PK point lookup), classify "text" settings
      * for LE links, build the same 4-column output as GEDCOM rows.
      */
-    public function blockRowToColumns(object $row, int $max_links, string $highlight_xref = '', bool $highlight_problems = false, ?Tree $context_tree = null, bool $show_snippets = true, bool $with_edit_urls = true): array
+    public function blockRowToColumns(object $row, int $max_links, string $highlight_xref = '', bool $highlight_problems = false, ?Tree $context_tree = null, bool $show_snippets = true, bool $with_edit_urls = true, string $filter_xref = ''): ?array
     {
         $block_id    = (int) $row->block_id;
         $module_name = (string) $row->type;
@@ -318,6 +351,21 @@ final class XrefOverviewColumns
                     'token'   => $link['token'],
                     'snippet' => $link['snippet'],
                 ];
+            }
+        }
+
+        if ($filter_xref !== '' && $entries !== []) {
+            $has_ref = false;
+            foreach ($entries as $entry) {
+                foreach (XrefsService::extractLinkTargets($entry['token']) as $target) {
+                    if ($target['xref'] === $filter_xref) {
+                        $has_ref = true;
+                        break 2;
+                    }
+                }
+            }
+            if (!$has_ref) {
+                return null;
             }
         }
 

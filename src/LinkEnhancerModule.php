@@ -959,6 +959,12 @@ class LinkEnhancerModule extends AbstractModule implements
     {
         $tree      = Validator::attributes($request)->tree();
         $params    = Validator::queryParams($request);
+
+        $denied = ClassName::get(ClassName::EXCEPTION_HTTP_FORBIDDEN);
+        if ($this->accessLevel($tree, ModuleListInterface::class) < Auth::accessLevel($tree)) {
+            throw new $denied();
+        }
+
         $xref      = trim((string) $params->string('xref', ''));
         $rectype   = (string) $params->string('rectype', '');
         $max_links = XrefsService::normalizeLinksPerClass((int) $params->integer('max_links', XrefsService::LINKS_PER_CLASS_DEFAULT));
@@ -972,7 +978,7 @@ class LinkEnhancerModule extends AbstractModule implements
             'tree' => $tree->id(),
             'max_rows' => $max_rows,
         ];
-        if ($xref !== '' && $index_status['fresh'] && !$live) {
+        if ($xref !== '') {
             $data_params['xref'] = $xref;
         }
         if ($live) {

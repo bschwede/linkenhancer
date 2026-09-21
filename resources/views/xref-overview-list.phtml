@@ -72,15 +72,13 @@ if ($index_status_ts) {
 
 <form class="row g-2 mt-2 mb-3 gx-3 ps-2" method="get" action="<?= e($page_url) ?>">
     <?php foreach ($hidden_params as $hidden_name => $hidden_value): ?>
-        <?php if ($hidden_name !== 'xref' || $index_status['fresh']): ?>
+        <?php if ($hidden_name !== 'xref'): ?>
             <input type="hidden" name="<?= e($hidden_name) ?>" value="<?= e($hidden_value) ?>">
         <?php endif; ?>
     <?php endforeach; ?>
-    <?php if ($use_index): ?>
-        <div class="col-auto">
-            <input class="form-control" type="text" name="xref" value="<?= e($xref) ?>" placeholder="<?= I18N::translate('referencing XREF') ?>">
-        </div>
-    <?php endif; ?>
+    <div class="col-auto">
+        <input class="form-control" type="text" name="xref" value="<?= e($xref) ?>" placeholder="<?= I18N::translate('referencing XREF') ?>">
+    </div>
     <?php if ($index_status['fresh']): ?>
         <div class="col-auto form-check">
             <input class="form-check-input" type="checkbox" name="live" value="1" id="le-force-live" <?= $live ? 'checked' : '' ?>>

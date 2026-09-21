@@ -27,7 +27,11 @@ declare(strict_types=1);
 namespace Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers;
 
 use Fisharebest\Webtrees\Auth;
+use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\Module\ModuleListInterface;
+use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Services\DatatablesService;
+use Fisharebest\Webtrees\Services\ModuleService;
 use Fisharebest\Webtrees\Services\TimeoutService;
 use Fisharebest\Webtrees\Services\TreeService;
 use Fisharebest\Webtrees\Tree;
@@ -35,6 +39,8 @@ use Fisharebest\Webtrees\Validator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Schwendinger\Webtrees\Helpers\ClassName;
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefOverviewColumns;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 
@@ -101,6 +107,13 @@ final class XrefOverviewListData implements RequestHandlerInterface
         $context_tree = $tree ?? $this->tree_service->all()->first();
         $user_id      = Auth::id();
 
+        $module = Registry::container()->get(ModuleService::class)->findByName(LinkEnhancerModule::MODULE_NAME);
+        $denied = ClassName::get(ClassName::EXCEPTION_HTTP_FORBIDDEN);
+        if ($module === null
+            || $module->accessLevel($context_tree, ModuleListInterface::class) < Auth::accessLevel($context_tree)) {
+            throw new $denied();
+        }
+
         $sources = XrefsService::rectypeSources($rectype);
         $index_fresh = XrefsService::indexStatus()['fresh'] && !$live;
 
@@ -108,7 +121,7 @@ final class XrefOverviewListData implements RequestHandlerInterface
         if ($sources['gedcom']) {
             $query = $index_fresh
                 ? XrefsService::getIndexQuery($tree, $xref !== '' ? $xref : null, $sources['rectypes'], false)
-                : XrefsService::getRecordsQuery($tree, null, $sources['rectypes'], false);
+                : XrefsService::getRecordsQuery($tree, $xref !== '' ? $xref : null, $sources['rectypes'], false);
         }
         if ($sources['blocks']) {
             $block_query = XrefsService::getBlockQuery($tree, $sources['rectypes'], $index_fresh, $user_id);
@@ -133,8 +146,13 @@ final class XrefOverviewListData implements RequestHandlerInterface
                 if ($only_problems && !$columns->rowHasProblem($row, false)) {
                     continue;
                 }
-                $cols = $columns->blockRowToColumns($row, $max_links, $xref, false, $context_tree, true, false);
+                $cols = $columns->blockRowToColumns($row, $max_links, $xref, false, $context_tree, true, false, $xref);
             } else {
+                if ($xref !== '' && !$columns->privatizedRowReferencesXref(
+                    (int) $row->file, (string) $row->xref, (string) $row->type, $xref, $context_tree
+                )) {
+                    continue;
+                }
                 if ($only_problems && !$columns->privatizedRowHasProblem(
                     (int) $row->file, (string) $row->xref, (string) $row->type, $context_tree
                 )) {
