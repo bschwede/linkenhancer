@@ -494,10 +494,12 @@ final class XrefsService { // stuff related with handling cross-references
      * @param array<int,string> $rectypes  active rectype filter (empty = all)
      * @param bool             $index_mode true = index column shape (file, xref, type, block_id)
      *                                    false = live column shape (xref, file, type, gedcom, block_id)
+     * @param int|null         $user_id    when set, restrict to tree-level blocks (user_id IS NULL)
+     *                                    and personal blocks owned by this user (D5)
      *
      * @return Builder|null null when no block module matches the rectype filter
      */
-    public static function getBlockQuery(Tree|null $tree, array $rectypes, bool $index_mode = false): ?Builder {
+    public static function getBlockQuery(Tree|null $tree, array $rectypes, bool $index_mode = false, int|null $user_id = null): ?Builder {
         $module_names = self::blockModuleNames();
 
         if ($rectypes !== []) {
@@ -541,6 +543,13 @@ final class XrefsService { // stuff related with handling cross-references
                 $subquery->where(static function ($q) use ($tree): void {
                     $q->where('b.gedcom_id', '=', $tree->id())
                         ->orWhereNull('b.gedcom_id');
+                });
+            }
+
+            if ($user_id !== null) {
+                $subquery->where(static function ($q) use ($user_id): void {
+                    $q->whereNull('b.user_id')
+                        ->orWhere('b.user_id', '=', $user_id);
                 });
             }
 
@@ -788,12 +797,17 @@ final class XrefsService { // stuff related with handling cross-references
       * ?array{count: int, hits: array<int, array{name: string, url: string, tree_label: string}>, goto_url: string}.
       * null (default) = no ambiguous resolution, unchanged output.
       *
+      * $show_snippets: when false (the non-admin overview, where raw GEDCOM
+      * text is privacy-sensitive), each entry renders the link token itself
+      * without the surrounding snippet context. true (default) = unchanged.
+      *
       * @param array<int, array{path: string, class: string, token: string, snippet: string}> $entries
       * @param callable(string, ?string): (array{name: string, url: string, tree_label: string}|null)|null $target_linker
       * @param bool $highlight_problems wrap missing/mismatch targets in a <mark>
       * @param callable(string, ?string): array{count: int, hits: array<int, array{name: string, url: string, tree_label: string}>, goto_url: string}|null $ambiguous_linker
+      * @param bool $show_snippets render the snippet context around the token
       */
-    public static function linkInventoryHtml(array $entries, int $max_per_class = self::LINKS_PER_CLASS_DEFAULT, string $highlight_xref = '', ?callable $target_linker = null, bool $highlight_problems = false, ?callable $ambiguous_linker = null): string {
+    public static function linkInventoryHtml(array $entries, int $max_per_class = self::LINKS_PER_CLASS_DEFAULT, string $highlight_xref = '', ?callable $target_linker = null, bool $highlight_problems = false, ?callable $ambiguous_linker = null, bool $show_snippets = true): string {
         $items = [];
         foreach ($entries as $entry) {
             $items[$entry['class']][] = $entry;
@@ -821,13 +835,19 @@ final class XrefsService { // stuff related with handling cross-references
             $html .= '<li><u>' . e($class_label) . ' (' . ($class !== $class_label ? e($class) . ': ' : '') . count($class_items) . ')</u><ol>';
             foreach ($shown as $entry) {
                 $prefix = ($entry['path'] !== '' && $entry['path'] !== 'NOTE') ? e($entry['path']) . ': ' : '';
-                // Highlight the token inside the snippet: the snippet is
-                // built around the token (token fallback: snippet = token),
-                // so every part around the token(s) is escaped separately.
-                $parts = explode($entry['token'], $entry['snippet']);
-                $hl    = e(array_shift($parts));
-                foreach ($parts as $part) {
-                    $hl .= '<strong>' . e($entry['token']) . '</strong>' . e($part);
+                if ($show_snippets) {
+                    // Highlight the token inside the snippet: the snippet is
+                    // built around the token (token fallback: snippet = token),
+                    // so every part around the token(s) is escaped separately.
+                    $parts = explode($entry['token'], $entry['snippet']);
+                    $hl    = e(array_shift($parts));
+                    foreach ($parts as $part) {
+                        $hl .= '<strong>' . e($entry['token']) . '</strong>' . e($part);
+                    }
+                } else {
+                    // Privacy mode: the link token only, without the
+                    // surrounding raw GEDCOM context (non-admin overview).
+                    $hl = '<strong>' . e($entry['token']) . '</strong>';
                 }
                 // When the "referencing XREF" filter is active, additionally
                 // mark the XREF itself so its occurrence stands out. Boundary-

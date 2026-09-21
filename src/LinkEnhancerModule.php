@@ -26,6 +26,7 @@ declare(strict_types=1);
 
 namespace Schwendinger\Webtrees\Module\LinkEnhancer;
 
+use DomainException;
 use Exception;
 use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\FlashMessages;
@@ -41,6 +42,10 @@ use Fisharebest\Webtrees\Module\ModuleCustomInterface;
 use Schwendinger\Webtrees\Traits\ModuleCustomTrait;
 use Fisharebest\Webtrees\Module\ModuleGlobalInterface;
 use Fisharebest\Webtrees\Module\ModuleGlobalTrait;
+use Fisharebest\Webtrees\Module\ModuleListInterface;
+use Fisharebest\Webtrees\Module\ModuleListTrait;
+use Fisharebest\Webtrees\Tree;
+use Fisharebest\Webtrees\User;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Services\TreeService;
 use Fisharebest\Webtrees\Session;
@@ -60,6 +65,7 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoXrefActio
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpMdAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpWtCoreAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpWthbAction;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\XrefOverviewListData;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\MarkdownEditorActivationService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\UidIndexService;
@@ -75,12 +81,13 @@ enum OverwriteMode
     case ParentIsNotOne; // parent is int triple state
 }
 
-class LinkEnhancerModule extends AbstractModule implements 
+class LinkEnhancerModule extends AbstractModule implements
     MiddlewareInterface,
     ModuleCustomInterface,
     ModuleGlobalInterface,
-    ModuleConfigInterface, 
-    SettingInterface 
+    ModuleConfigInterface,
+    ModuleListInterface,
+    SettingInterface
 {
 
 
@@ -88,6 +95,9 @@ class LinkEnhancerModule extends AbstractModule implements
     use ModuleCustomTrait;
     use ModuleGlobalTrait;
     use ModuleConfigTrait;
+    use ModuleListTrait;
+
+    protected int $access_level = Auth::PRIV_USER;
 
     /**
      * list of const for module administration
@@ -369,6 +379,7 @@ class LinkEnhancerModule extends AbstractModule implements
         
         if ($this->getPref(self::PREF_LINKSPP_ACTIVE, true)) {
             Functions::registerRoute('/tree/{tree}/goto-xref/{xref}', GotoXrefAction::class);
+            Functions::registerRoute('/xref-overview-list-data', XrefOverviewListData::class);
         }
 
         if ($this->getPref(self::PREF_UID_ACTIVE, true)) {
@@ -907,6 +918,89 @@ class LinkEnhancerModule extends AbstractModule implements
             'rectypes' => XrefsService::supportedGedcomRecordKeys(),
             'block_rectypes' => XrefsService::BLOCKS,
             'trees' => Registry::container()->get(TreeService::class)->all(),
+            'index_status' => $index_status,
+            'limited_mode' => !XrefsService::supportsRegexp(),
+        ]);
+    }
+
+    public function listIsEmpty(Tree $tree): bool
+    {
+        return !$this->getPref(self::PREF_LINKSPP_ACTIVE, true);
+    }
+
+    public function listTitle(): string
+    {
+        return I18N::translate('Cross-Reference Overview');
+    }
+
+    public function listUrl(Tree $tree, array $parameters = []): string
+    {
+        $user = Registry::container()->get(User::class);
+        if ($user->isAdmin()) {
+            return route('module', ['module' => $this->name(), 'action' => 'AdminXrefOverview', 'tree' => $tree->name()]);
+        }
+
+        return parent::listUrl($tree, $parameters);
+    }
+
+    /**
+     * Per-tree cross-reference overview for non-admin users (members and above).
+     * Privacy-filtered: no raw GEDCOM snippets, personal blocks only for owner.
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    public function listAction(ServerRequestInterface $request): ResponseInterface
+    {
+        $tree_name = Validator::queryParams($request)->string('tree', '');
+        $tree      = Registry::container()->get(TreeService::class)->all()->first(
+            static fn (Tree $t): bool => $t->name() === $tree_name
+        );
+        if ($tree === null) {
+            throw new DomainException('Tree not found');
+        }
+
+        $params    = Validator::queryParams($request);
+        $xref      = trim((string) $params->string('xref', ''));
+        $rectype   = (string) $params->string('rectype', '');
+        $max_links = XrefsService::normalizeLinksPerClass((int) $params->integer('max_links', XrefsService::LINKS_PER_CLASS_DEFAULT));
+        $live      = $params->boolean('live', false);
+        $target    = $params->string('target', '');
+
+        $index_status = XrefsService::indexStatus();
+
+        $data_params = [
+            'tree' => $tree->id(),
+        ];
+        if ($xref !== '' && $index_status['fresh'] && !$live) {
+            $data_params['xref'] = $xref;
+        }
+        if ($live) {
+            $data_params['live'] = 1;
+        }
+        if ($rectype !== '') {
+            $data_params['rectype'] = $rectype;
+        }
+        if ($max_links !== XrefsService::LINKS_PER_CLASS_DEFAULT) {
+            $data_params['max_links'] = $max_links;
+        }
+        if ($target === 'problems') {
+            $data_params['target'] = 'problems';
+        }
+        $data_params['uid_active'] = (int) $this->getPref(self::PREF_UID_ACTIVE, true);
+
+        return $this->viewResponse($this->name() . '::xref-overview-list', [
+            'title' => I18N::translate('Cross-Reference Overview'),
+            'module' => $this,
+            'tree' => $tree,
+            'data_url' => route(XrefOverviewListData::class, $data_params),
+            'xref' => $xref,
+            'rectype' => $rectype,
+            'max_links' => $max_links,
+            'live' => $live,
+            'target' => $target,
+            'rectypes' => XrefsService::supportedGedcomRecordKeys(),
+            'block_rectypes' => XrefsService::BLOCKS,
             'index_status' => $index_status,
             'limited_mode' => !XrefsService::supportsRegexp(),
         ]);

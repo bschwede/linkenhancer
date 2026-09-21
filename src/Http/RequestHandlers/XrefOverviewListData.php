@@ -26,7 +26,6 @@ declare(strict_types=1);
 
 namespace Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers;
 
-use DomainException;
 use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\Services\DatatablesService;
 use Fisharebest\Webtrees\Services\TimeoutService;
@@ -37,8 +36,6 @@ use Illuminate\Database\Query\Builder;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Schwendinger\Webtrees\Helpers\ClassName;
-use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefOverviewColumns;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 
@@ -46,26 +43,26 @@ use function response;
 use function trim;
 
 /**
- * Server-side DataTables data endpoint for the XREF overview admin page.
+ * Server-side DataTables data endpoint for the per-tree non-admin
+ * cross-reference overview.
  *
- * Optional query parameters (all filters optional, U2: no forced tree):
- *   xref    only records referencing this XREF
- *   rectype one of XrefsService::supportedGedcomRecordKeys()
- *   tree    only this tree (gedcom id)
+ * Privacy rules (D1/D5):
+ *  - no raw GEDCOM snippets ($show_snippets = false)
+ *  - personal blocks visible only to their owner ($user_id filter)
+ *  - no edit URLs ($with_edit_urls = false)
  *
- * Data source: the link index (Phase 2) when present and fresh,
- * otherwise the live regex scan. The column / target-resolution layer is
- * shared with the per-tree non-admin endpoint (XrefOverviewColumns).
+ * D6: result set is capped at MAX_ROWS.
  */
-final class AdminXrefOverviewData implements RequestHandlerInterface
+final class XrefOverviewListData implements RequestHandlerInterface
 {
+    private const MAX_ROWS = 10000;
+
     private DatatablesService $datatables_service;
 
     private TimeoutService $timeout_service;
 
     private TreeService $tree_service;
 
-    /** D3: the UID feature pref, forwarded by the page (module is the source of truth). */
     private bool $uid_active = false;
 
     public function __construct(
@@ -80,13 +77,6 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        if (!Auth::isAdmin()) {
-            $class = ClassName::get(ClassName::EXCEPTION_HTTP_FORBIDDEN);
-            throw new $class(MoreI18N::xlate('Admin only action')); // in ModuleAction without translation
-        }
-
-        // D1: do not stack a heavy scan onto a request that is already
-        // close to its execution-time budget.
         if ($this->timeout_service->isTimeNearlyUp()) {
             return $this->emptyResponse($request);
         }
@@ -95,42 +85,19 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
         $xref      = trim((string) $params->string('xref', ''));
         $rectype   = (string) $params->string('rectype', '');
         $tree_id   = (int) $params->integer('tree', 0);
-        // The endpoint is directly callable - normalize against the
-        // allowlist here, not only on the page (max_links=999999 must not
-        // dump an uncapped token list per row).
         $max_links = XrefsService::normalizeLinksPerClass((int) $params->integer('max_links', XrefsService::LINKS_PER_CLASS_DEFAULT));
+        $live      = $params->boolean('live', false);
+        $only_problems = $params->string('target', '') === 'problems';
+        $this->uid_active = $params->boolean('uid_active', false);
 
         $tree = null;
         if ($tree_id > 0) {
-            try {
-                $tree = $this->tree_service->find($tree_id);
-            } catch (DomainException) {
-                // unknown tree - treat as "all trees"
-            }
+            $tree = $this->tree_service->find($tree_id);
         }
         $context_tree = $tree ?? $this->tree_service->all()->first();
+        $user_id      = Auth::id();
 
-        // Which data sources back the record-type filter, and with which type
-        // list (sentinels select a whole category - see rectypeSources()).
         $sources = XrefsService::rectypeSources($rectype);
-        // live=1 = "force live scan" checkbox: a deliberate index bypass for
-        // comparison/debugging, only offered while a fresh index exists.
-        $live = $params->boolean('live', false);
-        // target=problems = "only broken targets": keep only rows that carry a
-        // missing or type-mismatch target. That state is derived by resolving
-        // every target (not a plain column), so it runs as a PHP-side
-        // collection filter with correct count/pagination, not a SQL LIKE.
-        $only_problems = $params->string('target', '') === 'problems';
-        // D3: the page forwards the module's PREF_UID_ACTIVE; default off so a
-        // directly-called endpoint (no param) never enables the feature.
-        $this->uid_active = $params->boolean('uid_active', false);
-
-        $columns = new XrefOverviewColumns($this->tree_service, $this->uid_active);
-
-        // Phase 2: prefer the link index when it is present and fresh, unless
-        // a live scan is explicitly forced. In live mode the "referencing
-        // XREF" filter is index-only and would be a coarse gate, so it is not
-        // applied there.
         $index_fresh = XrefsService::indexStatus()['fresh'] && !$live;
 
         $query = null;
@@ -140,11 +107,17 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
                 : XrefsService::getRecordsQuery($tree, null, $sources['rectypes'], false);
         }
         if ($sources['blocks']) {
-            $block_query = XrefsService::getBlockQuery($tree, $sources['rectypes'], $index_fresh);
+            $block_query = XrefsService::getBlockQuery($tree, $sources['rectypes'], $index_fresh, $user_id);
             if ($block_query !== null) {
                 $query = $query === null ? $block_query : $query->unionAll($block_query);
             }
         }
+
+        if ($query === null) {
+            return $this->emptyResponse($request);
+        }
+
+        $columns = new XrefOverviewColumns($this->tree_service, $this->uid_active);
 
         if ($only_problems) {
             return $this->problemsResponse($request, $query, $index_fresh, $xref, $max_links, $context_tree, $columns);
@@ -153,39 +126,29 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
         if ($index_fresh) {
             return $this->datatables_service->handleQuery(
                 $request,
-                $query,
+                $query->limit(self::MAX_ROWS),
                 ['xref', 'type'],
                 [0 => 'xref', 1 => 'type'],
-                fn (object $row): array => $columns->dispatchRow($row, $max_links, $xref, true, $context_tree)
+                fn (object $row): array => $columns->dispatchRow($row, $max_links, $xref, true, $context_tree, false, false)
             );
         }
 
         return $this->datatables_service->handleQuery(
             $request,
-            $query,
+            $query->limit(self::MAX_ROWS),
             ['xref', 'type'],
             [0 => 'xref', 1 => 'type'],
-            fn (object $row): array => $columns->dispatchRow($row, $max_links, '', false, $context_tree)
+            fn (object $row): array => $columns->dispatchRow($row, $max_links, '', false, $context_tree, false, false)
         );
     }
 
-    /**
-     * "Only broken targets": load the coarse-filtered rows, keep only those
-     * with a missing/mismatch target, then let handleCollection() count, sort
-     * and paginate the filtered set. Target resolution is memoised per request
-     * (resolveTarget cache), so the column build below re-resolves cheaply.
-     *
-     * handleCollection() sorts/filters through closures typed (array $row), so
-     * the object rows from the query are cast to arrays before it runs; the
-     * column builders still expect objects, so the callback casts back. The
-     * rows only carry scalar properties (file/xref/type[/gedcom]), so the
-     * (array)/(object) round-trip is lossless.
-     */
     private function problemsResponse(ServerRequestInterface $request, Builder $query, bool $index_fresh, string $xref, int $max_links, ?Tree $context_tree, XrefOverviewColumns $columns): ResponseInterface
     {
         $context_tree = $context_tree ?? $this->tree_service->all()->first();
+        $rows = $query->limit(self::MAX_ROWS)->get();
+
         if ($index_fresh) {
-            $rows = $query->get()
+            $rows = $rows
                 ->filter(fn (object $row): bool => $columns->rowHasProblem($row, true))
                 ->map(static fn (object $row): array => (array) $row);
 
@@ -194,11 +157,11 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
                 $rows,
                 ['xref', 'type'],
                 [0 => 'xref', 1 => 'type'],
-                fn (array $row): array => $columns->dispatchRow((object) $row, $max_links, $xref, true, $context_tree)
+                fn (array $row): array => $columns->dispatchRow((object) $row, $max_links, $xref, true, $context_tree, false, false)
             );
         }
 
-        $rows = $query->get()
+        $rows = $rows
             ->filter(fn (object $row): bool => $columns->rowHasProblem($row, false))
             ->map(static fn (object $row): array => (array) $row);
 
@@ -207,7 +170,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
             $rows,
             ['xref', 'type'],
             [0 => 'xref', 1 => 'type'],
-            fn (array $row): array => $columns->dispatchRow((object) $row, $max_links, '', false, $context_tree)
+            fn (array $row): array => $columns->dispatchRow((object) $row, $max_links, '', false, $context_tree, false, false)
         );
     }
 
