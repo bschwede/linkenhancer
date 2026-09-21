@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Fisharebest\Webtrees\FlashMessages;
 use Schwendinger\Webtrees\Helpers\ClassName;
+use Schwendinger\Webtrees\Helpers\Functions;
 use Fisharebest\Webtrees\I18N;
 use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Fisharebest\Webtrees\Module\CustomCssJsModule;
@@ -18,10 +19,20 @@ use Fisharebest\Webtrees\View;
  * @var string $content
  */
 
+if (Functions::wtIsAtLeast2_3()) {
+    $html_dir = I18N::textDirection()->value;
+    $html_lang = I18N::languageTag();
+    $homepage_a_display = MoreI18N::xlate('Exit control panel');
+} else {
+    $html_dir = I18N::locale()->direction();
+    $html_lang = I18N::locale()->languageTag();
+    $homepage_a_display = MoreI18N::xlate('My page');
+}
+
 ?>
 
 <!DOCTYPE html>
-<html dir="<?= I18N::locale()->direction() ?>" lang="<?= I18N::locale()->languageTag() ?>">
+<html dir="<?= $html_dir ?>" lang="<?= $html_lang ?>">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -51,16 +62,22 @@ use Fisharebest\Webtrees\View;
 
             <ul class="nav small d-flex justify-content-end">
                 <li class="nav-item menu-mypage">
-                    <a class="nav-link active" href="<?= e(route(ClassName::get(ClassName::HOME_PAGE))) ?>"><?= MoreI18N::xlate('My page') ?></a>
+                    <a class="nav-link active" href="<?= e(route(ClassName::get(ClassName::HOME_PAGE))) ?>"><?= $homepage_a_display ?></a>
                 </li>
                 <li class="nav-item dropdown menu-language">
-                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" id="admin-language-menu" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                         <?= MoreI18N::xlate('Language') ?>
                     </a>
-                    <div class="dropdown-menu">
-                        <?php foreach (I18N::activeLocales() as $locale): ?>
-                                <a class="dropdown-item menu-language-<?= $locale->languageTag() ?> <?= I18N::languageTag() === $locale->languageTag() ? ' active' : '' ?>" href="#" data-wt-post-url="<?= e(route(ClassName::get(ClassName::SELECT_LANGUAGE), ['language' => $locale->languageTag()])) ?>"><?= $locale->endonym() ?></a>
-                        <?php endforeach ?>
+                    <div class="dropdown-menu" aria-labelledby="admin-language-menu">
+                <?php if (Functions::wtIsAtLeast2_3()): ?>
+                    <?php foreach (I18N::activeLanguages() as $language_tag => $endonym): ?>
+                        <a class="dropdown-item menu-language-<?= $language_tag ?> <?= I18N::languageTag() === $language_tag ? ' active' : '' ?>" href="#" data-wt-post-url="<?= e(route(ClassName::get(ClassName::SELECT_LANGUAGE), ['language' => $language_tag])) ?>"><?= $endonym ?></a>
+                    <?php endforeach ?>
+                <?php else: ?>
+                    <?php foreach (I18N::activeLocales() as $locale): ?>
+                        <a class="dropdown-item menu-language-<?= $locale->languageTag() ?> <?= I18N::languageTag() === $locale->languageTag() ? ' active' : '' ?>" href="#" data-wt-post-url="<?= e(route(ClassName::get(ClassName::SELECT_LANGUAGE), ['language' => $locale->languageTag()])) ?>"><?= $locale->endonym() ?></a>
+                    <?php endforeach ?>
+                <?php endif; ?>
                     </div>
                 </li>
                 <li class="nav-item menu-logout">
@@ -83,7 +100,13 @@ use Fisharebest\Webtrees\View;
 
 
         <script src="<?= e(asset('js/vendor.min.js')) ?>"></script>
+        <?php if (Functions::wtIsAtLeast2_3()): ?>
+        <script src="<?= e(asset('js/i18n/' . I18N::languageTag() . '.js')) ?>"></script>
+        <?php endif; ?>
         <script src="<?= e(asset('js/webtrees.min.js')) ?>"></script>
+        <?php if (Functions::wtIsAtLeast2_3()): ?>
+        <script src="<?= e(asset('js/administration.min.js')) ?>"></script>
+        <?php endif; ?>
 
         <?= View::stack('javascript') ?>
 
