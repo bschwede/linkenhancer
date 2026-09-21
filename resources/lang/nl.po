@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-19 21:03+0200\n"
-"PO-Revision-Date: 2026-09-19 10:35+0000\n"
+"PO-Revision-Date: 2026-09-21 07:34+0000\n"
 "Last-Translator: TheDutchJewel <thedutchjewel@noreply.codeberg.org>\n"
 "Language-Team: Dutch <https://translate.codeberg.org/projects/wt-modules/"
 "linkenhancer/nl/>\n"
@@ -62,14 +62,12 @@ msgstr "Kruisverwijzing"
 msgid "expected %1$s, is %2$s"
 msgstr "verwacht: %1$s, is: %2$s"
 
-#, fuzzy
-#| msgid "target not found"
 msgid "target not unique"
-msgstr "doel niet gevonden"
+msgstr "doel niet uniek"
 
 #, php-format
 msgid "%1$s - %2$d matches in other trees"
-msgstr ""
+msgstr "%1$s - %2$d overeenkomsten in andere stambomen"
 
 #. I18N: Settings - section title
 msgid "Webtrees manual"
@@ -373,28 +371,30 @@ msgstr "stamboom"
 
 #, php-format
 msgid "No record for %s was found."
-msgstr ""
+msgstr "Geen record voor %s gevonden."
 
 #, php-format
 msgid "%s was found in another tree."
-msgstr ""
+msgstr "%s is gevonden in een andere stamboom."
 
 #, php-format
 msgid "Multiple records for %s"
-msgstr ""
+msgstr "Meerdere records voor %s"
 
 #, php-format
 msgid ""
 "No record with UID %s was found. The UID index may not be available yet."
 msgstr ""
+"Geen record met UID %s gevonden. De UID-index is mogelijk nog niet "
+"beschikbaar."
 
 #, php-format
 msgid "UID %s was found in another tree."
-msgstr ""
+msgstr "UID %s is gevonden in een andere stamboom."
 
 #, php-format
 msgid "Multiple records for UID %s"
-msgstr ""
+msgstr "Meerdere records voor UID %s"
 
 #. I18N: MD img error precondition
 msgid ""
@@ -454,10 +454,8 @@ msgstr "Kruisverwijzingsoverzicht"
 msgid "Update the link index"
 msgstr "Linkindex bijwerken"
 
-#, fuzzy
-#| msgid "Update the link index"
 msgid "Update the UID index"
-msgstr "Linkindex bijwerken"
+msgstr "UID-index bijwerken"
 
 msgid "Rebuild the link index incrementally."
 msgstr "Bouw de linkindex stapsgewijs opnieuw op."
@@ -466,28 +464,22 @@ msgid "max records per run"
 msgstr "maximaal aantal records per keer"
 
 msgid "number of the tree to be scanned - all if not set"
-msgstr ""
+msgstr "nummer van de te scannen stamboom - alle indien niet ingesteld"
 
 msgid "force a full rebuild"
-msgstr ""
+msgstr "volledige heropbouw forceren"
 
-#, fuzzy
-#| msgid "Update the link index"
 msgid "empty the index and exit"
-msgstr "Linkindex bijwerken"
+msgstr "index leegmaken en afsluiten"
 
-#, fuzzy
-#| msgid "Rebuild the link index incrementally."
 msgid "Rebuild the UID index incrementally."
-msgstr "Bouw de linkindex stapsgewijs opnieuw op."
+msgstr "Bouw de UID-index stapsgewijs opnieuw op."
 
 msgid "The link index is out of date."
 msgstr "De linkindex is verouderd."
 
-#, fuzzy
-#| msgid "The link index is out of date."
 msgid "The UID index is out of date."
-msgstr "De linkindex is verouderd."
+msgstr "De UID-index is verouderd."
 
 #. I18N: user defined url
 #. I18N: Settings - section title
@@ -563,23 +555,23 @@ msgid "user defined"
 msgstr "door gebruiker gedefinieerd"
 
 msgid "UID lookup"
-msgstr ""
+msgstr "UID-opzoeking"
 
 #, php-format
 msgid "Allow resolving UID tags (%s) to the corresponding records."
-msgstr ""
+msgstr "UID-labels (%s) naar de overeenkomstige records laten verwijzen."
 
 #, php-format
 msgid "Index status: %1$s rows, last built: %2$s"
-msgstr ""
+msgstr "Indexstatus: %1$s rijen, laatst opgebouwd: %2$s"
 
 msgid "Index source (link-index scan) not available."
-msgstr ""
+msgstr "Indexbron (linkindexscan) niet beschikbaar."
 
 #, php-format
 msgid ""
 "Multiple records match UID %s. Please choose the one you are looking for."
-msgstr ""
+msgstr "Meerdere records komen overeen met UID %s. Kies het record dat u zoekt."
 
 msgid ""
 "Webtrees uses a CommonMark implementation and supports a subset of the markup"
