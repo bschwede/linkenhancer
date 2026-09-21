@@ -935,12 +935,15 @@ class LinkEnhancerModule extends AbstractModule implements
 
     public function listUrl(Tree $tree, array $parameters = []): string
     {
-        $user = Registry::container()->get(User::class);
-        if ($user->isAdmin()) {
+        if (Auth::isAdmin()) {
             return route('module', ['module' => $this->name(), 'action' => 'AdminXrefOverview', 'tree' => $tree->name()]);
         }
 
-        return parent::listUrl($tree, $parameters);
+        return route('module', [
+                'module' => $this->name(),
+                'action' => 'List',
+                'tree'    => $tree->name(),
+        ] + $parameters);
     }
 
     /**
@@ -950,16 +953,9 @@ class LinkEnhancerModule extends AbstractModule implements
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function listAction(ServerRequestInterface $request): ResponseInterface
+    public function getlistAction(ServerRequestInterface $request): ResponseInterface
     {
-        $tree_name = Validator::queryParams($request)->string('tree', '');
-        $tree      = Registry::container()->get(TreeService::class)->all()->first(
-            static fn (Tree $t): bool => $t->name() === $tree_name
-        );
-        if ($tree === null) {
-            throw new DomainException('Tree not found');
-        }
-
+        $tree = Validator::attributes($request)->tree();
         $params    = Validator::queryParams($request);
         $xref      = trim((string) $params->string('xref', ''));
         $rectype   = (string) $params->string('rectype', '');
