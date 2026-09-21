@@ -144,14 +144,21 @@ final class XrefOverviewColumns
             return null;
         }
 
-        $xref_html  = e($xref)
+        $url = $record instanceof GedcomRecord ? $record->url() : null;
+
+        $xref_html  = '<a href="' . e($url ?? '#') . '">' . e($xref) . '</a>'
             . '<br><small class="text-muted">'
             . e($tree->name())
             . '</small>';
 
         $type_html  = e($type);
 
-        $name_html  = '<strong>' . e($record->fullName()) . '</strong>';
+        $name = $record instanceof GedcomRecord ? $record->fullName() : $xref;
+        $name_html = '<strong>' . (
+                $record instanceof GedcomRecord
+                ? '<a href="' . e($url) . '">' . $name . '</a>' // name contains html, so no escape needed
+                : e($name)
+            ) . '</strong>';
         $name_html .= XrefsService::linkInventoryHtml(
             $result['entries'], $max_links, $highlight_xref,
             $this->makeTargetLinker($tree, $file), false,
