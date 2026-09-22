@@ -6,7 +6,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-19 21:03+0200\n"
 "PO-Revision-Date: 2026-09-22 08:25+0000\n"
-"Last-Translator: Iberni2 <iberni2@noreply.codeberg.org>\n"
+"Last-Translator: bschwede <bschwede@noreply.codeberg.org>\n"
 "Language-Team: Catalan <https://translate.codeberg.org/projects/wt-modules/"
 "linkenhancer/ca/>\n"
 "Language: ca\n"
@@ -72,9 +72,9 @@ msgstr "Esperat %1$s, és %2$s"
 msgid "target not unique"
 msgstr "L'objectiu no és únic"
 
-#, fuzzy, php-format
+#, php-format
 msgid "%1$s - %2$d matches in other trees"
-msgstr "%1$s - %$2d Coincidències en altres arbres"
+msgstr "%1$s - %2$d Coincidències en altres arbres"
 
 #. I18N: Settings - section title
 msgid "Webtrees manual"
