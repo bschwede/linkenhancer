@@ -5,16 +5,16 @@ msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-19 21:03+0200\n"
-"PO-Revision-Date: 2026-05-26 06:14+0000\n"
+"PO-Revision-Date: 2026-09-22 08:25+0000\n"
 "Last-Translator: Iberni2 <iberni2@noreply.codeberg.org>\n"
-"Language-Team: Catalan <https://translate.codeberg.org/projects/linkenhancer/"
-"module/ca/>\n"
+"Language-Team: Catalan <https://translate.codeberg.org/projects/wt-modules/"
+"linkenhancer/ca/>\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.5\n"
+"X-Generator: Weblate 2026.9.1\n"
 "X-Poedit-Basepath: ../..\n"
 "X-Poedit-SearchPath-0: CustomMarkdownFactory.php\n"
 "X-Poedit-SearchPath-1: LinkEnhancerModule.php\n"
@@ -48,7 +48,7 @@ msgid "External links"
 msgstr "Enllaç permanent"
 
 msgid "Pictures"
-msgstr ""
+msgstr "Imatges"
 
 #, fuzzy
 #| msgid "cross reference"
@@ -56,27 +56,25 @@ msgid "Classic cross-references"
 msgstr "referència"
 
 msgid "Other - maybe damaged - links"
-msgstr ""
+msgstr "Altres enllaços — potser danyats —"
 
 msgid "target not found"
-msgstr ""
+msgstr "Objectiu no trobat"
 
 #. I18N: JS enhanced link
-#, fuzzy
-#| msgid "cross reference"
 msgid "Cross-reference"
-msgstr "referència"
+msgstr "%2$sreferència"
 
 #, php-format
 msgid "expected %1$s, is %2$s"
-msgstr ""
+msgstr "Esperat %1$s, és %2$s"
 
 msgid "target not unique"
-msgstr ""
+msgstr "L'objectiu no és únic"
 
-#, php-format
+#, fuzzy, php-format
 msgid "%1$s - %2$d matches in other trees"
-msgstr ""
+msgstr "%1$s - %$2d Coincidències en altres arbres"
 
 #. I18N: Settings - section title
 msgid "Webtrees manual"
@@ -87,19 +85,20 @@ msgstr "S'ha produït un error"
 
 #. I18N: csv import
 msgid "empty rows"
-msgstr "fileres buides"
+msgstr "files buides"
 
 #. I18N: csv import
 msgid "rows whose number of fields differs from the header row"
-msgstr "fils el nombre de camps dels quals difereix de la fila d'encapçalament"
+msgstr ""
+"fils amb el nombre de camps dels quals difereix de la fila d'encapçalament"
 
 #. I18N: data import with seeder
 msgid "rows in which at least one required field is not set"
-msgstr "fileres en què almenys un camp obligatori no està establert"
+msgstr "files en què almenys un camp obligatori no està establert"
 
 #. I18N: data import with seeder
 msgid "rows in which the maximum field value length has been exceeded"
-msgstr "fileres en què s'ha superat la longitud màxima del valor del camp"
+msgstr "files en què s'ha superat la longitud màxima del valor del camp"
 
 msgid "Routes imported"
 msgstr "Les rutes s'han importat"
@@ -377,32 +376,33 @@ msgid "Permalink"
 msgstr "Enllaç permanent"
 
 msgid "tree"
-msgstr ""
+msgstr "Arbre"
 
 #, php-format
 msgid "No record for %s was found."
-msgstr ""
+msgstr "No hi ha registre trobat per %s ."
 
 #, php-format
 msgid "%s was found in another tree."
-msgstr ""
+msgstr "%s es va trobar en un altre arbre."
 
 #, php-format
 msgid "Multiple records for %s"
-msgstr ""
+msgstr "Múltiples registres per a %s"
 
 #, php-format
 msgid ""
 "No record with UID %s was found. The UID index may not be available yet."
 msgstr ""
+"No hi ha registre amb UID %s . L'índex UID potser encara no està disponible."
 
 #, php-format
 msgid "UID %s was found in another tree."
-msgstr ""
+msgstr "UID %s es va trobar en un altre arbre."
 
 #, php-format
 msgid "Multiple records for UID %s"
-msgstr ""
+msgstr "Múltiples registres per a UID %s"
 
 #. I18N: MD img error precondition
 msgid ""
@@ -458,40 +458,38 @@ msgstr "L'enllaç d'inici JSON amb regles CSS, sembla no ser vàlid."
 msgid "Import registered routes"
 msgstr "Importar rutes registrades"
 
-#, fuzzy
-#| msgid "cross reference"
 msgid "Cross-Reference Overview"
-msgstr "referència"
+msgstr "Referència - Visió general"
 
 msgid "Update the link index"
-msgstr ""
+msgstr "Actualitza l'índex d'enllaços"
 
 msgid "Update the UID index"
-msgstr ""
+msgstr "Actualitza l'índex UID"
 
 msgid "Rebuild the link index incrementally."
-msgstr ""
+msgstr "Reconstrueix l'índex d'enllaç de manera incremental."
 
 msgid "max records per run"
-msgstr ""
+msgstr "Rècords màxims per execució"
 
 msgid "number of the tree to be scanned - all if not set"
-msgstr ""
+msgstr "nombre de l'arbre a escanejar - tots si no es configuren"
 
 msgid "force a full rebuild"
-msgstr ""
+msgstr "Forçar una reconstrucció completa"
 
 msgid "empty the index and exit"
-msgstr ""
+msgstr "buida l'índex i surt"
 
 msgid "Rebuild the UID index incrementally."
-msgstr ""
+msgstr "Reconstrueix l'índex UID de manera incremental."
 
 msgid "The link index is out of date."
-msgstr ""
+msgstr "L'índex d'enllaços està desactualitzat."
 
 msgid "The UID index is out of date."
-msgstr ""
+msgstr "L'índex UID està desactualitzat."
 
 #. I18N: user defined url
 #. I18N: Settings - section title
@@ -567,23 +565,24 @@ msgid "user defined"
 msgstr "definit per l'usuari"
 
 msgid "UID lookup"
-msgstr ""
+msgstr "Consulta UID"
 
 #, php-format
 msgid "Allow resolving UID tags (%s) to the corresponding records."
-msgstr ""
+msgstr "Permetre resoldre etiquetes UID (%s) als registres corresponents."
 
 #, php-format
 msgid "Index status: %1$s rows, last built: %2$s"
-msgstr ""
+msgstr "Estat de l'índex: %1$s Files, últimes construccions: %2$s"
 
 msgid "Index source (link-index scan) not available."
-msgstr ""
+msgstr "Font de l'índex (escaneig enllaç-índex) no disponible."
 
 #, php-format
 msgid ""
 "Multiple records match UID %s. Please choose the one you are looking for."
 msgstr ""
+"Diversos registres coincideixen amb UID %s. Si us plau, tria la que busques."
 
 msgid ""
 "Webtrees uses a CommonMark implementation and supports a subset of the markup"
@@ -611,7 +610,7 @@ msgid ""
 "Markdown editor” is used"
 msgstr ""
 "El projecte “TinyMDE - Un petit HTML/JavaScript integrat i sense "
-"dependències S'utilitza l'editor Markdown“"
+"dependències. S'utilitza l'editor Markdown“"
 
 #. I18N: MDE
 msgid ""
@@ -669,7 +668,7 @@ msgid ""
 "The existence of the linked data records is not checked in advance. Errors "
 "only appear when the link is clicked."
 msgstr ""
-"No es comprova prèviament l'existència dels registres de dades enllaçats "
+"No es comprova prèviament l'existència dels registres de dades enllaçats. "
 "Només apareixen quan es fa clic a l'enllaç."
 
 #. I18N: help md - section title
@@ -690,9 +689,9 @@ msgid ""
 "image subtitle - which is also a link to the media data set for GEDCOM "
 "objects."
 msgstr ""
-"Tècnicament, les imatges s'empaqueten en un contenidor div juntament amb un "
-"subtítol de la imatge, que també és un enllaç al conjunt de dades multimèdia "
-"dels objectes GEDCOM."
+"Tècnicament, les imatges s'empaqueten en un contenidor _div_ juntament amb "
+"un subtítol de la imatge, que també és un enllaç al conjunt de dades "
+"multimèdia dels objectes GEDCOM."
 
 #. I18N: MD img - sentence 3
 msgid ""
@@ -737,75 +736,91 @@ msgstr "Podeu trobar més informació en una pàgina d'ajuda separada."
 msgid ""
 "List all records that contain cross-references (XREFs) or linkenhancer links."
 msgstr ""
+"Llista tots els registres que continguin referències creuades (XREFs) o "
+"enllaços linkenhancer."
 
 msgid ""
 "Limited mode: this database engine has no regex support - the table is "
 "scanned live with a LIKE filter on every request, which can be slow on large "
 "trees. The link index is not available on this engine."
 msgstr ""
+"Mode limitat: aquest motor de base de dades no té suport per regex: la taula "
+"s'escaneja en directe amb un filtre LIKE a cada petició, cosa que pot ser "
+"lenta en arbres grans. L'índex d'enllaços no està disponible en aquest motor."
 
 #, php-format
 msgid "Link index active: %1$s scanned records, last verified %2$s."
 msgstr ""
+"Índex d'enllaços actiu: %1$s Registres escanejats, últim verificat %2$s."
 
 msgid ""
 "Live scan forced - the link index is bypassed for this view, which can be "
 "slow on large trees."
 msgstr ""
+"Escaneig en viu forçat - l'índex d'enllaç es salta per a aquesta vista, que "
+"pot ser lenta en arbres grans."
 
 msgid ""
 "No fresh link index - the table below scans the GEDCOM tables live, which "
 "can be slow on large trees. Build the index with the CLI script (see "
 "README.md, \"CLI scripts & maintenance\")."
 msgstr ""
+"No hi ha índex d'enllaços nous - la taula següent escaneja les taules GEDCOM "
+"en directe, cosa que pot ser lenta en arbres grans. Construeix l'índex amb "
+"l'script CLI (vegeu README.md, \"scripts CLI & manteniment\")."
 
 msgid ""
 "Only broken targets: every matching record is loaded and its targets "
 "resolved on the server, which can be slow on large trees. Combine with the "
 "type/tree filters to narrow the scan."
 msgstr ""
+"Només objectius trencats: tots els registres coincidents es carreguen i els "
+"seus objectius es resolen al servidor, cosa que pot ser lenta en arbres "
+"grans. Combina-ho amb els filtres de tipus/arbre per acotar l'escaneig."
 
 msgid "referencing XREF"
-msgstr ""
+msgstr "referenciant XREF"
 
 msgid "Bypass the link index and scan the GEDCOM tables live"
-msgstr ""
+msgstr "Evita l'índex d'enllaços i escaneja les taules GEDCOM en directe"
 
 msgid "Force live scan"
-msgstr ""
+msgstr "Escaneig en viu forçat"
 
 msgid "Record types"
-msgstr ""
+msgstr "Tipus de registre"
 
 msgid "All types"
-msgstr ""
+msgstr "Tots els tipus"
 
 msgid "All GEDCOM records"
-msgstr ""
+msgstr "Tots els registres de GEDCOM"
 
 msgid "All Block records"
-msgstr ""
+msgstr "Tots el registres del bloc"
 
 msgid "GEDCOM records"
-msgstr ""
+msgstr "Registres de GEDCOM"
 
 msgid "All trees"
-msgstr ""
+msgstr "Tots els arbres"
 
 msgid "links per class"
-msgstr ""
+msgstr "enllaços per classe"
 
 msgid "Only rows with a missing or wrong-type target are shown"
 msgstr ""
+"Només es mostren les files amb un objectiu que falta o amb un tipus "
+"incorrecte"
 
 msgid "Only broken targets"
-msgstr ""
+msgstr "Només objectius trencats"
 
 msgid "The target type differs from the declaration"
-msgstr ""
+msgstr "El tipus d'objectiu difereix de la declaració"
 
 msgid "XREF"
-msgstr ""
+msgstr "XREF"
 
 msgid "Goto top of cell content"
 msgstr "Anar al principi del contingut de la cel·la"
@@ -887,7 +902,7 @@ msgstr "Notes a peu de pàgina"
 
 msgid "Add hr-tag at the beginning of the footnote container"
 msgstr ""
-"Afegeix l'etiqueta hr al principi del contenidor de la nota a peu de pàgina"
+"Afegeix l'etiqueta _hr_ al principi del contenidor de la nota a peu de pàgina"
 
 msgid "Backreference symbol"
 msgstr "Símbol de referència posterior"
