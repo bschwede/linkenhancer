@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Helpers\ClassName;
 use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
@@ -44,4 +45,20 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
                 </div>
             </div>
 
+
+            <!-- links++ overview max rows --><?php $prefId = LinkEnhancerModule::PREF_LINKSPP_OVERVIEW_MAX_ROWS; ?>
+            <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
+                <?= I18N::translate('Max rows for non-admin cross-reference overview') ?>
+            </label>
+            <div class="col-sm-3 wt-page-options-value mt-2">
+                <input class="form-control" id="<?= $prefId ?>" name="<?= $prefId ?>" type="text"
+                    value="<?= e($prefs[$prefId]) ?>">
+            </div>
+            <div class="col-sm-6 mt-2 form-text">
+                <?= I18N::translate('configure list menu item') ?> -
+                <span style="text-align: center; line-height: inherit;"><?= view('icons/list') ?></span>
+                <a href="<?= e(route(ClassName::get(ClassName::MODULES_LISTS))) ?>">
+                    <?= I18N::translate('Lists') ?>
+                </a>
+            </div>
         </div>
