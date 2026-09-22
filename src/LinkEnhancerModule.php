@@ -98,8 +98,6 @@ class LinkEnhancerModule extends AbstractModule implements
     use ModuleConfigTrait;
     use ModuleListTrait;
 
-    protected int $access_level = Auth::PRIV_USER;
-
     /**
      * list of const for module administration
      */
@@ -141,6 +139,7 @@ class LinkEnhancerModule extends AbstractModule implements
     public const PREF_LINKSPP_JS = 'LINKSPP_JS'; // Javascript
     public const PREF_LINKSPP_OPEN_IN_NEW_TAB = 'LINKSPP_OPEN_IN_NEW_TAB'; // enable open link in new browser tab
     public const PREF_LINKSPP_OVERVIEW_MAX_ROWS = 'LINKSPP_OVERVIEW_MAX_ROWS'; // max rows for non-admin xref overview
+    public const PREF_LINKSPP_OVERVIEW_ACCESS = 'LINKSPP_OVERVIEW_ACCESS'; // -1=Hidden, 0=Managers, 1=Members, 2=All
 
     public const PREF_MD_ACTIVE = 'MD_ACTIVE'; // enable markdown enhancements
     public const PREF_MD_IMG_ACTIVE = 'MD_IMG_ACTIVE'; // enable enhanced markdown img syntax
@@ -234,6 +233,7 @@ class LinkEnhancerModule extends AbstractModule implements
         self::PREF_LINKSPP_JS                => [ 'type' => 'string', 'default' => '' ],
         self::PREF_LINKSPP_OPEN_IN_NEW_TAB   => [ 'type' => 'bool',   'default' => '1', 'parent' => self::PREF_OPEN_IN_NEW_TAB, 'mode' => OverwriteMode::ParentIsNotOne ],
         self::PREF_LINKSPP_OVERVIEW_MAX_ROWS => [ 'type' => 'int',    'default' => '10000' ],
+        self::PREF_LINKSPP_OVERVIEW_ACCESS  => [ 'type' => 'int',    'default' => '1' ], // -1=Hidden, 0=Managers, 1=Members, 2=All
         self::PREF_UID_ACTIVE                => [ 'type' => 'bool',   'default' => '1' ],
         // markdown
         self::PREF_MD_ACTIVE                 => [ 'type' => 'bool',   'default' => '1' ],
@@ -926,7 +926,34 @@ class LinkEnhancerModule extends AbstractModule implements
 
     public function listIsEmpty(Tree $tree): bool
     {
-        return !$this->getPref(self::PREF_LINKSPP_ACTIVE, true);
+        if (!$this->getPref(self::PREF_LINKSPP_ACTIVE, true)) {
+            return true;
+        }
+        $default_level = (int) $this->getPref(self::PREF_LINKSPP_OVERVIEW_ACCESS, true);
+        return !self::userHasOverviewAccess($tree, $default_level);
+    }
+
+    /**
+     * Check if the current user has access to the xref overview for this tree.
+     * Resolution: module_privacy (per-tree override) > module pref (default).
+     * Uses Auth::isManager()/isMember() (bool) – no int/enum comparison.
+     */
+    public static function userHasOverviewAccess(Tree $tree, int $default_level): bool
+    {
+        $override = DB::table('module_privacy')
+            ->where('gedcom_id', '=', $tree->id())
+            ->where('interface', '=', ModuleListInterface::class)
+            ->where('module_name', '=', self::MODULE_NAME)
+            ->value('access_level');
+
+        $level = ($override !== null) ? (int) $override : $default_level;
+
+        return match ($level) {
+            -1      => false,
+            0       => Auth::isManager($tree),
+            1       => Auth::isMember($tree),
+            default => true,
+        };
     }
 
     public function listTitle(): string
@@ -965,7 +992,8 @@ class LinkEnhancerModule extends AbstractModule implements
         $params    = Validator::queryParams($request);
 
         $denied = ClassName::get(ClassName::EXCEPTION_HTTP_FORBIDDEN);
-        if ($this->accessLevel($tree, ModuleListInterface::class) < Auth::accessLevel($tree)) {
+        $default_level = (int) $this->getPref(self::PREF_LINKSPP_OVERVIEW_ACCESS, true);
+        if (!self::userHasOverviewAccess($tree, $default_level)) {
             throw new $denied();
         }
 

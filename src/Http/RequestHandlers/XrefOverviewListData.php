@@ -27,8 +27,6 @@ declare(strict_types=1);
 namespace Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers;
 
 use Fisharebest\Webtrees\Auth;
-use Fisharebest\Webtrees\I18N;
-use Fisharebest\Webtrees\Module\ModuleListInterface;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Services\DatatablesService;
 use Fisharebest\Webtrees\Services\ModuleService;
@@ -107,10 +105,13 @@ final class XrefOverviewListData implements RequestHandlerInterface
         $context_tree = $tree ?? $this->tree_service->all()->first();
         $user_id      = Auth::id();
 
-        $module = Registry::container()->get(ModuleService::class)->findByName(LinkEnhancerModule::MODULE_NAME);
         $denied = ClassName::get(ClassName::EXCEPTION_HTTP_FORBIDDEN);
-        if ($module === null
-            || $module->accessLevel($context_tree, ModuleListInterface::class) < Auth::accessLevel($context_tree)) {
+        $module = Registry::container()->get(ModuleService::class)->findByName(LinkEnhancerModule::MODULE_NAME);
+        if (!$module instanceof LinkEnhancerModule) {
+            throw new $denied();
+        }
+        $default_level = (int) $module->getPref(LinkEnhancerModule::PREF_LINKSPP_OVERVIEW_ACCESS, true);
+        if (!LinkEnhancerModule::userHasOverviewAccess($context_tree, $default_level)) {
             throw new $denied();
         }
 

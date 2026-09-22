@@ -55,7 +55,27 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
                     value="<?= e($prefs[$prefId]) ?>">
             </div>
             <div class="col-sm-6 mt-2 form-text">
-                <?= I18N::translate('configure list menu item') ?> -
+            </div>
+
+            <!-- links++ overview access level --><?php $prefId = LinkEnhancerModule::PREF_LINKSPP_OVERVIEW_ACCESS; ?>
+            <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
+                <?= I18N::translate('Access to cross-reference overview') ?>
+            </label>
+            <div class="col-sm-3 wt-page-options-value mt-2">
+                <?= view('components/select', [
+                    'id' => $prefId,
+                    'name' => $prefId,
+                    'selected' => $prefs[$prefId],
+                    'options' => [
+                        '-1' => I18N::translate('Hidden'),
+                        '0'  => I18N::translate('Managers'),
+                        '1'  => I18N::translate('Members'),
+                        '2'  => I18N::translate('Everyone'),
+                    ]
+                ]) ?>
+            </div>
+            <div class="col-sm-6 mt-2 form-text">
+                <?= I18N::translate('Per-tree overrides are available in the control panel') ?> - 
                 <span style="text-align: center; line-height: inherit;"><?= view('icons/list') ?></span>
                 <a href="<?= e(route(ClassName::get(ClassName::MODULES_LISTS))) ?>">
                     <?= I18N::translate('Lists') ?>
