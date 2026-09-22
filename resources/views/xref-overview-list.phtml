@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Helpers\Functions;
 use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
@@ -136,7 +137,7 @@ if ($index_status_ts) {
 <div class="table-responsive pt-2 pb-4">
     <table
         id="wt-datatables-xref-overview-list"
-        class="table table-bordered table-sm datatables d-none"
+        class="table table-bordered table-sm <?= Functions::wtIsAtLeast2_3() ? 'wt-' : '' ?>datatables d-none"
         <?= view('lists/datatables-attributes') ?>
         data-ajax="<?= e($data_url) ?>"
         data-server-side="true"
@@ -153,54 +154,7 @@ if ($index_status_ts) {
     </table>
 </div>
 
-<script>
-(function () {
-    var TABLE_ID = 'wt-datatables-xref-overview-list';
-
-    function isFiltered() {
-        var q = new URLSearchParams(window.location.search);
-        return (q.get('xref') || '').length > 0
-            || (q.get('rectype') || '').length > 0
-            || (q.get('target') || '') === 'problems'
-            || (q.get('live') || '') === '1';
-    }
-
-    function clearSavedPage() {
-        if (!isFiltered()) {
-            return;
-        }
-        try {
-            var prefix = 'DataTables_';
-            var suffix = '_' + window.location.pathname;
-            for (var i = window.localStorage.length - 1; i >= 0; i--) {
-                var key = window.localStorage.key(i);
-                if (key && key.indexOf(prefix) === 0 && key.indexOf(suffix) !== -1) {
-                    window.localStorage.removeItem(key);
-                }
-            }
-        } catch (e) {
-            // Storage unavailable - the init.dt fallback still applies.
-        }
-    }
-
-    function bindReset() {
-        if (!isFiltered()) {
-            return;
-        }
-        var tableEl = document.getElementById(TABLE_ID);
-        var jq = window.jQuery;
-        if (!tableEl || !jq) {
-            return;
-        }
-        jq(tableEl).one('init.dt', function () {
-            var api = jq(tableEl).DataTable();
-            if (api && typeof api.page === 'function' && api.page() !== 0) {
-                api.page(0).draw();
-            }
-        });
-    }
-
-    clearSavedPage();
-    bindReset();
-})();
-</script>
+<?= view($module->name() . '::' . 'xref-overview-script', [
+    'table_id' => 'wt-datatables-xref-overview-list',
+    'has_tree' => false,
+]) ?>
