@@ -947,6 +947,11 @@ class LinkEnhancerModule extends AbstractModule implements
         ] + $parameters);
     }
 
+    public function listMenuClass(): string
+    {
+        return 'menu-list-xrefs';
+    }
+   
     /**
      * Per-tree cross-reference overview for non-admin users (members and above).
      * Privacy-filtered: no raw GEDCOM snippets, personal blocks only for owner.
