@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\I18N;
 use Schwendinger\Webtrees\Helpers\ClassName;
 use Schwendinger\Webtrees\Helpers\MoreI18N;
@@ -10,8 +11,28 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
 
 /**
  * @var array<string>           $prefs                  list of chapter objects
+ * @var array<string>           $links                  links
  * @var string                  $jscode_linkpp          javascript code snippet from js-file, csv-export...
  */
+
+$title_reset_all = e(I18N::translate('Reset list item access level overwrites - %s', MoreI18N::xlate('All')));
+$title_reset_access_level = e(I18N::translate('Reset list item access level overwrites - %s', I18N::translate('with configured access level')));
+
+$link_params = is_array($links['resetlist_params'] ?? null) ? (array) $links['resetlist_params'] : null;
+$link_reset_all = null;
+$link_reset_access_level = null;
+if (is_array($link_params)) {
+    $link_reset_all = route('module', $link_params);
+    $access_level = null;
+    try {
+        $access_level = (int) $prefs[LinkEnhancerModule::PREF_LINKSPP_OVERVIEW_ACCESS];
+    } catch (Throwable $e) {}
+
+    if (is_int($access_level)) {
+        $link_params['access_level'] = $access_level;
+        $link_reset_access_level = route('module', $link_params);
+    }
+}
 ?>
         <div class="row">
 <section class="openinnewtab">
@@ -44,11 +65,18 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
                     </p>
                 </div>
             </div>
+        </div>
 
+        <div class="row">
+            <div class="col-sm-3 col-form-label wt-page-options-label">
+                <?= I18N::translate('Non-admin cross-reference overview') ?>
+            </div>        
+        </div>
 
+        <div class="row">
             <!-- links++ overview max rows --><?php $prefId = LinkEnhancerModule::PREF_LINKSPP_OVERVIEW_MAX_ROWS; ?>
-            <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
-                <?= I18N::translate('Max rows for non-admin cross-reference overview') ?>
+            <label class="col-sm-3 col-form-label wt-page-options-label sub" for="<?= $prefId ?>">
+                <?= I18N::translate('Max rows') ?>
             </label>
             <div class="col-sm-3 wt-page-options-value mt-2">
                 <input class="form-control" id="<?= $prefId ?>" name="<?= $prefId ?>" type="text"
@@ -58,27 +86,71 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
             </div>
 
             <!-- links++ overview access level --><?php $prefId = LinkEnhancerModule::PREF_LINKSPP_OVERVIEW_ACCESS; ?>
-            <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
-                <?= I18N::translate('Access to cross-reference overview') ?>
+            <label class="col-sm-3 col-form-label wt-page-options-label sub" for="<?= $prefId ?>">
+                <?= MoreI18N::xlate('Access level') ?>
             </label>
             <div class="col-sm-3 wt-page-options-value mt-2">
                 <?= view('components/select', [
                     'id' => $prefId,
                     'name' => $prefId,
                     'selected' => $prefs[$prefId],
-                    'options' => [
-                        '-1' => I18N::translate('Hidden'),
-                        '0'  => I18N::translate('Managers'),
-                        '1'  => I18N::translate('Members'),
-                        '2'  => I18N::translate('Everyone'),
-                    ]
+                    'options' => Auth::accessLevelNames()
                 ]) ?>
             </div>
+            <?php
+                $access_level = null;
+                try {
+                    $access_level = (int) $prefs[$prefId];
+                } catch (Throwable $e) {}
+                $count = LinkEnhancerModule::countListAccessOverwrites($access_level);
+            ?>
             <div class="col-sm-6 mt-2 form-text">
-                <?= I18N::translate('Per-tree overrides are available in the control panel') ?> - 
+                <?= I18N::translate('Per-tree overrides are available  in the control panel') ?> - 
                 <span style="text-align: center; line-height: inherit;"><?= view('icons/list') ?></span>
                 <a href="<?= e(route(ClassName::get(ClassName::MODULES_LISTS))) ?>">
                     <?= I18N::translate('Lists') ?>
                 </a>
+                <ul>
+                    <li>
+                        <?= MoreI18N::xlate('Total') . ': ' . ($count['total'] ?? 0) ?>
+                        <?php if ($link_reset_all): ?>
+                        <a class="confirm-action"
+                            href="<?= e($link_reset_all) ?>"
+                            data-confirm-message="<?= $title_reset_all ?>"
+                            title="<?= $title_reset_all ?>">
+                            <?= MoreI18N::xlate('reset') ?>
+                        </a>
+                        <?php endif; ?>
+                    </li>
+                    <li>
+                        <?= I18N::translate('of which with this access level') . ': ' . ($count['access_level'] ?? 0) ?>
+                        <?php if ($link_reset_access_level): ?>
+                        <a class="confirm-action" 
+                            href="<?= e($link_reset_access_level) ?>" 
+                            data-confirm-message="<?= $title_reset_access_level ?>" 
+                            title="<?= $title_reset_access_level ?>">
+                            <?= MoreI18N::xlate('reset') ?>
+                        </a>
+                        <?php endif; ?>
+                    </li>
+                </ul>
             </div>
         </div>
+<style>
+    .confirm-action {
+        color: red;
+        margin-left: 2.0em;
+        font-style: italic;
+    }
+</style>
+<script>
+    document.querySelectorAll('.confirm-action').forEach(link => {
+        link.addEventListener('click', event => {
+            const message = event.currentTarget.dataset.confirmMessage;
+            if (!confirm("<?= I18N::translate('Confirmation Prompt - Do you really want to perform this action?') ?>" + "\n" + message)) {
+                event.preventDefault();
+                return;
+            }
+        });
+    });
+</script>        

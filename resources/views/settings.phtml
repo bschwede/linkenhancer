@@ -140,6 +140,7 @@ $module = Registry::container()->get(LinkEnhancerModule::class);
 <section id="options1">
 <?= view($module->name() . '::' . 'settings-le', [
     'prefs' => $prefs,
+    'links' => $links,
     'jscode_linkpp' => $jscode_linkpp,
 ]) ?>
 </section>

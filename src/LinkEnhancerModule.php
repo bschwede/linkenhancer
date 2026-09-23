@@ -75,6 +75,7 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\SettingInterface;
 use Schwendinger\Webtrees\Helpers\ClassName;
 
 use function array_key_exists, boolval, count, strval, is_array, intval, route, trim;
+use Throwable;
 
 enum OverwriteMode
 { // pref schema cascading setting - overwrite setting value with parent if...
@@ -655,6 +656,16 @@ class LinkEnhancerModule extends AbstractModule implements
             $this->docReadyJs .= "console.debug('LE-Mod theme:', '$theme'" . ($palette ? ", 'palette=$palette'" : '') . ");";        
         }
 
+        // links++
+        if (in_array('le', $this->bundleShortcuts) && in_array($theme, ['webtrees', 'clouds', 'colors', 'xenea'])) {
+            $includeRes .= "<style>.menu-list-xrefs::before {
+                content: \"🔗\"; 
+                display: inline-block;
+                vertical-align: middle !important;
+                margin-right: 0.25em;
+                }</style>\n";
+        }
+
         // webtrees manual
         if (in_array('wthb', $this->bundleShortcuts)) {
             $themeStyles = [
@@ -924,6 +935,34 @@ class LinkEnhancerModule extends AbstractModule implements
         ]);
     }
 
+
+    /**
+     * Reset 
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    public function getAdminResetListOverwritesAction(ServerRequestInterface $request): ResponseInterface
+    {
+        $params = Validator::queryParams($request);
+        $access_level = null;
+        try {
+            $access_level = (int) $params->integer('access_level', null);
+            $access_level = $access_level && ($access_level >= 0 && $access_level <= 2) ? $access_level : null;
+        } catch (Throwable $e) {}
+        
+        $query = DB::table('module_privacy')
+            ->where('interface', '=', ModuleListInterface::class)
+            ->where('module_name', '=', self::MODULE_NAME);
+
+        if ($access_level) {
+            $query = $query->where('access_level', '=', $access_level);
+        }
+
+        $query->delete();
+
+        return redirect($this->getConfigLink());
+    }
+
     public function listIsEmpty(Tree $tree): bool
     {
         if (!$this->getPref(self::PREF_LINKSPP_ACTIVE, true)) {
@@ -956,11 +995,44 @@ class LinkEnhancerModule extends AbstractModule implements
         };
     }
 
+    /**
+     * row count of overwrites in module_privacy for this module (total and access level specific)
+     * @param null|int $access_level
+     * @return array{"access_level": int, total: int}
+     */
+    public static function countListAccessOverwrites(null|int $access_level): array
+    {
+        return [
+            'total' => DB::table('module_privacy')
+                ->where('interface', '=', ModuleListInterface::class)
+                ->where('module_name', '=', self::MODULE_NAME)
+                ->count(),
+            'access_level' => $access_level === null ?
+                    0 :
+                    DB::table('module_privacy')
+                        ->where('interface', '=', ModuleListInterface::class)
+                        ->where('module_name', '=', self::MODULE_NAME)
+                        ->where('access_level', '=', $access_level)
+                        ->count()
+        ];
+    }
+
+
+    /**
+     * The title for a specific instance of this list. (ModuleListInterface)
+     * @return string
+     */
     public function listTitle(): string
     {
         return I18N::translate('Cross-Reference Overview');
     }
 
+    /**
+     * The URL for a page showing list options. (ModuleListInterface)
+     * @param Tree $tree
+     * @param array $parameters
+     * @return string
+     */
     public function listUrl(Tree $tree, array $parameters = []): string
     {
         if (Auth::isAdmin()) {
@@ -974,9 +1046,13 @@ class LinkEnhancerModule extends AbstractModule implements
         ] + $parameters);
     }
 
+    /**
+     * CSS class for the menu (ModuleListInterface)
+     * @return string
+     */
     public function listMenuClass(): string
     {
-        return 'menu-list-xrefs';
+        return 'menu-list-xrefs'; // css class is used in getThemeSpecificCss()
     }
    
     /**
@@ -1209,6 +1285,10 @@ class LinkEnhancerModule extends AbstractModule implements
             ])
             : ''
         );
+        $response['links']['resetlist_params'] = [
+            'module' => $this->name(),
+            'action' => 'AdminResetListOverwrites'
+        ];
         
 
         $response['tablerows'] = $this->wthb->getHelpTableCount();
@@ -1287,6 +1367,13 @@ class LinkEnhancerModule extends AbstractModule implements
         }
     }
 
+    /**
+     * Request handler for MiddlewareInterface
+     * injects modal ajax view where needed
+     * @param ServerRequestInterface $request
+     * @param RequestHandlerInterface $handler
+     * @return ResponseInterface
+     */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $response = $handler->handle($request);
