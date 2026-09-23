@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-23 13:16+0200\n"
-"PO-Revision-Date: 2026-09-20 08:25+0000\n"
+"PO-Revision-Date: 2026-09-23 11:32+0000\n"
 "Last-Translator: bschwede <bschwede@noreply.codeberg.org>\n"
 "Language-Team: German <https://translate.codeberg.org/projects/wt-modules/"
 "linkenhancer/de/>\n"
@@ -526,11 +526,6 @@ msgstr ""
 "Erstellen Sie den Index mit dem CLI-Skript (siehe README.md, „CLI-Skripte & "
 "Wartung“)."
 
-#, fuzzy
-#| msgid ""
-#| "Only broken targets: every matching record is loaded and its targets "
-#| "resolved on the server, which can be slow on large trees. Combine with "
-#| "the type/tree filters to narrow the scan."
 msgid ""
 "Only broken targets: every matching record is loaded and its targets "
 "resolved on the server, which can be slow on large trees. Combine with the "
@@ -538,8 +533,7 @@ msgid ""
 msgstr ""
 "Nur fehlerhafte Ziele: Jeder passende Datensatz wird geladen und seine Ziele "
 "auf dem Server aufgelöst, was bei großen Bäumen langsam sein kann. "
-"Kombinieren Sie diese Option mit den Typ- und Baumfiltern, um die Suche "
-"einzugrenzen."
+"Kombinieren Sie diese Option mit dem Typfilter um die Suche einzugrenzen."
 
 msgid "referencing XREF"
 msgstr "Verweis auf XREF"
@@ -994,9 +988,11 @@ msgstr "Für weitere Optionen aktivieren"
 #, php-format
 msgid "Reset list item access level overwrites - %s"
 msgstr ""
+"Zurücksetzen der gesondert konfigurierten Zugriffsberechtigungen des "
+"Listeneintrags - %s"
 
 msgid "with configured access level"
-msgstr ""
+msgstr "mit der konfigurierten Zugriffsebene"
 
 msgid "JavaScript for additional link targets"
 msgstr "JavaScript-Objekt für zusätzliche Link-Ziele"
@@ -1025,27 +1021,25 @@ msgstr ""
 "Es wird dabei eigentlich nur die Definition des Icons als Hintergrundbild "
 "benötigt - empfehlenswert ist die Referenzierung als data: URL."
 
-#, fuzzy
-#| msgid "Cross-Reference Overview"
 msgid "Non-admin cross-reference overview"
-msgstr "Querverweis-Übersicht"
+msgstr "Querverweis-Übersicht für Nicht-Administratoren"
 
-#, fuzzy
-#| msgid "Data rows"
 msgid "Max rows"
-msgstr "Daten-Zeilen"
+msgstr "Daten-Zeilen Maximum"
 
 msgid "Per-tree overrides are available  in the control panel"
 msgstr ""
+"pro Stammbaum kann die Zugriffsebene gesondert in der Verwaltung festgelegt "
+"werden"
 
 msgid "Lists"
 msgstr ""
 
 msgid "of which with this access level"
-msgstr ""
+msgstr "davon mit dieser Zugriffsebene"
 
 msgid "Confirmation Prompt - Do you really want to perform this action?"
-msgstr ""
+msgstr "Bestätigungsaufforderung – Möchten Sie diese Aktion wirklich ausführen?"
 
 #. I18N: wthb link user setting prologue
 msgid ""
