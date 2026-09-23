@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-23 13:16+0200\n"
+"POT-Creation-Date: 2026-09-23 13:32+0200\n"
 "PO-Revision-Date: 2026-09-23 11:32+0000\n"
 "Last-Translator: bschwede <bschwede@noreply.codeberg.org>\n"
 "Language-Team: German <https://translate.codeberg.org/projects/wt-modules/"
@@ -1032,14 +1032,12 @@ msgstr ""
 "pro Stammbaum kann die Zugriffsebene gesondert in der Verwaltung festgelegt "
 "werden"
 
-msgid "Lists"
-msgstr ""
-
 msgid "of which with this access level"
 msgstr "davon mit dieser Zugriffsebene"
 
 msgid "Confirmation Prompt - Do you really want to perform this action?"
-msgstr "Bestätigungsaufforderung – Möchten Sie diese Aktion wirklich ausführen?"
+msgstr ""
+"Bestätigungsaufforderung – Möchten Sie diese Aktion wirklich ausführen?"
 
 #. I18N: wthb link user setting prologue
 msgid ""
