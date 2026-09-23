@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-19 21:03+0200\n"
-"PO-Revision-Date: 2026-09-20 08:25+0000\n"
+"POT-Creation-Date: 2026-09-23 13:32+0200\n"
+"PO-Revision-Date: 2026-09-23 11:32+0000\n"
 "Last-Translator: bschwede <bschwede@noreply.codeberg.org>\n"
 "Language-Team: German <https://translate.codeberg.org/projects/wt-modules/"
 "linkenhancer/de/>\n"
@@ -19,6 +19,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 2026.9.1\n"
+
+msgid "tree"
+msgstr "Stammbaum"
 
 msgid "Option is disabled"
 msgstr "Einstellung ist deaktiviert"
@@ -372,9 +375,6 @@ msgstr "genau so verschachtelt, wie die Überschriften im Dokument vorkommen"
 msgid "Permalink"
 msgstr "Dauerhafter Link"
 
-msgid "tree"
-msgstr "Stammbaum"
-
 #, php-format
 msgid "No record for %s was found."
 msgstr "Kein Datensatz für %s gefunden."
@@ -488,6 +488,93 @@ msgstr "Der Link-Index ist veraltet."
 
 msgid "The UID index is out of date."
 msgstr "Der UID-Index ist veraltet."
+
+msgid ""
+"List all records that contain cross-references (XREFs) or linkenhancer links."
+msgstr ""
+"Liste aller Datensätze, die Querverweise (XREFs) oder „Linkenhancer“-Links "
+"enthalten."
+
+msgid ""
+"Limited mode: this database engine has no regex support - the table is "
+"scanned live with a LIKE filter on every request, which can be slow on large "
+"trees. The link index is not available on this engine."
+msgstr ""
+"Eingeschränkter Modus: Diese Datenbank-Engine bietet keine Unterstützung für "
+"reguläre Ausdrücke – die Tabelle wird bei jeder Abfrage live mit einem LIKE-"
+"Filter durchsucht, was bei großen Bäumen zu Verzögerungen führen kann. Der "
+"Link-Index ist bei dieser Engine nicht verfügbar."
+
+#, php-format
+msgid "Link index active: %1$s scanned records, last verified %2$s."
+msgstr "Link-Index aktiv: %1$s Datensätze gescannt, zuletzt überprüft am %2$s."
+
+msgid ""
+"Live scan forced - the link index is bypassed for this view, which can be "
+"slow on large trees."
+msgstr ""
+"Live-Scan erzwungen – Der Link-Index wird bei dieser Ansicht umgangen, was "
+"bei großen Stammbäumen zu Verzögerungen führen kann."
+
+msgid ""
+"No fresh link index - the table below scans the GEDCOM tables live, which "
+"can be slow on large trees. Build the index with the CLI script (see "
+"README.md, \"CLI scripts & maintenance\")."
+msgstr ""
+"Kein aktueller Link-Index – die folgende Tabelle durchsucht die GEDCOM-"
+"Tabellen in Echtzeit, was bei großen Stammbäumen langsam sein kann. "
+"Erstellen Sie den Index mit dem CLI-Skript (siehe README.md, „CLI-Skripte & "
+"Wartung“)."
+
+msgid ""
+"Only broken targets: every matching record is loaded and its targets "
+"resolved on the server, which can be slow on large trees. Combine with the "
+"type filter to narrow the scan."
+msgstr ""
+"Nur fehlerhafte Ziele: Jeder passende Datensatz wird geladen und seine Ziele "
+"auf dem Server aufgelöst, was bei großen Bäumen langsam sein kann. "
+"Kombinieren Sie diese Option mit dem Typfilter um die Suche einzugrenzen."
+
+msgid "referencing XREF"
+msgstr "Verweis auf XREF"
+
+msgid "Bypass the link index and scan the GEDCOM tables live"
+msgstr ""
+"Den Verzeichnisindex umgehen und die GEDCOM-Tabellen direkt durchsuchen"
+
+msgid "Force live scan"
+msgstr "Live-Scan erzwingen"
+
+msgid "Record types"
+msgstr "Datensatz-Typen"
+
+msgid "All types"
+msgstr "Alle Typen"
+
+msgid "All GEDCOM records"
+msgstr "Alle GEDCOM-Datensätze"
+
+msgid "All Block records"
+msgstr "Alle Block-Datensätze"
+
+msgid "GEDCOM records"
+msgstr "GEDCOM-Datensätze"
+
+msgid "links per class"
+msgstr "Anzahl Links pro Klasse"
+
+msgid "Only rows with a missing or wrong-type target are shown"
+msgstr ""
+"Nur Zeilen anzeigen, bei denen das Ziel fehlt oder vom falschen Typ ist"
+
+msgid "Only broken targets"
+msgstr "Nur defekte Ziele"
+
+msgid "The target type differs from the declaration"
+msgstr "Der Zieltyp weicht von der Deklaration ab"
+
+msgid "XREF"
+msgstr "XREF"
 
 #. I18N: user defined url
 #. I18N: Settings - section title
@@ -735,43 +822,6 @@ msgid "Further information can be found on a separate help page."
 msgstr "Weitere Informationen finden Sie auf einer separaten Hilfeseite."
 
 msgid ""
-"List all records that contain cross-references (XREFs) or linkenhancer links."
-msgstr ""
-"Liste aller Datensätze, die Querverweise (XREFs) oder „Linkenhancer“-Links "
-"enthalten."
-
-msgid ""
-"Limited mode: this database engine has no regex support - the table is "
-"scanned live with a LIKE filter on every request, which can be slow on large "
-"trees. The link index is not available on this engine."
-msgstr ""
-"Eingeschränkter Modus: Diese Datenbank-Engine bietet keine Unterstützung für "
-"reguläre Ausdrücke – die Tabelle wird bei jeder Abfrage live mit einem LIKE-"
-"Filter durchsucht, was bei großen Bäumen zu Verzögerungen führen kann. Der "
-"Link-Index ist bei dieser Engine nicht verfügbar."
-
-#, php-format
-msgid "Link index active: %1$s scanned records, last verified %2$s."
-msgstr "Link-Index aktiv: %1$s Datensätze gescannt, zuletzt überprüft am %2$s."
-
-msgid ""
-"Live scan forced - the link index is bypassed for this view, which can be "
-"slow on large trees."
-msgstr ""
-"Live-Scan erzwungen – Der Link-Index wird bei dieser Ansicht umgangen, was "
-"bei großen Stammbäumen zu Verzögerungen führen kann."
-
-msgid ""
-"No fresh link index - the table below scans the GEDCOM tables live, which "
-"can be slow on large trees. Build the index with the CLI script (see "
-"README.md, \"CLI scripts & maintenance\")."
-msgstr ""
-"Kein aktueller Link-Index – die folgende Tabelle durchsucht die GEDCOM-"
-"Tabellen in Echtzeit, was bei großen Stammbäumen langsam sein kann. "
-"Erstellen Sie den Index mit dem CLI-Skript (siehe README.md, „CLI-Skripte & "
-"Wartung“)."
-
-msgid ""
 "Only broken targets: every matching record is loaded and its targets "
 "resolved on the server, which can be slow on large trees. Combine with the "
 "type/tree filters to narrow the scan."
@@ -781,49 +831,8 @@ msgstr ""
 "Kombinieren Sie diese Option mit den Typ- und Baumfiltern, um die Suche "
 "einzugrenzen."
 
-msgid "referencing XREF"
-msgstr "Verweis auf XREF"
-
-msgid "Bypass the link index and scan the GEDCOM tables live"
-msgstr ""
-"Den Verzeichnisindex umgehen und die GEDCOM-Tabellen direkt durchsuchen"
-
-msgid "Force live scan"
-msgstr "Live-Scan erzwingen"
-
-msgid "Record types"
-msgstr "Datensatz-Typen"
-
-msgid "All types"
-msgstr "Alle Typen"
-
-msgid "All GEDCOM records"
-msgstr "Alle GEDCOM-Datensätze"
-
-msgid "All Block records"
-msgstr "Alle Block-Datensätze"
-
-msgid "GEDCOM records"
-msgstr "GEDCOM-Datensätze"
-
 msgid "All trees"
 msgstr "Alle Stammbäume"
-
-msgid "links per class"
-msgstr "Anzahl Links pro Klasse"
-
-msgid "Only rows with a missing or wrong-type target are shown"
-msgstr ""
-"Nur Zeilen anzeigen, bei denen das Ziel fehlt oder vom falschen Typ ist"
-
-msgid "Only broken targets"
-msgstr "Nur defekte Ziele"
-
-msgid "The target type differs from the declaration"
-msgstr "Der Zieltyp weicht von der Deklaration ab"
-
-msgid "XREF"
-msgstr "XREF"
 
 msgid "Goto top of cell content"
 msgstr "Zum Anfang des Zellinhalts gehen"
@@ -976,6 +985,15 @@ msgstr "JSON-Import"
 msgid "Enable for more options"
 msgstr "Für weitere Optionen aktivieren"
 
+#, php-format
+msgid "Reset list item access level overwrites - %s"
+msgstr ""
+"Zurücksetzen der gesondert konfigurierten Zugriffsberechtigungen des "
+"Listeneintrags - %s"
+
+msgid "with configured access level"
+msgstr "mit der konfigurierten Zugriffsebene"
+
 msgid "JavaScript for additional link targets"
 msgstr "JavaScript-Objekt für zusätzliche Link-Ziele"
 
@@ -1002,6 +1020,24 @@ msgid ""
 msgstr ""
 "Es wird dabei eigentlich nur die Definition des Icons als Hintergrundbild "
 "benötigt - empfehlenswert ist die Referenzierung als data: URL."
+
+msgid "Non-admin cross-reference overview"
+msgstr "Querverweis-Übersicht für Nicht-Administratoren"
+
+msgid "Max rows"
+msgstr "Daten-Zeilen Maximum"
+
+msgid "Per-tree overrides are available  in the control panel"
+msgstr ""
+"pro Stammbaum kann die Zugriffsebene gesondert in der Verwaltung festgelegt "
+"werden"
+
+msgid "of which with this access level"
+msgstr "davon mit dieser Zugriffsebene"
+
+msgid "Confirmation Prompt - Do you really want to perform this action?"
+msgstr ""
+"Bestätigungsaufforderung – Möchten Sie diese Aktion wirklich ausführen?"
 
 #. I18N: wthb link user setting prologue
 msgid ""

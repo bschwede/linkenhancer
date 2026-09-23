@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: modules_v 4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-19 21:03+0200\n"
+"POT-Creation-Date: 2026-09-23 13:32+0200\n"
 "PO-Revision-Date: 2026-05-24 07:15+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -17,6 +17,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+msgid "tree"
+msgstr ""
 
 msgid "Option is disabled"
 msgstr ""
@@ -359,9 +362,6 @@ msgstr ""
 msgid "Permalink"
 msgstr ""
 
-msgid "tree"
-msgstr ""
-
 #, php-format
 msgid "No record for %s was found."
 msgstr ""
@@ -466,6 +466,76 @@ msgid "The link index is out of date."
 msgstr ""
 
 msgid "The UID index is out of date."
+msgstr ""
+
+msgid ""
+"List all records that contain cross-references (XREFs) or linkenhancer links."
+msgstr ""
+
+msgid ""
+"Limited mode: this database engine has no regex support - the table is "
+"scanned live with a LIKE filter on every request, which can be slow on large "
+"trees. The link index is not available on this engine."
+msgstr ""
+
+#, php-format
+msgid "Link index active: %1$s scanned records, last verified %2$s."
+msgstr ""
+
+msgid ""
+"Live scan forced - the link index is bypassed for this view, which can be "
+"slow on large trees."
+msgstr ""
+
+msgid ""
+"No fresh link index - the table below scans the GEDCOM tables live, which "
+"can be slow on large trees. Build the index with the CLI script (see "
+"README.md, \"CLI scripts & maintenance\")."
+msgstr ""
+
+msgid ""
+"Only broken targets: every matching record is loaded and its targets "
+"resolved on the server, which can be slow on large trees. Combine with the "
+"type filter to narrow the scan."
+msgstr ""
+
+msgid "referencing XREF"
+msgstr ""
+
+msgid "Bypass the link index and scan the GEDCOM tables live"
+msgstr ""
+
+msgid "Force live scan"
+msgstr ""
+
+msgid "Record types"
+msgstr ""
+
+msgid "All types"
+msgstr ""
+
+msgid "All GEDCOM records"
+msgstr ""
+
+msgid "All Block records"
+msgstr ""
+
+msgid "GEDCOM records"
+msgstr ""
+
+msgid "links per class"
+msgstr ""
+
+msgid "Only rows with a missing or wrong-type target are shown"
+msgstr ""
+
+msgid "Only broken targets"
+msgstr ""
+
+msgid "The target type differs from the declaration"
+msgstr ""
+
+msgid "XREF"
 msgstr ""
 
 #. I18N: user defined url
@@ -675,76 +745,12 @@ msgid "Further information can be found on a separate help page."
 msgstr ""
 
 msgid ""
-"List all records that contain cross-references (XREFs) or linkenhancer links."
-msgstr ""
-
-msgid ""
-"Limited mode: this database engine has no regex support - the table is "
-"scanned live with a LIKE filter on every request, which can be slow on large "
-"trees. The link index is not available on this engine."
-msgstr ""
-
-#, php-format
-msgid "Link index active: %1$s scanned records, last verified %2$s."
-msgstr ""
-
-msgid ""
-"Live scan forced - the link index is bypassed for this view, which can be "
-"slow on large trees."
-msgstr ""
-
-msgid ""
-"No fresh link index - the table below scans the GEDCOM tables live, which "
-"can be slow on large trees. Build the index with the CLI script (see "
-"README.md, \"CLI scripts & maintenance\")."
-msgstr ""
-
-msgid ""
 "Only broken targets: every matching record is loaded and its targets "
 "resolved on the server, which can be slow on large trees. Combine with the "
 "type/tree filters to narrow the scan."
 msgstr ""
 
-msgid "referencing XREF"
-msgstr ""
-
-msgid "Bypass the link index and scan the GEDCOM tables live"
-msgstr ""
-
-msgid "Force live scan"
-msgstr ""
-
-msgid "Record types"
-msgstr ""
-
-msgid "All types"
-msgstr ""
-
-msgid "All GEDCOM records"
-msgstr ""
-
-msgid "All Block records"
-msgstr ""
-
-msgid "GEDCOM records"
-msgstr ""
-
 msgid "All trees"
-msgstr ""
-
-msgid "links per class"
-msgstr ""
-
-msgid "Only rows with a missing or wrong-type target are shown"
-msgstr ""
-
-msgid "Only broken targets"
-msgstr ""
-
-msgid "The target type differs from the declaration"
-msgstr ""
-
-msgid "XREF"
 msgstr ""
 
 msgid "Goto top of cell content"
@@ -883,6 +889,13 @@ msgstr ""
 msgid "Enable for more options"
 msgstr ""
 
+#, php-format
+msgid "Reset list item access level overwrites - %s"
+msgstr ""
+
+msgid "with configured access level"
+msgstr ""
+
 msgid "JavaScript for additional link targets"
 msgstr ""
 
@@ -901,6 +914,21 @@ msgstr ""
 msgid ""
 "Only the definition of the icon as a background image is actually needed - "
 "referencing as data: URL."
+msgstr ""
+
+msgid "Non-admin cross-reference overview"
+msgstr ""
+
+msgid "Max rows"
+msgstr ""
+
+msgid "Per-tree overrides are available  in the control panel"
+msgstr ""
+
+msgid "of which with this access level"
+msgstr ""
+
+msgid "Confirmation Prompt - Do you really want to perform this action?"
 msgstr ""
 
 #. I18N: wthb link user setting prologue

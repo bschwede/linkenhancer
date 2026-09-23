@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-19 21:03+0200\n"
+"POT-Creation-Date: 2026-09-23 13:32+0200\n"
 "PO-Revision-Date: 2026-09-22 08:25+0000\n"
 "Last-Translator: bschwede <bschwede@noreply.codeberg.org>\n"
 "Language-Team: Catalan <https://translate.codeberg.org/projects/wt-modules/"
@@ -19,6 +19,9 @@ msgstr ""
 "X-Poedit-SearchPath-0: CustomMarkdownFactory.php\n"
 "X-Poedit-SearchPath-1: LinkEnhancerModule.php\n"
 "X-Poedit-SearchPath-2: module.php\n"
+
+msgid "tree"
+msgstr "Arbre"
 
 msgid "Option is disabled"
 msgstr "L'opció està desactivada"
@@ -375,9 +378,6 @@ msgstr "anidant exactament com els encapçalaments apareixen dins del document"
 msgid "Permalink"
 msgstr "Enllaç permanent"
 
-msgid "tree"
-msgstr "Arbre"
-
 #, php-format
 msgid "No record for %s was found."
 msgstr "No hi ha registre trobat per %s ."
@@ -490,6 +490,97 @@ msgstr "L'índex d'enllaços està desactualitzat."
 
 msgid "The UID index is out of date."
 msgstr "L'índex UID està desactualitzat."
+
+msgid ""
+"List all records that contain cross-references (XREFs) or linkenhancer links."
+msgstr ""
+"Llista tots els registres que continguin referències creuades (XREFs) o "
+"enllaços linkenhancer."
+
+msgid ""
+"Limited mode: this database engine has no regex support - the table is "
+"scanned live with a LIKE filter on every request, which can be slow on large "
+"trees. The link index is not available on this engine."
+msgstr ""
+"Mode limitat: aquest motor de base de dades no té suport per regex: la taula "
+"s'escaneja en directe amb un filtre LIKE a cada petició, cosa que pot ser "
+"lenta en arbres grans. L'índex d'enllaços no està disponible en aquest motor."
+
+#, php-format
+msgid "Link index active: %1$s scanned records, last verified %2$s."
+msgstr ""
+"Índex d'enllaços actiu: %1$s Registres escanejats, últim verificat %2$s."
+
+msgid ""
+"Live scan forced - the link index is bypassed for this view, which can be "
+"slow on large trees."
+msgstr ""
+"Escaneig en viu forçat - l'índex d'enllaç es salta per a aquesta vista, que "
+"pot ser lenta en arbres grans."
+
+msgid ""
+"No fresh link index - the table below scans the GEDCOM tables live, which "
+"can be slow on large trees. Build the index with the CLI script (see "
+"README.md, \"CLI scripts & maintenance\")."
+msgstr ""
+"No hi ha índex d'enllaços nous - la taula següent escaneja les taules GEDCOM "
+"en directe, cosa que pot ser lenta en arbres grans. Construeix l'índex amb "
+"l'script CLI (vegeu README.md, \"scripts CLI & manteniment\")."
+
+#, fuzzy
+#| msgid ""
+#| "Only broken targets: every matching record is loaded and its targets "
+#| "resolved on the server, which can be slow on large trees. Combine with "
+#| "the type/tree filters to narrow the scan."
+msgid ""
+"Only broken targets: every matching record is loaded and its targets "
+"resolved on the server, which can be slow on large trees. Combine with the "
+"type filter to narrow the scan."
+msgstr ""
+"Només objectius trencats: tots els registres coincidents es carreguen i els "
+"seus objectius es resolen al servidor, cosa que pot ser lenta en arbres "
+"grans. Combina-ho amb els filtres de tipus/arbre per acotar l'escaneig."
+
+msgid "referencing XREF"
+msgstr "referenciant XREF"
+
+msgid "Bypass the link index and scan the GEDCOM tables live"
+msgstr "Evita l'índex d'enllaços i escaneja les taules GEDCOM en directe"
+
+msgid "Force live scan"
+msgstr "Escaneig en viu forçat"
+
+msgid "Record types"
+msgstr "Tipus de registre"
+
+msgid "All types"
+msgstr "Tots els tipus"
+
+msgid "All GEDCOM records"
+msgstr "Tots els registres de GEDCOM"
+
+msgid "All Block records"
+msgstr "Tots el registres del bloc"
+
+msgid "GEDCOM records"
+msgstr "Registres de GEDCOM"
+
+msgid "links per class"
+msgstr "enllaços per classe"
+
+msgid "Only rows with a missing or wrong-type target are shown"
+msgstr ""
+"Només es mostren les files amb un objectiu que falta o amb un tipus "
+"incorrecte"
+
+msgid "Only broken targets"
+msgstr "Només objectius trencats"
+
+msgid "The target type differs from the declaration"
+msgstr "El tipus d'objectiu difereix de la declaració"
+
+msgid "XREF"
+msgstr "XREF"
 
 #. I18N: user defined url
 #. I18N: Settings - section title
@@ -734,42 +825,6 @@ msgid "Further information can be found on a separate help page."
 msgstr "Podeu trobar més informació en una pàgina d'ajuda separada."
 
 msgid ""
-"List all records that contain cross-references (XREFs) or linkenhancer links."
-msgstr ""
-"Llista tots els registres que continguin referències creuades (XREFs) o "
-"enllaços linkenhancer."
-
-msgid ""
-"Limited mode: this database engine has no regex support - the table is "
-"scanned live with a LIKE filter on every request, which can be slow on large "
-"trees. The link index is not available on this engine."
-msgstr ""
-"Mode limitat: aquest motor de base de dades no té suport per regex: la taula "
-"s'escaneja en directe amb un filtre LIKE a cada petició, cosa que pot ser "
-"lenta en arbres grans. L'índex d'enllaços no està disponible en aquest motor."
-
-#, php-format
-msgid "Link index active: %1$s scanned records, last verified %2$s."
-msgstr ""
-"Índex d'enllaços actiu: %1$s Registres escanejats, últim verificat %2$s."
-
-msgid ""
-"Live scan forced - the link index is bypassed for this view, which can be "
-"slow on large trees."
-msgstr ""
-"Escaneig en viu forçat - l'índex d'enllaç es salta per a aquesta vista, que "
-"pot ser lenta en arbres grans."
-
-msgid ""
-"No fresh link index - the table below scans the GEDCOM tables live, which "
-"can be slow on large trees. Build the index with the CLI script (see "
-"README.md, \"CLI scripts & maintenance\")."
-msgstr ""
-"No hi ha índex d'enllaços nous - la taula següent escaneja les taules GEDCOM "
-"en directe, cosa que pot ser lenta en arbres grans. Construeix l'índex amb "
-"l'script CLI (vegeu README.md, \"scripts CLI & manteniment\")."
-
-msgid ""
 "Only broken targets: every matching record is loaded and its targets "
 "resolved on the server, which can be slow on large trees. Combine with the "
 "type/tree filters to narrow the scan."
@@ -778,49 +833,8 @@ msgstr ""
 "seus objectius es resolen al servidor, cosa que pot ser lenta en arbres "
 "grans. Combina-ho amb els filtres de tipus/arbre per acotar l'escaneig."
 
-msgid "referencing XREF"
-msgstr "referenciant XREF"
-
-msgid "Bypass the link index and scan the GEDCOM tables live"
-msgstr "Evita l'índex d'enllaços i escaneja les taules GEDCOM en directe"
-
-msgid "Force live scan"
-msgstr "Escaneig en viu forçat"
-
-msgid "Record types"
-msgstr "Tipus de registre"
-
-msgid "All types"
-msgstr "Tots els tipus"
-
-msgid "All GEDCOM records"
-msgstr "Tots els registres de GEDCOM"
-
-msgid "All Block records"
-msgstr "Tots el registres del bloc"
-
-msgid "GEDCOM records"
-msgstr "Registres de GEDCOM"
-
 msgid "All trees"
 msgstr "Tots els arbres"
-
-msgid "links per class"
-msgstr "enllaços per classe"
-
-msgid "Only rows with a missing or wrong-type target are shown"
-msgstr ""
-"Només es mostren les files amb un objectiu que falta o amb un tipus "
-"incorrecte"
-
-msgid "Only broken targets"
-msgstr "Només objectius trencats"
-
-msgid "The target type differs from the declaration"
-msgstr "El tipus d'objectiu difereix de la declaració"
-
-msgid "XREF"
-msgstr "XREF"
 
 msgid "Goto top of cell content"
 msgstr "Anar al principi del contingut de la cel·la"
@@ -974,6 +988,13 @@ msgstr "Importació de JSON"
 msgid "Enable for more options"
 msgstr "Activa per a més opcions"
 
+#, php-format
+msgid "Reset list item access level overwrites - %s"
+msgstr ""
+
+msgid "with configured access level"
+msgstr ""
+
 msgid "JavaScript for additional link targets"
 msgstr "JavaScrip per a enllaços addicionals"
 
@@ -999,6 +1020,25 @@ msgid ""
 msgstr ""
 "En realitat, només es necessita la definició de la icona com a imatge de "
 "fons fent referència com a dades: URL."
+
+#, fuzzy
+#| msgid "Cross-Reference Overview"
+msgid "Non-admin cross-reference overview"
+msgstr "Referència - Visió general"
+
+#, fuzzy
+#| msgid "Data rows"
+msgid "Max rows"
+msgstr "Línia de dades"
+
+msgid "Per-tree overrides are available  in the control panel"
+msgstr ""
+
+msgid "of which with this access level"
+msgstr ""
+
+msgid "Confirmation Prompt - Do you really want to perform this action?"
+msgstr ""
 
 #. I18N: wthb link user setting prologue
 msgid ""
