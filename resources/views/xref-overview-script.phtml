@@ -1,0 +1,74 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * @var string               $table_id
+ * @var bool                 $has_tree
+ */
+// Applying a filter above submits a GET form, so the page reloads with a
+// (usually) smaller result set. DataTables remembers the current page in
+// localStorage (data-state-save) under a key built from location.pathname -
+// which ignores the query string - so it restores a page that no longer
+// exists in the filtered set and the table stays empty until a valid page is
+// picked. Drop that stale state before the table is initialised, and force
+// the first page once DataTables reports init as a fallback.
+?>
+<script>
+(function () {
+    var TABLE_ID = '<?= $table_id ?>';
+
+    function isFiltered() {
+        var q = new URLSearchParams(window.location.search);
+        return (q.get('xref') || '').length > 0
+            || (q.get('rectype') || '').length > 0 <?= $has_tree ? "|| ((q.get('tree') || '') !== '' && q.get('tree') !== '0')" : '' ?>
+            || (q.get('target') || '') === 'problems'
+            || (q.get('live') || '') === '1';
+    }
+
+    function clearSavedPage() {
+        if (!isFiltered()) {
+            return;
+        }
+        try {
+            var prefix = 'DataTables_';
+            var suffix = '_' + window.location.pathname;
+            for (var i = window.localStorage.length - 1; i >= 0; i--) {
+                var key = window.localStorage.key(i);
+                if (key && key.indexOf(prefix) === 0 && key.indexOf(suffix) !== -1) {
+                    window.localStorage.removeItem(key);
+                }
+            }
+        } catch (e) {
+            // Storage unavailable - the init.dt fallback still applies.
+        }
+    }
+
+    function bindReset() {
+        if (!isFiltered()) return;
+
+        var tableEl = document.getElementById(TABLE_ID);
+        if (!tableEl) return;
+        setTimeout(function () {
+            var api = null;
+
+            // 2.3: Vanilla DataTables
+            if (typeof DataTable !== 'undefined' && DataTable.table) {
+                api = DataTable.table(tableEl);
+            }
+
+            // 2.2: jQuery DataTables
+            if (!api && typeof jQuery !== 'undefined') {
+                try { api = jQuery(tableEl).DataTable(); } catch(e) {}
+            }
+
+            if (api && typeof api.page === 'function' && api.page() !== 0) {
+                api.page(0).draw();
+            }
+        }, 500);
+    }
+
+    clearSavedPage();
+    bindReset();
+})();
+</script>

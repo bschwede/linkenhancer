@@ -557,6 +557,24 @@ check(
     [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=@aaaaaaaaaaaaaaaaaaaa@)', 'snippet' => '[see](#@wt=@aaaaaaaaaaaaaaaaaaaa@)']], 0, '', $target_linker, true, $ambiguous_2)],
     ['<ul class="le-xref-inventory"><li><u>Cross-references (xref: 1)</u><ol><li><code><strong>[see](#@wt=@aaaaaaaaaaaaaaaaaaaa@)</strong></code><div class="le-target-links"><span class="le-target-ambiguous" title="target not unique - 2 matches in other trees">? 2 @aaaaaaaaaaaaaaaaaaaa@</span><br><span class="le-cross-ref" title="Cross-reference">↪</span> <a href="/tree/t1/individual/I10">tree-a: Person A</a><br><span class="le-cross-ref" title="Cross-reference">↪</span> <a href="/tree/t2/individual/I20">tree-b: Person B</a></div></li></ol></li></ul>']
 );
+// T52 - $show_snippets = false (7th arg, the non-admin overview): the entry
+// renders the link token WITHOUT its raw GEDCOM context (privacy); the target
+// links and the XREF highlight stay intact.
+check(
+    'T52a no-snippet mode shows the token without its GEDCOM context, target links intact',
+    [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'classic', 'token' => '@I2@', 'snippet' => 'sah @I2@ dort']], 0, '', $target_linker, false, null, false)],
+    ['<ul class="le-xref-inventory"><li><u>Classic cross-references (classic: 1)</u><ol><li><code><strong>@I2@</strong></code><div class="le-target-links"><span class="le-cross-ref" title="Cross-reference">↪</span> <a href="/tree/t/individual/I2">Max Mustermann</a></div></li></ol></li></ul>']
+);
+check(
+    'T52b default mode keeps the snippet context (unchanged)',
+    [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'classic', 'token' => '@I2@', 'snippet' => 'sah @I2@ dort']], 0, '', $target_linker)],
+    ['<ul class="le-xref-inventory"><li><u>Classic cross-references (classic: 1)</u><ol><li><code>sah <strong>@I2@</strong> dort</code><div class="le-target-links"><span class="le-cross-ref" title="Cross-reference">↪</span> <a href="/tree/t/individual/I2">Max Mustermann</a></div></li></ol></li></ul>']
+);
+check(
+    'T52c no-snippet mode still marks the highlighted referencing XREF',
+    [XrefsService::linkInventoryHtml([['path' => '', 'class' => 'classic', 'token' => '@I2@', 'snippet' => 'sah @I2@']], 0, 'I2', null, false, null, false)],
+    ['<ul class="le-xref-inventory"><li><u>Classic cross-references (classic: 1)</u><ol><li><code><strong>@<mark class="le-xref-target">I2</mark>@</strong></code></li></ol></li></ul>']
+);
 // T45 - inventoryHasProblem(): the "only broken targets" filter predicate.
 check('T45a inventoryHasProblem true for a missing target', [XrefsService::inventoryHasProblem([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=i@I404@)', 'snippet' => '']], $target_linker)], [true]);
 check('T45b inventoryHasProblem true for a type mismatch', [XrefsService::inventoryHasProblem([['path' => '', 'class' => 'xref', 'token' => '[see](#@wt=i@I9@)', 'snippet' => '']], $target_linker)], [true]);

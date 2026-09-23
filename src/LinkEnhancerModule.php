@@ -26,6 +26,7 @@ declare(strict_types=1);
 
 namespace Schwendinger\Webtrees\Module\LinkEnhancer;
 
+use DomainException;
 use Exception;
 use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\FlashMessages;
@@ -41,6 +42,10 @@ use Fisharebest\Webtrees\Module\ModuleCustomInterface;
 use Schwendinger\Webtrees\Traits\ModuleCustomTrait;
 use Fisharebest\Webtrees\Module\ModuleGlobalInterface;
 use Fisharebest\Webtrees\Module\ModuleGlobalTrait;
+use Fisharebest\Webtrees\Module\ModuleListInterface;
+use Fisharebest\Webtrees\Module\ModuleListTrait;
+use Fisharebest\Webtrees\Tree;
+use Fisharebest\Webtrees\User;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Services\TreeService;
 use Fisharebest\Webtrees\Session;
@@ -60,14 +65,17 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoXrefActio
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpMdAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpWtCoreAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpWthbAction;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\XrefOverviewListData;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\MarkdownEditorActivationService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\UidIndexService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\WthbService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\SettingInterface;
+use Schwendinger\Webtrees\Helpers\ClassName;
 
 use function array_key_exists, boolval, count, strval, is_array, intval, route, trim;
+use Throwable;
 
 enum OverwriteMode
 { // pref schema cascading setting - overwrite setting value with parent if...
@@ -75,12 +83,13 @@ enum OverwriteMode
     case ParentIsNotOne; // parent is int triple state
 }
 
-class LinkEnhancerModule extends AbstractModule implements 
+class LinkEnhancerModule extends AbstractModule implements
     MiddlewareInterface,
     ModuleCustomInterface,
     ModuleGlobalInterface,
-    ModuleConfigInterface, 
-    SettingInterface 
+    ModuleConfigInterface,
+    ModuleListInterface,
+    SettingInterface
 {
 
 
@@ -88,6 +97,7 @@ class LinkEnhancerModule extends AbstractModule implements
     use ModuleCustomTrait;
     use ModuleGlobalTrait;
     use ModuleConfigTrait;
+    use ModuleListTrait;
 
     /**
      * list of const for module administration
@@ -129,6 +139,8 @@ class LinkEnhancerModule extends AbstractModule implements
     public const PREF_LINKSPP_ACTIVE = 'LINKSPP_ACTIVE'; // enable links++
     public const PREF_LINKSPP_JS = 'LINKSPP_JS'; // Javascript
     public const PREF_LINKSPP_OPEN_IN_NEW_TAB = 'LINKSPP_OPEN_IN_NEW_TAB'; // enable open link in new browser tab
+    public const PREF_LINKSPP_OVERVIEW_MAX_ROWS = 'LINKSPP_OVERVIEW_MAX_ROWS'; // max rows for non-admin xref overview
+    public const PREF_LINKSPP_OVERVIEW_ACCESS = 'LINKSPP_OVERVIEW_ACCESS'; // -1=Hidden, 0=Managers, 1=Members, 2=All
 
     public const PREF_MD_ACTIVE = 'MD_ACTIVE'; // enable markdown enhancements
     public const PREF_MD_IMG_ACTIVE = 'MD_IMG_ACTIVE'; // enable enhanced markdown img syntax
@@ -221,6 +233,8 @@ class LinkEnhancerModule extends AbstractModule implements
         self::PREF_LINKSPP_ACTIVE            => [ 'type' => 'bool',   'default' => '1' ],
         self::PREF_LINKSPP_JS                => [ 'type' => 'string', 'default' => '' ],
         self::PREF_LINKSPP_OPEN_IN_NEW_TAB   => [ 'type' => 'bool',   'default' => '1', 'parent' => self::PREF_OPEN_IN_NEW_TAB, 'mode' => OverwriteMode::ParentIsNotOne ],
+        self::PREF_LINKSPP_OVERVIEW_MAX_ROWS => [ 'type' => 'int',    'default' => '10000' ],
+        self::PREF_LINKSPP_OVERVIEW_ACCESS  => [ 'type' => 'int',    'default' => '1' ], // -1=Hidden, 0=Managers, 1=Members, 2=All
         self::PREF_UID_ACTIVE                => [ 'type' => 'bool',   'default' => '1' ],
         // markdown
         self::PREF_MD_ACTIVE                 => [ 'type' => 'bool',   'default' => '1' ],
@@ -369,6 +383,7 @@ class LinkEnhancerModule extends AbstractModule implements
         
         if ($this->getPref(self::PREF_LINKSPP_ACTIVE, true)) {
             Functions::registerRoute('/tree/{tree}/goto-xref/{xref}', GotoXrefAction::class);
+            Functions::registerRoute('/xref-overview-list-data', XrefOverviewListData::class);
         }
 
         if ($this->getPref(self::PREF_UID_ACTIVE, true)) {
@@ -641,6 +656,16 @@ class LinkEnhancerModule extends AbstractModule implements
             $this->docReadyJs .= "console.debug('LE-Mod theme:', '$theme'" . ($palette ? ", 'palette=$palette'" : '') . ");";        
         }
 
+        // links++
+        if (in_array('le', $this->bundleShortcuts) && in_array($theme, ['webtrees', 'clouds', 'colors', 'xenea'])) {
+            $includeRes .= "<style>.menu-list-xrefs::before {
+                content: \"🔗\"; 
+                display: inline-block;
+                vertical-align: middle !important;
+                margin-right: 0.25em;
+                }</style>\n";
+        }
+
         // webtrees manual
         if (in_array('wthb', $this->bundleShortcuts)) {
             $themeStyles = [
@@ -866,11 +891,9 @@ class LinkEnhancerModule extends AbstractModule implements
         $index_status = XrefsService::indexStatus();
 
         $data_params = [];
-        // The "referencing XREF" filter is precise only against the index
-        // (target_xref =). In live mode it would degenerate into a coarse
-        // regex gate, so it is only forwarded with a fresh index - and never
-        // when a live scan is explicitly forced (it would be a no-op there).
-        if ($xref !== '' && $index_status['fresh'] && !$live) {
+        // The "referencing XREF" filter narrows the GEDCOM result set at the
+        // SQL level (precise via index target_xref, coarse via regex in live).
+        if ($xref !== '') {
             $data_params['xref'] = $xref;
         }
         if ($live) {
@@ -907,6 +930,191 @@ class LinkEnhancerModule extends AbstractModule implements
             'rectypes' => XrefsService::supportedGedcomRecordKeys(),
             'block_rectypes' => XrefsService::BLOCKS,
             'trees' => Registry::container()->get(TreeService::class)->all(),
+            'index_status' => $index_status,
+            'limited_mode' => !XrefsService::supportsRegexp(),
+        ]);
+    }
+
+
+    /**
+     * Reset 
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    public function getAdminResetListOverwritesAction(ServerRequestInterface $request): ResponseInterface
+    {
+        $params = Validator::queryParams($request);
+        $access_level = null;
+        try {
+            $access_level = (int) $params->integer('access_level', null);
+            $access_level = $access_level && ($access_level >= 0 && $access_level <= 2) ? $access_level : null;
+        } catch (Throwable $e) {}
+        
+        $query = DB::table('module_privacy')
+            ->where('interface', '=', ModuleListInterface::class)
+            ->where('module_name', '=', self::MODULE_NAME);
+
+        if ($access_level) {
+            $query = $query->where('access_level', '=', $access_level);
+        }
+
+        $query->delete();
+
+        return redirect($this->getConfigLink());
+    }
+
+    public function listIsEmpty(Tree $tree): bool
+    {
+        if (!$this->getPref(self::PREF_LINKSPP_ACTIVE, true)) {
+            return true;
+        }
+        $default_level = (int) $this->getPref(self::PREF_LINKSPP_OVERVIEW_ACCESS, true);
+        return !self::userHasOverviewAccess($tree, $default_level);
+    }
+
+    /**
+     * Check if the current user has access to the xref overview for this tree.
+     * Resolution: module_privacy (per-tree override) > module pref (default).
+     * Uses Auth::isManager()/isMember() (bool) – no int/enum comparison.
+     */
+    public static function userHasOverviewAccess(Tree $tree, int $default_level): bool
+    {
+        $override = DB::table('module_privacy')
+            ->where('gedcom_id', '=', $tree->id())
+            ->where('interface', '=', ModuleListInterface::class)
+            ->where('module_name', '=', self::MODULE_NAME)
+            ->value('access_level');
+
+        $level = ($override !== null) ? (int) $override : $default_level;
+
+        return match ($level) {
+            -1      => false,
+            0       => Auth::isManager($tree),
+            1       => Auth::isMember($tree),
+            default => true,
+        };
+    }
+
+    /**
+     * row count of overwrites in module_privacy for this module (total and access level specific)
+     * @param null|int $access_level
+     * @return array{"access_level": int, total: int}
+     */
+    public static function countListAccessOverwrites(null|int $access_level): array
+    {
+        return [
+            'total' => DB::table('module_privacy')
+                ->where('interface', '=', ModuleListInterface::class)
+                ->where('module_name', '=', self::MODULE_NAME)
+                ->count(),
+            'access_level' => $access_level === null ?
+                    0 :
+                    DB::table('module_privacy')
+                        ->where('interface', '=', ModuleListInterface::class)
+                        ->where('module_name', '=', self::MODULE_NAME)
+                        ->where('access_level', '=', $access_level)
+                        ->count()
+        ];
+    }
+
+
+    /**
+     * The title for a specific instance of this list. (ModuleListInterface)
+     * @return string
+     */
+    public function listTitle(): string
+    {
+        return I18N::translate('Cross-Reference Overview');
+    }
+
+    /**
+     * The URL for a page showing list options. (ModuleListInterface)
+     * @param Tree $tree
+     * @param array $parameters
+     * @return string
+     */
+    public function listUrl(Tree $tree, array $parameters = []): string
+    {
+        if (Auth::isAdmin()) {
+            return route('module', ['module' => $this->name(), 'action' => 'AdminXrefOverview', 'tree' => $tree->name()]);
+        }
+
+        return route('module', [
+                'module' => $this->name(),
+                'action' => 'List',
+                'tree'    => $tree->name(),
+        ] + $parameters);
+    }
+
+    /**
+     * CSS class for the menu (ModuleListInterface)
+     * @return string
+     */
+    public function listMenuClass(): string
+    {
+        return 'menu-list-xrefs'; // css class is used in getThemeSpecificCss()
+    }
+   
+    /**
+     * Per-tree cross-reference overview for non-admin users (members and above).
+     * Privacy-filtered: no raw GEDCOM snippets, personal blocks only for owner.
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    public function getListAction(ServerRequestInterface $request): ResponseInterface
+    {
+        $tree      = Validator::attributes($request)->tree();
+        $params    = Validator::queryParams($request);
+
+        $denied = ClassName::get(ClassName::EXCEPTION_HTTP_FORBIDDEN);
+        $default_level = (int) $this->getPref(self::PREF_LINKSPP_OVERVIEW_ACCESS, true);
+        if (!self::userHasOverviewAccess($tree, $default_level)) {
+            throw new $denied();
+        }
+
+        $xref      = trim((string) $params->string('xref', ''));
+        $rectype   = (string) $params->string('rectype', '');
+        $max_links = XrefsService::normalizeLinksPerClass((int) $params->integer('max_links', XrefsService::LINKS_PER_CLASS_DEFAULT));
+        $live      = $params->boolean('live', false);
+        $target    = $params->string('target', '');
+        $max_rows  = (int) $this->getPref(self::PREF_LINKSPP_OVERVIEW_MAX_ROWS, true);
+
+        $index_status = XrefsService::indexStatus();
+
+        $data_params = [
+            'tree' => $tree->id(),
+            'max_rows' => $max_rows,
+        ];
+        if ($xref !== '') {
+            $data_params['xref'] = $xref;
+        }
+        if ($live) {
+            $data_params['live'] = 1;
+        }
+        if ($rectype !== '') {
+            $data_params['rectype'] = $rectype;
+        }
+        if ($max_links !== XrefsService::LINKS_PER_CLASS_DEFAULT) {
+            $data_params['max_links'] = $max_links;
+        }
+        if ($target === 'problems') {
+            $data_params['target'] = 'problems';
+        }
+        $data_params['uid_active'] = (int) $this->getPref(self::PREF_UID_ACTIVE, true);
+
+        return $this->viewResponse($this->name() . '::xref-overview-list', [
+            'title' => I18N::translate('Cross-Reference Overview'),
+            'module' => $this,
+            'tree' => $tree,
+            'data_url' => route(XrefOverviewListData::class, $data_params),
+            'xref' => $xref,
+            'rectype' => $rectype,
+            'max_links' => $max_links,
+            'live' => $live,
+            'target' => $target,
+            'rectypes' => XrefsService::supportedGedcomRecordKeys(),
+            'block_rectypes' => XrefsService::BLOCKS,
             'index_status' => $index_status,
             'limited_mode' => !XrefsService::supportsRegexp(),
         ]);
@@ -1077,6 +1285,10 @@ class LinkEnhancerModule extends AbstractModule implements
             ])
             : ''
         );
+        $response['links']['resetlist_params'] = [
+            'module' => $this->name(),
+            'action' => 'AdminResetListOverwrites'
+        ];
         
 
         $response['tablerows'] = $this->wthb->getHelpTableCount();
@@ -1155,6 +1367,13 @@ class LinkEnhancerModule extends AbstractModule implements
         }
     }
 
+    /**
+     * Request handler for MiddlewareInterface
+     * injects modal ajax view where needed
+     * @param ServerRequestInterface $request
+     * @param RequestHandlerInterface $handler
+     * @return ResponseInterface
+     */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $response = $handler->handle($request);

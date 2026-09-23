@@ -5,7 +5,7 @@
  *
  * Copyright (C) 2026 Bernd Schwendinger
  *
- * webtrees: online genealogy application
+ * webtrees: online genealogy
  * Copyright (C) 2026 webtrees development team.
  *
  * This program is free software; you can redistribute it and/or modify
@@ -27,13 +27,7 @@ declare(strict_types=1);
 namespace Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers;
 
 use DomainException;
-use Throwable;
 use Fisharebest\Webtrees\Auth;
-use Fisharebest\Webtrees\DB;
-use Fisharebest\Webtrees\GedcomRecord;
-use Fisharebest\Webtrees\I18N;
-use Schwendinger\Webtrees\Helpers\MoreI18N;
-use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Services\DatatablesService;
 use Fisharebest\Webtrees\Services\TimeoutService;
 use Fisharebest\Webtrees\Services\TreeService;
@@ -44,17 +38,11 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Schwendinger\Webtrees\Helpers\ClassName;
-use Schwendinger\Webtrees\Module\LinkEnhancer\Services\IdResolver;
-use Schwendinger\Webtrees\Module\LinkEnhancer\Services\TextTagCollector;
+use Schwendinger\Webtrees\Helpers\MoreI18N;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefOverviewColumns;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 
-use function array_key_exists;
-use function array_map;
-use function array_slice;
-use function count;
-use function e;
-use function route;
-use function strlen;
+use function response;
 use function trim;
 
 /**
@@ -66,7 +54,8 @@ use function trim;
  *   tree    only this tree (gedcom id)
  *
  * Data source: the link index (Phase 2) when present and fresh,
- * otherwise the live regex scan.
+ * otherwise the live regex scan. The column / target-resolution layer is
+ * shared with the per-tree non-admin endpoint (XrefOverviewColumns).
  */
 final class AdminXrefOverviewData implements RequestHandlerInterface
 {
@@ -75,12 +64,6 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
     private TimeoutService $timeout_service;
 
     private TreeService $tree_service;
-
-    /** Per-request cache for referenced-record lookups: "tree_id\0xref" => label|null. */
-    private array $target_cache = [];
-
-    /** Per-request cache for global UID ("not unique") lookups: "GLOBAL\0uid" => payload|null. */
-    private array $ambiguous_cache = [];
 
     /** D3: the UID feature pref, forwarded by the page (module is the source of truth). */
     private bool $uid_active = false;
@@ -142,27 +125,30 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
         // directly-called endpoint (no param) never enables the feature.
         $this->uid_active = $params->boolean('uid_active', false);
 
+        $columns = new XrefOverviewColumns($this->tree_service, $this->uid_active);
+
         // Phase 2: prefer the link index when it is present and fresh, unless
-        // a live scan is explicitly forced. In live mode the "referencing
-        // XREF" filter is index-only and would be a coarse gate, so it is not
-        // applied there.
+        // a live scan is explicitly forced. The "referencing XREF" filter
+        // narrows the GEDCOM result set at the SQL level in both modes.
+        // Blocks are not filtered by XREF (handleQuery architecture); use
+        // the rectype filter to exclude them.
         $index_fresh = XrefsService::indexStatus()['fresh'] && !$live;
 
         $query = null;
         if ($sources['gedcom']) {
             $query = $index_fresh
                 ? XrefsService::getIndexQuery($tree, $xref !== '' ? $xref : null, $sources['rectypes'], false)
-                : XrefsService::getRecordsQuery($tree, null, $sources['rectypes'], false);
+                : XrefsService::getRecordsQuery($tree, $xref !== '' ? $xref : null, $sources['rectypes'], false);
         }
         if ($sources['blocks']) {
-            $block_query = XrefsService::getBlockQuery($tree, $sources['rectypes'], $index_fresh);
+            $block_query = XrefsService::getBlockQuery($tree, $sources['rectypes'], $index_fresh, null, $xref);
             if ($block_query !== null) {
                 $query = $query === null ? $block_query : $query->unionAll($block_query);
             }
         }
 
         if ($only_problems) {
-            return $this->problemsResponse($request, $query, $index_fresh, $xref, $max_links, $context_tree);
+            return $this->problemsResponse($request, $query, $index_fresh, $xref, $max_links, $context_tree, $columns);
         }
 
         if ($index_fresh) {
@@ -171,7 +157,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
                 $query,
                 ['xref', 'type'],
                 [0 => 'xref', 1 => 'type'],
-                fn (object $row): array => $this->dispatchRow($row, $max_links, $xref, true, $context_tree)
+                fn (object $row): array => $columns->dispatchRow($row, $max_links, $xref, true, $context_tree)
             );
         }
 
@@ -180,7 +166,7 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
             $query,
             ['xref', 'type'],
             [0 => 'xref', 1 => 'type'],
-            fn (object $row): array => $this->dispatchRow($row, $max_links, '', false, $context_tree)
+            fn (object $row): array => $columns->dispatchRow($row, $max_links, '', false, $context_tree)
         );
     }
 
@@ -196,12 +182,12 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
      * rows only carry scalar properties (file/xref/type[/gedcom]), so the
      * (array)/(object) round-trip is lossless.
      */
-    private function problemsResponse(ServerRequestInterface $request, Builder $query, bool $index_fresh, string $xref, int $max_links, ?Tree $context_tree = null): ResponseInterface
+    private function problemsResponse(ServerRequestInterface $request, Builder $query, bool $index_fresh, string $xref, int $max_links, ?Tree $context_tree, XrefOverviewColumns $columns): ResponseInterface
     {
         $context_tree = $context_tree ?? $this->tree_service->all()->first();
         if ($index_fresh) {
             $rows = $query->get()
-                ->filter(fn (object $row): bool => $this->indexRowHasProblem($row))
+                ->filter(fn (object $row): bool => $columns->rowHasProblem($row, true))
                 ->map(static fn (object $row): array => (array) $row);
 
             return $this->datatables_service->handleCollection(
@@ -209,12 +195,12 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
                 $rows,
                 ['xref', 'type'],
                 [0 => 'xref', 1 => 'type'],
-                fn (array $row): array => $this->dispatchRow((object) $row, $max_links, $xref, true, $context_tree)
+                fn (array $row): array => $columns->dispatchRow((object) $row, $max_links, $xref, true, $context_tree)
             );
         }
 
         $rows = $query->get()
-            ->filter(fn (object $row): bool => $this->liveRowHasProblem($row))
+            ->filter(fn (object $row): bool => $columns->rowHasProblem($row, false))
             ->map(static fn (object $row): array => (array) $row);
 
         return $this->datatables_service->handleCollection(
@@ -222,430 +208,8 @@ final class AdminXrefOverviewData implements RequestHandlerInterface
             $rows,
             ['xref', 'type'],
             [0 => 'xref', 1 => 'type'],
-            fn (array $row): array => $this->dispatchRow((object) $row, $max_links, '', false, $context_tree)
+            fn (array $row): array => $columns->dispatchRow((object) $row, $max_links, '', false, $context_tree)
         );
-    }
-
-    /**
-     * True when this index row references at least one missing/mismatch target.
-     */
-    private function indexRowHasProblem(object $row): bool
-    {
-        $block_id = property_exists($row, 'block_id') ? (int) $row->block_id : 0;
-        if ($block_id > 0) {
-            return $this->blockRowHasProblem($row);
-        }
-
-        $tree = $this->findTree((int) $row->file);
-
-        return XrefsService::inventoryHasProblem($this->indexInventory($row, $tree)['entries'], $this->makeTargetLinker($tree, (int) $row->file));
-    }
-
-    /**
-     * True when this live-scan row references at least one missing/mismatch target.
-     */
-    private function liveRowHasProblem(object $row): bool
-    {
-        $block_id = property_exists($row, 'block_id') ? (int) $row->block_id : 0;
-        if ($block_id > 0) {
-            return $this->blockRowHasProblem($row);
-        }
-
-        $tree      = $this->findTree((int) $row->file);
-        $inventory = XrefsService::classifyGedcomText((string) $row->gedcom, TextTagCollector::DEFAULT_TAGS, (string) $row->type);
-
-        return XrefsService::inventoryHasProblem($inventory['entries'], $this->makeTargetLinker($tree, (int) $row->file));
-    }
-
-    private function blockRowHasProblem(object $row): bool
-    {
-        $module_name = (string) $row->type;
-        $file        = (int) ($row->file ?? 0);
-        $tree        = $file > 0 ? $this->findTree($file) : null;
-
-        $block_def = XrefsService::BLOCKS[$module_name] ?? null;
-        if ($block_def === null) {
-            return false;
-        }
-
-        $settings = DB::table('block_setting')
-            ->where('block_id', '=', (int) $row->block_id)
-            ->pluck('setting_value', 'setting_name');
-
-        $entries = [];
-        foreach ($block_def['settings'] as $name => $class) {
-            if ($class !== 'text') {
-                continue;
-            }
-            $text = (string) ($settings[$name] ?? '');
-            if ($text === '') {
-                continue;
-            }
-            foreach (XrefsService::classifyHtmlLinks($text) as $link) {
-                $entries[] = [
-                    'path'    => $name,
-                    'class'   => $link['class'],
-                    'token'   => $link['token'],
-                    'snippet' => $link['snippet'],
-                ];
-            }
-        }
-
-        return XrefsService::inventoryHasProblem($entries, $this->makeTargetLinker($tree, $file));
-    }
-
-    /**
-     * Live scan row: the record text is already part of the row (C4).
-     */
-    private function liveRowToColumns(object $row, int $max_links, bool $highlight_problems = false): array
-    {
-        $gedcom = (string) $row->gedcom;
-        $tree   = $this->findTree((int) $row->file);
-
-        $record = null;
-        if ($tree !== null) {
-            $record = Registry::gedcomRecordFactory()->make((string) $row->xref, $tree, $gedcom);
-        }
-
-        $inventory = XrefsService::classifyGedcomText($gedcom, TextTagCollector::DEFAULT_TAGS, (string) $row->type);
-
-        return $this->inventoryColumns($row, $tree, $record, $inventory, $max_links, '', $highlight_problems);
-    }
-
-    private function dispatchRow(object $row, int $max_links, string $highlight_xref, bool $index_fresh, ?Tree $context_tree = null): array
-    {
-        $block_id = property_exists($row, 'block_id') ? (int) $row->block_id : 0;
-        if ($block_id > 0) {
-            return $this->blockRowToColumns($row, $max_links, $highlight_xref, false, $context_tree);
-        }
-        if ($index_fresh) {
-            return $this->indexRowToColumns($row, $max_links, $highlight_xref);
-        }
-
-        return $this->liveRowToColumns($row, $max_links);
-    }
-
-    /**
-     * Block row: fetch settings (PK point lookup), classify "text" settings
-     * for LE links, build the same 4-column output as GEDCOM rows.
-     */
-    private function blockRowToColumns(object $row, int $max_links, string $highlight_xref = '', bool $highlight_problems = false, ?Tree $context_tree = null): array
-    {
-        $block_id    = (int) $row->block_id;
-        $module_name = (string) $row->type;
-        $file        = (int) ($row->file ?? 0);
-        $tree        = $file > 0 ? $this->findTree($file) : null;
-        $user_id     = isset($row->user_id) ? ($row->user_id !== null ? (int) $row->user_id : null) : null;
-
-        $block_def = XrefsService::BLOCKS[$module_name] ?? null;
-        if ($block_def === null) {
-            return [e($row->xref), e($module_name), '', '0'];
-        }
-
-        $settings = DB::table('block_setting')
-            ->where('block_id', '=', $block_id)
-            ->pluck('setting_value', 'setting_name');
-
-        $title_setting = '';
-        foreach ($block_def['settings'] as $name => $class) {
-            if ($class === 'title') {
-                $title_setting = (string) ($settings[$name] ?? '');
-                break;
-            }
-        }
-
-        $entries = [];
-        $counts  = XrefsService::emptyCounts();
-        foreach ($block_def['settings'] as $name => $class) {
-            if ($class !== 'text') {
-                continue;
-            }
-            $text = (string) ($settings[$name] ?? '');
-            if ($text === '') {
-                continue;
-            }
-            foreach (XrefsService::classifyHtmlLinks($text) as $link) {
-                $counts[$link['class']] = ($counts[$link['class']] ?? 0) + 1;
-                $entries[] = [
-                    'path'    => $name,
-                    'class'   => $link['class'],
-                    'token'   => $link['token'],
-                    'snippet' => $link['snippet'],
-                ];
-            }
-        }
-
-        $xref_label = (string) $row->xref;
-        $edit_url   = $this->blockEditUrl($tree, $module_name, $block_id, $user_id, $context_tree);
-        $xref_html  = ($edit_url ? '<a href="' . e($edit_url) . '">' . e($xref_label) . '</a>' : e($xref_label))
-            . '<br><small class="text-muted">'
-            . e($tree !== null ? $tree->name() : MoreI18N::xlate('Global'))
-            . '</small>';
-
-        $type_html = e(MoreI18N::xlate($block_def['title']));
-
-        $display_title = $title_setting !== '' ? $title_setting : $xref_label;
-        $name_html = '<strong>' .  ($edit_url ? '<a href="' . e($edit_url) . '">' . e($display_title) . '</a>' : e($display_title) ) . '</strong>';
-        $name_html .= XrefsService::linkInventoryHtml(
-            $entries, $max_links, $highlight_xref,
-            $this->makeTargetLinker($tree, $file), $highlight_problems,
-            $this->uid_active ? $this->makeAmbiguousLinker($tree, $file) : null
-        );
-
-        return [
-            $xref_html,
-            $type_html,
-            $name_html,
-            XrefsService::linkCountSummary($counts),
-        ];
-    }
-
-    private function blockEditUrl(?Tree $tree, string $module_name, int $block_id, int|null $user_id, ?Tree $context_tree = null): string
-    {
-        $url_tree = $tree ?? $context_tree ?? $this->tree_service->all()->first();
-        if ($url_tree === null) {
-            return '';
-        }
-
-        if ($module_name === 'html') {
-            $route = ClassName::get(ClassName::TREE_PAGE_BLOCK_EDIT);
-            if ($user_id !== null) {
-                if ($user_id === Auth::id()) { // also admins are not allowed to edit personal html blocks owned by other users
-                    $route = ClassName::get(ClassName::USER_PAGE_BLOCK_EDIT);
-                } else {
-                    return '';
-                }
-            }
-
-            return route($route, ['tree' => $url_tree->name(), 'block_id' => $block_id]);
-        }
-
-        $action = $module_name === '_vesta_classic_look_and_feel_' ? 'Admin2Edit' : 'AdminEdit';
-
-        return route('module-tree', [
-            'module'   => $module_name,
-            'action'   => $action,
-            'tree'     => $url_tree->name(),
-            'block_id' => $block_id,
-        ]);
-    }
-
-    /**
-     * The link inventory of one index row. When the index entry has vanished
-     * it falls back to a live scan of the record. Shared by the column builder
-     * and the "only broken targets" filter so both see the same links.
-     *
-     * @return array{entries: array<int, array{path: string, class: string, token: string, snippet: string}>, counts: array<string, int>}
-     */
-    private function indexInventory(object $row, ?Tree $tree): array
-    {
-        $links = XrefsService::indexRowLinks((int) $row->file, (string) $row->xref, (string) $row->type);
-        if ($links !== []) {
-            $counts  = XrefsService::emptyCounts();
-            $entries = [];
-            foreach ($links as $link) {
-                $counts[$link['class']] = ($counts[$link['class']] ?? 0) + 1;
-                $entries[] = [
-                    'path'    => $link['tag_path'],
-                    'class'   => $link['class'],
-                    'token'   => $link['token'],
-                    'snippet' => $link['snippet'] ?? $link['token'],
-                ];
-            }
-
-            return ['entries' => $entries, 'counts' => $counts];
-        }
-
-        // Index entry vanished - fall back to the live scan of this record.
-        $record = null;
-        if ($tree !== null) {
-            $record = Registry::gedcomRecordFactory()->make((string) $row->xref, $tree);
-        }
-
-        return $record instanceof GedcomRecord
-            ? XrefsService::classifyRecordLinks($record)
-            : ['entries' => [], 'counts' => XrefsService::emptyCounts()];
-    }
-
-    /**
-     * Index row: links come from the index, the record is fetched per row
-     * (a cheap indexed point lookup) for the display name and the URL.
-     * $highlight_xref is the active "referencing XREF" filter (empty = none);
-     * it is forwarded so the inventory can mark that XREF's occurrence.
-     */
-    private function indexRowToColumns(object $row, int $max_links, string $highlight_xref = '', bool $highlight_problems = false): array
-    {
-        $tree = $this->findTree((int) $row->file);
-
-        $record = null;
-        if ($tree !== null) {
-            $record = Registry::gedcomRecordFactory()->make((string) $row->xref, $tree);
-        }
-
-        return $this->inventoryColumns($row, $tree, $record, $this->indexInventory($row, $tree), $max_links, $highlight_xref, $highlight_problems);
-    }
-
-    /**
-     * @param object $row        row with xref, file, type
-     * @param array{entries: array<int, array{path: string, class: string, token: string, snippet: string}>, counts: array<string, int>} $inventory
-     * @param string $highlight_xref active "referencing XREF" filter (index path only; empty = none)
-     */
-    private function inventoryColumns(object $row, ?Tree $tree, ?GedcomRecord $record, array $inventory, int $max_links, string $highlight_xref = '', bool $highlight_problems = false): array
-    {
-        $xref = (string) $row->xref;
-        $type = (string) $row->type;
-        $file = (int) $row->file;
-
-        $url = $record instanceof GedcomRecord ? $record->url() : null;
-
-        // The xref cell shows the tree name as a second muted line; the
-        // type stays its own (sortable) column.
-        $xref_html = '<a href="' . e($url ?? '#') . '">' . e($xref) . '</a>'
-            . '<br><small class="text-muted">'
-            . e($tree !== null ? $tree->name() : (I18N::translate('tree') . ' #' . $file))
-            . '</small>';
-
-        $name = $record instanceof GedcomRecord ? $record->fullName() : $xref;
-        $name_html = '<strong>' . (
-                $record instanceof GedcomRecord
-                ? '<a href="' . e($url) . '">' . $name . '</a>' // name contains html, so no escape needed
-                : e($name)
-            ) . '</strong>';
-        // Resolve referenced records (xref/classic targets) for the inventory;
-        // the source tree is this row's tree, the resolver is cached per request.
-        $name_html .= XrefsService::linkInventoryHtml($inventory['entries'], $max_links, $highlight_xref, $this->makeTargetLinker($tree, $file), $highlight_problems, $this->uid_active ? $this->makeAmbiguousLinker($tree, $file) : null);
-
-        return [
-            $xref_html,
-            e($type),
-            $name_html,
-            XrefsService::linkCountSummary($inventory['counts']),
-        ];
-    }
-
-    private function findTree(int $file): ?Tree
-    {
-        try {
-            return $this->tree_service->find($file);
-        } catch (DomainException) {
-            // Orphaned row - the tree no longer exists.
-            return null;
-        }
-    }
-
-    /**
-     * @return callable(string, ?string): (array{name: string, url: string, tree_label: string}|null)
-     */
-    private function makeTargetLinker(?Tree $source_tree, int $source_tree_id): callable
-    {
-        return fn (string $xref, ?string $target_tree_name): ?array => $this->resolveTarget($xref, $target_tree_name, $source_tree, $source_tree_id);
-    }
-
-    /**
-     * @return callable(string, ?string): array{count: int, hits: array<int, array{name: string, url: string, tree_label: string}>, goto_url: string}|null
-     */
-    private function makeAmbiguousLinker(?Tree $source_tree, int $source_tree_id): callable
-    {
-        return fn (string $id, ?string $target_tree_name): ?array => $this->resolveAmbiguousTarget($id, $target_tree_name, $source_tree, $source_tree_id);
-    }
-
-    /**
-     * Resolve a referenced target (an XREF or a UID, the target of an
-     * xref/classic/pic link) to a display label + URL, via the shared
-     * IdResolver (length-aware XREF/UID, global fallback for tree-less
-     * targets). The target tree is the explicit @tree (a tree NAME carried by
-     * the link) when present, else the source record's own tree; a tree-less
-     * target is resolved globally (UID only). Also returns the record's actual
-     * GEDCOM tag ("actual") so the caller can check a declared wt= type / Media
-     * expectation. Cached per request, keyed by resolved tree id (or GLOBAL) +
-     * id (so a same-tree target from different source rows does not collide).
-     *
-     * @return array{name: string, url: string, tree_label: string, actual: string}|null
-     */
-    private function resolveTarget(string $xref, ?string $target_tree_name, ?Tree $source_tree, int $source_tree_id): ?array
-    {
-        $tree = ($target_tree_name !== null && $target_tree_name !== '')
-            ? $this->tree_service->all()->get($target_tree_name)
-            : $source_tree;
-
-        $cache_key = (($tree instanceof Tree) ? (int) $tree->id() : 'GLOBAL') . "\0" . $xref;
-        if (array_key_exists($cache_key, $this->target_cache)) {
-            return $this->target_cache[$cache_key];
-        }
-
-        $candidates = IdResolver::candidates($xref, $tree, $source_tree_id);
-        if ($candidates === []) {
-            $this->target_cache[$cache_key] = null;
-            return null;
-        }
-
-        $candidate = $candidates[0];
-        $label     = [
-            'name'       => $candidate['record']->fullName(),
-            'url'        => $candidate['record']->url(),
-            'tree_label' => $candidate['tree_label'],
-            'actual'     => $candidate['record']->tag(),
-        ];
-        $this->target_cache[$cache_key] = $label;
-
-        return $label;
-    }
-
-    /**
-     * D1/D5: resolve a "missing" UID-length target that has NO explicit @tree
-     * against the other trees (global UID lookup, visibility-filtered). Returns
-     * the match payload (count + up to 3 hits + a goto-id URL) when there is at
-     * least one global match, else null (the caller then keeps the "missing"
-     * rendering). An explicit @tree (a precise reference) or a short XREF never
-     * qualifies. Cached per request.
-     *
-     * @return array{count: int, hits: array<int, array{name: string, url: string, tree_label: string}>, goto_url: string}|null
-     */
-    private function resolveAmbiguousTarget(string $id, ?string $target_tree_name, ?Tree $source_tree, int $source_tree_id): ?array
-    {
-        if ($target_tree_name !== null && $target_tree_name !== '') {
-            return null;
-        }
-        if (strlen($id) < IdResolver::UID_MIN_LENGTH) {
-            return null;
-        }
-
-        $cache_key = 'GLOBAL\0' . $id;
-        if (array_key_exists($cache_key, $this->ambiguous_cache)) {
-            return $this->ambiguous_cache[$cache_key];
-        }
-
-        $hits = IdResolver::candidates($id, null, $source_tree_id);
-        if ($hits === []) {
-            $this->ambiguous_cache[$cache_key] = null;
-            return null;
-        }
-
-        $mapped = array_map(
-            static fn (array $hit): array => [
-                'name'       => $hit['record']->fullName(),
-                'url'        => $hit['record']->url(),
-                'tree_label' => $hit['tree_label'],
-            ],
-            $hits
-        );
-
-        $goto_url = '';
-        try {
-            $goto_url = route('le.goto-id.global', ['id' => $id]);
-        } catch (Throwable) {
-            // route not registered (PREF_UID_ACTIVE off) - the list still works,
-            // only the >3 goto link degrades
-        }
-
-        $payload = [
-            'count'    => count($hits),
-            'hits'     => array_slice($mapped, 0, 3),
-            'goto_url' => $goto_url,
-        ];
-        $this->ambiguous_cache[$cache_key] = $payload;
-
-        return $payload;
     }
 
     private function emptyResponse(ServerRequestInterface $request): ResponseInterface

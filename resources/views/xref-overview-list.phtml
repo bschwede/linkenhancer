@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-use Schwendinger\Webtrees\Helpers\ClassName;
-use Schwendinger\Webtrees\Helpers\Functions;
 use Fisharebest\Webtrees\I18N;
-use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
+use Schwendinger\Webtrees\Helpers\Functions;
 use Schwendinger\Webtrees\Helpers\MoreI18N;
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 
 use function parse_str;
@@ -15,30 +14,22 @@ use function parse_url;
 /**
  * @var string                                        $title
  * @var LinkEnhancerModule                            $module
- * @var string                                        $data_url   server-side data endpoint (incl. active filters)
- * @var string                                        $xref       active "target xref" filter
- * @var string                                        $rectype    active record-type filter
- * @var int                                           $tree_id    active tree filter (0 = all)
- * @var int                                           $max_links  active inventory cap (0 = all)
- * @var array<int,string>                             $rectypes   selectable record types
+ * @var \Fisharebest\Webtrees\Tree                    $tree
+ * @var string                                        $data_url
+ * @var string                                        $xref
+ * @var string                                        $rectype
+ * @var int                                           $max_links
+ * @var array<int,string>                             $rectypes
  * @var array<string, array{title: string, settings: array<string, string>}> $block_rectypes
- * @var \Illuminate\Support\Collection                $trees      all trees
  * @var array{rows: int, scanned_at: string|null, fresh: bool} $index_status
- * @var bool                                          $live         force live scan (index bypass)
- * @var string                                        $target     active "only broken targets" filter ('' or 'problems')
- * @var bool                                          $limited_mode no REGEXP support (SQLite/SQL Server)
+ * @var bool                                          $live
+ * @var string                                        $target
+ * @var bool                                          $limited_mode
  */
 
-$page_url = route('module', ['module' => $module->name(), 'action' => 'AdminXrefOverview']);
-// The index is used only when it is fresh AND a live scan is not forced.
+$page_url = route('module', ['module' => $module->name(), 'action' => 'List', 'tree' => $tree->name()]);
 $use_index = $index_status['fresh'] && !$live;
 
-// In the default (non-pretty) URL mode the action URL is
-// "index.php?route=…" - and a GET form submission REPLACES that query
-// string with the form fields, losing the route. Re-inject every query
-// parameter of the action URL as hidden fields so the submission keeps
-// working. In pretty mode the action URL has no query string, so nothing
-// is rendered and the behaviour is unchanged.
 $action_query  = (string) (parse_url($page_url, PHP_URL_QUERY) ?: '');
 $hidden_params = [];
 parse_str($action_query, $hidden_params);
@@ -48,15 +39,7 @@ if ($index_status_ts) {
 }
 ?>
 
-<?= view('components/breadcrumbs', [
-    'links' => [
-        route(ClassName::get(ClassName::CONTROL_PANEL)) => MoreI18N::xlate('Control panel'),
-        $module->getConfigLink() => $module->title(),
-        $title,
-    ],
-]) ?>
-
-<h1 id="top"><?= e($title) ?></h1>
+<h2 class="wt-page-title" id="top"><?= e($title) ?></h1>
 
 <p class="text-muted">
     <?= I18N::translate('List all records that contain cross-references (XREFs) or linkenhancer links.') ?>
@@ -84,21 +67,19 @@ if ($index_status_ts) {
 
 <?php if ($target === 'problems'): ?>
     <div class="alert alert-warning">
-        <?= I18N::translate('Only broken targets: every matching record is loaded and its targets resolved on the server, which can be slow on large trees. Combine with the type/tree filters to narrow the scan.') ?>
+        <?= I18N::translate('Only broken targets: every matching record is loaded and its targets resolved on the server, which can be slow on large trees. Combine with the type filter to narrow the scan.') ?>
     </div>
 <?php endif ?>
 
 <form class="row g-2 mt-2 mb-3 gx-3 ps-2" method="get" action="<?= e($page_url) ?>">
     <?php foreach ($hidden_params as $hidden_name => $hidden_value): ?>
-        <?php if ($hidden_name !== 'xref' || $index_status['fresh']): ?>
+        <?php if ($hidden_name !== 'xref'): ?>
             <input type="hidden" name="<?= e($hidden_name) ?>" value="<?= e($hidden_value) ?>">
         <?php endif; ?>
     <?php endforeach; ?>
-    <?php if ($use_index): ?>
-        <div class="col-auto">
-            <input class="form-control" type="text" name="xref" value="<?= e($xref) ?>" placeholder="<?= I18N::translate('referencing XREF') ?>">
-        </div>
-    <?php endif; ?>
+    <div class="col-auto">
+        <input class="form-control" type="text" name="xref" value="<?= e($xref) ?>" placeholder="<?= I18N::translate('referencing XREF') ?>">
+    </div>
     <?php if ($index_status['fresh']): ?>
         <div class="col-auto form-check">
             <input class="form-check-input" type="checkbox" name="live" value="1" id="le-force-live" <?= $live ? 'checked' : '' ?>>
@@ -123,14 +104,6 @@ if ($index_status_ts) {
         </select>
     </div>
     <div class="col-auto">
-        <select class="form-select" name="tree" title="<?= e(MoreI18N::xlate('Family trees')) ?>">
-            <option value=""><?= I18N::translate('All trees') ?></option>
-            <?php foreach ($trees as $tree): ?>
-                <option value="<?= $tree->id() ?>" <?= $tree->id() === $tree_id ? 'selected' : '' ?>><?= e($tree->name()) ?></option>
-            <?php endforeach; ?>
-        </select>
-    </div>
-    <div class="col-auto">
         <select class="form-select" name="max_links" title="<?= I18N::translate('links per class') ?>">
             <?php foreach (XrefsService::LINKS_PER_CLASS_OPTIONS as $option): ?>
                 <option value="<?= $option ?>" <?= $option === $max_links ? 'selected' : '' ?>><?= $option === 0 ? MoreI18N::xlate('All') : (string) $option ?></option>
@@ -141,7 +114,7 @@ if ($index_status_ts) {
         <input class="form-check-input" type="checkbox" name="target" value="problems" id="le-only-problems" <?= $target === 'problems' ? 'checked' : '' ?>>
         <label class="form-check-label" for="le-only-problems" title="<?= I18N::translate('Only rows with a missing or wrong-type target are shown') ?>">
             <?= I18N::translate('Only broken targets') ?>
-            (<span title="<?= e(I18N::translate("target not found")) ?>"><?= XrefsService::TARGET_NOT_FOUND_GLYPH ?></span> 
+            (<span title="<?= e(I18N::translate("target not found")) ?>"><?= XrefsService::TARGET_NOT_FOUND_GLYPH ?></span>
             / <span title="<?= e(I18N::translate("The target type differs from the declaration")) ?>"><?= XrefsService::TARGET_TYPE_MISMATCH_GLYPH ?></span>
             / <span title="<?= e(I18N::translate("target not unique")) ?>"><?= XrefsService::TARGET_AMBIGUOUS_GLYPH ?></span>
             )
@@ -152,11 +125,8 @@ if ($index_status_ts) {
     </div>
 </form>
 
-<!-- The global DataTables search box offers little value here (the dedicated
-     filters above cover it); hide it for this table only. The admin layout
-     loads no module CSS, so the reference-link styles are inlined here too. -->
 <style>
-#wt-datatables-xref-overview_wrapper .dt-search { display: none; }
+#wt-datatables-xref-overview-list_wrapper .dt-search { display: none; }
 .le-target-links { margin-top: 0.15em; font-size: 0.9em; color: #555; }
 .le-target-missing { color: #b02a37; font-style: italic; }
 .le-target-type-mismatch { color: #b8860b; font-weight: bold; cursor: help; }
@@ -166,7 +136,7 @@ if ($index_status_ts) {
 
 <div class="table-responsive pt-2 pb-4">
     <table
-        id="wt-datatables-xref-overview"
+        id="wt-datatables-xref-overview-list"
         class="table table-bordered table-sm <?= Functions::wtIsAtLeast2_3() ? 'wt-' : '' ?>datatables d-none"
         <?= view('lists/datatables-attributes') ?>
         data-ajax="<?= e($data_url) ?>"
@@ -185,6 +155,6 @@ if ($index_status_ts) {
 </div>
 
 <?= view($module->name() . '::' . 'xref-overview-script', [
-    'table_id' => 'wt-datatables-xref-overview',
-    'has_tree' => true,
+    'table_id' => 'wt-datatables-xref-overview-list',
+    'has_tree' => false,
 ]) ?>
