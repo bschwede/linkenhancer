@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-19 21:03+0200\n"
+"POT-Creation-Date: 2026-09-23 13:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: src/Services/XrefOverviewColumns.php:500
+msgid "tree"
+msgstr ""
+
 #: src/Services/MarkdownEditorActivationService.php:187
 #: src/Services/MarkdownEditorActivationService.php:191
 msgid "Option is disabled"
@@ -24,7 +28,7 @@ msgstr ""
 
 #. I18N: Settings - section title
 #: src/Services/MarkdownEditorActivationService.php:187
-#: resources/views/settings-main.phtml:47 resources/views/settings.phtml:147
+#: resources/views/settings-main.phtml:47 resources/views/settings.phtml:148
 msgid "Markdown enhancements"
 msgstr ""
 
@@ -40,47 +44,51 @@ msgstr ""
 msgid "Precondition: Tree preference '%s' need to be set to markdown."
 msgstr ""
 
-#: src/Services/XrefsService.php:750
+#: src/Services/XrefsService.php:773
 msgid "Cross-references"
 msgstr ""
 
-#: src/Services/XrefsService.php:751
+#: src/Services/XrefsService.php:774
 msgid "External links"
 msgstr ""
 
-#: src/Services/XrefsService.php:752
+#: src/Services/XrefsService.php:775
 msgid "Pictures"
 msgstr ""
 
-#: src/Services/XrefsService.php:753
+#: src/Services/XrefsService.php:776
 msgid "Classic cross-references"
 msgstr ""
 
-#: src/Services/XrefsService.php:754
+#: src/Services/XrefsService.php:777
 msgid "Other - maybe damaged - links"
 msgstr ""
 
-#: src/Services/XrefsService.php:896 resources/views/xref-overview.phtml:143
+#: src/Services/XrefsService.php:930
+#: resources/views/xref-overview-list.phtml:117
+#: resources/views/xref-overview.phtml:144
 msgid "target not found"
 msgstr ""
 
 #. I18N: JS enhanced link
-#: src/Services/XrefsService.php:904 src/Services/XrefsService.php:936
-#: src/Services/XrefsService.php:939 src/LinkEnhancerUtils.php:139
+#: src/Services/XrefsService.php:938 src/Services/XrefsService.php:970
+#: src/Services/XrefsService.php:973 src/LinkEnhancerUtils.php:139
 #: resources/views/help-wt-helptext.phtml:16
 msgid "Cross-reference"
 msgstr ""
 
-#: src/Services/XrefsService.php:906
+#: src/Services/XrefsService.php:940
 #, php-format
 msgid "expected %1$s, is %2$s"
 msgstr ""
 
-#: src/Services/XrefsService.php:930 resources/views/xref-overview.phtml:145
+#: src/Services/XrefsService.php:964
+#: resources/views/xref-overview-list.phtml:119
+#: resources/views/xref-overview.phtml:146
 msgid "target not unique"
 msgstr ""
 
-#: src/Services/XrefsService.php:930
+#: src/Services/XrefsService.php:964
 #, php-format
 msgid "%1$s - %2$d matches in other trees"
 msgstr ""
@@ -89,7 +97,7 @@ msgstr ""
 #: src/Services/WthbService.php:111 src/Services/WthbService.php:144
 #: src/Services/WthbService.php:271 src/LinkEnhancerUtils.php:166
 #: src/Http/RequestHandlers/HelpWthbAction.php:49
-#: resources/views/help-wt-helptext.phtml:16 resources/views/settings.phtml:155
+#: resources/views/help-wt-helptext.phtml:16 resources/views/settings.phtml:156
 msgid "Webtrees manual"
 msgstr ""
 
@@ -482,37 +490,33 @@ msgstr ""
 msgid "Permalink"
 msgstr ""
 
-#: src/Http/RequestHandlers/AdminXrefOverviewData.php:505
-msgid "tree"
-msgstr ""
-
-#: src/Http/RequestHandlers/GotoIdAction.php:82
+#: src/Http/RequestHandlers/GotoIdAction.php:86
 #, php-format
 msgid "No record for %s was found."
 msgstr ""
 
-#: src/Http/RequestHandlers/GotoIdAction.php:88
+#: src/Http/RequestHandlers/GotoIdAction.php:92
 #, php-format
 msgid "%s was found in another tree."
 msgstr ""
 
-#: src/Http/RequestHandlers/GotoIdAction.php:106
+#: src/Http/RequestHandlers/GotoIdAction.php:110
 #, php-format
 msgid "Multiple records for %s"
 msgstr ""
 
-#: src/Http/RequestHandlers/GotoUidAction.php:86
+#: src/Http/RequestHandlers/GotoUidAction.php:87
 #, php-format
 msgid ""
 "No record with UID %s was found. The UID index may not be available yet."
 msgstr ""
 
-#: src/Http/RequestHandlers/GotoUidAction.php:92
+#: src/Http/RequestHandlers/GotoUidAction.php:93
 #, php-format
 msgid "UID %s was found in another tree."
 msgstr ""
 
-#: src/Http/RequestHandlers/GotoUidAction.php:99
+#: src/Http/RequestHandlers/GotoUidAction.php:100
 #, php-format
 msgid "Multiple records for UID %s"
 msgstr ""
@@ -557,26 +561,27 @@ msgid "File '%1$s' in the public folder is not an image but '%2$s'"
 msgstr ""
 
 #. I18N: Module title
-#: src/LinkEnhancerModule.php:295
+#: src/LinkEnhancerModule.php:309
 msgid "Link-Enhancer"
 msgstr ""
 
 #. I18N: Module description
-#: src/LinkEnhancerModule.php:305
+#: src/LinkEnhancerModule.php:319
 msgid ""
 "Cross-references to Gedcom datasets, Markdown editor, context-sensitive link "
 "to the GenWiki webtrees manual"
 msgstr ""
 
-#: src/LinkEnhancerModule.php:689
+#: src/LinkEnhancerModule.php:714
 msgid "Home link - JSON with CSS rules seems to be invalid."
 msgstr ""
 
-#: src/LinkEnhancerModule.php:739 resources/views/settings-wthb.phtml:251
+#: src/LinkEnhancerModule.php:764 resources/views/settings-wthb.phtml:251
 msgid "Import registered routes"
 msgstr ""
 
-#: src/LinkEnhancerModule.php:898 resources/views/settings.phtml:75
+#: src/LinkEnhancerModule.php:921 src/LinkEnhancerModule.php:1027
+#: src/LinkEnhancerModule.php:1107 resources/views/settings.phtml:75
 msgid "Cross-Reference Overview"
 msgstr ""
 
@@ -620,15 +625,122 @@ msgstr ""
 msgid "The UID index is out of date."
 msgstr ""
 
+#: resources/views/xref-overview-list.phtml:45
+#: resources/views/xref-overview.phtml:62 resources/views/settings.phtml:79
+msgid ""
+"List all records that contain cross-references (XREFs) or linkenhancer links."
+msgstr ""
+
+#: resources/views/xref-overview-list.phtml:50
+#: resources/views/xref-overview.phtml:67
+msgid ""
+"Limited mode: this database engine has no regex support - the table is "
+"scanned live with a LIKE filter on every request, which can be slow on large "
+"trees. The link index is not available on this engine."
+msgstr ""
+
+#: resources/views/xref-overview-list.phtml:56
+#: resources/views/xref-overview.phtml:73
+#, php-format
+msgid "Link index active: %1$s scanned records, last verified %2$s."
+msgstr ""
+
+#: resources/views/xref-overview-list.phtml:60
+#: resources/views/xref-overview.phtml:77
+msgid ""
+"Live scan forced - the link index is bypassed for this view, which can be "
+"slow on large trees."
+msgstr ""
+
+#: resources/views/xref-overview-list.phtml:64
+#: resources/views/xref-overview.phtml:81
+msgid ""
+"No fresh link index - the table below scans the GEDCOM tables live, which "
+"can be slow on large trees. Build the index with the CLI script (see README."
+"md, \"CLI scripts & maintenance\")."
+msgstr ""
+
+#: resources/views/xref-overview-list.phtml:70
+msgid ""
+"Only broken targets: every matching record is loaded and its targets "
+"resolved on the server, which can be slow on large trees. Combine with the "
+"type filter to narrow the scan."
+msgstr ""
+
+#: resources/views/xref-overview-list.phtml:81
+#: resources/views/xref-overview.phtml:99
+msgid "referencing XREF"
+msgstr ""
+
+#: resources/views/xref-overview-list.phtml:86
+#: resources/views/xref-overview.phtml:105
+msgid "Bypass the link index and scan the GEDCOM tables live"
+msgstr ""
+
+#: resources/views/xref-overview-list.phtml:86
+#: resources/views/xref-overview.phtml:105
+msgid "Force live scan"
+msgstr ""
+
+#: resources/views/xref-overview-list.phtml:90
+#: resources/views/xref-overview.phtml:109
+msgid "Record types"
+msgstr ""
+
+#: resources/views/xref-overview-list.phtml:91
+#: resources/views/xref-overview.phtml:110
+msgid "All types"
+msgstr ""
+
+#: resources/views/xref-overview-list.phtml:92
+#: resources/views/xref-overview.phtml:111
+msgid "All GEDCOM records"
+msgstr ""
+
+#: resources/views/xref-overview-list.phtml:93
+#: resources/views/xref-overview.phtml:112
+msgid "All Block records"
+msgstr ""
+
+#: resources/views/xref-overview-list.phtml:94
+#: resources/views/xref-overview.phtml:113
+msgid "GEDCOM records"
+msgstr ""
+
+#: resources/views/xref-overview-list.phtml:107
+#: resources/views/xref-overview.phtml:134
+msgid "links per class"
+msgstr ""
+
+#: resources/views/xref-overview-list.phtml:115
+#: resources/views/xref-overview.phtml:142
+msgid "Only rows with a missing or wrong-type target are shown"
+msgstr ""
+
+#: resources/views/xref-overview-list.phtml:116
+#: resources/views/xref-overview.phtml:143
+msgid "Only broken targets"
+msgstr ""
+
+#: resources/views/xref-overview-list.phtml:118
+#: resources/views/xref-overview.phtml:145
+msgid "The target type differs from the declaration"
+msgstr ""
+
+#: resources/views/xref-overview-list.phtml:148
+#: resources/views/xref-overview.phtml:178
+msgid "XREF"
+msgstr ""
+
 #. I18N: user defined url
 #. I18N: Settings - section title
-#: resources/views/settings-home.phtml:18 resources/views/settings.phtml:165
+#: resources/views/settings-home.phtml:18 resources/views/settings.phtml:166
 msgid "Home link"
 msgstr ""
 
 #. I18N: see also fancy-research-links
 #: resources/views/settings-home.phtml:33 resources/views/settings-md.phtml:47
-#: resources/views/settings-le.phtml:21 resources/views/settings-wthb.phtml:166
+#: resources/views/settings-le.phtml:43 resources/views/settings-wthb.phtml:166
 #: resources/views/settings.phtml:121
 msgid "Open links in a new tab"
 msgstr ""
@@ -741,7 +853,7 @@ msgstr ""
 
 #: resources/views/help-md.phtml:20 resources/views/help-md.phtml:52
 #: resources/views/help-md.phtml:62 resources/views/settings-md.phtml:170
-#: resources/views/settings-le.phtml:40 resources/views/settings.phtml:68
+#: resources/views/settings-le.phtml:62 resources/views/settings.phtml:68
 msgid "See also"
 msgstr ""
 
@@ -885,97 +997,15 @@ msgstr ""
 msgid "Further information can be found on a separate help page."
 msgstr ""
 
-#: resources/views/xref-overview.phtml:61 resources/views/settings.phtml:79
-msgid ""
-"List all records that contain cross-references (XREFs) or linkenhancer links."
-msgstr ""
-
-#: resources/views/xref-overview.phtml:66
-msgid ""
-"Limited mode: this database engine has no regex support - the table is "
-"scanned live with a LIKE filter on every request, which can be slow on large "
-"trees. The link index is not available on this engine."
-msgstr ""
-
-#: resources/views/xref-overview.phtml:72
-#, php-format
-msgid "Link index active: %1$s scanned records, last verified %2$s."
-msgstr ""
-
-#: resources/views/xref-overview.phtml:76
-msgid ""
-"Live scan forced - the link index is bypassed for this view, which can be "
-"slow on large trees."
-msgstr ""
-
-#: resources/views/xref-overview.phtml:80
-msgid ""
-"No fresh link index - the table below scans the GEDCOM tables live, which "
-"can be slow on large trees. Build the index with the CLI script (see README."
-"md, \"CLI scripts & maintenance\")."
-msgstr ""
-
-#: resources/views/xref-overview.phtml:86
+#: resources/views/xref-overview.phtml:87
 msgid ""
 "Only broken targets: every matching record is loaded and its targets "
 "resolved on the server, which can be slow on large trees. Combine with the "
 "type/tree filters to narrow the scan."
 msgstr ""
 
-#: resources/views/xref-overview.phtml:98
-msgid "referencing XREF"
-msgstr ""
-
-#: resources/views/xref-overview.phtml:104
-msgid "Bypass the link index and scan the GEDCOM tables live"
-msgstr ""
-
-#: resources/views/xref-overview.phtml:104
-msgid "Force live scan"
-msgstr ""
-
-#: resources/views/xref-overview.phtml:108
-msgid "Record types"
-msgstr ""
-
-#: resources/views/xref-overview.phtml:109
-msgid "All types"
-msgstr ""
-
-#: resources/views/xref-overview.phtml:110
-msgid "All GEDCOM records"
-msgstr ""
-
-#: resources/views/xref-overview.phtml:111
-msgid "All Block records"
-msgstr ""
-
-#: resources/views/xref-overview.phtml:112
-msgid "GEDCOM records"
-msgstr ""
-
-#: resources/views/xref-overview.phtml:126
+#: resources/views/xref-overview.phtml:127
 msgid "All trees"
-msgstr ""
-
-#: resources/views/xref-overview.phtml:133
-msgid "links per class"
-msgstr ""
-
-#: resources/views/xref-overview.phtml:141
-msgid "Only rows with a missing or wrong-type target are shown"
-msgstr ""
-
-#: resources/views/xref-overview.phtml:142
-msgid "Only broken targets"
-msgstr ""
-
-#: resources/views/xref-overview.phtml:144
-msgid "The target type differs from the declaration"
-msgstr ""
-
-#: resources/views/xref-overview.phtml:177
-msgid "XREF"
 msgstr ""
 
 #: resources/views/md-toc-dropdown.phtml:19
@@ -1154,12 +1184,21 @@ msgstr ""
 msgid "Enable for more options"
 msgstr ""
 
-#: resources/views/settings-le.phtml:32
+#: resources/views/settings-le.phtml:18 resources/views/settings-le.phtml:19
+#, php-format
+msgid "Reset list item access level overwrites - %s"
+msgstr ""
+
+#: resources/views/settings-le.phtml:19
+msgid "with configured access level"
+msgstr ""
+
+#: resources/views/settings-le.phtml:54
 msgid "JavaScript for additional link targets"
 msgstr ""
 
 #. I18N: Enhanced Links js
-#: resources/views/settings-le.phtml:37
+#: resources/views/settings-le.phtml:59
 msgid ""
 "The JavaScript object overwrites and supplements the predefined settings, "
 "which are taken from the following code excerpt and can also serve as a "
@@ -1167,15 +1206,39 @@ msgid ""
 msgstr ""
 
 #. I18N: Enhanced Links js
-#: resources/views/settings-le.phtml:39
+#: resources/views/settings-le.phtml:61
 msgid "Any CSS rules required are best added via the “CSS and JS” module."
 msgstr ""
 
 #. I18N: Enhanced Links js
-#: resources/views/settings-le.phtml:40
+#: resources/views/settings-le.phtml:62
 msgid ""
 "Only the definition of the icon as a background image is actually needed - "
 "referencing as data: URL."
+msgstr ""
+
+#: resources/views/settings-le.phtml:72
+msgid "Non-admin cross-reference overview"
+msgstr ""
+
+#: resources/views/settings-le.phtml:79
+msgid "Max rows"
+msgstr ""
+
+#: resources/views/settings-le.phtml:108
+msgid "Per-tree overrides are available  in the control panel"
+msgstr ""
+
+#: resources/views/settings-le.phtml:111
+msgid "Lists"
+msgstr ""
+
+#: resources/views/settings-le.phtml:126
+msgid "of which with this access level"
+msgstr ""
+
+#: resources/views/settings-le.phtml:150
+msgid "Confirmation Prompt - Do you really want to perform this action?"
 msgstr ""
 
 #. I18N: wthb link user setting prologue
