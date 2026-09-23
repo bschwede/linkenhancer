@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-19 21:03+0200\n"
+"POT-Creation-Date: 2026-09-23 13:16+0200\n"
 "PO-Revision-Date: 2026-09-21 07:34+0000\n"
 "Last-Translator: TheDutchJewel <thedutchjewel@noreply.codeberg.org>\n"
 "Language-Team: Dutch <https://translate.codeberg.org/projects/wt-modules/"
@@ -19,6 +19,9 @@ msgstr ""
 "X-Poedit-SearchPath-0: CustomMarkdownFactory.php\n"
 "X-Poedit-SearchPath-1: LinkEnhancerModule.php\n"
 "X-Poedit-SearchPath-2: module.php\n"
+
+msgid "tree"
+msgstr "stamboom"
 
 msgid "Option is disabled"
 msgstr "Optie is uitgeschakeld"
@@ -366,9 +369,6 @@ msgstr "precies genest zoals kopteksten in het document voorkomen"
 msgid "Permalink"
 msgstr "Permalink"
 
-msgid "tree"
-msgstr "stamboom"
-
 #, php-format
 msgid "No record for %s was found."
 msgstr "Geen record voor %s gevonden."
@@ -481,6 +481,98 @@ msgstr "De linkindex is verouderd."
 msgid "The UID index is out of date."
 msgstr "De UID-index is verouderd."
 
+msgid ""
+"List all records that contain cross-references (XREFs) or linkenhancer links."
+msgstr ""
+"Toon alle records die kruisverwijzingen (XREF's) of LinkEnhancer-links "
+"bevatten."
+
+msgid ""
+"Limited mode: this database engine has no regex support - the table is "
+"scanned live with a LIKE filter on every request, which can be slow on large "
+"trees. The link index is not available on this engine."
+msgstr ""
+"Beperkte modus: deze database-engine heeft geen regexondersteuning - de "
+"tabel wordt bij elke aanvraag direct doorzocht met een LIKE-filter, wat bij "
+"grote stambomen traag kan zijn. De linkindex is niet beschikbaar voor deze "
+"database-engine."
+
+#, php-format
+msgid "Link index active: %1$s scanned records, last verified %2$s."
+msgstr "Linkindex actief: %1$s gescande records, laatst gecontroleerd op %2$s."
+
+msgid ""
+"Live scan forced - the link index is bypassed for this view, which can be "
+"slow on large trees."
+msgstr ""
+"Live-scan afgedwongen - de linkindex wordt voor deze weergave niet gebruikt, "
+"wat bij grote stambomen traag kan zijn."
+
+msgid ""
+"No fresh link index - the table below scans the GEDCOM tables live, which "
+"can be slow on large trees. Build the index with the CLI script (see "
+"README.md, \"CLI scripts & maintenance\")."
+msgstr ""
+"Geen actuele linkindex - de onderstaande tabel scant de GEDCOM-tabellen "
+"live, wat bij grote stambomen traag kan zijn. Bouw de index op met het CLI-"
+"script (zie README.md, \"CLI scripts & maintenance\")."
+
+#, fuzzy
+#| msgid ""
+#| "Only broken targets: every matching record is loaded and its targets "
+#| "resolved on the server, which can be slow on large trees. Combine with "
+#| "the type/tree filters to narrow the scan."
+msgid ""
+"Only broken targets: every matching record is loaded and its targets "
+"resolved on the server, which can be slow on large trees. Combine with the "
+"type filter to narrow the scan."
+msgstr ""
+"Alleen defecte doelen: elk overeenkomend record wordt geladen en de "
+"verwijzingsdoelen ervan worden op de server opgezocht, wat bij grote "
+"stambomen traag kan zijn. Combineer dit met de type/stamboomfilters om de "
+"scan te beperken."
+
+msgid "referencing XREF"
+msgstr "verwijzing naar XREF"
+
+msgid "Bypass the link index and scan the GEDCOM tables live"
+msgstr "Sla de linkindex over en scan de GEDCOM-tabellen direct"
+
+msgid "Force live scan"
+msgstr "Live-scan forceren"
+
+msgid "Record types"
+msgstr "Recordtypen"
+
+msgid "All types"
+msgstr "Alle typen"
+
+msgid "All GEDCOM records"
+msgstr "Alle GEDCOM-records"
+
+msgid "All Block records"
+msgstr "Alle Block-records"
+
+msgid "GEDCOM records"
+msgstr "GEDCOM-records"
+
+msgid "links per class"
+msgstr "links per klasse"
+
+msgid "Only rows with a missing or wrong-type target are shown"
+msgstr ""
+"Alleen rijen met een ontbrekend doel of een doel van een onjuist type worden "
+"weergegeven"
+
+msgid "Only broken targets"
+msgstr "Alleen defecte doelen"
+
+msgid "The target type differs from the declaration"
+msgstr "Het doeltype komt niet overeen met de declaratie"
+
+msgid "XREF"
+msgstr "XREF"
+
 #. I18N: user defined url
 #. I18N: Settings - section title
 msgid "Home link"
@@ -571,7 +663,8 @@ msgstr "Indexbron (linkindexscan) niet beschikbaar."
 #, php-format
 msgid ""
 "Multiple records match UID %s. Please choose the one you are looking for."
-msgstr "Meerdere records komen overeen met UID %s. Kies het record dat u zoekt."
+msgstr ""
+"Meerdere records komen overeen met UID %s. Kies het record dat u zoekt."
 
 msgid ""
 "Webtrees uses a CommonMark implementation and supports a subset of the markup"
@@ -723,42 +816,6 @@ msgid "Further information can be found on a separate help page."
 msgstr "Meer informatie vindt u op een aparte helppagina."
 
 msgid ""
-"List all records that contain cross-references (XREFs) or linkenhancer links."
-msgstr ""
-"Toon alle records die kruisverwijzingen (XREF's) of LinkEnhancer-links "
-"bevatten."
-
-msgid ""
-"Limited mode: this database engine has no regex support - the table is "
-"scanned live with a LIKE filter on every request, which can be slow on large "
-"trees. The link index is not available on this engine."
-msgstr ""
-"Beperkte modus: deze database-engine heeft geen regexondersteuning - de "
-"tabel wordt bij elke aanvraag direct doorzocht met een LIKE-filter, wat bij "
-"grote stambomen traag kan zijn. De linkindex is niet beschikbaar voor deze "
-"database-engine."
-
-#, php-format
-msgid "Link index active: %1$s scanned records, last verified %2$s."
-msgstr "Linkindex actief: %1$s gescande records, laatst gecontroleerd op %2$s."
-
-msgid ""
-"Live scan forced - the link index is bypassed for this view, which can be "
-"slow on large trees."
-msgstr ""
-"Live-scan afgedwongen - de linkindex wordt voor deze weergave niet gebruikt, "
-"wat bij grote stambomen traag kan zijn."
-
-msgid ""
-"No fresh link index - the table below scans the GEDCOM tables live, which "
-"can be slow on large trees. Build the index with the CLI script (see "
-"README.md, \"CLI scripts & maintenance\")."
-msgstr ""
-"Geen actuele linkindex - de onderstaande tabel scant de GEDCOM-tabellen "
-"live, wat bij grote stambomen traag kan zijn. Bouw de index op met het CLI-"
-"script (zie README.md, \"CLI scripts & maintenance\")."
-
-msgid ""
 "Only broken targets: every matching record is loaded and its targets "
 "resolved on the server, which can be slow on large trees. Combine with the "
 "type/tree filters to narrow the scan."
@@ -768,49 +825,8 @@ msgstr ""
 "stambomen traag kan zijn. Combineer dit met de type/stamboomfilters om de "
 "scan te beperken."
 
-msgid "referencing XREF"
-msgstr "verwijzing naar XREF"
-
-msgid "Bypass the link index and scan the GEDCOM tables live"
-msgstr "Sla de linkindex over en scan de GEDCOM-tabellen direct"
-
-msgid "Force live scan"
-msgstr "Live-scan forceren"
-
-msgid "Record types"
-msgstr "Recordtypen"
-
-msgid "All types"
-msgstr "Alle typen"
-
-msgid "All GEDCOM records"
-msgstr "Alle GEDCOM-records"
-
-msgid "All Block records"
-msgstr "Alle Block-records"
-
-msgid "GEDCOM records"
-msgstr "GEDCOM-records"
-
 msgid "All trees"
 msgstr "Alle stambomen"
-
-msgid "links per class"
-msgstr "links per klasse"
-
-msgid "Only rows with a missing or wrong-type target are shown"
-msgstr ""
-"Alleen rijen met een ontbrekend doel of een doel van een onjuist type worden "
-"weergegeven"
-
-msgid "Only broken targets"
-msgstr "Alleen defecte doelen"
-
-msgid "The target type differs from the declaration"
-msgstr "Het doeltype komt niet overeen met de declaratie"
-
-msgid "XREF"
-msgstr "XREF"
 
 msgid "Goto top of cell content"
 msgstr "Ga naar bovenaan de celinhoud"
@@ -963,6 +979,13 @@ msgstr "JSON-import"
 msgid "Enable for more options"
 msgstr "Schakel in voor meer opties"
 
+#, php-format
+msgid "Reset list item access level overwrites - %s"
+msgstr ""
+
+msgid "with configured access level"
+msgstr ""
+
 msgid "JavaScript for additional link targets"
 msgstr "JavaScript voor extra linkdoelen"
 
@@ -989,6 +1012,28 @@ msgid ""
 msgstr ""
 "Alleen de definitie van het pictogram als achtergrondafbeelding is "
 "daadwerkelijk nodig - verwijzen als data: URL."
+
+#, fuzzy
+#| msgid "Cross-Reference Overview"
+msgid "Non-admin cross-reference overview"
+msgstr "Kruisverwijzingsoverzicht"
+
+#, fuzzy
+#| msgid "Data rows"
+msgid "Max rows"
+msgstr "Gegevensrijen"
+
+msgid "Per-tree overrides are available  in the control panel"
+msgstr ""
+
+msgid "Lists"
+msgstr ""
+
+msgid "of which with this access level"
+msgstr ""
+
+msgid "Confirmation Prompt - Do you really want to perform this action?"
+msgstr ""
 
 #. I18N: wthb link user setting prologue
 msgid ""
