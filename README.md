@@ -40,7 +40,7 @@ This module wraps up some [examples mentioned in the German Webtrees Manual](htt
 
 The main purpose of this module is to make [**links to data records**](#enhancedlinks) stored in family trees more convenient. This avoids having to store fully qualified links, which impairs the portability of Gedcom data. By linking the notes to the GEDCOM data records (persons, families, sources, etc.) from the text makes story telling much easier and thus also save this information in the GEDCOM file (maybe this is an alternative for the [stories module](https://wiki.genealogy.net/Webtrees_Handbuch/Anleitung_f%C3%BCr_Besucher#Geschichten)). The option of embedding the [**images**](#mdimg) already inserted in the family tree in the notes rounds off this approach. The link function is controlled via the [anchor part of the URI](https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Web_mechanics/What_is_a_URL), so it's no problem, if this module is not active - the url just points to the current webtrees page.
 
-For the admin there is an [**overview of cross-references**](#xref-overview), that lists all GEDCOM records and html based records stored in the `block / block_setting` tables (like html, faq, stories and vesta classig look and feel badges) which contain linkenhancer cross-references, classic cross-references and embedded picture references. The latter two references are only supported in GEDCOM records.
+For the admin there is an [**overview of cross-references**](#xref-overview), that lists all GEDCOM records and html based records stored in the `block / block_setting` tables (like html, faq, stories and vesta classig look and feel badges) which contain linkenhancer cross-references, classic cross-references and embedded picture references. The latter two references are only supported in GEDCOM records. For a configurable user access level, an overview can be provided for each tree.
 
 Additionally there are some goodies more or less related with links:
 
@@ -150,7 +150,7 @@ For example: `.icon-whatever { background-image: url(...) }`
 <a name="uid-lookup"></a>
 ### UID lookup
 
-A **UID** (`_UID` in GEDCOM 5.5.1, `UID` in GEDCOM 7.0) is a persistent identifier assigned to a record by external software (e.g. a GEDCOM import from Ancestry, MyHeritage, or a research tool). The UID survives XREF renumbering and tree migrations, making it a stable reference point.
+A **UID** (`_UID` in GEDCOM 5.5.1, `UID` in GEDCOM 7.0) is a persistent identifier assigned to a record. The UID survives XREF renumbering and tree migrations, making it a stable reference point.
 
 This feature allows navigating directly to a record by its UID. The URL pattern is:
 
