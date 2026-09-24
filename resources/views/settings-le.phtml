@@ -105,7 +105,7 @@ if (is_array($link_params)) {
                 $count = LinkEnhancerModule::countListAccessOverwrites($access_level);
             ?>
             <div class="col-sm-6 mt-2 form-text">
-                <?= I18N::translate('Per-tree overrides are available  in the control panel') ?> - 
+                <?= I18N::translate('Per-tree overrides are available  in the control panel') ?> -
                 <span style="text-align: center; line-height: inherit;"><?= view('icons/list') ?></span>
                 <a href="<?= e(route(ClassName::get(ClassName::MODULES_LISTS))) ?>">
                     <?= MoreI18N::xlate('Lists') ?>
@@ -125,15 +125,53 @@ if (is_array($link_params)) {
                     <li>
                         <?= I18N::translate('of which with this access level') . ': ' . ($count['access_level'] ?? 0) ?>
                         <?php if ($link_reset_access_level): ?>
-                        <a class="confirm-action" 
-                            href="<?= e($link_reset_access_level) ?>" 
-                            data-confirm-message="<?= $title_reset_access_level ?>" 
+                        <a class="confirm-action"
+                            href="<?= e($link_reset_access_level) ?>"
+                            data-confirm-message="<?= $title_reset_access_level ?>"
                             title="<?= $title_reset_access_level ?>">
                             <?= MoreI18N::xlate('reset') ?>
                         </a>
                         <?php endif; ?>
                     </li>
                 </ul>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-3 col-form-label wt-page-options-label">
+                <?= I18N::translate('Record detail cross-references') ?>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- links++ detail access level --><?php $prefId = LinkEnhancerModule::PREF_LINKSPP_DETAIL_ACCESS; ?>
+            <label class="col-sm-3 col-form-label wt-page-options-label sub" for="<?= $prefId ?>">
+                <?= MoreI18N::xlate('Access level') ?>
+            </label>
+            <div class="col-sm-3 wt-page-options-value mt-2">
+                <?= view('components/select', [
+                    'id' => $prefId,
+                    'name' => $prefId,
+                    'selected' => $prefs[$prefId],
+                    'options' => Auth::accessLevelNames()
+                ]) ?>
+            </div>
+            <div class="col-sm-6 mt-2 form-text">
+                <?= I18N::translate('Per-tree overrides are available in the control panel') ?> -
+                <span style="text-align: center; line-height: inherit;"><?= view('icons/tab') ?></span>
+                <a href="<?= e(route(ClassName::get(ClassName::MODULES_TABS))) ?>">
+                    <?= MoreI18N::xlate('Tabs') ?>
+                </a>
+            </div>
+
+            <!-- links++ detail include blocks --><?php $prefId = LinkEnhancerModule::PREF_LINKSPP_DETAIL_INCLUDE_BLOCKS; ?>
+            <label class="col-sm-3 col-form-label wt-page-options-label sub" for="<?= $prefId ?>">
+                <?= I18N::translate('Include block references') ?>
+            </label>
+            <div class="col-sm-3 wt-page-options-value mt-2">
+                <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+            </div>
+            <div class="col-sm-6 mt-2 form-text">
             </div>
         </div>
 <style>

@@ -1,0 +1,46 @@
+<?php
+
+declare(strict_types=1);
+
+use Fisharebest\Webtrees\GedcomRecord;
+use Fisharebest\Webtrees\I18N;
+
+/**
+ * @var GedcomRecord $record
+ * @var string       $outgoing_html
+ * @var array        $incoming
+ * @var int          $total_count
+ */
+?>
+<div data-xref-count="<?= $total_count ?>">
+    <?php if ($outgoing_html !== '') : ?>
+        <h6 class="le-xref-section-title"><?= I18N::translate('Outgoing references') ?></h6>
+        <div class="le-xref-outgoing"><?= $outgoing_html ?></div>
+    <?php endif ?>
+
+    <?php if ($incoming !== []) : ?>
+        <h6 class="le-xref-section-title"><?= I18N::translate('Incoming references') ?></h6>
+        <table class="table table-sm le-xref-incoming-table">
+            <thead>
+                <tr>
+                    <th><?= I18N::translate('Record') ?></th>
+                    <th><?= I18N::translate('Type') ?></th>
+                    <th class="text-end"><?= I18N::translate('Links') ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($incoming as $ref) : ?>
+                    <tr>
+                        <td><a href="<?= e($ref['url']) ?>"><?= e($ref['name']) ?></a></td>
+                        <td><?= e($ref['rectype']) ?></td>
+                        <td class="text-end"><?= $ref['link_count'] ?></td>
+                    </tr>
+                <?php endforeach ?>
+            </tbody>
+        </table>
+    <?php endif ?>
+
+    <?php if ($outgoing_html === '' && $incoming === []) : ?>
+        <p class="text-muted"><?= I18N::translate('No cross-references found.') ?></p>
+    <?php endif ?>
+</div>
