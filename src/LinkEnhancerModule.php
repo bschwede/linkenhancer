@@ -589,7 +589,8 @@ class LinkEnhancerModule extends AbstractModule implements
             $xref_attr = Validator::attributes($request)->isXref()->string('xref', '');
             $handler_key = Functions::canonicalHandlerKey($activeRouteInfo['handler'] ?? '');
             $record_type = self::XREF_DETAIL_HANDLER_KEYS[$handler_key] ?? null;
-            if ($record_type !== null && $xref_attr !== '' && $tree !== null) {
+            if ($record_type !== null && $xref_attr !== '' && $tree !== null
+                && $this->accessLevel($tree, ModuleTabInterface::class) >= Auth::accessLevel($tree, Validator::attributes($request)->user())) {
                 $this->docReadyJs .= "LinkEnhMod.initXrefDetailTab(" . json_encode([
                     'tree'     => $tree->name(),
                     'xref'     => $xref_attr,
