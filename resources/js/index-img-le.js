@@ -1,5 +1,5 @@
 // Enhanced links and markdown enhancements
-import { initLE, getLEhelpInfo } from './index-le.js';
+import { initLE, getLEhelpInfo, initXrefDetailTab } from './index-le.js';
 import { initMd } from './index-img.js'
 
-export default { initLE, getLEhelpInfo, initMd };
+export default { initLE, getLEhelpInfo, initXrefDetailTab, initMd };
