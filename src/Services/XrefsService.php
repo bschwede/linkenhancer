@@ -556,13 +556,17 @@ final class XrefsService { // stuff related with handling cross-references
             }
 
             if ($filter_xref !== '') {
-                $subquery->whereExists(static function ($q) use ($filter_xref, $text_settings): void {
+                $uids = ($tree instanceof Tree) ? UidIndexService::uidsForRecord($tree->id(), $filter_xref) : [];
+                $subquery->whereExists(static function ($q) use ($filter_xref, $uids, $text_settings): void {
                     $q->select(DB::raw(1))
                         ->from('block_setting')
                         ->whereColumn('block_setting.block_id', 'b.block_id')
                         ->whereIn('block_setting.setting_name', $text_settings)
-                        ->where(static function ($sq) use ($filter_xref): void {
+                        ->where(static function ($sq) use ($filter_xref, $uids): void {
                             $sq->where('block_setting.setting_value', 'like', '%@' . $filter_xref . '@%');
+                            foreach ($uids as $uid) {
+                                $sq->orWhere('block_setting.setting_value', 'like', '%@' . $uid . '@%');
+                            }
                         });
                 });
             }
