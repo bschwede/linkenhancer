@@ -6,7 +6,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-23 13:32+0200\n"
 "PO-Revision-Date: 2026-09-25 08:18+0000\n"
-"Last-Translator: bschwede <bschwede@noreply.codeberg.org>\n"
+"Last-Translator: Iberni2 <iberni2@noreply.codeberg.org>\n"
 "Language-Team: Catalan <https://translate.codeberg.org/projects/wt-modules/"
 "linkenhancer/ca/>\n"
 "Language: ca\n"
@@ -40,10 +40,8 @@ msgstr ""
 "Condició prèvia: La preferència de l'arbre '%s' ha d'estar establerta a "
 "Markown."
 
-#, fuzzy
-#| msgid "cross reference"
 msgid "Cross-references"
-msgstr "referència"
+msgstr "Referències creuades"
 
 #, fuzzy
 #| msgid "Permalink"
@@ -53,10 +51,8 @@ msgstr "Enllaç permanent"
 msgid "Pictures"
 msgstr "Imatges"
 
-#, fuzzy
-#| msgid "cross reference"
 msgid "Classic cross-references"
-msgstr "referència"
+msgstr "Referències creuades (Clàssiques)"
 
 msgid "Other - maybe damaged - links"
 msgstr "Altres enllaços — potser danyats —"
@@ -66,7 +62,7 @@ msgstr "Objectiu no trobat"
 
 #. I18N: JS enhanced link
 msgid "Cross-reference"
-msgstr "referència"
+msgstr "Referències creuades"
 
 #, php-format
 msgid "expected %1$s, is %2$s"
@@ -739,7 +735,7 @@ msgid ""
 msgstr ""
 "És possible dirigir-se a diferents destinacions amb una definició d'enllaç, "
 "mitjançant el qual la referència creuada interna és sempre el primer enllaç "
-"i les altres destinacions externes estan representats per icones cliclables."
+"i les altres destinacions externes estan representats per icones clicables."
 
 #. I18N: Enhanced Links code example 1
 msgid "Link display title"
