@@ -105,7 +105,7 @@ final class XrefDetailService
 
         $results = [];
         foreach ($rows as $row) {
-            $source_tree = $tree_service->all()->get($row->file);
+            $source_tree = $tree_service->all()->first(static fn (Tree $t): bool => $t->id() === (int) $row->file); //get($row->file);
             if (!$source_tree instanceof Tree) {
                 continue;
             }
