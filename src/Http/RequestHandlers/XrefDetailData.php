@@ -70,7 +70,7 @@ final class XrefDetailData implements RequestHandlerInterface
         }
 
         $service       = new XrefDetailService();
-        $outgoing_html = $service->outgoingLinksHtml($record);
+        $outgoing_html = $service->outgoingLinksHtml($record, 0);
         $incoming      = $service->incomingReferences($tree, $xref);
         $total_count   = count($service->outgoingLinks($record)['entries'])
             + array_sum(array_column($incoming, 'link_count'));

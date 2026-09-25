@@ -1132,7 +1132,7 @@ class LinkEnhancerModule extends AbstractModule implements
     public function getTabContent(\Fisharebest\Webtrees\Individual $individual): string
     {
         $service       = new XrefDetailService();
-        $outgoing_html = $service->outgoingLinksHtml($individual);
+        $outgoing_html = $service->outgoingLinksHtml($individual, 0);
         $incoming      = $service->incomingReferences($individual->tree(), $individual->xref());
         $total_count   = count($service->outgoingLinks($individual)['entries'])
             + array_sum(array_column($incoming, 'link_count'));
