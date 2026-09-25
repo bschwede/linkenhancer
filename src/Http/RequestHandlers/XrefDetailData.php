@@ -82,6 +82,13 @@ final class XrefDetailData implements RequestHandlerInterface
             'total_count'   => $total_count,
         ]);
 
+        if (Validator::queryParams($request)->boolean('modal', false)) {
+            return response(view('modals/help', [
+                'title' => $module->tabTitle(),
+                'text'  => $content,
+            ]));
+        }
+
         return response(view('layouts/ajax', [
             'content' => $content,
         ]));

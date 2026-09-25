@@ -1,22 +1,22 @@
 /**
  * Cross-reference detail tab injection for non-INDI record pages.
  *
- * Adds a "Cross-references" tab to the existing .nav-tabs on NOTE, MEDIA,
- * SOUR, REPO, and custom record pages. On FAM pages, adds a button that
- * opens a Bootstrap modal.
+ * Uses a DOM observer (set up before body is parsed) to inject:
+ *  - A tab into .nav.nav-tabs (NOTE, MEDIA, SOUR, REPO)
+ *  - A link that opens the core #wt-ajax-modal (FAM)
  *
- * Content is loaded lazily via AJAX when the tab/modal is first shown.
- * The badge count is updated after the AJAX response loads.
+ * The observer fires during body parsing → injection happens before first paint.
+ * Content is loaded lazily via AJAX on first tab show / modal show.
  */
 
+import { createDomObserver } from './dom-observer-factory.js';
+
 const TAB_ID = 'le-xrefs-pane';
-const MODAL_ID = 'le-xref-modal';
 
 
-function injectTab(detailUrl, tabTitle) {
-    const navTabs = document.querySelector('.nav.nav-tabs');
+function injectTab(navTabs, detailUrl, tabTitle) {
     const tabContent = document.querySelector('.tab-content');
-    if (!navTabs || !tabContent) {
+    if (!tabContent) {
         return;
     }
 
@@ -58,62 +58,49 @@ function injectTab(detailUrl, tabTitle) {
     tabContent.appendChild(pane);
 }
 
-function injectFamilyButton(detailUrl, buttonLabel) {
-    const titleEl = document.querySelector('.wt-page-title');
-    if (!titleEl) {
-        return;
-    }
 
-    const btn = document.createElement('button');
-    btn.className = 'btn btn-outline-primary btn-sm ms-3';
-    btn.textContent = buttonLabel;
-    btn.type = 'button';
+function injectFamilyLink(titleEl, detailUrl, tabTitle) {
+    const a = document.createElement('a');
+    a.href = '#';
+    a.className = 'btn btn-outline-primary btn-sm ms-3';
+    a.setAttribute('data-bs-toggle', 'modal');
+    a.setAttribute('data-bs-target', '#wt-ajax-modal');
+    a.setAttribute('data-wt-href', `${detailUrl}?modal=1`);
+    a.textContent = tabTitle;
 
-    const modalHtml = `
-    <div class="modal fade" id="${MODAL_ID}" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">${buttonLabel}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" id="${MODAL_ID}-body"></div>
-            </div>
-        </div>
-    </div>`;
-    const modalWrapper = document.createElement('div');
-    modalWrapper.innerHTML = modalHtml;
-    document.body.appendChild(modalWrapper);
-
-    btn.addEventListener('click', function () {
-        const body = document.getElementById(`${MODAL_ID}-body`);
-        if (body && !body.innerHTML.trim()) {
-            webtrees.httpGet(detailUrl).then(data => data.text()).then(html => {
-                body.innerHTML = html;
-            });
-        }
-        const modalEl = document.getElementById(MODAL_ID);
-        if (modalEl) {
-            const Modal = bootstrap.Modal;
-            new Modal(modalEl).show();
-        }
-    });
-
-    titleEl.parentElement.appendChild(btn);
+    titleEl.parentElement.appendChild(a);
 }
+
 
 /**
  * Initialize the xref detail tab. Called from PHP on record detail pages.
+ * Sets up a DOM observer that injects the tab/button during body parsing.
  *
  * @param {object} config
- * @param {string} config.url     - tree name (URL segment)
-  * @param {string} config.rectype - record type (NOTE, MEDIA, SOUR, REPO, FAM, etc.)
+ * @param {string} config.url     - detail URL (e.g. /tree-name/le-xref-detail/I0001)
+ * @param {string} config.rectype - record type (NOTE, MEDIA, SOUR, REPO, FAM)
  * @param {string} config.tabTitle - translated tab title
  */
 export function initXrefDetailTab({ url, rectype, tabTitle }) {
     if (rectype === 'FAM') {
-        injectFamilyButton(url, tabTitle);
+        let obs;
+        obs = createDomObserver({
+            root: document.documentElement,
+            match: node => node.classList?.contains('wt-page-title'),
+            process: titleEl => {
+                obs.disconnect();
+                injectFamilyLink(titleEl, url, tabTitle);
+            }
+        });
     } else {
-        injectTab(url, tabTitle);
+        let obs;
+        obs = createDomObserver({
+            root: document.documentElement,
+            match: node => node.classList?.contains('nav') && node.classList?.contains('nav-tabs'),
+            process: navTabs => {
+                obs.disconnect();
+                injectTab(navTabs, url, tabTitle);
+            }
+        });
     }
 }
