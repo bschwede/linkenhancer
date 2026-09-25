@@ -5,8 +5,8 @@ msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-23 13:32+0200\n"
-"PO-Revision-Date: 2026-09-22 08:25+0000\n"
-"Last-Translator: bschwede <bschwede@noreply.codeberg.org>\n"
+"PO-Revision-Date: 2026-09-25 08:18+0000\n"
+"Last-Translator: Iberni2 <iberni2@noreply.codeberg.org>\n"
 "Language-Team: Catalan <https://translate.codeberg.org/projects/wt-modules/"
 "linkenhancer/ca/>\n"
 "Language: ca\n"
@@ -40,10 +40,8 @@ msgstr ""
 "Condició prèvia: La preferència de l'arbre '%s' ha d'estar establerta a "
 "Markown."
 
-#, fuzzy
-#| msgid "cross reference"
 msgid "Cross-references"
-msgstr "referència"
+msgstr "Referències creuades"
 
 #, fuzzy
 #| msgid "Permalink"
@@ -53,10 +51,8 @@ msgstr "Enllaç permanent"
 msgid "Pictures"
 msgstr "Imatges"
 
-#, fuzzy
-#| msgid "cross reference"
 msgid "Classic cross-references"
-msgstr "referència"
+msgstr "Referències creuades (Clàssiques)"
 
 msgid "Other - maybe damaged - links"
 msgstr "Altres enllaços — potser danyats —"
@@ -66,7 +62,7 @@ msgstr "Objectiu no trobat"
 
 #. I18N: JS enhanced link
 msgid "Cross-reference"
-msgstr "%2$sreferència"
+msgstr "Referències creuades"
 
 #, php-format
 msgid "expected %1$s, is %2$s"
@@ -739,7 +735,7 @@ msgid ""
 msgstr ""
 "És possible dirigir-se a diferents destinacions amb una definició d'enllaç, "
 "mitjançant el qual la referència creuada interna és sempre el primer enllaç "
-"i les altres destinacions externes estan representats per icones cliclables."
+"i les altres destinacions externes estan representats per icones clicables."
 
 #. I18N: Enhanced Links code example 1
 msgid "Link display title"
@@ -990,10 +986,10 @@ msgstr "Activa per a més opcions"
 
 #, php-format
 msgid "Reset list item access level overwrites - %s"
-msgstr ""
+msgstr "Reinici dels nivells d'accés als elements de la llista - %s"
 
 msgid "with configured access level"
-msgstr ""
+msgstr "amb nivell d'accés configurat"
 
 msgid "JavaScript for additional link targets"
 msgstr "JavaScrip per a enllaços addicionals"
@@ -1032,13 +1028,13 @@ msgid "Max rows"
 msgstr "Línia de dades"
 
 msgid "Per-tree overrides are available  in the control panel"
-msgstr ""
+msgstr "Les sobreescriptures per arbre estan disponibles al panell de control"
 
 msgid "of which with this access level"
-msgstr ""
+msgstr "d'aquest nivell d'accés"
 
 msgid "Confirmation Prompt - Do you really want to perform this action?"
-msgstr ""
+msgstr "Prompt de confirmació - Realment vols fer aquesta acció?"
 
 #. I18N: wthb link user setting prologue
 msgid ""

@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-23 13:32+0200\n"
-"PO-Revision-Date: 2026-09-21 07:34+0000\n"
+"PO-Revision-Date: 2026-09-25 08:18+0000\n"
 "Last-Translator: TheDutchJewel <thedutchjewel@noreply.codeberg.org>\n"
 "Language-Team: Dutch <https://translate.codeberg.org/projects/wt-modules/"
 "linkenhancer/nl/>\n"
@@ -452,7 +452,7 @@ msgid "Cross-Reference Overview"
 msgstr "Kruisverwijzingsoverzicht"
 
 msgid "Update the link index"
-msgstr "Linkindex bijwerken"
+msgstr "De linkindex bijwerken"
 
 msgid "Update the UID index"
 msgstr "UID-index bijwerken"
@@ -517,11 +517,6 @@ msgstr ""
 "live, wat bij grote stambomen traag kan zijn. Bouw de index op met het CLI-"
 "script (zie README.md, \"CLI scripts & maintenance\")."
 
-#, fuzzy
-#| msgid ""
-#| "Only broken targets: every matching record is loaded and its targets "
-#| "resolved on the server, which can be slow on large trees. Combine with "
-#| "the type/tree filters to narrow the scan."
 msgid ""
 "Only broken targets: every matching record is loaded and its targets "
 "resolved on the server, which can be slow on large trees. Combine with the "
@@ -529,8 +524,8 @@ msgid ""
 msgstr ""
 "Alleen defecte doelen: elk overeenkomend record wordt geladen en de "
 "verwijzingsdoelen ervan worden op de server opgezocht, wat bij grote "
-"stambomen traag kan zijn. Combineer dit met de type/stamboomfilters om de "
-"scan te beperken."
+"stambomen traag kan zijn. Combineer dit met het typefilter om de scan te "
+"beperken."
 
 msgid "referencing XREF"
 msgstr "verwijzing naar XREF"
@@ -982,9 +977,10 @@ msgstr "Schakel in voor meer opties"
 #, php-format
 msgid "Reset list item access level overwrites - %s"
 msgstr ""
+"Overschrijvingen van toegangsniveaus voor lijstitems opnieuw instellen - %s"
 
 msgid "with configured access level"
-msgstr ""
+msgstr "met het ingestelde toegangsniveau"
 
 msgid "JavaScript for additional link targets"
 msgstr "JavaScript voor extra linkdoelen"
@@ -1013,24 +1009,21 @@ msgstr ""
 "Alleen de definitie van het pictogram als achtergrondafbeelding is "
 "daadwerkelijk nodig - verwijzen als data: URL."
 
-#, fuzzy
-#| msgid "Cross-Reference Overview"
 msgid "Non-admin cross-reference overview"
-msgstr "Kruisverwijzingsoverzicht"
+msgstr "Kruisverwijzingsoverzicht voor niet-beheerders"
 
-#, fuzzy
-#| msgid "Data rows"
 msgid "Max rows"
-msgstr "Gegevensrijen"
+msgstr "Max. rijen"
 
 msgid "Per-tree overrides are available  in the control panel"
 msgstr ""
+"Overschrijvingen per stamboom zijn beschikbaar in het configuratiescherm"
 
 msgid "of which with this access level"
-msgstr ""
+msgstr "of die met dit toegangsniveau"
 
 msgid "Confirmation Prompt - Do you really want to perform this action?"
-msgstr ""
+msgstr "Bevestigingsvraag - Wilt u deze actie echt uitvoeren?"
 
 #. I18N: wthb link user setting prologue
 msgid ""

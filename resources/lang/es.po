@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-23 13:32+0200\n"
-"PO-Revision-Date: 2026-09-17 15:25+0000\n"
+"PO-Revision-Date: 2026-09-24 12:25+0000\n"
 "Last-Translator: gallegonovato <gallegonovato@noreply.codeberg.org>\n"
 "Language-Team: Spanish <https://translate.codeberg.org/projects/wt-modules/"
 "linkenhancer/es/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.9.1\n"
 "X-Poedit-Basepath: ../..\n"
 "X-Poedit-SearchPath-0: CustomMarkdownFactory.php\n"
 "X-Poedit-SearchPath-1: LinkEnhancerModule.php\n"
@@ -67,14 +67,12 @@ msgstr "Referencia cruzada"
 msgid "expected %1$s, is %2$s"
 msgstr "esperado %1$s, es %2$s"
 
-#, fuzzy
-#| msgid "target not found"
 msgid "target not unique"
-msgstr "destino no encontrado"
+msgstr "objetivo no es exclusivo"
 
 #, php-format
 msgid "%1$s - %2$d matches in other trees"
-msgstr ""
+msgstr "%1$s - %2$d coincide en otros árboles"
 
 #. I18N: Settings - section title
 msgid "Webtrees manual"
@@ -376,28 +374,30 @@ msgstr "Enlace permanente"
 
 #, php-format
 msgid "No record for %s was found."
-msgstr ""
+msgstr "No se encontró ningún registro para %s."
 
 #, php-format
 msgid "%s was found in another tree."
-msgstr ""
+msgstr "%s se encontró en otro árbol."
 
 #, php-format
 msgid "Multiple records for %s"
-msgstr ""
+msgstr "Varios registros para %s"
 
 #, php-format
 msgid ""
 "No record with UID %s was found. The UID index may not be available yet."
 msgstr ""
+"No se encontró ningún registro con UID %s. Es posible que el índice UID aún "
+"no esté disponible."
 
 #, php-format
 msgid "UID %s was found in another tree."
-msgstr ""
+msgstr "UID %s se encontró en otro árbol."
 
 #, php-format
 msgid "Multiple records for UID %s"
-msgstr ""
+msgstr "Múltiples registros para UID %s"
 
 #. I18N: MD img error precondition
 msgid ""
@@ -459,10 +459,8 @@ msgstr "Resumen de referencias cruzadas"
 msgid "Update the link index"
 msgstr "Actualizar índice de enlaces"
 
-#, fuzzy
-#| msgid "Update the link index"
 msgid "Update the UID index"
-msgstr "Actualizar índice de enlaces"
+msgstr "Actualizar el índice UID"
 
 msgid "Rebuild the link index incrementally."
 msgstr "Actualizar el índice de enlaces progresivamente."
@@ -471,28 +469,22 @@ msgid "max records per run"
 msgstr "registros máximos por ciclo"
 
 msgid "number of the tree to be scanned - all if not set"
-msgstr ""
+msgstr "Número del árbol que se va a escanear: todos si no están configurados"
 
 msgid "force a full rebuild"
-msgstr ""
+msgstr "forzar una reconstrucción completa"
 
-#, fuzzy
-#| msgid "Update the link index"
 msgid "empty the index and exit"
-msgstr "Actualizar índice de enlaces"
+msgstr "vaciar el índice y salir"
 
-#, fuzzy
-#| msgid "Rebuild the link index incrementally."
 msgid "Rebuild the UID index incrementally."
-msgstr "Actualizar el índice de enlaces progresivamente."
+msgstr "Reconstruya el índice UID de forma incremental."
 
 msgid "The link index is out of date."
 msgstr "Índice de enlaces desactualizado."
 
-#, fuzzy
-#| msgid "The link index is out of date."
 msgid "The UID index is out of date."
-msgstr "Índice de enlaces desactualizado."
+msgstr "El índice UID está desactualizado."
 
 msgid ""
 "List all records that contain cross-references (XREFs) or linkenhancer links."
@@ -534,19 +526,14 @@ msgstr ""
 "lento en árboles grandes. Cree el índice con el script de la CLI (consulte "
 "README.md, \"Scripts de la CLI y mantenimiento\")."
 
-#, fuzzy
-#| msgid ""
-#| "Only broken targets: every matching record is loaded and its targets "
-#| "resolved on the server, which can be slow on large trees. Combine with "
-#| "the type/tree filters to narrow the scan."
 msgid ""
 "Only broken targets: every matching record is loaded and its targets "
 "resolved on the server, which can be slow on large trees. Combine with the "
 "type filter to narrow the scan."
 msgstr ""
-"Solo enlaces rotos: cada registro coincidente se carga y sus objetivos se "
+"Solo objetivos rotos: cada registro coincidente se carga y sus objetivos se "
 "resuelven en el servidor, lo que puede ser lento en árboles grandes. "
-"Combínelo con los filtros de tipo/árbol para acotar el escaneo."
+"Combínelo con el filtro de tipo para limitar el escaneo."
 
 msgid "referencing XREF"
 msgstr "Haciendo referencia a XREF"
@@ -663,23 +650,23 @@ msgid "user defined"
 msgstr "definido por el usuario"
 
 msgid "UID lookup"
-msgstr ""
+msgstr "Búsqueda de UID"
 
 #, php-format
 msgid "Allow resolving UID tags (%s) to the corresponding records."
-msgstr ""
+msgstr "Permitir resolver etiquetas UID (%s) a los registros correspondientes."
 
 #, php-format
 msgid "Index status: %1$s rows, last built: %2$s"
-msgstr ""
+msgstr "Estado del índice: %1$s filas, última compilación: %2$s"
 
 msgid "Index source (link-index scan) not available."
-msgstr ""
+msgstr "Origen del índice (barrido de índice de enlaces) no disponible."
 
 #, php-format
 msgid ""
 "Multiple records match UID %s. Please choose the one you are looking for."
-msgstr ""
+msgstr "Hay varios registros con el UID %s. Por favor, elija el que desea."
 
 msgid ""
 "Webtrees uses a CommonMark implementation and supports a subset of the markup"
@@ -998,9 +985,11 @@ msgstr "Habilitar para más opciones"
 #, php-format
 msgid "Reset list item access level overwrites - %s"
 msgstr ""
+"Restablecer las sobrescrituras del nivel de acceso a los elementos de la "
+"lista - %s"
 
 msgid "with configured access level"
-msgstr ""
+msgstr "con nivel de acceso configurado"
 
 msgid "JavaScript for additional link targets"
 msgstr "JavaScrip para enlaces adicionales"
@@ -1028,24 +1017,20 @@ msgstr ""
 "En realidad, solamente se necesita la definición del icono como imagen de "
 "fondo haciendo referencia como datos: URL."
 
-#, fuzzy
-#| msgid "Cross-Reference Overview"
 msgid "Non-admin cross-reference overview"
-msgstr "Resumen de referencias cruzadas"
+msgstr "Descripción general de referencias cruzadas que no son de administrador"
 
-#, fuzzy
-#| msgid "Data rows"
 msgid "Max rows"
-msgstr "Línea de datos"
+msgstr "Filas máximas"
 
 msgid "Per-tree overrides are available  in the control panel"
-msgstr ""
+msgstr "Las sobrescripciones por árbol están disponibles en el panel de control"
 
 msgid "of which with this access level"
-msgstr ""
+msgstr "de los cuales con este nivel de acceso"
 
 msgid "Confirmation Prompt - Do you really want to perform this action?"
-msgstr ""
+msgstr "Mensaje de confirmación: ¿Realmente desea realizar esta acción?"
 
 #. I18N: wthb link user setting prologue
 msgid ""
