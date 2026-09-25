@@ -159,6 +159,7 @@ final class XrefDetailService
         $results = [];
         $tree_id = (int) $tree->id();
         $user_id = Auth::isAdmin() ? null : (int) Auth::id();
+        $uids    = UidIndexService::uidsForRecord($tree_id, $xref);
 
         foreach (XrefsService::BLOCKS as $module_name => $block_def) {
             $text_settings = XrefsService::blockTextSettings($module_name);
@@ -170,7 +171,12 @@ final class XrefDetailService
                 ->join('block_setting AS bs', 'bs.block_id', '=', 'b.block_id')
                 ->where('b.module_name', '=', $module_name)
                 ->whereIn('bs.setting_name', $text_settings)
-                ->where('bs.setting_value', 'like', '%@' . $xref . '@%')
+                ->where(function ($q) use ($xref, $uids): void {
+                    $q->where('bs.setting_value', 'like', '%@' . $xref . '@%');
+                    foreach ($uids as $uid) {
+                        $q->orWhere('bs.setting_value', 'like', '%@' . $uid . '@%');
+                    }
+                })
                 ->where(static function ($q) use ($tree_id): void {
                     $q->where('b.gedcom_id', '=', $tree_id)
                         ->orWhereNull('b.gedcom_id');
