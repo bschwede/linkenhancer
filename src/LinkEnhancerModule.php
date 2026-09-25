@@ -592,8 +592,10 @@ class LinkEnhancerModule extends AbstractModule implements
             if ($record_type !== null && $xref_attr !== '' && $tree !== null
                 && $this->accessLevel($tree, ModuleTabInterface::class) >= Auth::accessLevel($tree, Validator::attributes($request)->user())) {
                 $this->docReadyJs .= "LinkEnhMod.initXrefDetailTab(" . json_encode([
-                    'tree'     => $tree->name(),
-                    'xref'     => $xref_attr,
+                    'url' => route(XrefDetailData::class, [
+                        'tree'     => $tree->name(),
+                        'xref'     => $xref_attr,
+                    ]),
                     'rectype'  => $record_type,
                     'tabTitle' => $this->tabTitle(),
                 ]) . ");";

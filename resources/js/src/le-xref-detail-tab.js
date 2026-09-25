@@ -9,14 +9,9 @@
  * The badge count is updated after the AJAX response loads.
  */
 
-const XREF_DETAIL_URL = '/le-xref-detail/';
-const TAB_ID = 'le-xref-pane';
-const TAB_HREF = '#le-xrefs';
+const TAB_ID = 'le-xrefs-pane';
 const MODAL_ID = 'le-xref-modal';
 
-function buildDetailUrl(tree, xref) {
-    return `/${tree}${XREF_DETAIL_URL}${xref}`;
-}
 
 function injectTab(detailUrl, tabTitle) {
     const navTabs = document.querySelector('.nav.nav-tabs');
@@ -33,7 +28,7 @@ function injectTab(detailUrl, tabTitle) {
     a.className = 'nav-link';
     a.setAttribute('data-bs-toggle', 'tab');
     a.setAttribute('role', 'tab');
-    a.setAttribute('href', TAB_HREF);
+    a.setAttribute('href', `#${TAB_ID}`);
     a.setAttribute('data-wt-href', detailUrl);
     a.innerHTML = `${tabTitle} <span class="badge bg-secondary" id="le-xref-badge"></span>`;
 
@@ -111,17 +106,14 @@ function injectFamilyButton(detailUrl, buttonLabel) {
  * Initialize the xref detail tab. Called from PHP on record detail pages.
  *
  * @param {object} config
- * @param {string} config.tree    - tree name (URL segment)
- * @param {string} config.xref    - record XREF
- * @param {string} config.rectype - record type (NOTE, MEDIA, SOUR, REPO, FAM, etc.)
+ * @param {string} config.url     - tree name (URL segment)
+  * @param {string} config.rectype - record type (NOTE, MEDIA, SOUR, REPO, FAM, etc.)
  * @param {string} config.tabTitle - translated tab title
  */
-export function initXrefDetailTab({ tree, xref, rectype, tabTitle }) {
-    const detailUrl = buildDetailUrl(tree, xref);
-
+export function initXrefDetailTab({ url, rectype, tabTitle }) {
     if (rectype === 'FAM') {
-        injectFamilyButton(detailUrl, tabTitle);
+        injectFamilyButton(url, tabTitle);
     } else {
-        injectTab(detailUrl, tabTitle);
+        injectTab(url, tabTitle);
     }
 }
