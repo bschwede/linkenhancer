@@ -65,7 +65,7 @@ function injectFamilyLink(titleEl, detailUrl, tabTitle) {
     a.className = 'btn btn-outline-primary btn-sm ms-3';
     a.setAttribute('data-bs-toggle', 'modal');
     a.setAttribute('data-bs-target', '#wt-ajax-modal');
-    a.setAttribute('data-wt-href', `${detailUrl}?modal=1`);
+    a.setAttribute('data-wt-href', detailUrl);
     a.textContent = tabTitle;
 
     titleEl.parentElement.appendChild(a);

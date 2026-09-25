@@ -591,11 +591,16 @@ class LinkEnhancerModule extends AbstractModule implements
             $record_type = self::XREF_DETAIL_HANDLER_KEYS[$handler_key] ?? null;
             if ($record_type !== null && $xref_attr !== '' && $tree !== null
                 && $this->accessLevel($tree, ModuleTabInterface::class) >= Auth::accessLevel($tree, Validator::attributes($request)->user())) {
+                $url_params = [
+                    'tree' => $tree->name(),
+                    'xref' => $xref_attr,
+                ];
+                if ($record_type === 'FAM') {
+                    $url_params['modal'] = 1;
+                }
+
                 $this->initJs .= "LinkEnhMod.initXrefDetailTab(" . json_encode([
-                    'url' => route(XrefDetailData::class, [
-                        'tree'     => $tree->name(),
-                        'xref'     => $xref_attr,
-                    ]),
+                    'url' => route(XrefDetailData::class, $url_params),
                     'rectype'  => $record_type,
                     'tabTitle' => $this->tabTitle(),
                 ]) . ");";
