@@ -84,6 +84,6 @@ final class XrefDetailData implements RequestHandlerInterface
 
         return response(view('layouts/ajax', [
             'content' => $content,
-        ])->withHeader('X-Le-Xref-Count', (string) $total_count));
+        ]));
     }
 }
