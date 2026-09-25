@@ -178,6 +178,28 @@ final class UidIndexService
     }
 
     /**
+     * Get all UIDs registered for a given record in the UID index.
+     *
+     * @param int    $file tree (file) ID
+     * @param string $xref GEDCOM XREF of the record
+     *
+     * @return list<string> UID values (empty if the record has no UIDs or the index is unavailable)
+     */
+    public static function uidsForRecord(int $file, string $xref): array
+    {
+        try {
+            $uids = DB::table(self::UID_INDEX_TABLE)
+                ->where('file', '=', $file)
+                ->where('xref', '=', $xref)
+                ->pluck('uid');
+
+            return $uids->filter()->values()->all();
+        } catch (Throwable) {
+            return [];
+        }
+    }
+
+    /**
      * Freshness / status of the UID index, from the shared le_index_meta row
      * (id = 1) under its own columns (D5).
      *

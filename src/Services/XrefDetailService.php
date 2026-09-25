@@ -89,13 +89,29 @@ final class XrefDetailService
     {
         $tree_service = Registry::container()->get(\Fisharebest\Webtrees\Services\TreeService::class);
 
+        $uids = UidIndexService::uidsForRecord((int) $tree->id(), $xref);
+
         $rows = DB::table(XrefsService::INDEX_SCAN_TABLE . ' AS s')
             ->join(XrefsService::INDEX_LINK_TABLE . ' AS l', static function ($join): void {
                 $join->on('l.file', '=', 's.file')
                     ->on('l.xref', '=', 's.xref')
                     ->on('l.rectype', '=', 's.rectype');
             })
-            ->where('l.target_xref', '=', $xref)
+            ->where(function ($q) use ($tree, $xref, $uids): void {
+                $q->where(function ($q2) use ($tree): void {
+                    $q2->where('l.target_tree', '=', $tree->name())
+                        ->orWhere(function ($q3) use ($tree): void {
+                            $q3->whereNull('l.target_tree')
+                                ->where('l.file', '=', $tree->id());
+                        });
+                });
+                $q->where(function ($q2) use ($xref, $uids): void {
+                    $q2->where('l.target_xref', '=', $xref);
+                    if ($uids !== []) {
+                        $q2->orWhereIn('l.target_uid', $uids);
+                    }
+                });
+            })
             ->select(['s.file', 's.xref', DB::raw('s.rectype AS rectype'), DB::raw('COUNT(*) AS link_count')])
             ->groupBy('s.file', 's.xref', 's.rectype')
             ->orderBy('s.file')
