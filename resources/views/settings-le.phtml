@@ -105,7 +105,7 @@ if (is_array($link_params)) {
                 $count = LinkEnhancerModule::countListAccessOverwrites($access_level);
             ?>
             <div class="col-sm-6 mt-2 form-text">
-                <?= I18N::translate('Per-tree overrides are available  in the control panel') ?> -
+                <?= I18N::translate('Per-tree overrides are available in the control panel') ?> -
                 <span style="text-align: center; line-height: inherit;"><?= view('icons/list') ?></span>
                 <a href="<?= e(route(ClassName::get(ClassName::MODULES_LISTS))) ?>">
                     <?= MoreI18N::xlate('Lists') ?>
