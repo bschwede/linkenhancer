@@ -30,6 +30,7 @@ use DomainException;
 use Exception;
 use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\FlashMessages;
+use Fisharebest\Webtrees\GedcomRecord;
 use Fisharebest\Webtrees\Http\RequestHandlers\HomePage;
 use Fisharebest\Webtrees\Http\RequestHandlers\TreePage;
 use Fisharebest\Webtrees\I18N;
@@ -161,6 +162,7 @@ class LinkEnhancerModule extends AbstractModule implements
         'Source'     => 'SOUR',
         'Repository' => 'REPO',
         'Family'     => 'FAM',
+        'Location'   => '_LOC',
     ];
 
     public const PREF_MD_ACTIVE = 'MD_ACTIVE'; // enable markdown enhancements
@@ -1136,20 +1138,29 @@ class LinkEnhancerModule extends AbstractModule implements
 
     public function getTabContent(\Fisharebest\Webtrees\Individual $individual): string
     {
-        $service       = new XrefDetailService();
-        $outgoing_html = $service->outgoingLinksHtml($individual, 0);
-        $incoming      = $service->incomingReferences($individual->tree(), $individual->xref());
-        $total_count   = count($service->outgoingLinks($individual)['entries'])
+        return $this->getXrefDetailViewContent($individual);
+    }
+
+    /**
+     * xrefs (in-/outgoing) for a GEDCOM record - display in record detail tab
+     * @param GedcomRecord $record
+     * @return string                view content
+     */
+    public function getXrefDetailViewContent(GedcomRecord $record) : string {
+        $service        = new XrefDetailService();
+        $include_blocks = (bool) $this->getPref(self::PREF_LINKSPP_DETAIL_INCLUDE_BLOCKS, true);
+        $outgoing_html  = $service->outgoingLinksHtml($record, 0);
+        $incoming       = $service->incomingReferences($record->tree(), $record->xref(), $include_blocks);
+        $total_count    = count($service->outgoingLinks($record)['entries'])
             + array_sum(array_column($incoming, 'link_count'));
 
         return view($this->name() . '::xref-detail-tab', [
-            'record'        => $individual,
+            'record'        => $record,
             'outgoing_html' => $outgoing_html,
             'incoming'      => $incoming,
             'total_count'   => $total_count,
         ]);
     }
-
     // ─── ModuleListInterface: listAction ────────────────────────────────────
 
     /**
