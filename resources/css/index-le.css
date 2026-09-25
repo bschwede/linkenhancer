@@ -68,3 +68,14 @@ mark.icon-wt-xref { font-weight: bold; } /* xref of actually displayed gedcom re
 .le-xref-section-title {
     border-bottom: 1px #b6a4a4 solid;
 }
+
+.le-xref-section-title.inbound::after {
+    content: '↙';
+    display: inline-block;
+    margin-left: 0.5em;
+}
+.le-xref-section-title.outbound::after {
+    content: '↗';
+    display: inline-block;
+    margin-left: 0.5em;
+}

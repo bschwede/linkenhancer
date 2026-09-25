@@ -14,12 +14,12 @@ use Fisharebest\Webtrees\I18N;
 ?>
 <div class="p-3" data-xref-count="<?= $total_count ?>">
     <?php if ($outgoing_html !== '') : ?>
-        <h6 class="le-xref-section-title mt-2"><?= I18N::translate('Outgoing references') ?></h6>
+        <h6 class="le-xref-section-title outbound mt-2"><?= I18N::translate('Outgoing references') ?></h6>
         <div class="le-xref-outgoing row"><?= $outgoing_html ?></div>
     <?php endif ?>
 
     <?php if ($incoming !== []) : ?>
-        <h6 class="le-xref-section-title mt-2"><?= I18N::translate('Incoming references') ?></h6>
+        <h6 class="le-xref-section-title inbound mt-2"><?= I18N::translate('Incoming references') ?></h6>
         <table class="table table-sm le-xref-incoming-table">
             <thead>
                 <tr>
