@@ -142,6 +142,7 @@ final class XrefDetailService
     {
         $results = [];
         $tree_id = (int) $tree->id();
+        $user_id = Auth::isAdmin() ? null : (int) Auth::id();
 
         foreach (XrefsService::BLOCKS as $module_name => $block_def) {
             $text_settings = XrefsService::blockTextSettings($module_name);
@@ -149,7 +150,7 @@ final class XrefDetailService
                 continue;
             }
 
-            $rows = DB::table('block AS b')
+            $query = DB::table('block AS b')
                 ->join('block_setting AS bs', 'bs.block_id', '=', 'b.block_id')
                 ->where('b.module_name', '=', $module_name)
                 ->whereIn('bs.setting_name', $text_settings)
@@ -157,7 +158,16 @@ final class XrefDetailService
                 ->where(static function ($q) use ($tree_id): void {
                     $q->where('b.gedcom_id', '=', $tree_id)
                         ->orWhereNull('b.gedcom_id');
-                })
+                });
+
+            if ($user_id !== null) {
+                $query->where(static function ($q) use ($user_id): void {
+                    $q->whereNull('b.user_id')
+                        ->orWhere('b.user_id', '=', $user_id);
+                });
+            }
+
+            $rows = $query
                 ->groupBy('b.block_id', 'b.gedcom_id', 'b.module_name')
                 ->select(['b.block_id', 'b.gedcom_id', 'b.module_name', DB::raw('COUNT(*) AS link_count')])
                 ->get();
