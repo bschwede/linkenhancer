@@ -31,8 +31,19 @@ use Fisharebest\Webtrees\I18N;
             <tbody>
                 <?php foreach ($incoming as $ref) : ?>
                     <tr>
-                        <td><a href="<?= e($ref['url']) ?>"><?= $ref['name'] ?></a></td>
-                        <td><?= e($ref['rectype']) ?></td>
+                        <td>
+                            <?php if (!empty($ref['tree_label'])) : ?>
+                                <span class="text-muted small"><?= e($ref['tree_label']) ?>:</span>
+                            <?php endif ?>
+                            <a href="<?= e($ref['url']) ?>"><?= $ref['name'] ?></a>
+                        </td>
+                        <td>
+                            <?php if (($ref['source'] ?? 'gedcom') === 'block') : ?>
+                                <span class="badge bg-secondary"><?= e($ref['rectype']) ?></span>
+                            <?php else : ?>
+                                <?= e($ref['rectype']) ?>
+                            <?php endif ?>
+                        </td>
                         <td class="text-end"><?= $ref['link_count'] ?></td>
                     </tr>
                 <?php endforeach ?>

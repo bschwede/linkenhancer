@@ -69,10 +69,11 @@ final class XrefDetailData implements RequestHandlerInterface
             throw new $denied();
         }
 
-        $service       = new XrefDetailService();
-        $outgoing_html = $service->outgoingLinksHtml($record, 0);
-        $incoming      = $service->incomingReferences($tree, $xref);
-        $total_count   = count($service->outgoingLinks($record)['entries'])
+        $service        = new XrefDetailService();
+        $include_blocks = (bool) $module->getPref(LinkEnhancerModule::PREF_LINKSPP_DETAIL_INCLUDE_BLOCKS, true);
+        $outgoing_html  = $service->outgoingLinksHtml($record, 0);
+        $incoming       = $service->incomingReferences($tree, $xref, $include_blocks);
+        $total_count    = count($service->outgoingLinks($record)['entries'])
             + array_sum(array_column($incoming, 'link_count'));
 
         $content = view($module->name() . '::xref-detail-tab', [

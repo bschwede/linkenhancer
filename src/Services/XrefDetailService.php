@@ -78,12 +78,17 @@ final class XrefDetailService
      *
      * Returns deduplicated source records (by file, xref, rectype) with
      * a link count per source. Records not visible to the current user
-     * are filtered out.
+     * are filtered out. Includes same-tree and cross-tree references.
      *
-     * @return array<int, array{xref: string, rectype: string, name: string, url: string, link_count: int}>
+     * When $include_blocks is true, block modules that reference the XREF
+     * are also included.
+     *
+     * @return array<int, array{xref: string, rectype: string, name: string, url: string, link_count: int, tree_label: string, source: string}>
      */
-    public function incomingReferences(Tree $tree, string $xref): array
+    public function incomingReferences(Tree $tree, string $xref, bool $include_blocks = false): array
     {
+        $tree_service = Registry::container()->get(\Fisharebest\Webtrees\Services\TreeService::class);
+
         $rows = DB::table(XrefsService::INDEX_SCAN_TABLE . ' AS s')
             ->join(XrefsService::INDEX_LINK_TABLE . ' AS l', static function ($join): void {
                 $join->on('l.file', '=', 's.file')
@@ -91,16 +96,21 @@ final class XrefDetailService
                     ->on('l.rectype', '=', 's.rectype');
             })
             ->where('l.target_xref', '=', $xref)
-            ->where('s.file', '=', $tree->id())
             ->select(['s.file', 's.xref', DB::raw('s.rectype AS rectype'), DB::raw('COUNT(*) AS link_count')])
             ->groupBy('s.file', 's.xref', 's.rectype')
+            ->orderBy('s.file')
             ->orderBy('s.rectype')
             ->orderBy('s.xref')
             ->get();
 
         $results = [];
         foreach ($rows as $row) {
-            $record = Registry::gedcomRecordFactory()->make($row->xref, $tree);
+            $source_tree = $tree_service->all()->get($row->file);
+            if (!$source_tree instanceof Tree) {
+                continue;
+            }
+
+            $record = Registry::gedcomRecordFactory()->make($row->xref, $source_tree);
             if ($record === null || !$record->canShow()) {
                 continue;
             }
@@ -111,7 +121,66 @@ final class XrefDetailService
                 'name'       => $record->fullName(),
                 'url'        => $record->url(),
                 'link_count' => (int) $row->link_count,
+                'tree_label' => $source_tree->id() === $tree->id() ? '' : $source_tree->name(),
+                'source'     => 'gedcom',
             ];
+        }
+
+        if ($include_blocks) {
+            $results = array_merge($results, $this->incomingBlockReferences($tree, $xref));
+        }
+
+        return $results;
+    }
+
+    /**
+     * Find block modules in the given tree that reference the XREF.
+     *
+     * @return array<int, array{xref: string, rectype: string, name: string, url: string, link_count: int, tree_label: string, source: string}>
+     */
+    private function incomingBlockReferences(Tree $tree, string $xref): array
+    {
+        $results = [];
+        $tree_id = (int) $tree->id();
+
+        foreach (XrefsService::BLOCKS as $module_name => $block_def) {
+            $text_settings = XrefsService::blockTextSettings($module_name);
+            if ($text_settings === []) {
+                continue;
+            }
+
+            $rows = DB::table('block AS b')
+                ->join('block_setting AS bs', 'bs.block_id', '=', 'b.block_id')
+                ->where('b.module_name', '=', $module_name)
+                ->whereIn('bs.setting_name', $text_settings)
+                ->where('bs.setting_value', 'like', '%@' . $xref . '@%')
+                ->where(static function ($q) use ($tree_id): void {
+                    $q->where('b.gedcom_id', '=', $tree_id)
+                        ->orWhereNull('b.gedcom_id');
+                })
+                ->groupBy('b.block_id', 'b.gedcom_id', 'b.module_name')
+                ->select(['b.block_id', 'b.gedcom_id', 'b.module_name', DB::raw('COUNT(*) AS link_count')])
+                ->get();
+
+            foreach ($rows as $row) {
+                $title_setting = $block_def['settings']['title'] ?? null;
+                $block_title = $title_setting !== null
+                    ? (string) DB::table('block_setting')
+                        ->where('block_id', '=', $row->block_id)
+                        ->where('setting_name', '=', $title_setting)
+                        ->value('setting_value')
+                    : '';
+
+                $results[] = [
+                    'xref'       => 'BLOCK-' . $row->block_id,
+                    'rectype'    => $block_def['title'],
+                    'name'       => $block_title !== '' ? $block_title : $block_def['title'],
+                    'url'        => '/' . $tree->name(),
+                    'link_count' => (int) $row->link_count,
+                    'tree_label' => '',
+                    'source'     => 'block',
+                ];
+            }
         }
 
         return $results;
