@@ -159,7 +159,7 @@ final class XrefDetailService
             true
         );
 
-        $html .= '<div class="text-muted small">' . XrefsService::linkCountSummary($result['counts']) . '</div>';
+        $html = '<div class="col-md-10">' . $html . '</div><div class="col-md-2 text-muted small">' . XrefsService::linkCountSummary($result['counts']) . '</div>';
 
         return $html;
     }

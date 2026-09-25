@@ -12,14 +12,14 @@ use Fisharebest\Webtrees\I18N;
  * @var int          $total_count
  */
 ?>
-<div data-xref-count="<?= $total_count ?>">
+<div class="p-3" data-xref-count="<?= $total_count ?>">
     <?php if ($outgoing_html !== '') : ?>
-        <h6 class="le-xref-section-title"><?= I18N::translate('Outgoing references') ?></h6>
-        <div class="le-xref-outgoing"><?= $outgoing_html ?></div>
+        <h6 class="le-xref-section-title mt-2"><?= I18N::translate('Outgoing references') ?></h6>
+        <div class="le-xref-outgoing row"><?= $outgoing_html ?></div>
     <?php endif ?>
 
     <?php if ($incoming !== []) : ?>
-        <h6 class="le-xref-section-title"><?= I18N::translate('Incoming references') ?></h6>
+        <h6 class="le-xref-section-title mt-2"><?= I18N::translate('Incoming references') ?></h6>
         <table class="table table-sm le-xref-incoming-table">
             <thead>
                 <tr>
@@ -31,7 +31,7 @@ use Fisharebest\Webtrees\I18N;
             <tbody>
                 <?php foreach ($incoming as $ref) : ?>
                     <tr>
-                        <td><a href="<?= e($ref['url']) ?>"><?= e($ref['name']) ?></a></td>
+                        <td><a href="<?= e($ref['url']) ?>"><?= $ref['name'] ?></a></td>
                         <td><?= e($ref['rectype']) ?></td>
                         <td class="text-end"><?= $ref['link_count'] ?></td>
                     </tr>
