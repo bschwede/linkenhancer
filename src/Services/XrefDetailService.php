@@ -30,6 +30,7 @@ use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\DB;
 use Fisharebest\Webtrees\GedcomRecord;
 use Fisharebest\Webtrees\Registry;
+use Fisharebest\Webtrees\Services\TreeService;
 use Fisharebest\Webtrees\Tree;
 use Schwendinger\Webtrees\Helpers\Functions;
 
@@ -44,6 +45,13 @@ use Schwendinger\Webtrees\Helpers\Functions;
  */
 final class XrefDetailService
 {
+    
+    private TreeService $tree_service;
+
+    public function __construct() {
+        $this->tree_service = Registry::container()->get(TreeService::class);
+    }    
+
     /**
      * Get the outgoing link inventory from a record's text.
      *
@@ -87,8 +95,6 @@ final class XrefDetailService
      */
     public function incomingReferences(Tree $tree, string $xref, bool $include_blocks = false): array
     {
-        $tree_service = Registry::container()->get(\Fisharebest\Webtrees\Services\TreeService::class);
-
         $uids = UidIndexService::uidsForRecord((int) $tree->id(), $xref);
 
         $rows = DB::table(XrefsService::INDEX_SCAN_TABLE . ' AS s')
@@ -121,7 +127,7 @@ final class XrefDetailService
 
         $results = [];
         foreach ($rows as $row) {
-            $source_tree = $tree_service->all()->first(static fn (Tree $t): bool => $t->id() === (int) $row->file); //get($row->file);
+            $source_tree = $this->tree_service->all()->first(static fn (Tree $t): bool => $t->id() === (int) $row->file);
             if (!$source_tree instanceof Tree) {
                 continue;
             }
@@ -137,7 +143,7 @@ final class XrefDetailService
                 'name'       => $record->fullName(),
                 'url'        => $record->url(),
                 'link_count' => (int) $row->link_count,
-                'tree_label' => $source_tree->id() === $tree->id() ? '' : $source_tree->name(),
+                'tree_label' => IdResolver::treeLabel($record, $tree->id()), // $source_tree->id() === $tree->id() ? '' : $source_tree->name(),
                 'source'     => 'gedcom',
             ];
         }
@@ -161,6 +167,8 @@ final class XrefDetailService
         $user_id = Auth::isAdmin() ? null : (int) Auth::id();
         $uids    = UidIndexService::uidsForRecord($tree_id, $xref);
 
+        $accessable_tree_ids = $this->tree_service->all()->map(static fn(Tree $tree): int => $tree->id());        
+
         foreach (XrefsService::BLOCKS as $module_name => $block_def) {
             $text_settings = XrefsService::blockTextSettings($module_name);
             if ($text_settings === []) {
@@ -177,17 +185,20 @@ final class XrefDetailService
                         $q->orWhere('bs.setting_value', 'like', '%@' . $uid . '@%');
                     }
                 })
-                ->where(static function ($q) use ($tree_id): void {
-                    $q->where('b.gedcom_id', '=', $tree_id)
-                        ->orWhereNull('b.gedcom_id');
+                ->where(static function ($q) use ($user_id, $accessable_tree_ids): void {
+                    // user_id AND gedcom_id are NULL or one of them is set
+                    $q->whereIn('b.gedcom_id', $accessable_tree_ids)
+                        ->WhereNull('b.user_id')
+                        ->orWhereNull('b.gedcom_id')
+                        ->whereNull('b.user_id');
+                    if ($user_id !== null) {
+                        $q->orWhereNull('b.gedcom_id')
+                            ->where('b.user_id', '=', $user_id);
+                    } else {
+                        $q->orWhereNull('b.gedcom_id')
+                            ->where('b.user_id', '!=', null);
+                    }
                 });
-
-            if ($user_id !== null) {
-                $query->where(static function ($q) use ($user_id): void {
-                    $q->whereNull('b.user_id')
-                        ->orWhere('b.user_id', '=', $user_id);
-                });
-            }
 
             $rows = $query
                 ->groupBy('b.block_id', 'b.gedcom_id', 'b.module_name')
@@ -195,6 +206,7 @@ final class XrefDetailService
                 ->get();
 
             foreach ($rows as $row) {
+                $source_tree = $this->tree_service->all()->first(static fn(Tree $t): bool => $t->id() === (int) ($row->gedcom_id ?? -1));
                 $title_setting = $block_def['settings']['title'] ?? null;
                 $block_title = $title_setting !== null
                     ? (string) DB::table('block_setting')
@@ -207,9 +219,9 @@ final class XrefDetailService
                     'xref'       => 'BLOCK-' . $row->block_id,
                     'rectype'    => $block_def['title'],
                     'name'       => $block_title !== '' ? $block_title : $block_def['title'],
-                    'url'        => '/' . $tree->name(),
+                    'url'        => '',
                     'link_count' => (int) $row->link_count,
-                    'tree_label' => '',
+                    'tree_label' => $source_tree ? ($source_tree->id() === $tree->id() ? '' : $source_tree->name()) : '',
                     'source'     => 'block',
                 ];
             }
@@ -247,7 +259,7 @@ final class XrefDetailService
             return [
                 'name'       => $rec->fullName(),
                 'url'        => $rec->url(),
-                'tree_label' => $t->name(),
+                'tree_label' => '',
                 'actual'     => $rec->tag(),
             ];
         };

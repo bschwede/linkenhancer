@@ -35,7 +35,11 @@ use Fisharebest\Webtrees\I18N;
                             <?php if (!empty($ref['tree_label'])) : ?>
                                 <span class="text-muted small"><?= e($ref['tree_label']) ?>:</span>
                             <?php endif ?>
+                            <?php if ($ref['url'] != ''): ?>
                             <a href="<?= e($ref['url']) ?>"><?= $ref['name'] ?></a>
+                            <?php else: ?>
+                            <?= $ref['name'] ?>
+                            <?php endif; ?>
                         </td>
                         <td>
                             <?php if (($ref['source'] ?? 'gedcom') === 'block') : ?>
