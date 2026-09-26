@@ -990,9 +990,19 @@ class LinkEnhancerModule extends AbstractModule implements
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function getAdminResetListOverwritesAction(ServerRequestInterface $request): ResponseInterface
+    public function getAdminResetAccessOverwritesAction(ServerRequestInterface $request): ResponseInterface
     {
         $params = Validator::queryParams($request);
+        $type = null;
+        try {
+            $type = (string) $params->string('type', null);
+            $type = strtolower($type);
+        } catch (Throwable $e) {
+        }
+        if (!$type || !in_array($type, ['list', 'tab'])) {
+            return redirect($this->getConfigLink());
+        }
+
         $access_level = null;
         try {
             $access_level = (int) $params->integer('access_level', null);
@@ -1000,7 +1010,7 @@ class LinkEnhancerModule extends AbstractModule implements
         } catch (Throwable $e) {}
         
         $query = DB::table('module_privacy')
-            ->where('interface', '=', ModuleListInterface::class)
+            ->where('interface', '=', ($type === 'list' ? ModuleListInterface::class : ModuleTabInterface::class))
             ->where('module_name', '=', self::MODULE_NAME);
 
         if ($access_level) {
@@ -1045,21 +1055,23 @@ class LinkEnhancerModule extends AbstractModule implements
     }
 
     /**
-     * row count of overwrites in module_privacy for this module (total and access level specific)
+     * row count of overwrites in module_privacy for list or tab (total and access level specific)
+     * @param string $type   list or tab
      * @param null|int $access_level
      * @return array{"access_level": int, total: int}
      */
-    public static function countListAccessOverwrites(null|int $access_level): array
+    public static function countAccessOverwrites(string $type, null|int $access_level): array
     {
+        $class = (string) ($type === 'list' ? ModuleListInterface::class : ModuleTabInterface::class);
         return [
             'total' => DB::table('module_privacy')
-                ->where('interface', '=', ModuleListInterface::class)
+                ->where('interface', '=', $class)
                 ->where('module_name', '=', self::MODULE_NAME)
                 ->count(),
             'access_level' => $access_level === null ?
                     0 :
                     DB::table('module_privacy')
-                        ->where('interface', '=', ModuleListInterface::class)
+                        ->where('interface', '=', $class)
                         ->where('module_name', '=', self::MODULE_NAME)
                         ->where('access_level', '=', $access_level)
                         ->count()
@@ -1393,9 +1405,9 @@ class LinkEnhancerModule extends AbstractModule implements
             ])
             : ''
         );
-        $response['links']['resetlist_params'] = [
+        $response['links']['resetaccess_params'] = [
             'module' => $this->name(),
-            'action' => 'AdminResetListOverwrites'
+            'action' => 'AdminResetAccessOverwrites'
         ];
         
 
