@@ -11,7 +11,7 @@
 
 import { createDomObserver } from './dom-observer-factory.js';
 
-const TAB_ID = 'le-xrefs-pane';
+const TAB_ID = '_linkenhancer_';
 
 
 function injectTab(navTabs, detailUrl, tabTitle) {
@@ -60,15 +60,18 @@ function injectTab(navTabs, detailUrl, tabTitle) {
 
 
 function injectFamilyLink(titleEl, detailUrl, tabTitle) {
-    const a = document.createElement('a');
+    const div = document.createElement('div'); // prevents stretching of button
+    const a = document.createElement('button');
     a.href = '#';
-    a.className = 'btn btn-outline-primary btn-sm ms-3';
+    a.className = 'btn btn-primary ms-3 me-2 wt-page-menu-button';
+    a.setAttribute('type', 'button');
     a.setAttribute('data-bs-toggle', 'modal');
     a.setAttribute('data-bs-target', '#wt-ajax-modal');
     a.setAttribute('data-wt-href', detailUrl);
     a.textContent = tabTitle;
 
-    titleEl.parentElement.appendChild(a);
+    div.appendChild(a);
+    titleEl.parentElement.appendChild(div);
 }
 
 
