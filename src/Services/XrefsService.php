@@ -937,9 +937,9 @@ final class XrefsService { // stuff related with handling cross-references
             }
 
             $label  = ($resolved['tree_label'] !== '')
-                ? e($resolved['tree_label']) . ': ' . $resolved['name']
-                : $resolved['name'];
-            $anchor = '<span class="le-cross-ref" title="' . e(I18N::translate('Cross-reference')) . '">↪</span> <a href="' . e($resolved['url']) . '">' . $label . '</a>';
+                ? '<span class="text-muted small">' . e($resolved['tree_label']) . ': </span> '
+                : '';
+            $anchor = '<span class="le-cross-ref" title="' . e(I18N::translate('Cross-reference')) . '">↪</span> ' . $label . '<a href="' . e($resolved['url']) . '">' . $resolved['name'] . '</a>';
             if ($status === 'mismatch') {
                 $hint    = I18N::translate('expected %1$s, is %2$s', $expected_tag, $resolved['actual']);
                 $problem = '<span class="le-target-type-mismatch" title="' . e($hint) . '">' . self::TARGET_TYPE_MISMATCH_GLYPH . '</span>';
