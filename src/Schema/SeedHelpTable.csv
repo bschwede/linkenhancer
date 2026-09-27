@@ -532,3 +532,10 @@ id;path;handler;method;extras;subcontext;category;order;url
 560;;_potts_member_help_;GET;;;custom module;15;https://github.com/PottsNet/potts-help-centre
 561;/tree/{tree}/individual/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\IndividualPage;GET;;"a[href^=""#_full-diagram_""]";custom module;30;https://github.com/AlexBocken/WebtreesFullDiagram
 562;;_translate-notes_;GET;;;custom module;15;https://github.com/Aengelking/webtrees-translate
+563;/tree/{tree}/individual/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\IndividualPage;GET;;"a.nav-link[href^=""#_linkenhancer_""]";custom module;30;https://github.com/bschwede/linkenhancer
+564;/tree/{tree}/sharedPlace/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\LocationPage;GET;;"a.nav-link[href^=""#_linkenhancer_""]";custom module;30;https://github.com/bschwede/linkenhancer
+565;/tree/{tree}/media/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\MediaPage;GET;;"a.nav-link[href^=""#_linkenhancer_""]";custom module;30;https://github.com/bschwede/linkenhancer
+566;/tree/{tree}/note/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\NotePage;GET;;"a.nav-link[href^=""#_linkenhancer_""]";custom module;30;https://github.com/bschwede/linkenhancer
+567;/tree/{tree}/shared-note/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\SharedNotePage;GET;;"a.nav-link[href^=""#_linkenhancer_""]";custom module;30;https://github.com/bschwede/linkenhancer
+568;/tree/{tree}/repository/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\RepositoryPage;GET;;"a.nav-link[href^=""#_linkenhancer_""]";custom module;30;https://github.com/bschwede/linkenhancer
+569;/tree/{tree}/source/{xref}{/slug};Fisharebest\Webtrees\Http\RequestHandlers\SourcePage;GET;;"a.nav-link[href^=""#_linkenhancer_""]";custom module;30;https://github.com/bschwede/linkenhancer
