@@ -243,24 +243,26 @@ final class XrefDetailService
         }
 
         $tree = $record->tree();
-        $tree_id = (int) $tree->id();
 
         $target_linker = function (string $xref, ?string $target_tree_name) use ($tree): ?array {
             $t = ($target_tree_name !== null && $target_tree_name !== '')
-                ? Registry::container()->get(\Fisharebest\Webtrees\Services\TreeService::class)->all()->get($target_tree_name)
+                ? $this->tree_service->all()->get($target_tree_name)
                 : $tree;
             if (!$t instanceof Tree) {
                 return null;
             }
-            $rec = Registry::gedcomRecordFactory()->make($xref, $t);
-            if ($rec === null) {
+
+            $candidates = IdResolver::candidates($xref, $t, $t->id());
+            if ($candidates === []) {
                 return null;
             }
+
+            $candidate = $candidates[0];
             return [
-                'name'       => $rec->fullName(),
-                'url'        => $rec->url(),
-                'tree_label' => '',
-                'actual'     => $rec->tag(),
+                'name' => $candidate['record']->fullName(),
+                'url' => $candidate['record']->url(),
+                'tree_label' => $candidate['tree_label'],
+                'actual' => $candidate['record']->tag(),
             ];
         };
 
