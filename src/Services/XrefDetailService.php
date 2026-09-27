@@ -252,7 +252,7 @@ final class XrefDetailService
                 return null;
             }
 
-            $candidates = IdResolver::candidates($xref, $t, $t->id());
+            $candidates = IdResolver::candidates($xref, $t, $tree->id());
             if ($candidates === []) {
                 return null;
             }
