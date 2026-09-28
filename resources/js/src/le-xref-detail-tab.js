@@ -30,7 +30,7 @@ function injectTab(navTabs, detailUrl, tabTitle) {
     a.setAttribute('role', 'tab');
     a.setAttribute('href', `#${TAB_ID}`);
     a.setAttribute('data-wt-href', detailUrl);
-    a.innerHTML = `${tabTitle} <span class="badge bg-secondary" id="le-xref-badge"></span>`;
+    a.innerHTML = `${tabTitle} <span class="badge bg-secondary me-1" id="le-xref-badge"></span>`;
 
     a.addEventListener('show.bs.tab', function () {
         const target = document.getElementById(TAB_ID);
