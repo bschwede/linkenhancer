@@ -37,6 +37,8 @@ use InvalidArgumentException;
 use Throwable;
 
 use function e;
+use function preg_replace_callback;
+use function str_replace;
 use function strtotime;
 use function time;
 
@@ -182,6 +184,121 @@ final class XrefsService { // stuff related with handling cross-references
         return in_array($value, self::LINKS_PER_CLASS_OPTIONS, true)
             ? $value
             : self::LINKS_PER_CLASS_DEFAULT;
+    }
+
+    /**
+     * Replace the renumbered XREF inside le-link "wt=" targets of a GEDCOM text.
+     *
+     * Only the XREF position of a wt= target whose resolved tree is $target_tree_name
+     * is touched. An empty @tree part means "same tree as the source record"
+     * ($source_tree_name), so the replacement is evaluated relative to the source -
+     * a cross-tree source's own self-links (empty @tree) are NOT rewritten. Display
+     * text and id= (UID) targets are left alone.
+     *
+     * The URL part of each le-link is extracted exactly like extractLinkTargets()
+     * (markdown: after "(#@" up to the closing ")"; HTML: the href value minus the
+     * "#@" prefix) so RE_WT_TARGET's boundary matches at the URL start.
+     *
+     * @return array{gedcom: string, replaced: int}
+     */
+    public static function replaceLinkTargetXref(
+        string $gedcom,
+        string $old_xref,
+        string $new_xref,
+        string $source_tree_name,
+        string $target_tree_name
+    ): array {
+        $replaced = 0;
+
+        // Markdown le-links: [text](#@url) / ![pic](#@url)
+        $gedcom = preg_replace_callback(
+            self::RE_LE_LINK,
+            static function (array $m) use ($old_xref, $new_xref, $source_tree_name, $target_tree_name, &$replaced): string {
+                $token = $m[0];
+                $pos   = strrpos($token, '(#@');
+                if ($pos === false) {
+                    return $token;
+                }
+                $head = substr($token, 0, $pos + 3);
+                $url  = self::replaceWtXref(
+                    substr($token, $pos + 3, -1),
+                    $old_xref,
+                    $new_xref,
+                    $source_tree_name,
+                    $target_tree_name,
+                    $replaced
+                );
+                return $head . $url . ')';
+            },
+            $gedcom
+        );
+
+        // HTML le-links: <a ... href="#@url">text</a>
+        $gedcom = preg_replace_callback(
+            self::RE_LE_HTML_LINK,
+            static function (array $m) use ($old_xref, $new_xref, $source_tree_name, $target_tree_name, &$replaced): string {
+                $token    = $m[0];
+                $href_pos = strpos($token, 'href="');
+                $quote    = '"';
+                if ($href_pos === false) {
+                    $href_pos = strpos($token, "href='");
+                    $quote    = "'";
+                }
+                if ($href_pos === false) {
+                    return $token;
+                }
+                $href_start = $href_pos + 6;
+                $href_end   = strpos($token, $quote, $href_start);
+                if ($href_end === false) {
+                    return $token;
+                }
+                $href_val = substr($token, $href_start, $href_end - $href_start);
+                $is_le    = str_starts_with($href_val, '#@');
+                $url      = self::replaceWtXref(
+                    $is_le ? substr($href_val, 2) : $href_val,
+                    $old_xref,
+                    $new_xref,
+                    $source_tree_name,
+                    $target_tree_name,
+                    $replaced
+                );
+                // substr($token, $href_end) already carries the closing quote.
+                return substr($token, 0, $href_start) . ($is_le ? '#@' : '') . $url . substr($token, $href_end);
+            },
+            $gedcom
+        );
+
+        return ['gedcom' => $gedcom, 'replaced' => $replaced];
+    }
+
+    /**
+     * Replace a matching renumbered XREF in the XREF position of the "wt" targets
+     * of one LE-link URL (already extracted, so "wt=" sits at the start).
+     */
+    private static function replaceWtXref(
+        string $url,
+        string $old_xref,
+        string $new_xref,
+        string $source_tree_name,
+        string $target_tree_name,
+        int &$replaced
+    ): string {
+        return preg_replace_callback(
+            self::RE_WT_TARGET,
+            static function (array $m) use ($old_xref, $new_xref, $source_tree_name, $target_tree_name, &$replaced): string {
+                if ($m['xref'] !== $old_xref) {
+                    return $m[0];
+                }
+                $target_tree = $m['tree'] === '' ? $source_tree_name : (string) $m['tree'];
+                if ($target_tree !== $target_tree_name) {
+                    return $m[0];
+                }
+                $replaced++;
+
+                return str_replace('@' . $old_xref . '@', '@' . $new_xref . '@', $m[0]);
+            },
+            $url
+        );
     }
 
     

@@ -1,0 +1,80 @@
+<?php
+
+/*
+ * webtrees - linkenhancer (custom module)
+ *
+ * Copyright (C) 2026 Bernd Schwendinger
+ *
+ * webtrees: online genealogy application
+ * Copyright (C) 2026 webtrees development team.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; If not, see <https://www.gnu.org/licenses/>.
+ */
+
+declare(strict_types=1);
+
+use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\Tree;
+use Schwendinger\Webtrees\Helpers\ClassName;
+use Schwendinger\Webtrees\Helpers\MoreI18N;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\RenumberWithLinksAction;
+
+/**
+ * @var string           $title
+ * @var Tree             $tree
+ * @var array<string,string> $xrefs  xref => record type
+ * @var bool             $defer_index  the le_* index will be rebuilt by cron
+ */
+
+$count = count($xrefs);
+
+?>
+
+<?= view('components/breadcrumbs', ['links' => [route(ClassName::get(ClassName::CONTROL_PANEL)) => MoreI18N::xlate('Control panel'), $title]]) ?>
+
+<h1><?= e($title) ?></h1>
+
+<p><?= e(MoreI18N::xlate('This renumbers the records whose XREF collides with another family tree, and keeps the linkenhancer le-links and the le_* index in sync.')) ?></p>
+
+<p><?= e(I18N::plural('This family tree has %1$d record whose XREF is also used by another family tree.', 'This family tree has %1$d records whose XREF is also used by another family tree.', $count, I18N::number($count))) ?></p>
+
+<?php if ($count > 0): ?>
+    <ul class="list-group mb-3">
+        <?php foreach ($xrefs as $old => $type): ?>
+            <li class="list-group-item">
+                <code><?= e((string) $old) ?></code>
+                <span class="text-muted">— <?= e((string) $type) ?></span>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+
+    <p class="text-muted">
+        <?= e($defer_index
+            ? MoreI18N::xlate('After the renumber the le_* index will be refreshed by the cron job.')
+            : MoreI18N::xlate('After the renumber the le_* index will be updated inline.')) ?>
+    </p>
+
+    <form method="post" action="<?= e(route(RenumberWithLinksAction::class, ['tree' => $tree->name()])) ?>">
+        <button type="submit" class="btn btn-primary">
+            <?= view('icons/save') ?>
+            <?= e(MoreI18N::xlate('Renumber now')) ?>
+        </button>
+
+        <span class="ms-2 text-muted"><?= e(MoreI18N::xlate('Caution! This may take a long time. Be patient.')) ?></span>
+
+        <?= csrf_field() ?>
+    </form>
+<?php else: ?>
+    <p class="text-success"><?= e(MoreI18N::xlate('There are no XREF collisions to fix in this family tree.')) ?></p>
+<?php endif; ?>

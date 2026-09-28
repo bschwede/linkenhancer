@@ -68,6 +68,8 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoXrefActio
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpMdAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpWtCoreAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpWthbAction;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\RenumberWithLinksAction;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\RenumberWithLinksPage;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\XrefDetailData;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\XrefOverviewListData;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
@@ -413,6 +415,9 @@ class LinkEnhancerModule extends AbstractModule implements
             Functions::registerRoute('/tree/{tree}/goto-xref/{xref}', GotoXrefAction::class);
             Functions::registerRoute('/xref-overview-list-data', XrefOverviewListData::class);
             Functions::registerRoute('/tree/{tree}/le-xref-detail/{xref}', XrefDetailData::class);
+            // Single-pass renumber that keeps le-links + le_* index in sync (admin).
+            Functions::registerRoute('/tree/{tree}/le-renumber', RenumberWithLinksPage::class);
+            Functions::registerRoute('/tree/{tree}/le-renumber-run', RenumberWithLinksAction::class);
         }
 
         if ($this->getPref(self::PREF_UID_ACTIVE, true)) {
