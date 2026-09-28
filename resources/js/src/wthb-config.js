@@ -20,6 +20,7 @@ export const getDefaultConfig = () => ({
     dotranslate: 0,
     doTranslateUser: undefined,
     subcontext: [],
+    subcontext_pending_timeout: 5000, // ms to keep retrying for not-yet-present subcontext targets
 
     tocnsearch_url: '', // help is shown if not empty
 

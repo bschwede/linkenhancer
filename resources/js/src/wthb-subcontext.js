@@ -119,36 +119,37 @@ export const insertSubcontextLinks = (
         });
     };
 
-    contexts.forEach((elem, index) => {
-        let ctx = elem.ctx.trim();
-        let url = elem.url;
-        if (!ctx || !url) return;
-
-        let node = null;
+    // Resolve the target node for a context definition (JSON {f,e,p} or CSS selector).
+    // Returns { node, pos, invalid }; node is null when not found, invalid marks a
+    // malformed JSON context (not retried).
+    const findContextNode = (ctx) => {
         let pos = "top";
 
         if (ctx.startsWith("{")) { // JSON object: {f:filter, e:JS, p:position} e or f needed, p optional
+            let ctxobj;
             try {
-                let ctxobj = JSON.parse(ctx);
-                if (ctxobj?.e ?? null) {
-                    const filterFn = createSafeFilter(document, ctxobj.e);
-                    const result = filterFn();
-                    node = Array.isArray(result) ? (result[0] ?? null) : (result ?? null);
-                } else {
-                    node = ctxobj?.f ? document.querySelector(ctxobj.f) : null;
-                }
-                pos = ctxobj?.p ?? pos;
+                ctxobj = JSON.parse(ctx);
             } catch (e) {
-                console.warn('LE-mod wthb subcontext:', ctx, e);
-                return;
+                return { node: null, pos, invalid: true };
             }
-        } else { // must be a filter expression
-            node = document.querySelector(ctx);
+            let node = null;
+            if (ctxobj?.e ?? null) {
+                const filterFn = createSafeFilter(document, ctxobj.e);
+                const result = filterFn ? filterFn() : null;
+                node = Array.isArray(result) ? (result[0] ?? null) : (result ?? null);
+            } else {
+                node = ctxobj?.f ? document.querySelector(ctxobj.f) : null;
+            }
+            pos = ctxobj?.p ?? pos;
+            return { node, pos };
         }
 
-        if (!node) {
-            return;
-        }
+        return { node: document.querySelector(ctx), pos }; // must be a filter expression
+    };
+
+    // Attach the ⓘ trigger to a resolved node (guarded against double-attach).
+    const attachTrigger = (node, url, pos) => {
+        if (node.querySelector?.('.popover-trigger')) return;
 
         const poptrigger = document.createElement('span');
         poptrigger.className = 'popover-trigger';
@@ -157,11 +158,55 @@ export const insertSubcontextLinks = (
         node.appendChild(poptrigger);
 
         createPopoverForTrigger(poptrigger, url, pos);
+    };
+
+    // Contexts whose target node was not present yet (e.g. a tab injected
+    // asynchronously via le-xref-detail-tab.js). Re-checked on DOM mutation
+    // until found or the timeout expires.
+    const PENDING_TIMEOUT_MS = Number(cfg.subcontext_pending_timeout) > 0 ? Number(cfg.subcontext_pending_timeout) : 5000;
+    const pendingContexts = [];
+    const pendingStart = Date.now();
+    let pendingExpired = false;
+
+    const processPendingContexts = () => {
+        if (pendingExpired || pendingContexts.length === 0) return;
+        if (Date.now() - pendingStart > PENDING_TIMEOUT_MS) {
+            pendingExpired = true;
+            pendingContexts.length = 0;
+            return;
+        }
+        for (let i = pendingContexts.length - 1; i >= 0; i--) {
+            const { ctx, url } = pendingContexts[i];
+            const { node, pos } = findContextNode(ctx);
+            if (node) {
+                attachTrigger(node, url, pos);
+                pendingContexts.splice(i, 1);
+            }
+        }
+    };
+
+    contexts.forEach((elem) => {
+        const ctx = elem.ctx.trim();
+        const url = elem.url;
+        if (!ctx || !url) return;
+
+        const { node, pos, invalid } = findContextNode(ctx);
+        if (invalid) {
+            console.warn('LE-mod wthb subcontext:', ctx);
+            return;
+        }
+        if (!node) {
+            pendingContexts.push({ ctx, url }); // target not present yet - retry later
+            return;
+        }
+
+        attachTrigger(node, url, pos);
     });
 
     // mutation observer
     const observer = new MutationObserver((mutations) => {
         let shouldReinit = false;
+        const shouldProcessPending = pendingContexts.length > 0 && !pendingExpired;
         mutations.forEach(mutation => {
             if (mutation.type === 'childList') {
                 mutation.addedNodes.forEach(node => {
@@ -172,10 +217,13 @@ export const insertSubcontextLinks = (
                 });
             }
         });
-        if (shouldReinit) {
+        if (shouldReinit || shouldProcessPending) {
             // debounce: wait for 100ms
             clearTimeout(window.popoverReinitTimeout);
-            window.popoverReinitTimeout = setTimeout(initializeTriggers, 100);
+            window.popoverReinitTimeout = setTimeout(() => {
+                initializeTriggers();
+                processPendingContexts();
+            }, 100);
         }
     });
 
@@ -184,14 +232,28 @@ export const insertSubcontextLinks = (
         subtree: true
     });
 
+    // Fallback: if no mutation arrives (e.g. target added without a
+    // childList event in the observed subtree), do one final check after the
+    // timeout and then stop retrying.
+    window.__subcontextPendingStop = setTimeout(() => {
+        processPendingContexts();
+        pendingExpired = true;
+        pendingContexts.length = 0;
+    }, PENDING_TIMEOUT_MS);
+
     // initial setup
     setupDelegation();
     initializeTriggers();
+    processPendingContexts(); // safety net in case the target is already present
 
     // cleanup function
     return {
         dispose: () => {
             observer.disconnect();
+            clearTimeout(window.popoverReinitTimeout);
+            clearTimeout(window.__subcontextPendingStop);
+            pendingExpired = true;
+            pendingContexts.length = 0;
             document.querySelectorAll('.popover-trigger').forEach(trigger => {
                 const popover = activePopovers.get(trigger);
                 if (popover) popover.dispose();
