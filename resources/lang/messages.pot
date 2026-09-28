@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-23 13:32+0200\n"
+"POT-Creation-Date: 2026-09-28 09:14+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,51 +44,51 @@ msgstr ""
 msgid "Precondition: Tree preference '%s' need to be set to markdown."
 msgstr ""
 
-#: src/Services/XrefsService.php:773
+#: src/Services/XrefsService.php:777 src/LinkEnhancerModule.php:1124
 msgid "Cross-references"
 msgstr ""
 
-#: src/Services/XrefsService.php:774
+#: src/Services/XrefsService.php:778
 msgid "External links"
 msgstr ""
 
-#: src/Services/XrefsService.php:775
+#: src/Services/XrefsService.php:779
 msgid "Pictures"
 msgstr ""
 
-#: src/Services/XrefsService.php:776
+#: src/Services/XrefsService.php:780
 msgid "Classic cross-references"
 msgstr ""
 
-#: src/Services/XrefsService.php:777
+#: src/Services/XrefsService.php:781
 msgid "Other - maybe damaged - links"
 msgstr ""
 
-#: src/Services/XrefsService.php:930
+#: src/Services/XrefsService.php:934
 #: resources/views/xref-overview-list.phtml:117
 #: resources/views/xref-overview.phtml:144
 msgid "target not found"
 msgstr ""
 
 #. I18N: JS enhanced link
-#: src/Services/XrefsService.php:938 src/Services/XrefsService.php:970
-#: src/Services/XrefsService.php:973 src/LinkEnhancerUtils.php:139
+#: src/Services/XrefsService.php:942 src/Services/XrefsService.php:974
+#: src/Services/XrefsService.php:977 src/LinkEnhancerUtils.php:139
 #: resources/views/help-wt-helptext.phtml:16
 msgid "Cross-reference"
 msgstr ""
 
-#: src/Services/XrefsService.php:940
+#: src/Services/XrefsService.php:944
 #, php-format
 msgid "expected %1$s, is %2$s"
 msgstr ""
 
-#: src/Services/XrefsService.php:964
+#: src/Services/XrefsService.php:968
 #: resources/views/xref-overview-list.phtml:119
 #: resources/views/xref-overview.phtml:146
 msgid "target not unique"
 msgstr ""
 
-#: src/Services/XrefsService.php:964
+#: src/Services/XrefsService.php:968
 #, php-format
 msgid "%1$s - %2$d matches in other trees"
 msgstr ""
@@ -561,27 +561,27 @@ msgid "File '%1$s' in the public folder is not an image but '%2$s'"
 msgstr ""
 
 #. I18N: Module title
-#: src/LinkEnhancerModule.php:309
+#: src/LinkEnhancerModule.php:335
 msgid "Link-Enhancer"
 msgstr ""
 
 #. I18N: Module description
-#: src/LinkEnhancerModule.php:319
+#: src/LinkEnhancerModule.php:345
 msgid ""
 "Cross-references to Gedcom datasets, Markdown editor, context-sensitive link "
 "to the GenWiki webtrees manual"
 msgstr ""
 
-#: src/LinkEnhancerModule.php:714
+#: src/LinkEnhancerModule.php:764
 msgid "Home link - JSON with CSS rules seems to be invalid."
 msgstr ""
 
-#: src/LinkEnhancerModule.php:764 resources/views/settings-wthb.phtml:251
+#: src/LinkEnhancerModule.php:814 resources/views/settings-wthb.phtml:251
 msgid "Import registered routes"
 msgstr ""
 
-#: src/LinkEnhancerModule.php:921 src/LinkEnhancerModule.php:1027
-#: src/LinkEnhancerModule.php:1107 resources/views/settings.phtml:75
+#: src/LinkEnhancerModule.php:971 src/LinkEnhancerModule.php:1089
+#: src/LinkEnhancerModule.php:1228 resources/views/settings.phtml:75
 msgid "Cross-Reference Overview"
 msgstr ""
 
@@ -728,7 +728,7 @@ msgid "The target type differs from the declaration"
 msgstr ""
 
 #: resources/views/xref-overview-list.phtml:148
-#: resources/views/xref-overview.phtml:178
+#: resources/views/xref-overview.phtml:180
 msgid "XREF"
 msgstr ""
 
@@ -740,8 +740,8 @@ msgstr ""
 
 #. I18N: see also fancy-research-links
 #: resources/views/settings-home.phtml:33 resources/views/settings-md.phtml:47
-#: resources/views/settings-le.phtml:43 resources/views/settings-wthb.phtml:166
-#: resources/views/settings.phtml:121
+#: resources/views/settings-le.phtml:112
+#: resources/views/settings-wthb.phtml:166 resources/views/settings.phtml:121
 msgid "Open links in a new tab"
 msgstr ""
 
@@ -853,7 +853,7 @@ msgstr ""
 
 #: resources/views/help-md.phtml:20 resources/views/help-md.phtml:52
 #: resources/views/help-md.phtml:62 resources/views/settings-md.phtml:170
-#: resources/views/settings-le.phtml:62 resources/views/settings.phtml:68
+#: resources/views/settings-le.phtml:131 resources/views/settings.phtml:68
 msgid "See also"
 msgstr ""
 
@@ -1184,21 +1184,29 @@ msgstr ""
 msgid "Enable for more options"
 msgstr ""
 
-#: resources/views/settings-le.phtml:18 resources/views/settings-le.phtml:19
+#: resources/views/settings-le.phtml:42 resources/views/settings-le.phtml:43
 #, php-format
 msgid "Reset list item access level overwrites - %s"
 msgstr ""
 
-#: resources/views/settings-le.phtml:19
+#: resources/views/settings-le.phtml:43
 msgid "with configured access level"
 msgstr ""
 
-#: resources/views/settings-le.phtml:54
+#: resources/views/settings-le.phtml:69
+msgid "Per-tree overrides are available in the control panel"
+msgstr ""
+
+#: resources/views/settings-le.phtml:87
+msgid "of which with this access level"
+msgstr ""
+
+#: resources/views/settings-le.phtml:123
 msgid "JavaScript for additional link targets"
 msgstr ""
 
 #. I18N: Enhanced Links js
-#: resources/views/settings-le.phtml:59
+#: resources/views/settings-le.phtml:128
 msgid ""
 "The JavaScript object overwrites and supplements the predefined settings, "
 "which are taken from the following code excerpt and can also serve as a "
@@ -1206,34 +1214,34 @@ msgid ""
 msgstr ""
 
 #. I18N: Enhanced Links js
-#: resources/views/settings-le.phtml:61
+#: resources/views/settings-le.phtml:130
 msgid "Any CSS rules required are best added via the “CSS and JS” module."
 msgstr ""
 
 #. I18N: Enhanced Links js
-#: resources/views/settings-le.phtml:62
+#: resources/views/settings-le.phtml:131
 msgid ""
 "Only the definition of the icon as a background image is actually needed - "
 "referencing as data: URL."
 msgstr ""
 
-#: resources/views/settings-le.phtml:72
+#: resources/views/settings-le.phtml:141
 msgid "Non-admin cross-reference overview"
 msgstr ""
 
-#: resources/views/settings-le.phtml:79
+#: resources/views/settings-le.phtml:148
 msgid "Max rows"
 msgstr ""
 
-#: resources/views/settings-le.phtml:108
-msgid "Per-tree overrides are available  in the control panel"
+#: resources/views/settings-le.phtml:163
+msgid "Record detail cross-references"
 msgstr ""
 
-#: resources/views/settings-le.phtml:126
-msgid "of which with this access level"
+#: resources/views/settings-le.phtml:174
+msgid "Include block references"
 msgstr ""
 
-#: resources/views/settings-le.phtml:150
+#: resources/views/settings-le.phtml:193
 msgid "Confirmation Prompt - Do you really want to perform this action?"
 msgstr ""
 
@@ -1252,6 +1260,18 @@ msgstr ""
 #. I18N: wthb link user setting epilogue 1
 #: resources/views/wthb-modal.phtml:34
 msgid "This setting can be adjusted at any time."
+msgstr ""
+
+#: resources/views/xref-detail-tab.phtml:18
+msgid "Outgoing references"
+msgstr ""
+
+#: resources/views/xref-detail-tab.phtml:23
+msgid "Incoming references"
+msgstr ""
+
+#: resources/views/xref-detail-tab.phtml:60
+msgid "No cross-references found."
 msgstr ""
 
 #: resources/views/settings-wthb.phtml:25

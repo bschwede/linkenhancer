@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Fisharebest\Webtrees\GedcomRecord;
 use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Helpers\MoreI18N;
 
 /**
  * @var GedcomRecord $record
@@ -23,9 +24,9 @@ use Fisharebest\Webtrees\I18N;
         <table class="table table-sm le-xref-incoming-table">
             <thead>
                 <tr>
-                    <th><?= I18N::translate('Record') ?></th>
-                    <th><?= I18N::translate('Type') ?></th>
-                    <th class="text-end"><?= I18N::translate('Links') ?></th>
+                    <th><?= MoreI18N::xlate('Record') ?></th>
+                    <th><?= MoreI18N::xlate('Type') ?></th>
+                    <th class="text-end"><?= MoreI18N::xlate('Links') ?></th>
                 </tr>
             </thead>
             <tbody>
