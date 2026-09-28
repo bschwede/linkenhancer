@@ -143,13 +143,22 @@ final class XrefDetailService
                 'name'       => $record->fullName(),
                 'url'        => $record->url(),
                 'link_count' => (int) $row->link_count,
-                'tree_label' => IdResolver::treeLabel($record, $tree->id()), // $source_tree->id() === $tree->id() ? '' : $source_tree->name(),
+                'tree_label' => IdResolver::treeLabel($record, $tree->id()),
                 'source'     => 'gedcom',
             ];
         }
 
+        usort($results, function (array $a, array $b): int {
+            return strnatcasecmp($a['name'], $b['name']);
+        });
+
+
         if ($include_blocks) {
-            $results = array_merge($results, $this->incomingBlockReferences($tree, $xref));
+            $blocks = $this->incomingBlockReferences($tree, $xref);
+            usort($blocks, function (array $a, array $b): int {
+                return strnatcasecmp($a['name'], $b['name']);
+            });
+            $results = array_merge($results, $blocks);
         }
 
         return $results;
