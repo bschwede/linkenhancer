@@ -28,13 +28,15 @@ use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Tree;
 use Schwendinger\Webtrees\Helpers\ClassName;
 use Schwendinger\Webtrees\Helpers\MoreI18N;
-use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\RenumberWithLinksAction;
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 
 /**
- * @var string           $title
- * @var Tree             $tree
+ * @var string               $title
+ * @var LinkEnhancerModule   $module
+ * @var Tree|null            $tree
+ * @var iterable<int,Tree>   $trees
  * @var array<string,string> $xrefs  xref => record type
- * @var bool             $defer_index  the le_* index will be rebuilt by cron
+ * @var bool                 $defer_index  the le_* index will be rebuilt by cron
  */
 
 $count = count($xrefs);
@@ -47,34 +49,54 @@ $count = count($xrefs);
 
 <p><?= e(MoreI18N::xlate('This renumbers the records whose XREF collides with another family tree, and keeps the linkenhancer le-links and the le_* index in sync.')) ?></p>
 
-<p><?= e(I18N::plural('This family tree has %1$d record whose XREF is also used by another family tree.', 'This family tree has %1$d records whose XREF is also used by another family tree.', $count, I18N::number($count))) ?></p>
+<form method="get" action="<?= e(route('module', ['module' => $module->name(), 'action' => 'AdminRenumber'])) ?>" class="row g-2 align-items-end mb-4">
+    <div class="col-auto">
+        <label for="renumber-tree" class="col-form-label"><?= e(I18N::translate('Family tree')) ?></label>
+        <select id="renumber-tree" name="tree" class="form-select">
+            <option value="0"><?= e(I18N::translate('Select a family tree')) ?></option>
+            <?php foreach ($trees as $t): ?>
+                <option value="<?= (int) $t->id() ?>" <?= ($tree !== null && $tree->id() === $t->id()) ? 'selected' : '' ?>>
+                    <?= e($t->title()) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-outline-primary"><?= e(I18N::translate('Load')) ?></button>
+    </div>
+</form>
 
-<?php if ($count > 0): ?>
-    <ul class="list-group mb-3">
-        <?php foreach ($xrefs as $old => $type): ?>
-            <li class="list-group-item">
-                <code><?= e((string) $old) ?></code>
-                <span class="text-muted">— <?= e((string) $type) ?></span>
-            </li>
-        <?php endforeach; ?>
-    </ul>
+<?php if ($tree !== null): ?>
+    <p><?= e(I18N::plural('This family tree has %1$d record whose XREF is also used by another family tree.', 'This family tree has %1$d records whose XREF is also used by another family tree.', $count, I18N::number($count))) ?></p>
 
-    <p class="text-muted">
-        <?= e($defer_index
-            ? MoreI18N::xlate('After the renumber the le_* index will be refreshed by the cron job.')
-            : MoreI18N::xlate('After the renumber the le_* index will be updated inline.')) ?>
-    </p>
+    <?php if ($count > 0): ?>
+        <ul class="list-group mb-3">
+            <?php foreach ($xrefs as $old => $type): ?>
+                <li class="list-group-item">
+                    <code><?= e((string) $old) ?></code>
+                    <span class="text-muted">— <?= e((string) $type) ?></span>
+                </li>
+            <?php endforeach; ?>
+        </ul>
 
-    <form method="post" action="<?= e(route(RenumberWithLinksAction::class, ['tree' => $tree->name()])) ?>">
-        <button type="submit" class="btn btn-primary">
-            <?= view('icons/save') ?>
-            <?= e(MoreI18N::xlate('Renumber now')) ?>
-        </button>
+        <p class="text-muted">
+            <?= e($defer_index
+                ? MoreI18N::xlate('After the renumber the le_* index will be refreshed by the cron job.')
+                : MoreI18N::xlate('After the renumber the le_* index will be updated inline.')) ?>
+        </p>
 
-        <span class="ms-2 text-muted"><?= e(MoreI18N::xlate('Caution! This may take a long time. Be patient.')) ?></span>
+        <form method="post" action="<?= e(route('module', ['module' => $module->name(), 'action' => 'AdminRenumber'])) ?>">
+            <input type="hidden" name="tree" value="<?= (int) $tree->id() ?>">
+            <button type="submit" class="btn btn-primary">
+                <?= view('icons/save') ?>
+                <?= e(MoreI18N::xlate('Renumber now')) ?>
+            </button>
 
-        <?= csrf_field() ?>
-    </form>
-<?php else: ?>
-    <p class="text-success"><?= e(MoreI18N::xlate('There are no XREF collisions to fix in this family tree.')) ?></p>
+            <span class="ms-2 text-muted"><?= e(MoreI18N::xlate('Caution! This may take a long time. Be patient.')) ?></span>
+
+            <?= csrf_field() ?>
+        </form>
+    <?php else: ?>
+        <p class="text-success"><?= e(MoreI18N::xlate('There are no XREF collisions to fix in this family tree.')) ?></p>
+    <?php endif; ?>
 <?php endif; ?>
