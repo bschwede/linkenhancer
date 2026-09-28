@@ -198,6 +198,7 @@ class LinkEnhancerModule extends AbstractModule implements
 
     public const STDCLASS_HOME_LINK = 'homelink';
     public const STDCLASS_MD_CONTENT = 'md-content'; // section with rendered content; also used in index-img.js
+    public const STDCLASS_MD_CONTENT_WT2_3 = 'wt-markdown'; // wt2.3 wraps rendered markdown in div.wt-markdown
     public const STDCLASS_MD_IMG = 'md-img';
     public const STDCLASS_MD_IMG_TITLE = 'md-img-title';
     public const STDCLASS_MD_STICKY_WRAPPER = 'md-sticky-wrapper'; // for Bootstrap dropdown ()=> md-toc-dropdown.phtml) or height-control checkbox

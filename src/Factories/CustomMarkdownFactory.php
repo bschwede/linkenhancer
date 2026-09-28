@@ -309,7 +309,7 @@ class CustomMarkdownFactory extends MarkdownFactory {
         // wrap content with section tags
         if ($html !== '') {
             //TODO if toc enabled, replace placeholder with empty string
-            $class = LinkEnhancerModule::STDCLASS_MD_CONTENT;
+            $class = implode(' ', [LinkEnhancerModule::STDCLASS_MD_CONTENT, LinkEnhancerModule::STDCLASS_MD_CONTENT_WT2_3]);
             $html = "<section class=\"$class\">$html</section>";
         }
 
