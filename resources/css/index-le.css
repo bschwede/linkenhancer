@@ -64,7 +64,7 @@ mark.icon-wt-xref { font-weight: bold; } /* xref of actually displayed gedcom re
     margin-left: 0.1em;
     cursor: pointer;
 }
-
+/* cross-reference overview and detail tab */
 .le-xref-section-title {
     border-bottom: 1px #b6a4a4 solid;
 }
@@ -78,4 +78,10 @@ mark.icon-wt-xref { font-weight: bold; } /* xref of actually displayed gedcom re
     content: '↗';
     display: inline-block;
     margin-left: 0.5em;
+}
+.le-xref-inventory>li { /* also in xref-overview.phtml */
+    margin-bottom: 1.0em;
+}
+.le-xref-inventory ol>li { /* also in xref-overview.phtml */
+    margin-bottom: 0.2em;
 }
