@@ -3,582 +3,621 @@
 # This file is distributed under the same license as the modules_v package.
 # Automatically generated, 2026.
 #
+# Xapitonov <xapitonov@noreply.codeberg.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: modules_v 4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-23 13:32+0200\n"
-"PO-Revision-Date: 2026-05-24 07:15+0200\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2026-09-27 16:25+0000\n"
+"Last-Translator: Xapitonov <xapitonov@noreply.codeberg.org>\n"
+"Language-Team: Russian <https://translate.codeberg.org/projects/wt-modules/"
+"linkenhancer/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 2026.9.1\n"
 
 msgid "tree"
 msgstr ""
 
 msgid "Option is disabled"
-msgstr ""
+msgstr "Опция отключена"
 
 #. I18N: Settings - section title
 msgid "Markdown enhancements"
-msgstr ""
+msgstr "Улучшения Markdown"
 
 msgid "Markdown editor for note textareas"
-msgstr ""
+msgstr "Редактор Markdown для текстовых полей заметок"
 
 #. I18N: MDE
 #, php-format
 msgid "Precondition: Tree preference '%s' need to be set to markdown."
 msgstr ""
+"Предварительное условие: для настройки дерева «%s» должно быть установлено "
+"значение Markdown."
 
 msgid "Cross-references"
-msgstr ""
+msgstr "Перекрёстные ссылки"
 
 msgid "External links"
-msgstr ""
+msgstr "Внешние ссылки"
 
 msgid "Pictures"
-msgstr ""
+msgstr "Изображения"
 
 msgid "Classic cross-references"
-msgstr ""
+msgstr "Классические перекрёстные ссылки"
 
 msgid "Other - maybe damaged - links"
-msgstr ""
+msgstr "Другие — возможно, повреждённые — ссылки"
 
 msgid "target not found"
-msgstr ""
+msgstr "цель не найдена"
 
 #. I18N: JS enhanced link
 msgid "Cross-reference"
-msgstr ""
+msgstr "Перекрёстная ссылка"
 
 #, php-format
 msgid "expected %1$s, is %2$s"
-msgstr ""
+msgstr "ожидалось %1$s, получено %2$s"
 
 msgid "target not unique"
-msgstr ""
+msgstr "цель не уникальна"
 
 #, php-format
 msgid "%1$s - %2$d matches in other trees"
-msgstr ""
+msgstr "%1$s — совпадений в других деревьях: %2$d"
 
 #. I18N: Settings - section title
 msgid "Webtrees manual"
-msgstr ""
+msgstr "Руководство webtrees"
 
 msgid "Error occurred"
-msgstr ""
+msgstr "Произошла ошибка"
 
 #. I18N: csv import
 msgid "empty rows"
-msgstr ""
+msgstr "пустые строки"
 
 #. I18N: csv import
 msgid "rows whose number of fields differs from the header row"
-msgstr ""
+msgstr "строки, в которых количество полей отличается от строки заголовка"
 
 #. I18N: data import with seeder
 msgid "rows in which at least one required field is not set"
-msgstr ""
+msgstr "строки, в которых хотя бы одно обязательное поле не задано"
 
 #. I18N: data import with seeder
 msgid "rows in which the maximum field value length has been exceeded"
-msgstr ""
+msgstr "строки, в которых превышена максимальная длина значения поля"
 
 msgid "Routes imported"
-msgstr ""
+msgstr "Маршруты импортированы"
 
 #. I18N: wthb import skipped rows
 msgid "Skipped"
-msgstr ""
+msgstr "Пропущено"
 
 msgid "CSV-Import"
-msgstr ""
+msgstr "Импорт CSV"
 
 msgid "Table for context help is missing - fallback to standard url"
 msgstr ""
+"Таблица для контекстной справки отсутствует — используется стандартный URL"
 
 msgid "Table for context help is missing - nothing to do."
-msgstr ""
+msgstr "Таблица для контекстной справки отсутствует — нечего делать."
 
 msgid "No data available for export."
-msgstr ""
+msgstr "Нет данных для экспорта."
 
 msgid "No CSV file was received."
-msgstr ""
+msgstr "CSV-файл не получен."
 
 msgid "Separator is not set."
-msgstr ""
+msgstr "Разделитель не задан."
 
 msgid "For the separator is only a single character allowed."
-msgstr ""
+msgstr "Для разделителя допускается только один символ."
 
 msgid "webtrees FAQ"
-msgstr ""
+msgstr "Часто задаваемые вопросы webtrees"
 
 msgid "webtrees Forum"
-msgstr ""
+msgstr "Форум webtrees"
 
 msgid "ask a question (account necessary)"
-msgstr ""
+msgstr "задать вопрос (необходима учётная запись)"
 
 msgid "CompGen Discourse"
-msgstr ""
+msgstr "CompGen Discourse"
 
 msgid "GitHub - webtrees issues"
-msgstr ""
+msgstr "GitHub — проблемы webtrees"
 
 msgid "GitHub - webtrees related projects"
-msgstr ""
+msgstr "GitHub — связанные проекты webtrees"
 
 #. I18N: JS MDE
 msgid "bold"
-msgstr ""
+msgstr "полужирный"
 
 #. I18N: JS MDE
 msgid "italic"
-msgstr ""
+msgstr "курсив"
 
 #. I18N: JS MDE
 msgid "strikethrough"
-msgstr ""
+msgstr "зачёркивание"
 
 #. I18N: JS MDE
 msgid "format as code"
-msgstr ""
+msgstr "форматировать как код"
 
 #. I18N: JS MDE
 msgid "highlight"
-msgstr ""
+msgstr "выделение"
 
 #. I18N: JS MDE
 #, php-format
 msgid "Level %s heading"
-msgstr ""
+msgstr "Заголовок уровня %s"
 
 #. I18N: JS MDE
 msgid "Bulleted list"
-msgstr ""
+msgstr "Маркированный список"
 
 #. I18N: JS MDE
 msgid "Numbered list"
-msgstr ""
+msgstr "Нумерованный список"
 
 #. I18N: JS MDE blockquote
 msgid "quote"
-msgstr ""
+msgstr "цитата"
 
 #. I18N: JS MDE
 msgid "Insert link"
-msgstr ""
+msgstr "Вставить ссылку"
 
 #. I18N: JS MDE
 msgid "Insert image"
-msgstr ""
+msgstr "Вставить изображение"
 
 #. I18N: JS MDE
 msgid "Horizontal rule"
-msgstr ""
+msgstr "Горизонтальная линия"
 
 #. I18N: JS MDE
 msgid "Undo"
-msgstr ""
+msgstr "Отменить"
 
 #. I18N: JS MDE
 msgid "Redo"
-msgstr ""
+msgstr "Повторить"
 
 #. I18N: JS MDE
 msgid "Link destination"
-msgstr ""
+msgstr "Назначение ссылки"
 
 #. I18N: JS MDE
 msgid "Insert table"
-msgstr ""
+msgstr "Вставить таблицу"
 
 #. I18N: JS MDE
 msgid ""
 "How many columns and rows should the table have (input: [number] [number])?"
 msgstr ""
+"Сколько столбцов и строк должна иметь таблица (введите: [число] [число])?"
 
 #. I18N: JS enhanced link, %s name of location
 #, php-format
 msgid "Online Local heritage book of %s at CompGen"
-msgstr ""
+msgstr "Онлайн-книга местной истории %s на CompGen"
 
 #. I18N: JS enhanced link
 msgid "Historic Geo Information System (GOV)"
-msgstr ""
+msgstr "Историческая геоинформационная система (GOV)"
 
 #. I18N: JS enhanced link
 msgid "GEDBAS (Genealogical Database - collected personal data)"
-msgstr ""
+msgstr "GEDBAS (генеалогическая база данных — собранные персональные данные)"
 
 #. I18N: JS enhanced link
 msgid "wer-wir-waren.at"
-msgstr ""
+msgstr "wer-wir-waren.at"
 
 #. I18N: JS enhanced link
 msgid "Residents database - Family research in West Prussia"
-msgstr ""
+msgstr "База данных жителей — генеалогические исследования в Западной Пруссии"
 
 #. I18N: JS enhanced link
 msgid "Syntax error"
-msgstr ""
+msgstr "Синтаксическая ошибка"
 
 #. I18N: JS enhanced link
 msgid "Unknown parameter keys"
-msgstr ""
+msgstr "Неизвестные ключи параметров"
 
 #. I18N: JS enhanced link wt1 - %s=rectypes
 #, php-format
 msgid ""
 "standard link to note (available record types: %s) with XREF in active tree"
 msgstr ""
+"стандартная ссылка на заметку (доступные типы записей: %s) с XREF в активном "
+"дереве"
 
 #. I18N: JS enhanced link wt2
 msgid ""
 "link to record type individual with XREF from \"othertree\" and also link to"
 msgstr ""
+"ссылка на запись типа «персона» с XREF из \"othertree\" и также ссылка на"
 
 #. I18N: JS enhanced link wt3
 msgid "link to record without given record type - access via redirect url"
 msgstr ""
+"ссылка на запись без указанного типа записи — доступ через URL "
+"перенаправления"
 
 #. I18N: JS enhanced link osm1
 msgid "zoom/lat/lon for locating map"
-msgstr ""
+msgstr "масштаб/широта/долгота для определения местоположения на карте"
 
 #. I18N: JS enhanced link osm2
 msgid "same as before with additional marker"
-msgstr ""
+msgstr "то же, что и ранее, с дополнительным маркером"
 
 #. I18N: JS enhanced link osm3
 msgid "show also node/way/relation, see also"
-msgstr ""
+msgstr "также отображать узел/путь/связь, см. также"
 
 #. I18N: JS enhanced link osm4
 msgid "show also node/way/relation - alternative notation"
-msgstr ""
+msgstr "также отображать узел/путь/связь — альтернативная запись"
 
 #. I18N: JS enhanced link ofb1
 msgid "link to Online Local heritage book at CompGen with given uid"
-msgstr ""
+msgstr "ссылка на онлайн-книгу местной истории на CompGen с указанным uid"
 
 #. I18N: JS enhanced link wp1
 msgid "open the article in the german wikipedia"
-msgstr ""
+msgstr "открыть статью в немецкой Википедии"
 
 #. I18N: JS enhanced link wp2
 msgid "open the english version of the article"
-msgstr ""
+msgstr "открыть английскую версию статьи"
 
 #. I18N: JS enhanced link wp3
 msgid "you can address every subdomain instance of wikipedia.org"
-msgstr ""
+msgstr "можно обращаться к любому экземпляру поддомена wikipedia.org"
 
 #. I18N: JS enhanced link gedbas1
 msgid "open person record with given number"
-msgstr ""
+msgstr "открыть запись персоны с указанным номером"
 
 #. I18N: JS enhanced link gedbas2
 #. I18N: JS enhanced link gedbas3
 msgid "open person record with UID"
-msgstr ""
+msgstr "открыть запись персоны по UID"
 
 msgid "without database number"
-msgstr ""
+msgstr "без номера базы данных"
 
 msgid "Data Entry System (DES)"
-msgstr ""
+msgstr "Система ввода данных (DES)"
 
 msgid "Casualty lists"
-msgstr ""
+msgstr "Списки погибших"
 
 #. I18N: wthb link user setting title
 msgid "Webtrees manual link - user setting"
-msgstr ""
+msgstr "ссылка на руководство webtrees — пользовательская настройка"
 
 msgid "Full-text search"
-msgstr ""
+msgstr "Полнотекстовый поиск"
 
 msgid "Table of contents"
-msgstr ""
+msgstr "Оглавление"
 
 msgid "webtrees help topics (included)"
-msgstr ""
+msgstr "разделы справки webtrees (включены)"
 
 msgid "start page"
-msgstr ""
+msgstr "начальная страница"
 
 msgid "Settings"
-msgstr ""
+msgstr "Настройки"
 
 msgid "Limit cell height"
-msgstr ""
+msgstr "Ограничить высоту ячейки"
 
 #, php-format
 msgid "and so on until level %s"
-msgstr ""
+msgstr "и так далее до уровня %s"
 
 msgid "Term"
-msgstr ""
+msgstr "Термин"
 
 msgid "Text with a footnote reference"
-msgstr ""
+msgstr "Текст со ссылкой на сноску"
 
 msgid "Footnote text"
-msgstr ""
+msgstr "Текст сноски"
 
 msgid "list without marker"
-msgstr ""
+msgstr "список без маркера"
 
 #. I18N::translate('Insert at the very top of the document, before any content'),
 msgid "Insert just before the very first heading"
-msgstr ""
+msgstr "Вставить непосредственно перед самым первым заголовком"
 
 msgid "Location is manually defined by a placeholder"
-msgstr ""
+msgstr "Расположение задаётся вручную с помощью заполнителя"
 
 msgid "applies nesting, but handles edge cases"
-msgstr ""
+msgstr "применяет вложенность, но обрабатывает особые случаи"
 
 msgid "a flat, single-level list"
-msgstr ""
+msgstr "плоский одноуровневый список"
 
 msgid "inline"
-msgstr ""
+msgstr "встроенный"
 
 msgid "nesting exactly as headings occur within the document"
-msgstr ""
+msgstr "вложенность точно соответствует расположению заголовков в документе"
 
 msgid "Permalink"
-msgstr ""
+msgstr "Постоянная ссылка"
 
 #, php-format
 msgid "No record for %s was found."
-msgstr ""
+msgstr "Запись для %s не найдена."
 
 #, php-format
 msgid "%s was found in another tree."
-msgstr ""
+msgstr "%s найдена в другом дереве."
 
 #, php-format
 msgid "Multiple records for %s"
-msgstr ""
+msgstr "Несколько записей для %s"
 
 #, php-format
 msgid ""
 "No record with UID %s was found. The UID index may not be available yet."
-msgstr ""
+msgstr "Запись с UID %s не найдена. Индекс UID, возможно, ещё недоступен."
 
 #, php-format
 msgid "UID %s was found in another tree."
-msgstr ""
+msgstr "UID %s найден в другом дереве."
 
 #, php-format
 msgid "Multiple records for UID %s"
-msgstr ""
+msgstr "Несколько записей для UID %s"
 
 #. I18N: MD img error precondition
 msgid ""
 "Neither a media object nor a file from the public directory was specified."
-msgstr ""
+msgstr "Не указан ни медиаобъект, ни файл из общедоступного каталога."
 
 #. I18N: MD img error precondition
 msgid ""
 "Only one media object OR one file from the public directory can be specified."
 msgstr ""
+"Можно указать только один медиаобъект ИЛИ один файл из общедоступного "
+"каталога."
 
 #. I18N: MD img error crossreference
 msgid "There is no image file available for display."
-msgstr ""
+msgstr "Нет доступного файла изображения для отображения."
 
 #. I18N: MD img error public folder
 msgid "The public folder does not exist."
-msgstr ""
+msgstr "Общедоступная папка не существует."
 
 #. I18N: MD img error public file, %s the relative filename
 #, php-format
 msgid "File ‘%s’ does not exist in the public folder"
-msgstr ""
+msgstr "Файл «%s» не существует в общедоступной папке"
 
 #. I18N: MD img error public file
 msgid "Only files within the public folder are supported"
-msgstr ""
+msgstr "Поддерживаются только файлы внутри общедоступной папки"
 
 #. I18N: MD img error public file, %s1=rel. filename, %s2=mimetype
 #, php-format
 msgid "File '%1$s' in the public folder is not an image but '%2$s'"
 msgstr ""
+"Файл «%1$s» в общедоступной папке не является изображением, а имеет тип «%2$s"
+"»"
 
 #. I18N: Module title
 msgid "Link-Enhancer"
-msgstr ""
+msgstr "Расширение ссылок"
 
 #. I18N: Module description
 msgid ""
 "Cross-references to Gedcom datasets, Markdown editor, context-sensitive link "
 "to the GenWiki webtrees manual"
 msgstr ""
+"Перекрёстные ссылки на наборы данных Gedcom, редактор Markdown, контекстная "
+"ссылка на руководство GenWiki по webtrees"
 
 msgid "Home link - JSON with CSS rules seems to be invalid."
-msgstr ""
+msgstr "Домашняя ссылка — JSON с правилами CSS недействителен."
 
 msgid "Import registered routes"
-msgstr ""
+msgstr "Импорт зарегистрированных маршрутов"
 
 msgid "Cross-Reference Overview"
-msgstr ""
+msgstr "Обзор перекрёстных ссылок"
 
 msgid "Update the link index"
-msgstr ""
+msgstr "Обновить индекс ссылок"
 
 msgid "Update the UID index"
-msgstr ""
+msgstr "Обновить индекс UID"
 
 msgid "Rebuild the link index incrementally."
-msgstr ""
+msgstr "Перестроить индекс ссылок поэтапно."
 
 msgid "max records per run"
-msgstr ""
+msgstr "максимальное количество записей за один запуск"
 
 msgid "number of the tree to be scanned - all if not set"
-msgstr ""
+msgstr "номер дерева для сканирования — все деревья, если не задано"
 
 msgid "force a full rebuild"
-msgstr ""
+msgstr "принудительно выполнить полную перестройку"
 
 msgid "empty the index and exit"
-msgstr ""
+msgstr "очистить индекс и завершить работу"
 
 msgid "Rebuild the UID index incrementally."
-msgstr ""
+msgstr "Перестроить индекс UID поэтапно."
 
 msgid "The link index is out of date."
-msgstr ""
+msgstr "Индекс ссылок устарел."
 
 msgid "The UID index is out of date."
-msgstr ""
+msgstr "Индекс UID устарел."
 
 msgid ""
 "List all records that contain cross-references (XREFs) or linkenhancer links."
 msgstr ""
+"Показать все записи, содержащие перекрёстные ссылки (XREF) или ссылки Link-"
+"Enhancer."
 
 msgid ""
 "Limited mode: this database engine has no regex support - the table is "
 "scanned live with a LIKE filter on every request, which can be slow on large "
 "trees. The link index is not available on this engine."
 msgstr ""
+"Ограниченный режим: этот движок базы данных не поддерживает регулярные "
+"выражения — таблица сканируется в реальном времени с фильтром LIKE при "
+"каждом запросе, что может быть медленно для больших деревьев. Индекс ссылок "
+"недоступен в этом движке."
 
 #, php-format
 msgid "Link index active: %1$s scanned records, last verified %2$s."
 msgstr ""
+"Индекс ссылок активен: просканировано записей: %1$s, последняя проверка: "
+"%2$s."
 
 msgid ""
 "Live scan forced - the link index is bypassed for this view, which can be "
 "slow on large trees."
 msgstr ""
+"Принудительное сканирование в реальном времени — индекс ссылок для этого "
+"представления не используется, что может быть медленно для больших деревьев."
 
 msgid ""
 "No fresh link index - the table below scans the GEDCOM tables live, which "
 "can be slow on large trees. Build the index with the CLI script (see "
 "README.md, \"CLI scripts & maintenance\")."
 msgstr ""
+"Нет свежего индекса ссылок — таблицы GEDCOM ниже сканируются в реальном "
+"времени, что может быть медленно для больших деревьев. Создайте индекс с "
+"помощью CLI-скрипта (см. README.md, \"CLI-скрипты и обслуживание\")."
 
 msgid ""
 "Only broken targets: every matching record is loaded and its targets "
 "resolved on the server, which can be slow on large trees. Combine with the "
 "type filter to narrow the scan."
 msgstr ""
+"Только повреждённые цели: каждая подходящая запись загружается, а её цели "
+"разрешаются на сервере, что может быть медленно для больших деревьев. "
+"Используйте вместе с фильтром типов, чтобы сузить область сканирования."
 
 msgid "referencing XREF"
-msgstr ""
+msgstr "ссылающийся XREF"
 
 msgid "Bypass the link index and scan the GEDCOM tables live"
-msgstr ""
+msgstr "Обойти индекс ссылок и сканировать таблицы GEDCOM в реальном времени"
 
 msgid "Force live scan"
-msgstr ""
+msgstr "Принудительное сканирование в реальном времени"
 
 msgid "Record types"
-msgstr ""
+msgstr "Типы записей"
 
 msgid "All types"
-msgstr ""
+msgstr "Все типы"
 
 msgid "All GEDCOM records"
-msgstr ""
+msgstr "Все записи GEDCOM"
 
 msgid "All Block records"
-msgstr ""
+msgstr "Все записи блоков"
 
 msgid "GEDCOM records"
-msgstr ""
+msgstr "Записи GEDCOM"
 
 msgid "links per class"
-msgstr ""
+msgstr "ссылок на класс"
 
 msgid "Only rows with a missing or wrong-type target are shown"
 msgstr ""
+"Показывать только строки с отсутствующей целью или целью неправильного типа"
 
 msgid "Only broken targets"
-msgstr ""
+msgstr "Только повреждённые цели"
 
 msgid "The target type differs from the declaration"
-msgstr ""
+msgstr "Тип цели отличается от объявления"
 
 msgid "XREF"
-msgstr ""
+msgstr "XREF"
 
 #. I18N: user defined url
 #. I18N: Settings - section title
 msgid "Home link"
-msgstr ""
+msgstr "Домашняя ссылка"
 
 #. I18N: see also fancy-research-links
 msgid "Open links in a new tab"
-msgstr ""
+msgstr "Открывать ссылки в новой вкладке"
 
 msgid "JSON for home link styling"
-msgstr ""
+msgstr "JSON для оформления домашней ссылки"
 
 #. I18N: Home link js
 msgid ""
 "JSON object that can be used to dynamically apply CSS styles for the home "
 "link that match the current theme."
 msgstr ""
+"Объект JSON, который можно использовать для динамического применения стилей "
+"CSS к домашней ссылке в соответствии с текущей темой."
 
 #. I18N: Home link js
 msgid "Standard CSS class name"
-msgstr ""
+msgstr "Стандартное имя класса CSS"
 
 #. I18N: Home link js
 msgid "Example"
-msgstr ""
+msgstr "Пример"
 
 msgid "Activate enhanced links?"
-msgstr ""
+msgstr "Активировать расширенные ссылки?"
 
 #. I18N: Enhanced Links
 msgid ""
 "This function is implemented via Javascript and only affects links in notes "
 "and HTML blocks on the client side."
 msgstr ""
+"Эта функция реализована с помощью JavaScript и влияет только на ссылки в "
+"заметках и HTML-блоках на стороне клиента."
 
 #. I18N: MD img - sentence 1
 msgid "Only works in notes that are formatted with Markdown."
-msgstr ""
+msgstr "Работает только с заметками, отформатированными с помощью Markdown."
 
 msgid "Show Help Link"
-msgstr ""
+msgstr "Показывать ссылку на справку"
 
 #. I18N:
 msgid ""
@@ -586,64 +625,73 @@ msgid ""
 "in the small menu at the top of the page and for subcontext topics on the "
 "page."
 msgstr ""
+"Контекстные ссылки на справку немецкого руководства webtrees можно "
+"активировать в небольшом меню в верхней части страницы и для подтем на "
+"странице."
 
 msgid "Site title as home link"
-msgstr ""
+msgstr "Название сайта как домашняя ссылка"
 
 #. I18N: home link
 msgid "home page of the current tree"
-msgstr ""
+msgstr "домашняя страница текущего дерева"
 
 #. I18N: home link
 msgid "my page of the registered user"
-msgstr ""
+msgstr "моя страница зарегистрированного пользователя"
 
 #. I18N:
 #. I18N: wthb translate
 #. I18N:
 msgid "user defined"
-msgstr ""
+msgstr "определяется пользователем"
 
 msgid "UID lookup"
-msgstr ""
+msgstr "Поиск UID"
 
 #, php-format
 msgid "Allow resolving UID tags (%s) to the corresponding records."
-msgstr ""
+msgstr "Разрешить сопоставление тегов UID (%s) с соответствующими записями."
 
 #, php-format
 msgid "Index status: %1$s rows, last built: %2$s"
-msgstr ""
+msgstr "Состояние индекса: строк: %1$s, последнее построение: %2$s"
 
 msgid "Index source (link-index scan) not available."
-msgstr ""
+msgstr "Источник индекса (сканирование индекса ссылок) недоступен."
 
 #, php-format
 msgid ""
 "Multiple records match UID %s. Please choose the one you are looking for."
-msgstr ""
+msgstr "Несколько записей соответствуют UID %s. Выберите нужную запись."
 
 msgid ""
 "Webtrees uses a CommonMark implementation and supports a subset of the markup"
 msgstr ""
+"Webtrees использует реализацию CommonMark и поддерживает подмножество "
+"разметки"
 
 msgid "See also"
-msgstr ""
+msgstr "См. также"
 
 msgid "The following overview only briefly lists common formatting options"
 msgstr ""
+"В следующем обзоре кратко перечислены распространённые параметры "
+"форматирования"
 
 msgid "Rendered output"
-msgstr ""
+msgstr "Отображаемый результат"
 
 msgid "For more depth of detail"
-msgstr ""
+msgstr "Для более подробной информации"
 
 #. I18N: MDE
 msgid ""
 "The project “TinyMDE - A tiny, dependency-free embeddable HTML/JavaScript "
 "Markdown editor” is used"
 msgstr ""
+"Используется проект «TinyMDE — небольшой встраиваемый редактор Markdown на "
+"HTML/JavaScript без зависимостей»"
 
 #. I18N: MDE
 msgid ""
@@ -652,11 +700,15 @@ msgid ""
 "step in the small text field below the Markdown editor and must then be "
 "copied manually to the desired position."
 msgstr ""
+"Примечание: к сожалению, экранная клавиатура НЕ работает так же, как в "
+"предыдущем поле ввода текста. Выбранные символы попадают в качестве "
+"промежуточного шага в небольшое текстовое поле под редактором Markdown, "
+"после чего их необходимо вручную скопировать в нужное место."
 
 #. I18N: help md - section title
 #. I18N: Settings - section title
 msgid "Enhanced Link Support"
-msgstr ""
+msgstr "Расширенная поддержка ссылок"
 
 #. I18N: Enhanced Links
 #. I18N: Settings - prologue sentence 3
@@ -665,6 +717,9 @@ msgid ""
 "etc.) from the text makes story telling much easier and thus also save this "
 "information in the GEDCOM file."
 msgstr ""
+"Связывание заметок с записями данных GEDCOM (персонами, семьями, источниками "
+"и т. д.) непосредственно из текста значительно упрощает создание историй и "
+"позволяет сохранять эту информацию в файле GEDCOM."
 
 #. I18N: Enhanced Links
 msgid ""
@@ -672,34 +727,41 @@ msgid ""
 "the internal cross-reference is always the first link and the other external "
 "targets are represented by attached clickable icons."
 msgstr ""
+"С помощью одного определения ссылки можно обращаться к разным назначениям: "
+"внутренняя перекрёстная ссылка всегда является первой, а остальные внешние "
+"цели представлены прикреплёнными кликабельными значками."
 
 #. I18N: Enhanced Links code example 1
 msgid "Link display title"
-msgstr ""
+msgstr "Отображаемый заголовок ссылки"
 
 #. I18N: Enhanced Links code
 msgid "The following parameters can be used"
-msgstr ""
+msgstr "Можно использовать следующие параметры"
 
 #. I18N: Enhanced Links
 msgid "The parameter definitions will be inserted by a javascript routine"
-msgstr ""
+msgstr "Определения параметров будут вставлены процедурой JavaScript"
 
 #. I18N: Enhanced Links
 msgid ""
 "The existence of the linked data records is not checked in advance. Errors "
 "only appear when the link is clicked."
 msgstr ""
+"Существование связанных записей данных заранее не проверяется. Ошибки "
+"появляются только при переходе по ссылке."
 
 #. I18N: help md - section title
 msgid "Markdown Image Support"
-msgstr ""
+msgstr "Поддержка изображений Markdown"
 
 #. I18N: MD img - sentence 1
 msgid ""
 "This option allows you to easily embed images from GEDCOM media records or "
 "from the public directory into notes."
 msgstr ""
+"Эта опция позволяет легко вставлять в заметки изображения из медиа-записей "
+"GEDCOM или из общедоступного каталога."
 
 #. I18N: MD img - sentence 2
 msgid ""
@@ -707,197 +769,218 @@ msgid ""
 "image subtitle - which is also a link to the media data set for GEDCOM "
 "objects."
 msgstr ""
+"Технически изображения помещаются в контейнер div вместе с подписью к "
+"изображению, которая также является ссылкой на набор медиа-данных для "
+"объектов GEDCOM."
 
 #. I18N: MD img - sentence 3
 msgid ""
 "The display can be customized as required using the following standard CSS "
 "classes or additional CSS classes."
 msgstr ""
+"Отображение можно настроить по мере необходимости с помощью следующих "
+"стандартных классов CSS или дополнительных классов CSS."
 
 msgid "CSS class name(s)"
-msgstr ""
+msgstr "Имя класса CSS"
 
 msgid "Markdown image container"
-msgstr ""
+msgstr "контейнер изображения Markdown"
 
 msgid "not defined"
-msgstr ""
+msgstr "не определено"
 
 msgid "Markdown image title container"
-msgstr ""
+msgstr "контейнер заголовка изображения Markdown"
 
 #. I18N: MD img code example 1
 msgid "alternate text for gedcom object"
-msgstr ""
+msgstr "альтернативный текст для объекта gedcom"
 
 #. I18N: MD img code example 2
 msgid "alternate text for picture in public folder"
-msgstr ""
+msgstr "альтернативный текст для изображения в общедоступной папке"
 
 #. I18N: MD img code example 3
 msgid "picture with defined height, width and additional css class"
-msgstr ""
+msgstr "изображение с заданной высотой, шириной и дополнительным классом CSS"
 
 msgid "The context help topics provided by webtrees are listed below."
-msgstr ""
+msgstr "Ниже перечислены разделы контекстной справки, предоставляемые webtrees."
 
 msgid "Further information can be found on a separate help page."
-msgstr ""
+msgstr "Дополнительную информацию можно найти на отдельной странице справки."
 
 msgid ""
 "Only broken targets: every matching record is loaded and its targets "
 "resolved on the server, which can be slow on large trees. Combine with the "
 "type/tree filters to narrow the scan."
 msgstr ""
+"Только повреждённые цели: каждая подходящая запись загружается, а её цели "
+"разрешаются на сервере, что может быть медленно для больших деревьев. "
+"Используйте вместе с фильтрами типов и деревьев, чтобы сузить область "
+"сканирования."
 
 msgid "All trees"
-msgstr ""
+msgstr "Все деревья"
 
 msgid "Goto top of cell content"
-msgstr ""
+msgstr "Перейти к началу содержимого ячейки"
 
 msgid "Select search engine"
-msgstr ""
+msgstr "Выбрать поисковую систему"
 
 msgid "Goto section"
-msgstr ""
+msgstr "Перейти к разделу"
 
 msgid ""
 "A local copy of the table of contents does not appear to be available. "
 "Please visit the website directly."
 msgstr ""
+"Локальная копия оглавления, по-видимому, недоступна. Посетите веб-сайт "
+"напрямую."
 
 msgid "Activate markdown image tweak?"
-msgstr ""
+msgstr "Активировать обработку изображений Markdown?"
 
 msgid "Debug info - registered custom modules"
-msgstr ""
+msgstr "Отладочная информация — зарегистрированные пользовательские модули"
 
 msgid "Table cell height control"
-msgstr ""
+msgstr "Управление высотой ячеек таблицы"
 
 #. I18N:
 msgid "available"
-msgstr ""
+msgstr "доступно"
 
 msgid "disabled"
-msgstr ""
+msgstr "отключено"
 
 msgid "enabled"
-msgstr ""
+msgstr "включено"
 
 msgid ""
 "Toggle checkbox in order to set max-height and make longer content scrollable"
 msgstr ""
+"Установите флажок, чтобы задать максимальную высоту и сделать более длинное "
+"содержимое прокручиваемым"
 
 msgid "Checkbox always visible"
-msgstr ""
+msgstr "Флажок всегда виден"
 
 msgid "Markdown extensions"
-msgstr ""
+msgstr "Расширения Markdown"
 
 msgid "Warning"
-msgstr ""
+msgstr "Предупреждение"
 
 msgid ""
 "Please keep in mind when using this extensions, you are deviating from the "
 "smallest common markdown dialect set."
 msgstr ""
+"Помните, что при использовании этих расширений вы отклоняетесь от "
+"минимального общего набора диалектов Markdown."
 
 msgid ""
 "If the library used to render markdown in HTML needs to be changed for any "
 "reason, there is a possibility that not all of the extended markup used here "
 "will be supported."
 msgstr ""
+"Если по какой-либо причине библиотеку, используемую для отображения Markdown "
+"в HTML, потребуется заменить, существует вероятность, что не вся "
+"используемая здесь расширенная разметка будет поддерживаться."
 
 msgid "Strikethrough"
-msgstr ""
+msgstr "Зачёркивание"
 
 msgid "Description list"
-msgstr ""
+msgstr "Список определений"
 
 msgid "Highlight"
-msgstr ""
+msgstr "Выделение"
 
 msgid "Footnotes"
-msgstr ""
+msgstr "Сноски"
 
 msgid "Add hr-tag at the beginning of the footnote container"
-msgstr ""
+msgstr "Добавить тег hr в начало контейнера сносок"
 
 msgid "Backreference symbol"
-msgstr ""
+msgstr "Символ обратной ссылки"
 
 msgid "Normalize"
-msgstr ""
+msgstr "Нормализация"
 
 msgid "Style"
-msgstr ""
+msgstr "Стиль"
 
 msgid "Position"
-msgstr ""
+msgstr "Положение"
 
 msgid "Placeholder"
-msgstr ""
+msgstr "Заполнитель"
 
 msgid "Permalink symbol"
-msgstr ""
+msgstr "Символ постоянной ссылки"
 
 msgid "Punctuation"
-msgstr ""
+msgstr "Пунктуация"
 
 msgid ""
 "The SmartPunctExtension intelligently converts ASCII quotes, dashes, and "
 "ellipses to their Unicode equivalents."
 msgstr ""
+"Расширение SmartPunct интеллектуально преобразует кавычки, тире и многоточия "
+"ASCII в соответствующие эквиваленты Unicode."
 
 msgid ""
 "The quotation marks are automatically replaced in accordance with the "
 "conventions of the selected language."
 msgstr ""
+"Кавычки автоматически заменяются в соответствии с правилами выбранного языка."
 
 msgid ""
 "You can specify replacement characters for the beginning and end of the "
 "quoted text."
-msgstr ""
+msgstr "Можно указать символы, заменяющие начало и конец цитируемого текста."
 
 msgid "Double quotation marks"
-msgstr ""
+msgstr "Двойные кавычки"
 
 #, php-format
 msgid "Replacement for the %s character"
-msgstr ""
+msgstr "Замена символа %s"
 
 msgid "Single quotation marks"
-msgstr ""
+msgstr "Одинарные кавычки"
 
 msgid "JSON is invalid"
-msgstr ""
+msgstr "JSON недействителен"
 
 msgid "Javascript is invalid"
-msgstr ""
+msgstr "JavaScript недействителен"
 
 msgid "Input required"
-msgstr ""
+msgstr "Требуется ввод"
 
 msgid "JSON export"
-msgstr ""
+msgstr "Экспорт JSON"
 
 msgid "JSON import"
-msgstr ""
+msgstr "Импорт JSON"
 
 msgid "Enable for more options"
-msgstr ""
+msgstr "Включить дополнительные параметры"
 
 #, php-format
 msgid "Reset list item access level overwrites - %s"
-msgstr ""
+msgstr "Сбросить переопределения уровня доступа элементов списка — %s"
 
 msgid "with configured access level"
-msgstr ""
+msgstr "с настроенным уровнем доступа"
 
 msgid "JavaScript for additional link targets"
-msgstr ""
+msgstr "JavaScript для дополнительных целей ссылок"
 
 #. I18N: Enhanced Links js
 msgid ""
@@ -905,172 +988,202 @@ msgid ""
 "which are taken from the following code excerpt and can also serve as a "
 "reference point for adjustments."
 msgstr ""
+"Объект JavaScript переопределяет и дополняет предопределённые настройки, "
+"взятые из следующего фрагмента кода; он также может служить справочным "
+"материалом для внесения изменений."
 
 #. I18N: Enhanced Links js
 msgid "Any CSS rules required are best added via the “CSS and JS” module."
 msgstr ""
+"Все необходимые правила CSS лучше всего добавлять с помощью модуля «CSS и JS"
+"»."
 
 #. I18N: Enhanced Links js
 msgid ""
 "Only the definition of the icon as a background image is actually needed - "
 "referencing as data: URL."
 msgstr ""
+"Фактически требуется только определение значка в качестве фонового "
+"изображения — со ссылкой в виде URL data:."
 
 msgid "Non-admin cross-reference overview"
-msgstr ""
+msgstr "Обзор перекрёстных ссылок для пользователей без прав администратора"
 
 msgid "Max rows"
-msgstr ""
+msgstr "Максимальное количество строк"
 
 msgid "Per-tree overrides are available  in the control panel"
-msgstr ""
+msgstr "Переопределения для отдельных деревьев доступны на панели управления"
 
 msgid "of which with this access level"
-msgstr ""
+msgstr "из них с этим уровнем доступа"
 
 msgid "Confirmation Prompt - Do you really want to perform this action?"
-msgstr ""
+msgstr "Запрос подтверждения — действительно выполнить это действие?"
 
 #. I18N: wthb link user setting prologue
 msgid ""
 "Please select whether you want to access the help page directly or via a "
 "translation service."
 msgstr ""
+"Выберите, хотите ли вы открыть страницу справки напрямую или через службу "
+"перевода."
 
 #. I18N: wthb link setting option
 msgid "Open webtrees manual URL with Google Translate?"
-msgstr ""
+msgstr "Открывать URL руководства webtrees с помощью Google Переводчика?"
 
 #. I18N: wthb link user setting epilogue 1
 msgid "This setting can be adjusted at any time."
-msgstr ""
+msgstr "Эту настройку можно изменить в любое время."
 
 msgid "Top menu"
-msgstr ""
+msgstr "Верхнее меню"
 
 msgid ""
 "An entry is added to the top menu, which provides access to a context-"
 "sensitive help link for the current page."
 msgstr ""
+"В верхнее меню добавляется пункт, обеспечивающий доступ к контекстной ссылке "
+"на справку для текущей страницы."
 
 msgid "Precede the top menu link with an icon"
-msgstr ""
+msgstr "Предварять ссылку в верхнем меню значком"
 
 msgid "Split top menu item"
-msgstr ""
+msgstr "Разделить пункт верхнего меню"
 
 msgid ""
 "This option controls whether the help link is located in the submenu or can "
 "be clicked directly, opening the submenu via a separate link."
 msgstr ""
+"Эта опция определяет, будет ли ссылка на справку находиться в подменю или "
+"доступна для непосредственного нажатия с открытием подменю через отдельную "
+"ссылку."
 
 msgid "Additional help links"
-msgstr ""
+msgstr "Дополнительные ссылки на справку"
 
 msgid "Help link for subcontext topics"
-msgstr ""
+msgstr "Ссылка на справку для подтем"
 
 msgid "Help link in the admin backend"
-msgstr ""
+msgstr "Ссылка на справку в административной части"
 
 msgid ""
 "Vesta modules override the admin layout view and provide a way to insert "
 "code through custom modules."
 msgstr ""
+"Модули Vesta переопределяют представление административного интерфейса и "
+"предоставляют возможность вставлять код с помощью пользовательских модулей."
 
 msgid "As they are frequently used, this module first attempts this approach."
 msgstr ""
+"Поскольку они часто используются, этот модуль сначала пытается применить "
+"такой подход."
 
 msgid "Fallback patch for admin layout view"
-msgstr ""
+msgstr "Запасное исправление для представления административного интерфейса"
 
 msgid "Link to GenWiki"
-msgstr ""
+msgstr "Ссылка на GenWiki"
 
 #. I18N: WTHB Link
 msgid ""
 "This is the base link that is combined with the relative context links from "
 "the database table."
 msgstr ""
+"Это базовая ссылка, объединяемая с относительными ссылками контекста из "
+"таблицы базы данных."
 
 msgid "Standard Link to webtrees manual"
-msgstr ""
+msgstr "Стандартная ссылка на руководство webtrees"
 
 #. I18N: WTHB Link
 msgid "This fallback link is used, when no specific context link was defined."
 msgstr ""
+"Эта резервная ссылка используется, если конкретная ссылка контекста не "
+"задана."
 
 msgid "Data table"
-msgstr ""
+msgstr "Таблица данных"
 
 #. I18N: WTHB Link table
 msgid ""
 "The context is established by assigning the routes used in webtrees to the "
 "corresponding sections in the manual."
 msgstr ""
+"Контекст устанавливается путём сопоставления маршрутов, используемых в "
+"webtrees, с соответствующими разделами руководства."
 
 #. I18N: WTHB Link table
 msgid "The data is stored in the database table"
-msgstr ""
+msgstr "Данные хранятся в таблице базы данных"
 
 #. I18N: WTHB Link table rows
 msgid "Data rows"
-msgstr ""
+msgstr "Строки данных"
 
 #. I18N: WTHB Link table rows assigned/total
 #, php-format
 msgid "%1$s of %2$s assigned"
-msgstr ""
+msgstr "Назначено: %1$s из %2$s"
 
 msgid "truncate table before import routes or csv file"
-msgstr ""
+msgstr "очистить таблицу перед импортом маршрутов или CSV-файла"
 
 msgid "Table truncate"
-msgstr ""
+msgstr "Очистка таблицы"
 
 msgid "Reset routes to delivery status"
-msgstr ""
+msgstr "Сбросить маршруты до состояния поставки"
 
 msgid "Separator"
-msgstr ""
+msgstr "Разделитель"
 
 msgid "CSV-Export"
-msgstr ""
+msgstr "Экспорт CSV"
 
 msgid "CSV import file"
-msgstr ""
+msgstr "Файл импорта CSV"
 
 msgid "Automatically refresh data table when module is updated"
-msgstr ""
+msgstr "Автоматически обновлять таблицу данных при обновлении модуля"
 
 msgid "reset to default"
-msgstr ""
+msgstr "сбросить по умолчанию"
 
 #. I18N: Settings - prologue sentence 1
 msgid ""
 "The main purpose of this module is to make links to data records stored in "
 "family trees more convenient."
 msgstr ""
+"Основная цель этого модуля — сделать ссылки на записи данных, хранящиеся в "
+"родословных деревьях, более удобными."
 
 #. I18N: Settings - prologue sentence 2
 msgid ""
 "This avoids having to store fully qualified links, which impairs the "
 "portability of Gedcom data."
 msgstr ""
+"Это позволяет не хранить полностью определённые ссылки, что ухудшает "
+"переносимость данных Gedcom."
 
 #. I18N: Settings - prologue sentence 4
 msgid ""
 "The option of embedding the images already inserted in the family tree in "
 "the notes rounds off this approach."
 msgstr ""
+"Возможность встраивать изображения, уже добавленные в родословное дерево, в "
+"заметки завершает этот подход."
 
 #. I18N: Settings - section title
 msgid "Activate Support"
-msgstr ""
+msgstr "Активировать поддержку"
 
 #. I18N: Settings - section title
 msgid "More options"
-msgstr ""
+msgstr "Дополнительные параметры"
 
 msgid "Output of debug information on the JS console"
-msgstr ""
+msgstr "Вывод отладочной информации в консоль JS"
