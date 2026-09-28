@@ -15,24 +15,93 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
  * @var string                  $jscode_linkpp          javascript code snippet from js-file, csv-export...
  */
 
-$title_reset_all = e(I18N::translate('Reset list item access level overwrites - %s', MoreI18N::xlate('All')));
-$title_reset_access_level = e(I18N::translate('Reset list item access level overwrites - %s', I18N::translate('with configured access level')));
+function getResetLinks(null|array $link_params, string $type, null|int $access_level) :array {
+    $link_reset_all = null;
+    $link_reset_one = null;
 
-$link_params = is_array($links['resetlist_params'] ?? null) ? (array) $links['resetlist_params'] : null;
-$link_reset_all = null;
-$link_reset_access_level = null;
-if (is_array($link_params)) {
-    $link_reset_all = route('module', $link_params);
-    $access_level = null;
-    try {
-        $access_level = (int) $prefs[LinkEnhancerModule::PREF_LINKSPP_OVERVIEW_ACCESS];
-    } catch (Throwable $e) {}
+    if (is_array($link_params)) {
+        $link_params['type'] = $type;
+        $link_reset_all = route('module', $link_params);
 
-    if (is_int($access_level)) {
-        $link_params['access_level'] = $access_level;
-        $link_reset_access_level = route('module', $link_params);
+        if (is_int($access_level)) {
+            $link_params['access_level'] = $access_level;
+            $link_reset_one = route('module', $link_params);
+        }
     }
+
+    return [
+        'all' => $link_reset_all,
+        'one' => $link_reset_one,
+    ];
 }
+
+function getAccessOverwriteControls(null|array $link_params, string $type, string $prefId, string $prefValue) {
+    $mod_title = $type === 'list' ? MoreI18N::xlate('Lists') : MoreI18N::xlate('Tabs');
+    $mod_class = $type === 'list' ? ClassName::MODULES_LISTS : ClassName::MODULES_TABS;
+
+    $title_reset_all = e(I18N::translate('Reset list item access level overwrites - %s', MoreI18N::xlate('All')));
+    $title_reset_access_level = e(I18N::translate('Reset list item access level overwrites - %s', I18N::translate('with configured access level')));
+
+    $access_level = null;
+    $link_reset = null;
+    $count = null;
+
+    try {
+        $access_level = (int) $prefValue;
+    } catch (Throwable $e) {
+    }
+    $link_reset = getResetLinks($link_params, $type, $access_level);
+    $count = LinkEnhancerModule::countAccessOverwrites($type, $access_level);
+
+    ob_start();?>
+            <label class="col-sm-3 col-form-label wt-page-options-label sub" for="<?= $prefId ?>">
+                <?= MoreI18N::xlate('Access level') ?>
+            </label>
+            <div class="col-sm-3 wt-page-options-value mt-2">
+                <?= view('components/select', [
+                    'id' => $prefId,
+                    'name' => $prefId,
+                    'selected' => $prefValue,
+                    'options' => Auth::accessLevelNames()
+                ]) ?>
+            </div>
+            <div class="col-sm-6 mt-2 form-text">
+                <?= I18N::translate('Per-tree overrides are available in the control panel') ?> -
+                <span style="text-align: center; line-height: inherit;"><?= view('icons/' . $type) ?></span>
+                <a href="<?= e(route(ClassName::get($mod_class))) ?>">
+                    <?= $mod_title ?>
+                </a>
+                <ul>
+                    <li>
+                        <?= MoreI18N::xlate('Total') . ': ' . ($count['total'] ?? 0) ?>
+                        <?php if ($link_reset['all']): ?>
+                        <a class="confirm-action"
+                            href="<?= e($link_reset['all']) ?>"
+                            data-confirm-message="<?= $title_reset_all ?>"
+                            title="<?= $title_reset_all ?>">
+                            <?= MoreI18N::xlate('reset') ?>
+                        </a>
+                        <?php endif; ?>
+                    </li>
+                    <li>
+                        <?= I18N::translate('of which with this access level') . ': ' . ($count['access_level'] ?? 0) ?>
+                        <?php if ($link_reset['one']): ?>
+                        <a class="confirm-action"
+                            href="<?= e($link_reset['one']) ?>"
+                            data-confirm-message="<?= $title_reset_access_level ?>"
+                            title="<?= $title_reset_access_level ?>">
+                            <?= MoreI18N::xlate('reset') ?>
+                        </a>
+                        <?php endif; ?>
+                    </li>
+                </ul>
+            </div>
+<?php
+    return ob_get_clean();
+}
+
+$link_params = is_array($links['resetaccess_params'] ?? null) ? (array) $links['resetaccess_params'] : null;
+
 ?>
         <div class="row">
 <section class="openinnewtab">
@@ -86,54 +155,28 @@ if (is_array($link_params)) {
             </div>
 
             <!-- links++ overview access level --><?php $prefId = LinkEnhancerModule::PREF_LINKSPP_OVERVIEW_ACCESS; ?>
+            <?= getAccessOverwriteControls($link_params, 'list', $prefId, $prefs[$prefId]) ?>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-3 col-form-label wt-page-options-label">
+                <?= I18N::translate('Record detail cross-references') ?>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- links++ detail access level --><?php $prefId = LinkEnhancerModule::PREF_LINKSPP_DETAIL_ACCESS; ?>
+            <?= getAccessOverwriteControls($link_params, 'tab', $prefId, $prefs[$prefId]) ?>
+
+
+            <!-- links++ detail include blocks --><?php $prefId = LinkEnhancerModule::PREF_LINKSPP_DETAIL_INCLUDE_BLOCKS; ?>
             <label class="col-sm-3 col-form-label wt-page-options-label sub" for="<?= $prefId ?>">
-                <?= MoreI18N::xlate('Access level') ?>
+                <?= I18N::translate('Include block references') ?>
             </label>
             <div class="col-sm-3 wt-page-options-value mt-2">
-                <?= view('components/select', [
-                    'id' => $prefId,
-                    'name' => $prefId,
-                    'selected' => $prefs[$prefId],
-                    'options' => Auth::accessLevelNames()
-                ]) ?>
+                <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
             </div>
-            <?php
-                $access_level = null;
-                try {
-                    $access_level = (int) $prefs[$prefId];
-                } catch (Throwable $e) {}
-                $count = LinkEnhancerModule::countListAccessOverwrites($access_level);
-            ?>
             <div class="col-sm-6 mt-2 form-text">
-                <?= I18N::translate('Per-tree overrides are available  in the control panel') ?> - 
-                <span style="text-align: center; line-height: inherit;"><?= view('icons/list') ?></span>
-                <a href="<?= e(route(ClassName::get(ClassName::MODULES_LISTS))) ?>">
-                    <?= MoreI18N::xlate('Lists') ?>
-                </a>
-                <ul>
-                    <li>
-                        <?= MoreI18N::xlate('Total') . ': ' . ($count['total'] ?? 0) ?>
-                        <?php if ($link_reset_all): ?>
-                        <a class="confirm-action"
-                            href="<?= e($link_reset_all) ?>"
-                            data-confirm-message="<?= $title_reset_all ?>"
-                            title="<?= $title_reset_all ?>">
-                            <?= MoreI18N::xlate('reset') ?>
-                        </a>
-                        <?php endif; ?>
-                    </li>
-                    <li>
-                        <?= I18N::translate('of which with this access level') . ': ' . ($count['access_level'] ?? 0) ?>
-                        <?php if ($link_reset_access_level): ?>
-                        <a class="confirm-action" 
-                            href="<?= e($link_reset_access_level) ?>" 
-                            data-confirm-message="<?= $title_reset_access_level ?>" 
-                            title="<?= $title_reset_access_level ?>">
-                            <?= MoreI18N::xlate('reset') ?>
-                        </a>
-                        <?php endif; ?>
-                    </li>
-                </ul>
             </div>
         </div>
 <style>

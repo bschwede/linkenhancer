@@ -46,7 +46,7 @@ export function createCommandBar(editor, cfg, showHelp) {
             title: cfg.i18n("Insert link"),
             action: e => {
                 let dest = prompt(cfg.i18n("Link destination"))
-                if (!dest && cfg.href) dest = "#@wt=i@@"
+                if (!dest && cfg.href) dest = "#@wt=@@"
                 e.wrapSelection("[", `](${dest})`)
             }
         },

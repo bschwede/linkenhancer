@@ -556,13 +556,17 @@ final class XrefsService { // stuff related with handling cross-references
             }
 
             if ($filter_xref !== '') {
-                $subquery->whereExists(static function ($q) use ($filter_xref, $text_settings): void {
+                $uids = ($tree instanceof Tree) ? UidIndexService::uidsForRecord($tree->id(), $filter_xref) : [];
+                $subquery->whereExists(static function ($q) use ($filter_xref, $uids, $text_settings): void {
                     $q->select(DB::raw(1))
                         ->from('block_setting')
                         ->whereColumn('block_setting.block_id', 'b.block_id')
                         ->whereIn('block_setting.setting_name', $text_settings)
-                        ->where(static function ($sq) use ($filter_xref): void {
+                        ->where(static function ($sq) use ($filter_xref, $uids): void {
                             $sq->where('block_setting.setting_value', 'like', '%@' . $filter_xref . '@%');
+                            foreach ($uids as $uid) {
+                                $sq->orWhere('block_setting.setting_value', 'like', '%@' . $uid . '@%');
+                            }
                         });
                 });
             }
@@ -933,9 +937,9 @@ final class XrefsService { // stuff related with handling cross-references
             }
 
             $label  = ($resolved['tree_label'] !== '')
-                ? e($resolved['tree_label']) . ': ' . $resolved['name']
-                : $resolved['name'];
-            $anchor = '<span class="le-cross-ref" title="' . e(I18N::translate('Cross-reference')) . '">↪</span> <a href="' . e($resolved['url']) . '">' . $label . '</a>';
+                ? '<span class="text-muted small">' . e($resolved['tree_label']) . ': </span> '
+                : '';
+            $anchor = '<span class="le-cross-ref" title="' . e(I18N::translate('Cross-reference')) . '">↪</span> ' . $label . '<a href="' . e($resolved['url']) . '">' . $resolved['name'] . '</a>';
             if ($status === 'mismatch') {
                 $hint    = I18N::translate('expected %1$s, is %2$s', $expected_tag, $resolved['actual']);
                 $problem = '<span class="le-target-type-mismatch" title="' . e($hint) . '">' . self::TARGET_TYPE_MISMATCH_GLYPH . '</span>';

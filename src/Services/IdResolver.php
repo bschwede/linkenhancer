@@ -157,7 +157,7 @@ final class IdResolver
      * The tree name when the record is not in the source record's tree (the
      * overview prefixes such labels), else an empty string.
      */
-    private static function treeLabel(GedcomRecord $record, ?int $source_tree_id): string
+    public static function treeLabel(GedcomRecord $record, ?int $source_tree_id): string
     {
         $tree = $record->tree();
 

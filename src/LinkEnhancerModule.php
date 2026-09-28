@@ -30,6 +30,7 @@ use DomainException;
 use Exception;
 use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\FlashMessages;
+use Fisharebest\Webtrees\GedcomRecord;
 use Fisharebest\Webtrees\Http\RequestHandlers\HomePage;
 use Fisharebest\Webtrees\Http\RequestHandlers\TreePage;
 use Fisharebest\Webtrees\I18N;
@@ -44,6 +45,8 @@ use Fisharebest\Webtrees\Module\ModuleGlobalInterface;
 use Fisharebest\Webtrees\Module\ModuleGlobalTrait;
 use Fisharebest\Webtrees\Module\ModuleListInterface;
 use Fisharebest\Webtrees\Module\ModuleListTrait;
+use Fisharebest\Webtrees\Module\ModuleTabInterface;
+use Fisharebest\Webtrees\Module\ModuleTabTrait;
 use Fisharebest\Webtrees\Tree;
 use Fisharebest\Webtrees\User;
 use Fisharebest\Webtrees\Registry;
@@ -65,11 +68,13 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoXrefActio
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpMdAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpWtCoreAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpWthbAction;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\XrefDetailData;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\XrefOverviewListData;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\MarkdownEditorActivationService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\UidIndexService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\WthbService;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefDetailService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\SettingInterface;
 use Schwendinger\Webtrees\Helpers\ClassName;
@@ -89,6 +94,7 @@ class LinkEnhancerModule extends AbstractModule implements
     ModuleGlobalInterface,
     ModuleConfigInterface,
     ModuleListInterface,
+    ModuleTabInterface,
     SettingInterface
 {
 
@@ -98,6 +104,7 @@ class LinkEnhancerModule extends AbstractModule implements
     use ModuleGlobalTrait;
     use ModuleConfigTrait;
     use ModuleListTrait;
+    use ModuleTabTrait;
 
     /**
      * list of const for module administration
@@ -141,6 +148,22 @@ class LinkEnhancerModule extends AbstractModule implements
     public const PREF_LINKSPP_OPEN_IN_NEW_TAB = 'LINKSPP_OPEN_IN_NEW_TAB'; // enable open link in new browser tab
     public const PREF_LINKSPP_OVERVIEW_MAX_ROWS = 'LINKSPP_OVERVIEW_MAX_ROWS'; // max rows for non-admin xref overview
     public const PREF_LINKSPP_OVERVIEW_ACCESS = 'LINKSPP_OVERVIEW_ACCESS'; // -1=Hidden, 0=Managers, 1=Members, 2=All
+    public const PREF_LINKSPP_DETAIL_ACCESS = 'LINKSPP_DETAIL_ACCESS'; // -1=Hidden, 0=Managers, 1=Members, 2=All
+    public const PREF_LINKSPP_DETAIL_INCLUDE_BLOCKS = 'LINKSPP_DETAIL_INCLUDE_BLOCKS'; // include block references in detail view
+
+    /**
+     * Canonical handler keys (via Functions::canonicalHandlerKey) of the
+     * non-INDI record detail pages that receive JS tab injection,
+     * mapped to the GEDCOM record type.
+     */
+    public const XREF_DETAIL_HANDLER_KEYS = [
+        'Note'       => 'NOTE',
+        'Media'      => 'MEDIA',
+        'Source'     => 'SOUR',
+        'Repository' => 'REPO',
+        'Family'     => 'FAM',
+        'Location'   => '_LOC',
+    ];
 
     public const PREF_MD_ACTIVE = 'MD_ACTIVE'; // enable markdown enhancements
     public const PREF_MD_IMG_ACTIVE = 'MD_IMG_ACTIVE'; // enable enhanced markdown img syntax
@@ -235,6 +258,8 @@ class LinkEnhancerModule extends AbstractModule implements
         self::PREF_LINKSPP_OPEN_IN_NEW_TAB   => [ 'type' => 'bool',   'default' => '1', 'parent' => self::PREF_OPEN_IN_NEW_TAB, 'mode' => OverwriteMode::ParentIsNotOne ],
         self::PREF_LINKSPP_OVERVIEW_MAX_ROWS => [ 'type' => 'int',    'default' => '10000' ],
         self::PREF_LINKSPP_OVERVIEW_ACCESS  => [ 'type' => 'int',    'default' => '1' ], // -1=Hidden, 0=Managers, 1=Members, 2=All
+        self::PREF_LINKSPP_DETAIL_ACCESS    => [ 'type' => 'int',    'default' => '1' ], // -1=Hidden, 0=Managers, 1=Members, 2=All
+        self::PREF_LINKSPP_DETAIL_INCLUDE_BLOCKS => [ 'type' => 'bool', 'default' => '0' ],
         self::PREF_UID_ACTIVE                => [ 'type' => 'bool',   'default' => '1' ],
         // markdown
         self::PREF_MD_ACTIVE                 => [ 'type' => 'bool',   'default' => '1' ],
@@ -326,6 +351,8 @@ class LinkEnhancerModule extends AbstractModule implements
     {
         Functions::updateSchema($this, '\Schwendinger\Webtrees\Module\LinkEnhancer\Schema', 'SCHEMA_VERSION', self::HELP_SCHEMA_TARGET_VERSION);
 
+        $this->access_level = (int) $this->getPref(self::PREF_LINKSPP_DETAIL_ACCESS, true);
+
         // check for csv updates once a day and if schema was updated
         Registry::cache()->file()->remember(
             $this->name() . '-check-wthb-csvupdate-' . self::CUSTOM_VERSION . '_' . self::HELP_SCHEMA_TARGET_VERSION,
@@ -384,6 +411,7 @@ class LinkEnhancerModule extends AbstractModule implements
         if ($this->getPref(self::PREF_LINKSPP_ACTIVE, true)) {
             Functions::registerRoute('/tree/{tree}/goto-xref/{xref}', GotoXrefAction::class);
             Functions::registerRoute('/xref-overview-list-data', XrefOverviewListData::class);
+            Functions::registerRoute('/tree/{tree}/le-xref-detail/{xref}', XrefDetailData::class);
         }
 
         if ($this->getPref(self::PREF_UID_ACTIVE, true)) {
@@ -558,6 +586,27 @@ class LinkEnhancerModule extends AbstractModule implements
                 'urlmode'      => (Validator::attributes($request)->boolean('rewrite_urls', false) ? 'pretty' : 'default'),
             ];
             $this->docReadyJs .= "LinkEnhMod.initLE($lecfg, " . json_encode($options) . ");";
+
+            // --- Cross-reference detail tab (non-INDI record pages)
+            $xref_attr = Validator::attributes($request)->isXref()->string('xref', '');
+            $handler_key = Functions::canonicalHandlerKey($activeRouteInfo['handler'] ?? '');
+            $record_type = self::XREF_DETAIL_HANDLER_KEYS[$handler_key] ?? null;
+            if ($record_type !== null && $xref_attr !== '' && $tree !== null
+                && $this->accessLevel($tree, ModuleTabInterface::class) >= Auth::accessLevel($tree, Validator::attributes($request)->user())) {
+                $url_params = [
+                    'tree' => $tree->name(),
+                    'xref' => $xref_attr,
+                ];
+                if ($record_type === 'FAM') {
+                    $url_params['modal'] = 1;
+                }
+
+                $this->initJs .= "LinkEnhMod.initXrefDetailTab(" . json_encode([
+                    'url' => route(XrefDetailData::class, $url_params),
+                    'rectype'  => $record_type,
+                    'tabTitle' => $this->tabTitle(),
+                ]) . ");";
+            }
         }
 
         // === include selectively
@@ -941,9 +990,19 @@ class LinkEnhancerModule extends AbstractModule implements
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function getAdminResetListOverwritesAction(ServerRequestInterface $request): ResponseInterface
+    public function getAdminResetAccessOverwritesAction(ServerRequestInterface $request): ResponseInterface
     {
         $params = Validator::queryParams($request);
+        $type = null;
+        try {
+            $type = (string) $params->string('type', null);
+            $type = strtolower($type);
+        } catch (Throwable $e) {
+        }
+        if (!$type || !in_array($type, ['list', 'tab'])) {
+            return redirect($this->getConfigLink());
+        }
+
         $access_level = null;
         try {
             $access_level = (int) $params->integer('access_level', null);
@@ -951,7 +1010,7 @@ class LinkEnhancerModule extends AbstractModule implements
         } catch (Throwable $e) {}
         
         $query = DB::table('module_privacy')
-            ->where('interface', '=', ModuleListInterface::class)
+            ->where('interface', '=', ($type === 'list' ? ModuleListInterface::class : ModuleTabInterface::class))
             ->where('module_name', '=', self::MODULE_NAME);
 
         if ($access_level) {
@@ -996,21 +1055,23 @@ class LinkEnhancerModule extends AbstractModule implements
     }
 
     /**
-     * row count of overwrites in module_privacy for this module (total and access level specific)
+     * row count of overwrites in module_privacy for list or tab (total and access level specific)
+     * @param string $type   list or tab
      * @param null|int $access_level
      * @return array{"access_level": int, total: int}
      */
-    public static function countListAccessOverwrites(null|int $access_level): array
+    public static function countAccessOverwrites(string $type, null|int $access_level): array
     {
+        $class = (string) ($type === 'list' ? ModuleListInterface::class : ModuleTabInterface::class);
         return [
             'total' => DB::table('module_privacy')
-                ->where('interface', '=', ModuleListInterface::class)
+                ->where('interface', '=', $class)
                 ->where('module_name', '=', self::MODULE_NAME)
                 ->count(),
             'access_level' => $access_level === null ?
                     0 :
                     DB::table('module_privacy')
-                        ->where('interface', '=', ModuleListInterface::class)
+                        ->where('interface', '=', $class)
                         ->where('module_name', '=', self::MODULE_NAME)
                         ->where('access_level', '=', $access_level)
                         ->count()
@@ -1054,7 +1115,66 @@ class LinkEnhancerModule extends AbstractModule implements
     {
         return 'menu-list-xrefs'; // css class is used in getThemeSpecificCss()
     }
-   
+
+    // ─── ModuleTabInterface ─────────────────────────────────────────────────
+
+    public function tabTitle(): string
+    {
+        return I18N::translate('Cross-references');
+    }
+
+    public function defaultTabOrder(): int
+    {
+        return 10;
+    }
+
+    public function canLoadAjax(): bool
+    {
+        return true;
+    }
+
+    public function hasTabContent(\Fisharebest\Webtrees\Individual $individual): bool
+    {
+        return $this->getPref(self::PREF_LINKSPP_ACTIVE, true);
+    }
+
+    public function isGrayedOut(\Fisharebest\Webtrees\Individual $individual): bool
+    {
+        return false;
+    }
+
+    public function supportedFacts(): \Illuminate\Support\Collection
+    {
+        return new \Illuminate\Support\Collection();
+    }
+
+    public function getTabContent(\Fisharebest\Webtrees\Individual $individual): string
+    {
+        return $this->getXrefDetailViewContent($individual);
+    }
+
+    /**
+     * xrefs (in-/outgoing) for a GEDCOM record - display in record detail tab
+     * @param GedcomRecord $record
+     * @return string                view content
+     */
+    public function getXrefDetailViewContent(GedcomRecord $record) : string {
+        $service        = new XrefDetailService();
+        $include_blocks = (bool) $this->getPref(self::PREF_LINKSPP_DETAIL_INCLUDE_BLOCKS, true);
+        $outgoing_html  = $service->outgoingLinksHtml($record, 0);
+        $incoming       = $service->incomingReferences($record->tree(), $record->xref(), $include_blocks);
+        $total_count    = count($service->outgoingLinks($record)['entries'])
+            + array_sum(array_column($incoming, 'link_count'));
+
+        return view($this->name() . '::xref-detail-tab', [
+            'record'        => $record,
+            'outgoing_html' => $outgoing_html,
+            'incoming'      => $incoming,
+            'total_count'   => $total_count,
+        ]);
+    }
+    // ─── ModuleListInterface: listAction ────────────────────────────────────
+
     /**
      * Per-tree cross-reference overview for non-admin users (members and above).
      * Privacy-filtered: no raw GEDCOM snippets, personal blocks only for owner.
@@ -1285,9 +1405,9 @@ class LinkEnhancerModule extends AbstractModule implements
             ])
             : ''
         );
-        $response['links']['resetlist_params'] = [
+        $response['links']['resetaccess_params'] = [
             'module' => $this->name(),
-            'action' => 'AdminResetListOverwrites'
+            'action' => 'AdminResetAccessOverwrites'
         ];
         
 
