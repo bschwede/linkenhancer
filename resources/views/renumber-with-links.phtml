@@ -43,16 +43,23 @@ $count = count($xrefs);
 
 ?>
 
-<?= view('components/breadcrumbs', ['links' => [route(ClassName::get(ClassName::CONTROL_PANEL)) => MoreI18N::xlate('Control panel'), $title]]) ?>
+<?= view('components/breadcrumbs', ['links' => [
+    route(ClassName::get(ClassName::CONTROL_PANEL)) => MoreI18N::xlate('Control panel'),
+    $module->getConfigLink() => $module->title(),
+    $title
+    ]
+]) ?>
 
 <h1><?= e($title) ?></h1>
 
-<p><?= e(MoreI18N::xlate('This renumbers the records whose XREF collides with another family tree, and keeps the linkenhancer le-links and the le_* index in sync.')) ?></p>
+<p><?= MoreI18N::xlate('In a family tree, each record has an internal reference number (called an “XREF”) such as “F123” or “R14”.') ?></p>
+<p><?= MoreI18N::xlate('You can renumber the records in a family tree, so that these internal reference numbers are not duplicated in any other family tree.') ?></p>
+<p><?= e(I18N::translate('This renumbers the records whose XREF collides with another family tree, and keeps the linkenhancer le-links and the le_* index in sync.')) ?></p>
 
-<form method="get" action="<?= e(route('module', ['module' => $module->name(), 'action' => 'AdminRenumber'])) ?>" class="row g-2 align-items-end mb-4">
+<div id="renumber-form" class="row g-2 align-items-end mb-4">
     <div class="col-auto">
         <label for="renumber-tree" class="col-form-label"><?= e(I18N::translate('Family tree')) ?></label>
-        <select id="renumber-tree" name="tree" class="form-select">
+        <select id="renumber-tree" name="target_tree" class="form-select">
             <option value="0"><?= e(I18N::translate('Select a family tree')) ?></option>
             <?php foreach ($trees as $t): ?>
                 <option value="<?= (int) $t->id() ?>" <?= ($tree !== null && $tree->id() === $t->id()) ? 'selected' : '' ?>>
@@ -62,12 +69,23 @@ $count = count($xrefs);
         </select>
     </div>
     <div class="col-auto">
-        <button type="submit" class="btn btn-outline-primary"><?= e(I18N::translate('Load')) ?></button>
+        <button id="renumber-submit" type="button" class="btn btn-outline-primary"><?= e(I18N::translate('Load')) ?></button>
     </div>
-</form>
+</div>
+
+<script>
+document.getElementById('renumber-submit').addEventListener('click', function (e) {
+    const url = '<?= route('module', ['module' => $module->name(), 'action' => 'AdminRenumber', 'target_tree' => 'X']) ?>';
+    const tree = document.getElementById('renumber-tree').value;
+    if (!tree || tree === '0') {
+        return;
+    }
+    location.href = url.replace(/target_tree=X/, `target_tree=${tree}`);
+});
+</script>
 
 <?php if ($tree !== null): ?>
-    <p><?= e(I18N::plural('This family tree has %1$d record whose XREF is also used by another family tree.', 'This family tree has %1$d records whose XREF is also used by another family tree.', $count, I18N::number($count))) ?></p>
+    <p><?= e(MoreI18N::xlatePlural('This family tree has %s record which uses the same “XREF” as another family tree.', 'This family tree has %s records which use the same “XREF” as another family tree.', $count, I18N::number($count))) ?></p>
 
     <?php if ($count > 0): ?>
         <ul class="list-group mb-3">
@@ -89,7 +107,7 @@ $count = count($xrefs);
             <input type="hidden" name="tree" value="<?= (int) $tree->id() ?>">
             <button type="submit" class="btn btn-primary">
                 <?= view('icons/save') ?>
-                <?= e(MoreI18N::xlate('Renumber now')) ?>
+                <?= e(MoreI18N::xlate('continue')) ?>
             </button>
 
             <span class="ms-2 text-muted"><?= e(MoreI18N::xlate('Caution! This may take a long time. Be patient.')) ?></span>

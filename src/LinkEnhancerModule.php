@@ -999,7 +999,7 @@ class LinkEnhancerModule extends AbstractModule implements
         $this->layout = 'layouts/administration';
 
         $params  = Validator::queryParams($request);
-        $tree_id = (int) $params->integer('tree', 0);
+        $tree_id = (int) $params->integer('target_tree', 0);
         $trees   = Registry::container()->get(TreeService::class)->all();
 
         $tree  = null;
