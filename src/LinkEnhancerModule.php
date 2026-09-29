@@ -1019,7 +1019,7 @@ class LinkEnhancerModule extends AbstractModule implements
         $plan = IndexRebuildScheduler::deferPlan();
 
         return $this->viewResponse($this->name() . '::renumber-with-links', [
-            'title'       => MoreI18N::xlate('Renumber XREFs (with links)'),
+            'title'       => /*I18N: renumber xrefs */ I18N::translate('%s (with links)', MoreI18N::xlate('Renumber XREFs')),
             'module'      => $this,
             'tree'        => $tree,
             'trees'       => $trees,
@@ -1034,7 +1034,7 @@ class LinkEnhancerModule extends AbstractModule implements
     public function postAdminRenumberAction(ServerRequestInterface $request): ResponseInterface
     {
         $params  = Validator::parsedBody($request);
-        $tree_id = (int) $params->integer('tree', 0);
+        $tree_id = (int) $params->integer('target_tree', 0);
         $trees   = Registry::container()->get(TreeService::class)->all();
 
         $tree = null;
@@ -1046,7 +1046,7 @@ class LinkEnhancerModule extends AbstractModule implements
         }
 
         $redirect = route('module', ['module' => $this->name(), 'action' => 'AdminRenumber']
-            + ($tree_id > 0 ? ['tree' => $tree_id] : []));
+            + ($tree_id > 0 ? ['target_tree' => $tree_id] : []));
 
         if ($tree === null) {
             FlashMessages::addMessage(MoreI18N::xlate('No valid tree selected.'), 'danger');
