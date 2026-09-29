@@ -68,36 +68,33 @@ $count = count($xrefs);
             <?php endforeach; ?>
         </select>
     </div>
-    <div class="col-auto">
-        <button id="renumber-submit" type="button" class="btn btn-outline-primary"><?= e(I18N::translate('Load')) ?></button>
-    </div>
 </div>
 
 <script>
-document.getElementById('renumber-submit').addEventListener('click', function (e) {
+document.getElementById('renumber-tree').addEventListener('change', function (e) {
     const url = '<?= route('module', ['module' => $module->name(), 'action' => 'AdminRenumber', 'target_tree' => 'X']) ?>';
-    const tree = document.getElementById('renumber-tree').value;
-    if (!tree || tree === '0') {
-        return;
-    }
+    const tree = e.target.value ?? 0;
     location.href = url.replace(/target_tree=X/, `target_tree=${tree}`);
 });
 </script>
 
+<div class="mb-5">
 <?php if ($tree !== null): ?>
     <p><?= e(MoreI18N::xlatePlural('This family tree has %s record which uses the same “XREF” as another family tree.', 'This family tree has %s records which use the same “XREF” as another family tree.', $count, I18N::number($count))) ?></p>
 
     <?php if ($count > 0): ?>
-        <ul class="list-group mb-3">
+        <div style="max-height:250px; overflow: scroll;">
+        <ol class="list-group list-group-numbered mb-3">
             <?php foreach ($xrefs as $old => $type): ?>
                 <li class="list-group-item">
                     <code><?= e((string) $old) ?></code>
                     <span class="text-muted">— <?= e((string) $type) ?></span>
                 </li>
             <?php endforeach; ?>
-        </ul>
+        </ol>
+        </div>
 
-        <p class="text-muted">
+        <p class="mt-2 text-muted">
             <?= e($defer_index
                 ? MoreI18N::xlate('After the renumber the le_* index will be refreshed by the cron job.')
                 : MoreI18N::xlate('After the renumber the le_* index will be updated inline.')) ?>
@@ -105,12 +102,15 @@ document.getElementById('renumber-submit').addEventListener('click', function (e
 
         <form method="post" action="<?= e(route('module', ['module' => $module->name(), 'action' => 'AdminRenumber'])) ?>">
             <input type="hidden" name="tree" value="<?= (int) $tree->id() ?>">
+
+            <div class="alert alert-warning">
+                <?= e(MoreI18N::xlate('Caution! This may take a long time. Be patient.')) ?>
+            </div>
+
             <button type="submit" class="btn btn-primary">
                 <?= view('icons/save') ?>
                 <?= e(MoreI18N::xlate('continue')) ?>
             </button>
-
-            <span class="ms-2 text-muted"><?= e(MoreI18N::xlate('Caution! This may take a long time. Be patient.')) ?></span>
 
             <?= csrf_field() ?>
         </form>
@@ -118,3 +118,4 @@ document.getElementById('renumber-submit').addEventListener('click', function (e
         <p class="text-success"><?= e(MoreI18N::xlate('There are no XREF collisions to fix in this family tree.')) ?></p>
     <?php endif; ?>
 <?php endif; ?>
+</div>
