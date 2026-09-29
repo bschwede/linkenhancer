@@ -175,6 +175,80 @@ final class XrefsService { // stuff related with handling cross-references
     public const TARGET_TYPE_MISMATCH_GLYPH = "⚠";
     public const TARGET_AMBIGUOUS_GLYPH = "?";
 
+    public const GEDCOM_TABLES = [
+        'INDI' => [
+            'table' => 'individuals',
+            'prefix' => 'i',
+            'typestr' => "'INDI'",
+        ],
+        'FAM' => [
+            'table' => 'families',
+            'prefix' => 'f',
+            'typestr' => "'FAM'",
+        ],
+        'MEDIA' => [
+            'table' => 'media',
+            'prefix' => 'm',
+            'typestr' => "'MEDIA'",
+        ],
+        'SOUR' => [
+            'table' => 'sources',
+            'prefix' => 's',
+            'typestr' => "'SOUR'",
+        ],
+        'OTHER' => [ // NOTE, REPO, _LOC
+            'table' => 'other',
+            'prefix' => 'o',
+            'typestr' => '`o_type`',
+        ]
+    ];
+
+    public const GEDCOM_OTHER_SUBTYPES = ["NOTE", "REPO", "_LOC"];
+
+    /**
+     * Block modules whose "text" settings may contain LE links / XREFs.
+     * Key = block.module_name.
+     *
+     * @var array<string, array{title: string, settings: array<string, string>}>
+     */
+    public const BLOCKS = [
+        'html' => [
+            'title' => 'HTML',
+            'settings' => ['title' => 'title', 'html' => 'text', 'languages' => 'info'],
+        ],
+        'faq' => [
+            'title' => 'FAQ',
+            'settings' => ['header' => 'title', 'faqbody' => 'text', 'languages' => 'info'],
+        ],
+        'stories' => [
+            'title' => 'Stories',
+            'settings' => ['title' => 'title', 'story_body' => 'text', 'languages' => 'info'],
+        ],
+        '_vesta_classic_look_and_feel_' => [
+            'title' => 'Name badges (vesta)',
+            'settings' => ['header' => 'title', 'snippet' => 'text', 'regex' => 'info', 'access' => 'access'],
+        ],
+    ];
+
+    /**
+     * Block pre-filter: the setting value contains an LE link in HTML href
+     * syntax: <a ... href="#@...">.
+     */
+    public const BLOCK_LE_PREFILTER = 'href=["\']#@';
+
+    /** LIKE fallback for engines without REGEXP support. */
+    public const BLOCK_LE_LIKE = '%#@%';
+
+    /**
+     * Record-type filter sentinels (see xref-overview.phtml). They are not a
+     * real GEDCOM record type or block module name - the double-underscore
+     * form cannot collide with either (GEDCOM keys are 2-letter tags, block
+     * module names are single tokens). "__all_gedcom__" = every GEDCOM record
+     * type, no blocks; "__all_blocks__" = every block module, no GEDCOM.
+     */
+    public const RECTYPE_ALL_GEDCOM = '__all_gedcom__';
+    public const RECTYPE_ALL_BLOCKS = '__all_blocks__';
+        
     /**
      * Clamp an arbitrary input to the selectable caps - the single source
      * of truth for the allowlist (page select AND data endpoint policy).
@@ -300,81 +374,6 @@ final class XrefsService { // stuff related with handling cross-references
             $url
         );
     }
-
-    
-    public const GEDCOM_TABLES = [
-        'INDI' => [
-            'table'      => 'individuals',
-            'prefix'     => 'i',
-            'typestr'    => "'INDI'",
-        ],
-        'FAM' => [
-            'table'      => 'families',
-            'prefix'     => 'f',
-            'typestr'    => "'FAM'",
-        ],
-        'MEDIA' => [
-            'table'      => 'media',
-            'prefix'     => 'm',
-            'typestr'    => "'MEDIA'",
-        ],
-        'SOUR' => [
-            'table'      => 'sources',
-            'prefix'     => 's',
-            'typestr'    => "'SOUR'",
-        ],
-        'OTHER' => [ // NOTE, REPO, _LOC
-            'table'      => 'other',
-            'prefix'     => 'o',
-            'typestr'    => '`o_type`',
-        ]
-    ];
-
-    public const GEDCOM_OTHER_SUBTYPES = [ "NOTE", "REPO", "_LOC" ];
-
-    /**
-     * Block modules whose "text" settings may contain LE links / XREFs.
-     * Key = block.module_name.
-     *
-     * @var array<string, array{title: string, settings: array<string, string>}>
-     */
-    public const BLOCKS = [
-        'html' => [
-            'title'    => 'HTML',
-            'settings' => ['title' => 'title', 'html' => 'text', 'languages' => 'info'],
-        ],
-        'faq' => [
-            'title'    => 'FAQ',
-            'settings' => ['header' => 'title', 'faqbody' => 'text', 'languages' => 'info'],
-        ],
-        'stories' => [
-            'title'    => 'Stories',
-            'settings' => ['title' => 'title', 'story_body' => 'text', 'languages' => 'info'],
-        ],
-        '_vesta_classic_look_and_feel_' => [
-            'title'    => 'Name badges (vesta)',
-            'settings' => ['header' => 'title', 'snippet' => 'text', 'regex' => 'info', 'access' => 'access'],
-        ],
-    ];
-
-    /**
-     * Block pre-filter: the setting value contains an LE link in HTML href
-     * syntax: <a ... href="#@...">.
-     */
-    public const BLOCK_LE_PREFILTER = 'href=["\']#@';
-
-    /** LIKE fallback for engines without REGEXP support. */
-    public const BLOCK_LE_LIKE = '%#@%';
-
-    /**
-     * Record-type filter sentinels (see xref-overview.phtml). They are not a
-     * real GEDCOM record type or block module name - the double-underscore
-     * form cannot collide with either (GEDCOM keys are 2-letter tags, block
-     * module names are single tokens). "__all_gedcom__" = every GEDCOM record
-     * type, no blocks; "__all_blocks__" = every block module, no GEDCOM.
-     */
-    public const RECTYPE_ALL_GEDCOM = '__all_gedcom__';
-    public const RECTYPE_ALL_BLOCKS = '__all_blocks__';
 
     /**
      * Setting names classified as 'text' for a given block module.
