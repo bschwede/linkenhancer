@@ -970,8 +970,10 @@ final class XrefsService { // stuff related with handling cross-references
 
         if ($count <= 3) {
             foreach ($ambiguous['hits'] as $hit) {
-                $label = ($hit['tree_label'] !== '') ? e($hit['tree_label']) . ': ' . $hit['name'] : $hit['name'];
-                $html .= '<br><span class="le-cross-ref" title="' . e(I18N::translate('Cross-reference')) . '">↪</span> <a href="' . e($hit['url']) . '">' . $label . '</a>';
+                $label = ($hit['tree_label'] !== '')
+                ? '<span class="text-muted small">' . e($hit['tree_label']) . ': </span> '
+                : '';
+                $html .= '<br><span class="le-cross-ref" title="' . e(I18N::translate('Cross-reference')) . '">↪</span> ' . $label . '<a href="' . e($hit['url']) . '">' . $hit['name'] . '</a>';
             }
         } elseif ($ambiguous['goto_url'] !== '') {
             $html .= '<br><span class="le-cross-ref" title="' . e(I18N::translate('Cross-reference')) . '">↪</span> <a href="' . e($ambiguous['goto_url']) . '">@' . e($uid) . '@ (' . $count . ')</a>';
