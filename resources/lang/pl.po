@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-23 13:32+0200\n"
+"POT-Creation-Date: 2026-09-28 09:14+0200\n"
 "PO-Revision-Date: 2026-07-01 14:24+0000\n"
 "Last-Translator: bschwede <bschwede@noreply.codeberg.org>\n"
 "Language-Team: Polish <https://translate.codeberg.org/projects/linkenhancer/"
@@ -980,6 +980,12 @@ msgstr ""
 msgid "with configured access level"
 msgstr ""
 
+msgid "Per-tree overrides are available in the control panel"
+msgstr ""
+
+msgid "of which with this access level"
+msgstr ""
+
 msgid "JavaScript for additional link targets"
 msgstr "JavaScript do obsługi dodatkowych miejsc docelowych linków"
 
@@ -1016,10 +1022,12 @@ msgstr "odniesienie"
 msgid "Max rows"
 msgstr "Wiersze danych"
 
-msgid "Per-tree overrides are available  in the control panel"
-msgstr ""
+#, fuzzy
+#| msgid "cross reference"
+msgid "Record detail cross-references"
+msgstr "odniesienie"
 
-msgid "of which with this access level"
+msgid "Include block references"
 msgstr ""
 
 msgid "Confirmation Prompt - Do you really want to perform this action?"
@@ -1040,6 +1048,21 @@ msgstr "Czy można otworzyć adres URL instrukcji Webtrees w Tłumaczu Google?"
 #. I18N: wthb link user setting epilogue 1
 msgid "This setting can be adjusted at any time."
 msgstr "To ustawienie można zmienić w dowolnym momencie."
+
+#, fuzzy
+#| msgid "cross reference"
+msgid "Outgoing references"
+msgstr "odniesienie"
+
+#, fuzzy
+#| msgid "cross reference"
+msgid "Incoming references"
+msgstr "odniesienie"
+
+#, fuzzy
+#| msgid "cross reference"
+msgid "No cross-references found."
+msgstr "odniesienie"
 
 msgid "Top menu"
 msgstr "Menu główne"

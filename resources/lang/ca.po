@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-23 13:32+0200\n"
+"POT-Creation-Date: 2026-09-28 09:14+0200\n"
 "PO-Revision-Date: 2026-09-25 08:18+0000\n"
 "Last-Translator: Iberni2 <iberni2@noreply.codeberg.org>\n"
 "Language-Team: Catalan <https://translate.codeberg.org/projects/wt-modules/"
@@ -991,6 +991,14 @@ msgstr "Reinici dels nivells d'accés als elements de la llista - %s"
 msgid "with configured access level"
 msgstr "amb nivell d'accés configurat"
 
+#, fuzzy
+#| msgid "Per-tree overrides are available  in the control panel"
+msgid "Per-tree overrides are available in the control panel"
+msgstr "Les sobreescriptures per arbre estan disponibles al panell de control"
+
+msgid "of which with this access level"
+msgstr "d'aquest nivell d'accés"
+
 msgid "JavaScript for additional link targets"
 msgstr "JavaScrip per a enllaços addicionals"
 
@@ -1027,11 +1035,13 @@ msgstr "Referència - Visió general"
 msgid "Max rows"
 msgstr "Línia de dades"
 
-msgid "Per-tree overrides are available  in the control panel"
-msgstr "Les sobreescriptures per arbre estan disponibles al panell de control"
+#, fuzzy
+#| msgid "Classic cross-references"
+msgid "Record detail cross-references"
+msgstr "Referències creuades (Clàssiques)"
 
-msgid "of which with this access level"
-msgstr "d'aquest nivell d'accés"
+msgid "Include block references"
+msgstr ""
 
 msgid "Confirmation Prompt - Do you really want to perform this action?"
 msgstr "Prompt de confirmació - Realment vols fer aquesta acció?"
@@ -1052,6 +1062,21 @@ msgstr ""
 #. I18N: wthb link user setting epilogue 1
 msgid "This setting can be adjusted at any time."
 msgstr "Aquesta configuració es pot ajustar en qualsevol moment."
+
+#, fuzzy
+#| msgid "Cross-references"
+msgid "Outgoing references"
+msgstr "Referències creuades"
+
+#, fuzzy
+#| msgid "Cross-references"
+msgid "Incoming references"
+msgstr "Referències creuades"
+
+#, fuzzy
+#| msgid "Cross-references"
+msgid "No cross-references found."
+msgstr "Referències creuades"
 
 msgid "Top menu"
 msgstr "Menú superior"
