@@ -40,7 +40,7 @@ This module wraps up some [examples mentioned in the German Webtrees Manual](htt
 
 The main purpose of this module is to make [**links to data records**](#enhancedlinks) stored in family trees more convenient. This avoids having to store fully qualified links, which impairs the portability of Gedcom data. By linking the notes to the GEDCOM data records (persons, families, sources, etc.) from the text makes story telling much easier and thus also save this information in the GEDCOM file (maybe this is an alternative for the [stories module](https://wiki.genealogy.net/Webtrees_Handbuch/Anleitung_f%C3%BCr_Besucher#Geschichten)). The option of embedding the [**images**](#mdimg) already inserted in the family tree in the notes rounds off this approach. The link function is controlled via the [anchor part of the URI](https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Web_mechanics/What_is_a_URL), so it's no problem, if this module is not active - the url just points to the current webtrees page.
 
-For the admin there is an [**overview of cross-references**](#xref-overview), that lists all GEDCOM records and html based records stored in the `block / block_setting` tables (like html, faq, stories and vesta classig look and feel badges) which contain linkenhancer cross-references, classic cross-references and embedded picture references. The latter two references are only supported in GEDCOM records. For a configurable user access level, an overview can be provided for each tree.
+For the admin there is an [**overview of cross-references**](#xref-overview), that lists all GEDCOM records and html based records stored in the `block / block_setting` tables (like html, faq, stories and vesta classig look and feel badges) which contain linkenhancer cross-references, classic cross-references and embedded picture references. The latter two references are only supported in GEDCOM records. For a configurable user access level, an overview can be provided for each tree. On the GEDCOM record detail view you can have an additional tab "cross-references" that lists incoming and outgoing references.
 
 Additionally there are some goodies more or less related with links:
 
@@ -469,6 +469,8 @@ These are minor bug fixes or functional enhancements — usually in a single fil
 ### Cross-reference overview
 
 The cross-reference overview admin page (Control panel → LinkEnhancer → Cross-reference overview) is a server-side paginated DataTable. It lists all records that contain classic `@XREF@` cross-references or linkenhancer links, with a per-record link inventory. Optional filters: referenced XREF (only available while a fresh link index is active - in live-scan mode the field is hidden, because it would only be a coarse pre-filter there), record type, tree, and the number of tokens shown per link class (all / 5 / 10 / 20, default 5). The XREF cell shows the tree name as a second muted line; the type is its own sortable column. Each inventory token is displayed as a short display context (snippet) with the link token itself in bold.
+
+Optionally you can enable an user overview per tree and a list of incoming and outgoing references per GEDCOM record.
 
 #### Supported engines
 
