@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-23 13:32+0200\n"
-"PO-Revision-Date: 2026-09-23 11:32+0000\n"
+"POT-Creation-Date: 2026-09-28 09:14+0200\n"
+"PO-Revision-Date: 2026-09-29 04:20+0000\n"
 "Last-Translator: bschwede <bschwede@noreply.codeberg.org>\n"
 "Language-Team: German <https://translate.codeberg.org/projects/wt-modules/"
 "linkenhancer/de/>\n"
@@ -994,6 +994,14 @@ msgstr ""
 msgid "with configured access level"
 msgstr "mit der konfigurierten Zugriffsebene"
 
+msgid "Per-tree overrides are available in the control panel"
+msgstr ""
+"pro Stammbaum kann die Zugriffsebene gesondert in der Verwaltung festgelegt "
+"werden"
+
+msgid "of which with this access level"
+msgstr "davon mit dieser Zugriffsebene"
+
 msgid "JavaScript for additional link targets"
 msgstr "JavaScript-Objekt für zusätzliche Link-Ziele"
 
@@ -1027,13 +1035,11 @@ msgstr "Querverweis-Übersicht für Nicht-Administratoren"
 msgid "Max rows"
 msgstr "Daten-Zeilen Maximum"
 
-msgid "Per-tree overrides are available  in the control panel"
-msgstr ""
-"pro Stammbaum kann die Zugriffsebene gesondert in der Verwaltung festgelegt "
-"werden"
+msgid "Record detail cross-references"
+msgstr "Querverweise in der Datensatzdetailansicht"
 
-msgid "of which with this access level"
-msgstr "davon mit dieser Zugriffsebene"
+msgid "Include block references"
+msgstr "Verweise in Block-Datensätzen berücksichtigen"
 
 msgid "Confirmation Prompt - Do you really want to perform this action?"
 msgstr ""
@@ -1054,6 +1060,15 @@ msgstr "Webtrees Handbuch URL mit Google Translate öffnen?"
 #. I18N: wthb link user setting epilogue 1
 msgid "This setting can be adjusted at any time."
 msgstr "Diese Einstellung kann jederzeit angepasst werden."
+
+msgid "Outgoing references"
+msgstr "Ausgehende Verweise"
+
+msgid "Incoming references"
+msgstr "Eingehende Verweise"
+
+msgid "No cross-references found."
+msgstr "Es wurden keine Querverweise gefunden."
 
 msgid "Top menu"
 msgstr "Kopfmenü"

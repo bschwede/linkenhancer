@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-23 13:32+0200\n"
+"POT-Creation-Date: 2026-09-28 09:14+0200\n"
 "PO-Revision-Date: 2026-04-01 13:57+0000\n"
 "Last-Translator: MicXDev <micxdev@noreply.codeberg.org>\n"
 "Language-Team: English <https://translate.codeberg.org/projects/linkenhancer/"
@@ -899,6 +899,12 @@ msgstr ""
 msgid "with configured access level"
 msgstr ""
 
+msgid "Per-tree overrides are available in the control panel"
+msgstr ""
+
+msgid "of which with this access level"
+msgstr ""
+
 msgid "JavaScript for additional link targets"
 msgstr ""
 
@@ -925,10 +931,10 @@ msgstr ""
 msgid "Max rows"
 msgstr ""
 
-msgid "Per-tree overrides are available  in the control panel"
+msgid "Record detail cross-references"
 msgstr ""
 
-msgid "of which with this access level"
+msgid "Include block references"
 msgstr ""
 
 msgid "Confirmation Prompt - Do you really want to perform this action?"
@@ -946,6 +952,15 @@ msgstr ""
 
 #. I18N: wthb link user setting epilogue 1
 msgid "This setting can be adjusted at any time."
+msgstr ""
+
+msgid "Outgoing references"
+msgstr ""
+
+msgid "Incoming references"
+msgstr ""
+
+msgid "No cross-references found."
 msgstr ""
 
 msgid "Top menu"

@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-23 13:32+0200\n"
-"PO-Revision-Date: 2026-09-25 08:18+0000\n"
+"POT-Creation-Date: 2026-09-28 09:14+0200\n"
+"PO-Revision-Date: 2026-09-29 04:20+0000\n"
 "Last-Translator: TheDutchJewel <thedutchjewel@noreply.codeberg.org>\n"
 "Language-Team: Dutch <https://translate.codeberg.org/projects/wt-modules/"
 "linkenhancer/nl/>\n"
@@ -982,6 +982,13 @@ msgstr ""
 msgid "with configured access level"
 msgstr "met het ingestelde toegangsniveau"
 
+msgid "Per-tree overrides are available in the control panel"
+msgstr ""
+"Overschrijvingen per stamboom zijn beschikbaar in het configuratiescherm"
+
+msgid "of which with this access level"
+msgstr "of die met dit toegangsniveau"
+
 msgid "JavaScript for additional link targets"
 msgstr "JavaScript voor extra linkdoelen"
 
@@ -1015,12 +1022,11 @@ msgstr "Kruisverwijzingsoverzicht voor niet-beheerders"
 msgid "Max rows"
 msgstr "Max. rijen"
 
-msgid "Per-tree overrides are available  in the control panel"
-msgstr ""
-"Overschrijvingen per stamboom zijn beschikbaar in het configuratiescherm"
+msgid "Record detail cross-references"
+msgstr "Kruisverwijzingen in recorddetails"
 
-msgid "of which with this access level"
-msgstr "of die met dit toegangsniveau"
+msgid "Include block references"
+msgstr "Verwijzingen in Block-records meenemen"
 
 msgid "Confirmation Prompt - Do you really want to perform this action?"
 msgstr "Bevestigingsvraag - Wilt u deze actie echt uitvoeren?"
@@ -1039,6 +1045,15 @@ msgstr "Open webtreeshandleiding-URL met Google Translate?"
 #. I18N: wthb link user setting epilogue 1
 msgid "This setting can be adjusted at any time."
 msgstr "Deze instelling kan op elk moment worden aangepast."
+
+msgid "Outgoing references"
+msgstr "Uitgaande verwijzingen"
+
+msgid "Incoming references"
+msgstr "Inkomende verwijzingen"
+
+msgid "No cross-references found."
+msgstr "Geen kruisverwijzingen gevonden."
 
 msgid "Top menu"
 msgstr "Hoofdmenu"

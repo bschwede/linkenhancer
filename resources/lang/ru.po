@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: modules_v 4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-23 13:32+0200\n"
+"POT-Creation-Date: 2026-09-28 09:14+0200\n"
 "PO-Revision-Date: 2026-09-27 16:25+0000\n"
 "Last-Translator: Xapitonov <xapitonov@noreply.codeberg.org>\n"
 "Language-Team: Russian <https://translate.codeberg.org/projects/wt-modules/"
@@ -432,8 +432,8 @@ msgstr "Поддерживаются только файлы внутри общ
 #, php-format
 msgid "File '%1$s' in the public folder is not an image but '%2$s'"
 msgstr ""
-"Файл «%1$s» в общедоступной папке не является изображением, а имеет тип «%2$s"
-"»"
+"Файл «%1$s» в общедоступной папке не является изображением, а имеет тип "
+"«%2$s»"
 
 #. I18N: Module title
 msgid "Link-Enhancer"
@@ -806,7 +806,8 @@ msgid "picture with defined height, width and additional css class"
 msgstr "изображение с заданной высотой, шириной и дополнительным классом CSS"
 
 msgid "The context help topics provided by webtrees are listed below."
-msgstr "Ниже перечислены разделы контекстной справки, предоставляемые webtrees."
+msgstr ""
+"Ниже перечислены разделы контекстной справки, предоставляемые webtrees."
 
 msgid "Further information can be found on a separate help page."
 msgstr "Дополнительную информацию можно найти на отдельной странице справки."
@@ -979,6 +980,14 @@ msgstr "Сбросить переопределения уровня досту�
 msgid "with configured access level"
 msgstr "с настроенным уровнем доступа"
 
+#, fuzzy
+#| msgid "Per-tree overrides are available  in the control panel"
+msgid "Per-tree overrides are available in the control panel"
+msgstr "Переопределения для отдельных деревьев доступны на панели управления"
+
+msgid "of which with this access level"
+msgstr "из них с этим уровнем доступа"
+
 msgid "JavaScript for additional link targets"
 msgstr "JavaScript для дополнительных целей ссылок"
 
@@ -995,8 +1004,8 @@ msgstr ""
 #. I18N: Enhanced Links js
 msgid "Any CSS rules required are best added via the “CSS and JS” module."
 msgstr ""
-"Все необходимые правила CSS лучше всего добавлять с помощью модуля «CSS и JS"
-"»."
+"Все необходимые правила CSS лучше всего добавлять с помощью модуля «CSS и "
+"JS»."
 
 #. I18N: Enhanced Links js
 msgid ""
@@ -1012,11 +1021,13 @@ msgstr "Обзор перекрёстных ссылок для пользова
 msgid "Max rows"
 msgstr "Максимальное количество строк"
 
-msgid "Per-tree overrides are available  in the control panel"
-msgstr "Переопределения для отдельных деревьев доступны на панели управления"
+#, fuzzy
+#| msgid "Classic cross-references"
+msgid "Record detail cross-references"
+msgstr "Классические перекрёстные ссылки"
 
-msgid "of which with this access level"
-msgstr "из них с этим уровнем доступа"
+msgid "Include block references"
+msgstr ""
 
 msgid "Confirmation Prompt - Do you really want to perform this action?"
 msgstr "Запрос подтверждения — действительно выполнить это действие?"
@@ -1036,6 +1047,21 @@ msgstr "Открывать URL руководства webtrees с помощью
 #. I18N: wthb link user setting epilogue 1
 msgid "This setting can be adjusted at any time."
 msgstr "Эту настройку можно изменить в любое время."
+
+#, fuzzy
+#| msgid "Cross-references"
+msgid "Outgoing references"
+msgstr "Перекрёстные ссылки"
+
+#, fuzzy
+#| msgid "Cross-references"
+msgid "Incoming references"
+msgstr "Перекрёстные ссылки"
+
+#, fuzzy
+#| msgid "Cross-references"
+msgid "No cross-references found."
+msgstr "Перекрёстные ссылки"
 
 msgid "Top menu"
 msgstr "Верхнее меню"
