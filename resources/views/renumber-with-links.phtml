@@ -101,7 +101,7 @@ document.getElementById('renumber-tree').addEventListener('change', function (e)
         </p>
 
         <form method="post" action="<?= e(route('module', ['module' => $module->name(), 'action' => 'AdminRenumber'])) ?>">
-            <input type="hidden" name="tree" value="<?= (int) $tree->id() ?>">
+            <input type="hidden" name="target_tree" value="<?= (int) $tree->id() ?>">
 
             <div class="alert alert-warning">
                 <?= e(MoreI18N::xlate('Caution! This may take a long time. Be patient.')) ?>
