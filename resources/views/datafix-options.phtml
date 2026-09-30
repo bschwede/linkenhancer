@@ -1,0 +1,32 @@
+<?php
+
+declare(strict_types=1);
+
+use Fisharebest\Webtrees\Tree;
+use Schwendinger\Webtrees\Helpers\MoreI18N;
+use Schwendinger\Webtrees\Module\LinkEnhancer\DataFix\FixHandlerInterface;
+
+/**
+ * @var Tree                   $tree
+ * @var array<string, string>  $params
+ * @var array<string, FixHandlerInterface> $handlers
+ * @var FixHandlerInterface    $active
+ */
+
+$active_id = $active->id();
+?>
+
+<div class="row mb-3">
+    <label class="col-sm-3 col-form-label" for="fix_type"><?= e(MoreI18N::xlate('Fix type')) ?></label>
+    <div class="col-sm-9">
+        <select class="form-select" id="fix_type" name="fix_type">
+            <?php foreach ($handlers as $id => $handler): ?>
+                <option value="<?= e($id) ?>" <?= $id === $active_id ? 'selected' : '' ?>>
+                    <?= e($handler->label()) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+</div>
+
+<?= $active->optionsHtml($tree, $params) ?>

@@ -86,7 +86,7 @@ final class XrefsService { // stuff related with handling cross-references
      * letter may be absent, the "@tree" part may be empty (same tree). REF is
      * an XREF or a UID (RE_REF_CLASS).
      */
-    private const RE_WT_TARGET = '/(?:^|[?&])wt=(?P<type>[a-z])?@(?P<xref>' . self::RE_REF_CLASS . ')@(?P<tree>[^&\s+]*)/';
+    public const RE_WT_TARGET = '/(?:^|[?&])wt=(?P<type>[a-z])?@(?P<xref>' . self::RE_REF_CLASS . ')@(?P<tree>[^&\s+]*)/';
 
     /**
      * The optional "id" parameter: id=@REF@ - at most one per link, the

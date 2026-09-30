@@ -38,6 +38,7 @@ use Schwendinger\Webtrees\Helpers\Functions;
 use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Fisharebest\Webtrees\Module\AbstractModule;
 use Fisharebest\Webtrees\Module\ModuleConfigInterface;
+use Fisharebest\Webtrees\Module\ModuleDataFixInterface;
 use Fisharebest\Webtrees\Module\ModuleConfigTrait;
 use Fisharebest\Webtrees\Module\ModuleCustomInterface;
 use Schwendinger\Webtrees\Traits\ModuleCustomTrait;
@@ -57,6 +58,8 @@ use Fisharebest\Webtrees\Session;
 use Fisharebest\Webtrees\Validator;
 use Fisharebest\Webtrees\View;
 use Illuminate\Database\Capsule\Manager as DB;
+use Illuminate\Support\Collection;
+use Schwendinger\Webtrees\Module\LinkEnhancer\DataFix\DataFixDispatcher;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -97,6 +100,7 @@ class LinkEnhancerModule extends AbstractModule implements
     ModuleCustomInterface,
     ModuleGlobalInterface,
     ModuleConfigInterface,
+    ModuleDataFixInterface,
     ModuleListInterface,
     ModuleTabInterface,
     SettingInterface
@@ -1121,9 +1125,43 @@ class LinkEnhancerModule extends AbstractModule implements
         return $message;
     }
 
+    // ─── ModuleDataFixInterface ─────────────────────────────────────────────
+
+    private ?DataFixDispatcher $data_fix_dispatcher = null;
+
+    private function dataFixDispatcher(): DataFixDispatcher
+    {
+        return $this->data_fix_dispatcher ??= new DataFixDispatcher();
+    }
+
+    public function fixOptions(Tree $tree): string
+    {
+        return $this->dataFixDispatcher()->optionsHtml($tree, []);
+    }
+
+    public function recordsToFix(Tree $tree, array $params): Collection
+    {
+        return $this->dataFixDispatcher()->recordsToFix($tree, $params);
+    }
+
+    public function doesRecordNeedUpdate(GedcomRecord $record, array $params): bool
+    {
+        return $this->dataFixDispatcher()->needsUpdate($record, $params);
+    }
+
+    public function previewUpdate(GedcomRecord $record, array $params): string
+    {
+        return $this->dataFixDispatcher()->preview($record, $params);
+    }
+
+    public function updateRecord(GedcomRecord $record, array $params): void
+    {
+        $this->dataFixDispatcher()->apply($record, $params);
+    }
+
 
     /**
-     * Reset 
+     * Reset
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
