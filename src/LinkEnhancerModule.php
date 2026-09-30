@@ -1002,8 +1002,9 @@ class LinkEnhancerModule extends AbstractModule implements
         $tree_id = (int) $params->integer('target_tree', 0);
         $trees   = Registry::container()->get(TreeService::class)->all();
 
-        $tree  = null;
-        $xrefs = [];
+        $tree           = null;
+        $xrefs          = [];
+        $inbound_counts = [];
         if ($tree_id > 0) {
             foreach ($trees as $t) {
                 if ($t->id() === $tree_id) {
@@ -1013,18 +1014,36 @@ class LinkEnhancerModule extends AbstractModule implements
             }
             if ($tree !== null) {
                 $xrefs = Registry::container()->get(AdminService::class)->duplicateXrefs($tree);
+                foreach (array_keys($xrefs) as $xref) {
+                    $inbound_counts[$xref] = DB::table(XrefsService::INDEX_LINK_TABLE)
+                        ->where('target_xref', '=', $xref)
+                        ->where(static function ($q) use ($tree): void {
+                            $q->where(static function ($q2) use ($tree): void {
+                                $q2->whereNull('target_tree')->where('file', '=', $tree->id());
+                            })->orWhere('target_tree', '=', $tree->name());
+                        })
+                        ->count();
+                }
             }
         }
 
-        $plan = IndexRebuildScheduler::deferPlan();
+        $plan         = IndexRebuildScheduler::deferPlan();
+        $index_status = XrefsService::indexStatus();
+
+        $renumber_result = Session::get('le-renumber-result', null);
+        Session::forget('le-renumber-result');
 
         return $this->viewResponse($this->name() . '::renumber-with-links', [
-            'title'       => /*I18N: renumber xrefs */ I18N::translate('%s (with links)', MoreI18N::xlate('Renumber XREFs')),
-            'module'      => $this,
-            'tree'        => $tree,
-            'trees'       => $trees,
-            'xrefs'       => $xrefs,
-            'defer_index' => $plan['link'] || $plan['uid'],
+            'title'            => /*I18N: renumber xrefs */ I18N::translate('%s (with links)', MoreI18N::xlate('Renumber XREFs')),
+            'module'           => $this,
+            'tree'             => $tree,
+            'trees'            => $trees,
+            'xrefs'            => $xrefs,
+            'inbound_counts'   => $inbound_counts,
+            'defer_index'      => $plan['link'] || $plan['uid'],
+            'index_fresh'      => $index_status['fresh'],
+            'index_scanned_at' => $index_status['scanned_at'],
+            'renumber_result'  => $renumber_result,
         ]);
     }
 
@@ -1067,6 +1086,12 @@ class LinkEnhancerModule extends AbstractModule implements
             Registry::container()->get(TreeService::class),
         );
         $report = $service->renumber($tree);
+
+        Session::put('le-renumber-result', [
+            'per'         => $report['per'] ?? [],
+            'timed_out'   => (bool) ($report['timed_out'] ?? false),
+            'defer_index' => (bool) ($report['defer_index'] ?? false),
+        ]);
 
         $type = !empty($report['timed_out']) ? 'warning' : 'success';
         FlashMessages::addMessage($this->renumberSummary($report), $type);
