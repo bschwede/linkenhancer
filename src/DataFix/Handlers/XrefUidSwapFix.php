@@ -74,11 +74,7 @@ final class XrefUidSwapFix implements FixHandlerInterface
     public function optionsHtml(Tree $tree, array $params): string
     {
         $direction = (string) ($params['direction'] ?? self::DIR_XREF_TO_UID);
-        $uid_pref  = DB::table('module_setting')
-            ->where('module_name', '=', LinkEnhancerModule::MODULE_NAME)
-            ->where('setting_name', '=', LinkEnhancerModule::PREF_UID_ACTIVE)
-            ->value('setting_value');
-        $uid_active = $uid_pref === null ? true : boolval($uid_pref);
+        $uid_active = UidIndexService::uidFeatureEnabled();
 
         $rectypes = [
             'INDI'   => MoreI18N::xlate('Individual'),
@@ -113,7 +109,7 @@ final class XrefUidSwapFix implements FixHandlerInterface
         $html .= '<div class="col-sm-9">';
         foreach ($rectypes as $rt => $label) {
             $html .= '<div class="form-check form-check-inline">';
-            $html .= '<input class="form-check-input" type="checkbox" name="rectypes[]" value="' . e($rt) . '" id="rectype-' . e($rt) . '" checked>';
+            $html .= '<input class="form-check-input" type="checkbox" name="rectype_' . e($rt) . '" value="1" id="rectype-' . e($rt) . '" checked>';
             $html .= '<label class="form-check-label" for="rectype-' . e($rt) . '">' . e($label) . '</label></div>';
         }
         $html .= '</div></div>';
@@ -384,16 +380,20 @@ final class XrefUidSwapFix implements FixHandlerInterface
 
     /**
      * Extract selected record types from params (default: all).
+     * Uses individual field names (rectype_INDI, rectype_FAM, ...) to avoid
+     * the core data-fix-page.phtml JS bug with FormData array overwriting.
      *
      * @return array<int, string>
      */
     private function selectedRectypes(array $params): array
     {
         $all = ['INDI', 'FAM', 'NOTE', 'SOUR', 'REPO', '_LOC', 'OBJE'];
-        if (!isset($params['rectypes']) || !is_array($params['rectypes'])) {
-            return $all;
+        $selected = [];
+        foreach ($all as $rt) {
+            if (!empty($params['rectype_' . $rt])) {
+                $selected[] = $rt;
+            }
         }
-        $selected = array_values(array_intersect($all, $params['rectypes']));
         return $selected !== [] ? $selected : $all;
     }
 }
