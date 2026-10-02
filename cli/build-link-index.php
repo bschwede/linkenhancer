@@ -120,6 +120,8 @@ if ($lock === false || !flock($lock, LOCK_EX | LOCK_NB)) {
     exit(0);
 }
 
+$table_prefix = DB::getTablePrefix();
+
 // ------------------------------------------------------------- flush
 // --flush (without --rebuild): empty the index tables and stop. The meta
 // row must be reset in every case - otherwise indexStatus() would report
@@ -130,9 +132,9 @@ if ($flush && !$rebuild) {
         DB::table(XrefsService::INDEX_LINK_TABLE)->where('file', '=', $tree_id)->delete();
         DB::table(XrefsService::INDEX_SCAN_TABLE)->where('file', '=', $tree_id)->delete();
     } else {
-        DB::statement('TRUNCATE TABLE ' . XrefsService::INDEX_LINK_TABLE);
-        DB::statement('TRUNCATE TABLE ' . XrefsService::INDEX_SCAN_TABLE);
-        DB::statement('TRUNCATE TABLE ' . XrefsService::INDEX_META_TABLE);
+        DB::statement('TRUNCATE TABLE ' . $table_prefix . XrefsService::INDEX_LINK_TABLE);
+        DB::statement('TRUNCATE TABLE ' . $table_prefix . XrefsService::INDEX_SCAN_TABLE);
+        DB::statement('TRUNCATE TABLE ' . $table_prefix . XrefsService::INDEX_META_TABLE);
     }
     DB::table(XrefsService::INDEX_META_TABLE)
         ->where('id', '=', 1)
@@ -221,17 +223,17 @@ if ($is_initial) {
         DB::table(XrefsService::INDEX_LINK_TABLE)->where('file', '=', $tree_id)->delete();
         DB::table(XrefsService::INDEX_SCAN_TABLE)->where('file', '=', $tree_id)->delete();
     } else {
-        DB::statement('TRUNCATE TABLE ' . XrefsService::INDEX_LINK_TABLE);
-        DB::statement('TRUNCATE TABLE ' . XrefsService::INDEX_SCAN_TABLE);
+        DB::statement('TRUNCATE TABLE ' . $table_prefix . XrefsService::INDEX_LINK_TABLE);
+        DB::statement('TRUNCATE TABLE ' . $table_prefix . XrefsService::INDEX_SCAN_TABLE);
     }
 
     // Bulk scan rows: pure SQL, server-side, zero row transfer.
     foreach (XrefsService::GEDCOM_TABLES as $rectype => $params) {
         $prefix = $params['prefix'];
-        $sql    = 'INSERT INTO ' . XrefsService::INDEX_SCAN_TABLE . ' (file, xref, rectype, hash, scanned_at) '
+        $sql    = 'INSERT INTO ' . $table_prefix . XrefsService::INDEX_SCAN_TABLE . ' (file, xref, rectype, hash, scanned_at) '
             . 'SELECT ' . $prefix . '_file, ' . $prefix . '_id, '
             . ($rectype === 'OTHER' ? 'o_type' : "'" . $rectype . "'") . ', '
-            . 'MD5(' . $prefix . '_gedcom), NOW() FROM ' . $params['table'];
+            . 'MD5(' . $prefix . '_gedcom), NOW() FROM ' . $table_prefix . $params['table'];
         if ($rectype === 'OTHER') {
             $sql .= ' WHERE o_type IN (' . implode(', ', array_map(static fn (string $t): string => "'" . $t . "'", XrefsService::GEDCOM_OTHER_SUBTYPES)) . ')';
         }
@@ -359,14 +361,14 @@ if ($is_initial) {
                         $join->on('s.rectype', '=', DB::raw("'" . $rectype . "'"));
                     }
                 })
-                ->whereRaw('t.' . $idcol . ' > ?', [$cursor])
-                ->whereRaw('s.file IS NULL OR s.hash <> MD5(t.' . $gedcomcol . ')')
+                ->whereRaw($table_prefix . 't.' . $idcol . ' > ?', [$cursor])
+                ->whereRaw($table_prefix . "s.file IS NULL OR {$table_prefix}s.hash <> MD5({$table_prefix}t." . $gedcomcol . ')')
                 ->select([
                     't.' . $idcol . ' AS xref',
                     't.' . $filecol . ' AS file',
                     't.' . $gedcomcol . ' AS gedcom',
                     $rectype === 'OTHER' ? 't.o_type' : DB::raw("'" . $rectype . "' AS o_type"),
-                    DB::raw('MD5(t.' . $gedcomcol . ') AS hash'),
+                    DB::raw("MD5({$table_prefix}t." . $gedcomcol . ') AS hash'),
                 ])
                 ->orderBy('t.' . $idcol)
                 ->limit($n);

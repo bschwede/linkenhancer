@@ -97,6 +97,7 @@ final class XrefDetailService
     {
         $uids = UidIndexService::uidsForRecord((int) $tree->id(), $xref);
 
+        $table_prefix = DB::getTablePrefix();
         $rows = DB::table(XrefsService::INDEX_SCAN_TABLE . ' AS s')
             ->join(XrefsService::INDEX_LINK_TABLE . ' AS l', static function ($join): void {
                 $join->on('l.file', '=', 's.file')
@@ -118,7 +119,7 @@ final class XrefDetailService
                     }
                 });
             })
-            ->select(['s.file', 's.xref', DB::raw('s.rectype AS rectype'), DB::raw('COUNT(*) AS link_count')])
+            ->select(['s.file', 's.xref', DB::raw("{$table_prefix}s.rectype AS rectype"), DB::raw('COUNT(*) AS link_count')])
             ->groupBy('s.file', 's.xref', 's.rectype')
             ->orderBy('s.file')
             ->orderBy('s.rectype')

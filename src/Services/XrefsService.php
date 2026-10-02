@@ -504,6 +504,8 @@ final class XrefsService { // stuff related with handling cross-references
     public static function getBlockQuery(Tree|null $tree, array $rectypes, bool $index_mode = false, int|null $user_id = null, string $filter_xref = ''): ?Builder {
         $module_names = self::blockModuleNames();
 
+        $table_prefix = DB::getTablePrefix();
+
         if ($rectypes !== []) {
             $module_names = array_values(array_intersect($module_names, $rectypes));
             if ($module_names === []) {
@@ -520,20 +522,20 @@ final class XrefsService { // stuff related with handling cross-references
 
             if ($index_mode) {
                 $select = [
-                    DB::raw('b.gedcom_id AS file'),
-                    DB::raw("CONCAT('BLOCK-', b.block_id) AS xref"),
+                    DB::raw("{$table_prefix}b.gedcom_id AS file"),
+                    DB::raw("CONCAT('BLOCK-', {$table_prefix}b.block_id) AS xref"),
                     DB::raw("'" . $module_name . "' AS type"),
-                    DB::raw('b.block_id AS block_id'),
-                    DB::raw('b.user_id'),
+                    DB::raw($table_prefix . 'b.block_id AS block_id'),
+                    DB::raw($table_prefix . 'b.user_id'),
                 ];
             } else {
                 $select = [
-                    DB::raw("CONCAT('BLOCK-', b.block_id) AS xref"),
-                    DB::raw('b.gedcom_id AS file'),
+                    DB::raw("CONCAT('BLOCK-', {$table_prefix}b.block_id) AS xref"),
+                    DB::raw($table_prefix .'b.gedcom_id AS file'),
                     DB::raw("'" . $module_name . "' AS type"),
                     DB::raw('NULL AS gedcom'),
-                    DB::raw('b.block_id AS block_id'),
-                    DB::raw('b.user_id'),
+                    DB::raw($table_prefix .'b.block_id AS block_id'),
+                    DB::raw($table_prefix .'b.user_id'),
                 ];
             }
 
@@ -1194,6 +1196,7 @@ final class XrefsService { // stuff related with handling cross-references
         // 1:1 on (file, xref, rectype), so the plain count(*) the datatables
         // service issues (it drops the outer DISTINCT) already equals the
         // number of source records - not of links.
+        $table_prefix = DB::getTablePrefix();
         $links = DB::table(self::INDEX_LINK_TABLE)
             ->distinct()
             ->select('file', 'xref', 'rectype');
@@ -1208,7 +1211,7 @@ final class XrefsService { // stuff related with handling cross-references
                     ->on('l.rectype', '=', 's.rectype');
             })
             ->distinct()
-            ->select(['s.file', 's.xref', DB::raw('s.rectype AS type'), DB::raw('NULL AS block_id'), DB::raw('NULL AS user_id')])
+            ->select(['s.file', 's.xref', DB::raw($table_prefix . 's.rectype AS type'), DB::raw('NULL AS block_id'), DB::raw('NULL AS user_id')])
             ->whereIn('s.rectype', self::normalizeIndexRectypes($rectypes));
 
         if ($ordered) {

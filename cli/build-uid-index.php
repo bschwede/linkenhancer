@@ -125,6 +125,8 @@ if ($lock === false || !flock($lock, LOCK_EX | LOCK_NB)) {
     exit(0);
 }
 
+$table_prefix = DB::getTablePrefix();
+
 // ------------------------------------------------------------- flush
 // --flush (without --rebuild): empty the UID index and stop. The meta row must
 // be reset in every case - otherwise indexStatus() would report the now-empty
@@ -133,7 +135,7 @@ if ($flush && !$rebuild) {
     if ($tree_id > 0) {
         DB::table(UidIndexService::UID_INDEX_TABLE)->where('file', '=', $tree_id)->delete();
     } else {
-        DB::statement('TRUNCATE TABLE ' . UidIndexService::UID_INDEX_TABLE);
+        DB::statement('TRUNCATE TABLE ' . $table_prefix . UidIndexService::UID_INDEX_TABLE);
     }
     DB::table(XrefsService::INDEX_META_TABLE)
         ->where('id', '=', 1)
@@ -186,7 +188,7 @@ if ($is_initial) {
     if ($tree_id > 0) {
         DB::table(UidIndexService::UID_INDEX_TABLE)->where('file', '=', $tree_id)->delete();
     } else {
-        DB::statement('TRUNCATE TABLE ' . UidIndexService::UID_INDEX_TABLE);
+        DB::statement('TRUNCATE TABLE ' . $table_prefix . UidIndexService::UID_INDEX_TABLE);
     }
 
     // Candidate pass: only records that pass the UID pre-filter are scanned in
@@ -309,15 +311,15 @@ if ($is_initial) {
                         $join->on('s.rectype', '=', DB::raw("'" . $rectype . "'"));
                     }
                 })
-                ->whereRaw('t.' . $idcol . ' > ?', [$cursor])
-                ->whereRaw('s.hash <> MD5(t.' . $gedcomcol . ')')
+                ->whereRaw($table_prefix . 't.' . $idcol . ' > ?', [$cursor])
+                ->whereRaw($table_prefix . "s.hash <> MD5({$table_prefix}t." . $gedcomcol . ')')
                 ->distinct()
                 ->select([
                     't.' . $idcol . ' AS xref',
                     't.' . $filecol . ' AS file',
                     't.' . $gedcomcol . ' AS gedcom',
                     $rectype === 'OTHER' ? 't.o_type' : DB::raw("'" . $rectype . "' AS o_type"),
-                    DB::raw('MD5(t.' . $gedcomcol . ') AS hash'),
+                    DB::raw("MD5({$table_prefix}t." . $gedcomcol . ') AS hash'),
                 ])
                 ->orderBy('t.' . $idcol)
                 ->limit($n);
@@ -353,21 +355,21 @@ if ($is_initial) {
         while ($processed < $limit) {
             $n = min($chunk, $limit - $processed);
             $query = DB::table($table . ' AS t')
-                ->whereRaw('t.' . $idcol . ' > ?', [$cursor])
+                ->whereRaw($table_prefix . 't.' . $idcol . ' > ?', [$cursor])
                 ->where(static function ($q) use ($patterns, $gedcomcol): void {
                     foreach ($patterns as $pattern) {
                         $q->orWhere('t.' . $gedcomcol, DB::regexOperator(), $pattern);
                     }
                 })
-                ->whereNotExists(static function ($q) use ($prefix, $rectype): void {
+                ->whereNotExists(static function ($q) use ($prefix, $rectype, $table_prefix): void {
                     $q->from(UidIndexService::UID_INDEX_TABLE . ' AS s')
                         ->select(DB::raw('1'))
-                        ->whereRaw('s.file = t.' . $prefix . '_file')
-                        ->whereRaw('s.xref = t.' . $prefix . '_id');
+                        ->whereRaw($table_prefix . "s.file = {$table_prefix}t." . $prefix . '_file')
+                        ->whereRaw($table_prefix . "s.xref = {$table_prefix}t." . $prefix . '_id');
                     if ($rectype === 'OTHER') {
-                        $q->whereRaw('s.rectype = t.o_type');
+                        $q->whereRaw($table_prefix . "s.rectype = {$table_prefix}t.o_type");
                     } else {
-                        $q->whereRaw('s.rectype = ?', [$rectype]);
+                        $q->whereRaw($table_prefix . 's.rectype = ?', [$rectype]);
                     }
                 })
                 ->select([
@@ -375,7 +377,7 @@ if ($is_initial) {
                     't.' . $filecol . ' AS file',
                     't.' . $gedcomcol . ' AS gedcom',
                     $rectype === 'OTHER' ? 't.o_type' : DB::raw("'" . $rectype . "' AS o_type"),
-                    DB::raw('MD5(t.' . $gedcomcol . ') AS hash'),
+                    DB::raw("MD5({$table_prefix}t." . $gedcomcol . ') AS hash'),
                 ])
                 ->orderBy('t.' . $idcol)
                 ->limit($n);
