@@ -45,9 +45,23 @@ class HelpWthbAction implements RequestHandlerInterface
         $prev_language_tag = Utils::checkRequestLanguage($request);
 
         $module = Registry::container()->get(LinkEnhancerModule::class);
-        
+
         $title = MoreI18N::xlate('Help') . ' - ' . I18N::translate('Webtrees manual');
-        $tochtml = view($module->name() . '::help-wthb-toc');
+
+        $svc      = $module->wthbToc();
+        $toc_data = $svc->loadStructure();
+        if (empty($toc_data['items'])) {
+            $tochtml = '';
+        } else {
+            $translations = $svc->loadTranslations();
+            $tochtml = view($module->name() . '::help-wthb-toc', [
+                'items'        => $toc_data['items'],
+                'translations' => $translations,
+                'generated'    => Registry::timestampFactory()->fromString($toc_data['version'] ?? null, 'Y-m-d')->format(strtr(I18N::dateFormat(), ['%' => ''])),
+                'wiki_base'    => 'https://wiki.genealogy.net',
+            ]);
+        }
+
         $text = view($module->name() . '::help-wthb', [
             'toc_url' => LinkEnhancerModule::STDLINK_WTHB_TOC,
             'toc_html' => $tochtml,
@@ -63,6 +77,6 @@ class HelpWthbAction implements RequestHandlerInterface
             I18N::init($prev_language_tag);
         }
 
-        return Utils::getCachedResponse($html);
+        return Utils::getCachedResponse($html, false);
     }
 }
