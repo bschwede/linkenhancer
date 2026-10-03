@@ -96,12 +96,35 @@ final class XrefUidSwapFix implements FixHandlerInterface
 
         if ($direction === self::DIR_XREF_TO_UID && !$uid_active) {
             $html .= '<div class="alert alert-info">' . e(I18N::translate(
-                'Note: the current setting “UID active” is OFF. After converting XREFs to UIDs, you should enable “UID active” for the links to resolve correctly.'
+                'Note: the current setting "UID active" is OFF. After converting XREFs to UIDs, you should enable "UID active" for the links to resolve correctly.'
             )) . '</div>';
         }
         if ($direction === self::DIR_UID_TO_XREF && $uid_active) {
             $html .= '<div class="alert alert-info">' . e(I18N::translate(
-                'Note: the current setting “UID active” is ON. After converting UIDs to XREFs, you should disable “UID active” for the links to resolve correctly.'
+                'Note: the current setting "UID active" is ON. After converting UIDs to XREFs, you should disable "UID active" for the links to resolve correctly.'
+            )) . '</div>';
+        }
+
+        // Index freshness status
+        $link_status = XrefsService::indexStatus();
+        $uid_status  = UidIndexService::indexStatus();
+        $html .= '<div class="alert alert-light py-2 small">';
+        $html .= '<strong>' . e(I18N::translate('Index status')) . ':</strong><br>';
+        $link_ts = $link_status['scanned_at'] !== null
+            ? MoreI18N::localizedDatetimeString($link_status['scanned_at'])
+            : '—';
+        $link_fresh = $link_status['fresh'] ? '' : ' <span class="text-warning">(' . e(I18N::translate('stale')) . ')</span>';
+        $html .= e(I18N::translate('Link index')) . ': ' . I18N::number($link_status['rows']) . ' ' . e(I18N::translate('rows')) . ', ' . e(I18N::translate('last built')) . ': ' . e($link_ts) . $link_fresh . '<br>';
+        $uid_ts = $uid_status['last_run'] !== null
+            ? MoreI18N::localizedDatetimeString($uid_status['last_run'])
+            : '—';
+        $uid_fresh = $uid_status['fresh'] ? '' : ' <span class="text-warning">(' . e(I18N::translate('stale')) . ')</span>';
+        $html .= e(I18N::translate('UID index')) . ': ' . I18N::number($uid_status['rows']) . ' ' . e(I18N::translate('rows')) . ', ' . e(I18N::translate('last built')) . ': ' . e($uid_ts) . $uid_fresh;
+        $html .= '</div>';
+
+        if ($direction === self::DIR_UID_TO_XREF && !$uid_status['fresh']) {
+            $html .= '<div class="alert alert-warning">' . e(I18N::translate(
+                'The UID index is stale or empty. The UID → XREF resolution may miss records. Consider running a full rebuild before applying this fix.'
             )) . '</div>';
         }
 
@@ -181,6 +204,121 @@ final class XrefUidSwapFix implements FixHandlerInterface
 
         if (IndexRebuildScheduler::canDefer(IndexRebuildScheduler::EVENT_LINK_INDEX)) {
             IndexRebuildScheduler::defer(['link' => true, 'uid' => false], $tree->id());
+        }
+    }
+
+    public function processBlocks(Tree $tree, array $params): array
+    {
+        $direction = (string) ($params['direction'] ?? self::DIR_XREF_TO_UID);
+        $processed = 0;
+        $changed   = 0;
+        $skipped   = 0;
+        $errors    = [];
+
+        $pre_filter = XrefsService::BLOCK_LE_PREFILTER;
+
+        foreach (XrefsService::BLOCKS as $module_name => $block_def) {
+            $text_settings = XrefsService::blockTextSettings($module_name);
+            if ($text_settings === []) {
+                continue;
+            }
+
+            $rows = DB::table('block AS b')
+                ->join('block_setting AS bs', 'bs.block_id', '=', 'b.block_id')
+                ->where('b.module_name', '=', $module_name)
+                ->whereIn('bs.setting_name', $text_settings)
+                ->where('bs.setting_value', 'LIKE', '%' . $pre_filter . '%')
+                ->select(['b.block_id', 'b.gedcom_id', 'bs.setting_name', 'bs.setting_value'])
+                ->get();
+
+            foreach ($rows as $row) {
+                $processed++;
+
+                $block_tree = $row->gedcom_id !== null
+                    ? $this->findTreeById((int) $row->gedcom_id)
+                    : $tree;
+                if ($block_tree === null) {
+                    $skipped++;
+                    $errors[] = 'block_id=' . $row->block_id . ': source tree not found';
+                    continue;
+                }
+
+                $swapped = 0;
+                $new_value = preg_replace_callback(
+                    XrefsService::RE_LE_HTML_LINK,
+                    function (array $m) use ($direction, $block_tree, &$swapped, &$skipped): string {
+                        $token    = $m[0];
+                        $href_pos = strpos($token, 'href="');
+                        $quote    = '"';
+                        if ($href_pos === false) {
+                            $href_pos = strpos($token, "href='");
+                            $quote    = "'";
+                        }
+                        if ($href_pos === false) {
+                            return $token;
+                        }
+                        $href_start = $href_pos + 6;
+                        $href_end   = strpos($token, $quote, $href_start);
+                        if ($href_end === false) {
+                            return $token;
+                        }
+                        $href_val = substr($token, $href_start, $href_end - $href_start);
+                        $is_le    = str_starts_with($href_val, '#@');
+                        $url      = $this->convertWtTargets(
+                            $is_le ? substr($href_val, 2) : $href_val,
+                            $direction,
+                            $block_tree,
+                            $swapped,
+                            $skipped
+                        );
+                        return substr($token, 0, $href_start) . ($is_le ? '#@' : '') . $url . substr($token, $href_end);
+                    },
+                    $row->setting_value
+                );
+
+                // Also handle markdown-style LE links in block text
+                $new_value = preg_replace_callback(
+                    XrefsService::RE_LE_LINK,
+                    function (array $m) use ($direction, $block_tree, &$swapped, &$skipped): string {
+                        $token = $m[0];
+                        $pos   = strrpos($token, '(#@');
+                        if ($pos === false) {
+                            return $token;
+                        }
+                        $head = substr($token, 0, $pos + 3);
+                        $url  = $this->convertWtTargets(
+                            substr($token, $pos + 3, -1),
+                            $direction,
+                            $block_tree,
+                            $swapped,
+                            $skipped
+                        );
+                        return $head . $url . ')';
+                    },
+                    $new_value
+                );
+
+                if ($swapped > 0) {
+                    DB::table('block_setting')
+                        ->where('block_id', '=', $row->block_id)
+                        ->where('setting_name', '=', $row->setting_name)
+                        ->update(['setting_value' => $new_value]);
+                    $changed++;
+                } else {
+                    $skipped++;
+                }
+            }
+        }
+
+        return ['processed' => $processed, 'changed' => $changed, 'skipped' => $skipped, 'errors' => $errors];
+    }
+
+    private function findTreeById(int $tree_id): ?Tree
+    {
+        try {
+            return Registry::container()->get(TreeService::class)->find($tree_id);
+        } catch (\Throwable) {
+            return null;
         }
     }
 

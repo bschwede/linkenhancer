@@ -29,6 +29,10 @@ namespace Schwendinger\Webtrees\Module\LinkEnhancer\DataFix;
 use Fisharebest\Webtrees\GedcomRecord;
 use Fisharebest\Webtrees\Tree;
 use Illuminate\Support\Collection;
+use Schwendinger\Webtrees\Module\LinkEnhancer\DataFix\Handlers\AmbiguousUidFix;
+use Schwendinger\Webtrees\Module\LinkEnhancer\DataFix\Handlers\DanglingLinksFix;
+use Schwendinger\Webtrees\Module\LinkEnhancer\DataFix\Handlers\DuplicateUidFix;
+use Schwendinger\Webtrees\Module\LinkEnhancer\DataFix\Handlers\WtTypeFix;
 use Schwendinger\Webtrees\Module\LinkEnhancer\DataFix\Handlers\XrefUidSwapFix;
 
 use function array_keys;
@@ -44,7 +48,11 @@ class DataFixDispatcher
     public function __construct()
     {
         $this->handlers = [
-            XrefUidSwapFix::ID => new XrefUidSwapFix(),
+            XrefUidSwapFix::ID  => new XrefUidSwapFix(),
+            WtTypeFix::ID       => new WtTypeFix(),
+            DanglingLinksFix::ID => new DanglingLinksFix(),
+            AmbiguousUidFix::ID  => new AmbiguousUidFix(),
+            DuplicateUidFix::ID  => new DuplicateUidFix(),
         ];
     }
 
@@ -88,5 +96,10 @@ class DataFixDispatcher
     public function apply(GedcomRecord $record, array $params): void
     {
         $this->resolve($params)->apply($record, $params);
+    }
+
+    public function processBlocks(Tree $tree, array $params): array
+    {
+        return $this->resolve($params)->processBlocks($tree, $params);
     }
 }

@@ -67,6 +67,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Nyholm\Psr7\Stream;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Factories\CustomMarkdownFactory;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\AdminXrefOverviewData;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\DataFixBlocksAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoIdAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoUidAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoXrefAction;
@@ -433,6 +434,9 @@ class LinkEnhancerModule extends AbstractModule implements
 
         // XREF overview - server-side DataTables data endpoint (admin only)
         Functions::registerRoute('/admin-xref-overview-data', AdminXrefOverviewData::class);
+
+        // Datafix: process block modules (AJAX POST)
+        Functions::registerRoute('/datafix-process-blocks', 'le.datafix-process-blocks', DataFixBlocksAction::class, [], true);
     }
  
 
@@ -1129,7 +1133,7 @@ class LinkEnhancerModule extends AbstractModule implements
 
     private ?DataFixDispatcher $data_fix_dispatcher = null;
 
-    private function dataFixDispatcher(): DataFixDispatcher
+    public function dataFixDispatcher(): DataFixDispatcher
     {
         return $this->data_fix_dispatcher ??= new DataFixDispatcher();
     }

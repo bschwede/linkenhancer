@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Tree;
 use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Schwendinger\Webtrees\Module\LinkEnhancer\DataFix\FixHandlerInterface;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\DataFixBlocksAction;
 
 /**
  * @var Tree                   $tree
@@ -30,3 +32,43 @@ $active_id = $active->id();
 </div>
 
 <?= $active->optionsHtml($tree, $params) ?>
+
+<?php if ($active_id === 'xref_uid_swap'): ?>
+<div class="row mb-3">
+    <label class="col-sm-3 col-form-label"><?= e(I18N::translate('Block modules')) ?></label>
+    <div class="col-sm-9">
+        <button type="button" class="btn btn-outline-primary btn-sm" id="btn-process-blocks"
+            data-wt-href="<?= e(route(DataFixBlocksAction::class, ['tree' => $tree->name()])) ?>">
+            <?= e(I18N::translate('Process block modules')) ?>
+        </button>
+        <span id="blocks-result" class="ms-2 small text-muted"></span>
+    </div>
+</div>
+<script>
+(function() {
+    var btn = document.getElementById('btn-process-blocks');
+    if (!btn) return;
+    btn.addEventListener('click', function() {
+        btn.disabled = true;
+        var resultSpan = document.getElementById('blocks-result');
+        resultSpan.textContent = '...';
+        var form = btn.closest('form');
+        var params = new URLSearchParams();
+        if (form) {
+            var direction = form.querySelector('[name="direction"]');
+            if (direction) params.set('direction', direction.value);
+        }
+        var url = btn.getAttribute('data-wt-href') + (btn.getAttribute('data-wt-href').indexOf('?') !== -1 ? '&' : '?') + params.toString();
+        fetch(url, {method: 'POST', credentials: 'same-origin'})
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                resultSpan.textContent = data.processed + ' ' + <?= e(json_encode(I18N::translate('checked'))) ?> + ', '
+                    + data.changed + ' ' + <?= e(json_encode(I18N::translate('updated'))) ?> + ', '
+                    + data.skipped + ' ' + <?= e(json_encode(I18N::translate('skipped'))) ?>;
+            })
+            .catch(function() { resultSpan.textContent = 'Error'; })
+            .finally(function() { btn.disabled = false; });
+    });
+})();
+</script>
+<?php endif; ?>

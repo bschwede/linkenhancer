@@ -90,4 +90,15 @@ interface FixHandlerInterface
      * @return void
      */
     public function apply(GedcomRecord $record, array $params): void;
+
+    /**
+     * Process non-GEDCOM records (e.g. block modules). Called via a separate
+     * AJAX endpoint, not through the core datafix loop.
+     *
+     * @param Tree                 $tree
+     * @param array<string,string> $params
+     *
+     * @return array{processed: int, changed: int, skipped: int, errors: array<int,string>}
+     */
+    public function processBlocks(Tree $tree, array $params): array;
 }
