@@ -436,7 +436,7 @@ class LinkEnhancerModule extends AbstractModule implements
         Functions::registerRoute('/admin-xref-overview-data', AdminXrefOverviewData::class);
 
         // Datafix: process block modules (AJAX POST)
-        Functions::registerRoute('/datafix-process-blocks', 'le.datafix-process-blocks', DataFixBlocksAction::class, [], true);
+        Functions::registerRoute('/admin/datafix-process-blocks/{tree}', 'le.datafix-process-blocks', DataFixBlocksAction::class, [], true);
     }
  
 
@@ -1140,7 +1140,8 @@ class LinkEnhancerModule extends AbstractModule implements
 
     public function fixOptions(Tree $tree): string
     {
-        return $this->dataFixDispatcher()->optionsHtml($tree, []);
+        $params = isset($_GET['fix_type']) ? ['fix_type' => (string) $_GET['fix_type']] : [];
+        return $this->dataFixDispatcher()->optionsHtml($tree, $params);
     }
 
     public function recordsToFix(Tree $tree, array $params): Collection
