@@ -396,6 +396,6 @@ final class XrefUidSwapFix implements FixHandlerInterface
                 $selected[] = $rt;
             }
         }
-        return $selected !== [] ? $selected : $all;
+        return $selected;
     }
 }
