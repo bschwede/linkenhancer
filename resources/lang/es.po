@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-28 09:14+0200\n"
-"PO-Revision-Date: 2026-09-24 12:25+0000\n"
-"Last-Translator: gallegonovato <gallegonovato@noreply.codeberg.org>\n"
+"PO-Revision-Date: 2026-10-03 16:27+0000\n"
+"Last-Translator: Iberni2 <iberni2@noreply.codeberg.org>\n"
 "Language-Team: Spanish <https://translate.codeberg.org/projects/wt-modules/"
 "linkenhancer/es/>\n"
 "Language: es\n"
@@ -991,11 +991,8 @@ msgstr ""
 msgid "with configured access level"
 msgstr "con nivel de acceso configurado"
 
-#, fuzzy
-#| msgid "Per-tree overrides are available  in the control panel"
 msgid "Per-tree overrides are available in the control panel"
-msgstr ""
-"Las sobrescripciones por árbol están disponibles en el panel de control"
+msgstr "Las sobrescripciones por árbol están disponibles en el panel de control"
 
 msgid "of which with this access level"
 msgstr "de los cuales con este nivel de acceso"
@@ -1033,13 +1030,11 @@ msgstr ""
 msgid "Max rows"
 msgstr "Filas máximas"
 
-#, fuzzy
-#| msgid "Classic cross-references"
 msgid "Record detail cross-references"
-msgstr "referencias cruzadas clásicas"
+msgstr "Referencias cruzadas clásicas"
 
 msgid "Include block references"
-msgstr ""
+msgstr "Incluir referencias de bloque"
 
 msgid "Confirmation Prompt - Do you really want to perform this action?"
 msgstr "Mensaje de confirmación: ¿Realmente desea realizar esta acción?"
@@ -1059,20 +1054,14 @@ msgstr "¿Abrir la URL del manual de webtrees con Google Translate?"
 msgid "This setting can be adjusted at any time."
 msgstr "Esta configuración se puede cambiar en cualquier momento."
 
-#, fuzzy
-#| msgid "Cross-references"
 msgid "Outgoing references"
-msgstr "referencias cruzadas"
+msgstr "Referencias cruzadas"
 
-#, fuzzy
-#| msgid "Cross-references"
 msgid "Incoming references"
-msgstr "referencias cruzadas"
+msgstr "Referencias entrantes"
 
-#, fuzzy
-#| msgid "Cross-references"
 msgid "No cross-references found."
-msgstr "referencias cruzadas"
+msgstr "No se encontraron referencias cruzadas."
 
 msgid "Top menu"
 msgstr "Menú superior"
