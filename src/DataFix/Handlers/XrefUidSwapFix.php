@@ -215,7 +215,7 @@ final class XrefUidSwapFix implements FixHandlerInterface
         $skipped   = 0;
         $errors    = [];
 
-        $pre_filter = XrefsService::BLOCK_LE_PREFILTER;
+        $pre_filter = XrefsService::BLOCK_LE_LIKE;
 
         foreach (XrefsService::BLOCKS as $module_name => $block_def) {
             $text_settings = XrefsService::blockTextSettings($module_name);
@@ -223,30 +223,22 @@ final class XrefUidSwapFix implements FixHandlerInterface
                 continue;
             }
 
-            $rows = DB::table('block AS b')
+            $query = DB::table('block AS b')
                 ->join('block_setting AS bs', 'bs.block_id', '=', 'b.block_id')
                 ->where('b.module_name', '=', $module_name)
                 ->whereIn('bs.setting_name', $text_settings)
                 ->where('bs.setting_value', 'LIKE', '%' . $pre_filter . '%')
-                ->select(['b.block_id', 'b.gedcom_id', 'bs.setting_name', 'bs.setting_value'])
-                ->get();
+                ->where('b.gedcom_id', '=', $tree->id())
+                ->select(['b.block_id', 'b.gedcom_id', 'bs.setting_name', 'bs.setting_value']);
+
+            $rows = $query->get();
 
             foreach ($rows as $row) {
                 $processed++;
-
-                $block_tree = $row->gedcom_id !== null
-                    ? $this->findTreeById((int) $row->gedcom_id)
-                    : $tree;
-                if ($block_tree === null) {
-                    $skipped++;
-                    $errors[] = 'block_id=' . $row->block_id . ': source tree not found';
-                    continue;
-                }
-
                 $swapped = 0;
                 $new_value = preg_replace_callback(
                     XrefsService::RE_LE_HTML_LINK,
-                    function (array $m) use ($direction, $block_tree, &$swapped, &$skipped): string {
+                    function (array $m) use ($direction, $tree, &$swapped, &$skipped): string {
                         $token    = $m[0];
                         $href_pos = strpos($token, 'href="');
                         $quote    = '"';
@@ -267,35 +259,13 @@ final class XrefUidSwapFix implements FixHandlerInterface
                         $url      = $this->convertWtTargets(
                             $is_le ? substr($href_val, 2) : $href_val,
                             $direction,
-                            $block_tree,
+                            $tree,
                             $swapped,
                             $skipped
                         );
                         return substr($token, 0, $href_start) . ($is_le ? '#@' : '') . $url . substr($token, $href_end);
                     },
                     $row->setting_value
-                );
-
-                // Also handle markdown-style LE links in block text
-                $new_value = preg_replace_callback(
-                    XrefsService::RE_LE_LINK,
-                    function (array $m) use ($direction, $block_tree, &$swapped, &$skipped): string {
-                        $token = $m[0];
-                        $pos   = strrpos($token, '(#@');
-                        if ($pos === false) {
-                            return $token;
-                        }
-                        $head = substr($token, 0, $pos + 3);
-                        $url  = $this->convertWtTargets(
-                            substr($token, $pos + 3, -1),
-                            $direction,
-                            $block_tree,
-                            $swapped,
-                            $skipped
-                        );
-                        return $head . $url . ')';
-                    },
-                    $new_value
                 );
 
                 if ($swapped > 0) {
