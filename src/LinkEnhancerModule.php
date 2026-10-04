@@ -29,6 +29,7 @@ namespace Schwendinger\Webtrees\Module\LinkEnhancer;
 use DomainException;
 use Exception;
 use Fisharebest\Webtrees\Auth;
+use Fisharebest\Webtrees\Enums\AccessLevel; //wt2.3
 use Fisharebest\Webtrees\FlashMessages;
 use Fisharebest\Webtrees\GedcomRecord;
 use Fisharebest\Webtrees\Http\RequestHandlers\HomePage;
@@ -352,7 +353,8 @@ class LinkEnhancerModule extends AbstractModule implements
     {
         Functions::updateSchema($this, '\Schwendinger\Webtrees\Module\LinkEnhancer\Schema', 'SCHEMA_VERSION', self::HELP_SCHEMA_TARGET_VERSION);
 
-        $this->access_level = (int) $this->getPref(self::PREF_LINKSPP_DETAIL_ACCESS, true);
+        $access_level = (int) $this->getPref(self::PREF_LINKSPP_DETAIL_ACCESS, true);
+        $this->access_level = Functions::wtIsAtLeast2_3() ? AccessLevel::from($access_level) : $access_level;
 
         // check for csv updates once a day and if schema was updated
         Registry::cache()->file()->remember(
