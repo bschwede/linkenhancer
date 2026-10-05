@@ -39,7 +39,7 @@ $active_id = $active->id();
         <button type="button" class="btn btn-outline-primary btn-sm" id="btn-process-blocks">
             <?= e(I18N::translate('Process block modules')) ?>
         </button>
-        <span id="blocks-result" class="ms-2 small text-muted"></span>
+        <div id="blocks-result" class="ms-2 small text-muted d-inline-block"></div>
     </div>
 </div>
 <?php endif; ?>
@@ -60,8 +60,8 @@ $active_id = $active->id();
         var blocksUrl = <?= json_encode(route('le.datafix-process-blocks', ['tree' => $tree->name()]), JSON_THROW_ON_ERROR) ?>;
         btn.addEventListener('click', function() {
             btn.disabled = true;
-            var resultSpan = document.getElementById('blocks-result');
-            resultSpan.textContent = '...';
+            var resultEl = document.getElementById('blocks-result');
+            resultEl.textContent = '...';
             var form = btn.closest('form');
             var params = new URLSearchParams();
             if (form) {
@@ -72,11 +72,23 @@ $active_id = $active->id();
             webtrees.httpPost(url)
                 .then(function(r) { return r.json(); })
                 .then(function(data) {
-                    resultSpan.textContent = data.processed + ' <?= e(I18N::translate('checked')) ?>, '
+                    var html = '<span class="me-2">' + data.processed + ' <?= e(I18N::translate('checked')) ?>, '
                         + data.changed + ' <?= e(I18N::translate('updated')) ?>, '
-                        + data.skipped + ' <?= e(I18N::translate('skipped')) ?>';
+                        + data.skipped + ' <?= e(I18N::translate('skipped')) ?></span>';
+                    if (data.details && data.details.length > 0) {
+                        html += '<ul class="list-unstyled small mb-0 mt-1">';
+                        for (var i = 0; i < data.details.length; i++) {
+                            var d = data.details[i];
+                            var icon = d.changes > 0 ? '<span class="text-success">&#10003;</span> ' : '<span class="text-muted">&#8212;</span> ';
+                            html += '<li>' + icon + d.name + ' <span class="text-muted">(' + d.module + ')</span>';
+                            if (d.changes > 0) html += ' — ' + d.changes + ' <?= e(I18N::translate('change(s)')) ?>';
+                            html += '</li>';
+                        }
+                        html += '</ul>';
+                    }
+                    resultEl.innerHTML = html;
                 })
-                .catch(function() { resultSpan.textContent = 'Error'; })
+                .catch(function() { resultEl.textContent = 'Error'; })
                 .finally(function() { btn.disabled = false; });
         });
     }

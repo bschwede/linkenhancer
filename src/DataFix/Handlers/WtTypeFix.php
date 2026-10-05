@@ -25,6 +25,10 @@ final class WtTypeFix implements FixHandlerInterface
 {
     public const ID = 'wt_type_fix';
 
+    private const MODE_SET    = 'set';
+    private const MODE_REPAIR = 'repair';
+    private const MODE_REMOVE = 'remove';
+
     private const TYPE_TAG_TO_LETTER = [
         'INDI' => 'i',
         'FAM'  => 'f',
@@ -44,15 +48,33 @@ final class WtTypeFix implements FixHandlerInterface
 
     public function label(): string
     {
-        return I18N::translate('Fix wt= type letter (set/correct/remove)');
+        return I18N::translate('Fix wt= type letter (set/repair/remove)');
     }
 
     public function optionsHtml(Tree $tree, array $params): string
     {
-        return '<div class="alert alert-info">' . e(I18N::translate(
-            'This fix ensures the type letter in wt= link targets matches the resolved target record. '
-            . 'It will set a missing letter, correct a wrong one, or remove a letter when the target type has no mapping (e.g. media objects).'
-        )) . '</div>';
+        $mode = (string) ($params['wt_type_mode'] ?? self::MODE_REPAIR);
+
+        $html  = '<div class="row mb-3">';
+        $html .= '<label class="col-sm-3 col-form-label">' . e(I18N::translate('Mode')) . '</label>';
+        $html .= '<div class="col-sm-9">';
+        $html .= '<select class="form-select" name="wt_type_mode">';
+        $html .= '<option value="set" ' . ($mode === self::MODE_SET ? 'selected' : '') . '>' . e(I18N::translate('Set — add missing type letters')) . '</option>';
+        $html .= '<option value="repair" ' . ($mode === self::MODE_REPAIR ? 'selected' : '') . '>' . e(I18N::translate('Repair — correct wrong type letters')) . '</option>';
+        $html .= '<option value="remove" ' . ($mode === self::MODE_REMOVE ? 'selected' : '') . '>' . e(I18N::translate('Remove — strip all type letters')) . '</option>';
+        $html .= '</select></div></div>';
+
+        $html .= '<div class="alert alert-info small mb-3">';
+        if ($mode === self::MODE_SET) {
+            $html .= e(I18N::translate('Adds the correct type letter to wt= targets that have none (e.g. wt=@SOUR1@ → wt=s@SOUR1@).'));
+        } elseif ($mode === self::MODE_REMOVE) {
+            $html .= e(I18N::translate('Removes ALL type letters from wt= targets (e.g. wt=i@INDI1@ → wt=@INDI1@). The letters were originally only needed for JavaScript routing.'));
+        } else {
+            $html .= e(I18N::translate('Corrects the type letter when it does not match the resolved target record (e.g. wt=i@SOUR1@ → wt=s@SOUR1@).'));
+        }
+        $html .= '</div>';
+
+        return $html;
     }
 
     public function recordsToFix(Tree $tree, array $params): Collection
@@ -76,7 +98,7 @@ final class WtTypeFix implements FixHandlerInterface
 
     public function preview(GedcomRecord $record, array $params): string
     {
-        $result = $this->convert($record->gedcom(), $record->tree());
+        $result = $this->convert($record->gedcom(), $record->tree(), $params);
         $data_fix_service = Registry::container()->get(DataFixService::class);
 
         return $data_fix_service->gedcomDiff($record->tree(), $record->gedcom(), $result['gedcom']);
@@ -85,7 +107,7 @@ final class WtTypeFix implements FixHandlerInterface
     public function apply(GedcomRecord $record, array $params): void
     {
         $tree   = $record->tree();
-        $result = $this->convert($record->gedcom(), $tree);
+        $result = $this->convert($record->gedcom(), $tree, $params);
 
         if ($result['fixed'] > 0) {
             $record->updateRecord($result['gedcom'], false);
@@ -98,54 +120,68 @@ final class WtTypeFix implements FixHandlerInterface
 
     public function processBlocks(Tree $tree, array $params): array
     {
-        return ['processed' => 0, 'changed' => 0, 'skipped' => 0, 'errors' => []];
+        return ['processed' => 0, 'changed' => 0, 'skipped' => 0, 'errors' => [], 'details' => []];
     }
 
     /**
+     * @param array<string, string> $params
      * @return array{gedcom: string, fixed: int, skipped: int}
      */
-    private function convert(string $gedcom, Tree $source_tree): array
+    private function convert(string $gedcom, Tree $source_tree, array $params): array
     {
+        $mode    = (string) ($params['wt_type_mode'] ?? self::MODE_REPAIR);
         $fixed   = 0;
         $skipped = 0;
 
-        $gedcom = preg_match_all(XrefsService::RE_WT_TARGET, $gedcom, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER) > 0
-            ? preg_replace_callback(
-                XrefsService::RE_WT_TARGET,
-                function (array $m) use ($source_tree, &$fixed, &$skipped): string {
-                    $type_letter = $m['type'];
-                    $ref         = $m['xref'];
-                    $tree_name   = ($m['tree'] === '' ? $source_tree->name() : (string) $m['tree']);
+        if (preg_match_all(XrefsService::RE_WT_TARGET, $gedcom, $matches, PREG_SET_ORDER) === 0) {
+            return ['gedcom' => $gedcom, 'fixed' => 0, 'skipped' => 0];
+        }
 
-                    $actual_tag = $this->resolveTargetType($ref, $tree_name);
-                    if ($actual_tag === null) {
-                        $skipped++;
+        $gedcom = preg_replace_callback(
+            XrefsService::RE_WT_TARGET,
+            function (array $m) use ($mode, $source_tree, &$fixed, &$skipped): string {
+                $type_letter = $m['type'];
+                $ref         = $m['xref'];
+                $tree_name   = ($m['tree'] === '' ? $source_tree->name() : (string) $m['tree']);
+
+                // Mode REMOVE: strip all type letters, no resolution needed
+                if ($mode === self::MODE_REMOVE) {
+                    if ($type_letter !== '') {
+                        $fixed++;
+                        return str_replace('wt=' . $type_letter . '@', 'wt=@', $m[0]);
+                    }
+                    return $m[0];
+                }
+
+                // Modes SET and REPAIR need the actual target type
+                $actual_tag = $this->resolveTargetType($ref, $tree_name);
+                if ($actual_tag === null) {
+                    $skipped++;
+                    return $m[0];
+                }
+
+                $expected_letter = self::TYPE_TAG_TO_LETTER[$actual_tag] ?? null;
+
+                if ($mode === self::MODE_SET) {
+                    if ($type_letter !== '' || $expected_letter === null) {
                         return $m[0];
                     }
-
-                    $expected_letter = self::TYPE_TAG_TO_LETTER[$actual_tag] ?? null;
-
-                    if ($expected_letter === null) {
-                        if ($type_letter !== '') {
-                            $fixed++;
-                            return str_replace('wt=' . $type_letter . '@', 'wt=@', $m[0]);
-                        }
-                        return $m[0];
-                    }
-
-                    if ($type_letter === $expected_letter) {
-                        return $m[0];
-                    }
-
                     $fixed++;
-                    if ($type_letter === '') {
-                        return str_replace('wt=@', 'wt=' . $expected_letter . '@', $m[0]);
-                    }
-                    return str_replace('wt=' . $type_letter . '@', 'wt=' . $expected_letter . '@', $m[0]);
-                },
-                $gedcom
-            )
-            : $gedcom;
+                    return str_replace('wt=@', 'wt=' . $expected_letter . '@', $m[0]);
+                }
+
+                // MODE REPAIR (default)
+                if ($type_letter === '' || $expected_letter === null) {
+                    return $m[0];
+                }
+                if ($type_letter === $expected_letter) {
+                    return $m[0];
+                }
+                $fixed++;
+                return str_replace('wt=' . $type_letter . '@', 'wt=' . $expected_letter . '@', $m[0]);
+            },
+            $gedcom
+        );
 
         return ['gedcom' => $gedcom, 'fixed' => $fixed, 'skipped' => $skipped];
     }

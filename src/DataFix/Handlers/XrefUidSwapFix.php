@@ -214,6 +214,7 @@ final class XrefUidSwapFix implements FixHandlerInterface
         $changed   = 0;
         $skipped   = 0;
         $errors    = [];
+        $details   = [];
 
         $pre_filter = XrefsService::BLOCK_LE_LIKE;
 
@@ -222,6 +223,8 @@ final class XrefUidSwapFix implements FixHandlerInterface
             if ($text_settings === []) {
                 continue;
             }
+
+            $title_setting = $block_def['settings']['title'] ?? null;
 
             $query = DB::table('block AS b')
                 ->join('block_setting AS bs', 'bs.block_id', '=', 'b.block_id')
@@ -233,6 +236,7 @@ final class XrefUidSwapFix implements FixHandlerInterface
 
             $rows = $query->get();
 
+            $block_changes = 0;
             foreach ($rows as $row) {
                 $processed++;
                 $swapped = 0;
@@ -274,13 +278,28 @@ final class XrefUidSwapFix implements FixHandlerInterface
                         ->where('setting_name', '=', $row->setting_name)
                         ->update(['setting_value' => $new_value]);
                     $changed++;
+                    $block_changes += $swapped;
                 } else {
                     $skipped++;
                 }
             }
+
+            if ($processed > 0) {
+                $block_title = $title_setting !== null
+                    ? (string) DB::table('block_setting')
+                        ->where('block_id', '=', $rows->first()->block_id)
+                        ->where('setting_name', '=', $title_setting)
+                        ->value('setting_value')
+                    : '';
+                $details[] = [
+                    'name'    => $block_title !== '' ? $block_title : $block_def['title'],
+                    'module'  => $module_name,
+                    'changes' => $block_changes,
+                ];
+            }
         }
 
-        return ['processed' => $processed, 'changed' => $changed, 'skipped' => $skipped, 'errors' => $errors];
+        return ['processed' => $processed, 'changed' => $changed, 'skipped' => $skipped, 'errors' => $errors, 'details' => $details];
     }
 
     private function findTreeById(int $tree_id): ?Tree
