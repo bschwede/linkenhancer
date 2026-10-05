@@ -196,10 +196,10 @@ final class XrefsService { // stuff related with handling cross-references
             'prefix'     => 'f',
             'typestr'    => "'FAM'",
         ],
-        'MEDIA' => [
+        'OBJE' => [
             'table'      => 'media',
             'prefix'     => 'm',
-            'typestr'    => "'MEDIA'",
+            'typestr'    => "'OBJE'",
         ],
         'SOUR' => [
             'table'      => 'sources',

@@ -2,7 +2,7 @@
  * Cross-reference detail tab injection for non-INDI record pages.
  *
  * Uses a DOM observer (set up before body is parsed) to inject:
- *  - A tab into .nav.nav-tabs (NOTE, MEDIA, SOUR, REPO)
+ *  - A tab into .nav.nav-tabs (NOTE, OBJE, SOUR, REPO)
  *  - A link that opens the core #wt-ajax-modal (FAM)
  *
  * The observer fires during body parsing → injection happens before first paint.
@@ -81,7 +81,7 @@ function injectFamilyLink(titleEl, detailUrl, tabTitle) {
  *
  * @param {object} config
  * @param {string} config.url     - detail URL (e.g. /tree-name/le-xref-detail/I0001)
- * @param {string} config.rectype - record type (NOTE, MEDIA, SOUR, REPO, FAM)
+ * @param {string} config.rectype - record type (NOTE, OBJE, SOUR, REPO, FAM)
  * @param {string} config.tabTitle - translated tab title
  */
 export function initXrefDetailTab({ url, rectype, tabTitle }) {

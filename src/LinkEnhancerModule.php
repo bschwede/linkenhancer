@@ -159,7 +159,7 @@ class LinkEnhancerModule extends AbstractModule implements
      */
     public const XREF_DETAIL_HANDLER_KEYS = [
         'Note'       => 'NOTE',
-        'Media'      => 'MEDIA',
+        'Media'      => 'OBJE',
         'Source'     => 'SOUR',
         'Repository' => 'REPO',
         'Family'     => 'FAM',

@@ -42,7 +42,7 @@ use function view;
 
 /**
  * AJAX endpoint for the cross-reference detail tab on non-INDI record pages
- * (NOTE, MEDIA, SOUR, REPO, custom records) and the FAM modal.
+ * (NOTE, OBJE, SOUR, REPO, custom records) and the FAM modal.
  *
  * Route: /tree/{tree}/le-xref-detail/{xref}
  *
