@@ -57,7 +57,8 @@ Additionally there are some goodies more or less related with links:
 Although webtrees replaces [XREFs](https://wiki.genealogy.net/GEDCOM/XREF_ID) such as `@I2@` in notes with a **cross-reference** and it's appropriate display name, this is not so flexible. You can't determine the display name, which means that in the event of an error (due to XREF renumbering or typing error), it is not easy or possible to resolve the cross-reference to the corresponding data record without any doubt. Unfortunately, this does not work in the HTML block on the start page if you want to refer to a data record in the continuous text without inserting absolute references (such absolute references could be entered in the source code of the HTML block as follows, for example: `<a href="https://mytree.somewhere/tree/mytree/individual/I2">Jon Doe</a>`).
 
 > [!TIP]
-> The custom module [webtrees-mitalteli-show-xref](https://github.com/elysch/webtrees-mitalteli-show-xref) can help you find the XREF reference of personal data records.
+> The custom module [webtrees-mitalteli-show-xref](https://github.com/elysch/webtrees-mitalteli-show-xref) can help you find the XREF and UID reference of personal data records.
+> Some UIDs (38 characters lentgh) are automatically shortend by webtrees in the standard view - this module shows the unchanged UIDs.
 
 The enhanced links function is implemented via Javascript and searches in the rendered output of webtrees for `<a>` tags whose href attribute values begin with `#@`. This way it is possible to handle links in markdown and html markup. Because it is processed in the browser on client side, the existence of the cross-referenced data records in webtrees is not checked in advance. Errors only occur when the link is clicked (e. g. if the access to the ressource is restricted).
 
