@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-28 09:14+0200\n"
-"PO-Revision-Date: 2026-09-25 08:18+0000\n"
+"PO-Revision-Date: 2026-10-06 09:27+0000\n"
 "Last-Translator: Iberni2 <iberni2@noreply.codeberg.org>\n"
 "Language-Team: Catalan <https://translate.codeberg.org/projects/wt-modules/"
 "linkenhancer/ca/>\n"
@@ -43,10 +43,8 @@ msgstr ""
 msgid "Cross-references"
 msgstr "Referències creuades"
 
-#, fuzzy
-#| msgid "Permalink"
 msgid "External links"
-msgstr "Enllaç permanent"
+msgstr "Enllaços externs"
 
 msgid "Pictures"
 msgstr "Imatges"
@@ -62,7 +60,7 @@ msgstr "Objectiu no trobat"
 
 #. I18N: JS enhanced link
 msgid "Cross-reference"
-msgstr "Referències creuades"
+msgstr "%2$sreferència"
 
 #, php-format
 msgid "expected %1$s, is %2$s"
@@ -523,19 +521,14 @@ msgstr ""
 "en directe, cosa que pot ser lenta en arbres grans. Construeix l'índex amb "
 "l'script CLI (vegeu README.md, \"scripts CLI & manteniment\")."
 
-#, fuzzy
-#| msgid ""
-#| "Only broken targets: every matching record is loaded and its targets "
-#| "resolved on the server, which can be slow on large trees. Combine with "
-#| "the type/tree filters to narrow the scan."
 msgid ""
 "Only broken targets: every matching record is loaded and its targets "
 "resolved on the server, which can be slow on large trees. Combine with the "
 "type filter to narrow the scan."
 msgstr ""
-"Només objectius trencats: tots els registres coincidents es carreguen i els "
-"seus objectius es resolen al servidor, cosa que pot ser lenta en arbres "
-"grans. Combina-ho amb els filtres de tipus/arbre per acotar l'escaneig."
+"Només destinacions trencades: cada registre coincident es carrega i les "
+"seues destinacions es resolen al servidor, cosa que pot ser lenta en arbres "
+"grans. Combina-ho amb el filtre per tipus per a limitar l’anàlisi."
 
 msgid "referencing XREF"
 msgstr "referenciant XREF"
@@ -991,10 +984,10 @@ msgstr "Reinici dels nivells d'accés als elements de la llista - %s"
 msgid "with configured access level"
 msgstr "amb nivell d'accés configurat"
 
-#, fuzzy
-#| msgid "Per-tree overrides are available  in the control panel"
 msgid "Per-tree overrides are available in the control panel"
-msgstr "Les sobreescriptures per arbre estan disponibles al panell de control"
+msgstr ""
+"Es poden establir configuracions específiques per a cada arbre des del "
+"tauler de control."
 
 msgid "of which with this access level"
 msgstr "d'aquest nivell d'accés"
@@ -1025,23 +1018,18 @@ msgstr ""
 "En realitat, només es necessita la definició de la icona com a imatge de "
 "fons fent referència com a dades: URL."
 
-#, fuzzy
-#| msgid "Cross-Reference Overview"
 msgid "Non-admin cross-reference overview"
-msgstr "Referència - Visió general"
+msgstr ""
+"Visió general de les referències creuades per als usuaris no administradors."
 
-#, fuzzy
-#| msgid "Data rows"
 msgid "Max rows"
-msgstr "Línia de dades"
+msgstr "Màxim de files"
 
-#, fuzzy
-#| msgid "Classic cross-references"
 msgid "Record detail cross-references"
-msgstr "Referències creuades (Clàssiques)"
+msgstr "Referències creuades en els detalls del registre"
 
 msgid "Include block references"
-msgstr ""
+msgstr "Incloure referències als blocs"
 
 msgid "Confirmation Prompt - Do you really want to perform this action?"
 msgstr "Prompt de confirmació - Realment vols fer aquesta acció?"
@@ -1063,20 +1051,14 @@ msgstr ""
 msgid "This setting can be adjusted at any time."
 msgstr "Aquesta configuració es pot ajustar en qualsevol moment."
 
-#, fuzzy
-#| msgid "Cross-references"
 msgid "Outgoing references"
-msgstr "Referències creuades"
+msgstr "Referències creuades sortints"
 
-#, fuzzy
-#| msgid "Cross-references"
 msgid "Incoming references"
-msgstr "Referències creuades"
+msgstr "Referències entrants"
 
-#, fuzzy
-#| msgid "Cross-references"
 msgid "No cross-references found."
-msgstr "Referències creuades"
+msgstr "No s'han trobat referències creuades"
 
 msgid "Top menu"
 msgstr "Menú superior"
