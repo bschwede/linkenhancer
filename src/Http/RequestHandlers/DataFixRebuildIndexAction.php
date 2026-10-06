@@ -10,6 +10,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Schwendinger\Webtrees\Helpers\ClassName;
+use Schwendinger\Webtrees\Helpers\Functions;
 use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\IndexRebuildScheduler;
 
@@ -32,7 +33,7 @@ class DataFixRebuildIndexAction implements RequestHandlerInterface
         } elseif ($index === 'uid') {
             IndexRebuildScheduler::defer(['link' => false, 'uid' => true], $tree->id());
         } else {
-            return response(['error' => 'invalid index'], 400); //TODO compat fix needed
+            return response(['error' => 'invalid index'], Functions::httpStatusCode(400));
         }
 
         return response(['ok' => true, 'queued' => $index]);
