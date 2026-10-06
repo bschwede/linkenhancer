@@ -256,10 +256,10 @@ final class XrefUidSwapFix implements FixHandlerInterface
                 }
             }
 
-            if ($processed > 0) {
+            if ($new_value !==  $row->setting_value) { //$processed > 0) {
                 $block_title = $title_setting !== null
                     ? (string) DB::table('block_setting')
-                        ->where('block_id', '=', $rows->first()->block_id)
+                        ->where('block_id', '=', $row->block_id)
                         ->where('setting_name', '=', $title_setting)
                         ->value('setting_value')
                     : '';
