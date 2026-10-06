@@ -68,6 +68,7 @@ use Nyholm\Psr7\Stream;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Factories\CustomMarkdownFactory;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\AdminXrefOverviewData;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\DataFixBlocksAction;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\DataFixRebuildIndexAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoIdAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoUidAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoXrefAction;
@@ -437,6 +438,9 @@ class LinkEnhancerModule extends AbstractModule implements
 
         // Datafix: process block modules (AJAX POST)
         Functions::registerRoute('/admin/datafix-process-blocks/{tree}', 'le.datafix-process-blocks', DataFixBlocksAction::class, [], true);
+
+        // Datafix: trigger index rebuild (AJAX POST)
+        Functions::registerRoute('/admin/datafix-rebuild-index/{tree}', 'le.datafix-rebuild-index', DataFixRebuildIndexAction::class, [], true);
     }
  
 

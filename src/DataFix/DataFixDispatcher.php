@@ -34,6 +34,9 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\DataFix\Handlers\DanglingLinksFix;
 use Schwendinger\Webtrees\Module\LinkEnhancer\DataFix\Handlers\DuplicateUidFix;
 use Schwendinger\Webtrees\Module\LinkEnhancer\DataFix\Handlers\WtTypeFix;
 use Schwendinger\Webtrees\Module\LinkEnhancer\DataFix\Handlers\XrefUidSwapFix;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Services\IndexRebuildScheduler;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Services\UidIndexService;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 
 use function array_keys;
 use function view;
@@ -71,10 +74,13 @@ class DataFixDispatcher
     public function optionsHtml(Tree $tree, array $params): string
     {
         return view('_linkenhancer_::datafix-options', [
-            'tree'     => $tree,
-            'params'   => $params,
-            'handlers' => $this->handlers,
-            'active'   => $this->resolve($params),
+            'tree'         => $tree,
+            'params'       => $params,
+            'handlers'     => $this->handlers,
+            'active'       => $this->resolve($params),
+            'link_status'  => XrefsService::indexStatus(),
+            'uid_status'   => UidIndexService::indexStatus(),
+            'cron_plan'    => IndexRebuildScheduler::deferPlan(),
         ]);
     }
 

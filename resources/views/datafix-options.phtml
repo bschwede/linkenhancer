@@ -12,9 +12,21 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\DataFix\FixHandlerInterface;
  * @var array<string, string>  $params
  * @var array<string, FixHandlerInterface> $handlers
  * @var FixHandlerInterface    $active
+ * @var array{rows: int, scanned_at: string|null, fresh: bool} $link_status
+ * @var array{rows: int, last_run: string|null, fresh: bool}  $uid_status
+ * @var array{link: bool, uid: bool} $cron_plan
  */
 
 $active_id = $active->id();
+
+$link_ts = $link_status['scanned_at'] !== null
+    ? MoreI18N::localizedDatetimeString($link_status['scanned_at'])
+    : '—';
+$link_fresh = $link_status['fresh'] ? '' : ' <span class="text-warning">(' . e(I18N::translate('stale')) . ')</span>';
+$uid_ts = $uid_status['last_run'] !== null
+    ? MoreI18N::localizedDatetimeString($uid_status['last_run'])
+    : '—';
+$uid_fresh = $uid_status['fresh'] ? '' : ' <span class="text-warning">(' . e(I18N::translate('stale')) . ')</span>';
 ?>
 
 <div class="row mb-3">
@@ -27,6 +39,32 @@ $active_id = $active->id();
                 </option>
             <?php endforeach; ?>
         </select>
+    </div>
+</div>
+
+<div class="alert alert-light py-2 small">
+    <strong><?= e(I18N::translate('Index status')) ?>:</strong>
+    <div class="d-flex justify-content-between align-items-center">
+        <span>
+            <?= e(I18N::translate('Link index')) ?>: <?= I18N::number($link_status['rows']) ?> <?= e(I18N::translate('rows')) ?>,
+            <?= e(I18N::translate('last built')) ?>: <?= e($link_ts) ?><?= $link_fresh ?>
+        </span>
+        <?php if ($cron_plan['link']): ?>
+        <button type="button" class="btn btn-outline-secondary btn-sm" data-rebuild="link" title="<?= e(I18N::translate('Trigger link index rebuild')) ?>">
+            &#8635; <?= e(I18N::translate('Rebuild')) ?>
+        </button>
+        <?php endif; ?>
+    </div>
+    <div class="d-flex justify-content-between align-items-center">
+        <span>
+            <?= e(I18N::translate('UID index')) ?>: <?= I18N::number($uid_status['rows']) ?> <?= e(I18N::translate('rows')) ?>,
+            <?= e(I18N::translate('last built')) ?>: <?= e($uid_ts) ?><?= $uid_fresh ?>
+        </span>
+        <?php if ($cron_plan['uid']): ?>
+        <button type="button" class="btn btn-outline-secondary btn-sm" data-rebuild="uid" title="<?= e(I18N::translate('Trigger UID index rebuild')) ?>">
+            &#8635; <?= e(I18N::translate('Rebuild')) ?>
+        </button>
+        <?php endif; ?>
     </div>
 </div>
 
@@ -92,5 +130,25 @@ $active_id = $active->id();
                 .finally(function() { btn.disabled = false; });
         });
     }
+
+    var rebuildUrl = <?= json_encode(route('le.datafix-rebuild-index', ['tree' => $tree->name()]), JSON_THROW_ON_ERROR) ?>;
+    document.querySelectorAll('[data-rebuild]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var index = this.dataset.rebuild;
+            this.disabled = true;
+            var btn = this;
+            webtrees.httpPost(rebuildUrl, {index: index})
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    btn.innerHTML = '&#10003; <?= e(I18N::translate('queued')) ?>';
+                    btn.classList.remove('btn-outline-secondary');
+                    btn.classList.add('btn-success');
+                })
+                .catch(function() {
+                    btn.disabled = false;
+                    btn.title = 'Error';
+                });
+        });
+    });
 })();
 </script>

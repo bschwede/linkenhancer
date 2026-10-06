@@ -105,29 +105,6 @@ final class XrefUidSwapFix implements FixHandlerInterface
             )) . '</div>';
         }
 
-        // Index freshness status
-        $link_status = XrefsService::indexStatus();
-        $uid_status  = UidIndexService::indexStatus();
-        $html .= '<div class="alert alert-light py-2 small">';
-        $html .= '<strong>' . e(I18N::translate('Index status')) . ':</strong><br>';
-        $link_ts = $link_status['scanned_at'] !== null
-            ? MoreI18N::localizedDatetimeString($link_status['scanned_at'])
-            : '—';
-        $link_fresh = $link_status['fresh'] ? '' : ' <span class="text-warning">(' . e(I18N::translate('stale')) . ')</span>';
-        $html .= e(I18N::translate('Link index')) . ': ' . I18N::number($link_status['rows']) . ' ' . e(I18N::translate('rows')) . ', ' . e(I18N::translate('last built')) . ': ' . e($link_ts) . $link_fresh . '<br>';
-        $uid_ts = $uid_status['last_run'] !== null
-            ? MoreI18N::localizedDatetimeString($uid_status['last_run'])
-            : '—';
-        $uid_fresh = $uid_status['fresh'] ? '' : ' <span class="text-warning">(' . e(I18N::translate('stale')) . ')</span>';
-        $html .= e(I18N::translate('UID index')) . ': ' . I18N::number($uid_status['rows']) . ' ' . e(I18N::translate('rows')) . ', ' . e(I18N::translate('last built')) . ': ' . e($uid_ts) . $uid_fresh;
-        $html .= '</div>';
-
-        if ($direction === self::DIR_UID_TO_XREF && !$uid_status['fresh']) {
-            $html .= '<div class="alert alert-warning">' . e(I18N::translate(
-                'The UID index is stale or empty. The UID → XREF resolution may miss records. Consider running a full rebuild before applying this fix.'
-            )) . '</div>';
-        }
-
         $html .= '<div class="row mb-3"><label class="col-sm-3 col-form-label">' . e(I18N::translate('Record types')) . '</label>';
         $html .= '<div class="col-sm-9">';
         foreach ($rectypes as $rt => $label) {
@@ -136,11 +113,6 @@ final class XrefUidSwapFix implements FixHandlerInterface
             $html .= '<label class="form-check-label" for="rectype-' . e($rt) . '">' . e($label) . '</label></div>';
         }
         $html .= '</div></div>';
-
-        $html .= '<div class="row mb-3"><label class="col-sm-3 col-form-label">' . e(I18N::translate('Include blocks')) . '</label>';
-        $html .= '<div class="col-sm-9"><div class="form-check">';
-        $html .= '<input class="form-check-input" type="checkbox" name="include_blocks" value="1" id="include_blocks">';
-        $html .= '<label class="form-check-label" for="include_blocks">' . e(I18N::translate('Also process block modules')) . '</label></div></div></div>';
 
         return $html;
     }
