@@ -137,7 +137,10 @@ $uid_fresh = $uid_status['fresh'] ? '' : ' <span class="text-warning">(' . e(I18
             var index = this.dataset.rebuild;
             this.disabled = true;
             var btn = this;
-            webtrees.httpPost(rebuildUrl, {index: index})
+            
+            let formData = new FormData();
+            formData.append('index', index);
+            webtrees.httpPost(rebuildUrl, formData)
                 .then(function(r) { return r.json(); })
                 .then(function(data) {
                     btn.innerHTML = '&#10003; <?= e(I18N::translate('queued')) ?>';
