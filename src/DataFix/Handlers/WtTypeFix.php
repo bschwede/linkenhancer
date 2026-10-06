@@ -96,7 +96,12 @@ final class WtTypeFix implements FixHandlerInterface
 
     public function needsUpdate(GedcomRecord $record, array $params): bool
     {
-        return (bool) preg_match('/[?&@]wt=[a-z]?@[A-Za-z0-9][A-Za-z0-9:_.-]{0,254}@/', $record->gedcom());
+        $mode = (string) ($params['wt_type_mode'] ?? self::MODE_REPAIR);
+        $pattern = match ($mode) {
+            self::MODE_SET => XrefsService::getReWtTarget(false),
+            default => XrefsService::getReWtTarget(true) // repair and remove - type char must be set
+        };
+        return (bool) preg_match($pattern, $record->gedcom());
     }
 
     public function preview(GedcomRecord $record, array $params): string

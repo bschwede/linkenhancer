@@ -96,7 +96,18 @@ final class XrefsService { // stuff related with handling cross-references
      * for the full GEDCOM text. The prefix (?:^|[?&]) requires "wt=" to
      * be at the start or after ?/& - in raw GEDCOM it is preceded by "@".
      */
-    public const RE_WT_TARGET = '/(?:^|[?&])wt=(?P<type>[a-z])?@(?P<xref>' . self::RE_REF_CLASS . ')@(?P<tree>[^&]*)/';
+    private const RE_WT_TARGET_TMPL = '/(?:^|[@?&])wt=(?P<type>[a-z]__TYPEQUANT__)@(?P<xref>' . self::RE_REF_CLASS . ')@(?P<tree>[^&]*)/';
+    public const RE_WT_TARGET = '/(?:^|[@?&])wt=(?P<type>[a-z])?@(?P<xref>' . self::RE_REF_CLASS . ')@(?P<tree>[^&]*)/';
+    
+    public static function getReWtTarget(?bool $type_avail = null): string
+    {
+        $type_quant = match($type_avail) {
+            true => '{1}',
+            false => '{0}',
+            default => '?'
+        };
+        return str_replace('__TYPEQUANT__', $type_quant, self::RE_WT_TARGET_TMPL);
+    }
 
     /**
      * The optional "id" parameter: id=@REF@ - at most one per link, the
