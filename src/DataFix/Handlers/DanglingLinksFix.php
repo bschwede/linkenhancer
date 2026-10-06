@@ -16,7 +16,7 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\Services\IdResolver;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\UidIndexService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 
-use function preg_match_all;
+use function preg_match;
 use function strlen;
 
 final class DanglingLinksFix implements FixHandlerInterface
@@ -58,15 +58,14 @@ final class DanglingLinksFix implements FixHandlerInterface
 
     public function needsUpdate(GedcomRecord $record, array $params): bool
     {
-        $gedcom = $record->gedcom();
-        $tree   = $record->tree();
+        // Permissive pre-check: does the GEDCOM contain any wt= targets?
+        if (!preg_match('/[?&@]wt=[a-z]?@[A-Za-z0-9][A-Za-z0-9:_.-]{0,254}@/', $record->gedcom())) {
+            return false;
+        }
 
-        preg_match_all(XrefsService::RE_WT_TARGET, $gedcom, $matches, PREG_SET_ORDER);
-        foreach ($matches as $m) {
-            $ref       = $m['xref'];
-            $tree_name = ($m['tree'] === '' ? $tree->name() : (string) $m['tree']);
-
-            if (!$this->targetExists($ref, $tree_name, $tree)) {
+        $tree = $record->tree();
+        foreach (XrefsService::extractWtTargetsFromGedcom($record->gedcom(), $tree->name()) as $target) {
+            if (!$this->targetExists($target['xref'], $target['tree'], $tree)) {
                 return true;
             }
         }
@@ -76,20 +75,15 @@ final class DanglingLinksFix implements FixHandlerInterface
 
     public function preview(GedcomRecord $record, array $params): string
     {
-        $tree    = $record->tree();
-        $gedcom  = $record->gedcom();
+        $tree     = $record->tree();
         $findings = [];
 
-        preg_match_all(XrefsService::RE_WT_TARGET, $gedcom, $matches, PREG_SET_ORDER);
-        foreach ($matches as $m) {
-            $ref       = $m['xref'];
-            $tree_name = ($m['tree'] === '' ? $tree->name() : (string) $m['tree']);
-
-            if (!$this->targetExists($ref, $tree_name, $tree)) {
-                $reason = strlen($ref) < IdResolver::UID_MIN_LENGTH
-                    ? I18N::translate('no record %s in tree "%s"', '@' . $ref . '@', $tree_name)
-                    : I18N::translate('UID not found in tree "%s"', $tree_name);
-                $findings[] = 'wt=' . ($m['type'] ?? '') . '@' . $ref . '@' . $m['tree'] . ' → ' . $reason;
+        foreach (XrefsService::extractWtTargetsFromGedcom($record->gedcom(), $tree->name()) as $target) {
+            if (!$this->targetExists($target['xref'], $target['tree'], $tree)) {
+                $reason = strlen($target['xref']) < IdResolver::UID_MIN_LENGTH
+                    ? I18N::translate('no record %s in tree "%s"', '@' . $target['xref'] . '@', $target['tree'])
+                    : I18N::translate('UID not found in tree "%s"', $target['tree']);
+                $findings[] = 'wt=' . $target['type'] . '@' . $target['xref'] . '@' . $target['tree'] . ' → ' . $reason;
             }
         }
 

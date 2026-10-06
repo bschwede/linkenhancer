@@ -345,39 +345,6 @@ final class XrefUidSwapFix implements FixHandlerInterface
             $gedcom
         );
 
-        // HTML le-links: <a ... href="#@url">text</a>
-        $gedcom = preg_replace_callback(
-            XrefsService::RE_LE_HTML_LINK,
-            function (array $m) use ($direction, $source_tree, &$swapped, &$skipped): string {
-                $token    = $m[0];
-                $href_pos = strpos($token, 'href="');
-                $quote    = '"';
-                if ($href_pos === false) {
-                    $href_pos = strpos($token, "href='");
-                    $quote    = "'";
-                }
-                if ($href_pos === false) {
-                    return $token;
-                }
-                $href_start = $href_pos + 6;
-                $href_end   = strpos($token, $quote, $href_start);
-                if ($href_end === false) {
-                    return $token;
-                }
-                $href_val = substr($token, $href_start, $href_end - $href_start);
-                $is_le    = str_starts_with($href_val, '#@');
-                $url      = $this->convertWtTargets(
-                    $is_le ? substr($href_val, 2) : $href_val,
-                    $direction,
-                    $source_tree,
-                    $swapped,
-                    $skipped
-                );
-                return substr($token, 0, $href_start) . ($is_le ? '#@' : '') . $url . substr($token, $href_end);
-            },
-            $gedcom
-        );
-
         return ['gedcom' => $gedcom, 'swapped' => $swapped, 'skipped' => $skipped];
     }
 
@@ -395,7 +362,8 @@ final class XrefUidSwapFix implements FixHandlerInterface
             XrefsService::RE_WT_TARGET,
             function (array $m) use ($direction, $source_tree, &$swapped, &$skipped): string {
                 $value = $m['xref'];
-                $target_tree_name = ($m['tree'] === '' ? $source_tree->name() : (string) $m['tree']);
+                $url_tree = ($m['tree'] !== '' ? XrefsService::stripDiaSuffix((string) $m['tree']) : '');
+                $target_tree_name = ($url_tree === '' ? $source_tree->name() : $url_tree);
 
                 if ($direction === self::DIR_XREF_TO_UID) {
                     if (strlen($value) >= IdResolver::UID_MIN_LENGTH) {

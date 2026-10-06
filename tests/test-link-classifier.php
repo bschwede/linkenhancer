@@ -632,6 +632,30 @@ check('T50g sentinels do not collide with block module names',
     array_values(array_intersect([XrefsService::RECTYPE_ALL_GEDCOM, XrefsService::RECTYPE_ALL_BLOCKS], XrefsService::blockModuleNames())),
     []);
 
+// T51: tree names with spaces
+check('T51a extractLinkTargets tree name with space', XrefsService::extractLinkTargets('[x](#@wt=i@I1@My Family)'), [['xref' => 'I1', 'tree' => 'My Family', 'type' => 'i']]);
+check('T51b extractLinkTargets tree name with multiple spaces', XrefsService::extractLinkTargets('[x](#@wt=f@F1@Great Grand Family Tree)'), [['xref' => 'F1', 'tree' => 'Great Grand Family Tree', 'type' => 'f']]);
+check('T51c extractLinkTargets HTML tree with space', XrefsService::extractLinkTargets('<a href="#@wt=i@I50@My Family">x</a>'), [['xref' => 'I50', 'tree' => 'My Family', 'type' => 'i']]);
+
+// T52: dia suffix handling
+check('T52a stripDiaSuffix basic', [XrefsService::stripDiaSuffix('My Family dia')], ['My Family']);
+check('T52b stripDiaSuffix uppercase DIA', [XrefsService::stripDiaSuffix('My Family DIA')], ['My Family']);
+check('T52c stripDiaSuffix no suffix', [XrefsService::stripDiaSuffix('My Family')], ['My Family']);
+check('T52d stripDiaSuffix empty string', [XrefsService::stripDiaSuffix('')], ['']);
+check('T52e extractLinkTargets tree with dia suffix', XrefsService::extractLinkTargets('[x](#@wt=i@I1@My Family dia)'), [['xref' => 'I1', 'tree' => 'My Family', 'type' => 'i']]);
+check('T52f extractLinkTargets tree with DIA suffix', XrefsService::extractLinkTargets('[x](#@wt=i@I1@My Family DIA)'), [['xref' => 'I1', 'tree' => 'My Family', 'type' => 'i']]);
+
+// T53: extractWtTargetsFromGedcom (Markdown-only, 2-step)
+$gedcom_sample = "0 @I1@ INDI\n1 NOTE see [person](#@wt=i@I2@My Family) and [fam](#@wt=f@F1@&wt=i@I3@My Family dia)\n2 CONT plus ![pic](#@wt=n@N1@)";
+check('T53a extractWtTargetsFromGedcom multiple links', XrefsService::extractWtTargetsFromGedcom($gedcom_sample, 'Source Tree'), [
+    ['xref' => 'I2', 'tree' => 'My Family', 'type' => 'i'],
+    ['xref' => 'F1', 'tree' => 'Source Tree', 'type' => 'f'],
+    ['xref' => 'I3', 'tree' => 'My Family', 'type' => 'i'],
+    ['xref' => 'N1', 'tree' => 'Source Tree', 'type' => 'n'],
+]);
+check('T53b extractWtTargetsFromGedcom no links', XrefsService::extractWtTargetsFromGedcom("0 @I1@ INDI\n1 NAME John", 'T'), []);
+check('T53c extractWtTargetsFromGedcom classic only', XrefsService::extractWtTargetsFromGedcom("0 @I1@ INDI\n1 NOTE see @I2@", 'T'), []);
+
 echo "\n{$total} tests, {$failures} failure(s)\n";
 exit($failures === 0 ? 0 : 1);
 }

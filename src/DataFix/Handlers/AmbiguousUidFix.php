@@ -16,7 +16,7 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\Services\IdResolver;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\UidIndexService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 
-use function preg_match_all;
+use function preg_match;
 use function strlen;
 
 final class AmbiguousUidFix implements FixHandlerInterface
@@ -59,21 +59,21 @@ final class AmbiguousUidFix implements FixHandlerInterface
 
     public function needsUpdate(GedcomRecord $record, array $params): bool
     {
-        $gedcom = $record->gedcom();
-        $tree   = $record->tree();
+        // Permissive pre-check: does the GEDCOM contain any UID-length wt= targets?
+        if (!preg_match('/[?&@]wt=[a-z]?@[A-Za-z0-9][A-Za-z0-9:_.-]{17,254}@/', $record->gedcom())) {
+            return false;
+        }
 
-        preg_match_all(XrefsService::RE_WT_TARGET, $gedcom, $matches, PREG_SET_ORDER);
-        foreach ($matches as $m) {
-            $ref = $m['xref'];
-            if (strlen($ref) < IdResolver::UID_MIN_LENGTH) {
+        $tree = $record->tree();
+        foreach (XrefsService::extractWtTargetsFromGedcom($record->gedcom(), $tree->name()) as $target) {
+            if (strlen($target['xref']) < IdResolver::UID_MIN_LENGTH) {
                 continue;
             }
-            $tree_name = ($m['tree'] === '' ? $tree->name() : (string) $m['tree']);
-            $target    = $this->findTree($tree_name);
-            if ($target === null) {
+            $t = $this->findTree($target['tree']);
+            if ($t === null) {
                 continue;
             }
-            $results = UidIndexService::lookup($ref, $target->id());
+            $results = UidIndexService::lookup($target['xref'], $t->id());
             if ($results->count() > 1) {
                 return true;
             }
@@ -85,24 +85,20 @@ final class AmbiguousUidFix implements FixHandlerInterface
     public function preview(GedcomRecord $record, array $params): string
     {
         $tree     = $record->tree();
-        $gedcom   = $record->gedcom();
         $findings = [];
 
-        preg_match_all(XrefsService::RE_WT_TARGET, $gedcom, $matches, PREG_SET_ORDER);
-        foreach ($matches as $m) {
-            $ref = $m['xref'];
-            if (strlen($ref) < IdResolver::UID_MIN_LENGTH) {
+        foreach (XrefsService::extractWtTargetsFromGedcom($record->gedcom(), $tree->name()) as $target) {
+            if (strlen($target['xref']) < IdResolver::UID_MIN_LENGTH) {
                 continue;
             }
-            $tree_name = ($m['tree'] === '' ? $tree->name() : (string) $m['tree']);
-            $target    = $this->findTree($tree_name);
-            if ($target === null) {
+            $t = $this->findTree($target['tree']);
+            if ($t === null) {
                 continue;
             }
-            $results = UidIndexService::lookup($ref, $target->id());
+            $results = UidIndexService::lookup($target['xref'], $t->id());
             if ($results->count() > 1) {
                 $xrefs = $results->map(static fn (object $r): string => '@' . $r->xref . '@')->implode(', ');
-                $findings[] = $ref . ' → ' . $results->count() . ' ' . I18N::translate('records') . ': ' . $xrefs;
+                $findings[] = $target['xref'] . ' → ' . $results->count() . ' ' . I18N::translate('records') . ': ' . $xrefs;
             }
         }
 

@@ -19,7 +19,10 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\Services\UidIndexService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 
 use function preg_match_all;
+use function preg_replace_callback;
 use function strlen;
+use function strrpos;
+use function substr;
 
 final class WtTypeFix implements FixHandlerInterface
 {
@@ -93,7 +96,7 @@ final class WtTypeFix implements FixHandlerInterface
 
     public function needsUpdate(GedcomRecord $record, array $params): bool
     {
-        return (bool) preg_match_all(XrefsService::RE_WT_TARGET, $record->gedcom(), $m, PREG_SET_ORDER) > 0;
+        return (bool) preg_match('/[?&@]wt=[a-z]?@[A-Za-z0-9][A-Za-z0-9:_.-]{0,254}@/', $record->gedcom());
     }
 
     public function preview(GedcomRecord $record, array $params): string
@@ -133,16 +136,52 @@ final class WtTypeFix implements FixHandlerInterface
         $fixed   = 0;
         $skipped = 0;
 
-        if (preg_match_all(XrefsService::RE_WT_TARGET, $gedcom, $matches, PREG_SET_ORDER) === 0) {
-            return ['gedcom' => $gedcom, 'fixed' => 0, 'skipped' => 0];
+        // Markdown le-links: [text](#@url) / ![pic](#@url)
+        $gedcom = preg_replace_callback(
+            XrefsService::RE_LE_LINK,
+            function (array $m) use ($mode, $source_tree, &$fixed, &$skipped): string {
+                $token = $m[0];
+                $pos   = strrpos($token, '(#@');
+                if ($pos === false) {
+                    return $token;
+                }
+                $head = substr($token, 0, $pos + 3);
+                $url  = $this->fixWtTargets(
+                    substr($token, $pos + 3, -1),
+                    $mode,
+                    $source_tree,
+                    $fixed,
+                    $skipped
+                );
+                return $head . $url . ')';
+            },
+            $gedcom
+        );
+
+        return ['gedcom' => $gedcom, 'fixed' => $fixed, 'skipped' => $skipped];
+    }
+
+    /**
+     * Fix all wt= type letters in one extracted URL (RE_WT_TARGET is designed
+     * for the extracted URL, not the full GEDCOM text).
+     */
+    private function fixWtTargets(
+        string $url,
+        string $mode,
+        Tree $source_tree,
+        int &$fixed,
+        int &$skipped
+    ): string {
+        if (!preg_match_all(XrefsService::RE_WT_TARGET, $url, $matches, PREG_SET_ORDER)) {
+            return $url;
         }
 
-        $gedcom = preg_replace_callback(
+        return preg_replace_callback(
             XrefsService::RE_WT_TARGET,
             function (array $m) use ($mode, $source_tree, &$fixed, &$skipped): string {
                 $type_letter = $m['type'];
                 $ref         = $m['xref'];
-                $tree_name   = ($m['tree'] === '' ? $source_tree->name() : (string) $m['tree']);
+                $tree_name   = ($m['tree'] === '' ? $source_tree->name() : XrefsService::stripDiaSuffix((string) $m['tree']));
 
                 // Mode REMOVE: strip all type letters, no resolution needed
                 if ($mode === self::MODE_REMOVE) {
@@ -180,10 +219,8 @@ final class WtTypeFix implements FixHandlerInterface
                 $fixed++;
                 return str_replace('wt=' . $type_letter . '@', 'wt=' . $expected_letter . '@', $m[0]);
             },
-            $gedcom
+            $url
         );
-
-        return ['gedcom' => $gedcom, 'fixed' => $fixed, 'skipped' => $skipped];
     }
 
     private function resolveTargetType(string $ref, string $target_tree_name): ?string
