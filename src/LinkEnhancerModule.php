@@ -231,11 +231,11 @@ class LinkEnhancerModule extends AbstractModule implements
 ,{"title":"GitHub - webtrees related projects", "url":"https://github.com/topics/webtrees?o=desc&s=updated"}
 ]'; // standard additional links for webtrees manual top menu
     
-    public const HELP_TABLE = 'route_help_map';
+    public const HELP_TABLE = 'le_route_help_map';
 
     public const HELP_CSV = __DIR__ . DIRECTORY_SEPARATOR . 'Schema' . DIRECTORY_SEPARATOR . 'SeedHelpTable.csv';
 
-    public const int HELP_SCHEMA_TARGET_VERSION = 6;
+    public const int HELP_SCHEMA_TARGET_VERSION = 7;
 
     public const PREFERENCES_SCHEMA = [
         // required settings:
