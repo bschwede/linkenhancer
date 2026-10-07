@@ -42,6 +42,7 @@ use Illuminate\Support\Collection;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\UidIndexService;
 
 use function count;
@@ -96,7 +97,7 @@ class GotoUidAction implements RequestHandlerInterface
             return redirect($visible[0]['record']->url());
         }
 
-        return $this->viewResponse('_linkenhancer_::goto-uid-select', [
+        return $this->viewResponse(LinkEnhancerModule::MODULE_NAME . '::goto-uid-select', [
             'title' => I18N::translate('Multiple records for UID %s', $uid),
             'tree'  => $this->headerTree($tree),
             'uid'   => $uid,

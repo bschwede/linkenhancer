@@ -80,6 +80,18 @@ $module = Registry::container()->get(LinkEnhancerModule::class);
     </p>
 </div>
 
+<!-- Renumber XREFs link -->
+<div class="row mt-3">
+    <p class="col-sm-3 text-center">
+        <a href="<?= route('module', ['module' => $module->name(), 'action' => 'AdminRenumber']) ?>" class="btn btn-outline-primary">
+            <?= I18N::translate('Renumber XREFs') ?>
+        </a>
+    </p>
+    <p class="col-sm-9 text-start text-muted">
+        <?= I18N::translate('Renumber records whose XREF collides with another family tree, keeping linkenhancer links in sync.') ?>
+    </p>
+</div>
+
 <div class="linkenhancer mb-5">
     <form method="post" enctype="multipart/form-data" onsubmit="return checkForm();">
         <?= csrf_field() ?>

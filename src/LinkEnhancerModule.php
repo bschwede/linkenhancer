@@ -39,6 +39,7 @@ use Schwendinger\Webtrees\Helpers\Functions;
 use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Fisharebest\Webtrees\Module\AbstractModule;
 use Fisharebest\Webtrees\Module\ModuleConfigInterface;
+use Fisharebest\Webtrees\Module\ModuleDataFixInterface;
 use Fisharebest\Webtrees\Module\ModuleConfigTrait;
 use Fisharebest\Webtrees\Module\ModuleCustomInterface;
 use Schwendinger\Webtrees\Traits\ModuleCustomTrait;
@@ -51,11 +52,15 @@ use Fisharebest\Webtrees\Module\ModuleTabTrait;
 use Fisharebest\Webtrees\Tree;
 use Fisharebest\Webtrees\User;
 use Fisharebest\Webtrees\Registry;
+use Fisharebest\Webtrees\Services\AdminService;
+use Fisharebest\Webtrees\Services\TimeoutService;
 use Fisharebest\Webtrees\Services\TreeService;
 use Fisharebest\Webtrees\Session;
 use Fisharebest\Webtrees\Validator;
 use Fisharebest\Webtrees\View;
 use Illuminate\Database\Capsule\Manager as DB;
+use Illuminate\Support\Collection;
+use Schwendinger\Webtrees\Module\LinkEnhancer\DataFix\DataFixDispatcher;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -63,6 +68,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Nyholm\Psr7\Stream;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Factories\CustomMarkdownFactory;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\AdminXrefOverviewData;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\DataFixBlocksAction;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\DataFixRebuildIndexAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoIdAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoUidAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoXrefAction;
@@ -72,7 +79,9 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpWthbActio
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\XrefDetailData;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\XrefOverviewListData;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Services\IndexRebuildScheduler;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\MarkdownEditorActivationService;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Services\RenumberWithLinksService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\UidIndexService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\WthbService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefDetailService;
@@ -94,6 +103,7 @@ class LinkEnhancerModule extends AbstractModule implements
     ModuleCustomInterface,
     ModuleGlobalInterface,
     ModuleConfigInterface,
+    ModuleDataFixInterface,
     ModuleListInterface,
     ModuleTabInterface,
     SettingInterface
@@ -427,6 +437,12 @@ class LinkEnhancerModule extends AbstractModule implements
 
         // XREF overview - server-side DataTables data endpoint (admin only)
         Functions::registerRoute('/admin-xref-overview-data', AdminXrefOverviewData::class);
+
+        // Datafix: process block modules (AJAX POST)
+        Functions::registerRoute('/admin/datafix-process-blocks/{tree}', 'le.datafix-process-blocks', DataFixBlocksAction::class, [], true);
+
+        // Datafix: trigger index rebuild (AJAX POST)
+        Functions::registerRoute('/admin/datafix-rebuild-index/{tree}', 'le.datafix-rebuild-index', DataFixRebuildIndexAction::class, [], true);
     }
  
 
@@ -989,7 +1005,174 @@ class LinkEnhancerModule extends AbstractModule implements
 
 
     /**
-     * Reset 
+     * Admin page: select a tree, preview its cross-tree XREF collisions,
+     * and offer to renumber them (keeping le-links and the le_* index in sync).
+     */
+    public function getAdminRenumberAction(ServerRequestInterface $request): ResponseInterface
+    {
+        $this->layout = 'layouts/administration';
+
+        $params  = Validator::queryParams($request);
+        $tree_id = (int) $params->integer('target_tree', 0);
+        $trees   = Registry::container()->get(TreeService::class)->all();
+
+        $tree           = null;
+        $xrefs          = [];
+        $inbound_counts = [];
+        if ($tree_id > 0) {
+            foreach ($trees as $t) {
+                if ($t->id() === $tree_id) {
+                    $tree = $t;
+                    break;
+                }
+            }
+            if ($tree !== null) {
+                $xrefs = Registry::container()->get(AdminService::class)->duplicateXrefs($tree);
+                foreach (array_keys($xrefs) as $xref) {
+                    $inbound_counts[$xref] = DB::table(XrefsService::INDEX_LINK_TABLE)
+                        ->where('target_xref', '=', $xref)
+                        ->where(static function ($q) use ($tree): void {
+                            $q->where(static function ($q2) use ($tree): void {
+                                $q2->whereNull('target_tree')->where('file', '=', $tree->id());
+                            })->orWhere('target_tree', '=', $tree->name());
+                        })
+                        ->count();
+                }
+            }
+        }
+
+        $plan         = IndexRebuildScheduler::deferPlan();
+        $index_status = XrefsService::indexStatus();
+
+        $renumber_result = Session::get('le-renumber-result', null);
+        Session::forget('le-renumber-result');
+
+        return $this->viewResponse($this->name() . '::renumber-with-links', [
+            'title'            => /*I18N: renumber xrefs */ I18N::translate('%s (with links)', MoreI18N::xlate('Renumber XREFs')),
+            'module'           => $this,
+            'tree'             => $tree,
+            'trees'            => $trees,
+            'xrefs'            => $xrefs,
+            'inbound_counts'   => $inbound_counts,
+            'defer_index'      => $plan['link'] || $plan['uid'],
+            'index_fresh'      => $index_status['fresh'],
+            'index_scanned_at' => $index_status['scanned_at'],
+            'renumber_result'  => $renumber_result,
+        ]);
+    }
+
+    /**
+     * Admin action: execute the single-pass renumber for the selected tree.
+     */
+    public function postAdminRenumberAction(ServerRequestInterface $request): ResponseInterface
+    {
+        $params  = Validator::parsedBody($request);
+        $tree_id = (int) $params->integer('target_tree', 0);
+        $trees   = Registry::container()->get(TreeService::class)->all();
+
+        $tree = null;
+        foreach ($trees as $t) {
+            if ($t->id() === $tree_id) {
+                $tree = $t;
+                break;
+            }
+        }
+
+        $redirect = route('module', ['module' => $this->name(), 'action' => 'AdminRenumber']
+            + ($tree_id > 0 ? ['target_tree' => $tree_id] : []));
+
+        if ($tree === null) {
+            FlashMessages::addMessage(MoreI18N::xlate('No valid tree selected.'), 'danger');
+            return redirect($redirect);
+        }
+
+        if ($tree->hasPendingEdit()) {
+            FlashMessages::addMessage(
+                MoreI18N::xlate('You need to accept or reject all pending changes before renumbering.'),
+                'danger'
+            );
+            return redirect($redirect);
+        }
+
+        $service = new RenumberWithLinksService(
+            Registry::container()->get(AdminService::class),
+            Registry::container()->get(TimeoutService::class),
+            Registry::container()->get(TreeService::class),
+        );
+        $report = $service->renumber($tree);
+
+        Session::put('le-renumber-result', [
+            'per'         => $report['per'] ?? [],
+            'timed_out'   => (bool) ($report['timed_out'] ?? false),
+            'defer_index' => (bool) ($report['defer_index'] ?? false),
+        ]);
+
+        $type = !empty($report['timed_out']) ? 'warning' : 'success';
+        FlashMessages::addMessage($this->renumberSummary($report), $type);
+
+        return redirect($redirect);
+    }
+
+    /**
+     * @param array<string, mixed> $report
+     */
+    private function renumberSummary(array $report): string
+    {
+        if (!empty($report['timed_out'])) {
+            return MoreI18N::xlate('The time limit was reached; no changes were made.');
+        }
+
+        $message = MoreI18N::xlate(
+            'Renumbered %1$d conflicting record(s) and updated %2$d le-link reference(s).',
+            (int) $report['count'],
+            (int) $report['links']
+        );
+
+        $message .= $report['defer_index']
+            ? ' ' . MoreI18N::xlate('The le_* index will be refreshed by the cron job.')
+            : ' ' . MoreI18N::xlate('The le_* index was updated inline.');
+
+        return $message;
+    }
+
+    // ─── ModuleDataFixInterface ─────────────────────────────────────────────
+
+    private ?DataFixDispatcher $data_fix_dispatcher = null;
+
+    public function dataFixDispatcher(): DataFixDispatcher
+    {
+        return $this->data_fix_dispatcher ??= new DataFixDispatcher();
+    }
+
+    public function fixOptions(Tree $tree): string
+    {
+        $params = isset($_GET['fix_type']) ? ['fix_type' => (string) $_GET['fix_type']] : [];
+        return $this->dataFixDispatcher()->optionsHtml($tree, $params);
+    }
+
+    public function recordsToFix(Tree $tree, array $params): Collection
+    {
+        return $this->dataFixDispatcher()->recordsToFix($tree, $params);
+    }
+
+    public function doesRecordNeedUpdate(GedcomRecord $record, array $params): bool
+    {
+        return $this->dataFixDispatcher()->needsUpdate($record, $params);
+    }
+
+    public function previewUpdate(GedcomRecord $record, array $params): string
+    {
+        return $this->dataFixDispatcher()->preview($record, $params);
+    }
+
+    public function updateRecord(GedcomRecord $record, array $params): void
+    {
+        $this->dataFixDispatcher()->apply($record, $params);
+    }
+
+
+    /**
+     * Reset
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
