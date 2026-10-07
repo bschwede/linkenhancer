@@ -34,7 +34,6 @@ use Fisharebest\Webtrees\Services\DataFixService;
 use Fisharebest\Webtrees\Services\TreeService;
 use Fisharebest\Webtrees\Tree;
 use Illuminate\Support\Collection;
-use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Schwendinger\Webtrees\Module\LinkEnhancer\DataFix\FixHandlerInterface;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\IdResolver;
@@ -42,7 +41,6 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\Services\IndexRebuildScheduler;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\UidIndexService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 
-use function boolval;
 use function preg_match;
 use function preg_replace_callback;
 use function strlen;
@@ -107,11 +105,9 @@ final class XrefUidSwapFix implements FixHandlerInterface
         $gedcom    = $record->gedcom();
 
         if ($direction === self::DIR_XREF_TO_UID) {
-            //return (bool) preg_match('/(?:^|[?&])wt=[a-z]?@[A-Za-z0-9][A-Za-z0-9:_.-]{0,17}(@|$)/', $gedcom);
             return (bool) preg_match('/[?&@](?:wt|id)=[a-z]?@[A-Za-z0-9][A-Za-z0-9:_.-]{0,17}@/', $gedcom);
         }
 
-        // return (bool) preg_match('/(?:^|[?&])wt=[a-z]?@[A-Za-z0-9][A-Za-z0-9:_.-]{17,254}@/', $gedcom);
         return (bool) preg_match('/[?&@](?:wt|id)=[a-z]?@[A-Za-z0-9][A-Za-z0-9:_.-]{17,254}@/', $gedcom);
     }
 
