@@ -23,6 +23,7 @@ use function preg_replace_callback;
 use function strlen;
 use function strrpos;
 use function substr;
+use function view;
 
 final class WtTypeFix implements FixHandlerInterface
 {
@@ -57,27 +58,7 @@ final class WtTypeFix implements FixHandlerInterface
     public function optionsHtml(Tree $tree, array $params): string
     {
         $mode = (string) ($params['wt_type_mode'] ?? self::MODE_REPAIR);
-
-        $html  = '<div class="row mb-3">';
-        $html .= '<label class="col-sm-3 col-form-label">' . e(I18N::translate('Mode')) . '</label>';
-        $html .= '<div class="col-sm-9">';
-        $html .= '<select class="form-select" name="wt_type_mode">';
-        $html .= '<option value="set" ' . ($mode === self::MODE_SET ? 'selected' : '') . '>' . e(I18N::translate('Set — add missing type letters')) . '</option>';
-        $html .= '<option value="repair" ' . ($mode === self::MODE_REPAIR ? 'selected' : '') . '>' . e(I18N::translate('Repair — correct wrong type letters')) . '</option>';
-        $html .= '<option value="remove" ' . ($mode === self::MODE_REMOVE ? 'selected' : '') . '>' . e(I18N::translate('Remove — strip all type letters')) . '</option>';
-        $html .= '</select></div></div>';
-
-        $html .= '<div class="alert alert-info small mb-3">';
-        if ($mode === self::MODE_SET) {
-            $html .= e(I18N::translate('Adds the correct type letter to wt= targets that have none (e.g. wt=@SOUR1@ → wt=s@SOUR1@).'));
-        } elseif ($mode === self::MODE_REMOVE) {
-            $html .= e(I18N::translate('Removes ALL type letters from wt= targets (e.g. wt=i@INDI1@ → wt=@INDI1@). The letters were originally only needed for JavaScript routing.'));
-        } else {
-            $html .= e(I18N::translate('Corrects the type letter when it does not match the resolved target record (e.g. wt=i@SOUR1@ → wt=s@SOUR1@).'));
-        }
-        $html .= '</div>';
-
-        return $html;
+        return view('_linkenhancer_::datafix-wt-type-options', ['mode' => $mode]);
     }
 
     public function recordsToFix(Tree $tree, array $params): Collection
