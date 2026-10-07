@@ -55,8 +55,8 @@ final class XrefUidSwapFix implements FixHandlerInterface
 {
     public const ID = 'xref_uid_swap';
 
-    private const DIR_XREF_TO_UID = 'xref_to_uid';
-    private const DIR_UID_TO_XREF = 'uid_to_xref';
+    public const DIR_XREF_TO_UID = 'xref_to_uid';
+    public const DIR_UID_TO_XREF = 'uid_to_xref';
 
     /** @var Tree[] tree_name => Tree (per-request cache) */
     private array $tree_cache = [];
@@ -73,48 +73,10 @@ final class XrefUidSwapFix implements FixHandlerInterface
 
     public function optionsHtml(Tree $tree, array $params): string
     {
-        $direction = (string) ($params['direction'] ?? self::DIR_XREF_TO_UID);
-        $uid_active = UidIndexService::uidFeatureEnabled();
-
-        $rectypes = [
-            'INDI'   => MoreI18N::xlate('Individual'),
-            'FAM'    => MoreI18N::xlate('Family'),
-            'NOTE'   => MoreI18N::xlate('Note'),
-            'SOUR'   => MoreI18N::xlate('Source'),
-            'REPO'   => MoreI18N::xlate('Repository'),
-            '_LOC'   => MoreI18N::xlate('Location'),
-            'OBJE'   => MoreI18N::xlate('Media object'),
-        ];
-
-        $html  = '<div class="row mb-3">';
-        $html .= '<label class="col-sm-3 col-form-label">' . e(I18N::translate('Direction')) . '</label>';
-        $html .= '<div class="col-sm-9">';
-        $html .= '<select class="form-select" name="direction" required>';
-        $html .= '<option value="xref_to_uid" ' . ($direction === self::DIR_XREF_TO_UID ? 'selected' : '') . '>' . e(I18N::translate('XREF → UID')) . '</option>';
-        $html .= '<option value="uid_to_xref" ' . ($direction === self::DIR_UID_TO_XREF ? 'selected' : '') . '>' . e(I18N::translate('UID → XREF')) . '</option>';
-        $html .= '</select></div></div>';
-
-        if ($direction === self::DIR_XREF_TO_UID && !$uid_active) {
-            $html .= '<div class="alert alert-info">' . e(I18N::translate(
-                'Note: the current setting "UID active" is OFF. After converting XREFs to UIDs, you should enable "UID active" for the links to resolve correctly.'
-            )) . '</div>';
-        }
-        if ($direction === self::DIR_UID_TO_XREF && $uid_active) {
-            $html .= '<div class="alert alert-info">' . e(I18N::translate(
-                'Note: the current setting "UID active" is ON. After converting UIDs to XREFs, you should disable "UID active" for the links to resolve correctly.'
-            )) . '</div>';
-        }
-
-        $html .= '<div class="row mb-3"><label class="col-sm-3 col-form-label">' . e(I18N::translate('Record types')) . '</label>';
-        $html .= '<div class="col-sm-9">';
-        foreach ($rectypes as $rt => $label) {
-            $html .= '<div class="form-check form-check-inline">';
-            $html .= '<input class="form-check-input" type="checkbox" name="rectype_' . e($rt) . '" value="1" id="rectype-' . e($rt) . '" checked>';
-            $html .= '<label class="form-check-label" for="rectype-' . e($rt) . '">' . e($label) . '</label></div>';
-        }
-        $html .= '</div></div>';
-
-        return $html;
+        return view(LinkEnhancerModule::MODULE_NAME . '::datafix-xref-uid-swap-options', [
+            'direction'  => (string) ($params['direction'] ?? self::DIR_XREF_TO_UID),
+            'uid_active' => UidIndexService::uidFeatureEnabled(),
+        ]);
     }
 
     public function recordsToFix(Tree $tree, array $params): Collection
