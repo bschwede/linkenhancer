@@ -39,6 +39,7 @@ use Fisharebest\Webtrees\Validator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\IdResolver;
 
 use function array_map;
@@ -106,7 +107,7 @@ class GotoIdAction implements RequestHandlerInterface
             $candidates
         );
 
-        return $this->viewResponse('_linkenhancer_::goto-uid-select', [
+        return $this->viewResponse(LinkEnhancerModule::MODULE_NAME . '::goto-uid-select', [
             'title' => I18N::translate('Multiple records for %s', $id),
             'tree'  => $this->headerTree($tree),
             'uid'   => $id,

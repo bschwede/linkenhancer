@@ -177,7 +177,7 @@ final class MarkdownEditorActivationService
         /**
          * @var  LinkEnhancerModule $linkenhancer
          */
-        $linkenhancer = $module_service->findByName('_linkenhancer_', true);
+        $linkenhancer = $module_service->findByName(LinkEnhancerModule::MODULE_NAME, true);
 
         if (!($linkenhancer !== null && $linkenhancer->isEnabled())) {
             return MoreI18N::xlate('The module “%s” has been disabled.', $linkenhancer->title());

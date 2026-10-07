@@ -29,6 +29,7 @@ namespace Schwendinger\Webtrees\Module\LinkEnhancer\DataFix;
 use Fisharebest\Webtrees\GedcomRecord;
 use Fisharebest\Webtrees\Tree;
 use Illuminate\Support\Collection;
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\DataFix\Handlers\AmbiguousUidFix;
 use Schwendinger\Webtrees\Module\LinkEnhancer\DataFix\Handlers\DanglingLinksFix;
 use Schwendinger\Webtrees\Module\LinkEnhancer\DataFix\Handlers\DuplicateUidFix;
@@ -73,7 +74,7 @@ class DataFixDispatcher
 
     public function optionsHtml(Tree $tree, array $params): string
     {
-        return view('_linkenhancer_::datafix-options', [
+        return view(LinkEnhancerModule::MODULE_NAME . '::datafix-options', [
             'tree'         => $tree,
             'params'       => $params,
             'handlers'     => $this->handlers,

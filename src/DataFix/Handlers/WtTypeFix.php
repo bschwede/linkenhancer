@@ -12,6 +12,7 @@ use Fisharebest\Webtrees\Services\DataFixService;
 use Fisharebest\Webtrees\Services\TreeService;
 use Fisharebest\Webtrees\Tree;
 use Illuminate\Support\Collection;
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\DataFix\FixHandlerInterface;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\IdResolver;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\IndexRebuildScheduler;
@@ -58,7 +59,7 @@ final class WtTypeFix implements FixHandlerInterface
     public function optionsHtml(Tree $tree, array $params): string
     {
         $mode = (string) ($params['wt_type_mode'] ?? self::MODE_REPAIR);
-        return view('_linkenhancer_::datafix-wt-type-options', ['mode' => $mode]);
+        return view(LinkEnhancerModule::MODULE_NAME . '::datafix-wt-type-options', ['mode' => $mode]);
     }
 
     public function recordsToFix(Tree $tree, array $params): Collection
