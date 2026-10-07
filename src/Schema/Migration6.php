@@ -23,7 +23,7 @@
 
 namespace Schwendinger\Webtrees\Module\LinkEnhancer\Schema;
 
-use Illuminate\Database\Capsule\Manager as DB;
+use Fisharebest\Webtrees\DB;
 use Fisharebest\Webtrees\Schema\MigrationInterface;
 
 use function in_array;
@@ -49,7 +49,7 @@ class Migration6 implements MigrationInterface
     {
         // (1) Table rename
         if (DB::schema()->hasTable('route_help_map') && !DB::schema()->hasTable('le_route_help_map')) {
-            $prefix = DB::prefix();
+            $prefix = DB::getTablePrefix();
             $old    = $prefix . 'route_help_map';
             $new    = $prefix . 'le_route_help_map';
             $driver = DB::connection()->getDriverName();
