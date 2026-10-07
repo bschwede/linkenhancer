@@ -489,12 +489,16 @@ class LinkEnhancerModule extends AbstractModule implements
             $withSubcontext = $this->getPref(self::PREF_WTHB_SUBCONTEXT, true);
             $help = $this->wthb->getContextHelp($activeRouteInfo, $withSubcontext, $cfg_js_debug_console);
             if ($cfg_js_debug_console) {
-                $this->docReadyJs .= "console.debug('LE-Mod help rows:', " . json_encode($help['result']) . ");";
-                $this->docReadyJs .= "console.debug('LE-Mod help sql:', " . json_encode($help['sql']) . ");";
-                if ($withSubcontext) $this->docReadyJs .= "console.debug('LE-Mod help subcontext:', " . json_encode($help['subcontext']) . ");";
+                if (is_array($help)) {
+                    $this->docReadyJs .= "console.debug('LE-Mod help rows:', " . json_encode($help['result']) . ");";
+                    $this->docReadyJs .= "console.debug('LE-Mod help sql:', " . json_encode($help['sql']) . ");";
+                    if ($withSubcontext) $this->docReadyJs .= "console.debug('LE-Mod help subcontext:', " . json_encode($help['subcontext']) . ");";
+                } else {
+                    $this->docReadyJs .= "console.debug('LE-Mod help:', " . json_encode($help) . ");";
+                }
             }
 
-            $help_url = $help['help_url']; //gettype(value: $help) == 'string' ? $help : $help->first()->url;
+            $help_url = $help['help_url'] ?? $help; //gettype(value: $help) == 'string' ? $help : $help->first()->url;
             $linksJsonString = match($this->getPref(self::PREF_WTHB_LINKS_TYPE, true)) {
                 1 => $this->getPref( self::PREF_WTHB_LINKS_JSON, true), // user defined
                 2 => self::STD_WTHB_LINKS_JSON, // default json
@@ -508,7 +512,7 @@ class LinkEnhancerModule extends AbstractModule implements
                 'wiki_url'        => $this->getPref(self::PREF_GENWIKI_LINK),
                 'wthb_url'        => $this->getPref(self::PREF_WTHB_STD_LINK),
                 'dotranslate'     => $this->getPref(self::PREF_WTHB_TRANSLATE, true), // 0=off, 1=user defined, 2=on
-                'subcontext'      => $withSubcontext ? $help['subcontext'] : [],
+                'subcontext'      => $withSubcontext && is_array($help) ? $help['subcontext'] : [],
                 'tocnsearch_url'  => ($this->getPref(self::PREF_WTHB_TOCNSEARCH, true) ? route(HelpWthbAction::class, ['language' => I18N::languageTag()]) : ''),
                 'openInNewTab'    => $this->getPref(self::PREF_WTHB_OPEN_IN_NEW_TAB, true, true),
                 'splitNavlink'    => $this->getPref(self::PREF_WTHB_SPLIT_TOPMENU, true),
