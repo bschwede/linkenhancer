@@ -1045,9 +1045,6 @@ class LinkEnhancerModule extends AbstractModule implements
             }
         }
 
-        $plan         = IndexRebuildScheduler::deferPlan();
-        $index_status = XrefsService::indexStatus();
-
         $renumber_result = Session::get('le-renumber-result', null);
         Session::forget('le-renumber-result');
 
@@ -1058,10 +1055,10 @@ class LinkEnhancerModule extends AbstractModule implements
             'trees'            => $trees,
             'xrefs'            => $xrefs,
             'inbound_counts'   => $inbound_counts,
-            'defer_index'      => $plan['link'] || $plan['uid'],
-            'index_fresh'      => $index_status['fresh'],
-            'index_scanned_at' => $index_status['scanned_at'],
             'renumber_result'  => $renumber_result,
+            'link_status'      => XrefsService::indexStatus(),
+            'uid_status'       => UidIndexService::indexStatus(),
+            'cron_plan'        => IndexRebuildScheduler::deferPlan(),
         ]);
     }
 

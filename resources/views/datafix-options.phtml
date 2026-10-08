@@ -6,6 +6,7 @@ use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Tree;
 use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Schwendinger\Webtrees\Module\LinkEnhancer\DataFix\FixHandlerInterface;
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 
 /**
  * @var Tree                   $tree
@@ -42,31 +43,12 @@ $uid_fresh = $uid_status['fresh'] ? '' : ' <span class="text-warning">(' . e(I18
     </div>
 </div>
 
-<div class="alert alert-light py-2 small">
-    <strong><?= e(I18N::translate('Index status')) ?>:</strong>
-    <div class="d-flex justify-content-between align-items-center">
-        <span>
-            <?= e(I18N::translate('Link index')) ?>: <?= I18N::number($link_status['rows']) ?> <?= e(I18N::translate('rows')) ?>,
-            <?= e(I18N::translate('last built')) ?>: <?= e($link_ts) ?><?= $link_fresh ?>
-        </span>
-        <?php if ($cron_plan['link']): ?>
-        <button type="button" class="btn btn-outline-secondary btn-sm" data-rebuild="link" title="<?= e(I18N::translate('Trigger link index rebuild')) ?>">
-            &#8635; <?= e(I18N::translate('Rebuild')) ?>
-        </button>
-        <?php endif; ?>
-    </div>
-    <div class="d-flex justify-content-between align-items-center">
-        <span>
-            <?= e(I18N::translate('UID index')) ?>: <?= I18N::number($uid_status['rows']) ?> <?= e(I18N::translate('rows')) ?>,
-            <?= e(I18N::translate('last built')) ?>: <?= e($uid_ts) ?><?= $uid_fresh ?>
-        </span>
-        <?php if ($cron_plan['uid']): ?>
-        <button type="button" class="btn btn-outline-secondary btn-sm" data-rebuild="uid" title="<?= e(I18N::translate('Trigger UID index rebuild')) ?>">
-            &#8635; <?= e(I18N::translate('Rebuild')) ?>
-        </button>
-        <?php endif; ?>
-    </div>
-</div>
+<?= view(LinkEnhancerModule::MODULE_NAME . '::datafix-index-status', [
+    'tree' => $tree,
+    'link_status' => $link_status,
+    'uid_status' => $uid_status,
+    'cron_plan' => $cron_plan,
+]) ?>
 
 <?= $active->optionsHtml($tree, $params) ?>
 

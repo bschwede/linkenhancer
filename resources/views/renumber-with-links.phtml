@@ -37,14 +37,16 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
  * @var iterable<int,Tree>   $trees
  * @var array<string,string> $xrefs  xref => record type
  * @var array<string,int>    $inbound_counts  xref => number of inbound le-links
- * @var bool                 $defer_index  the le_* index will be rebuilt by cron
- * @var bool                 $index_fresh  the link index is up to date
- * @var string|null          $index_scanned_at  last full index scan timestamp
  * @var array|null           $renumber_result  previous run result (from session)
+ * @var array{rows: int, scanned_at: string|null, fresh: bool} $link_status
+ * @var array{rows: int, last_run: string|null, fresh: bool}  $uid_status
+ * @var array{link: bool, uid: bool} $cron_plan 
  */
 
+$defer_index = $cron_plan['link'] || $cron_plan['uid']; //the le_* index will be rebuilt by cron
+$index_fresh = $index_status['fresh'] ?? false;
+$index_scanned_at = $index_status['scanned_at'] ?? null; // last full index scan timestamp
 $count = count($xrefs);
-
 ?>
 
 <?= view('components/breadcrumbs', ['links' => [
@@ -59,6 +61,13 @@ $count = count($xrefs);
 <p><?= MoreI18N::xlate('In a family tree, each record has an internal reference number (called an “XREF”) such as “F123” or “R14”.') ?></p>
 <p><?= MoreI18N::xlate('You can renumber the records in a family tree, so that these internal reference numbers are not duplicated in any other family tree.') ?></p>
 <p><?= e(I18N::translate('This renumbers the records whose XREF collides with another family tree, and keeps the linkenhancer le-links and the le_* index in sync.')) ?></p>
+
+<?= view(LinkEnhancerModule::MODULE_NAME . '::datafix-index-status', [
+    'tree' => $tree,
+    'link_status' => $link_status,
+    'uid_status' => $uid_status,
+    'cron_plan' => $cron_plan,
+]) ?>
 
 <?php if ($renumber_result !== null): ?>
     <div class="alert alert-<?= $renumber_result['timed_out'] ? 'warning' : 'success' ?>">
