@@ -50,8 +50,7 @@ use function trim;
 
 /**
  * Resolve an id (a record XREF or a UID) to a record. The standard navigation
- * target for every linkenhancer link (see
- * .opencode/plans/linkenhancer-uid-link-target-cross-tree-goto.md, Teil C).
+ * target for every linkenhancer link.
  *
  * Routes: /tree/{tree}/goto-id/{id} (tree-scoped) and /goto-id/{id} (global).
  * Resolves via the shared IdResolver (length-aware, bidirectional XREF/UID).
