@@ -29,24 +29,16 @@ namespace Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers;
 use Fisharebest\Webtrees\FlashMessages;
 use Fisharebest\Webtrees\GedcomRecord;
 use Fisharebest\Webtrees\Http\Exceptions\HttpNotFoundException;
-use Fisharebest\Webtrees\Http\ViewResponseTrait;
 use Fisharebest\Webtrees\I18N;
-use Fisharebest\Webtrees\Registry;
-use Fisharebest\Webtrees\Services\TreeService;
-use Fisharebest\Webtrees\Site;
-use Fisharebest\Webtrees\Tree;
 use Fisharebest\Webtrees\Validator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\IdResolver;
 
 use function array_map;
 use function count;
-use function method_exists;
 use function redirect;
-use function trim;
 
 /**
  * Resolve an id (a record XREF or a UID) to a record. The standard navigation
@@ -61,9 +53,8 @@ use function trim;
  * (A1/C1). Unlike goto-xref there is no isXref() gate: the {id} parameter is
  * read verbatim (loose string) so it may be an XREF or a UID.
  */
-class GotoIdAction implements RequestHandlerInterface
+class GotoIdAction extends AbstractGotoAction
 {
-    use ViewResponseTrait;
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
@@ -101,7 +92,7 @@ class GotoIdAction implements RequestHandlerInterface
                 'uid'      => (string) $candidate['uid'],
                 'rectype'  => $candidate['rectype'],
                 'tag_path' => $candidate['tag_path'],
-                'label'    => self::label($candidate['record']),
+                'label'    => static::recordLabel($candidate['record']),
             ],
             $candidates
         );
@@ -112,39 +103,5 @@ class GotoIdAction implements RequestHandlerInterface
             'uid'   => $id,
             'hits'  => $hits,
         ]);
-    }
-
-    /**
-     * The tree the page layout shows in its header (genealogy menu, tree
-     * title, header search): the tree-scoped route's tree, otherwise the
-     * site's default tree (HomePage pattern) so the global selection page
-     * still gets a full header. Null when the user can see no tree at all.
-     */
-    private function headerTree(?Tree $request_tree): ?Tree
-    {
-        if ($request_tree instanceof Tree) {
-            return $request_tree;
-        }
-
-        $trees   = Registry::container()->get(TreeService::class)->all();
-        $default = Site::getPreference('DEFAULT_GEDCOM');
-
-        return $trees->get($default) ?? $trees->first();
-    }
-
-    /**
-     * A short, user-facing label for a record: a human name when the record
-     * type provides one (individual / family), otherwise its XREF.
-     */
-    private static function label(GedcomRecord $record): string
-    {
-        if (method_exists($record, 'fullName')) {
-            $label = trim((string) $record->fullName());
-            if ($label !== '') {
-                return $label;
-            }
-        }
-
-        return '@' . $record->xref() . '@';
     }
 }
