@@ -18,7 +18,9 @@
   "author": "Bernd Schwendinger",
   "type": "module",
   "scripts": {
-    "test": "mocha 'resources/js/tests/**/*.test.js' --require jsdom-global/register"
+    "test": "npm run test:php && npm run test:js",
+    "test:js": "mocha 'resources/js/tests/**/*.test.js' --require jsdom-global/register",
+    "test:php": "bash -c 'fail=0; for f in tests/test-*.php; do echo \"--- $f\"; php \"$f\" || fail=1; done; exit $fail'"
   },
   "dependencies": {
     "tiny-markdown-editor": "^0.2.34"

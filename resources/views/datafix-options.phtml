@@ -1,0 +1,139 @@
+<?php
+
+declare(strict_types=1);
+
+use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\Tree;
+use Schwendinger\Webtrees\Helpers\MoreI18N;
+use Schwendinger\Webtrees\Module\LinkEnhancer\DataFix\FixHandlerInterface;
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
+
+/**
+ * @var Tree                   $tree
+ * @var array<string, string>  $params
+ * @var array<string, FixHandlerInterface> $handlers
+ * @var FixHandlerInterface    $active
+ * @var array{rows: int, scanned_at: string|null, fresh: bool} $link_status
+ * @var array{rows: int, last_run: string|null, fresh: bool}  $uid_status
+ * @var array{link: bool, uid: bool} $cron_plan
+ */
+
+$active_id = $active->id();
+
+$link_ts = $link_status['scanned_at'] !== null
+    ? MoreI18N::localizedDatetimeString($link_status['scanned_at'])
+    : '—';
+$link_fresh = $link_status['fresh'] ? '' : ' <span class="text-warning">(' . e(I18N::translate('stale')) . ')</span>';
+$uid_ts = $uid_status['last_run'] !== null
+    ? MoreI18N::localizedDatetimeString($uid_status['last_run'])
+    : '—';
+$uid_fresh = $uid_status['fresh'] ? '' : ' <span class="text-warning">(' . e(I18N::translate('stale')) . ')</span>';
+?>
+
+<div class="row mb-3">
+    <label class="col-sm-3 col-form-label" for="fix_type"><?= e(MoreI18N::xlate('Fix type')) ?></label>
+    <div class="col-sm-9">
+        <select class="form-select" id="fix_type" name="fix_type">
+            <?php foreach ($handlers as $id => $handler): ?>
+                <option value="<?= e($id) ?>" <?= $id === $active_id ? 'selected' : '' ?>>
+                    <?= e($handler->label()) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+</div>
+
+<?= view(LinkEnhancerModule::MODULE_NAME . '::datafix-index-status', [
+    'tree' => $tree,
+    'link_status' => $link_status,
+    'uid_status' => $uid_status,
+    'cron_plan' => $cron_plan,
+]) ?>
+
+<?= $active->optionsHtml($tree, $params) ?>
+
+<?php if ($active_id === 'xref_uid_swap'): ?>
+<div class="row mb-3">
+    <label class="col-sm-3 col-form-label"><?= e(I18N::translate('Block modules')) ?></label>
+    <div class="col-sm-9">
+        <button type="button" class="btn btn-outline-primary btn-sm" id="btn-process-blocks">
+            <?= e(I18N::translate('Process block modules')) ?>
+        </button>
+        <div id="blocks-result" class="ms-2 small text-muted d-inline-block"></div>
+    </div>
+</div>
+<?php endif; ?>
+
+<script>
+(function() {
+    var select = document.getElementById('fix_type');
+    if (select) {
+        select.addEventListener('change', function() {
+            var url = new URL(window.location.href);
+            url.searchParams.set('fix_type', this.value);
+            window.location.href = url.toString();
+        });
+    }
+
+    var btn = document.getElementById('btn-process-blocks');
+    if (btn) {
+        var blocksUrl = <?= json_encode(route('le.datafix-process-blocks', ['tree' => $tree->name()]), JSON_THROW_ON_ERROR) ?>;
+        btn.addEventListener('click', function() {
+            btn.disabled = true;
+            var resultEl = document.getElementById('blocks-result');
+            resultEl.textContent = '...';
+            var form = btn.closest('form');
+            var params = new URLSearchParams();
+            if (form) {
+                var direction = form.querySelector('[name="direction"]');
+                if (direction) params.set('direction', direction.value);
+            }
+            var url = blocksUrl + (blocksUrl.indexOf('?') !== -1 ? '&' : '?') + params.toString();
+            webtrees.httpPost(url)
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    var html = '<span class="me-2">' + data.processed + ' <?= e(I18N::translate('checked')) ?>, '
+                        + data.changed + ' <?= e(I18N::translate('updated')) ?>, '
+                        + data.skipped + ' <?= e(I18N::translate('skipped')) ?></span>';
+                    if (data.details && data.details.length > 0) {
+                        html += '<ul class="list-unstyled small mb-0 mt-1">';
+                        for (var i = 0; i < data.details.length; i++) {
+                            var d = data.details[i];
+                            var icon = d.changes > 0 ? '<span class="text-success">&#10003;</span> ' : '<span class="text-muted">&#8212;</span> ';
+                            html += '<li>' + icon + d.name + ' <span class="text-muted">(' + d.module + ')</span>';
+                            if (d.changes > 0) html += ' — ' + d.changes + ' <?= e(I18N::translate('change(s)')) ?>';
+                            html += '</li>';
+                        }
+                        html += '</ul>';
+                    }
+                    resultEl.innerHTML = html;
+                })
+                .catch(function() { resultEl.textContent = 'Error'; })
+                .finally(function() { btn.disabled = false; });
+        });
+    }
+
+    var rebuildUrl = <?= json_encode(route('le.datafix-rebuild-index', ['tree' => $tree->name()]), JSON_THROW_ON_ERROR) ?>;
+    document.querySelectorAll('[data-rebuild]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var index = this.dataset.rebuild;
+            this.disabled = true;
+            var btn = this;
+            
+            let formData = new FormData();
+            formData.append('index', index);
+            webtrees.httpPost(rebuildUrl, formData)
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    btn.innerHTML = '&#10003; <?= e(I18N::translate('queued')) ?>';
+                    btn.classList.remove('btn-outline-secondary');
+                    btn.classList.add('btn-success');
+                })
+                .catch(function() {
+                    btn.disabled = false;
+                    btn.title = 'Error';
+                });
+        });
+    });
+})();
+</script>

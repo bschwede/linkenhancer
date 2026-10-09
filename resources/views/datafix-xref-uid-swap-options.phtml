@@ -1,0 +1,79 @@
+<?php
+
+declare(strict_types=1);
+
+use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Helpers\MoreI18N;
+use Schwendinger\Webtrees\Module\LinkEnhancer\DataFix\Handlers\XrefUidSwapFix;
+
+/**
+ * @var string $direction
+ * @var bool   $uid_active
+ */
+
+$rectypes = [
+    'INDI' => MoreI18N::xlate('Individual'),
+    'FAM' => MoreI18N::xlate('Family'),
+    'NOTE' => MoreI18N::xlate('Note'),
+    'SOUR' => MoreI18N::xlate('Source'),
+    'REPO' => MoreI18N::xlate('Repository'),
+    '_LOC' => MoreI18N::xlate('Location'),
+    'OBJE' => MoreI18N::xlate('Media object'),
+];
+
+
+$hints = [
+    XrefUidSwapFix::DIR_XREF_TO_UID => [
+        'text' => I18N::translate('Note: the current setting "%s" is OFF. You should enable this option for the links to resolve correctly.', I18N::translate('UID lookup')),
+        'uid_active' => false,
+    ],
+    XrefUidSwapFix::DIR_UID_TO_XREF => [
+        'text' => I18N::translate('Note: the current setting "%s" is ON. After converting UIDs to XREFs, you can disable this option if the index is not used otherwise.', I18N::translate('UID lookup')),
+        'uid_active' => true,
+    ],
+];
+?>
+        <div class="row mb-3">
+            <label class="col-sm-3 col-form-label"><?= e(I18N::translate('Direction')) ?></label>
+            <div class="col-sm-9">
+                <select class="form-select" name="direction" id="direction" required>
+                    <option value="xref_to_uid" <?= ($direction === XrefUidSwapFix::DIR_XREF_TO_UID ? 'selected' : '') ?>><?= e(I18N::translate('XREF → UID')) ?></option>
+                    <option value="uid_to_xref" <?= ($direction === XrefUidSwapFix::DIR_UID_TO_XREF ? 'selected' : '') ?>><?= e(I18N::translate('UID → XREF')) ?></option>
+                </select>
+            </div>
+        </div>
+
+        <div id="direction_hint" class="alert alert-info"></div>
+
+        <div class="row mb-3">
+            <label class="col-sm-3 col-form-label"><?= e(I18N::translate('Record types')) ?></label>
+            <div class="col-sm-9">
+            <?php foreach ($rectypes as $rt => $label): ?>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" name="rectype_<?= e($rt) ?>" value="1" id="rectype-<?= e($rt) ?>" checked>
+                    <label class="form-check-label" for="rectype-<?= e($rt) ?>"><?=  e($label) ?></label>
+                </div>
+            <?php endforeach; ?>
+            </div>
+        </div>
+
+
+<script>
+(function() {
+    var select = document.getElementById('direction');
+    var desc   = document.getElementById('direction_hint');
+    if (!select || !desc) return;
+    var hints = <?= json_encode($hints, JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+    
+    const changeHint = (value) => {
+        let hint = hints[value] || null;
+        if (!hint) return;
+        let text = hint['uid_active'] == <?= $uid_active ? 'true' : 'false' ?> ? hint['text'] || '' : '';
+        desc.textContent = text;
+        desc.style.display = text !== '' ? 'block' : 'none';
+    }
+    
+    select.addEventListener('change', function() { changeHint(this.value); });
+    changeHint(select.value);
+})();
+</script>

@@ -28,8 +28,7 @@ declare(strict_types=1);
 //
 // Created as part of the P1 execution; run it MANUALLY on the live
 // instance (it is NOT a gate for the implementation, it only feeds
-// the later calibration of the DataTables defaults - see
-// .opencode/plans/linkenhancer-xref-overview-p1-scaling.md, Q5):
+// the later calibration of the DataTables defaults:
 //
 //   php modules_v4/linkenhancer/tests/p1-measure.php [--tree=<id>]
 //

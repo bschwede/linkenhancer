@@ -39,6 +39,7 @@ use Fisharebest\Webtrees\Validator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\IdResolver;
 
 use function array_map;
@@ -49,8 +50,7 @@ use function trim;
 
 /**
  * Resolve an id (a record XREF or a UID) to a record. The standard navigation
- * target for every linkenhancer link (see
- * .opencode/plans/linkenhancer-uid-link-target-cross-tree-goto.md, Teil C).
+ * target for every linkenhancer link.
  *
  * Routes: /tree/{tree}/goto-id/{id} (tree-scoped) and /goto-id/{id} (global).
  * Resolves via the shared IdResolver (length-aware, bidirectional XREF/UID).
@@ -106,7 +106,7 @@ class GotoIdAction implements RequestHandlerInterface
             $candidates
         );
 
-        return $this->viewResponse('_linkenhancer_::goto-uid-select', [
+        return $this->viewResponse(LinkEnhancerModule::MODULE_NAME . '::goto-uid-select', [
             'title' => I18N::translate('Multiple records for %s', $id),
             'tree'  => $this->headerTree($tree),
             'uid'   => $id,

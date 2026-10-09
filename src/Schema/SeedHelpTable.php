@@ -26,6 +26,7 @@ namespace Schwendinger\Webtrees\Module\LinkEnhancer\Schema;
 
 use Fisharebest\Webtrees\DB;
 use Fisharebest\Webtrees\Schema\SeedInterface;
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Helpers\Functions;
 
 /**
@@ -116,7 +117,7 @@ class SeedHelpTable implements SeedInterface
      */
     public function run(): void
     {
-        $table = 'route_help_map';
+        $table = LinkEnhancerModule::HELP_TABLE;
         if (!DB::schema()->hasTable($table)) return;
         $now = date('Y-m-d H:i:s');
 
@@ -129,7 +130,7 @@ class SeedHelpTable implements SeedInterface
             }
 
             try {
-                DB::table('route_help_map')->truncate();
+                DB::table($table)->truncate();
             } finally {
                 // Re-open a transaction for webtrees' middleware to commit, even if
                 // the DDL above failed.

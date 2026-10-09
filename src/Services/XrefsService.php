@@ -37,7 +37,12 @@ use InvalidArgumentException;
 use Throwable;
 
 use function e;
+use function preg_match_all;
+use function preg_replace_callback;
+use function str_replace;
+use function strrpos;
 use function strtotime;
+use function substr;
 use function time;
 
 final class XrefsService { // stuff related with handling cross-references
@@ -81,10 +86,28 @@ final class XrefsService { // stuff related with handling cross-references
 
     /**
      * One "wt" parameter value: wt=[type]@REF@[tree] - the optional type
-     * letter may be absent, the "@tree" part may be empty (same tree). REF is
-     * an XREF or a UID (RE_REF_CLASS).
+     * letter may be absent, the "@tree" part may be empty (same tree) or
+     * contain spaces (e.g. "My Family"). The tree value may carry a
+     * trailing " dia" suffix (stripped by stripDiaSuffix()). REF is an
+     * XREF or a UID (RE_REF_CLASS).
+     *
+     * IMPORTANT: This pattern is designed for the EXTRACTED URL part
+     * (after "#@" in markdown links or "href="#@..." in HTML links), NOT
+     * for the full GEDCOM text. The prefix (?:^|[?&]) requires "wt=" to
+     * be at the start or after ?/& - in raw GEDCOM it is preceded by "@".
      */
-    private const RE_WT_TARGET = '/(?:^|[?&])wt=(?P<type>[a-z])?@(?P<xref>' . self::RE_REF_CLASS . ')@(?P<tree>[^&\s+]*)/';
+    private const RE_WT_TARGET_TMPL = '/(?:^|[@?&])wt=(?P<type>[a-z]__TYPEQUANT__)@(?P<xref>' . self::RE_REF_CLASS . ')@(?P<tree>[^&]*)/';
+    public const RE_WT_TARGET = '/(?:^|[@?&])wt=(?P<type>[a-z])?@(?P<xref>' . self::RE_REF_CLASS . ')@(?P<tree>[^&]*)/';
+    
+    public static function getReWtTarget(?bool $type_avail = null): string
+    {
+        $type_quant = match($type_avail) {
+            true => '{1}',
+            false => '{0}',
+            default => '?'
+        };
+        return str_replace('__TYPEQUANT__', $type_quant, self::RE_WT_TARGET_TMPL);
+    }
 
     /**
      * The optional "id" parameter: id=@REF@ - at most one per link, the
@@ -173,28 +196,16 @@ final class XrefsService { // stuff related with handling cross-references
     public const TARGET_TYPE_MISMATCH_GLYPH = "⚠";
     public const TARGET_AMBIGUOUS_GLYPH = "?";
 
-    /**
-     * Clamp an arbitrary input to the selectable caps - the single source
-     * of truth for the allowlist (page select AND data endpoint policy).
-     */
-    public static function normalizeLinksPerClass(int $value): int
-    {
-        return in_array($value, self::LINKS_PER_CLASS_OPTIONS, true)
-            ? $value
-            : self::LINKS_PER_CLASS_DEFAULT;
-    }
-
-    
     public const GEDCOM_TABLES = [
         'INDI' => [
-            'table'      => 'individuals',
-            'prefix'     => 'i',
-            'typestr'    => "'INDI'",
+            'table' => 'individuals',
+            'prefix' => 'i',
+            'typestr' => "'INDI'",
         ],
         'FAM' => [
-            'table'      => 'families',
-            'prefix'     => 'f',
-            'typestr'    => "'FAM'",
+            'table' => 'families',
+            'prefix' => 'f',
+            'typestr' => "'FAM'",
         ],
         'OBJE' => [
             'table'      => 'media',
@@ -202,18 +213,18 @@ final class XrefsService { // stuff related with handling cross-references
             'typestr'    => "'OBJE'",
         ],
         'SOUR' => [
-            'table'      => 'sources',
-            'prefix'     => 's',
-            'typestr'    => "'SOUR'",
+            'table' => 'sources',
+            'prefix' => 's',
+            'typestr' => "'SOUR'",
         ],
         'OTHER' => [ // NOTE, REPO, _LOC
-            'table'      => 'other',
-            'prefix'     => 'o',
-            'typestr'    => '`o_type`',
+            'table' => 'other',
+            'prefix' => 'o',
+            'typestr' => '`o_type`',
         ]
     ];
 
-    public const GEDCOM_OTHER_SUBTYPES = [ "NOTE", "REPO", "_LOC" ];
+    public const GEDCOM_OTHER_SUBTYPES = ["NOTE", "REPO", "_LOC"];
 
     /**
      * Block modules whose "text" settings may contain LE links / XREFs.
@@ -223,19 +234,19 @@ final class XrefsService { // stuff related with handling cross-references
      */
     public const BLOCKS = [
         'html' => [
-            'title'    => 'HTML',
+            'title' => 'HTML',
             'settings' => ['title' => 'title', 'html' => 'text', 'languages' => 'info'],
         ],
         'faq' => [
-            'title'    => 'FAQ',
+            'title' => 'FAQ',
             'settings' => ['header' => 'title', 'faqbody' => 'text', 'languages' => 'info'],
         ],
         'stories' => [
-            'title'    => 'Stories',
+            'title' => 'Stories',
             'settings' => ['title' => 'title', 'story_body' => 'text', 'languages' => 'info'],
         ],
         '_vesta_classic_look_and_feel_' => [
-            'title'    => 'Name badges (vesta)',
+            'title' => 'Name badges (vesta)',
             'settings' => ['header' => 'title', 'snippet' => 'text', 'regex' => 'info', 'access' => 'access'],
         ],
     ];
@@ -258,6 +269,108 @@ final class XrefsService { // stuff related with handling cross-references
      */
     public const RECTYPE_ALL_GEDCOM = '__all_gedcom__';
     public const RECTYPE_ALL_BLOCKS = '__all_blocks__';
+
+    /**
+     * Strip the trailing " dia" (case-insensitive) suffix from a tree name.
+     * The " dia" marker is used in le-links to flag a tree as a
+     * duplicate/alternate view; the JS parser (le-xref-parser.js) strips
+     * it the same way. Returns the cleaned name.
+     */
+    public static function stripDiaSuffix(string $tree_name): string
+    {
+        return (string) preg_replace('/[ +]dia$/i', '', $tree_name);
+    }
+
+    /**
+     * Clamp an arbitrary input to the selectable caps - the single source
+     * of truth for the allowlist (page select AND data endpoint policy).
+     */
+    public static function normalizeLinksPerClass(int $value): int
+    {
+        return in_array($value, self::LINKS_PER_CLASS_OPTIONS, true)
+            ? $value
+            : self::LINKS_PER_CLASS_DEFAULT;
+    }
+
+    /**
+     * Replace the renumbered XREF inside le-link "wt=" targets of a GEDCOM text.
+     *
+     * Only the XREF position of a wt= target whose resolved tree is $target_tree_name
+     * is touched. An empty @tree part means "same tree as the source record"
+     * ($source_tree_name), so the replacement is evaluated relative to the source -
+     * a cross-tree source's own self-links (empty @tree) are NOT rewritten. Display
+     * text and id= (UID) targets are left alone.
+     *
+     * The URL part of each le-link is extracted after "(#@" up to the closing
+     * ")" so RE_WT_TARGET's boundary matches at the URL start.
+     *
+     * @return array{gedcom: string, replaced: int}
+     */
+    public static function replaceLinkTargetXref(
+        string $gedcom,
+        string $old_xref,
+        string $new_xref,
+        string $source_tree_name,
+        string $target_tree_name
+    ): array {
+        $replaced = 0;
+
+        // Markdown le-links: [text](#@url) / ![pic](#@url)
+        $gedcom = preg_replace_callback(
+            self::RE_LE_LINK,
+            static function (array $m) use ($old_xref, $new_xref, $source_tree_name, $target_tree_name, &$replaced): string {
+                $token = $m[0];
+                $pos   = strrpos($token, '(#@');
+                if ($pos === false) {
+                    return $token;
+                }
+                $head = substr($token, 0, $pos + 3);
+                $url  = self::replaceWtXref(
+                    substr($token, $pos + 3, -1),
+                    $old_xref,
+                    $new_xref,
+                    $source_tree_name,
+                    $target_tree_name,
+                    $replaced
+                );
+                return $head . $url . ')';
+            },
+            $gedcom
+        );
+
+        return ['gedcom' => $gedcom, 'replaced' => $replaced];
+    }
+
+    /**
+     * Replace a matching renumbered XREF in the XREF position of the "wt" targets
+     * of one LE-link URL (already extracted, so "wt=" sits at the start).
+     */
+    private static function replaceWtXref(
+        string $url,
+        string $old_xref,
+        string $new_xref,
+        string $source_tree_name,
+        string $target_tree_name,
+        int &$replaced
+    ): string {
+        return preg_replace_callback(
+            self::RE_WT_TARGET,
+            static function (array $m) use ($old_xref, $new_xref, $source_tree_name, $target_tree_name, &$replaced): string {
+                if ($m['xref'] !== $old_xref) {
+                    return $m[0];
+                }
+                $url_tree = $m['tree'] !== '' ? self::stripDiaSuffix((string) $m['tree']) : '';
+                $target_tree = $url_tree === '' ? $source_tree_name : $url_tree;
+                if ($target_tree !== $target_tree_name) {
+                    return $m[0];
+                }
+                $replaced++;
+
+                return str_replace('@' . $old_xref . '@', '@' . $new_xref . '@', $m[0]);
+            },
+            $url
+        );
+    }
 
     /**
      * Setting names classified as 'text' for a given block module.
@@ -1098,9 +1211,10 @@ final class XrefsService { // stuff related with handling cross-references
             $url = substr($token, $pos + 3, -1);
             if (preg_match_all(self::RE_WT_TARGET, $url, $matches, PREG_SET_ORDER) !== false) {
                 foreach ($matches as $m) {
+                    $url_tree = $m['tree'] !== '' ? self::stripDiaSuffix($m['tree']) : '';
                     $targets[] = [
                         'xref' => $m['xref'],
-                        'tree' => $m['tree'] !== '' ? $m['tree'] : null,
+                        'tree' => $url_tree !== '' ? $url_tree : null,
                         'type' => $m['type'] !== '' ? $m['type'] : null,
                     ];
                 }
@@ -1132,7 +1246,7 @@ final class XrefsService { // stuff related with handling cross-references
                     foreach ($matches as $m) {
                         $targets[] = [
                             'xref' => $m['xref'],
-                            'tree' => $m['tree'] !== '' ? $m['tree'] : null,
+                            'tree' => $m['tree'] !== '' ? self::stripDiaSuffix($m['tree']) : null,
                             'type' => $m['type'] !== '' ? $m['type'] : null,
                         ];
                     }
@@ -1151,7 +1265,39 @@ final class XrefsService { // stuff related with handling cross-references
     }
 
     /**
-     * Status of the link index (Phase 2): row count, last COMPLETE
+     * Extract all wt= targets from GEDCOM text (Markdown LE links only —
+     * GEDCOM records never contain HTML; block settings do, and those go
+     * through processBlocks()).
+     *
+     * @return array<int, array{xref: string, tree: string, type: string}>
+     */
+    public static function extractWtTargetsFromGedcom(string $gedcom, string $source_tree_name): array
+    {
+        $targets = [];
+
+        if (preg_match_all(self::RE_LE_LINK, $gedcom, $link_matches, PREG_SET_ORDER) !== false) {
+            foreach ($link_matches as $lm) {
+                $pos = strrpos($lm[0], '(#@');
+                if ($pos === false) {
+                    continue;
+                }
+                $url = substr($lm[0], $pos + 3, -1);
+                if (preg_match_all(self::RE_WT_TARGET, $url, $wt_matches, PREG_SET_ORDER) !== false) {
+                    foreach ($wt_matches as $m) {
+                        $targets[] = [
+                            'xref' => $m['xref'],
+                            'tree' => ($m['tree'] === '' ? $source_tree_name : self::stripDiaSuffix((string) $m['tree'])),
+                            'type' => (string) $m['type'],
+                        ];
+                    }
+                }
+            }
+        }
+
+        return $targets;
+    }
+
+    /**
      * verification and whether the index is considered fresh.
      *
      * Freshness comes from le_index_meta (written by the CLI at the end of

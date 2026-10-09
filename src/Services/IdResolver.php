@@ -37,7 +37,7 @@ use function strlen;
 /**
  * Resolve an id (a record XREF or a UID) to the visible candidate records.
  * Shared by the cross-reference overview (AdminXrefOverviewData) and the
- * goto-id route (see .opencode/plans/linkenhancer-uid-link-target-cross-tree-goto.md).
+ * goto-id route
  *
  * Length-aware and bidirectional: an id at or above UID_MIN_LENGTH is tried
  * against the UID index first, a shorter one against the record XREF - and
