@@ -38,6 +38,7 @@ use Throwable;
 use Schwendinger\Webtrees\Helpers\ClassName;
 use Schwendinger\Webtrees\Helpers\Functions;
 use Schwendinger\Webtrees\Helpers\MoreI18N;
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 
 use function array_key_exists;
 use function array_map;
@@ -525,7 +526,7 @@ final class XrefOverviewColumns
         try {
             return $this->tree_service->find($file);
         } catch (DomainException) {
-            // Orphaned row - the tree no longer exists.
+            LinkEnhancerModule::log()->debug('orphaned index row: tree ' . $file . ' not found', 'XrefColumns');
             return null;
         }
     }

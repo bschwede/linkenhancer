@@ -34,6 +34,7 @@ use Fisharebest\Webtrees\GedcomRecord;
 use Fisharebest\Webtrees\Tree;
 use Illuminate\Database\Query\Builder;
 use InvalidArgumentException;
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Throwable;
 
 use function e;
@@ -1348,7 +1349,8 @@ final class XrefsService { // stuff related with handling cross-references
                 && strtotime($scanned_at) > time() - $fresh_seconds;
 
             return ['rows' => $rows, 'scanned_at' => $scanned_at, 'fresh' => $fresh];
-        } catch (Throwable) {
+        } catch (Throwable $e) {
+            LinkEnhancerModule::log()->debug('link index status unavailable: ' . $e->getMessage(), 'XrefsService');
             return ['rows' => 0, 'scanned_at' => null, 'fresh' => false];
         }
     }

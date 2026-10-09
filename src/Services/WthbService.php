@@ -163,6 +163,7 @@ class WthbService { // stuff related to webtrees manual link handling
         try {
             $result = $this->importCsv($file, $separator, $truncate, $encoding);
         } catch (Exception $ex) {
+            LinkEnhancerModule::log()->error('CSV import failed: ' . $ex->getMessage(), 'WthbService');
             $this->setImportFlashError($title, $ex->getMessage());
             return;
         }
