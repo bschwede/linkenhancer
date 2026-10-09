@@ -40,6 +40,8 @@ use function e;
 use function preg_match_all;
 use function preg_replace_callback;
 use function str_replace;
+use function str_starts_with;
+use function stripos;
 use function strrpos;
 use function strtotime;
 use function substr;
@@ -320,20 +322,19 @@ final class XrefsService { // stuff related with handling cross-references
             self::RE_LE_LINK,
             static function (array $m) use ($old_xref, $new_xref, $source_tree_name, $target_tree_name, &$replaced): string {
                 $token = $m[0];
-                $pos   = strrpos($token, '(#@');
-                if ($pos === false) {
+                $url   = self::extractLeLinkUrl($token);
+                if ($url === null) {
                     return $token;
                 }
-                $head = substr($token, 0, $pos + 3);
-                $url  = self::replaceWtXref(
-                    substr($token, $pos + 3, -1),
+                $head = substr($token, 0, strrpos($token, '(#@') + 3);
+                return $head . self::replaceWtXref(
+                    $url,
                     $old_xref,
                     $new_xref,
                     $source_tree_name,
                     $target_tree_name,
                     $replaced
-                );
-                return $head . $url . ')';
+                ) . ')';
             },
             $gedcom
         );
@@ -783,22 +784,12 @@ final class XrefsService { // stuff related with handling cross-references
                 $token  = $match[0];
                 $offset = (int) $match[1];
 
-                $href_pos = stripos($token, 'href="');
-                $quote    = '"';
-                if ($href_pos === false) {
-                    $href_pos = stripos($token, "href='");
-                    $quote    = "'";
-                }
-                if ($href_pos === false) {
+                $href = self::extractHtmlLinkHref($token);
+                if ($href === null) {
                     continue;
                 }
-                $href_start = $href_pos + 6;
-                $href_end   = strpos($token, $quote, $href_start);
-                $href_val = $href_end !== false
-                    ? substr($token, $href_start, $href_end - $href_start)
-                    : substr($token, $href_start);
 
-                $le_params = str_starts_with($href_val, '#@') ? substr($href_val, 2) : $href_val;
+                $le_params = $href['value'];
                 $class     = preg_match(self::RE_WT_PARAM, $le_params) === 1 ? 'xref' : 'ext';
 
                 $found[$offset] = [
@@ -1205,10 +1196,8 @@ final class XrefsService { // stuff related with handling cross-references
         }
 
         $targets = [];
-        $pos     = strrpos($token, '(#@');
-        if ($pos !== false) {
-            // The URL part ends at the closing bracket of the token.
-            $url = substr($token, $pos + 3, -1);
+        $url = self::extractLeLinkUrl($token);
+        if ($url !== null) {
             if (preg_match_all(self::RE_WT_TARGET, $url, $matches, PREG_SET_ORDER) !== false) {
                 foreach ($matches as $m) {
                     $url_tree = $m['tree'] !== '' ? self::stripDiaSuffix($m['tree']) : '';
@@ -1228,19 +1217,9 @@ final class XrefsService { // stuff related with handling cross-references
                 ];
             }
         } elseif (str_contains($token, 'href="') || str_contains($token, "href='")) {
-            $href_pos = strpos($token, 'href="');
-            $quote    = '"';
-            if ($href_pos === false) {
-                $href_pos = strpos($token, "href='");
-                $quote    = "'";
-            }
-            if ($href_pos !== false) {
-                $href_start = $href_pos + 6;
-                $href_end   = strpos($token, $quote, $href_start);
-                $href_val   = $href_end !== false
-                    ? substr($token, $href_start, $href_end - $href_start)
-                    : substr($token, $href_start);
-                $url = str_starts_with($href_val, '#@') ? substr($href_val, 2) : $href_val;
+            $href = self::extractHtmlLinkHref($token);
+            if ($href !== null) {
+                $url = $href['value'];
 
                 if (preg_match_all(self::RE_WT_TARGET, $url, $matches, PREG_SET_ORDER) !== false) {
                     foreach ($matches as $m) {
@@ -1277,11 +1256,10 @@ final class XrefsService { // stuff related with handling cross-references
 
         if (preg_match_all(self::RE_LE_LINK, $gedcom, $link_matches, PREG_SET_ORDER) !== false) {
             foreach ($link_matches as $lm) {
-                $pos = strrpos($lm[0], '(#@');
-                if ($pos === false) {
+                $url = self::extractLeLinkUrl($lm[0]);
+                if ($url === null) {
                     continue;
                 }
-                $url = substr($lm[0], $pos + 3, -1);
                 if (preg_match_all(self::RE_WT_TARGET, $url, $wt_matches, PREG_SET_ORDER) !== false) {
                     foreach ($wt_matches as $m) {
                         $targets[] = [
@@ -1298,7 +1276,52 @@ final class XrefsService { // stuff related with handling cross-references
     }
 
     /**
-     * verification and whether the index is considered fresh.
+     * Extract the URL part from a Markdown LE link token.
+     * Token format: [text](#@url) / ![pic](#@url)
+     * Returns the URL between "(#@" and the closing ")" (exclusive).
+     * Returns null when the token does not contain "(#@".
+     */
+    public static function extractLeLinkUrl(string $token): ?string
+    {
+        $pos = strrpos($token, '(#@');
+        if ($pos === false) {
+            return null;
+        }
+        return substr($token, $pos + 3, -1);
+    }
+
+    /**
+     * Extract the href value from an HTML anchor token (matched by RE_LE_HTML_LINK).
+     * Returns ['value' => string, 'is_le' => bool] or null when no href found.
+     * The "#@" prefix is stripped from value when present (is_le = true).
+     */
+    public static function extractHtmlLinkHref(string $token): ?array
+    {
+        $href_pos = stripos($token, 'href="');
+        $quote    = '"';
+        if ($href_pos === false) {
+            $href_pos = stripos($token, "href='");
+            $quote    = "'";
+        }
+        if ($href_pos === false) {
+            return null;
+        }
+        $href_start = $href_pos + 6;
+        $href_end   = strpos($token, $quote, $href_start);
+        $href_val   = $href_end !== false
+            ? substr($token, $href_start, $href_end - $href_start)
+            : substr($token, $href_start);
+        $is_le      = str_starts_with($href_val, '#@');
+
+        return [
+            'value'   => $is_le ? substr($href_val, 2) : $href_val,
+            'is_le'   => $is_le,
+            'start'   => $href_start,
+            'end'     => $href_end,
+        ];
+    }
+
+    /**
      *
      * Freshness comes from le_index_meta (written by the CLI at the end of
      * a full, untruncated run) - not from MAX(scanned_at), which would

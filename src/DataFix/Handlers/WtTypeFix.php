@@ -128,19 +128,18 @@ final class WtTypeFix implements FixHandlerInterface
             XrefsService::RE_LE_LINK,
             function (array $m) use ($mode, $source_tree, &$fixed, &$skipped): string {
                 $token = $m[0];
-                $pos   = strrpos($token, '(#@');
-                if ($pos === false) {
+                $url   = XrefsService::extractLeLinkUrl($token);
+                if ($url === null) {
                     return $token;
                 }
-                $head = substr($token, 0, $pos + 3);
-                $url  = $this->fixWtTargets(
-                    substr($token, $pos + 3, -1),
+                $head = substr($token, 0, strrpos($token, '(#@') + 3);
+                return $head . $this->fixWtTargets(
+                    $url,
                     $mode,
                     $source_tree,
                     $fixed,
                     $skipped
-                );
-                return $head . $url . ')';
+                ) . ')';
             },
             $gedcom
         );
