@@ -31,10 +31,10 @@ use Fisharebest\Webtrees\GedcomRecord;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Services\DataFixService;
-use Fisharebest\Webtrees\Services\TreeService;
 use Fisharebest\Webtrees\Tree;
 use Illuminate\Support\Collection;
 use Schwendinger\Webtrees\Module\LinkEnhancer\DataFix\FixHandlerInterface;
+use Schwendinger\Webtrees\Module\LinkEnhancer\DataFix\TreeLookupTrait;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\IdResolver;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\IndexRebuildScheduler;
@@ -51,13 +51,12 @@ use function str_starts_with;
 
 final class XrefUidSwapFix implements FixHandlerInterface
 {
+    use TreeLookupTrait;
+
     public const ID = 'xref_uid_swap';
 
     public const DIR_XREF_TO_UID = 'xref_to_uid';
     public const DIR_UID_TO_XREF = 'uid_to_xref';
-
-    /** @var Tree[] tree_name => Tree (per-request cache) */
-    private array $tree_cache = [];
 
     public function id(): string
     {
@@ -224,15 +223,6 @@ final class XrefUidSwapFix implements FixHandlerInterface
         return ['processed' => $processed, 'changed' => $changed, 'skipped' => $skipped, 'errors' => $errors, 'details' => $details];
     }
 
-    private function findTreeById(int $tree_id): ?Tree
-    {
-        try {
-            return Registry::container()->get(TreeService::class)->find($tree_id);
-        } catch (\Throwable) {
-            return null;
-        }
-    }
-
     /**
      * Core token rewrite. Returns the new GEDCOM text + counters.
      *
@@ -358,24 +348,6 @@ final class XrefUidSwapFix implements FixHandlerInterface
         }
 
         return (string) $results->first()->xref;
-    }
-
-    /**
-     * Resolve a tree name to a Tree object (cached per request).
-     */
-    private function findTree(string $name): ?Tree
-    {
-        if (array_key_exists($name, $this->tree_cache)) {
-            return $this->tree_cache[$name];
-        }
-        try {
-            $tree = Registry::container()->get(TreeService::class)->all()->get($name);
-            $this->tree_cache[$name] = $tree;
-            return $tree;
-        } catch (\Throwable) {
-            $this->tree_cache[$name] = null;
-            return null;
-        }
     }
 
     /**

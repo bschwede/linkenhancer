@@ -9,11 +9,11 @@ use Fisharebest\Webtrees\GedcomRecord;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Services\DataFixService;
-use Fisharebest\Webtrees\Services\TreeService;
 use Fisharebest\Webtrees\Tree;
 use Illuminate\Support\Collection;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\DataFix\FixHandlerInterface;
+use Schwendinger\Webtrees\Module\LinkEnhancer\DataFix\TreeLookupTrait;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\IdResolver;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\IndexRebuildScheduler;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\UidIndexService;
@@ -28,6 +28,8 @@ use function view;
 
 final class WtTypeFix implements FixHandlerInterface
 {
+    use TreeLookupTrait;
+
     public const ID = 'wt_type_fix';
 
     private const MODE_SET    = 'set';
@@ -42,9 +44,6 @@ final class WtTypeFix implements FixHandlerInterface
         'NOTE' => 'n',
         '_LOC' => 'l',
     ];
-
-    /** @var Tree[] tree_name => Tree */
-    private array $tree_cache = [];
 
     public function id(): string
     {
@@ -228,20 +227,5 @@ final class WtTypeFix implements FixHandlerInterface
 
         $record = Registry::gedcomRecordFactory()->make((string) $results->first()->xref, $tree);
         return $record instanceof GedcomRecord ? $record->tag() : null;
-    }
-
-    private function findTree(string $name): ?Tree
-    {
-        if (array_key_exists($name, $this->tree_cache)) {
-            return $this->tree_cache[$name];
-        }
-        try {
-            $tree = Registry::container()->get(TreeService::class)->all()->get($name);
-            $this->tree_cache[$name] = $tree;
-            return $tree;
-        } catch (\Throwable) {
-            $this->tree_cache[$name] = null;
-            return null;
-        }
     }
 }

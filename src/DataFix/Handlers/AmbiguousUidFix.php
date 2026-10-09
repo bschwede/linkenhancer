@@ -7,11 +7,10 @@ namespace Schwendinger\Webtrees\Module\LinkEnhancer\DataFix\Handlers;
 use Fisharebest\Webtrees\DB;
 use Fisharebest\Webtrees\GedcomRecord;
 use Fisharebest\Webtrees\I18N;
-use Fisharebest\Webtrees\Registry;
-use Fisharebest\Webtrees\Services\TreeService;
 use Fisharebest\Webtrees\Tree;
 use Illuminate\Support\Collection;
 use Schwendinger\Webtrees\Module\LinkEnhancer\DataFix\FixHandlerInterface;
+use Schwendinger\Webtrees\Module\LinkEnhancer\DataFix\TreeLookupTrait;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\IdResolver;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\UidIndexService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
@@ -21,10 +20,9 @@ use function strlen;
 
 final class AmbiguousUidFix implements FixHandlerInterface
 {
-    public const ID = 'ambiguous_uid';
+    use TreeLookupTrait;
 
-    /** @var Tree[] */
-    private array $tree_cache = [];
+    public const ID = 'ambiguous_uid';
 
     public function id(): string
     {
@@ -124,20 +122,5 @@ final class AmbiguousUidFix implements FixHandlerInterface
     public function processBlocks(Tree $tree, array $params): array
     {
         return ['processed' => 0, 'changed' => 0, 'skipped' => 0, 'errors' => []];
-    }
-
-    private function findTree(string $name): ?Tree
-    {
-        if (array_key_exists($name, $this->tree_cache)) {
-            return $this->tree_cache[$name];
-        }
-        try {
-            $tree = Registry::container()->get(TreeService::class)->all()->get($name);
-            $this->tree_cache[$name] = $tree;
-            return $tree;
-        } catch (\Throwable) {
-            $this->tree_cache[$name] = null;
-            return null;
-        }
     }
 }
