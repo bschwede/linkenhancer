@@ -54,6 +54,7 @@ class WthbService { // stuff related to webtrees manual link handling
 
     public const string CMM_CLASS = '\Jefferson49\Webtrees\Module\CustomModuleManager\CustomModuleManager';
     public const string CMM_CFG_CLASS = '\Jefferson49\Webtrees\Module\CustomModuleManager\Configuration\ModuleUpdateServiceConfiguration';
+    private const FLASH_TTL_1H = 3600;
 
     public function __construct(string $helptable, string $std_url, string $wiki_url)
     {
@@ -273,7 +274,7 @@ class WthbService { // stuff related to webtrees manual link handling
                         'warning'
                     );
                 },
-                3600
+                self::FLASH_TTL_1H
             );
             return $std_url;
         }

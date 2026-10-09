@@ -60,6 +60,8 @@ use function trim;
  */
 final class XrefOverviewListData implements RequestHandlerInterface
 {
+    private const DEFAULT_MAX_ROWS = 10000;
+
     private DatatablesService $datatables_service;
 
     private TimeoutService $timeout_service;
@@ -91,7 +93,7 @@ final class XrefOverviewListData implements RequestHandlerInterface
         $max_links     = XrefsService::normalizeLinksPerClass((int) $params->integer('max_links', XrefsService::LINKS_PER_CLASS_DEFAULT));
         $live          = $params->boolean('live', false);
         $only_problems = $params->string('target', '') === 'problems';
-        $max_rows      = max(1, (int) $params->integer('max_rows', 10000));
+        $max_rows      = max(1, (int) $params->integer('max_rows', self::DEFAULT_MAX_ROWS));
         $this->uid_active = $params->boolean('uid_active', false);
 
         $tree = null;

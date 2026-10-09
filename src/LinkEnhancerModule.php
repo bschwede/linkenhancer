@@ -120,6 +120,7 @@ class LinkEnhancerModule extends AbstractModule implements
     /**
      * list of const for module administration
      */
+    public const CACHE_TTL_1D = 86400;
     public const CUSTOM_MODULE = 'linkenhancer';
     public const MODULE_NAME = '_linkenhancer_'; // webtrees module name (folder name, underscore-wrapped)
     public const CUSTOM_AUTHOR = 'Bernd Schwendinger';
@@ -389,7 +390,7 @@ class LinkEnhancerModule extends AbstractModule implements
                     }
                 }
             },
-            86400
+            self::CACHE_TTL_1D
         );
 
         // Register a namespace for our views.

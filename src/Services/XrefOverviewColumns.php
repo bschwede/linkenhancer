@@ -61,6 +61,8 @@ use function strlen;
  */
 final class XrefOverviewColumns
 {
+    private const MAX_AMBIGUOUS_HITS = 3;
+
     private TreeService $tree_service;
 
     /** D3: the UID feature pref (module is the source of truth). */
@@ -635,7 +637,7 @@ final class XrefOverviewColumns
 
         $payload = [
             'count'    => count($hits),
-            'hits'     => array_slice($mapped, 0, 3),
+            'hits'     => array_slice($mapped, 0, self::MAX_AMBIGUOUS_HITS),
             'goto_url' => $goto_url,
         ];
         $this->ambiguous_cache[$cache_key] = $payload;

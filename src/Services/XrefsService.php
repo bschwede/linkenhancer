@@ -77,6 +77,9 @@ final class XrefsService { // stuff related with handling cross-references
      */
     private const RE_CLASSIC_XREF = '/^@([A-Za-z0-9][A-Za-z0-9:_.-]{0,19})@$/';
 
+    /** Number of context characters on each side of a token in a snippet. */
+    private const SNIPPET_CONTEXT_CHARS = 10;
+
     /**
      * The reference carried between the @...@ of a wt=/id= target. XREFs are
      * short (max 20) but UIDs can reach 36+ chars - so the class is widened to
@@ -1456,8 +1459,8 @@ final class XrefsService { // stuff related with handling cross-references
      */
     private static function snippet(string $text, int $offset, string $token): string {
         $length = strlen($text);
-        $start  = max(0, $offset - 10);
-        $end    = min($length, $offset + 10 + strlen($token));
+        $start  = max(0, $offset - self::SNIPPET_CONTEXT_CHARS);
+        $end    = min($length, $offset + self::SNIPPET_CONTEXT_CHARS + strlen($token));
 
         // Left edge: if it lands inside a multi-byte sequence, back up to the
         // sequence's lead byte so the whole character is kept.
