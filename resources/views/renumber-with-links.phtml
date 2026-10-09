@@ -44,8 +44,8 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
  */
 
 $defer_index = $cron_plan['link'] || $cron_plan['uid']; //the le_* index will be rebuilt by cron
-$index_fresh = $index_status['fresh'] ?? false;
-$index_scanned_at = $index_status['scanned_at'] ?? null; // last full index scan timestamp
+$index_fresh = $link_status['fresh'] ?? false;
+$index_scanned_at = $link_status['scanned_at'] ?? null; // last full index scan timestamp
 $count = count($xrefs);
 ?>
 
