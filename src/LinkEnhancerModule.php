@@ -88,6 +88,7 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefDetailService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\SettingInterface;
 use Schwendinger\Webtrees\Helpers\ClassName;
+use Schwendinger\Webtrees\Services\ModuleLog;
 
 use function array_key_exists, boolval, count, strval, is_array, intval, route, trim;
 use Throwable;
@@ -121,6 +122,7 @@ class LinkEnhancerModule extends AbstractModule implements
      * list of const for module administration
      */
     public const CACHE_TTL_1D = 86400;
+    public const LOG_ID = 'linkenhancer';
     public const CUSTOM_MODULE = 'linkenhancer';
     public const MODULE_NAME = '_linkenhancer_'; // webtrees module name (folder name, underscore-wrapped)
     public const CUSTOM_AUTHOR = 'Bernd Schwendinger';
@@ -162,6 +164,7 @@ class LinkEnhancerModule extends AbstractModule implements
     public const PREF_LINKSPP_OVERVIEW_ACCESS = 'LINKSPP_OVERVIEW_ACCESS'; // -1=Hidden, 0=Managers, 1=Members, 2=All
     public const PREF_LINKSPP_DETAIL_ACCESS = 'LINKSPP_DETAIL_ACCESS'; // -1=Hidden, 0=Managers, 1=Members, 2=All
     public const PREF_LINKSPP_DETAIL_INCLUDE_BLOCKS = 'LINKSPP_DETAIL_INCLUDE_BLOCKS'; // include block references in detail view
+    public const PREF_DEBUG_LOG = 'DEBUG_LOG'; // PHP error_log debug output; 0=off, 1=on
 
     /**
      * Canonical handler keys (via Functions::canonicalHandlerKey) of the
@@ -262,6 +265,7 @@ class LinkEnhancerModule extends AbstractModule implements
         self::PREF_WTHB_LINKS_TYPE           => [ 'type' => 'int',    'default' => '2' ], // triple-state, 0=off, 1=user defined, 2=on
         self::PREF_WTHB_LINKS_JSON           => [ 'type' => 'string', 'default' => self::STD_WTHB_LINKS_JSON ],
         self::PREF_JS_DEBUG_CONSOLE          => [ 'type' => 'bool',   'default' => '0' ],
+        self::PREF_DEBUG_LOG                 => [ 'type' => 'bool',   'default' => '0' ],
         self::PREF_OPEN_IN_NEW_TAB           => [ 'type' => 'int',    'default' => '2' ], // triple-state, 0=off, 1=user defined, 2=on
         self::PREF_WTHB_STD_LINK             => [ 'type' => 'string', 'default' => self::STDLINK_WTHB ], // url
         self::PREF_GENWIKI_LINK              => [ 'type' => 'string', 'default' => self::STDLINK_GENWIKI ], // url
@@ -358,10 +362,20 @@ class LinkEnhancerModule extends AbstractModule implements
     }
 
     /**
+     * Get the module logger instance.
+     */
+    public static function log(): ModuleLog
+    {
+        return ModuleLog::for(self::LOG_ID);
+    }
+
+    /**
      * Called for all *enabled* modules.
      */
     public function boot(): void
     {
+        ModuleLog::for(self::LOG_ID, $this->getPref(self::PREF_DEBUG_LOG, true) === '1');
+
         Functions::updateSchema($this, '\Schwendinger\Webtrees\Module\LinkEnhancer\Schema', 'SCHEMA_VERSION', self::HELP_SCHEMA_TARGET_VERSION);
 
         $access_level = (int) $this->getPref(self::PREF_LINKSPP_DETAIL_ACCESS, true);
@@ -926,8 +940,8 @@ class LinkEnhancerModule extends AbstractModule implements
                 try {
                     $value = trim(Validator::parsedBody($request)->string($preference));
                     $this->setPref($preference, $value);
-                } catch (Exception $ex) { //Fisharebest\Webtrees\Http\Exceptions\HttpBadRequestException
-                    //TODO maybe compose warning flash message for preferences not found in request?!
+                } catch (Exception $ex) {
+                    self::log()->error('pref ' . $preference . ' not saved: ' . $ex->getMessage(), 'Settings', flash: I18N::translate('Some settings could not be saved.'));
                 }
             }
 
@@ -1186,6 +1200,7 @@ class LinkEnhancerModule extends AbstractModule implements
             $type = (string) $params->string('type', null);
             $type = strtolower($type);
         } catch (Throwable $e) {
+            self::log()->debug('type param extract failed: ' . $e->getMessage(), 'AdminReset');
         }
         if (!$type || !in_array($type, ['list', 'tab'])) {
             return redirect($this->getConfigLink());

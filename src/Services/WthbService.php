@@ -217,6 +217,7 @@ class WthbService { // stuff related to webtrees manual link handling
                     ->where('url', '!=', '')
                     ->count();
             } catch (Exception $e) {
+                LinkEnhancerModule::log()->error('help_table count failed: ' . $e->getMessage(), 'WthbService');
             }
         }
 
@@ -404,6 +405,7 @@ class WthbService { // stuff related to webtrees manual link handling
                 $custom_module_manager = $module_service->findByName((self::CMM_CLASS)::activeModuleName());
                 $result = $custom_module_manager !== null;
             } catch (Exception $ex)  {
+                LinkEnhancerModule::log()->debug('CMM not available: ' . $ex->getMessage(), 'WthbService');
             }
         }
         return $result;
