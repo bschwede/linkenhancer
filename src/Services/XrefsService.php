@@ -383,11 +383,7 @@ final class XrefsService { // stuff related with handling cross-references
      * @return array<int,string>
      */
     public static function blockTextSettings(string $module_name): array {
-        $block = self::BLOCKS[$module_name] ?? null;
-        if ($block === null) {
-            return [];
-        }
-        return array_values(array_filter(array_keys($block['settings']), static fn (string $name): bool => $block['settings'][$name] === 'text'));
+        return LinkIndexService::blockTextSettings($module_name);
     }
 
     /**
@@ -396,7 +392,7 @@ final class XrefsService { // stuff related with handling cross-references
      * @return array<int,string>
      */
     public static function blockModuleNames(): array {
-        return array_keys(self::BLOCKS);
+        return LinkIndexService::blockModuleNames();
     }
 
     /**
@@ -410,60 +406,7 @@ final class XrefsService { // stuff related with handling cross-references
      *         the block query when blocks is true.
      */
     public static function rectypeSources(string $rectype): array {
-        $is_all_gedcom    = $rectype === self::RECTYPE_ALL_GEDCOM;
-        $is_all_blocks    = $rectype === self::RECTYPE_ALL_BLOCKS;
-        $is_block_rectype = $rectype !== '' && in_array($rectype, self::blockModuleNames(), true);
-
-        $gedcom = !$is_block_rectype && !$is_all_blocks;
-        $blocks = !$is_all_gedcom && ($rectype === '' || $is_block_rectype || $is_all_blocks);
-
-        $rectypes = $is_all_gedcom
-            ? []
-            : ($is_all_blocks
-                ? self::blockModuleNames()
-                : ($rectype !== '' ? [$rectype] : []));
-
-        return ['gedcom' => $gedcom, 'blocks' => $blocks, 'rectypes' => $rectypes];
-    }
-
-    private static function getGedcomRecTypeSubquery(array $params, string $xref = Gedcom::REGEX_XREF, int|null $file = null): Builder {
-        // Identifiers are wrapped per grammar (backticks on M/M, double
-        // quotes on PG/SQLite, [] on SQL Server) - the live overview must
-        // work on every engine, also in limited LIKE mode.
-        $grammar = DB::connection()->getQueryGrammar();
-
-        $query = DB::table($params['table'])
-            ->select(
-                DB::raw($grammar->wrap($params['prefix'] . '_id') . ' AS xref'),
-                DB::raw($grammar->wrap($params['prefix'] . '_file') . ' AS file'),
-                $params['table'] === 'other'
-                    ? DB::raw($grammar->wrap('o_type') . ' AS type')
-                    : DB::raw($params['typestr'] . ' AS type'),
-                DB::raw($grammar->wrap($params['prefix'] . '_gedcom') . ' AS gedcom'),
-                DB::raw('NULL AS block_id'),
-                DB::raw('NULL AS user_id')
-            );
-
-        if ($file !== null) {
-            $query->where($params['prefix'] . '_file', '=', $file);
-        }
-
-        $field = "{$params['prefix']}_gedcom";
-        if (self::supportsRegexp()) {
-            $patterns = self::linkPrefilterPatterns($xref, $params['table'] === 'other');
-            $query->where(function ($q) use ($patterns, $field) {
-                foreach ($patterns as $pattern) {
-                    $q->orWhere($field, DB::regexOperator(), $pattern);
-                }
-            });
-        } else {
-            // Limited mode (F9): no working REGEXP operator on this engine.
-            // Coarse over-approximation - the PHP classifier is the source
-            // of truth, this only decides which records are fetched.
-            $query->where($field, 'like', self::LIKE_XREF_PREDICATE);
-        }
-
-        return $query;
+        return LinkIndexService::rectypeSources($rectype);
     }
 
     /**
@@ -512,11 +455,7 @@ final class XrefsService { // stuff related with handling cross-references
      */
     public static function supportsRegexp(): bool
     {
-        try {
-            return in_array(DB::driverName(), self::REGEXP_DRIVERS, true);
-        } catch (Throwable) {
-            return false;
-        }
+        return LinkIndexService::supportsRegexp();
     }
 
     /**
@@ -537,12 +476,12 @@ final class XrefsService { // stuff related with handling cross-references
 
     
     public static function supportedGedcomTableKeys() : array {
-        return array_keys(self::GEDCOM_TABLES);
+        return LinkIndexService::supportedGedcomTableKeys();
     }
 
     public static function supportedGedcomRecordKeys(): array
     {
-        return array_merge(self::supportedGedcomTableKeys(), self::GEDCOM_OTHER_SUBTYPES);
+        return LinkIndexService::supportedGedcomRecordKeys();
     }
 
     /**
@@ -557,51 +496,7 @@ final class XrefsService { // stuff related with handling cross-references
      */
     public static function getRecordsQuery(Tree|null $tree = null, string|null $xref = null, array $rectypes = [], bool $ordered = true): Builder
     {
-        $gedcom_table_keys = self::supportedGedcomTableKeys();
-        $gedcom_record_keys = self::supportedGedcomRecordKeys();
-        $rectypes = array_map('strtoupper', $rectypes);
-        $rectypes = array_values(array_filter($rectypes, fn($s) => in_array($s, $gedcom_record_keys)));
-        $rectypes = count($rectypes) === 0 ?
-            $gedcom_table_keys :
-            $rectypes;
-        $other_subtypes_filter = in_array('OTHER', $rectypes) ?
-            self::GEDCOM_OTHER_SUBTYPES :
-            array_values(array_filter($rectypes, fn($s) => in_array($s, self::GEDCOM_OTHER_SUBTYPES)));
-        // NOTE/REPO/_LOC live in the "other" table - make sure it is part of the union
-        if ($other_subtypes_filter !== [] && !in_array('OTHER', $rectypes)) {
-            $rectypes[] = 'OTHER';
-        }
-        $rectypes_filter = array_values(array_filter($rectypes, fn($s) => in_array($s, $gedcom_table_keys)));
-
-        $xref ??= Gedcom::REGEX_XREF;
-
-        $file = $tree instanceof Tree ? $tree->id() : null;
-
-        $unionQuery = null;
-        foreach ($rectypes_filter as $rectype) {
-            $params = self::GEDCOM_TABLES[$rectype];
-            $subquery = self::getGedcomRecTypeSubquery($params, $xref, $file);
-
-            if ($rectype === 'OTHER') {
-                $subquery->whereIn('o_type', $other_subtypes_filter);
-            }
-
-            $unionQuery = $unionQuery ? $unionQuery->unionAll($subquery) : $subquery;
-        }
-
-        if ($unionQuery === null) {
-            throw new InvalidArgumentException('No valid GEDCOM record types given.');
-        }
-
-        $query = DB::query()
-            ->fromSub($unionQuery, 'u')
-            ->select('u.*');
-
-        if ($ordered) {
-            $query->orderBy('u.file')->orderBy('u.xref');
-        }
-
-        return $query;
+        return LinkIndexService::getRecordsQuery($tree, $xref, $rectypes, $ordered);
     }
 
     /**
@@ -620,97 +515,7 @@ final class XrefsService { // stuff related with handling cross-references
      * @return Builder|null null when no block module matches the rectype filter
      */
     public static function getBlockQuery(Tree|null $tree, array $rectypes, bool $index_mode = false, int|null $user_id = null, string $filter_xref = ''): ?Builder {
-        $module_names = self::blockModuleNames();
-
-        $table_prefix = DB::getTablePrefix();
-
-        if ($rectypes !== []) {
-            $module_names = array_values(array_intersect($module_names, $rectypes));
-            if ($module_names === []) {
-                return null;
-            }
-        }
-
-        $union = null;
-        foreach ($module_names as $module_name) {
-            $text_settings = self::blockTextSettings($module_name);
-            if ($text_settings === []) {
-                continue;
-            }
-
-            if ($index_mode) {
-                $select = [
-                    DB::raw("{$table_prefix}b.gedcom_id AS file"),
-                    DB::raw("CONCAT('BLOCK-', {$table_prefix}b.block_id) AS xref"),
-                    DB::raw("'" . $module_name . "' AS type"),
-                    DB::raw($table_prefix . 'b.block_id AS block_id'),
-                    DB::raw($table_prefix . 'b.user_id'),
-                ];
-            } else {
-                $select = [
-                    DB::raw("CONCAT('BLOCK-', {$table_prefix}b.block_id) AS xref"),
-                    DB::raw($table_prefix .'b.gedcom_id AS file'),
-                    DB::raw("'" . $module_name . "' AS type"),
-                    DB::raw('NULL AS gedcom'),
-                    DB::raw($table_prefix .'b.block_id AS block_id'),
-                    DB::raw($table_prefix .'b.user_id'),
-                ];
-            }
-
-            $subquery = DB::table('block AS b')
-                ->select($select)
-                ->where('b.module_name', '=', $module_name);
-
-            if ($tree instanceof Tree) {
-                $subquery->where(static function ($q) use ($tree): void {
-                    $q->where('b.gedcom_id', '=', $tree->id())
-                        ->orWhereNull('b.gedcom_id');
-                });
-            }
-
-            if ($user_id !== null) {
-                $subquery->where(static function ($q) use ($user_id): void {
-                    $q->whereNull('b.user_id')
-                        ->orWhere('b.user_id', '=', $user_id);
-                });
-            }
-
-            if ($filter_xref !== '') {
-                $uids = ($tree instanceof Tree) ? UidIndexService::uidsForRecord($tree->id(), $filter_xref) : [];
-                $subquery->whereExists(static function ($q) use ($filter_xref, $uids, $text_settings): void {
-                    $q->select(DB::raw(1))
-                        ->from('block_setting')
-                        ->whereColumn('block_setting.block_id', 'b.block_id')
-                        ->whereIn('block_setting.setting_name', $text_settings)
-                        ->where(static function ($sq) use ($filter_xref, $uids): void {
-                            $sq->where('block_setting.setting_value', 'like', '%@' . $filter_xref . '@%');
-                            foreach ($uids as $uid) {
-                                $sq->orWhere('block_setting.setting_value', 'like', '%@' . $uid . '@%');
-                            }
-                        });
-                });
-            }
-
-            $subquery->where(static function ($q) use ($text_settings): void {
-                foreach ($text_settings as $setting_name) {
-                    $q->orWhereExists(static function ($sub) use ($setting_name): void {
-                        $sub->select(DB::raw(1))
-                            ->from('block_setting')
-                            ->whereColumn('block_setting.block_id', 'b.block_id')
-                            ->where('block_setting.setting_name', '=', $setting_name);
-                        if (self::supportsRegexp()) {
-                            $sub->where('block_setting.setting_value', DB::regexOperator(), self::BLOCK_LE_PREFILTER);
-                        } else {
-                            $sub->where('block_setting.setting_value', 'like', self::BLOCK_LE_LIKE);
-                        }
-                    });
-                }
-            });
-
-            $union = $union ? $union->unionAll($subquery) : $subquery;
-        }
-
-        return $union;
+        return LinkIndexService::getBlockQuery($tree, $rectypes, $index_mode, $user_id, $filter_xref);
     }
 
     /**
@@ -863,7 +668,7 @@ final class XrefsService { // stuff related with handling cross-references
      * @return array{ext: int, pic: int, xref: int, classic: int, other: int}
      */
     public static function emptyCounts(): array {
-        return array_fill_keys(self::LINK_CLASSES, 0);
+        return LinkRenderer::emptyCounts();
     }
 
     /**
@@ -883,14 +688,7 @@ final class XrefsService { // stuff related with handling cross-references
 
     public static function getClassLabel(string $class): string
     {
-        return match($class) {
-            'xref'    => I18N::translate('Cross-references'),
-            'ext'     => I18N::translate('External links'),
-            'pic'     => I18N::translate('Pictures'),
-            'classic' => I18N::translate('Classic cross-references'),
-            'other'   => I18N::translate('Other - maybe damaged - links'),
-            default   => $class
-        };
+        return LinkRenderer::getClassLabel($class);
     }
 
     /**
@@ -936,188 +734,7 @@ final class XrefsService { // stuff related with handling cross-references
       * @param bool $show_snippets render the snippet context around the token
       */
     public static function linkInventoryHtml(array $entries, int $max_per_class = self::LINKS_PER_CLASS_DEFAULT, string $highlight_xref = '', ?callable $target_linker = null, bool $highlight_problems = false, ?callable $ambiguous_linker = null, bool $show_snippets = true): string {
-        $items = [];
-        foreach ($entries as $entry) {
-            $items[$entry['class']][] = $entry;
-        }
-
-        $has_any = false;
-        foreach ($items as $class_items) {
-            if ($class_items !== []) {
-                $has_any = true;
-                break;
-            }
-        }
-        if (!$has_any) {
-            return '';
-        }
-
-        $html = '<ul class="le-xref-inventory">';
-        foreach (self::LINK_CLASSES as $class) {
-            $class_items = $items[$class] ?? [];
-            if ($class_items === []) {
-                continue;
-            }
-            $shown = ($max_per_class > 0) ? array_slice($class_items, 0, $max_per_class) : $class_items;
-            $class_label = self::getClassLabel($class);
-            $html .= '<li><u>' . e($class_label) . ' (' . ($class !== $class_label ? e($class) . ': ' : '') . count($class_items) . ')</u><ol>';
-            foreach ($shown as $entry) {
-                $prefix = ($entry['path'] !== '' && $entry['path'] !== 'NOTE') ? e($entry['path']) . ': ' : '';
-                if ($show_snippets) {
-                    // Highlight the token inside the snippet: the snippet is
-                    // built around the token (token fallback: snippet = token),
-                    // so every part around the token(s) is escaped separately.
-                    $parts = explode($entry['token'], $entry['snippet']);
-                    $hl    = e(array_shift($parts));
-                    foreach ($parts as $part) {
-                        $hl .= '<strong>' . e($entry['token']) . '</strong>' . e($part);
-                    }
-                } else {
-                    // Privacy mode: the link token only, without the
-                    // surrounding raw GEDCOM context (non-admin overview).
-                    $hl = '<strong>' . e($entry['token']) . '</strong>';
-                }
-                // When the "referencing XREF" filter is active, additionally
-                // mark the XREF itself so its occurrence stands out. Boundary-
-                // aware (I1 must not match I12) and case-sensitive, matching
-                // the utf8mb4_bin target_xref SQL filter.
-                if ($highlight_xref !== '') {
-                    $pattern = '/(?<![A-Za-z0-9])' . preg_quote($highlight_xref, '/') . '(?![A-Za-z0-9])/';
-                    $hl      = (string) preg_replace($pattern, '<mark class="le-xref-target">$0</mark>', $hl);
-                }
-                $target_html = self::targetLinksHtml($entry, $target_linker, $highlight_problems, $ambiguous_linker);
-                $html  .= '<li>' . $prefix . '<code>' . $hl . '</code>' . $target_html . '</li>';
-            }
-            $html .= '</ol>';
-
-            if ($max_per_class > 0 && count($class_items) > $max_per_class) {
-                $html .= '<em>+' . (count($class_items) - $max_per_class) . '</em>';
-            }
-            $html .= '</li>';
-        }
-        $html .= '</ul>';
-
-        return $html;
-    }
-
-    /**
-     * The reference link(s) shown below the snippet of an xref/classic/pic
-     * token: the referenced record(s), labelled with their full name (a
-     * cross-tree target is prefixed with its tree name). For an xref target
-     * the declared "wt" type letter is checked against the resolved record's
-     * tag (a pic target must be a Media); a mismatch keeps the link and adds
-     * a findable "⚠" hint. Unresolvable targets render as "✗" + the raw XREF
-     * (findable via the browser's search). $target_linker = null (or a
-     * non-xref/classic/pic class) yields no links. The full name is trusted
-     * HTML (privacy-aware, may hold markup) and is embedded unescaped,
-     * matching the record-name column.
-     *
-     * @param array{class: string, token: string} $entry
-     * @param callable(string, ?string): (array{name: string, url: string, tree_label: string, actual: string}|null)|null $target_linker
-     * @param callable(string, ?string): array{count: int, hits: array<int, array{name: string, url: string, tree_label: string}>, goto_url: string}|null $ambiguous_linker
-     */
-    private static function targetLinksHtml(array $entry, ?callable $target_linker, bool $highlight_problems = false, ?callable $ambiguous_linker = null): string {
-        if ($target_linker === null || !in_array($entry['class'], ['xref', 'classic', 'pic'], true)) {
-            return '';
-        }
-
-        $links = [];
-        foreach (self::extractLinkTargets($entry['token']) as $target) {
-            // Declared target type: the wt= letter (xref), or Media for a pic
-            // link's id= target. classic / unknown letter = nothing to check.
-            $expected_tag = self::expectedTagFor($target, $entry['class']);
-            $resolved     = $target_linker($target['xref'], $target['tree']);
-            $status       = self::targetStatus($resolved, $expected_tag);
-
-            if ($status === 'missing') {
-                // A UID-length target with no explicit tree that exists in other
-                // trees is "not unique", not "missing" (D1). The linker decides -
-                // it returns null for anything that is not such a case (D1/D3).
-                $ambiguous = ($ambiguous_linker !== null)
-                    ? $ambiguous_linker($target['xref'], $target['tree'])
-                    : null;
-                if ($ambiguous !== null) {
-                    $links[] = self::ambiguousTargetHtml($ambiguous, $target['xref']);
-                    continue;
-                }
-
-                $problem = '<span class="le-target-missing" title="' . e(I18N::translate("target not found")). '">' . self::TARGET_NOT_FOUND_GLYPH . ($target['tree'] ? ' ' . $target['tree'] . ': ' : '') . ' @' . e($target['xref']) . '@</span>';
-                $links[] = $highlight_problems ? '<mark class="le-problem-mark">' . $problem . '</mark>' : $problem;
-                continue;
-            }
-
-            $label  = ($resolved['tree_label'] !== '')
-                ? '<span class="text-muted small">' . e($resolved['tree_label']) . ': </span> '
-                : '';
-            $anchor = '<span class="le-cross-ref" title="' . e(I18N::translate('Cross-reference')) . '">↪</span> ' . $label . '<a href="' . e($resolved['url']) . '">' . $resolved['name'] . '</a>';
-            if ($status === 'mismatch') {
-                $hint    = I18N::translate('expected %1$s, is %2$s', $expected_tag, $resolved['actual']);
-                $problem = '<span class="le-target-type-mismatch" title="' . e($hint) . '">' . self::TARGET_TYPE_MISMATCH_GLYPH . '</span>';
-                $anchor .= ' ' . ($highlight_problems ? '<mark class="le-problem-mark">' . $problem . '</mark>' : $problem);
-            }
-            $links[] = $anchor;
-        }
-        if ($links === []) {
-            return '';
-        }
-
-        return '<div class="le-target-links">' . implode('<br>', $links) . '</div>';
-    }
-
-    /**
-     * HTML for a target that is "not unique" (D1): a UID-length reference with
-     * no explicit tree that was not found in the source tree but exists in
-     * other trees. Shows the match count; lists the matches as links when there
-     * are few (<= 3), otherwise a single goto-id link (title = the UID, D4).
-     *
-     * @param array{count: int, hits: array<int, array{name: string, url: string, tree_label: string}>, goto_url: string} $ambiguous
-     */
-    private static function ambiguousTargetHtml(array $ambiguous, string $uid): string {
-        $count = (int) $ambiguous['count'];
-        $html  = '<span class="le-target-ambiguous" title="'
-            . e(I18N::translate('%1$s - %2$d matches in other trees', I18N::translate('target not unique'), $count))
-            . '">' . self::TARGET_AMBIGUOUS_GLYPH . ' ' . $count . ' @' . e($uid) . '@</span>';
-
-        if ($count <= 3) {
-            foreach ($ambiguous['hits'] as $hit) {
-                $label = ($hit['tree_label'] !== '')
-                ? '<span class="text-muted small">' . e($hit['tree_label']) . ': </span> '
-                : '';
-                $html .= '<br><span class="le-cross-ref" title="' . e(I18N::translate('Cross-reference')) . '">↪</span> ' . $label . '<a href="' . e($hit['url']) . '">' . $hit['name'] . '</a>';
-            }
-        } elseif ($ambiguous['goto_url'] !== '') {
-            $html .= '<br><span class="le-cross-ref" title="' . e(I18N::translate('Cross-reference')) . '">↪</span> <a href="' . e($ambiguous['goto_url']) . '">@' . e($uid) . '@ (' . $count . ')</a>';
-        }
-
-        return $html;
-    }
-
-    /**
-     * The GEDCOM tag a link target is declared to be: the "wt" type letter
-     * mapped to its tag, "OBJE" for a pic link's id= target, null when there
-     * is nothing to check (classic / unknown letter / other classes).
-     */
-    private static function expectedTagFor(array $target, string $class): ?string {
-        return $target['type'] !== null
-            ? (self::WT_TYPE_TAGS[$target['type']] ?? null)
-            : ($class === 'pic' ? 'OBJE' : null);
-    }
-
-    /**
-     * Classify one resolved target: "missing" (the target - XREF or UID -
-     * could not be resolved), "mismatch" (the declared type differs from the
-     * actual record tag) or "ok". Shared by the reference-link renderer and
-     * the "only broken targets" filter.
-     */
-    private static function targetStatus(?array $resolved, ?string $expected_tag): string {
-        if ($resolved === null) {
-            return 'missing';
-        }
-        if ($expected_tag !== null && $resolved['actual'] !== $expected_tag) {
-            return 'mismatch';
-        }
-
-        return 'ok';
+        return LinkRenderer::linkInventoryHtml($entries, $max_per_class, $highlight_xref, $target_linker, $highlight_problems, $ambiguous_linker, $show_snippets);
     }
 
     /**
@@ -1132,22 +749,7 @@ final class XrefsService { // stuff related with handling cross-references
      * @param callable(string, ?string): (array{name: string, url: string, tree_label: string, actual: string}|null)|null $target_linker
      */
     public static function inventoryHasProblem(array $entries, ?callable $target_linker): bool {
-        if ($target_linker === null) {
-            return false;
-        }
-
-        foreach ($entries as $entry) {
-            if (!in_array($entry['class'], ['xref', 'classic', 'pic'], true)) {
-                continue;
-            }
-            foreach (self::extractLinkTargets($entry['token']) as $target) {
-                if (self::targetStatus($target_linker($target['xref'], $target['tree']), self::expectedTagFor($target, $entry['class'])) !== 'ok') {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return LinkRenderer::inventoryHasProblem($entries, $target_linker);
     }
 
     /**
@@ -1156,20 +758,7 @@ final class XrefsService { // stuff related with handling cross-references
      * @param array<string, int> $counts
      */
     public static function linkCountSummary(array $counts): string {
-        $total = 0;
-        $parts = [];
-        foreach (self::LINK_CLASSES as $class) {
-            $n = $counts[$class] ?? 0;
-            $total += $n;
-            if ($n > 0) {
-                $parts[] = $class . ':&nbsp;' . $n;
-            }
-        }
-        if ($total === 0) {
-            return '0';
-        }
-
-        return '<strong>' . $total . '</strong><div class="text-muted"><small>' . implode('<br/>', $parts) . '</small></div>';
+        return LinkRenderer::linkCountSummary($counts);
     }
 
     /**
@@ -1335,24 +924,7 @@ final class XrefsService { // stuff related with handling cross-references
      * @return array{rows: int, scanned_at: string|null, fresh: bool}
      */
     public static function indexStatus(int $fresh_seconds = self::INDEX_FRESH_SECONDS): array {
-        try {
-            if (!DB::schema()->hasTable(self::INDEX_META_TABLE)
-                || !DB::schema()->hasTable(self::INDEX_SCAN_TABLE)
-            ) {
-                return ['rows' => 0, 'scanned_at' => null, 'fresh' => false];
-            }
-            $meta = DB::table(self::INDEX_META_TABLE)->first(['last_run', 'rows']);
-
-            $rows       = (int) ($meta->rows ?? 0);
-            $scanned_at = $meta->last_run !== null ? (string) $meta->last_run : null;
-            $fresh      = $scanned_at !== null
-                && strtotime($scanned_at) > time() - $fresh_seconds;
-
-            return ['rows' => $rows, 'scanned_at' => $scanned_at, 'fresh' => $fresh];
-        } catch (Throwable $e) {
-            LinkEnhancerModule::log()->debug('link index status unavailable: ' . $e->getMessage(), 'XrefsService');
-            return ['rows' => 0, 'scanned_at' => null, 'fresh' => false];
-        }
+        return LinkIndexService::indexStatus($fresh_seconds);
     }
 
     /**
@@ -1366,36 +938,7 @@ final class XrefsService { // stuff related with handling cross-references
      *                                      the caller (datatables) applies its own
      */
     public static function getIndexQuery(Tree|null $tree = null, ?string $target_xref = null, array $rectypes = [], bool $ordered = true): Builder {
-        // Deduplicated link rows as a subquery: the join becomes at most
-        // 1:1 on (file, xref, rectype), so the plain count(*) the datatables
-        // service issues (it drops the outer DISTINCT) already equals the
-        // number of source records - not of links.
-        $table_prefix = DB::getTablePrefix();
-        $links = DB::table(self::INDEX_LINK_TABLE)
-            ->distinct()
-            ->select('file', 'xref', 'rectype');
-        if ($target_xref !== null && $target_xref !== '') {
-            $links->where('target_xref', '=', $target_xref);
-        }
-
-        $query = DB::table(self::INDEX_SCAN_TABLE . ' AS s')
-            ->joinSub($links, 'l', static function ($join): void {
-                $join->on('l.file', '=', 's.file')
-                    ->on('l.xref', '=', 's.xref')
-                    ->on('l.rectype', '=', 's.rectype');
-            })
-            ->distinct()
-            ->select(['s.file', 's.xref', DB::raw($table_prefix . 's.rectype AS type'), DB::raw('NULL AS block_id'), DB::raw('NULL AS user_id')])
-            ->whereIn('s.rectype', self::normalizeIndexRectypes($rectypes));
-
-        if ($ordered) {
-            $query->orderBy('s.file')->orderBy('s.xref');
-        }
-        if ($tree instanceof Tree) {
-            $query->where('s.file', '=', $tree->id());
-        }
-
-        return $query;
+        return LinkIndexService::getIndexQuery($tree, $target_xref, $rectypes, $ordered);
     }
 
     /**
@@ -1407,47 +950,7 @@ final class XrefsService { // stuff related with handling cross-references
      * @return array<int, array{tag_path: string, class: string, token: string, snippet: string|null}>
      */
     public static function indexRowLinks(int $file, string $xref, string $rectype): array {
-        $links = [];
-        foreach (DB::table(self::INDEX_LINK_TABLE)
-            ->where('file', '=', $file)
-            ->where('xref', '=', $xref)
-            ->where('rectype', '=', $rectype)
-            ->get(['tag_path', 'link_class', 'token', 'snippet']) as $row) {
-            $key = $row->link_class . "\0" . $row->token;
-            if (!isset($links[$key])) {
-                $links[$key] = [
-                    'tag_path' => (string) $row->tag_path,
-                    'class'    => (string) $row->link_class,
-                    'token'    => (string) $row->token,
-                    'snippet'  => $row->snippet !== null ? (string) $row->snippet : null,
-                ];
-            }
-        }
-
-        return array_values($links);
-    }
-
-    /**
-     * Map the UI record-type filter to the concrete rectype values stored
-     * in the index (OTHER expands to its subtypes, which are stored as the
-     * actual o_type values).
-     *
-     * @param  array<int,string> $rectypes
-     * @return array<int,string>
-     */
-    private static function normalizeIndexRectypes(array $rectypes): array {
-        $record_keys = self::supportedGedcomRecordKeys();
-        $rectypes    = array_map('strtoupper', $rectypes);
-        $rectypes    = array_values(array_filter($rectypes, static fn (string $s): bool => in_array($s, $record_keys, true)));
-        if ($rectypes === []) {
-            $rectypes = self::supportedGedcomTableKeys();
-        }
-        $expanded = array_values(array_filter($rectypes, static fn (string $s): bool => $s !== 'OTHER'));
-        if (in_array('OTHER', $rectypes, true)) {
-            $expanded = array_merge($expanded, self::GEDCOM_OTHER_SUBTYPES);
-        }
-
-        return array_values(array_unique($expanded));
+        return LinkIndexService::indexRowLinks($file, $xref, $rectype);
     }
 
     /**
