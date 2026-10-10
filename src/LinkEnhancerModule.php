@@ -26,14 +26,11 @@ declare(strict_types=1);
 
 namespace Schwendinger\Webtrees\Module\LinkEnhancer;
 
-use DomainException;
 use Exception;
 use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\Enums\AccessLevel; //wt2.3
 use Fisharebest\Webtrees\FlashMessages;
 use Fisharebest\Webtrees\GedcomRecord;
-use Fisharebest\Webtrees\Http\RequestHandlers\HomePage;
-use Fisharebest\Webtrees\Http\RequestHandlers\TreePage;
 use Fisharebest\Webtrees\I18N;
 use Schwendinger\Webtrees\Helpers\Functions;
 use Schwendinger\Webtrees\Helpers\MoreI18N;
@@ -50,12 +47,8 @@ use Fisharebest\Webtrees\Module\ModuleListTrait;
 use Fisharebest\Webtrees\Module\ModuleTabInterface;
 use Fisharebest\Webtrees\Module\ModuleTabTrait;
 use Fisharebest\Webtrees\Tree;
-use Fisharebest\Webtrees\User;
 use Fisharebest\Webtrees\Registry;
-use Fisharebest\Webtrees\Services\AdminService;
-use Fisharebest\Webtrees\Services\TimeoutService;
 use Fisharebest\Webtrees\Services\TreeService;
-use Fisharebest\Webtrees\Session;
 use Fisharebest\Webtrees\Validator;
 use Fisharebest\Webtrees\View;
 use Illuminate\Database\Capsule\Manager as DB;
@@ -78,16 +71,17 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpWtCoreAct
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpWthbAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\XrefDetailData;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\XrefOverviewListData;
-use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
-use Schwendinger\Webtrees\Module\LinkEnhancer\Services\IndexRebuildScheduler;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\WthbAdminHandler;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\RenumberActionHandler;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Services\AdminSettingsBuilder;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\MarkdownEditorActivationService;
-use Schwendinger\Webtrees\Module\LinkEnhancer\Services\RenumberWithLinksService;
-use Schwendinger\Webtrees\Module\LinkEnhancer\Services\UidIndexService;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Services\ContentBuilder;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\WthbService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefDetailService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\SettingInterface;
 use Schwendinger\Webtrees\Helpers\ClassName;
+use Schwendinger\Webtrees\Services\ModuleLog;
 
 use function array_key_exists, boolval, count, strval, is_array, intval, route, trim;
 use Throwable;
@@ -120,6 +114,8 @@ class LinkEnhancerModule extends AbstractModule implements
     /**
      * list of const for module administration
      */
+    public const CACHE_TTL_1D = 86400;
+    public const LOG_ID = 'linkenhancer';
     public const CUSTOM_MODULE = 'linkenhancer';
     public const MODULE_NAME = '_linkenhancer_'; // webtrees module name (folder name, underscore-wrapped)
     public const CUSTOM_AUTHOR = 'Bernd Schwendinger';
@@ -161,6 +157,7 @@ class LinkEnhancerModule extends AbstractModule implements
     public const PREF_LINKSPP_OVERVIEW_ACCESS = 'LINKSPP_OVERVIEW_ACCESS'; // -1=Hidden, 0=Managers, 1=Members, 2=All
     public const PREF_LINKSPP_DETAIL_ACCESS = 'LINKSPP_DETAIL_ACCESS'; // -1=Hidden, 0=Managers, 1=Members, 2=All
     public const PREF_LINKSPP_DETAIL_INCLUDE_BLOCKS = 'LINKSPP_DETAIL_INCLUDE_BLOCKS'; // include block references in detail view
+    public const PREF_DEBUG_LOG = 'DEBUG_LOG'; // PHP error_log debug output; 0=off, 1=on
 
     /**
      * Canonical handler keys (via Functions::canonicalHandlerKey) of the
@@ -261,6 +258,7 @@ class LinkEnhancerModule extends AbstractModule implements
         self::PREF_WTHB_LINKS_TYPE           => [ 'type' => 'int',    'default' => '2' ], // triple-state, 0=off, 1=user defined, 2=on
         self::PREF_WTHB_LINKS_JSON           => [ 'type' => 'string', 'default' => self::STD_WTHB_LINKS_JSON ],
         self::PREF_JS_DEBUG_CONSOLE          => [ 'type' => 'bool',   'default' => '0' ],
+        self::PREF_DEBUG_LOG                 => [ 'type' => 'bool',   'default' => '0' ],
         self::PREF_OPEN_IN_NEW_TAB           => [ 'type' => 'int',    'default' => '2' ], // triple-state, 0=off, 1=user defined, 2=on
         self::PREF_WTHB_STD_LINK             => [ 'type' => 'string', 'default' => self::STDLINK_WTHB ], // url
         self::PREF_GENWIKI_LINK              => [ 'type' => 'string', 'default' => self::STDLINK_GENWIKI ], // url
@@ -307,12 +305,7 @@ class LinkEnhancerModule extends AbstractModule implements
     protected WthbService $wthb;
     protected MarkdownEditorActivationService $mde;
 
-    // JavaScript is composed in headContent and can be injected in bodyContent, after vendor and webtrees js is included
-    protected array $bundleShortcuts;
-    protected string $docReadyJs;
-    protected string $initJs;
 
-    protected bool $needajax;
 
 
     public function __construct(public readonly bool $vesta_common_enabled = false)
@@ -332,8 +325,6 @@ class LinkEnhancerModule extends AbstractModule implements
         // By registering the service now it is available to other custom module in their boot methods. No impact due to unpredictable boot order of modules.
         // The service is also available when the module is disabled - however, this should not be a problem, as it only has an effect when this module is enabled.
         Registry::container()->set(MarkdownEditorActivationService::class, $this->mde);
-
-        $this->needajax = false;
     }    
   
     /**
@@ -357,10 +348,30 @@ class LinkEnhancerModule extends AbstractModule implements
     }
 
     /**
+     * Get the module logger instance.
+     */
+    public static function log(): ModuleLog
+    {
+        return ModuleLog::for(self::LOG_ID);
+    }
+
+    public function wthb(): WthbService
+    {
+        return $this->wthb;
+    }
+
+    public function mde(): MarkdownEditorActivationService
+    {
+        return $this->mde;
+    }
+
+    /**
      * Called for all *enabled* modules.
      */
     public function boot(): void
     {
+        ModuleLog::for(self::LOG_ID, $this->getPref(self::PREF_DEBUG_LOG, true) === '1');
+
         Functions::updateSchema($this, '\Schwendinger\Webtrees\Module\LinkEnhancer\Schema', 'SCHEMA_VERSION', self::HELP_SCHEMA_TARGET_VERSION);
 
         $access_level = (int) $this->getPref(self::PREF_LINKSPP_DETAIL_ACCESS, true);
@@ -389,7 +400,7 @@ class LinkEnhancerModule extends AbstractModule implements
                     }
                 }
             },
-            86400
+            self::CACHE_TTL_1D
         );
 
         // Register a namespace for our views.
@@ -454,226 +465,7 @@ class LinkEnhancerModule extends AbstractModule implements
      */
     public function headContent(): string
     {
-        $cfg_home_type   = $this->getPref(self::PREF_HOME_LINK_TYPE, true); // 0=off, 1=Home, 2=My-Page
-        $cfg_home_active = boolval($cfg_home_type);
-        $cfg_wthb_active = $this->getPref(self::PREF_WTHB_ACTIVE, true);
-        $cfg_link_active = $this->getPref(self::PREF_LINKSPP_ACTIVE, true);
-        $cfg_md_active   = $this->getPref(self::PREF_MD_ACTIVE, true);
-
-        if (!$cfg_home_active && !$cfg_wthb_active && ! $cfg_md_active && !$cfg_link_active) {
-            return '';
-        }
-
-        $cfg_md_editor_active = $this->getPref(self::PREF_MDE_ACTIVE, true, true);
-        $cfg_md_img_active    = $this->getPref(self::PREF_MD_IMG_ACTIVE, true, true);
-        $cfg_md_ext_active    = $this->getPref(self::PREF_MD_EXT_ACTIVE, true, true);
-        $cfg_js_debug_console = $this->getPref(self::PREF_JS_DEBUG_CONSOLE, true);
-
-
-        $request = Registry::container()->get(ServerRequestInterface::class);
-        //ressources to include
-        $this->bundleShortcuts = [];
-        $includeRes = '';
-        $this->docReadyJs = ''; // init on document ready
-        $this->initJs = '';
-      
-        $activeRouteInfo = Utils::getActiveRoute($request);
-        if ($cfg_js_debug_console) {
-            $this->docReadyJs .= "console.debug('LE-Mod active route:', " . json_encode($activeRouteInfo) .");";
-        }
-
-        // --- Webtrees Handbuch Link
-        if ($cfg_wthb_active) {
-            $this->bundleShortcuts[] = 'wthb';
-
-            $withSubcontext = $this->getPref(self::PREF_WTHB_SUBCONTEXT, true);
-            $help = $this->wthb->getContextHelp($activeRouteInfo, $withSubcontext, $cfg_js_debug_console);
-            if ($cfg_js_debug_console) {
-                if (is_array($help)) {
-                    $this->docReadyJs .= "console.debug('LE-Mod help rows:', " . json_encode($help['result']) . ");";
-                    $this->docReadyJs .= "console.debug('LE-Mod help sql:', " . json_encode($help['sql']) . ");";
-                    if ($withSubcontext) $this->docReadyJs .= "console.debug('LE-Mod help subcontext:', " . json_encode($help['subcontext']) . ");";
-                } else {
-                    $this->docReadyJs .= "console.debug('LE-Mod help:', " . json_encode($help) . ");";
-                }
-            }
-
-            $help_url = $help['help_url'] ?? $help; //gettype(value: $help) == 'string' ? $help : $help->first()->url;
-            $linksJsonString = match($this->getPref(self::PREF_WTHB_LINKS_TYPE, true)) {
-                1 => $this->getPref( self::PREF_WTHB_LINKS_JSON, true), // user defined
-                2 => self::STD_WTHB_LINKS_JSON, // default json
-                default => '' // off
-            };
-
-            $options = [
-                'I18N'            => Utils::getJsI18N('wthb', $this),
-                'help_url'        => $help_url,
-                'faicon'          => $this->getPref(self::PREF_WTHB_FAICON, true),
-                'wiki_url'        => $this->getPref(self::PREF_GENWIKI_LINK),
-                'wthb_url'        => $this->getPref(self::PREF_WTHB_STD_LINK),
-                'dotranslate'     => $this->getPref(self::PREF_WTHB_TRANSLATE, true), // 0=off, 1=user defined, 2=on
-                'subcontext'      => $withSubcontext && is_array($help) ? $help['subcontext'] : [],
-                'tocnsearch_url'  => ($this->getPref(self::PREF_WTHB_TOCNSEARCH, true) ? route(HelpWthbAction::class, ['language' => I18N::languageTag()]) : ''),
-                'openInNewTab'    => $this->getPref(self::PREF_WTHB_OPEN_IN_NEW_TAB, true, true),
-                'splitNavlink'    => $this->getPref(self::PREF_WTHB_SPLIT_TOPMENU, true),
-                'wtcorehelp_url'  => ($this->getPref(self::PREF_WTHB_WTCOREHELP, true) ? route(HelpWtCoreAction::class, ['language' => I18N::languageTag()]) : ''),
-                'linksJson'       => Utils::getWthbLinksJsonStringTranslated($linksJsonString),
-                'admin_url'       => (Auth::isAdmin() ? route('module', ['module' => $this->name(), 'action' => 'Admin']) : ''),
-            ];
-
-            $this->initJs .= "LinkEnhMod.initWthb(" . json_encode($options) . ");";
-        }        
-
-        // === admin backend - only if patch P002 for administration.phtml was applied; default: headContent of custom modules is not called on the admin backend
-        // TODO - is it possible to determine the underlying page layout or should the info for backend pages be stored in DB?!
-        if (Utils::isAdminPage($request))
-        {
-                if ($cfg_wthb_active) {
-                    $includeRes .= Utils::getIncludeWebressourceString($this, $this->bundleShortcuts, WebRessource::CssAndJs);
-                    $includeRes .= Utils::getJavascriptWrapper($this->docReadyJs, $this->initJs);
-                    return $includeRes;
-                }
-                return ''; # other stuff is of no use in admin backend
-        }
-
-
-        $tree = Validator::attributes($request)->treeOptional();
-
-        // === include on all pages
-        // --- I18N for JS MDE and enhanced links
-        //if ($cfg_link_active || $cfg_md_editor_active) {
-        //    $includeRes .= "<script>window.I18N = " . Utils::getJsI18N() . "; </script>";
-        //}
-        // --- Home Link
-        $isHomeLinkActive = $cfg_home_active && $tree != null;
-        if ($isHomeLinkActive) {
-            $params = [ 'tree' => $tree->name()];
-            $url = "#";
-            $target = '';
-            switch ($cfg_home_type) {
-                case 1:
-                    $url = route(TreePage::class, $params);
-                    break;
-                case 2:
-                    $url = route(HomePage::class, $params);
-                    break;
-                case 3:
-                    $url = $this->getPref(self::PREF_HOME_LINK_URL);
-                    $url = $url !== '' ? $url : '#';
-                    $target = $this->getPref(self::PREF_HOME_LINK_OPEN_IN_NEW_TAB, true, true) ? ' target="_blank"' : '';
-                    break;
-            }
-            $this->docReadyJs .= 'document.querySelectorAll(".wt-site-title").forEach(el => el.innerHTML = `<a class="' . self::STDCLASS_HOME_LINK . '" href="' . e($url) . '"' . $target . '>` + el.innerHTML + "</a>");';
-        }
-
-        // --- UID search in quick search field
-        if ($this->getPref(self::PREF_UID_ACTIVE, true) && $tree !== null) {
-            $uid_route = route('le.goto-uid.tree', ['tree' => $tree->name(), 'uid' => '__UID__']);
-            $this->docReadyJs .= '
-(function(){
-    var f = document.querySelector("form.wt-header-search-form");
-    if (!f) return;
-    f.addEventListener("submit", function(e) {
-        var q = (f.querySelector("input[name=query]") || {}).value || "";
-        q = q.trim();
-        if (!q) return;
-        var uid = null;
-        if (q.toLowerCase().startsWith("uid:")) {
-            uid = q.slice(4).trim();
-        } else if (/^(?:[0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12}|[0-9a-f]{36,38})$/i.test(q)) {
-            uid = q;
-        }
-        if (uid) {
-            e.preventDefault();
-            window.location.href = "' . e($uid_route) . '".replace("__UID__", encodeURIComponent(uid));
-        }
-    });
-})();';
-        }
-
-        // --- Link++
-        if ($cfg_link_active) {
-            $this->bundleShortcuts[] = 'le';
-
-            $lecfg = $this->getPref(self::PREF_LINKSPP_JS); // getPref returns trimmed string
-            $lecfg = $lecfg != '' ? $lecfg : '{}';
-            $treename = ($tree !== null ? $tree->name() : '');
-
-            $options = [
-                'I18N'         => Utils::getJsI18N('le', $this),
-                'thisXref'     => Validator::attributes($request)->isXref()->string('xref', ''),
-                'openInNewTab' => $this->getPref(self::PREF_LINKSPP_OPEN_IN_NEW_TAB, true),
-                'uidActive'    => $this->getPref(self::PREF_UID_ACTIVE, true),
-                'tree'         => $treename,
-                'baseurl'      => route(TreePage::class, [ 'tree' => $treename ]),
-                'urlmode'      => (Validator::attributes($request)->boolean('rewrite_urls', false) ? 'pretty' : 'default'),
-            ];
-            $this->docReadyJs .= "LinkEnhMod.initLE($lecfg, " . json_encode($options) . ");";
-
-            // --- Cross-reference detail tab (non-INDI record pages)
-            $xref_attr = Validator::attributes($request)->isXref()->string('xref', '');
-            $handler_key = Functions::canonicalHandlerKey($activeRouteInfo['handler'] ?? '');
-            $record_type = self::XREF_DETAIL_HANDLER_KEYS[$handler_key] ?? null;
-            if ($record_type !== null && $xref_attr !== '' && $tree !== null
-                && $this->accessLevel($tree, ModuleTabInterface::class) >= Auth::accessLevel($tree, Validator::attributes($request)->user())) {
-                $url_params = [
-                    'tree' => $tree->name(),
-                    'xref' => $xref_attr,
-                ];
-                if ($record_type === 'FAM') {
-                    $url_params['modal'] = 1;
-                }
-
-                $this->initJs .= "LinkEnhMod.initXrefDetailTab(" . json_encode([
-                    'url' => route(XrefDetailData::class, $url_params),
-                    'rectype'  => $record_type,
-                    'tabTitle' => $this->tabTitle(),
-                ]) . ");";
-            }
-        }
-
-        // === include selectively
-        // --- markdown support
-        if ($cfg_md_active && $tree != null && $tree->getPreference('FORMAT_TEXT') == 'markdown') {
-            if ($cfg_md_img_active || $cfg_md_ext_active) {
-                // markdown image support
-                $this->bundleShortcuts[] = 'img';
-
-                $options = [
-                    'I18N'      => Utils::getJsI18N('img', $this),
-                    'ext_fn'    => $this->getPref(self::PREF_MD_EXT_FN_ACTIVE, true),
-                    'ext_toc'   => $this->getPref(self::PREF_MD_EXT_TOC_ACTIVE, true),
-                    'td_h_ctrl' => $this->getPref(self::PREF_MD_TD_H_CTRL_TYPE, true),
-                    'td_h_cb'   => $this->getPref(self::PREF_MD_TD_H_CB_VISIBLE, true),
-                ];
-                $this->docReadyJs .= "LinkEnhMod.initMd(" . json_encode($options) . ");";
-            }
-
-            if ($cfg_md_editor_active) {
-                // --- TinyMDE -- only nessary on edit pages        
-                if ($this->mde->isEditPage($request)) {
-                    $this->bundleShortcuts[] = 'mde';
-
-                    $options = [
-                        'I18N'         => Utils::getJsI18N('mde', $this),    
-                        'href'         => $cfg_link_active,
-                        'src'          => $cfg_md_img_active,
-                        'ext'          => $cfg_md_ext_active,
-                        'ext_mark'     => $this->canActivateHighlightExtension(),
-                        'ext_fn'       => $this->getPref(self::PREF_MD_EXT_FN_ACTIVE, true),
-                        'ext_strike'   => $this->getPref(self::PREF_MD_EXT_STRIKE_ACTIVE, true),
-                        'query_filter' => $this->mde->getElementFilter(),
-                        'helpmd_url'   => route(HelpMdAction::class, ['language' => I18N::languageTag()]),
-                    ];                    
-                    $this->docReadyJs .= "LinkEnhMod.installMDE(" . json_encode($options) . ");";
-                }
-            }
-        }
-        
-        $includeRes .= Utils::getIncludeWebressourceString($this, $this->bundleShortcuts, WebRessource::CssAndJs);
-        $includeRes .= $this->getThemeSpecificCss($cfg_js_debug_console, $isHomeLinkActive);
-        $includeRes .= Utils::getJavascriptWrapper($this->docReadyJs, $this->initJs);
-        return $includeRes;
+        return $this->contentBuilder()->buildHead();
     }
 
     /**
@@ -682,117 +474,13 @@ class LinkEnhancerModule extends AbstractModule implements
      *
      * @return string
      */
-    public function bodyContent(): string {
-        $cfg_md_active        = $this->getPref(self::PREF_MD_ACTIVE, true);
-        $cfg_md_editor_active = $cfg_md_active ? $this->getPref(self::PREF_MDE_ACTIVE, true) : false;
-        $cfg_wthb_active      = $this->getPref(self::PREF_WTHB_ACTIVE, true);
-        $cfg_wthb_tocnsearch  = $this->getPref(self::PREF_WTHB_TOCNSEARCH, true);
-        $cfg_wthb_wtcorehelp  = $this->getPref(self::PREF_WTHB_WTCOREHELP, true);
-
-        $includeRes = '';
-        //$includeRes .= Utils::getIncludeWebressourceString($this, $this->bundleShortcuts, WebRessource::Js);
-        //$includeRes .= Utils::getJavascriptWrapper($this->docReadyJs, $this->initJs);
-
-        $html = '';
-        $this->needajax = false;
-        
-        if ($cfg_wthb_active) {
-            $html .= view($this->name() . '::wthb-modal');
-            $this->needajax = $cfg_wthb_tocnsearch || $cfg_wthb_wtcorehelp;
-        }
-
-        // wt-ajax-modal is included if necessary in process method via MiddleWareInterface
-        $this->needajax = ($this->needajax || ($cfg_md_editor_active && $this->mde->isEditPage())); // markdown editor is not useful on other pages
-
-        return $includeRes . $html;
+    public function bodyContent(): string
+    {
+        return $this->contentBuilder()->buildBody();
     }
 
 
-    /**
-     * Compiles theme specific css "patches"
-     * wthb needs some minor modifications with primer and justlight
-     * for home link there could be user defined patches
-     * 
-     * @param bool $jsDebugMsg        log to js debug console
-     * @param bool $isHomeLinkActive  is home link component active
-     * @return string
-     */    
-    private function getThemeSpecificCss(bool $jsDebugMsg, bool $isHomeLinkActive) : string {
-        $theme = Session::get('theme');
-        $palette = Session::get('palette', '');
-        $theme_palette = $theme . ($palette ? "_{$palette}" : ''); // palette is also set with other themes than colors
 
-        $includeRes = "";
-
-        if ($jsDebugMsg) {
-            $this->docReadyJs .= "console.debug('LE-Mod theme:', '$theme'" . ($palette ? ", 'palette=$palette'" : '') . ");";        
-        }
-
-        // links++
-        if (in_array('le', $this->bundleShortcuts) && in_array($theme, ['webtrees', 'clouds', 'colors', 'xenea'])) {
-            $includeRes .= "<style>.menu-list-xrefs::before {
-                content: \"🔗\"; 
-                display: inline-block;
-                vertical-align: middle !important;
-                margin-right: 0.25em;
-                }</style>\n";
-        }
-
-        // webtrees manual
-        if (in_array('wthb', $this->bundleShortcuts)) {
-            $themeStyles = [
-//-- justlight
-                '_jc-theme-justlight_'    =>
-".nav-item.dropdown.menu-wthb { line-height: 1.25; }
-.popover {
-  background-clip: padding-box;
-  background-color: hsl(0, 0%, 100%);;
-  border: 1px solid hwb(0 0% 100% / 0.18);
-  border-radius: 0.2rem;
-  text-align: start;
-  text-shadow: none;
-  z-index:1070;
-}
-.popover-body { padding: 0.5rem 0.5rem;}
-.helpsection .linkicon { background-size: 20px 20px !important; }",
-
-//-- primer
-                '_webtrees-primer-theme_' =>
-".nav-item.dropdown.menu-wthb {
-  line-height: 1.75;
-  color: var(--fgColor-muted);
-}
-.nav-item.dropdown.menu-wthb svg { color: var(--fgColor-muted); }
-.helpsection .linkicon { background-size: 20px 20px !important; }",
-            ];
-            $stylerules = $themeStyles[$theme_palette] ?? $themeStyles[$theme] ?? '';
-            $includeRes .= $stylerules ? "<style>{$stylerules}</style>\n" : '';
-        }
-
-        // home link
-        if ($isHomeLinkActive) {
-            $cfg_home_link_json = $this->getPref(self::PREF_HOME_LINK_JSON); // getPref returns trimmed string 
-            if ($cfg_home_link_json) {
-                $json = json_decode($cfg_home_link_json, true);
-                if ($json) {
-                    $stylerules = $json[$theme_palette] ?? $json[$theme] ?? $json['*'] ?? null;
-                    if ($stylerules) {
-                        $includeRes .= "<style>{$stylerules}</style>\n";
-                    } elseif ($jsDebugMsg) {
-                        $this->docReadyJs .= "console.debug('LE-Mod home link: JSON contains no matching style rule for current theme');";
-                    }
-                } else {
-                    FlashMessages::addMessage(
-                        I18N::translate('Home link - JSON with CSS rules seems to be invalid.'),
-                        'warning'
-                    );
-                }
-            }
-        }
-
-        return $includeRes;
-    }
-    
     /**
      * Open control panel page with options
      *
@@ -814,15 +502,7 @@ class LinkEnhancerModule extends AbstractModule implements
      */
     public function getAdminResetRoutesAction(ServerRequestInterface $request): ResponseInterface
     {
-        $this->importDeliveredCsv();
-        $csvfile = self::HELP_CSV;
-        if (file_exists($csvfile)) {
-            $this_hash = hash_file('sha256', $csvfile);
-            if ($this_hash) {
-                $this->setPref(self::PREF_WTHB_LASTHASH, $this_hash);
-            }
-        }
-        return redirect($this->getConfigLink());
+        return $this->wthbAdminHandler()->resetRoutes($request);
     }    
 
     /**
@@ -833,15 +513,7 @@ class LinkEnhancerModule extends AbstractModule implements
      */
     public function getAdminImportRoutesAction(ServerRequestInterface $request): ResponseInterface
     {
-        $title = I18N::translate('Import registered routes');
-        try {
-            $result = $this->wthb->importRoutesAction($request);
-            $this->wthb->setImportFlashOk($title, $result);
-        } catch (Exception $ex) {
-            $this->wthb->setImportFlashError($title, $ex->getMessage());
-        }
-        
-        return redirect($this->getConfigLink());
+        return $this->wthbAdminHandler()->importRoutes($request);
     }
 
     /**
@@ -852,18 +524,7 @@ class LinkEnhancerModule extends AbstractModule implements
      */
     public function getAdminCmmConfig2CsvAction(ServerRequestInterface $request): ResponseInterface
     {
-        $filename = "wthb-route-mapping-export-cmm.csv";
-        try {
-            return $this->wthb->exportCmmCsvAction($filename, $request);
-
-        } catch (Exception $ex) {
-            FlashMessages::addMessage(
-                MoreI18N::xlate('Export failed') . ' - Custom Module Manager config<hr><samp dir="ltr">' . $ex->getMessage() . '</samp>',
-                'danger'
-            );
-            return redirect($this->getConfigLink());
-        }
-
+        return $this->wthbAdminHandler()->cmmConfig2Csv($request);
     }    
 
     /**
@@ -874,17 +535,7 @@ class LinkEnhancerModule extends AbstractModule implements
      */
     public function postAdminCsvExportAction(ServerRequestInterface $request): ResponseInterface
     {
-        $filename = "wthb-route-mapping-export.csv";
-        try {
-            return $this->wthb->exportCsvAction($filename, $request);
-
-        } catch (Exception $ex) {
-            FlashMessages::addMessage(
-                MoreI18N::xlate('Export failed') . '<hr><samp dir="ltr">' . $ex->getMessage() . '</samp>',
-                'danger'
-            );
-            return redirect($this->getConfigLink());
-        }
+        return $this->wthbAdminHandler()->csvExport($request);
     }
 
 
@@ -895,15 +546,7 @@ class LinkEnhancerModule extends AbstractModule implements
      * @return ResponseInterface
      */
     public function postAdminCsvImportAction(ServerRequestInterface $request): ResponseInterface {
-        try {
-            $this->wthb->importCsvAction($request);
-        } catch (Exception $ex) {
-            FlashMessages::addMessage(
-                MoreI18N::xlate('Import failed') . '<hr><samp dir="ltr">' . $ex->getMessage() . '</samp>',
-                'danger'
-            );
-        }
-        return redirect($this->getConfigLink());   
+        return $this->wthbAdminHandler()->csvImport($request);
     }
 
 
@@ -925,8 +568,8 @@ class LinkEnhancerModule extends AbstractModule implements
                 try {
                     $value = trim(Validator::parsedBody($request)->string($preference));
                     $this->setPref($preference, $value);
-                } catch (Exception $ex) { //Fisharebest\Webtrees\Http\Exceptions\HttpBadRequestException
-                    //TODO maybe compose warning flash message for preferences not found in request?!
+                } catch (Exception $ex) {
+                    self::log()->error('pref ' . $preference . ' not saved: ' . $ex->getMessage(), 'Settings', flash: I18N::translate('Some settings could not be saved.'));
                 }
             }
 
@@ -1015,51 +658,8 @@ class LinkEnhancerModule extends AbstractModule implements
     public function getAdminRenumberAction(ServerRequestInterface $request): ResponseInterface
     {
         $this->layout = 'layouts/administration';
-
-        $params  = Validator::queryParams($request);
-        $tree_id = (int) $params->integer('target_tree', 0);
-        $trees   = Registry::container()->get(TreeService::class)->all();
-
-        $tree           = null;
-        $xrefs          = [];
-        $inbound_counts = [];
-        if ($tree_id > 0) {
-            foreach ($trees as $t) {
-                if ($t->id() === $tree_id) {
-                    $tree = $t;
-                    break;
-                }
-            }
-            if ($tree !== null) {
-                $xrefs = Registry::container()->get(AdminService::class)->duplicateXrefs($tree);
-                foreach (array_keys($xrefs) as $xref) {
-                    $inbound_counts[$xref] = DB::table(XrefsService::INDEX_LINK_TABLE)
-                        ->where('target_xref', '=', $xref)
-                        ->where(static function ($q) use ($tree): void {
-                            $q->where(static function ($q2) use ($tree): void {
-                                $q2->whereNull('target_tree')->where('file', '=', $tree->id());
-                            })->orWhere('target_tree', '=', $tree->name());
-                        })
-                        ->count();
-                }
-            }
-        }
-
-        $renumber_result = Session::get('le-renumber-result', null);
-        Session::forget('le-renumber-result');
-
-        return $this->viewResponse($this->name() . '::renumber-with-links', [
-            'title'            => /*I18N: renumber xrefs */ I18N::translate('%s (with links)', MoreI18N::xlate('Renumber XREFs')),
-            'module'           => $this,
-            'tree'             => $tree,
-            'trees'            => $trees,
-            'xrefs'            => $xrefs,
-            'inbound_counts'   => $inbound_counts,
-            'renumber_result'  => $renumber_result,
-            'link_status'      => XrefsService::indexStatus(),
-            'uid_status'       => UidIndexService::indexStatus(),
-            'cron_plan'        => IndexRebuildScheduler::deferPlan(),
-        ]);
+        [$view, $data] = $this->renumberHandler()->showPage($request);
+        return $this->viewResponse($view, $data);
     }
 
     /**
@@ -1067,82 +667,34 @@ class LinkEnhancerModule extends AbstractModule implements
      */
     public function postAdminRenumberAction(ServerRequestInterface $request): ResponseInterface
     {
-        $params  = Validator::parsedBody($request);
-        $tree_id = (int) $params->integer('target_tree', 0);
-        $trees   = Registry::container()->get(TreeService::class)->all();
-
-        $tree = null;
-        foreach ($trees as $t) {
-            if ($t->id() === $tree_id) {
-                $tree = $t;
-                break;
-            }
-        }
-
-        $redirect = route('module', ['module' => $this->name(), 'action' => 'AdminRenumber']
-            + ($tree_id > 0 ? ['target_tree' => $tree_id] : []));
-
-        if ($tree === null) {
-            FlashMessages::addMessage(MoreI18N::xlate('No valid tree selected.'), 'danger');
-            return redirect($redirect);
-        }
-
-        if ($tree->hasPendingEdit()) {
-            FlashMessages::addMessage(
-                MoreI18N::xlate('You need to accept or reject all pending changes before renumbering.'),
-                'danger'
-            );
-            return redirect($redirect);
-        }
-
-        $service = new RenumberWithLinksService(
-            Registry::container()->get(AdminService::class),
-            Registry::container()->get(TimeoutService::class),
-            Registry::container()->get(TreeService::class),
-        );
-        $report = $service->renumber($tree);
-
-        Session::put('le-renumber-result', [
-            'per'         => $report['per'] ?? [],
-            'timed_out'   => (bool) ($report['timed_out'] ?? false),
-            'defer_index' => (bool) ($report['defer_index'] ?? false),
-        ]);
-
-        $type = !empty($report['timed_out']) ? 'warning' : 'success';
-        FlashMessages::addMessage($this->renumberSummary($report), $type);
-
-        return redirect($redirect);
-    }
-
-    /**
-     * @param array<string, mixed> $report
-     */
-    private function renumberSummary(array $report): string
-    {
-        if (!empty($report['timed_out'])) {
-            return MoreI18N::xlate('The time limit was reached; no changes were made.');
-        }
-
-        $message = MoreI18N::xlate(
-            'Renumbered %1$d conflicting record(s) and updated %2$d le-link reference(s).',
-            (int) $report['count'],
-            (int) $report['links']
-        );
-
-        $message .= $report['defer_index']
-            ? ' ' . MoreI18N::xlate('The le_* index will be refreshed by the cron job.')
-            : ' ' . MoreI18N::xlate('The le_* index was updated inline.');
-
-        return $message;
+        return $this->renumberHandler()->execute($request);
     }
 
     // ─── ModuleDataFixInterface ─────────────────────────────────────────────
 
     private ?DataFixDispatcher $data_fix_dispatcher = null;
+    private ?WthbAdminHandler $wthb_admin_handler = null;
+    private ?RenumberActionHandler $renumber_handler = null;
+    private ?ContentBuilder $content_builder = null;
 
     public function dataFixDispatcher(): DataFixDispatcher
     {
         return $this->data_fix_dispatcher ??= new DataFixDispatcher();
+    }
+
+    private function wthbAdminHandler(): WthbAdminHandler
+    {
+        return $this->wthb_admin_handler ??= new WthbAdminHandler($this->wthb, $this);
+    }
+
+    private function renumberHandler(): RenumberActionHandler
+    {
+        return $this->renumber_handler ??= new RenumberActionHandler($this);
+    }
+
+    private function contentBuilder(): ContentBuilder
+    {
+        return $this->content_builder ??= new ContentBuilder($this);
     }
 
     public function fixOptions(Tree $tree): string
@@ -1185,6 +737,7 @@ class LinkEnhancerModule extends AbstractModule implements
             $type = (string) $params->string('type', null);
             $type = strtolower($type);
         } catch (Throwable $e) {
+            self::log()->debug('type param extract failed: ' . $e->getMessage(), 'AdminReset');
         }
         if (!$type || !in_array($type, ['list', 'tab'])) {
             return redirect($this->getConfigLink());
@@ -1432,7 +985,7 @@ class LinkEnhancerModule extends AbstractModule implements
      */
     protected function importDeliveredCsv(): void
     {
-        $result = $this->wthb->importCsvFlash(self::HELP_CSV);
+        $this->wthbAdminHandler()->importDelivered();
     }
 
 
@@ -1551,85 +1104,7 @@ class LinkEnhancerModule extends AbstractModule implements
      */
     private function getInitializedOptions(ServerRequestInterface $request): array
     {
-        $response = [];
-
-        $response['title'] = $this->title();
-        $response['description'] = $this->description();
-
-        $preferences = array_keys(self::PREFERENCES_SCHEMA);
-        foreach ($preferences as $preference) {
-            $response['prefs'][$preference] = $this->getPref($preference);
-        }
-
-        $jsfile = $this->resourcesFolder() . 'js' . DIRECTORY_SEPARATOR . 'bundle-le-config.js';
-        $jscode = '';
-        if (file_exists($jsfile)) {
-            $jscode = strval(file_get_contents($jsfile));
-        }
-        $response['jscode_linkpp'] = $jscode;
-        
-        $response['links'] = [];
-        $response['links']['csvexport'] = route('module', [
-            'module' => $this->name(),
-            'action' => 'AdminCsvExport'
-        ]);
-        $response['links']['csvimport'] = route('module', [
-            'module' => $this->name(),
-            'action' => 'AdminCsvImport'
-        ]);        
-        $response['links']['routeimport'] = route('module', [
-            'module' => $this->name(),
-            'action' => 'AdminImportRoutes'
-        ]);
-        $response['links']['resetroutes'] = route('module', [
-            'module' => $this->name(),
-            'action' => 'AdminResetRoutes'
-        ]);
-        $response['links']['csvexportcmm'] = ($this->wthb->isCmmAvailable() ?
-            route('module', [
-                'module' => $this->name(),
-                'action' => 'AdminCmmConfig2Csv'
-            ])
-            : ''
-        );
-        $response['links']['resetaccess_params'] = [
-            'module' => $this->name(),
-            'action' => 'AdminResetAccessOverwrites'
-        ];
-        
-
-        $response['tablerows'] = $this->wthb->getHelpTableCount();
-
-
-        $tree_service = Registry::container()->get(TreeService::class);
-
-        //FORMAT_TEXT = markdown
-        $trees = $tree_service->all();
-        $trees_w_md = [];
-        $trees_w_text = [];
-        foreach ($trees as $tree) {
-            if ($tree->getPreference('FORMAT_TEXT') === 'markdown') {
-                $trees_w_md[] = $tree->name();
-            } else {
-                $trees_w_text[] = $tree->name();
-            }
-        }
-        $cntTotal = count($trees);
-        $response['mdcfg'] = [
-            'total'        => $cntTotal,
-            'activated'    => count($trees_w_md),
-            'trees_w_md'   => $trees_w_md,
-            'trees_w_text' => $trees_w_text
-        ];
-
-        $response['vesta_common_enabled'] = $this->vesta_common_enabled;
-
-        $response['uid_index_status'] = UidIndexService::indexStatus();
-
-        $mde_rules = $this->mde->getAllRules();
-        $response['mde_custom'] = $mde_rules['custom'] ?? false ? print_r($mde_rules['custom'], true) : '';
-
-        return $response;
+        return (new AdminSettingsBuilder($this))->build();
     }
 
 
@@ -1687,7 +1162,7 @@ class LinkEnhancerModule extends AbstractModule implements
 
         // include wt-ajax-modal if needed and not already present
         // only helpful on html pages requested by GET method
-        if (!$this->needajax || strtoupper($request->getMethod()) !== 'GET') {
+        if (!$this->contentBuilder()->needsAjax() || strtoupper($request->getMethod()) !== 'GET') {
             return $response;
         }
 

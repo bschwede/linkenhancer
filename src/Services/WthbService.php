@@ -54,6 +54,7 @@ class WthbService { // stuff related to webtrees manual link handling
 
     public const string CMM_CLASS = '\Jefferson49\Webtrees\Module\CustomModuleManager\CustomModuleManager';
     public const string CMM_CFG_CLASS = '\Jefferson49\Webtrees\Module\CustomModuleManager\Configuration\ModuleUpdateServiceConfiguration';
+    private const FLASH_TTL_1H = 3600;
 
     public function __construct(string $helptable, string $std_url, string $wiki_url)
     {
@@ -162,6 +163,7 @@ class WthbService { // stuff related to webtrees manual link handling
         try {
             $result = $this->importCsv($file, $separator, $truncate, $encoding);
         } catch (Exception $ex) {
+            LinkEnhancerModule::log()->error('CSV import failed: ' . $ex->getMessage(), 'WthbService');
             $this->setImportFlashError($title, $ex->getMessage());
             return;
         }
@@ -216,6 +218,7 @@ class WthbService { // stuff related to webtrees manual link handling
                     ->where('url', '!=', '')
                     ->count();
             } catch (Exception $e) {
+                LinkEnhancerModule::log()->error('help_table count failed: ' . $e->getMessage(), 'WthbService');
             }
         }
 
@@ -273,7 +276,7 @@ class WthbService { // stuff related to webtrees manual link handling
                         'warning'
                     );
                 },
-                3600
+                self::FLASH_TTL_1H
             );
             return $std_url;
         }
@@ -403,6 +406,7 @@ class WthbService { // stuff related to webtrees manual link handling
                 $custom_module_manager = $module_service->findByName((self::CMM_CLASS)::activeModuleName());
                 $result = $custom_module_manager !== null;
             } catch (Exception $ex)  {
+                LinkEnhancerModule::log()->debug('CMM not available: ' . $ex->getMessage(), 'WthbService');
             }
         }
         return $result;

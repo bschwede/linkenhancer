@@ -32,6 +32,7 @@ use Fisharebest\Webtrees\Family;
 use Fisharebest\Webtrees\GedcomRecord;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Individual;
+use Fisharebest\Webtrees\Log;
 use Fisharebest\Webtrees\Media;
 use Fisharebest\Webtrees\Note;
 use Fisharebest\Webtrees\Registry;
@@ -143,6 +144,11 @@ final class RenumberWithLinksService
             $report['core_rows']  += $core;
             $report['links']      += $links;
             $report['index_rows'] += $index;
+
+            Log::addEditLog(
+                I18N::translate('Renumbered @%1$s@ → @%2$s@ (%3$s, %4$d core rows, %5$d links)', $old_xref, $new_xref, $type, $core, $links),
+                $tree
+            );
 
             // How much time do we have left? Stop with partial progress (core pattern).
             if ($this->timeout_service->isTimeNearlyUp()) {

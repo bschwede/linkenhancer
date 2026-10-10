@@ -31,24 +31,19 @@ use Fisharebest\Webtrees\FlashMessages;
 use Fisharebest\Webtrees\GedcomRecord;
 use Fisharebest\Webtrees\Http\Exceptions\HttpException;
 use Fisharebest\Webtrees\Http\Exceptions\HttpNotFoundException;
-use Fisharebest\Webtrees\Http\ViewResponseTrait;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Services\TreeService;
-use Fisharebest\Webtrees\Site;
 use Fisharebest\Webtrees\Tree;
 use Fisharebest\Webtrees\Validator;
 use Illuminate\Support\Collection;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\UidIndexService;
 
 use function count;
-use function method_exists;
 use function redirect;
-use function trim;
 
 /**
  * Resolve a UID (_UID in GEDCOM 5.5.1 / UID in GEDCOM 7.0) to a record.
@@ -63,9 +58,8 @@ use function trim;
  * that finds nothing in the tree falls back to a global lookup and reports the
  * cross-tree hit with a flash message (A1).
  */
-class GotoUidAction implements RequestHandlerInterface
+class GotoUidAction extends AbstractGotoAction
 {
-    use ViewResponseTrait;
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
@@ -106,24 +100,6 @@ class GotoUidAction implements RequestHandlerInterface
     }
 
     /**
-     * The tree the page layout shows in its header (genealogy menu, tree
-     * title, header search): the tree-scoped route's tree, otherwise the
-     * site's default tree (HomePage pattern) so the global selection page
-     * still gets a full header. Null when the user can see no tree at all.
-     */
-    private function headerTree(?Tree $request_tree): ?Tree
-    {
-        if ($request_tree instanceof Tree) {
-            return $request_tree;
-        }
-
-        $trees   = Registry::container()->get(TreeService::class)->all();
-        $default = Site::getPreference('DEFAULT_GEDCOM');
-
-        return $trees->get($default) ?? $trees->first();
-    }
-
-    /**
      * Resolve the raw index rows to records the current user is allowed to see.
      *
      * @return array<int, array{record: GedcomRecord, uid: string, rectype: string, tag_path: string, label: string}>
@@ -157,26 +133,10 @@ class GotoUidAction implements RequestHandlerInterface
                 'uid'      => (string) $hit->uid,
                 'rectype'  => (string) $hit->rectype,
                 'tag_path' => (string) $hit->tag_path,
-                'label'    => $this->label($record),
+                'label'    => static::recordLabel($record),
             ];
         }
 
         return $visible;
-    }
-
-    /**
-     * A short, user-facing label for a record: a human name when the record
-     * type provides one (individual / family), otherwise its XREF.
-     */
-    private function label(GedcomRecord $record): string
-    {
-        if (method_exists($record, 'fullName')) {
-            $label = trim((string) $record->fullName());
-            if ($label !== '') {
-                return $label;
-            }
-        }
-
-        return '@' . $record->xref() . '@';
     }
 }

@@ -172,7 +172,8 @@ final class UidIndexService
                 ->orderBy('xref')
                 ->orderBy('tag_path')
                 ->get(['file', 'xref', 'rectype', 'tag_path', 'uid']);
-        } catch (Throwable) {
+        } catch (Throwable $e) {
+            LinkEnhancerModule::log()->debug('UID lookup query failed: ' . $e->getMessage(), 'UidIndex');
             return new Collection();
         }
     }
@@ -194,7 +195,8 @@ final class UidIndexService
                 ->pluck('uid');
 
             return $uids->filter()->values()->all();
-        } catch (Throwable) {
+        } catch (Throwable $e) {
+            LinkEnhancerModule::log()->debug('uidsForRecord query failed: ' . $e->getMessage(), 'UidIndex');
             return [];
         }
     }
@@ -226,7 +228,8 @@ final class UidIndexService
                 && strtotime($last_run) > time() - $fresh_seconds;
 
             return ['rows' => $rows, 'last_run' => $last_run, 'fresh' => $fresh, 'source_available' => $source_available];
-        } catch (Throwable) {
+        } catch (Throwable $e) {
+            LinkEnhancerModule::log()->debug('UID index status unavailable: ' . $e->getMessage(), 'UidIndex');
             return ['rows' => 0, 'last_run' => null, 'fresh' => false, 'source_available' => false];
         }
     }

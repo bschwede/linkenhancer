@@ -46,6 +46,9 @@ enum WebRessource
 }
 
 class LinkEnhancerUtils { // misc helper functions
+    public const CACHE_TTL_1D = 86400;
+    public const INLINE_CSS_MAX_BYTES = 500;
+
     /**
      * Wrapper for init javascript with try-catch-wrapper
      * 
@@ -381,7 +384,7 @@ class LinkEnhancerUtils { // misc helper functions
             $infix = implode("-", $bundleShortcutsCss);
             $assetFile = $module->resourcesFolder() . "css/bundle-{$infix}.min.css";
             if (file_exists($assetFile)) {
-                if (filesize($assetFile) > 500) {
+                if (filesize($assetFile) > self::INLINE_CSS_MAX_BYTES) {
                     $includeRes .= '<link rel="stylesheet" type="text/css" href="' . $module->assetUrl("css/bundle-{$infix}.min.css") . '">';
                 } else {
                     $includeRes .= '<style>' . file_get_contents($assetFile) . '</style>';
@@ -440,8 +443,8 @@ class LinkEnhancerUtils { // misc helper functions
 
     public static function getCachedResponse(string $content):ResponseInterface {
         return response($content)
-            ->withHeader('Cache-Control', 'public, max-age=86400, immutable')
-            ->withHeader('Expires', gmdate('D, d M Y H:i:s', time() + 86400) . ' GMT') // force caching for Firefox
+            ->withHeader('Cache-Control', 'public, max-age=' . self::CACHE_TTL_1D . ', immutable')
+            ->withHeader('Expires', gmdate('D, d M Y H:i:s', time() + self::CACHE_TTL_1D) . ' GMT') // force caching for Firefox
             ->withHeader('ETag', md5($content));
     }
 

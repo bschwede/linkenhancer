@@ -26,6 +26,7 @@ declare(strict_types=1);
 
 namespace Schwendinger\Webtrees\Module\LinkEnhancer\Services;
 
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Throwable;
 
 use function class_exists;
@@ -80,6 +81,7 @@ final class IndexRebuildScheduler
         try {
             return $svc::isEnabled() && $svc::listenersFor($event) !== [];
         } catch (Throwable) {
+            LinkEnhancerModule::log()->debug('cronjob deferral unavailable: ' . $event, 'IndexRebuild');
             return false; // cronjob not migrated / tables missing
         }
     }
@@ -116,8 +118,8 @@ final class IndexRebuildScheduler
                 return;
             }
             $svc::pushEvent($event, $payload);
-        } catch (Throwable) {
-            // never break the caller because of the optional deferral
+        } catch (Throwable $e) {
+            LinkEnhancerModule::log()->error('index rebuild defer failed: ' . $e->getMessage(), 'IndexRebuild');
         }
     }
 }

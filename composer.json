@@ -6,7 +6,7 @@
         { "type": "path", "url": "../wt-shared-libs", "options": { "symlink": false } }
     ],
     "require": {
-        "bschwede/wt-shared-libs": "^1.0"
+        "bschwede/wt-shared-libs": "^1.1.4"
     },
     "config": {
         "prepend-autoloader": false

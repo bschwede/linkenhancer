@@ -532,6 +532,43 @@ The page shows which source it uses:
 Use `tests/p1-measure.php` (read-only) on your instance to check how expensive the live scan is for your data and to calibrate the cron schedule.
 
 
+<a name="renumber"></a>
+### Renumber XREFs (with links)
+
+The standard webtrees renumbering (Control panel → Data fixes → Renumber XREFs) resolves cross-tree XREF collisions but does not update linkenhancer links. This module provides an extended renumber that repairs all affected links in one step.
+
+**Access:** Control panel → LinkEnhancer → Renumber XREFs (with links)
+
+**Workflow:**
+1. Select the tree that has XREF collisions (duplicate XREFs with other trees).
+2. The page shows each conflicting XREF, its record type, and the number of inbound linkenhancer references from the link index.
+3. On submit, each conflicting XREF is:
+   - renamed in the GEDCOM core tables (same as the standard renumber)
+   - all `wt=@XREF@` / `id=@XREF@` links in notes and blocks are updated
+   - the link index (`le_link_index`) and UID index (`le_uid_index`) are repaired inline or deferred to cron
+4. Each renumbered record is logged in the edit log (Admin → Changes log), e.g. `Renumbered @I456@ → @I457@ (INDI, 3 core rows, 2 links)`.
+5. If the PHP time limit is reached, the run stops with partial progress — the remaining conflicts are renumbered on the next run.
+
+> [!NOTE]
+> The standard webtrees renumber (without links) remains available and is unaffected. Use this module's renumber when your notes or blocks contain linkenhancer links.
+
+
+<a name="datafix"></a>
+### Data fixes
+
+The module provides a set of data-fix handlers accessible from the standard webtrees data-fix interface (Control panel → Data fixes → LinkEnhancer). Each handler addresses a specific link integrity issue:
+
+| Fix | What it does |
+|-----|-------------|
+| **XREF ⇄ UID reference swap** | Converts linkenhancer link targets between XREF and UID form. Direction is selectable (XREF→UID or UID→XREF). Requires the UID index to be built. |
+| **Fix `wt=` type letter** | Sets, repairs, or removes the legacy type letter in `wt=<type>@REF@` links. Modes: *set* (add missing type), *repair* (fix wrong type), *remove* (strip type letter). |
+| **Report dangling link targets** | *Report-only*: lists linkenhancer links whose target record no longer exists. No changes are made. |
+| **Report ambiguous UID targets** | *Report-only*: lists links whose UID target resolves to more than one record. No changes are made. |
+| **Report duplicate UIDs in index** | *Report-only*: lists UIDs assigned to multiple records in the UID index. No changes are made. |
+
+Each fix follows the standard webtrees data-fix workflow: select fix type → preview → apply. The data-fix page also shows the current status of the link and UID indexes, and whether index updates will be deferred to the cron job.
+
+
 <a name="webtrees"></a>
 ## webtrees
 

@@ -126,6 +126,21 @@ $module = Registry::container()->get(LinkEnhancerModule::class);
                 </div>
             </fieldset>
 
+            <!-- PHP debug log --><?php $prefId = LinkEnhancerModule::PREF_DEBUG_LOG; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label">
+                        <?= I18N::translate('Enable PHP debug log output') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                        <div class="form-text">
+                            <?= I18N::translate('Also enabled per-request with ?debug=1 (non-sensitive info only)') ?>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
             <!-- open links in new tab - global --><?php $prefId = LinkEnhancerModule::PREF_OPEN_IN_NEW_TAB; ?>
             <fieldset class="form-group mb-3">
                 <div class="row">

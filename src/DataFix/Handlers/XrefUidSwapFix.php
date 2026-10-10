@@ -31,10 +31,10 @@ use Fisharebest\Webtrees\GedcomRecord;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Services\DataFixService;
-use Fisharebest\Webtrees\Services\TreeService;
 use Fisharebest\Webtrees\Tree;
 use Illuminate\Support\Collection;
 use Schwendinger\Webtrees\Module\LinkEnhancer\DataFix\FixHandlerInterface;
+use Schwendinger\Webtrees\Module\LinkEnhancer\DataFix\TreeLookupTrait;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\IdResolver;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\IndexRebuildScheduler;
@@ -51,13 +51,12 @@ use function str_starts_with;
 
 final class XrefUidSwapFix implements FixHandlerInterface
 {
+    use TreeLookupTrait;
+
     public const ID = 'xref_uid_swap';
 
     public const DIR_XREF_TO_UID = 'xref_to_uid';
     public const DIR_UID_TO_XREF = 'uid_to_xref';
-
-    /** @var Tree[] tree_name => Tree (per-request cache) */
-    private array $tree_cache = [];
 
     public function id(): string
     {
@@ -173,31 +172,23 @@ final class XrefUidSwapFix implements FixHandlerInterface
                 $new_value = preg_replace_callback(
                     XrefsService::RE_LE_HTML_LINK,
                     function (array $m) use ($direction, $tree, &$swapped, &$skipped): string {
-                        $token    = $m[0];
-                        $href_pos = strpos($token, 'href="');
-                        $quote    = '"';
-                        if ($href_pos === false) {
-                            $href_pos = strpos($token, "href='");
-                            $quote    = "'";
-                        }
-                        if ($href_pos === false) {
+                        $token = $m[0];
+                        $href  = XrefsService::extractHtmlLinkHref($token);
+                        if ($href === null) {
                             return $token;
                         }
-                        $href_start = $href_pos + 6;
-                        $href_end   = strpos($token, $quote, $href_start);
-                        if ($href_end === false) {
-                            return $token;
-                        }
-                        $href_val = substr($token, $href_start, $href_end - $href_start);
-                        $is_le    = str_starts_with($href_val, '#@');
-                        $url      = $this->convertWtTargets(
-                            $is_le ? substr($href_val, 2) : $href_val,
+                        $url = $this->convertWtTargets(
+                            $href['value'],
                             $direction,
                             $tree,
                             $swapped,
                             $skipped
                         );
-                        return substr($token, 0, $href_start) . ($is_le ? '#@' : '') . $url . substr($token, $href_end);
+                        $rebuild = substr($token, 0, $href['start']) . ($href['is_le'] ? '#@' : '') . $url;
+                        if ($href['end'] !== null) {
+                            $rebuild .= substr($token, $href['end']);
+                        }
+                        return $rebuild;
                     },
                     $row->setting_value
                 );
@@ -232,15 +223,6 @@ final class XrefUidSwapFix implements FixHandlerInterface
         return ['processed' => $processed, 'changed' => $changed, 'skipped' => $skipped, 'errors' => $errors, 'details' => $details];
     }
 
-    private function findTreeById(int $tree_id): ?Tree
-    {
-        try {
-            return Registry::container()->get(TreeService::class)->find($tree_id);
-        } catch (\Throwable) {
-            return null;
-        }
-    }
-
     /**
      * Core token rewrite. Returns the new GEDCOM text + counters.
      *
@@ -258,19 +240,18 @@ final class XrefUidSwapFix implements FixHandlerInterface
             XrefsService::RE_LE_LINK,
             function (array $m) use ($direction, $source_tree, &$swapped, &$skipped): string {
                 $token = $m[0];
-                $pos   = strrpos($token, '(#@');
-                if ($pos === false) {
+                $url   = XrefsService::extractLeLinkUrl($token);
+                if ($url === null) {
                     return $token;
                 }
-                $head = substr($token, 0, $pos + 3);
-                $url  = $this->convertWtTargets(
-                    substr($token, $pos + 3, -1),
+                $head = substr($token, 0, strrpos($token, '(#@') + 3);
+                return $head . $this->convertWtTargets(
+                    $url,
                     $direction,
                     $source_tree,
                     $swapped,
                     $skipped
-                );
-                return $head . $url . ')';
+                ) . ')';
             },
             $gedcom
         );
@@ -367,24 +348,6 @@ final class XrefUidSwapFix implements FixHandlerInterface
         }
 
         return (string) $results->first()->xref;
-    }
-
-    /**
-     * Resolve a tree name to a Tree object (cached per request).
-     */
-    private function findTree(string $name): ?Tree
-    {
-        if (array_key_exists($name, $this->tree_cache)) {
-            return $this->tree_cache[$name];
-        }
-        try {
-            $tree = Registry::container()->get(TreeService::class)->all()->get($name);
-            $this->tree_cache[$name] = $tree;
-            return $tree;
-        } catch (\Throwable) {
-            $this->tree_cache[$name] = null;
-            return null;
-        }
     }
 
     /**

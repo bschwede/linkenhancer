@@ -54,6 +54,8 @@ if (PHP_SAPI !== 'cli') {
 // provides e() - used by the inventory/count HTML helpers.
 require_once __DIR__ . '/../../../vendor/illuminate/support/helpers.php';
 require_once __DIR__ . '/../src/Services/XrefsService.php';
+require_once __DIR__ . '/../src/Services/LinkRenderer.php';
+require_once __DIR__ . '/../src/Services/LinkIndexService.php';
 require_once __DIR__ . '/../src/Services/TextTagCollector.php';
 
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\TextTagCollector;

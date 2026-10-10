@@ -65,6 +65,8 @@ use League\Config\ConfigurationInterface;
 
 final class LeImageRenderer implements NodeRendererInterface, XmlNodeRendererInterface, ConfigurationAwareInterface
 {
+    private const DEFAULT_IMAGE_DIM = 200;
+
     /** @psalm-readonly-allow-private-mutation */
     private ConfigurationInterface $config;
 
@@ -142,8 +144,8 @@ final class LeImageRenderer implements NodeRendererInterface, XmlNodeRendererInt
             ]);
         }
 
-        $width = isset($params['w']) && preg_match('/^\d+$/', $params['w'], $match) ? intval($params['w']) : 200;
-        $height = isset($params['h']) && preg_match('/^\d+$/', $params['h'], $match) ? intval($params['h']) : 200;
+        $width = isset($params['w']) && preg_match('/^\d+$/', $params['w'], $match) ? intval($params['w']) : self::DEFAULT_IMAGE_DIM;
+        $height = isset($params['h']) && preg_match('/^\d+$/', $params['h'], $match) ? intval($params['h']) : self::DEFAULT_IMAGE_DIM;
 
         if (isset($params['id'])) {
             //--- XREF - alt_text and title taken from mediaobject;
