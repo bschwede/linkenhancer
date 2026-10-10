@@ -26,14 +26,11 @@ declare(strict_types=1);
 
 namespace Schwendinger\Webtrees\Module\LinkEnhancer;
 
-use DomainException;
 use Exception;
 use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\Enums\AccessLevel; //wt2.3
 use Fisharebest\Webtrees\FlashMessages;
 use Fisharebest\Webtrees\GedcomRecord;
-use Fisharebest\Webtrees\Http\RequestHandlers\HomePage;
-use Fisharebest\Webtrees\Http\RequestHandlers\TreePage;
 use Fisharebest\Webtrees\I18N;
 use Schwendinger\Webtrees\Helpers\Functions;
 use Schwendinger\Webtrees\Helpers\MoreI18N;
@@ -50,12 +47,8 @@ use Fisharebest\Webtrees\Module\ModuleListTrait;
 use Fisharebest\Webtrees\Module\ModuleTabInterface;
 use Fisharebest\Webtrees\Module\ModuleTabTrait;
 use Fisharebest\Webtrees\Tree;
-use Fisharebest\Webtrees\User;
 use Fisharebest\Webtrees\Registry;
-use Fisharebest\Webtrees\Services\AdminService;
-use Fisharebest\Webtrees\Services\TimeoutService;
 use Fisharebest\Webtrees\Services\TreeService;
-use Fisharebest\Webtrees\Session;
 use Fisharebest\Webtrees\Validator;
 use Fisharebest\Webtrees\View;
 use Illuminate\Database\Capsule\Manager as DB;
@@ -80,13 +73,9 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\XrefDetailDat
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\XrefOverviewListData;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\WthbAdminHandler;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\RenumberActionHandler;
-use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
-use Schwendinger\Webtrees\Module\LinkEnhancer\Services\IndexRebuildScheduler;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\AdminSettingsBuilder;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\MarkdownEditorActivationService;
-use Schwendinger\Webtrees\Module\LinkEnhancer\Services\RenumberWithLinksService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\ContentBuilder;
-use Schwendinger\Webtrees\Module\LinkEnhancer\Services\UidIndexService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\WthbService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefDetailService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
