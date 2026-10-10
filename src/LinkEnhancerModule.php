@@ -79,6 +79,7 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpWthbActio
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\XrefDetailData;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\XrefOverviewListData;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\WthbAdminHandler;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\RenumberActionHandler;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\IndexRebuildScheduler;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\AdminSettingsBuilder;
@@ -997,51 +998,8 @@ class LinkEnhancerModule extends AbstractModule implements
     public function getAdminRenumberAction(ServerRequestInterface $request): ResponseInterface
     {
         $this->layout = 'layouts/administration';
-
-        $params  = Validator::queryParams($request);
-        $tree_id = (int) $params->integer('target_tree', 0);
-        $trees   = Registry::container()->get(TreeService::class)->all();
-
-        $tree           = null;
-        $xrefs          = [];
-        $inbound_counts = [];
-        if ($tree_id > 0) {
-            foreach ($trees as $t) {
-                if ($t->id() === $tree_id) {
-                    $tree = $t;
-                    break;
-                }
-            }
-            if ($tree !== null) {
-                $xrefs = Registry::container()->get(AdminService::class)->duplicateXrefs($tree);
-                foreach (array_keys($xrefs) as $xref) {
-                    $inbound_counts[$xref] = DB::table(XrefsService::INDEX_LINK_TABLE)
-                        ->where('target_xref', '=', $xref)
-                        ->where(static function ($q) use ($tree): void {
-                            $q->where(static function ($q2) use ($tree): void {
-                                $q2->whereNull('target_tree')->where('file', '=', $tree->id());
-                            })->orWhere('target_tree', '=', $tree->name());
-                        })
-                        ->count();
-                }
-            }
-        }
-
-        $renumber_result = Session::get('le-renumber-result', null);
-        Session::forget('le-renumber-result');
-
-        return $this->viewResponse($this->name() . '::renumber-with-links', [
-            'title'            => /*I18N: renumber xrefs */ I18N::translate('%s (with links)', MoreI18N::xlate('Renumber XREFs')),
-            'module'           => $this,
-            'tree'             => $tree,
-            'trees'            => $trees,
-            'xrefs'            => $xrefs,
-            'inbound_counts'   => $inbound_counts,
-            'renumber_result'  => $renumber_result,
-            'link_status'      => XrefsService::indexStatus(),
-            'uid_status'       => UidIndexService::indexStatus(),
-            'cron_plan'        => IndexRebuildScheduler::deferPlan(),
-        ]);
+        [$view, $data] = $this->renumberHandler()->showPage($request);
+        return $this->viewResponse($view, $data);
     }
 
     /**
@@ -1049,79 +1007,14 @@ class LinkEnhancerModule extends AbstractModule implements
      */
     public function postAdminRenumberAction(ServerRequestInterface $request): ResponseInterface
     {
-        $params  = Validator::parsedBody($request);
-        $tree_id = (int) $params->integer('target_tree', 0);
-        $trees   = Registry::container()->get(TreeService::class)->all();
-
-        $tree = null;
-        foreach ($trees as $t) {
-            if ($t->id() === $tree_id) {
-                $tree = $t;
-                break;
-            }
-        }
-
-        $redirect = route('module', ['module' => $this->name(), 'action' => 'AdminRenumber']
-            + ($tree_id > 0 ? ['target_tree' => $tree_id] : []));
-
-        if ($tree === null) {
-            FlashMessages::addMessage(MoreI18N::xlate('No valid tree selected.'), 'danger');
-            return redirect($redirect);
-        }
-
-        if ($tree->hasPendingEdit()) {
-            FlashMessages::addMessage(
-                MoreI18N::xlate('You need to accept or reject all pending changes before renumbering.'),
-                'danger'
-            );
-            return redirect($redirect);
-        }
-
-        $service = new RenumberWithLinksService(
-            Registry::container()->get(AdminService::class),
-            Registry::container()->get(TimeoutService::class),
-            Registry::container()->get(TreeService::class),
-        );
-        $report = $service->renumber($tree);
-
-        Session::put('le-renumber-result', [
-            'per'         => $report['per'] ?? [],
-            'timed_out'   => (bool) ($report['timed_out'] ?? false),
-            'defer_index' => (bool) ($report['defer_index'] ?? false),
-        ]);
-
-        $type = !empty($report['timed_out']) ? 'warning' : 'success';
-        FlashMessages::addMessage($this->renumberSummary($report), $type);
-
-        return redirect($redirect);
-    }
-
-    /**
-     * @param array<string, mixed> $report
-     */
-    private function renumberSummary(array $report): string
-    {
-        if (!empty($report['timed_out'])) {
-            return MoreI18N::xlate('The time limit was reached; no changes were made.');
-        }
-
-        $message = MoreI18N::xlate(
-            'Renumbered %1$d conflicting record(s) and updated %2$d le-link reference(s).',
-            (int) $report['count'],
-            (int) $report['links']
-        );
-
-        $message .= $report['defer_index']
-            ? ' ' . MoreI18N::xlate('The le_* index will be refreshed by the cron job.')
-            : ' ' . MoreI18N::xlate('The le_* index was updated inline.');
-
-        return $message;
+        return $this->renumberHandler()->execute($request);
     }
 
     // ─── ModuleDataFixInterface ─────────────────────────────────────────────
 
     private ?DataFixDispatcher $data_fix_dispatcher = null;
     private ?WthbAdminHandler $wthb_admin_handler = null;
+    private ?RenumberActionHandler $renumber_handler = null;
 
     public function dataFixDispatcher(): DataFixDispatcher
     {
@@ -1131,6 +1024,11 @@ class LinkEnhancerModule extends AbstractModule implements
     private function wthbAdminHandler(): WthbAdminHandler
     {
         return $this->wthb_admin_handler ??= new WthbAdminHandler($this->wthb, $this);
+    }
+
+    private function renumberHandler(): RenumberActionHandler
+    {
+        return $this->renumber_handler ??= new RenumberActionHandler($this);
     }
 
     public function fixOptions(Tree $tree): string
