@@ -78,6 +78,7 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpWtCoreAct
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpWthbAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\XrefDetailData;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\XrefOverviewListData;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\WthbAdminHandler;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\IndexRebuildScheduler;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\MarkdownEditorActivationService;
@@ -829,15 +830,7 @@ class LinkEnhancerModule extends AbstractModule implements
      */
     public function getAdminResetRoutesAction(ServerRequestInterface $request): ResponseInterface
     {
-        $this->importDeliveredCsv();
-        $csvfile = self::HELP_CSV;
-        if (file_exists($csvfile)) {
-            $this_hash = hash_file('sha256', $csvfile);
-            if ($this_hash) {
-                $this->setPref(self::PREF_WTHB_LASTHASH, $this_hash);
-            }
-        }
-        return redirect($this->getConfigLink());
+        return $this->wthbAdminHandler()->resetRoutes($request);
     }    
 
     /**
@@ -848,15 +841,7 @@ class LinkEnhancerModule extends AbstractModule implements
      */
     public function getAdminImportRoutesAction(ServerRequestInterface $request): ResponseInterface
     {
-        $title = I18N::translate('Import registered routes');
-        try {
-            $result = $this->wthb->importRoutesAction($request);
-            $this->wthb->setImportFlashOk($title, $result);
-        } catch (Exception $ex) {
-            $this->wthb->setImportFlashError($title, $ex->getMessage());
-        }
-        
-        return redirect($this->getConfigLink());
+        return $this->wthbAdminHandler()->importRoutes($request);
     }
 
     /**
@@ -867,18 +852,7 @@ class LinkEnhancerModule extends AbstractModule implements
      */
     public function getAdminCmmConfig2CsvAction(ServerRequestInterface $request): ResponseInterface
     {
-        $filename = "wthb-route-mapping-export-cmm.csv";
-        try {
-            return $this->wthb->exportCmmCsvAction($filename, $request);
-
-        } catch (Exception $ex) {
-            FlashMessages::addMessage(
-                MoreI18N::xlate('Export failed') . ' - Custom Module Manager config<hr><samp dir="ltr">' . $ex->getMessage() . '</samp>',
-                'danger'
-            );
-            return redirect($this->getConfigLink());
-        }
-
+        return $this->wthbAdminHandler()->cmmConfig2Csv($request);
     }    
 
     /**
@@ -889,17 +863,7 @@ class LinkEnhancerModule extends AbstractModule implements
      */
     public function postAdminCsvExportAction(ServerRequestInterface $request): ResponseInterface
     {
-        $filename = "wthb-route-mapping-export.csv";
-        try {
-            return $this->wthb->exportCsvAction($filename, $request);
-
-        } catch (Exception $ex) {
-            FlashMessages::addMessage(
-                MoreI18N::xlate('Export failed') . '<hr><samp dir="ltr">' . $ex->getMessage() . '</samp>',
-                'danger'
-            );
-            return redirect($this->getConfigLink());
-        }
+        return $this->wthbAdminHandler()->csvExport($request);
     }
 
 
@@ -910,15 +874,7 @@ class LinkEnhancerModule extends AbstractModule implements
      * @return ResponseInterface
      */
     public function postAdminCsvImportAction(ServerRequestInterface $request): ResponseInterface {
-        try {
-            $this->wthb->importCsvAction($request);
-        } catch (Exception $ex) {
-            FlashMessages::addMessage(
-                MoreI18N::xlate('Import failed') . '<hr><samp dir="ltr">' . $ex->getMessage() . '</samp>',
-                'danger'
-            );
-        }
-        return redirect($this->getConfigLink());   
+        return $this->wthbAdminHandler()->csvImport($request);
     }
 
 
@@ -1154,10 +1110,16 @@ class LinkEnhancerModule extends AbstractModule implements
     // ─── ModuleDataFixInterface ─────────────────────────────────────────────
 
     private ?DataFixDispatcher $data_fix_dispatcher = null;
+    private ?WthbAdminHandler $wthb_admin_handler = null;
 
     public function dataFixDispatcher(): DataFixDispatcher
     {
         return $this->data_fix_dispatcher ??= new DataFixDispatcher();
+    }
+
+    private function wthbAdminHandler(): WthbAdminHandler
+    {
+        return $this->wthb_admin_handler ??= new WthbAdminHandler($this->wthb, $this);
     }
 
     public function fixOptions(Tree $tree): string
@@ -1448,7 +1410,7 @@ class LinkEnhancerModule extends AbstractModule implements
      */
     protected function importDeliveredCsv(): void
     {
-        $result = $this->wthb->importCsvFlash(self::HELP_CSV);
+        $this->wthbAdminHandler()->importDelivered();
     }
 
 
