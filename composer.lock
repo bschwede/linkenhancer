@@ -4,15 +4,15 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4a51e9c769bcb2e51791a5af67b2a4f1",
+    "content-hash": "d61025fdb3a792a3e63520f7e7084da1",
     "packages": [
         {
             "name": "bschwede/wt-shared-libs",
-            "version": "1.1.2",
+            "version": "1.1.4",
             "dist": {
                 "type": "path",
                 "url": "../wt-shared-libs",
-                "reference": "3573d2bbc24e3ebaa5d6c6c848dc1160328b38a1"
+                "reference": "28e829f743d32c1aa80e7d9c11807c2274708d9a"
             },
             "require": {
                 "php": ">=8.3"
