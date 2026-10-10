@@ -14,7 +14,6 @@ use Fisharebest\Webtrees\Session;
 use Fisharebest\Webtrees\Validator;
 use Psr\Http\Message\ServerRequestInterface;
 use Schwendinger\Webtrees\Helpers\Functions;
-use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpMdAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpWtCoreAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpWthbAction;
@@ -30,9 +29,6 @@ use function is_array;
 use function json_decode;
 use function json_encode;
 use function route;
-use function str_contains;
-use function str_replace;
-use function strtoupper;
 use function view;
 
 /**
