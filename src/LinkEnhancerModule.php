@@ -85,6 +85,7 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\Services\IndexRebuildScheduler;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\AdminSettingsBuilder;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\MarkdownEditorActivationService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\RenumberWithLinksService;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Services\ContentBuilder;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\UidIndexService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\WthbService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefDetailService;
@@ -315,12 +316,7 @@ class LinkEnhancerModule extends AbstractModule implements
     protected WthbService $wthb;
     protected MarkdownEditorActivationService $mde;
 
-    // JavaScript is composed in headContent and can be injected in bodyContent, after vendor and webtrees js is included
-    protected array $bundleShortcuts;
-    protected string $docReadyJs;
-    protected string $initJs;
 
-    protected bool $needajax;
 
 
     public function __construct(public readonly bool $vesta_common_enabled = false)
@@ -340,8 +336,6 @@ class LinkEnhancerModule extends AbstractModule implements
         // By registering the service now it is available to other custom module in their boot methods. No impact due to unpredictable boot order of modules.
         // The service is also available when the module is disabled - however, this should not be a problem, as it only has an effect when this module is enabled.
         Registry::container()->set(MarkdownEditorActivationService::class, $this->mde);
-
-        $this->needajax = false;
     }    
   
     /**
@@ -482,226 +476,7 @@ class LinkEnhancerModule extends AbstractModule implements
      */
     public function headContent(): string
     {
-        $cfg_home_type   = $this->getPref(self::PREF_HOME_LINK_TYPE, true); // 0=off, 1=Home, 2=My-Page
-        $cfg_home_active = boolval($cfg_home_type);
-        $cfg_wthb_active = $this->getPref(self::PREF_WTHB_ACTIVE, true);
-        $cfg_link_active = $this->getPref(self::PREF_LINKSPP_ACTIVE, true);
-        $cfg_md_active   = $this->getPref(self::PREF_MD_ACTIVE, true);
-
-        if (!$cfg_home_active && !$cfg_wthb_active && ! $cfg_md_active && !$cfg_link_active) {
-            return '';
-        }
-
-        $cfg_md_editor_active = $this->getPref(self::PREF_MDE_ACTIVE, true, true);
-        $cfg_md_img_active    = $this->getPref(self::PREF_MD_IMG_ACTIVE, true, true);
-        $cfg_md_ext_active    = $this->getPref(self::PREF_MD_EXT_ACTIVE, true, true);
-        $cfg_js_debug_console = $this->getPref(self::PREF_JS_DEBUG_CONSOLE, true);
-
-
-        $request = Registry::container()->get(ServerRequestInterface::class);
-        //ressources to include
-        $this->bundleShortcuts = [];
-        $includeRes = '';
-        $this->docReadyJs = ''; // init on document ready
-        $this->initJs = '';
-      
-        $activeRouteInfo = Utils::getActiveRoute($request);
-        if ($cfg_js_debug_console) {
-            $this->docReadyJs .= "console.debug('LE-Mod active route:', " . json_encode($activeRouteInfo) .");";
-        }
-
-        // --- Webtrees Handbuch Link
-        if ($cfg_wthb_active) {
-            $this->bundleShortcuts[] = 'wthb';
-
-            $withSubcontext = $this->getPref(self::PREF_WTHB_SUBCONTEXT, true);
-            $help = $this->wthb->getContextHelp($activeRouteInfo, $withSubcontext, $cfg_js_debug_console);
-            if ($cfg_js_debug_console) {
-                if (is_array($help)) {
-                    $this->docReadyJs .= "console.debug('LE-Mod help rows:', " . json_encode($help['result']) . ");";
-                    $this->docReadyJs .= "console.debug('LE-Mod help sql:', " . json_encode($help['sql']) . ");";
-                    if ($withSubcontext) $this->docReadyJs .= "console.debug('LE-Mod help subcontext:', " . json_encode($help['subcontext']) . ");";
-                } else {
-                    $this->docReadyJs .= "console.debug('LE-Mod help:', " . json_encode($help) . ");";
-                }
-            }
-
-            $help_url = $help['help_url'] ?? $help; //gettype(value: $help) == 'string' ? $help : $help->first()->url;
-            $linksJsonString = match($this->getPref(self::PREF_WTHB_LINKS_TYPE, true)) {
-                1 => $this->getPref( self::PREF_WTHB_LINKS_JSON, true), // user defined
-                2 => self::STD_WTHB_LINKS_JSON, // default json
-                default => '' // off
-            };
-
-            $options = [
-                'I18N'            => Utils::getJsI18N('wthb', $this),
-                'help_url'        => $help_url,
-                'faicon'          => $this->getPref(self::PREF_WTHB_FAICON, true),
-                'wiki_url'        => $this->getPref(self::PREF_GENWIKI_LINK),
-                'wthb_url'        => $this->getPref(self::PREF_WTHB_STD_LINK),
-                'dotranslate'     => $this->getPref(self::PREF_WTHB_TRANSLATE, true), // 0=off, 1=user defined, 2=on
-                'subcontext'      => $withSubcontext && is_array($help) ? $help['subcontext'] : [],
-                'tocnsearch_url'  => ($this->getPref(self::PREF_WTHB_TOCNSEARCH, true) ? route(HelpWthbAction::class, ['language' => I18N::languageTag()]) : ''),
-                'openInNewTab'    => $this->getPref(self::PREF_WTHB_OPEN_IN_NEW_TAB, true, true),
-                'splitNavlink'    => $this->getPref(self::PREF_WTHB_SPLIT_TOPMENU, true),
-                'wtcorehelp_url'  => ($this->getPref(self::PREF_WTHB_WTCOREHELP, true) ? route(HelpWtCoreAction::class, ['language' => I18N::languageTag()]) : ''),
-                'linksJson'       => Utils::getWthbLinksJsonStringTranslated($linksJsonString),
-                'admin_url'       => (Auth::isAdmin() ? route('module', ['module' => $this->name(), 'action' => 'Admin']) : ''),
-            ];
-
-            $this->initJs .= "LinkEnhMod.initWthb(" . json_encode($options) . ");";
-        }        
-
-        // === admin backend - only if patch P002 for administration.phtml was applied; default: headContent of custom modules is not called on the admin backend
-        // TODO - is it possible to determine the underlying page layout or should the info for backend pages be stored in DB?!
-        if (Utils::isAdminPage($request))
-        {
-                if ($cfg_wthb_active) {
-                    $includeRes .= Utils::getIncludeWebressourceString($this, $this->bundleShortcuts, WebRessource::CssAndJs);
-                    $includeRes .= Utils::getJavascriptWrapper($this->docReadyJs, $this->initJs);
-                    return $includeRes;
-                }
-                return ''; # other stuff is of no use in admin backend
-        }
-
-
-        $tree = Validator::attributes($request)->treeOptional();
-
-        // === include on all pages
-        // --- I18N for JS MDE and enhanced links
-        //if ($cfg_link_active || $cfg_md_editor_active) {
-        //    $includeRes .= "<script>window.I18N = " . Utils::getJsI18N() . "; </script>";
-        //}
-        // --- Home Link
-        $isHomeLinkActive = $cfg_home_active && $tree != null;
-        if ($isHomeLinkActive) {
-            $params = [ 'tree' => $tree->name()];
-            $url = "#";
-            $target = '';
-            switch ($cfg_home_type) {
-                case 1:
-                    $url = route(TreePage::class, $params);
-                    break;
-                case 2:
-                    $url = route(HomePage::class, $params);
-                    break;
-                case 3:
-                    $url = $this->getPref(self::PREF_HOME_LINK_URL);
-                    $url = $url !== '' ? $url : '#';
-                    $target = $this->getPref(self::PREF_HOME_LINK_OPEN_IN_NEW_TAB, true, true) ? ' target="_blank"' : '';
-                    break;
-            }
-            $this->docReadyJs .= 'document.querySelectorAll(".wt-site-title").forEach(el => el.innerHTML = `<a class="' . self::STDCLASS_HOME_LINK . '" href="' . e($url) . '"' . $target . '>` + el.innerHTML + "</a>");';
-        }
-
-        // --- UID search in quick search field
-        if ($this->getPref(self::PREF_UID_ACTIVE, true) && $tree !== null) {
-            $uid_route = route('le.goto-uid.tree', ['tree' => $tree->name(), 'uid' => '__UID__']);
-            $this->docReadyJs .= '
-(function(){
-    var f = document.querySelector("form.wt-header-search-form");
-    if (!f) return;
-    f.addEventListener("submit", function(e) {
-        var q = (f.querySelector("input[name=query]") || {}).value || "";
-        q = q.trim();
-        if (!q) return;
-        var uid = null;
-        if (q.toLowerCase().startsWith("uid:")) {
-            uid = q.slice(4).trim();
-        } else if (/^(?:[0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12}|[0-9a-f]{36,38})$/i.test(q)) {
-            uid = q;
-        }
-        if (uid) {
-            e.preventDefault();
-            window.location.href = "' . e($uid_route) . '".replace("__UID__", encodeURIComponent(uid));
-        }
-    });
-})();';
-        }
-
-        // --- Link++
-        if ($cfg_link_active) {
-            $this->bundleShortcuts[] = 'le';
-
-            $lecfg = $this->getPref(self::PREF_LINKSPP_JS); // getPref returns trimmed string
-            $lecfg = $lecfg != '' ? $lecfg : '{}';
-            $treename = ($tree !== null ? $tree->name() : '');
-
-            $options = [
-                'I18N'         => Utils::getJsI18N('le', $this),
-                'thisXref'     => Validator::attributes($request)->isXref()->string('xref', ''),
-                'openInNewTab' => $this->getPref(self::PREF_LINKSPP_OPEN_IN_NEW_TAB, true),
-                'uidActive'    => $this->getPref(self::PREF_UID_ACTIVE, true),
-                'tree'         => $treename,
-                'baseurl'      => route(TreePage::class, [ 'tree' => $treename ]),
-                'urlmode'      => (Validator::attributes($request)->boolean('rewrite_urls', false) ? 'pretty' : 'default'),
-            ];
-            $this->docReadyJs .= "LinkEnhMod.initLE($lecfg, " . json_encode($options) . ");";
-
-            // --- Cross-reference detail tab (non-INDI record pages)
-            $xref_attr = Validator::attributes($request)->isXref()->string('xref', '');
-            $handler_key = Functions::canonicalHandlerKey($activeRouteInfo['handler'] ?? '');
-            $record_type = self::XREF_DETAIL_HANDLER_KEYS[$handler_key] ?? null;
-            if ($record_type !== null && $xref_attr !== '' && $tree !== null
-                && $this->accessLevel($tree, ModuleTabInterface::class) >= Auth::accessLevel($tree, Validator::attributes($request)->user())) {
-                $url_params = [
-                    'tree' => $tree->name(),
-                    'xref' => $xref_attr,
-                ];
-                if ($record_type === 'FAM') {
-                    $url_params['modal'] = 1;
-                }
-
-                $this->initJs .= "LinkEnhMod.initXrefDetailTab(" . json_encode([
-                    'url' => route(XrefDetailData::class, $url_params),
-                    'rectype'  => $record_type,
-                    'tabTitle' => $this->tabTitle(),
-                ]) . ");";
-            }
-        }
-
-        // === include selectively
-        // --- markdown support
-        if ($cfg_md_active && $tree != null && $tree->getPreference('FORMAT_TEXT') == 'markdown') {
-            if ($cfg_md_img_active || $cfg_md_ext_active) {
-                // markdown image support
-                $this->bundleShortcuts[] = 'img';
-
-                $options = [
-                    'I18N'      => Utils::getJsI18N('img', $this),
-                    'ext_fn'    => $this->getPref(self::PREF_MD_EXT_FN_ACTIVE, true),
-                    'ext_toc'   => $this->getPref(self::PREF_MD_EXT_TOC_ACTIVE, true),
-                    'td_h_ctrl' => $this->getPref(self::PREF_MD_TD_H_CTRL_TYPE, true),
-                    'td_h_cb'   => $this->getPref(self::PREF_MD_TD_H_CB_VISIBLE, true),
-                ];
-                $this->docReadyJs .= "LinkEnhMod.initMd(" . json_encode($options) . ");";
-            }
-
-            if ($cfg_md_editor_active) {
-                // --- TinyMDE -- only nessary on edit pages        
-                if ($this->mde->isEditPage($request)) {
-                    $this->bundleShortcuts[] = 'mde';
-
-                    $options = [
-                        'I18N'         => Utils::getJsI18N('mde', $this),    
-                        'href'         => $cfg_link_active,
-                        'src'          => $cfg_md_img_active,
-                        'ext'          => $cfg_md_ext_active,
-                        'ext_mark'     => $this->canActivateHighlightExtension(),
-                        'ext_fn'       => $this->getPref(self::PREF_MD_EXT_FN_ACTIVE, true),
-                        'ext_strike'   => $this->getPref(self::PREF_MD_EXT_STRIKE_ACTIVE, true),
-                        'query_filter' => $this->mde->getElementFilter(),
-                        'helpmd_url'   => route(HelpMdAction::class, ['language' => I18N::languageTag()]),
-                    ];                    
-                    $this->docReadyJs .= "LinkEnhMod.installMDE(" . json_encode($options) . ");";
-                }
-            }
-        }
-        
-        $includeRes .= Utils::getIncludeWebressourceString($this, $this->bundleShortcuts, WebRessource::CssAndJs);
-        $includeRes .= $this->getThemeSpecificCss($cfg_js_debug_console, $isHomeLinkActive);
-        $includeRes .= Utils::getJavascriptWrapper($this->docReadyJs, $this->initJs);
-        return $includeRes;
+        return $this->contentBuilder()->buildHead();
     }
 
     /**
@@ -710,117 +485,13 @@ class LinkEnhancerModule extends AbstractModule implements
      *
      * @return string
      */
-    public function bodyContent(): string {
-        $cfg_md_active        = $this->getPref(self::PREF_MD_ACTIVE, true);
-        $cfg_md_editor_active = $cfg_md_active ? $this->getPref(self::PREF_MDE_ACTIVE, true) : false;
-        $cfg_wthb_active      = $this->getPref(self::PREF_WTHB_ACTIVE, true);
-        $cfg_wthb_tocnsearch  = $this->getPref(self::PREF_WTHB_TOCNSEARCH, true);
-        $cfg_wthb_wtcorehelp  = $this->getPref(self::PREF_WTHB_WTCOREHELP, true);
-
-        $includeRes = '';
-        //$includeRes .= Utils::getIncludeWebressourceString($this, $this->bundleShortcuts, WebRessource::Js);
-        //$includeRes .= Utils::getJavascriptWrapper($this->docReadyJs, $this->initJs);
-
-        $html = '';
-        $this->needajax = false;
-        
-        if ($cfg_wthb_active) {
-            $html .= view($this->name() . '::wthb-modal');
-            $this->needajax = $cfg_wthb_tocnsearch || $cfg_wthb_wtcorehelp;
-        }
-
-        // wt-ajax-modal is included if necessary in process method via MiddleWareInterface
-        $this->needajax = ($this->needajax || ($cfg_md_editor_active && $this->mde->isEditPage())); // markdown editor is not useful on other pages
-
-        return $includeRes . $html;
+    public function bodyContent(): string
+    {
+        return $this->contentBuilder()->buildBody();
     }
 
 
-    /**
-     * Compiles theme specific css "patches"
-     * wthb needs some minor modifications with primer and justlight
-     * for home link there could be user defined patches
-     * 
-     * @param bool $jsDebugMsg        log to js debug console
-     * @param bool $isHomeLinkActive  is home link component active
-     * @return string
-     */    
-    private function getThemeSpecificCss(bool $jsDebugMsg, bool $isHomeLinkActive) : string {
-        $theme = Session::get('theme');
-        $palette = Session::get('palette', '');
-        $theme_palette = $theme . ($palette ? "_{$palette}" : ''); // palette is also set with other themes than colors
 
-        $includeRes = "";
-
-        if ($jsDebugMsg) {
-            $this->docReadyJs .= "console.debug('LE-Mod theme:', '$theme'" . ($palette ? ", 'palette=$palette'" : '') . ");";        
-        }
-
-        // links++
-        if (in_array('le', $this->bundleShortcuts) && in_array($theme, ['webtrees', 'clouds', 'colors', 'xenea'])) {
-            $includeRes .= "<style>.menu-list-xrefs::before {
-                content: \"🔗\"; 
-                display: inline-block;
-                vertical-align: middle !important;
-                margin-right: 0.25em;
-                }</style>\n";
-        }
-
-        // webtrees manual
-        if (in_array('wthb', $this->bundleShortcuts)) {
-            $themeStyles = [
-//-- justlight
-                '_jc-theme-justlight_'    =>
-".nav-item.dropdown.menu-wthb { line-height: 1.25; }
-.popover {
-  background-clip: padding-box;
-  background-color: hsl(0, 0%, 100%);;
-  border: 1px solid hwb(0 0% 100% / 0.18);
-  border-radius: 0.2rem;
-  text-align: start;
-  text-shadow: none;
-  z-index:1070;
-}
-.popover-body { padding: 0.5rem 0.5rem;}
-.helpsection .linkicon { background-size: 20px 20px !important; }",
-
-//-- primer
-                '_webtrees-primer-theme_' =>
-".nav-item.dropdown.menu-wthb {
-  line-height: 1.75;
-  color: var(--fgColor-muted);
-}
-.nav-item.dropdown.menu-wthb svg { color: var(--fgColor-muted); }
-.helpsection .linkicon { background-size: 20px 20px !important; }",
-            ];
-            $stylerules = $themeStyles[$theme_palette] ?? $themeStyles[$theme] ?? '';
-            $includeRes .= $stylerules ? "<style>{$stylerules}</style>\n" : '';
-        }
-
-        // home link
-        if ($isHomeLinkActive) {
-            $cfg_home_link_json = $this->getPref(self::PREF_HOME_LINK_JSON); // getPref returns trimmed string 
-            if ($cfg_home_link_json) {
-                $json = json_decode($cfg_home_link_json, true);
-                if ($json) {
-                    $stylerules = $json[$theme_palette] ?? $json[$theme] ?? $json['*'] ?? null;
-                    if ($stylerules) {
-                        $includeRes .= "<style>{$stylerules}</style>\n";
-                    } elseif ($jsDebugMsg) {
-                        $this->docReadyJs .= "console.debug('LE-Mod home link: JSON contains no matching style rule for current theme');";
-                    }
-                } else {
-                    FlashMessages::addMessage(
-                        I18N::translate('Home link - JSON with CSS rules seems to be invalid.'),
-                        'warning'
-                    );
-                }
-            }
-        }
-
-        return $includeRes;
-    }
-    
     /**
      * Open control panel page with options
      *
@@ -1015,6 +686,7 @@ class LinkEnhancerModule extends AbstractModule implements
     private ?DataFixDispatcher $data_fix_dispatcher = null;
     private ?WthbAdminHandler $wthb_admin_handler = null;
     private ?RenumberActionHandler $renumber_handler = null;
+    private ?ContentBuilder $content_builder = null;
 
     public function dataFixDispatcher(): DataFixDispatcher
     {
@@ -1029,6 +701,11 @@ class LinkEnhancerModule extends AbstractModule implements
     private function renumberHandler(): RenumberActionHandler
     {
         return $this->renumber_handler ??= new RenumberActionHandler($this);
+    }
+
+    private function contentBuilder(): ContentBuilder
+    {
+        return $this->content_builder ??= new ContentBuilder($this);
     }
 
     public function fixOptions(Tree $tree): string
@@ -1496,7 +1173,7 @@ class LinkEnhancerModule extends AbstractModule implements
 
         // include wt-ajax-modal if needed and not already present
         // only helpful on html pages requested by GET method
-        if (!$this->needajax || strtoupper($request->getMethod()) !== 'GET') {
+        if (!$this->contentBuilder()->needsAjax() || strtoupper($request->getMethod()) !== 'GET') {
             return $response;
         }
 
