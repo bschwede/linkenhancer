@@ -9,7 +9,6 @@ export const getDefaultConfig = () => ({
         tocnsearch: 'Full-text search / Table of contents',
         wtcorehelp: 'webtrees help topics (included)',
         startpage: 'start page',
-        admin_title: 'Link-Enhancer - Admin',
     },
 
     help_url: '#',
@@ -30,7 +29,7 @@ export const getDefaultConfig = () => ({
     wtcorehelp_url: '', // help is shown if not empty
 
     linksJson: [],
-    admin_url: ''
+    admin_settings: [],
 });
 
 

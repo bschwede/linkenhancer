@@ -77,14 +77,18 @@ export const buildMenuHtml = (cfg, locationHref) => {
     }
 
     // admin link if not admin page itself
-    if (cfg.admin_url && !locationHref.startsWith(cfg.admin_url)) {
-        dropdown += (dropdown !== '' || !cfg.splitNavlink ? '<hr>' : '') + `
-        <a class="dropdown-item menu-wthb"
-            role="menuitem"
-            id="le-admin-link"
-            href="${cfg.admin_url}">
-            <i class="fa-solid fa-wrench fa-fw"></i>&nbsp;${cfg.i18n('admin_title')}
-        </a>`;
+    if (Array.isArray(cfg.admin_settings) && cfg.admin_settings.length > 0) {    
+        const html = cfg.admin_settings
+            .map(({ url, title }) =>
+                !locationHref.startsWith(url) ?
+                `<a class="dropdown-item menu-wthb" role="menuitem" class="le-admin-link" href="${url}"><i class="fa-solid fa-wrench fa-fw"></i>&nbsp;${title}</a>`
+                : ''
+            )
+            .join("\n");
+
+        if (html) {
+            dropdown += (dropdown !== '' || !cfg.splitNavlink ? '<hr>' : '') + html;
+        }
     }
 
     const help_icon = '<i class="fa-solid fa-circle-question"></i> ';

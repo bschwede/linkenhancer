@@ -172,7 +172,6 @@ class LinkEnhancerUtils { // misc helper functions
                     'tocnsearch'        => I18N::translate("Full-text search") . ' / ' . I18N::translate('Table of contents'),
                     'wtcorehelp'        => I18N::translate("webtrees help topics (included)"),
                     'startpage'         => I18N::translate("start page"),
-                    'admin_title'       => $module->title() . ' - ' . I18N::translate('Settings'),
                 ],
             
             'img' => [

@@ -14,6 +14,7 @@ use Fisharebest\Webtrees\Session;
 use Fisharebest\Webtrees\Validator;
 use Psr\Http\Message\ServerRequestInterface;
 use Schwendinger\Webtrees\Helpers\Functions;
+use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpMdAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpWtCoreAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpWthbAction;
@@ -98,6 +99,21 @@ final class ContentBuilder
                 default => ''
             };
 
+            $admin_settings = [];
+            if (Auth::isAdmin()) {
+                $admin_settings[] = [ 
+                    'title' => $module->title() . ' - ' . I18N::translate('Settings'),
+                    'url' => route('module', ['module' => $module->name(), 'action' => 'Admin']),
+                ];
+
+                if (class_exists('\Schwendinger\Webtrees\Module\Cronjob\CronjobModule')) {
+                    $admin_settings[] = [
+                        'title' => MoreI18N::xlate('Cron Job Scheduler') . ' - ' . I18N::translate('Settings'),
+                        'url' => route('module', ['module' => '_cronjob_', 'action' => 'Admin']),
+                    ];
+                }
+            }
+
             $options = [
                 'I18N'            => Utils::getJsI18N('wthb', $module),
                 'help_url'        => $help_url,
@@ -111,7 +127,7 @@ final class ContentBuilder
                 'splitNavlink'    => $module->getPref(LinkEnhancerModule::PREF_WTHB_SPLIT_TOPMENU, true),
                 'wtcorehelp_url'  => ($module->getPref(LinkEnhancerModule::PREF_WTHB_WTCOREHELP, true) ? route(HelpWtCoreAction::class, ['language' => I18N::languageTag()]) : ''),
                 'linksJson'       => Utils::getWthbLinksJsonStringTranslated($linksJsonString),
-                'admin_url'       => (Auth::isAdmin() ? route('module', ['module' => $module->name(), 'action' => 'Admin']) : ''),
+                'admin_settings'  => $admin_settings,
             ];
 
             $this->initJs .= "LinkEnhMod.initWthb(" . json_encode($options) . ");";
