@@ -81,6 +81,7 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\XrefOverviewL
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\WthbAdminHandler;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\IndexRebuildScheduler;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Services\AdminSettingsBuilder;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\MarkdownEditorActivationService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\RenumberWithLinksService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\UidIndexService;
@@ -368,6 +369,16 @@ class LinkEnhancerModule extends AbstractModule implements
     public static function log(): ModuleLog
     {
         return ModuleLog::for(self::LOG_ID);
+    }
+
+    public function wthb(): WthbService
+    {
+        return $this->wthb;
+    }
+
+    public function mde(): MarkdownEditorActivationService
+    {
+        return $this->mde;
     }
 
     /**
@@ -1529,85 +1540,7 @@ class LinkEnhancerModule extends AbstractModule implements
      */
     private function getInitializedOptions(ServerRequestInterface $request): array
     {
-        $response = [];
-
-        $response['title'] = $this->title();
-        $response['description'] = $this->description();
-
-        $preferences = array_keys(self::PREFERENCES_SCHEMA);
-        foreach ($preferences as $preference) {
-            $response['prefs'][$preference] = $this->getPref($preference);
-        }
-
-        $jsfile = $this->resourcesFolder() . 'js' . DIRECTORY_SEPARATOR . 'bundle-le-config.js';
-        $jscode = '';
-        if (file_exists($jsfile)) {
-            $jscode = strval(file_get_contents($jsfile));
-        }
-        $response['jscode_linkpp'] = $jscode;
-        
-        $response['links'] = [];
-        $response['links']['csvexport'] = route('module', [
-            'module' => $this->name(),
-            'action' => 'AdminCsvExport'
-        ]);
-        $response['links']['csvimport'] = route('module', [
-            'module' => $this->name(),
-            'action' => 'AdminCsvImport'
-        ]);        
-        $response['links']['routeimport'] = route('module', [
-            'module' => $this->name(),
-            'action' => 'AdminImportRoutes'
-        ]);
-        $response['links']['resetroutes'] = route('module', [
-            'module' => $this->name(),
-            'action' => 'AdminResetRoutes'
-        ]);
-        $response['links']['csvexportcmm'] = ($this->wthb->isCmmAvailable() ?
-            route('module', [
-                'module' => $this->name(),
-                'action' => 'AdminCmmConfig2Csv'
-            ])
-            : ''
-        );
-        $response['links']['resetaccess_params'] = [
-            'module' => $this->name(),
-            'action' => 'AdminResetAccessOverwrites'
-        ];
-        
-
-        $response['tablerows'] = $this->wthb->getHelpTableCount();
-
-
-        $tree_service = Registry::container()->get(TreeService::class);
-
-        //FORMAT_TEXT = markdown
-        $trees = $tree_service->all();
-        $trees_w_md = [];
-        $trees_w_text = [];
-        foreach ($trees as $tree) {
-            if ($tree->getPreference('FORMAT_TEXT') === 'markdown') {
-                $trees_w_md[] = $tree->name();
-            } else {
-                $trees_w_text[] = $tree->name();
-            }
-        }
-        $cntTotal = count($trees);
-        $response['mdcfg'] = [
-            'total'        => $cntTotal,
-            'activated'    => count($trees_w_md),
-            'trees_w_md'   => $trees_w_md,
-            'trees_w_text' => $trees_w_text
-        ];
-
-        $response['vesta_common_enabled'] = $this->vesta_common_enabled;
-
-        $response['uid_index_status'] = UidIndexService::indexStatus();
-
-        $mde_rules = $this->mde->getAllRules();
-        $response['mde_custom'] = $mde_rules['custom'] ?? false ? print_r($mde_rules['custom'], true) : '';
-
-        return $response;
+        return (new AdminSettingsBuilder($this))->build();
     }
 
 
