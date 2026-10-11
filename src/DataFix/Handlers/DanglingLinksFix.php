@@ -38,7 +38,7 @@ final class DanglingLinksFix implements FixHandlerInterface
     public function optionsHtml(Tree $tree, array $params): string
     {
         return '<div class="alert alert-info">' . e(I18N::translate(
-            'This fix reports le-links whose target record does not exist. No changes are made (report-only).'
+            'This fix reports linkenhancer links whose target record does not exist. No changes are made (report-only).'
         )) . '</div>';
     }
 
@@ -80,7 +80,7 @@ final class DanglingLinksFix implements FixHandlerInterface
         foreach (XrefsService::extractWtTargetsFromGedcom($record->gedcom(), $tree->name()) as $target) {
             if (!$this->targetExists($target['xref'], $target['tree'], $tree)) {
                 $reason = strlen($target['xref']) < IdResolver::UID_MIN_LENGTH
-                    ? I18N::translate('no record %s in tree "%s"', '@' . $target['xref'] . '@', $target['tree'])
+                    ? /* I18N: 1=xref, 2=tree name */I18N::translate('no record %1$s in tree "%2$s"', '@' . $target['xref'] . '@', $target['tree'])
                     : I18N::translate('UID not found in tree "%s"', $target['tree']);
                 $findings[] = 'wt=' . $target['type'] . '@' . $target['xref'] . '@' . $target['tree'] . ' → ' . $reason;
             }

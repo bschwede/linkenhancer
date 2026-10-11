@@ -60,7 +60,7 @@ $count = count($xrefs);
 
 <p><?= MoreI18N::xlate('In a family tree, each record has an internal reference number (called an “XREF”) such as “F123” or “R14”.') ?></p>
 <p><?= MoreI18N::xlate('You can renumber the records in a family tree, so that these internal reference numbers are not duplicated in any other family tree.') ?></p>
-<p><?= e(I18N::translate('This renumbers the records whose XREF collides with another family tree, and keeps the linkenhancer le-links and the le_* index in sync.')) ?></p>
+<p><?= e(I18N::translate('This renumbers the records whose XREF collides with another family tree, and keeps the linkenhancer links and the le_* index in sync.')) ?></p>
 
 <?= view(LinkEnhancerModule::MODULE_NAME . '::datafix-index-status', [
     'tree' => $tree,
@@ -135,7 +135,7 @@ document.getElementById('renumber-tree').addEventListener('change', function (e)
 <?php if ($tree !== null): ?>
     <?php if (!$index_fresh): ?>
         <div class="alert alert-info">
-            <?= e(I18N::translate('The link index was last fully scanned at %s. Some le-links may not be detected in this pass.', $index_scanned_at ?? '—')) ?>
+            <?= e(I18N::translate('The link index was last fully scanned at %s. Some linkenhancer links may not be detected in this pass.', $index_scanned_at ?? '—')) ?>
         </div>
     <?php endif; ?>
 
