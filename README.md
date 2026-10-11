@@ -40,10 +40,12 @@ This module wraps up some [examples mentioned in the German Webtrees Manual](htt
 
 The main purpose of this module is to make [**links to data records**](#enhancedlinks) stored in family trees more convenient. This avoids having to store fully qualified links, which impairs the portability of Gedcom data. By linking the notes to the GEDCOM data records (persons, families, sources, etc.) from the text makes story telling much easier and thus also save this information in the GEDCOM file (maybe this is an alternative for the [stories module](https://wiki.genealogy.net/Webtrees_Handbuch/Anleitung_f%C3%BCr_Besucher#Geschichten)). The option of embedding the [**images**](#mdimg) already inserted in the family tree in the notes rounds off this approach. The link function is controlled via the [anchor part of the URI](https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Web_mechanics/What_is_a_URL), so it's no problem, if this module is not active - the url just points to the current webtrees page.
 
-For the admin there is an [**overview of cross-references**](#xref-overview), that lists all GEDCOM records and html based records stored in the `block / block_setting` tables (like html, faq, stories and vesta classig look and feel badges) which contain linkenhancer cross-references, classic cross-references and embedded picture references. The latter two references are only supported in GEDCOM records. For a configurable user access level, an overview can be provided for each tree. On the GEDCOM record detail view you can have an additional tab "cross-references" that lists incoming and outgoing references.
+For the admin there is an [**overview of cross-references**](#xref-overview), that lists all GEDCOM records and html based records stored in the `block / block_setting` tables (like html, faq, stories and vesta classic look and feel badges) which contain linkenhancer cross-references, classic cross-references and embedded picture references. The latter two references are only supported in GEDCOM records. For a configurable user access level, an overview can be provided for each tree. On the GEDCOM record detail view you can have an additional tab "cross-references" that lists incoming and outgoing references.
 
 Additionally there are some goodies more or less related with links:
 
+- [**Renumber XREFs (with links)**](#renumber) provides an extended renumber that repairs all affected links in one step with solving the XREF collisions.
+- There are [**Datafixes**](#datafix) to address specific link integrity issues.
 - [**UID lookup**](#uid-lookup) — navigate to a record by its persistent UID (`_UID` / `UID` tag), surviving XREF renumbering.
 - The note textarea can be a [**visual markdown editor**](#mde) with **markdown help** (can also be utilized by other custom modules).
 - Enabling further [**markdown extensions**](#mdext).
@@ -144,7 +146,7 @@ Now some **explanation** for the used properties in the code snippet above (as a
 
 `options.i18n` is a function passed through from this module in order to provide translated strings.
 
-Any CSS rules required are best added via the [“CSS and JS” module](https://wiki.genealogy.net/Webtrees_Handbuch/Anleitung_f%C3%BCr_Administratoren/Module#CSS_und_JS). Only the definition of the icon (size 30 x 30 pixels is sufficient) as a background image is actually needed - referencing as data: URL (see also: [mdn web docs - data: URLs](https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Schemes/data)).\
+Any CSS rules required are best added via the [“CSS and JS” module](https://wiki.genealogy.net/Webtrees_Handbuch/Anleitung_f%C3%BCr_Administratoren/Module#CSS_und_JS). Only the definition of the icon (size 30 x 30 pixels is sufficient) as a background image is actually needed - referencing as [data: URLs](https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Schemes/data)\
 For example: `.icon-whatever { background-image: url(...) }`
 
 
@@ -177,6 +179,9 @@ You can lookup uids via the **quick search** input. For shorter uids, that can b
 **Behavior** (shared `IdResolver`): the id is tried length-aware and bidirectionally — a long id (≥ 18 chars) as a UID first, a short one as an XREF first — and falls back to the other when the first yields nothing, so a resolution is never lost. 0 hits → 404, 1 visible hit → redirect, >1 → selection list.
 
 A typed `wt=<type>@REF@` link is a **legacy** form: the type letter is no longer used for routing (all links go through `goto-id`) and is only documentary — it still drives the diagram link for individuals and the type-mismatch hint in the cross-reference overview. New links should use the untyped `wt=@REF@` form.
+
+#### XREF route (`goto-xref`)
+There ist also the route `/tree/{tree}/goto-xref/{xref}` available, which allows you to navigate to the corresponding record in the tree, regardless of the record type.
 
 #### Cross-reference overview: UID targets in other trees
 
@@ -331,6 +336,8 @@ A **context sensitive help link** to the [german webtrees manual](https://wiki.g
 To ensure that this function is also available in the admin backend a modified version of [views/layouts/administration.phtml](https://github.com/fisharebest/webtrees/blob/main/resources/views/layouts/administration.phtml) must be registered. This module attempts to use the custom module [vesta_common](https://github.com/vesta-webtrees-2-custom-modules/vesta_common/tree/master) (if installed and enabled) or its own version of the view layout file. Alternatively, patch P002 could also be applied to the core code.
 
 If the webtrees page is displayed in a language other than german, it is possible to **open the webtrees manual URL via a translation service** ([Google Translate](https://translate.google.com/)). This can be enabled or disabled as a site setting or delegated to the visitor to decide.
+> [!NOTE]
+> Due to AI bot restrictions on the GenWiki, this feature is currently useless.
 
 ![WTHB user setting](resources/img/screenshot_wthb-user-setting.png)
 
@@ -443,29 +450,6 @@ Theme *colors* is a special case, where we also have palettes. In order to addre
 Just activate the option "Output of debug information on the JS console" in order to figure out the correct values.
 
 
-<a name="patches"></a>
-### Patches
-**The patches can be applied additionally — the module also works without them!**
-
-The util subfolder contains minor patches for the webtrees core.
-These are [diff-files](https://www.gnu.org/software/diffutils/) that can be easily applied or removed using shell from within the installed module folder (necessary for auto detecting webtrees sources):
-
-```bash 
-Usage: util/wt-patch.sh [-R] [FILTER]
-  -R                  undo Patch (patch -R)
-  FILTER              '*' for all or specific (e.g. '01')
-```
-Don't forget to reapply the patches after updating webtrees.
-
-These are minor bug fixes or functional enhancements — usually in a single file — that are intended to bridge the gap until they are officially fixed/implemented in the webtrees core.
-
-| #    | Description | applies to version |
-| :--: | :----       | :---:   |
-| P001 | Backlink for level 1 shared notes [#5181](https://github.com/fisharebest/webtrees/issues/5181) - not necessary anymore except you would like to have an additional edit link <br> */app/Fact.php* | 2.2.1 - 2.2.6 |
-| P002 | Enable headContent/bodyContent for this module on admin backend in order to show the context help link [#5214](https://github.com/fisharebest/webtrees/issues/5214)<br> *resources/views/layouts/administration.phtml* | 2.2.1 - 2.2.6 |
-| ~~P003~~ | Record has multiple uid fields [#4828](https://github.com/fisharebest/webtrees/issues/4828) <br> *app/Services/GedcomEditService.php* | 2.2.1 |
-
-
 <a name="xref-overview"></a>
 ### Cross-reference overview
 
@@ -551,6 +535,7 @@ The standard webtrees renumbering (Control panel → Data fixes → Renumber XRE
 
 > [!NOTE]
 > The standard webtrees renumber (without links) remains available and is unaffected. Use this module's renumber when your notes or blocks contain linkenhancer links.
+> See also: [fisharebest/webtrees#5156](https://github.com/fisharebest/webtrees/issues/5156)
 
 
 <a name="datafix"></a>
@@ -568,6 +553,30 @@ The module provides a set of data-fix handlers accessible from the standard webt
 
 Each fix follows the standard webtrees data-fix workflow: select fix type → preview → apply. The data-fix page also shows the current status of the link and UID indexes, and whether index updates will be deferred to the cron job.
 
+<a name="patches"></a>
+
+### Patches
+
+**The patches can be applied additionally — the module also works without them!**
+
+The util subfolder contains minor patches for the webtrees core.
+These are [diff-files](https://www.gnu.org/software/diffutils/) that can be easily applied or removed using shell from within the installed module folder (necessary for auto detecting webtrees sources):
+
+```bash
+Usage: util/wt-patch.sh [-R] [FILTER]
+  -R                  undo Patch (patch -R)
+  FILTER              '*' for all or specific (e.g. '01')
+```
+
+Don't forget to reapply the patches after updating webtrees.
+
+These are minor bug fixes or functional enhancements — usually in a single file — that are intended to bridge the gap until they are officially fixed/implemented in the webtrees core.
+
+| # | Description | applies to version |
+| :--: | :---- | :---: |
+| P001 | Backlink for level 1 shared notes [#5181](https://github.com/fisharebest/webtrees/issues/5181) - not necessary anymore except you would like to have an additional edit link <br> */app/Fact.php* | 2.2.1 - 2.2.6 |
+| P002 | Enable headContent/bodyContent for this module on admin backend in order to show the context help link [#5214](https://github.com/fisharebest/webtrees/issues/5214)<br> *resources/views/layouts/administration.phtml* | 2.2.1 - 2.2.6 |
+| ~~P003~~ | Record has multiple uid fields [#4828](https://github.com/fisharebest/webtrees/issues/4828) <br> *app/Services/GedcomEditService.php* | 2.2.1 |
 
 <a name="webtrees"></a>
 ## webtrees
@@ -585,8 +594,9 @@ This module has the same requirements as [webtrees#system-requirements](https://
 This module was tested with **webtrees** version 2.2.4
 and build-in themes and some other custom modules.
 
-It's recommended installing the [Cronjob](https://github.com/bschwede/wt-cronjob) module as well.
-This makes it easy to run the CLI scripts for maintaining the indexes.
+> [!TIP]
+> It's recommended installing the [Cronjob](https://github.com/bschwede/wt-cronjob) module as well.
+> This makes it easy to run the CLI scripts for maintaining the indexes.
 
 <a name="installation"></a>
 ## Installation
