@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-28 09:14+0200\n"
+"POT-Creation-Date: 2026-10-11 13:50+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,9 +16,135 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: src/Services/XrefOverviewColumns.php:500
-msgid "tree"
+#: src/DataFix/Handlers/XrefUidSwapFix.php:68
+msgid "XREF ⇄ UID reference swap"
+msgstr ""
+
+#: src/DataFix/Handlers/DuplicateUidFix.php:26
+msgid "Report duplicate UIDs in index"
+msgstr ""
+
+#: src/DataFix/Handlers/DuplicateUidFix.php:32
+msgid ""
+"This fix reports UIDs that are assigned to multiple records in the UID "
+"index. No changes are made (report-only)."
+msgstr ""
+
+#: src/DataFix/Handlers/DuplicateUidFix.php:74
+msgid "No duplicate UIDs found for this record."
+msgstr ""
+
+#: src/DataFix/Handlers/DuplicateUidFix.php:78
+#, php-format
+msgid "%d duplicate UID(s) on this record:"
+msgstr ""
+
+#: src/DataFix/Handlers/WtTypeFix.php:55
+msgid "Fix wt= type letter (set/repair/remove)"
+msgstr ""
+
+#: src/DataFix/Handlers/DanglingLinksFix.php:35
+msgid "Report dangling link targets"
+msgstr ""
+
+#: src/DataFix/Handlers/DanglingLinksFix.php:41
+msgid ""
+"This fix reports le-links whose target record does not exist. No changes are "
+"made (report-only)."
+msgstr ""
+
+#: src/DataFix/Handlers/DanglingLinksFix.php:83
+#, php-format
+msgid "no record %s in tree \"%s\""
+msgstr ""
+
+#: src/DataFix/Handlers/DanglingLinksFix.php:84
+#, php-format
+msgid "UID not found in tree \"%s\""
+msgstr ""
+
+#: src/DataFix/Handlers/DanglingLinksFix.php:90
+msgid "No dangling links found."
+msgstr ""
+
+#: src/DataFix/Handlers/DanglingLinksFix.php:94
+#, php-format
+msgid "%d missing target(s):"
+msgstr ""
+
+#: src/DataFix/Handlers/AmbiguousUidFix.php:35
+msgid "Report ambiguous UID targets"
+msgstr ""
+
+#: src/DataFix/Handlers/AmbiguousUidFix.php:41
+msgid ""
+"This fix reports UID targets that resolve to multiple records (ambiguous). "
+"No changes are made (report-only)."
+msgstr ""
+
+#: src/DataFix/Handlers/AmbiguousUidFix.php:105
+msgid "No ambiguous UIDs found."
+msgstr ""
+
+#: src/DataFix/Handlers/AmbiguousUidFix.php:109
+#, php-format
+msgid "%d ambiguous UID target(s):"
+msgstr ""
+
+#: src/Services/RenumberWithLinksService.php:150
+#, php-format
+msgid "Renumbered @%1$s@ → @%2$s@ (%3$s, %4$d core rows, %5$d links)"
+msgstr ""
+
+#: src/Services/LinkRenderer.php:39 src/LinkEnhancerModule.php:863
+msgid "Cross-references"
+msgstr ""
+
+#: src/Services/LinkRenderer.php:40
+msgid "External links"
+msgstr ""
+
+#: src/Services/LinkRenderer.php:41
+msgid "Pictures"
+msgstr ""
+
+#: src/Services/LinkRenderer.php:42
+msgid "Classic cross-references"
+msgstr ""
+
+#: src/Services/LinkRenderer.php:43
+msgid "Other - maybe damaged - links"
+msgstr ""
+
+#: src/Services/LinkRenderer.php:136
+#: resources/views/xref-overview-list.phtml:114
+#: resources/views/xref-overview.phtml:142
+msgid "target not found"
+msgstr ""
+
+#. I18N: JS enhanced link
+#: src/Services/LinkRenderer.php:144 src/Services/LinkRenderer.php:174
+#: src/Services/LinkRenderer.php:177 src/LinkEnhancerUtils.php:142
+#: resources/views/help-wt-helptext.phtml:16
+msgid "Cross-reference"
+msgstr ""
+
+#: src/Services/LinkRenderer.php:146
+#, php-format
+msgid "expected %1$s, is %2$s"
+msgstr ""
+
+#: src/Services/LinkRenderer.php:166
+#: resources/views/xref-overview-list.phtml:116
+#: resources/views/xref-overview.phtml:144
+msgid "target not unique"
+msgstr ""
+
+#: src/Services/LinkRenderer.php:166
+#, php-format
+msgid "%1$s - %2$d matches in other trees"
 msgstr ""
 
 #: src/Services/MarkdownEditorActivationService.php:187
@@ -28,7 +154,7 @@ msgstr ""
 
 #. I18N: Settings - section title
 #: src/Services/MarkdownEditorActivationService.php:187
-#: resources/views/settings-main.phtml:47 resources/views/settings.phtml:148
+#: resources/views/settings-main.phtml:47 resources/views/settings.phtml:175
 msgid "Markdown enhancements"
 msgstr ""
 
@@ -44,414 +170,370 @@ msgstr ""
 msgid "Precondition: Tree preference '%s' need to be set to markdown."
 msgstr ""
 
-#: src/Services/XrefsService.php:777 src/LinkEnhancerModule.php:1124
-msgid "Cross-references"
+#: src/Services/ContentBuilder.php:105 src/Services/ContentBuilder.php:111
+#: resources/views/settings-jscss.phtml:347
+#: resources/views/settings-jscss.phtml:352 resources/views/settings.phtml:38
+msgid "Settings"
 msgstr ""
 
-#: src/Services/XrefsService.php:778
-msgid "External links"
-msgstr ""
-
-#: src/Services/XrefsService.php:779
-msgid "Pictures"
-msgstr ""
-
-#: src/Services/XrefsService.php:780
-msgid "Classic cross-references"
-msgstr ""
-
-#: src/Services/XrefsService.php:781
-msgid "Other - maybe damaged - links"
-msgstr ""
-
-#: src/Services/XrefsService.php:934
-#: resources/views/xref-overview-list.phtml:117
-#: resources/views/xref-overview.phtml:144
-msgid "target not found"
-msgstr ""
-
-#. I18N: JS enhanced link
-#: src/Services/XrefsService.php:942 src/Services/XrefsService.php:974
-#: src/Services/XrefsService.php:977 src/LinkEnhancerUtils.php:139
-#: resources/views/help-wt-helptext.phtml:16
-msgid "Cross-reference"
-msgstr ""
-
-#: src/Services/XrefsService.php:944
-#, php-format
-msgid "expected %1$s, is %2$s"
-msgstr ""
-
-#: src/Services/XrefsService.php:968
-#: resources/views/xref-overview-list.phtml:119
-#: resources/views/xref-overview.phtml:146
-msgid "target not unique"
-msgstr ""
-
-#: src/Services/XrefsService.php:968
-#, php-format
-msgid "%1$s - %2$d matches in other trees"
+#: src/Services/ContentBuilder.php:369
+msgid "Home link - JSON with CSS rules seems to be invalid."
 msgstr ""
 
 #. I18N: Settings - section title
-#: src/Services/WthbService.php:111 src/Services/WthbService.php:144
-#: src/Services/WthbService.php:271 src/LinkEnhancerUtils.php:166
+#: src/Services/WthbService.php:113 src/Services/WthbService.php:146
+#: src/Services/WthbService.php:275 src/LinkEnhancerUtils.php:169
 #: src/Http/RequestHandlers/HelpWthbAction.php:49
-#: resources/views/help-wt-helptext.phtml:16 resources/views/settings.phtml:156
+#: resources/views/help-wt-helptext.phtml:16 resources/views/settings.phtml:183
 msgid "Webtrees manual"
 msgstr ""
 
-#: src/Services/WthbService.php:111
+#: src/Services/WthbService.php:113
 msgid "Error occurred"
 msgstr ""
 
 #. I18N: csv import
-#: src/Services/WthbService.php:124
+#: src/Services/WthbService.php:126
 msgid "empty rows"
 msgstr ""
 
 #. I18N: csv import
-#: src/Services/WthbService.php:125
+#: src/Services/WthbService.php:127
 msgid "rows whose number of fields differs from the header row"
 msgstr ""
 
 #. I18N: data import with seeder
-#: src/Services/WthbService.php:126
+#: src/Services/WthbService.php:128
 msgid "rows in which at least one required field is not set"
 msgstr ""
 
 #. I18N: data import with seeder
-#: src/Services/WthbService.php:127
+#: src/Services/WthbService.php:129
 msgid "rows in which the maximum field value length has been exceeded"
 msgstr ""
 
-#: src/Services/WthbService.php:144
+#: src/Services/WthbService.php:146
 msgid "Routes imported"
 msgstr ""
 
 #. I18N: wthb import skipped rows
-#: src/Services/WthbService.php:148
+#: src/Services/WthbService.php:150
 msgid "Skipped"
 msgstr ""
 
-#: src/Services/WthbService.php:160 resources/views/settings-wthb.phtml:266
+#: src/Services/WthbService.php:162 resources/views/settings-wthb.phtml:266
 msgid "CSV-Import"
 msgstr ""
 
-#: src/Services/WthbService.php:271
+#: src/Services/WthbService.php:275
 msgid "Table for context help is missing - fallback to standard url"
 msgstr ""
 
-#: src/Services/WthbService.php:464 src/Services/WthbService.php:499
+#: src/Services/WthbService.php:469 src/Services/WthbService.php:504
 msgid "Table for context help is missing - nothing to do."
 msgstr ""
 
-#: src/Services/WthbService.php:470
+#: src/Services/WthbService.php:475
 msgid "No data available for export."
 msgstr ""
 
-#: src/Services/WthbService.php:508
+#: src/Services/WthbService.php:513
 msgid "No CSV file was received."
 msgstr ""
 
-#: src/Services/WthbService.php:526
+#: src/Services/WthbService.php:531
 msgid "Separator is not set."
 msgstr ""
 
-#: src/Services/WthbService.php:529
+#: src/Services/WthbService.php:534
 msgid "For the separator is only a single character allowed."
 msgstr ""
 
-#: src/LinkEnhancerUtils.php:97
+#: src/LinkEnhancerUtils.php:100
 msgid "webtrees FAQ"
 msgstr ""
 
-#: src/LinkEnhancerUtils.php:98 src/LinkEnhancerUtils.php:99
+#: src/LinkEnhancerUtils.php:101 src/LinkEnhancerUtils.php:102
 msgid "webtrees Forum"
 msgstr ""
 
-#: src/LinkEnhancerUtils.php:99 src/LinkEnhancerUtils.php:101
+#: src/LinkEnhancerUtils.php:102 src/LinkEnhancerUtils.php:104
 msgid "ask a question (account necessary)"
 msgstr ""
 
-#: src/LinkEnhancerUtils.php:100 src/LinkEnhancerUtils.php:101
+#: src/LinkEnhancerUtils.php:103 src/LinkEnhancerUtils.php:104
 msgid "CompGen Discourse"
 msgstr ""
 
-#: src/LinkEnhancerUtils.php:102
+#: src/LinkEnhancerUtils.php:105
 msgid "GitHub - webtrees issues"
 msgstr ""
 
-#: src/LinkEnhancerUtils.php:103
+#: src/LinkEnhancerUtils.php:106
 msgid "GitHub - webtrees related projects"
 msgstr ""
 
 #. I18N: JS MDE
-#: src/LinkEnhancerUtils.php:117 src/LinkEnhancerUtils.php:209
-#: src/LinkEnhancerUtils.php:210
+#: src/LinkEnhancerUtils.php:120 src/LinkEnhancerUtils.php:211
+#: src/LinkEnhancerUtils.php:212
 msgid "bold"
 msgstr ""
 
 #. I18N: JS MDE
-#: src/LinkEnhancerUtils.php:118 src/LinkEnhancerUtils.php:205
-#: src/LinkEnhancerUtils.php:206
+#: src/LinkEnhancerUtils.php:121 src/LinkEnhancerUtils.php:207
+#: src/LinkEnhancerUtils.php:208
 msgid "italic"
 msgstr ""
 
 #. I18N: JS MDE
-#: src/LinkEnhancerUtils.php:119 src/LinkEnhancerUtils.php:220
-#: src/LinkEnhancerUtils.php:221
+#: src/LinkEnhancerUtils.php:122 src/LinkEnhancerUtils.php:222
+#: src/LinkEnhancerUtils.php:223
 msgid "strikethrough"
 msgstr ""
 
 #. I18N: JS MDE
-#: src/LinkEnhancerUtils.php:120 src/LinkEnhancerUtils.php:213
-#: src/LinkEnhancerUtils.php:214
+#: src/LinkEnhancerUtils.php:123 src/LinkEnhancerUtils.php:215
+#: src/LinkEnhancerUtils.php:216
 msgid "format as code"
 msgstr ""
 
 #. I18N: JS MDE
-#: src/LinkEnhancerUtils.php:121 src/LinkEnhancerUtils.php:229
-#: src/LinkEnhancerUtils.php:230
+#: src/LinkEnhancerUtils.php:124 src/LinkEnhancerUtils.php:231
+#: src/LinkEnhancerUtils.php:232
 msgid "highlight"
 msgstr ""
 
 #. I18N: JS MDE
-#: src/LinkEnhancerUtils.php:122 src/LinkEnhancerUtils.php:236
-#: src/LinkEnhancerUtils.php:237 src/LinkEnhancerUtils.php:240
-#: src/LinkEnhancerUtils.php:242
+#: src/LinkEnhancerUtils.php:125 src/LinkEnhancerUtils.php:238
+#: src/LinkEnhancerUtils.php:239 src/LinkEnhancerUtils.php:242
+#: src/LinkEnhancerUtils.php:244
 #, php-format
 msgid "Level %s heading"
 msgstr ""
 
 #. I18N: JS MDE
-#: src/LinkEnhancerUtils.php:123 src/LinkEnhancerUtils.php:245
-#: src/LinkEnhancerUtils.php:246 src/Factories/CustomMarkdownFactory.php:71
+#: src/LinkEnhancerUtils.php:126 src/LinkEnhancerUtils.php:247
+#: src/LinkEnhancerUtils.php:248 src/Factories/CustomMarkdownFactory.php:71
 msgid "Bulleted list"
 msgstr ""
 
 #. I18N: JS MDE
-#: src/LinkEnhancerUtils.php:124 src/LinkEnhancerUtils.php:249
-#: src/LinkEnhancerUtils.php:250 src/Factories/CustomMarkdownFactory.php:72
+#: src/LinkEnhancerUtils.php:127 src/LinkEnhancerUtils.php:251
+#: src/LinkEnhancerUtils.php:252 src/Factories/CustomMarkdownFactory.php:72
 msgid "Numbered list"
 msgstr ""
 
 #. I18N: JS MDE blockquote
-#: src/LinkEnhancerUtils.php:125 src/LinkEnhancerUtils.php:291
-#: src/LinkEnhancerUtils.php:292
+#: src/LinkEnhancerUtils.php:128 src/LinkEnhancerUtils.php:293
+#: src/LinkEnhancerUtils.php:294
 msgid "quote"
 msgstr ""
 
 #. I18N: JS MDE
-#: src/LinkEnhancerUtils.php:126 src/LinkEnhancerUtils.php:273
-#: src/LinkEnhancerUtils.php:274
+#: src/LinkEnhancerUtils.php:129 src/LinkEnhancerUtils.php:275
+#: src/LinkEnhancerUtils.php:276
 msgid "Insert link"
 msgstr ""
 
 #. I18N: JS MDE
-#: src/LinkEnhancerUtils.php:127 src/LinkEnhancerUtils.php:277
-#: src/LinkEnhancerUtils.php:278
+#: src/LinkEnhancerUtils.php:130 src/LinkEnhancerUtils.php:279
+#: src/LinkEnhancerUtils.php:280
 msgid "Insert image"
 msgstr ""
 
 #. I18N: JS MDE
-#: src/LinkEnhancerUtils.php:128 src/LinkEnhancerUtils.php:282
-#: src/LinkEnhancerUtils.php:283
+#: src/LinkEnhancerUtils.php:131 src/LinkEnhancerUtils.php:284
+#: src/LinkEnhancerUtils.php:285
 msgid "Horizontal rule"
 msgstr ""
 
 #. I18N: JS MDE
-#: src/LinkEnhancerUtils.php:129
+#: src/LinkEnhancerUtils.php:132
 msgid "Undo"
 msgstr ""
 
 #. I18N: JS MDE
-#: src/LinkEnhancerUtils.php:130
+#: src/LinkEnhancerUtils.php:133
 msgid "Redo"
 msgstr ""
 
 #. I18N: JS MDE
-#: src/LinkEnhancerUtils.php:132
+#: src/LinkEnhancerUtils.php:135
 msgid "Link destination"
 msgstr ""
 
 #. I18N: JS MDE
-#: src/LinkEnhancerUtils.php:133 src/LinkEnhancerUtils.php:286
+#: src/LinkEnhancerUtils.php:136 src/LinkEnhancerUtils.php:288
 msgid "Insert table"
 msgstr ""
 
 #. I18N: JS MDE
-#: src/LinkEnhancerUtils.php:134
+#: src/LinkEnhancerUtils.php:137
 msgid ""
 "How many columns and rows should the table have (input: [number] [number])?"
 msgstr ""
 
 #. I18N: JS enhanced link, %s name of location
-#: src/LinkEnhancerUtils.php:140
+#: src/LinkEnhancerUtils.php:143
 #, php-format
 msgid "Online Local heritage book of %s at CompGen"
 msgstr ""
 
 #. I18N: JS enhanced link
-#: src/LinkEnhancerUtils.php:141
+#: src/LinkEnhancerUtils.php:144
 msgid "Historic Geo Information System (GOV)"
 msgstr ""
 
 #. I18N: JS enhanced link
-#: src/LinkEnhancerUtils.php:142
+#: src/LinkEnhancerUtils.php:145
 msgid "GEDBAS (Genealogical Database - collected personal data)"
 msgstr ""
 
 #. I18N: JS enhanced link
-#: src/LinkEnhancerUtils.php:143
+#: src/LinkEnhancerUtils.php:146
 msgid "wer-wir-waren.at"
 msgstr ""
 
 #. I18N: JS enhanced link
-#: src/LinkEnhancerUtils.php:144
+#: src/LinkEnhancerUtils.php:147
 msgid "Residents database - Family research in West Prussia"
 msgstr ""
 
 #. I18N: JS enhanced link
-#: src/LinkEnhancerUtils.php:146
+#: src/LinkEnhancerUtils.php:149
 msgid "Syntax error"
 msgstr ""
 
 #. I18N: JS enhanced link
-#: src/LinkEnhancerUtils.php:147
+#: src/LinkEnhancerUtils.php:150
 msgid "Unknown parameter keys"
 msgstr ""
 
 #. I18N: JS enhanced link wt1 - %s=rectypes
-#: src/LinkEnhancerUtils.php:148
+#: src/LinkEnhancerUtils.php:151
 #, php-format
 msgid ""
 "standard link to note (available record types: %s) with XREF in active tree"
 msgstr ""
 
 #. I18N: JS enhanced link wt2
-#: src/LinkEnhancerUtils.php:149
+#: src/LinkEnhancerUtils.php:152
 msgid ""
 "link to record type individual with XREF from \"othertree\" and also link to"
 msgstr ""
 
 #. I18N: JS enhanced link wt3
-#: src/LinkEnhancerUtils.php:150
+#: src/LinkEnhancerUtils.php:153
 msgid "link to record without given record type - access via redirect url"
 msgstr ""
 
 #. I18N: JS enhanced link osm1
-#: src/LinkEnhancerUtils.php:151
+#: src/LinkEnhancerUtils.php:154
 msgid "zoom/lat/lon for locating map"
 msgstr ""
 
 #. I18N: JS enhanced link osm2
-#: src/LinkEnhancerUtils.php:152
+#: src/LinkEnhancerUtils.php:155
 msgid "same as before with additional marker"
 msgstr ""
 
 #. I18N: JS enhanced link osm3
-#: src/LinkEnhancerUtils.php:153
+#: src/LinkEnhancerUtils.php:156
 msgid "show also node/way/relation, see also"
 msgstr ""
 
 #. I18N: JS enhanced link osm4
-#: src/LinkEnhancerUtils.php:154
+#: src/LinkEnhancerUtils.php:157
 msgid "show also node/way/relation - alternative notation"
 msgstr ""
 
 #. I18N: JS enhanced link ofb1
-#: src/LinkEnhancerUtils.php:155
+#: src/LinkEnhancerUtils.php:158
 msgid "link to Online Local heritage book at CompGen with given uid"
 msgstr ""
 
 #. I18N: JS enhanced link wp1
-#: src/LinkEnhancerUtils.php:156
+#: src/LinkEnhancerUtils.php:159
 msgid "open the article in the german wikipedia"
 msgstr ""
 
 #. I18N: JS enhanced link wp2
-#: src/LinkEnhancerUtils.php:157
+#: src/LinkEnhancerUtils.php:160
 msgid "open the english version of the article"
 msgstr ""
 
 #. I18N: JS enhanced link wp3
-#: src/LinkEnhancerUtils.php:158
+#: src/LinkEnhancerUtils.php:161
 msgid "you can address every subdomain instance of wikipedia.org"
 msgstr ""
 
 #. I18N: JS enhanced link gedbas1
-#: src/LinkEnhancerUtils.php:159
+#: src/LinkEnhancerUtils.php:162
 msgid "open person record with given number"
 msgstr ""
 
 #. I18N: JS enhanced link gedbas2
 #. I18N: JS enhanced link gedbas3
-#: src/LinkEnhancerUtils.php:160 src/LinkEnhancerUtils.php:161
+#: src/LinkEnhancerUtils.php:163 src/LinkEnhancerUtils.php:164
 msgid "open person record with UID"
 msgstr ""
 
-#: src/LinkEnhancerUtils.php:161
+#: src/LinkEnhancerUtils.php:164
 msgid "without database number"
 msgstr ""
 
-#: src/LinkEnhancerUtils.php:162
+#: src/LinkEnhancerUtils.php:165
 msgid "Data Entry System (DES)"
 msgstr ""
 
-#: src/LinkEnhancerUtils.php:162
+#: src/LinkEnhancerUtils.php:165
 msgid "Casualty lists"
 msgstr ""
 
 #. I18N: wthb link user setting title
-#: src/LinkEnhancerUtils.php:168 resources/views/wthb-modal.phtml:12
+#: src/LinkEnhancerUtils.php:171 resources/views/wthb-modal.phtml:12
 msgid "Webtrees manual link - user setting"
 msgstr ""
 
-#: src/LinkEnhancerUtils.php:169 resources/views/help-wthb.phtml:37
+#: src/LinkEnhancerUtils.php:172 resources/views/help-wthb.phtml:37
 #: resources/views/settings-wthb.phtml:69
 msgid "Full-text search"
 msgstr ""
 
-#: src/LinkEnhancerUtils.php:169 resources/views/md-toc-dropdown.phtml:15
+#: src/LinkEnhancerUtils.php:172 resources/views/md-toc-dropdown.phtml:15
 #: resources/views/help-wthb.phtml:53 resources/views/settings-md.phtml:272
 #: resources/views/settings-wthb.phtml:69
 msgid "Table of contents"
 msgstr ""
 
-#: src/LinkEnhancerUtils.php:170
+#: src/LinkEnhancerUtils.php:173
 #: src/Http/RequestHandlers/HelpWtCoreAction.php:50
 #: resources/views/settings-wthb.phtml:81
 msgid "webtrees help topics (included)"
 msgstr ""
 
-#: src/LinkEnhancerUtils.php:171
+#: src/LinkEnhancerUtils.php:174
 msgid "start page"
 msgstr ""
 
-#: src/LinkEnhancerUtils.php:172 resources/views/settings-jscss.phtml:347
-#: resources/views/settings-jscss.phtml:352 resources/views/settings.phtml:38
-msgid "Settings"
-msgstr ""
-
-#: src/LinkEnhancerUtils.php:176
+#: src/LinkEnhancerUtils.php:178
 msgid "Limit cell height"
 msgstr ""
 
-#: src/LinkEnhancerUtils.php:241
+#: src/LinkEnhancerUtils.php:243
 #, php-format
 msgid "and so on until level %s"
 msgstr ""
 
-#: src/LinkEnhancerUtils.php:256 src/LinkEnhancerUtils.php:258
+#: src/LinkEnhancerUtils.php:258 src/LinkEnhancerUtils.php:260
 msgid "Term"
 msgstr ""
 
-#: src/LinkEnhancerUtils.php:266 src/LinkEnhancerUtils.php:267
+#: src/LinkEnhancerUtils.php:268 src/LinkEnhancerUtils.php:269
 msgid "Text with a footnote reference"
 msgstr ""
 
-#: src/LinkEnhancerUtils.php:266 src/LinkEnhancerUtils.php:267
+#: src/LinkEnhancerUtils.php:268 src/LinkEnhancerUtils.php:269
 msgid "Footnote text"
 msgstr ""
 
@@ -486,102 +568,109 @@ msgstr ""
 msgid "nesting exactly as headings occur within the document"
 msgstr ""
 
-#: src/Factories/CustomMarkdownFactory.php:213
+#: src/Factories/CustomMarkdownFactory.php:209
 msgid "Permalink"
 msgstr ""
 
-#: src/Http/RequestHandlers/GotoIdAction.php:86
+#. I18N: renumber xrefs
+#: src/Http/RequestHandlers/RenumberActionHandler.php:80
+#, php-format
+msgid "%s (with links)"
+msgstr ""
+
+#: src/Http/RequestHandlers/GotoIdAction.php:77
 #, php-format
 msgid "No record for %s was found."
 msgstr ""
 
-#: src/Http/RequestHandlers/GotoIdAction.php:92
+#: src/Http/RequestHandlers/GotoIdAction.php:83
 #, php-format
 msgid "%s was found in another tree."
 msgstr ""
 
-#: src/Http/RequestHandlers/GotoIdAction.php:110
+#: src/Http/RequestHandlers/GotoIdAction.php:101
 #, php-format
 msgid "Multiple records for %s"
 msgstr ""
 
-#: src/Http/RequestHandlers/GotoUidAction.php:87
+#: src/Http/RequestHandlers/WthbAdminHandler.php:47
+#: resources/views/settings-wthb.phtml:251
+msgid "Import registered routes"
+msgstr ""
+
+#: src/Http/RequestHandlers/GotoUidAction.php:82
 #, php-format
 msgid ""
 "No record with UID %s was found. The UID index may not be available yet."
 msgstr ""
 
-#: src/Http/RequestHandlers/GotoUidAction.php:93
+#: src/Http/RequestHandlers/GotoUidAction.php:88
 #, php-format
 msgid "UID %s was found in another tree."
 msgstr ""
 
-#: src/Http/RequestHandlers/GotoUidAction.php:100
+#: src/Http/RequestHandlers/GotoUidAction.php:95
 #, php-format
 msgid "Multiple records for UID %s"
 msgstr ""
 
 #. I18N: MD img error precondition
-#: src/CommonMark/LeImageRenderer.php:134
+#: src/CommonMark/LeImageRenderer.php:136
 msgid ""
 "Neither a media object nor a file from the public directory was specified."
 msgstr ""
 
 #. I18N: MD img error precondition
-#: src/CommonMark/LeImageRenderer.php:140
+#: src/CommonMark/LeImageRenderer.php:142
 msgid ""
 "Only one media object OR one file from the public directory can be specified."
 msgstr ""
 
 #. I18N: MD img error crossreference
-#: src/CommonMark/LeImageRenderer.php:180
+#: src/CommonMark/LeImageRenderer.php:182
 msgid "There is no image file available for display."
 msgstr ""
 
 #. I18N: MD img error public folder
-#: src/CommonMark/LeImageRenderer.php:202
+#: src/CommonMark/LeImageRenderer.php:204
 msgid "The public folder does not exist."
 msgstr ""
 
 #. I18N: MD img error public file, %s the relative filename
-#: src/CommonMark/LeImageRenderer.php:211
+#: src/CommonMark/LeImageRenderer.php:213
 #, php-format
 msgid "File ‘%s’ does not exist in the public folder"
 msgstr ""
 
 #. I18N: MD img error public file
-#: src/CommonMark/LeImageRenderer.php:218
+#: src/CommonMark/LeImageRenderer.php:220
 msgid "Only files within the public folder are supported"
 msgstr ""
 
 #. I18N: MD img error public file, %s1=rel. filename, %s2=mimetype
-#: src/CommonMark/LeImageRenderer.php:226
+#: src/CommonMark/LeImageRenderer.php:228
 #, php-format
 msgid "File '%1$s' in the public folder is not an image but '%2$s'"
 msgstr ""
 
 #. I18N: Module title
-#: src/LinkEnhancerModule.php:335
+#: src/LinkEnhancerModule.php:337
 msgid "Link-Enhancer"
 msgstr ""
 
 #. I18N: Module description
-#: src/LinkEnhancerModule.php:345
+#: src/LinkEnhancerModule.php:347
 msgid ""
 "Cross-references to Gedcom datasets, Markdown editor, context-sensitive link "
 "to the GenWiki webtrees manual"
 msgstr ""
 
-#: src/LinkEnhancerModule.php:764
-msgid "Home link - JSON with CSS rules seems to be invalid."
+#: src/LinkEnhancerModule.php:572
+msgid "Some settings could not be saved."
 msgstr ""
 
-#: src/LinkEnhancerModule.php:814 resources/views/settings-wthb.phtml:251
-msgid "Import registered routes"
-msgstr ""
-
-#: src/LinkEnhancerModule.php:971 src/LinkEnhancerModule.php:1089
-#: src/LinkEnhancerModule.php:1228 resources/views/settings.phtml:75
+#: src/LinkEnhancerModule.php:636 src/LinkEnhancerModule.php:828
+#: src/LinkEnhancerModule.php:967 resources/views/settings.phtml:75
 msgid "Cross-Reference Overview"
 msgstr ""
 
@@ -625,123 +714,124 @@ msgstr ""
 msgid "The UID index is out of date."
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:45
-#: resources/views/xref-overview.phtml:62 resources/views/settings.phtml:79
+#: resources/views/xref-overview-list.phtml:42
+#: resources/views/xref-overview.phtml:60 resources/views/settings.phtml:79
 msgid ""
 "List all records that contain cross-references (XREFs) or linkenhancer links."
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:50
-#: resources/views/xref-overview.phtml:67
+#: resources/views/xref-overview-list.phtml:47
+#: resources/views/xref-overview.phtml:65
 msgid ""
 "Limited mode: this database engine has no regex support - the table is "
 "scanned live with a LIKE filter on every request, which can be slow on large "
 "trees. The link index is not available on this engine."
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:56
-#: resources/views/xref-overview.phtml:73
+#: resources/views/xref-overview-list.phtml:53
+#: resources/views/xref-overview.phtml:71
 #, php-format
 msgid "Link index active: %1$s scanned records, last verified %2$s."
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:60
-#: resources/views/xref-overview.phtml:77
+#: resources/views/xref-overview-list.phtml:57
+#: resources/views/xref-overview.phtml:75
 msgid ""
 "Live scan forced - the link index is bypassed for this view, which can be "
 "slow on large trees."
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:64
-#: resources/views/xref-overview.phtml:81
+#: resources/views/xref-overview-list.phtml:61
+#: resources/views/xref-overview.phtml:79
 msgid ""
 "No fresh link index - the table below scans the GEDCOM tables live, which "
 "can be slow on large trees. Build the index with the CLI script (see README."
 "md, \"CLI scripts & maintenance\")."
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:70
+#: resources/views/xref-overview-list.phtml:67
 msgid ""
 "Only broken targets: every matching record is loaded and its targets "
 "resolved on the server, which can be slow on large trees. Combine with the "
 "type filter to narrow the scan."
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:81
-#: resources/views/xref-overview.phtml:99
+#: resources/views/xref-overview-list.phtml:78
+#: resources/views/xref-overview.phtml:97
 msgid "referencing XREF"
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:86
-#: resources/views/xref-overview.phtml:105
+#: resources/views/xref-overview-list.phtml:83
+#: resources/views/xref-overview.phtml:103
 msgid "Bypass the link index and scan the GEDCOM tables live"
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:86
-#: resources/views/xref-overview.phtml:105
+#: resources/views/xref-overview-list.phtml:83
+#: resources/views/xref-overview.phtml:103
 msgid "Force live scan"
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:90
-#: resources/views/xref-overview.phtml:109
+#: resources/views/xref-overview-list.phtml:87
+#: resources/views/xref-overview.phtml:107
+#: resources/views/datafix-xref-uid-swap-options.phtml:49
 msgid "Record types"
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:91
-#: resources/views/xref-overview.phtml:110
+#: resources/views/xref-overview-list.phtml:88
+#: resources/views/xref-overview.phtml:108
 msgid "All types"
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:92
-#: resources/views/xref-overview.phtml:111
+#: resources/views/xref-overview-list.phtml:89
+#: resources/views/xref-overview.phtml:109
 msgid "All GEDCOM records"
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:93
-#: resources/views/xref-overview.phtml:112
+#: resources/views/xref-overview-list.phtml:90
+#: resources/views/xref-overview.phtml:110
 msgid "All Block records"
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:94
-#: resources/views/xref-overview.phtml:113
+#: resources/views/xref-overview-list.phtml:91
+#: resources/views/xref-overview.phtml:111
 msgid "GEDCOM records"
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:107
-#: resources/views/xref-overview.phtml:134
+#: resources/views/xref-overview-list.phtml:104
+#: resources/views/xref-overview.phtml:132
 msgid "links per class"
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:115
-#: resources/views/xref-overview.phtml:142
+#: resources/views/xref-overview-list.phtml:112
+#: resources/views/xref-overview.phtml:140
 msgid "Only rows with a missing or wrong-type target are shown"
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:116
-#: resources/views/xref-overview.phtml:143
+#: resources/views/xref-overview-list.phtml:113
+#: resources/views/xref-overview.phtml:141
 msgid "Only broken targets"
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:118
-#: resources/views/xref-overview.phtml:145
+#: resources/views/xref-overview-list.phtml:115
+#: resources/views/xref-overview.phtml:143
 msgid "The target type differs from the declaration"
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:148
-#: resources/views/xref-overview.phtml:180
+#: resources/views/xref-overview-list.phtml:145
+#: resources/views/xref-overview.phtml:178
 msgid "XREF"
 msgstr ""
 
 #. I18N: user defined url
 #. I18N: Settings - section title
-#: resources/views/settings-home.phtml:18 resources/views/settings.phtml:166
+#: resources/views/settings-home.phtml:18 resources/views/settings.phtml:193
 msgid "Home link"
 msgstr ""
 
 #. I18N: see also fancy-research-links
 #: resources/views/settings-home.phtml:33 resources/views/settings-md.phtml:47
 #: resources/views/settings-le.phtml:112
-#: resources/views/settings-wthb.phtml:166 resources/views/settings.phtml:121
+#: resources/views/settings-wthb.phtml:166 resources/views/settings.phtml:148
 msgid "Open links in a new tab"
 msgstr ""
 
@@ -818,26 +908,19 @@ msgstr ""
 #: resources/views/settings-main.phtml:102
 #: resources/views/settings-md.phtml:384
 #: resources/views/settings-wthb.phtml:101
-#: resources/views/settings-wthb.phtml:152 resources/views/settings.phtml:129
+#: resources/views/settings-wthb.phtml:152 resources/views/settings.phtml:156
 msgid "user defined"
 msgstr ""
 
 #: resources/views/settings-main.phtml:114
+#: resources/views/datafix-xref-uid-swap-options.phtml:27
+#: resources/views/datafix-xref-uid-swap-options.phtml:31
 msgid "UID lookup"
 msgstr ""
 
 #: resources/views/settings-main.phtml:119
 #, php-format
 msgid "Allow resolving UID tags (%s) to the corresponding records."
-msgstr ""
-
-#: resources/views/settings-main.phtml:122
-#, php-format
-msgid "Index status: %1$s rows, last built: %2$s"
-msgstr ""
-
-#: resources/views/settings-main.phtml:124
-msgid "Index source (link-index scan) not available."
 msgstr ""
 
 #: resources/views/goto-uid-select.phtml:21
@@ -887,7 +970,7 @@ msgstr ""
 
 #. I18N: help md - section title
 #. I18N: Settings - section title
-#: resources/views/help-md.phtml:70 resources/views/settings.phtml:139
+#: resources/views/help-md.phtml:70 resources/views/settings.phtml:166
 msgid "Enhanced Link Support"
 msgstr ""
 
@@ -989,6 +1072,49 @@ msgstr ""
 msgid "picture with defined height, width and additional css class"
 msgstr ""
 
+#: resources/views/datafix-index-status.phtml:20
+#: resources/views/datafix-index-status.phtml:26
+#: resources/views/datafix-options.phtml:26
+#: resources/views/datafix-options.phtml:30
+msgid "stale"
+msgstr ""
+
+#: resources/views/datafix-index-status.phtml:31
+msgid "Index status"
+msgstr ""
+
+#: resources/views/datafix-index-status.phtml:35
+#, php-format
+msgid "Link index: %1$s rows, last built: %2$s"
+msgstr ""
+
+#: resources/views/datafix-index-status.phtml:38
+msgid "Trigger link index rebuild"
+msgstr ""
+
+#: resources/views/datafix-index-status.phtml:39
+#: resources/views/datafix-index-status.phtml:54
+msgid "Rebuild"
+msgstr ""
+
+#: resources/views/datafix-index-status.phtml:47
+#, php-format
+msgid "UID index: %1$s rows, last built: %2$s"
+msgstr ""
+
+#: resources/views/datafix-index-status.phtml:49
+msgid "Index source (link-index scan) not available."
+msgstr ""
+
+#: resources/views/datafix-index-status.phtml:53
+msgid "Trigger UID index rebuild"
+msgstr ""
+
+#: resources/views/datafix-index-status.phtml:76
+#: resources/views/datafix-options.phtml:128
+msgid "queued"
+msgstr ""
+
 #: resources/views/help-wt-helptext.phtml:115
 msgid "The context help topics provided by webtrees are listed below."
 msgstr ""
@@ -997,14 +1123,48 @@ msgstr ""
 msgid "Further information can be found on a separate help page."
 msgstr ""
 
-#: resources/views/xref-overview.phtml:87
+#: resources/views/datafix-wt-type-options.phtml:12
+msgid ""
+"Adds the correct type letter to wt= targets that have none (e.g. wt=@SOUR1@ "
+"→ wt=s@SOUR1@)."
+msgstr ""
+
+#: resources/views/datafix-wt-type-options.phtml:13
+msgid ""
+"Corrects the type letter when it does not match the resolved target record "
+"(e.g. wt=i@SOUR1@ → wt=s@SOUR1@)."
+msgstr ""
+
+#: resources/views/datafix-wt-type-options.phtml:14
+msgid ""
+"Removes ALL type letters from wt= targets (e.g. wt=i@INDI1@ → wt=@INDI1@). "
+"The letters were originally only needed for JavaScript routing."
+msgstr ""
+
+#: resources/views/datafix-wt-type-options.phtml:18
+msgid "Mode"
+msgstr ""
+
+#: resources/views/datafix-wt-type-options.phtml:21
+msgid "Set — add missing type letters"
+msgstr ""
+
+#: resources/views/datafix-wt-type-options.phtml:22
+msgid "Repair — correct wrong type letters"
+msgstr ""
+
+#: resources/views/datafix-wt-type-options.phtml:23
+msgid "Remove — strip all type letters"
+msgstr ""
+
+#: resources/views/xref-overview.phtml:85
 msgid ""
 "Only broken targets: every matching record is loaded and its targets "
 "resolved on the server, which can be slow on large trees. Combine with the "
 "type/tree filters to narrow the scan."
 msgstr ""
 
-#: resources/views/xref-overview.phtml:127
+#: resources/views/xref-overview.phtml:125
 msgid "All trees"
 msgstr ""
 
@@ -1274,6 +1434,56 @@ msgstr ""
 msgid "No cross-references found."
 msgstr ""
 
+#: resources/views/datafix-xref-uid-swap-options.phtml:27
+#, php-format
+msgid ""
+"Note: the current setting \"%s\" is OFF. You should enable this option for "
+"the links to resolve correctly."
+msgstr ""
+
+#: resources/views/datafix-xref-uid-swap-options.phtml:31
+#, php-format
+msgid ""
+"Note: the current setting \"%s\" is ON. After converting UIDs to XREFs, you "
+"can disable this option if the index is not used otherwise."
+msgstr ""
+
+#: resources/views/datafix-xref-uid-swap-options.phtml:37
+msgid "Direction"
+msgstr ""
+
+#: resources/views/datafix-xref-uid-swap-options.phtml:40
+msgid "XREF → UID"
+msgstr ""
+
+#: resources/views/datafix-xref-uid-swap-options.phtml:41
+msgid "UID → XREF"
+msgstr ""
+
+#: resources/views/datafix-options.phtml:57
+msgid "Block modules"
+msgstr ""
+
+#: resources/views/datafix-options.phtml:60
+msgid "Process block modules"
+msgstr ""
+
+#: resources/views/datafix-options.phtml:95
+msgid "checked"
+msgstr ""
+
+#: resources/views/datafix-options.phtml:96
+msgid "updated"
+msgstr ""
+
+#: resources/views/datafix-options.phtml:97
+msgid "skipped"
+msgstr ""
+
+#: resources/views/datafix-options.phtml:104
+msgid "change(s)"
+msgstr ""
+
 #: resources/views/settings-wthb.phtml:25
 msgid "Top menu"
 msgstr ""
@@ -1399,6 +1609,59 @@ msgstr ""
 msgid "Automatically refresh data table when module is updated"
 msgstr ""
 
+#: resources/views/renumber-with-links.phtml:63
+msgid ""
+"This renumbers the records whose XREF collides with another family tree, and "
+"keeps the linkenhancer le-links and the le_* index in sync."
+msgstr ""
+
+#: resources/views/renumber-with-links.phtml:75
+msgid ""
+"The time limit was reached. Partial progress saved — run again to continue."
+msgstr ""
+
+#: resources/views/renumber-with-links.phtml:77
+msgid "Renumber completed successfully."
+msgstr ""
+
+#: resources/views/renumber-with-links.phtml:82
+msgid "XREF mapping"
+msgstr ""
+
+#: resources/views/renumber-with-links.phtml:86
+msgid "Old XREF"
+msgstr ""
+
+#: resources/views/renumber-with-links.phtml:87
+msgid "New XREF"
+msgstr ""
+
+#: resources/views/renumber-with-links.phtml:116
+msgid "Select a family tree"
+msgstr ""
+
+#: resources/views/renumber-with-links.phtml:138
+#, php-format
+msgid ""
+"The link index was last fully scanned at %s. Some le-links may not be "
+"detected in this pass."
+msgstr ""
+
+#: resources/views/renumber-with-links.phtml:153
+#, php-format
+msgid "%s inbound link"
+msgid_plural "%s inbound links"
+msgstr[0] ""
+msgstr[1] ""
+
+#: resources/views/renumber-with-links.phtml:162
+msgid "After the renumber the le_* index will be refreshed by the cron job."
+msgstr ""
+
+#: resources/views/renumber-with-links.phtml:163
+msgid "After the renumber the le_* index will be updated inline."
+msgstr ""
+
 #: resources/views/settings.phtml:42
 msgid "reset to default"
 msgstr ""
@@ -1424,16 +1687,30 @@ msgid ""
 "the notes rounds off this approach."
 msgstr ""
 
+#: resources/views/settings.phtml:91
+msgid ""
+"Renumber records whose XREF collides with another family tree, keeping "
+"linkenhancer links in sync."
+msgstr ""
+
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:89
+#: resources/views/settings.phtml:101
 msgid "Activate Support"
 msgstr ""
 
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:100
+#: resources/views/settings.phtml:112
 msgid "More options"
 msgstr ""
 
-#: resources/views/settings.phtml:107
+#: resources/views/settings.phtml:119
 msgid "Output of debug information on the JS console"
+msgstr ""
+
+#: resources/views/settings.phtml:133
+msgid "Enable PHP debug log output"
+msgstr ""
+
+#: resources/views/settings.phtml:138
+msgid "Also enabled per-request with ?debug=1 (non-sensitive info only)"
 msgstr ""

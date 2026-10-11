@@ -44,6 +44,7 @@ use Fisharebest\Webtrees\Source;
 use Fisharebest\Webtrees\Tree;
 use Illuminate\Database\Query\Expression;
 use Illuminate\Database\Query\JoinClause;
+use Schwendinger\Webtrees\Helpers\MoreI18N;
 
 /**
  * Single-pass renumber of this tree's cross-tree XREF collisions that ALSO keeps
@@ -153,7 +154,7 @@ final class RenumberWithLinksService
             // How much time do we have left? Stop with partial progress (core pattern).
             if ($this->timeout_service->isTimeNearlyUp()) {
                 $report['timed_out'] = true;
-                $report['message']   = I18N::translate('The server’s time limit has been reached.');
+                $report['message']   = MoreI18N::xlate('The server’s time limit has been reached.');
                 break;
             }
         }

@@ -111,7 +111,7 @@ $count = count($xrefs);
 
 <div id="renumber-form" class="row g-2 align-items-end mb-4">
     <div class="col-auto">
-        <label for="renumber-tree" class="col-form-label"><?= e(I18N::translate('Family tree')) ?></label>
+        <label for="renumber-tree" class="col-form-label"><?= e(MoreI18N::xlate('Family tree')) ?></label>
         <select id="renumber-tree" name="target_tree" class="form-select">
             <option value="0"><?= e(I18N::translate('Select a family tree')) ?></option>
             <?php foreach ($trees as $t): ?>

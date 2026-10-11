@@ -30,7 +30,6 @@ use DomainException;
 use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\DB;
 use Fisharebest\Webtrees\GedcomRecord;
-use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Services\TreeService;
 use Fisharebest\Webtrees\Tree;
@@ -500,7 +499,7 @@ final class XrefOverviewColumns
         // type stays its own (sortable) column.
         $xref_html = '<a href="' . e($url ?? '#') . '">' . e($xref) . '</a>'
             . '<br><small class="text-muted">'
-            . e($tree !== null ? $tree->name() : (I18N::translate('tree') . ' #' . $file))
+            . e($tree !== null ? $tree->name() : (MoreI18N::xlate('Tree') . ' #' . $file))
             . '</small>';
 
         $name = $record instanceof GedcomRecord ? $record->fullName() : $xref;

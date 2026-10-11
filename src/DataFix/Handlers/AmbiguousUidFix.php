@@ -9,6 +9,7 @@ use Fisharebest\Webtrees\GedcomRecord;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Tree;
 use Illuminate\Support\Collection;
+use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Schwendinger\Webtrees\Module\LinkEnhancer\DataFix\FixHandlerInterface;
 use Schwendinger\Webtrees\Module\LinkEnhancer\DataFix\TreeLookupTrait;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\IdResolver;
@@ -96,7 +97,7 @@ final class AmbiguousUidFix implements FixHandlerInterface
             $results = UidIndexService::lookup($target['xref'], $t->id());
             if ($results->count() > 1) {
                 $xrefs = $results->map(static fn (object $r): string => '@' . $r->xref . '@')->implode(', ');
-                $findings[] = $target['xref'] . ' → ' . $results->count() . ' ' . I18N::translate('records') . ': ' . $xrefs;
+                $findings[] = $target['xref'] . ' → ' . $results->count() . ' ' . MoreI18N::xlate('records') . ': ' . $xrefs;
             }
         }
 

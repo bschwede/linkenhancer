@@ -84,7 +84,7 @@ $module = Registry::container()->get(LinkEnhancerModule::class);
 <div class="row mt-3">
     <p class="col-sm-3 text-center">
         <a href="<?= route('module', ['module' => $module->name(), 'action' => 'AdminRenumber']) ?>" class="btn btn-outline-primary">
-            <?= I18N::translate('Renumber XREFs') ?>
+            <?= MoreI18N::xlate('Renumber XREFs') ?>
         </a>
     </p>
     <p class="col-sm-9 text-start text-muted">
