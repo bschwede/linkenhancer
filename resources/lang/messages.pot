@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 18:57+0200\n"
+"POT-Creation-Date: 2026-10-11 19:11+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1611,6 +1611,7 @@ msgid "Automatically refresh data table when module is updated"
 msgstr ""
 
 #: resources/views/renumber-with-links.phtml:63
+#: resources/views/settings.phtml:91
 msgid ""
 "This renumbers the records whose XREF collides with another family tree, and "
 "keeps the linkenhancer links and the le_* index in sync."
@@ -1686,12 +1687,6 @@ msgstr ""
 msgid ""
 "The option of embedding the images already inserted in the family tree in "
 "the notes rounds off this approach."
-msgstr ""
-
-#: resources/views/settings.phtml:91
-msgid ""
-"Renumber records whose XREF collides with another family tree, keeping "
-"linkenhancer links in sync."
 msgstr ""
 
 #. I18N: Settings - section title
