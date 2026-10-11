@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-28 09:14+0200\n"
+"POT-Creation-Date: 2026-10-11 13:50+0200\n"
 "PO-Revision-Date: 2026-09-29 04:20+0000\n"
 "Last-Translator: TheDutchJewel <thedutchjewel@noreply.codeberg.org>\n"
 "Language-Team: Dutch <https://translate.codeberg.org/projects/wt-modules/"
@@ -20,24 +20,73 @@ msgstr ""
 "X-Poedit-SearchPath-1: LinkEnhancerModule.php\n"
 "X-Poedit-SearchPath-2: module.php\n"
 
-msgid "tree"
-msgstr "stamboom"
-
-msgid "Option is disabled"
-msgstr "Optie is uitgeschakeld"
-
-#. I18N: Settings - section title
-msgid "Markdown enhancements"
-msgstr "Markdown-verbeteringen"
-
-msgid "Markdown editor for note textareas"
-msgstr "Markdown-editor voor tekstvelden in notities"
-
-#. I18N: MDE
-#, php-format
-msgid "Precondition: Tree preference '%s' need to be set to markdown."
+msgid "XREF ⇄ UID reference swap"
 msgstr ""
-"Voorwaarde: De stamboomvoorkeur ‘%s’ moet worden ingesteld op markdown."
+
+#, fuzzy
+#| msgid "Update the UID index"
+msgid "Report duplicate UIDs in index"
+msgstr "UID-index bijwerken"
+
+msgid ""
+"This fix reports UIDs that are assigned to multiple records in the UID "
+"index. No changes are made (report-only)."
+msgstr ""
+
+msgid "No duplicate UIDs found for this record."
+msgstr ""
+
+#, php-format
+msgid "%d duplicate UID(s) on this record:"
+msgstr ""
+
+msgid "Fix wt= type letter (set/repair/remove)"
+msgstr ""
+
+#, fuzzy
+#| msgid "JavaScript for additional link targets"
+msgid "Report dangling link targets"
+msgstr "JavaScript voor extra linkdoelen"
+
+msgid ""
+"This fix reports le-links whose target record does not exist. No changes are "
+"made (report-only)."
+msgstr ""
+
+#, php-format
+msgid "no record %s in tree \"%s\""
+msgstr ""
+
+#, fuzzy, php-format
+#| msgid "UID %s was found in another tree."
+msgid "UID not found in tree \"%s\""
+msgstr "UID %s is gevonden in een andere stamboom."
+
+msgid "No dangling links found."
+msgstr ""
+
+#, php-format
+msgid "%d missing target(s):"
+msgstr ""
+
+msgid "Report ambiguous UID targets"
+msgstr ""
+
+msgid ""
+"This fix reports UID targets that resolve to multiple records (ambiguous). "
+"No changes are made (report-only)."
+msgstr ""
+
+msgid "No ambiguous UIDs found."
+msgstr ""
+
+#, php-format
+msgid "%d ambiguous UID target(s):"
+msgstr ""
+
+#, php-format
+msgid "Renumbered @%1$s@ → @%2$s@ (%3$s, %4$d core rows, %5$d links)"
+msgstr ""
 
 msgid "Cross-references"
 msgstr "Kruisverwijzingen"
@@ -71,6 +120,28 @@ msgstr "doel niet uniek"
 #, php-format
 msgid "%1$s - %2$d matches in other trees"
 msgstr "%1$s - %2$d overeenkomsten in andere stambomen"
+
+msgid "Option is disabled"
+msgstr "Optie is uitgeschakeld"
+
+#. I18N: Settings - section title
+msgid "Markdown enhancements"
+msgstr "Markdown-verbeteringen"
+
+msgid "Markdown editor for note textareas"
+msgstr "Markdown-editor voor tekstvelden in notities"
+
+#. I18N: MDE
+#, php-format
+msgid "Precondition: Tree preference '%s' need to be set to markdown."
+msgstr ""
+"Voorwaarde: De stamboomvoorkeur ‘%s’ moet worden ingesteld op markdown."
+
+msgid "Settings"
+msgstr "Instellingen"
+
+msgid "Home link - JSON with CSS rules seems to be invalid."
+msgstr "Startpagina-link - JSON met CSS-regels lijkt ongeldig te zijn."
 
 #. I18N: Settings - section title
 msgid "Webtrees manual"
@@ -325,9 +396,6 @@ msgstr "webtrees-helponderwerpen (inbegrepen)"
 msgid "start page"
 msgstr "startpagina"
 
-msgid "Settings"
-msgstr "Instellingen"
-
 msgid "Limit cell height"
 msgstr "Beperk celhoogte"
 
@@ -369,6 +437,11 @@ msgstr "precies genest zoals kopteksten in het document voorkomen"
 msgid "Permalink"
 msgstr "Permalink"
 
+#. I18N: renumber xrefs
+#, php-format
+msgid "%s (with links)"
+msgstr ""
+
 #, php-format
 msgid "No record for %s was found."
 msgstr "Geen record voor %s gevonden."
@@ -380,6 +453,9 @@ msgstr "%s is gevonden in een andere stamboom."
 #, php-format
 msgid "Multiple records for %s"
 msgstr "Meerdere records voor %s"
+
+msgid "Import registered routes"
+msgstr "Geregistreerde routes importeren"
 
 #, php-format
 msgid ""
@@ -442,11 +518,8 @@ msgstr ""
 "Kruisverwijzingen naar GEDCOM-gegevenssets, Markdown-editor, "
 "contextgevoelige link naar de GenWiki-webtreeshandleiding"
 
-msgid "Home link - JSON with CSS rules seems to be invalid."
-msgstr "Startpagina-link - JSON met CSS-regels lijkt ongeldig te zijn."
-
-msgid "Import registered routes"
-msgstr "Geregistreerde routes importeren"
+msgid "Some settings could not be saved."
+msgstr ""
 
 msgid "Cross-Reference Overview"
 msgstr "Kruisverwijzingsoverzicht"
@@ -649,13 +722,6 @@ msgid "Allow resolving UID tags (%s) to the corresponding records."
 msgstr "UID-labels (%s) naar de overeenkomstige records laten verwijzen."
 
 #, php-format
-msgid "Index status: %1$s rows, last built: %2$s"
-msgstr "Indexstatus: %1$s rijen, laatst opgebouwd: %2$s"
-
-msgid "Index source (link-index scan) not available."
-msgstr "Indexbron (linkindexscan) niet beschikbaar."
-
-#, php-format
 msgid ""
 "Multiple records match UID %s. Please choose the one you are looking for."
 msgstr ""
@@ -802,6 +868,37 @@ msgstr "alternatieve tekst voor afbeelding in openbare map"
 msgid "picture with defined height, width and additional css class"
 msgstr "afbeelding met gedefinieerde hoogte, breedte en extra CSS-klasse"
 
+msgid "stale"
+msgstr ""
+
+msgid "Index status"
+msgstr ""
+
+#, fuzzy, php-format
+#| msgid "Index status: %1$s rows, last built: %2$s"
+msgid "Link index: %1$s rows, last built: %2$s"
+msgstr "Indexstatus: %1$s rijen, laatst opgebouwd: %2$s"
+
+msgid "Trigger link index rebuild"
+msgstr ""
+
+msgid "Rebuild"
+msgstr ""
+
+#, fuzzy, php-format
+#| msgid "Index status: %1$s rows, last built: %2$s"
+msgid "UID index: %1$s rows, last built: %2$s"
+msgstr "Indexstatus: %1$s rijen, laatst opgebouwd: %2$s"
+
+msgid "Index source (link-index scan) not available."
+msgstr "Indexbron (linkindexscan) niet beschikbaar."
+
+msgid "Trigger UID index rebuild"
+msgstr ""
+
+msgid "queued"
+msgstr ""
+
 msgid "The context help topics provided by webtrees are listed below."
 msgstr ""
 "De contextonderwerpen die door webtrees worden aangeboden, staan hieronder "
@@ -809,6 +906,33 @@ msgstr ""
 
 msgid "Further information can be found on a separate help page."
 msgstr "Meer informatie vindt u op een aparte helppagina."
+
+msgid ""
+"Adds the correct type letter to wt= targets that have none (e.g. wt=@SOUR1@ "
+"→ wt=s@SOUR1@)."
+msgstr ""
+
+msgid ""
+"Corrects the type letter when it does not match the resolved target record "
+"(e.g. wt=i@SOUR1@ → wt=s@SOUR1@)."
+msgstr ""
+
+msgid ""
+"Removes ALL type letters from wt= targets (e.g. wt=i@INDI1@ → wt=@INDI1@). "
+"The letters were originally only needed for JavaScript routing."
+msgstr ""
+
+msgid "Mode"
+msgstr ""
+
+msgid "Set — add missing type letters"
+msgstr ""
+
+msgid "Repair — correct wrong type letters"
+msgstr ""
+
+msgid "Remove — strip all type letters"
+msgstr ""
 
 msgid ""
 "Only broken targets: every matching record is loaded and its targets "
@@ -1055,6 +1179,51 @@ msgstr "Inkomende verwijzingen"
 msgid "No cross-references found."
 msgstr "Geen kruisverwijzingen gevonden."
 
+#, php-format
+msgid ""
+"Note: the current setting \"%s\" is OFF. You should enable this option for "
+"the links to resolve correctly."
+msgstr ""
+
+#, php-format
+msgid ""
+"Note: the current setting \"%s\" is ON. After converting UIDs to XREFs, you "
+"can disable this option if the index is not used otherwise."
+msgstr ""
+
+#, fuzzy
+#| msgid "Definition"
+msgid "Direction"
+msgstr "Definitie"
+
+msgid "XREF → UID"
+msgstr ""
+
+msgid "UID → XREF"
+msgstr ""
+
+#, fuzzy
+#| msgid "All Block records"
+msgid "Block modules"
+msgstr "Alle Block-records"
+
+msgid "Process block modules"
+msgstr ""
+
+msgid "checked"
+msgstr ""
+
+msgid "updated"
+msgstr ""
+
+#, fuzzy
+#| msgid "Skipped"
+msgid "skipped"
+msgstr "Overgeslagen"
+
+msgid "change(s)"
+msgstr ""
+
 msgid "Top menu"
 msgstr "Hoofdmenu"
 
@@ -1166,6 +1335,52 @@ msgid "Automatically refresh data table when module is updated"
 msgstr ""
 "De gegevenstabel automatisch vernieuwen wanneer de module wordt bijgewerkt"
 
+msgid ""
+"This renumbers the records whose XREF collides with another family tree, and "
+"keeps the linkenhancer le-links and the le_* index in sync."
+msgstr ""
+
+msgid ""
+"The time limit was reached. Partial progress saved — run again to continue."
+msgstr ""
+
+msgid "Renumber completed successfully."
+msgstr ""
+
+msgid "XREF mapping"
+msgstr ""
+
+#, fuzzy
+#| msgid "XREF"
+msgid "Old XREF"
+msgstr "XREF"
+
+#, fuzzy
+#| msgid "XREF"
+msgid "New XREF"
+msgstr "XREF"
+
+msgid "Select a family tree"
+msgstr ""
+
+#, php-format
+msgid ""
+"The link index was last fully scanned at %s. Some le-links may not be "
+"detected in this pass."
+msgstr ""
+
+#, php-format
+msgid "%s inbound link"
+msgid_plural "%s inbound links"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "After the renumber the le_* index will be refreshed by the cron job."
+msgstr ""
+
+msgid "After the renumber the le_* index will be updated inline."
+msgstr ""
+
 msgid "reset to default"
 msgstr "terugzetten naar standaard"
 
@@ -1193,6 +1408,11 @@ msgstr ""
 "De mogelijkheid om de reeds in de stamboom ingevoegde afbeeldingen in de "
 "notities in te sluiten, maakt deze aanpak compleet."
 
+msgid ""
+"Renumber records whose XREF collides with another family tree, keeping "
+"linkenhancer links in sync."
+msgstr ""
+
 #. I18N: Settings - section title
 msgid "Activate Support"
 msgstr "Ondersteuning activeren"
@@ -1203,6 +1423,15 @@ msgstr "Meer opties"
 
 msgid "Output of debug information on the JS console"
 msgstr "Uitvoer van debug-informatie op de JS-console"
+
+msgid "Enable PHP debug log output"
+msgstr ""
+
+msgid "Also enabled per-request with ?debug=1 (non-sensitive info only)"
+msgstr ""
+
+#~ msgid "tree"
+#~ msgstr "stamboom"
 
 #~ msgid "only changes since this timestamp"
 #~ msgstr "alleen wijzigingen sinds deze tijdstempel"
@@ -1249,9 +1478,6 @@ msgstr "Uitvoer van debug-informatie op de JS-console"
 
 #~ msgid "Interactive tree"
 #~ msgstr "Interactieve boom"
-
-#~ msgid "Definition"
-#~ msgstr "Definitie"
 
 #~ msgid ""
 #~ "This media object does not exist or you do not have permission to view it."

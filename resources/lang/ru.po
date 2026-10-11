@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: modules_v 4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-28 09:14+0200\n"
+"POT-Creation-Date: 2026-10-11 13:50+0200\n"
 "PO-Revision-Date: 2026-09-27 16:25+0000\n"
 "Last-Translator: Xapitonov <xapitonov@noreply.codeberg.org>\n"
 "Language-Team: Russian <https://translate.codeberg.org/projects/wt-modules/"
@@ -21,25 +21,73 @@ msgstr ""
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Weblate 2026.9.1\n"
 
-msgid "tree"
+msgid "XREF ⇄ UID reference swap"
 msgstr ""
 
-msgid "Option is disabled"
-msgstr "Опция отключена"
+#, fuzzy
+#| msgid "Update the UID index"
+msgid "Report duplicate UIDs in index"
+msgstr "Обновить индекс UID"
 
-#. I18N: Settings - section title
-msgid "Markdown enhancements"
-msgstr "Улучшения Markdown"
+msgid ""
+"This fix reports UIDs that are assigned to multiple records in the UID "
+"index. No changes are made (report-only)."
+msgstr ""
 
-msgid "Markdown editor for note textareas"
-msgstr "Редактор Markdown для текстовых полей заметок"
+msgid "No duplicate UIDs found for this record."
+msgstr ""
 
-#. I18N: MDE
 #, php-format
-msgid "Precondition: Tree preference '%s' need to be set to markdown."
+msgid "%d duplicate UID(s) on this record:"
 msgstr ""
-"Предварительное условие: для настройки дерева «%s» должно быть установлено "
-"значение Markdown."
+
+msgid "Fix wt= type letter (set/repair/remove)"
+msgstr ""
+
+#, fuzzy
+#| msgid "JavaScript for additional link targets"
+msgid "Report dangling link targets"
+msgstr "JavaScript для дополнительных целей ссылок"
+
+msgid ""
+"This fix reports le-links whose target record does not exist. No changes are "
+"made (report-only)."
+msgstr ""
+
+#, php-format
+msgid "no record %s in tree \"%s\""
+msgstr ""
+
+#, fuzzy, php-format
+#| msgid "UID %s was found in another tree."
+msgid "UID not found in tree \"%s\""
+msgstr "UID %s найден в другом дереве."
+
+msgid "No dangling links found."
+msgstr ""
+
+#, php-format
+msgid "%d missing target(s):"
+msgstr ""
+
+msgid "Report ambiguous UID targets"
+msgstr ""
+
+msgid ""
+"This fix reports UID targets that resolve to multiple records (ambiguous). "
+"No changes are made (report-only)."
+msgstr ""
+
+msgid "No ambiguous UIDs found."
+msgstr ""
+
+#, php-format
+msgid "%d ambiguous UID target(s):"
+msgstr ""
+
+#, php-format
+msgid "Renumbered @%1$s@ → @%2$s@ (%3$s, %4$d core rows, %5$d links)"
+msgstr ""
 
 msgid "Cross-references"
 msgstr "Перекрёстные ссылки"
@@ -73,6 +121,29 @@ msgstr "цель не уникальна"
 #, php-format
 msgid "%1$s - %2$d matches in other trees"
 msgstr "%1$s — совпадений в других деревьях: %2$d"
+
+msgid "Option is disabled"
+msgstr "Опция отключена"
+
+#. I18N: Settings - section title
+msgid "Markdown enhancements"
+msgstr "Улучшения Markdown"
+
+msgid "Markdown editor for note textareas"
+msgstr "Редактор Markdown для текстовых полей заметок"
+
+#. I18N: MDE
+#, php-format
+msgid "Precondition: Tree preference '%s' need to be set to markdown."
+msgstr ""
+"Предварительное условие: для настройки дерева «%s» должно быть установлено "
+"значение Markdown."
+
+msgid "Settings"
+msgstr "Настройки"
+
+msgid "Home link - JSON with CSS rules seems to be invalid."
+msgstr "Домашняя ссылка — JSON с правилами CSS недействителен."
 
 #. I18N: Settings - section title
 msgid "Webtrees manual"
@@ -330,9 +401,6 @@ msgstr "разделы справки webtrees (включены)"
 msgid "start page"
 msgstr "начальная страница"
 
-msgid "Settings"
-msgstr "Настройки"
-
 msgid "Limit cell height"
 msgstr "Ограничить высоту ячейки"
 
@@ -374,6 +442,11 @@ msgstr "вложенность точно соответствует распо�
 msgid "Permalink"
 msgstr "Постоянная ссылка"
 
+#. I18N: renumber xrefs
+#, php-format
+msgid "%s (with links)"
+msgstr ""
+
 #, php-format
 msgid "No record for %s was found."
 msgstr "Запись для %s не найдена."
@@ -385,6 +458,9 @@ msgstr "%s найдена в другом дереве."
 #, php-format
 msgid "Multiple records for %s"
 msgstr "Несколько записей для %s"
+
+msgid "Import registered routes"
+msgstr "Импорт зарегистрированных маршрутов"
 
 #, php-format
 msgid ""
@@ -447,11 +523,8 @@ msgstr ""
 "Перекрёстные ссылки на наборы данных Gedcom, редактор Markdown, контекстная "
 "ссылка на руководство GenWiki по webtrees"
 
-msgid "Home link - JSON with CSS rules seems to be invalid."
-msgstr "Домашняя ссылка — JSON с правилами CSS недействителен."
-
-msgid "Import registered routes"
-msgstr "Импорт зарегистрированных маршрутов"
+msgid "Some settings could not be saved."
+msgstr ""
 
 msgid "Cross-Reference Overview"
 msgstr "Обзор перекрёстных ссылок"
@@ -654,13 +727,6 @@ msgid "Allow resolving UID tags (%s) to the corresponding records."
 msgstr "Разрешить сопоставление тегов UID (%s) с соответствующими записями."
 
 #, php-format
-msgid "Index status: %1$s rows, last built: %2$s"
-msgstr "Состояние индекса: строк: %1$s, последнее построение: %2$s"
-
-msgid "Index source (link-index scan) not available."
-msgstr "Источник индекса (сканирование индекса ссылок) недоступен."
-
-#, php-format
 msgid ""
 "Multiple records match UID %s. Please choose the one you are looking for."
 msgstr "Несколько записей соответствуют UID %s. Выберите нужную запись."
@@ -805,12 +871,70 @@ msgstr "альтернативный текст для изображения в
 msgid "picture with defined height, width and additional css class"
 msgstr "изображение с заданной высотой, шириной и дополнительным классом CSS"
 
+msgid "stale"
+msgstr ""
+
+msgid "Index status"
+msgstr ""
+
+#, fuzzy, php-format
+#| msgid "Index status: %1$s rows, last built: %2$s"
+msgid "Link index: %1$s rows, last built: %2$s"
+msgstr "Состояние индекса: строк: %1$s, последнее построение: %2$s"
+
+msgid "Trigger link index rebuild"
+msgstr ""
+
+msgid "Rebuild"
+msgstr ""
+
+#, fuzzy, php-format
+#| msgid "Index status: %1$s rows, last built: %2$s"
+msgid "UID index: %1$s rows, last built: %2$s"
+msgstr "Состояние индекса: строк: %1$s, последнее построение: %2$s"
+
+msgid "Index source (link-index scan) not available."
+msgstr "Источник индекса (сканирование индекса ссылок) недоступен."
+
+msgid "Trigger UID index rebuild"
+msgstr ""
+
+msgid "queued"
+msgstr ""
+
 msgid "The context help topics provided by webtrees are listed below."
 msgstr ""
 "Ниже перечислены разделы контекстной справки, предоставляемые webtrees."
 
 msgid "Further information can be found on a separate help page."
 msgstr "Дополнительную информацию можно найти на отдельной странице справки."
+
+msgid ""
+"Adds the correct type letter to wt= targets that have none (e.g. wt=@SOUR1@ "
+"→ wt=s@SOUR1@)."
+msgstr ""
+
+msgid ""
+"Corrects the type letter when it does not match the resolved target record "
+"(e.g. wt=i@SOUR1@ → wt=s@SOUR1@)."
+msgstr ""
+
+msgid ""
+"Removes ALL type letters from wt= targets (e.g. wt=i@INDI1@ → wt=@INDI1@). "
+"The letters were originally only needed for JavaScript routing."
+msgstr ""
+
+msgid "Mode"
+msgstr ""
+
+msgid "Set — add missing type letters"
+msgstr ""
+
+msgid "Repair — correct wrong type letters"
+msgstr ""
+
+msgid "Remove — strip all type letters"
+msgstr ""
 
 msgid ""
 "Only broken targets: every matching record is loaded and its targets "
@@ -1063,6 +1187,49 @@ msgstr "Перекрёстные ссылки"
 msgid "No cross-references found."
 msgstr "Перекрёстные ссылки"
 
+#, php-format
+msgid ""
+"Note: the current setting \"%s\" is OFF. You should enable this option for "
+"the links to resolve correctly."
+msgstr ""
+
+#, php-format
+msgid ""
+"Note: the current setting \"%s\" is ON. After converting UIDs to XREFs, you "
+"can disable this option if the index is not used otherwise."
+msgstr ""
+
+msgid "Direction"
+msgstr ""
+
+msgid "XREF → UID"
+msgstr ""
+
+msgid "UID → XREF"
+msgstr ""
+
+#, fuzzy
+#| msgid "All Block records"
+msgid "Block modules"
+msgstr "Все записи блоков"
+
+msgid "Process block modules"
+msgstr ""
+
+msgid "checked"
+msgstr ""
+
+msgid "updated"
+msgstr ""
+
+#, fuzzy
+#| msgid "Skipped"
+msgid "skipped"
+msgstr "Пропущено"
+
+msgid "change(s)"
+msgstr ""
+
 msgid "Top menu"
 msgstr "Верхнее меню"
 
@@ -1176,6 +1343,53 @@ msgstr "Файл импорта CSV"
 msgid "Automatically refresh data table when module is updated"
 msgstr "Автоматически обновлять таблицу данных при обновлении модуля"
 
+msgid ""
+"This renumbers the records whose XREF collides with another family tree, and "
+"keeps the linkenhancer le-links and the le_* index in sync."
+msgstr ""
+
+msgid ""
+"The time limit was reached. Partial progress saved — run again to continue."
+msgstr ""
+
+msgid "Renumber completed successfully."
+msgstr ""
+
+msgid "XREF mapping"
+msgstr ""
+
+#, fuzzy
+#| msgid "XREF"
+msgid "Old XREF"
+msgstr "XREF"
+
+#, fuzzy
+#| msgid "XREF"
+msgid "New XREF"
+msgstr "XREF"
+
+msgid "Select a family tree"
+msgstr ""
+
+#, php-format
+msgid ""
+"The link index was last fully scanned at %s. Some le-links may not be "
+"detected in this pass."
+msgstr ""
+
+#, php-format
+msgid "%s inbound link"
+msgid_plural "%s inbound links"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+msgid "After the renumber the le_* index will be refreshed by the cron job."
+msgstr ""
+
+msgid "After the renumber the le_* index will be updated inline."
+msgstr ""
+
 msgid "reset to default"
 msgstr "сбросить по умолчанию"
 
@@ -1203,6 +1417,11 @@ msgstr ""
 "Возможность встраивать изображения, уже добавленные в родословное дерево, в "
 "заметки завершает этот подход."
 
+msgid ""
+"Renumber records whose XREF collides with another family tree, keeping "
+"linkenhancer links in sync."
+msgstr ""
+
 #. I18N: Settings - section title
 msgid "Activate Support"
 msgstr "Активировать поддержку"
@@ -1213,3 +1432,9 @@ msgstr "Дополнительные параметры"
 
 msgid "Output of debug information on the JS console"
 msgstr "Вывод отладочной информации в консоль JS"
+
+msgid "Enable PHP debug log output"
+msgstr ""
+
+msgid "Also enabled per-request with ?debug=1 (non-sensitive info only)"
+msgstr ""

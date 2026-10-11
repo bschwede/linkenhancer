@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-28 09:14+0200\n"
+"POT-Creation-Date: 2026-10-11 13:50+0200\n"
 "PO-Revision-Date: 2026-10-06 09:27+0000\n"
 "Last-Translator: Iberni2 <iberni2@noreply.codeberg.org>\n"
 "Language-Team: Catalan <https://translate.codeberg.org/projects/wt-modules/"
@@ -20,25 +20,73 @@ msgstr ""
 "X-Poedit-SearchPath-1: LinkEnhancerModule.php\n"
 "X-Poedit-SearchPath-2: module.php\n"
 
-msgid "tree"
-msgstr "Arbre"
-
-msgid "Option is disabled"
-msgstr "L'opció està desactivada"
-
-#. I18N: Settings - section title
-msgid "Markdown enhancements"
-msgstr "Millores de markdown"
-
-msgid "Markdown editor for note textareas"
-msgstr "Editor Markdown per a àrees de text de notes"
-
-#. I18N: MDE
-#, php-format
-msgid "Precondition: Tree preference '%s' need to be set to markdown."
+msgid "XREF ⇄ UID reference swap"
 msgstr ""
-"Condició prèvia: La preferència de l'arbre '%s' ha d'estar establerta a "
-"Markown."
+
+#, fuzzy
+#| msgid "Update the UID index"
+msgid "Report duplicate UIDs in index"
+msgstr "Actualitza l'índex UID"
+
+msgid ""
+"This fix reports UIDs that are assigned to multiple records in the UID "
+"index. No changes are made (report-only)."
+msgstr ""
+
+msgid "No duplicate UIDs found for this record."
+msgstr ""
+
+#, php-format
+msgid "%d duplicate UID(s) on this record:"
+msgstr ""
+
+msgid "Fix wt= type letter (set/repair/remove)"
+msgstr ""
+
+#, fuzzy
+#| msgid "JavaScript for additional link targets"
+msgid "Report dangling link targets"
+msgstr "JavaScrip per a enllaços addicionals"
+
+msgid ""
+"This fix reports le-links whose target record does not exist. No changes are "
+"made (report-only)."
+msgstr ""
+
+#, php-format
+msgid "no record %s in tree \"%s\""
+msgstr ""
+
+#, fuzzy, php-format
+#| msgid "UID %s was found in another tree."
+msgid "UID not found in tree \"%s\""
+msgstr "UID %s es va trobar en un altre arbre."
+
+msgid "No dangling links found."
+msgstr ""
+
+#, php-format
+msgid "%d missing target(s):"
+msgstr ""
+
+msgid "Report ambiguous UID targets"
+msgstr ""
+
+msgid ""
+"This fix reports UID targets that resolve to multiple records (ambiguous). "
+"No changes are made (report-only)."
+msgstr ""
+
+msgid "No ambiguous UIDs found."
+msgstr ""
+
+#, php-format
+msgid "%d ambiguous UID target(s):"
+msgstr ""
+
+#, php-format
+msgid "Renumbered @%1$s@ → @%2$s@ (%3$s, %4$d core rows, %5$d links)"
+msgstr ""
 
 msgid "Cross-references"
 msgstr "Referències creuades"
@@ -72,6 +120,29 @@ msgstr "L'objectiu no és únic"
 #, php-format
 msgid "%1$s - %2$d matches in other trees"
 msgstr "%1$s - %2$d Coincidències en altres arbres"
+
+msgid "Option is disabled"
+msgstr "L'opció està desactivada"
+
+#. I18N: Settings - section title
+msgid "Markdown enhancements"
+msgstr "Millores de markdown"
+
+msgid "Markdown editor for note textareas"
+msgstr "Editor Markdown per a àrees de text de notes"
+
+#. I18N: MDE
+#, php-format
+msgid "Precondition: Tree preference '%s' need to be set to markdown."
+msgstr ""
+"Condició prèvia: La preferència de l'arbre '%s' ha d'estar establerta a "
+"Markown."
+
+msgid "Settings"
+msgstr "Configuració"
+
+msgid "Home link - JSON with CSS rules seems to be invalid."
+msgstr "L'enllaç d'inici JSON amb regles CSS, sembla no ser vàlid."
 
 #. I18N: Settings - section title
 msgid "Webtrees manual"
@@ -328,9 +399,6 @@ msgstr "Temes d'ajuda de webtrees (inclosos)"
 msgid "start page"
 msgstr "pàgina d'inici"
 
-msgid "Settings"
-msgstr "Configuració"
-
 msgid "Limit cell height"
 msgstr "Limita l'alçada de la cel·la"
 
@@ -372,6 +440,11 @@ msgstr "anidant exactament com els encapçalaments apareixen dins del document"
 msgid "Permalink"
 msgstr "Enllaç permanent"
 
+#. I18N: renumber xrefs
+#, php-format
+msgid "%s (with links)"
+msgstr ""
+
 #, php-format
 msgid "No record for %s was found."
 msgstr "No hi ha registre trobat per %s ."
@@ -383,6 +456,9 @@ msgstr "%s es va trobar en un altre arbre."
 #, php-format
 msgid "Multiple records for %s"
 msgstr "Múltiples registres per a %s"
+
+msgid "Import registered routes"
+msgstr "Importar rutes registrades"
 
 #, php-format
 msgid ""
@@ -446,11 +522,8 @@ msgstr ""
 "Referències als conjunts de dades GEDCOM, amb l'editor Markdown, a enllaços "
 "contextuals al manual GenWiki webtrees"
 
-msgid "Home link - JSON with CSS rules seems to be invalid."
-msgstr "L'enllaç d'inici JSON amb regles CSS, sembla no ser vàlid."
-
-msgid "Import registered routes"
-msgstr "Importar rutes registrades"
+msgid "Some settings could not be saved."
+msgstr ""
 
 msgid "Cross-Reference Overview"
 msgstr "Referència - Visió general"
@@ -652,13 +725,6 @@ msgid "Allow resolving UID tags (%s) to the corresponding records."
 msgstr "Permetre resoldre etiquetes UID (%s) als registres corresponents."
 
 #, php-format
-msgid "Index status: %1$s rows, last built: %2$s"
-msgstr "Estat de l'índex: %1$s Files, últimes construccions: %2$s"
-
-msgid "Index source (link-index scan) not available."
-msgstr "Font de l'índex (escaneig enllaç-índex) no disponible."
-
-#, php-format
 msgid ""
 "Multiple records match UID %s. Please choose the one you are looking for."
 msgstr ""
@@ -805,6 +871,37 @@ msgstr "text alternatiu per a la imatge a la carpeta pública"
 msgid "picture with defined height, width and additional css class"
 msgstr "imatge amb alçada, amplada i classe CSS addicional definides"
 
+msgid "stale"
+msgstr ""
+
+msgid "Index status"
+msgstr ""
+
+#, fuzzy, php-format
+#| msgid "Index status: %1$s rows, last built: %2$s"
+msgid "Link index: %1$s rows, last built: %2$s"
+msgstr "Estat de l'índex: %1$s Files, últimes construccions: %2$s"
+
+msgid "Trigger link index rebuild"
+msgstr ""
+
+msgid "Rebuild"
+msgstr ""
+
+#, fuzzy, php-format
+#| msgid "Index status: %1$s rows, last built: %2$s"
+msgid "UID index: %1$s rows, last built: %2$s"
+msgstr "Estat de l'índex: %1$s Files, últimes construccions: %2$s"
+
+msgid "Index source (link-index scan) not available."
+msgstr "Font de l'índex (escaneig enllaç-índex) no disponible."
+
+msgid "Trigger UID index rebuild"
+msgstr ""
+
+msgid "queued"
+msgstr ""
+
 msgid "The context help topics provided by webtrees are listed below."
 msgstr ""
 "Els temes d'ajuda contextual proporcionats per webtrees es llisten a "
@@ -812,6 +909,33 @@ msgstr ""
 
 msgid "Further information can be found on a separate help page."
 msgstr "Podeu trobar més informació en una pàgina d'ajuda separada."
+
+msgid ""
+"Adds the correct type letter to wt= targets that have none (e.g. wt=@SOUR1@ "
+"→ wt=s@SOUR1@)."
+msgstr ""
+
+msgid ""
+"Corrects the type letter when it does not match the resolved target record "
+"(e.g. wt=i@SOUR1@ → wt=s@SOUR1@)."
+msgstr ""
+
+msgid ""
+"Removes ALL type letters from wt= targets (e.g. wt=i@INDI1@ → wt=@INDI1@). "
+"The letters were originally only needed for JavaScript routing."
+msgstr ""
+
+msgid "Mode"
+msgstr ""
+
+msgid "Set — add missing type letters"
+msgstr ""
+
+msgid "Repair — correct wrong type letters"
+msgstr ""
+
+msgid "Remove — strip all type letters"
+msgstr ""
 
 msgid ""
 "Only broken targets: every matching record is loaded and its targets "
@@ -1060,6 +1184,49 @@ msgstr "Referències entrants"
 msgid "No cross-references found."
 msgstr "No s'han trobat referències creuades"
 
+#, php-format
+msgid ""
+"Note: the current setting \"%s\" is OFF. You should enable this option for "
+"the links to resolve correctly."
+msgstr ""
+
+#, php-format
+msgid ""
+"Note: the current setting \"%s\" is ON. After converting UIDs to XREFs, you "
+"can disable this option if the index is not used otherwise."
+msgstr ""
+
+msgid "Direction"
+msgstr ""
+
+msgid "XREF → UID"
+msgstr ""
+
+msgid "UID → XREF"
+msgstr ""
+
+#, fuzzy
+#| msgid "All Block records"
+msgid "Block modules"
+msgstr "Tots el registres del bloc"
+
+msgid "Process block modules"
+msgstr ""
+
+msgid "checked"
+msgstr ""
+
+msgid "updated"
+msgstr ""
+
+#, fuzzy
+#| msgid "Skipped"
+msgid "skipped"
+msgstr "Saltat"
+
+msgid "change(s)"
+msgstr ""
+
 msgid "Top menu"
 msgstr "Menú superior"
 
@@ -1172,6 +1339,52 @@ msgid "Automatically refresh data table when module is updated"
 msgstr ""
 "Actualitzar automàticament la taula de dades quan s'actualitza el mòdul"
 
+msgid ""
+"This renumbers the records whose XREF collides with another family tree, and "
+"keeps the linkenhancer le-links and the le_* index in sync."
+msgstr ""
+
+msgid ""
+"The time limit was reached. Partial progress saved — run again to continue."
+msgstr ""
+
+msgid "Renumber completed successfully."
+msgstr ""
+
+msgid "XREF mapping"
+msgstr ""
+
+#, fuzzy
+#| msgid "XREF"
+msgid "Old XREF"
+msgstr "XREF"
+
+#, fuzzy
+#| msgid "XREF"
+msgid "New XREF"
+msgstr "XREF"
+
+msgid "Select a family tree"
+msgstr ""
+
+#, php-format
+msgid ""
+"The link index was last fully scanned at %s. Some le-links may not be "
+"detected in this pass."
+msgstr ""
+
+#, php-format
+msgid "%s inbound link"
+msgid_plural "%s inbound links"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "After the renumber the le_* index will be refreshed by the cron job."
+msgstr ""
+
+msgid "After the renumber the le_* index will be updated inline."
+msgstr ""
+
 msgid "reset to default"
 msgstr "Restablir als valors per defecte"
 
@@ -1199,6 +1412,11 @@ msgstr ""
 "L'opció d'incrustar les imatges ja inserides en l'arbre genealògic en les "
 "notes, completen aquest procediment."
 
+msgid ""
+"Renumber records whose XREF collides with another family tree, keeping "
+"linkenhancer links in sync."
+msgstr ""
+
 #. I18N: Settings - section title
 msgid "Activate Support"
 msgstr "Activar assistència"
@@ -1209,6 +1427,15 @@ msgstr "Més opcions"
 
 msgid "Output of debug information on the JS console"
 msgstr "Sortida d'informació de depuració a la consola JS"
+
+msgid "Enable PHP debug log output"
+msgstr ""
+
+msgid "Also enabled per-request with ?debug=1 (non-sensitive info only)"
+msgstr ""
+
+#~ msgid "tree"
+#~ msgstr "Arbre"
 
 #, php-format
 #~ msgid "File ‘%s’ in the public folder is not an image but '%s'"
