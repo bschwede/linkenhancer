@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: modules_v 4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 13:50+0200\n"
+"POT-Creation-Date: 2026-10-11 19:11+0200\n"
 "PO-Revision-Date: 2026-09-27 16:25+0000\n"
 "Last-Translator: Xapitonov <xapitonov@noreply.codeberg.org>\n"
 "Language-Team: Russian <https://translate.codeberg.org/projects/wt-modules/"
@@ -50,13 +50,15 @@ msgid "Report dangling link targets"
 msgstr "JavaScript для дополнительных целей ссылок"
 
 msgid ""
-"This fix reports le-links whose target record does not exist. No changes are "
-"made (report-only)."
+"This fix reports linkenhancer links whose target record does not exist. No "
+"changes are made (report-only)."
 msgstr ""
 
-#, php-format
-msgid "no record %s in tree \"%s\""
-msgstr ""
+#. I18N: 1=xref, 2=tree name
+#, fuzzy, php-format
+#| msgid "UID %s was found in another tree."
+msgid "no record %1$s in tree \"%2$s\""
+msgstr "UID %s найден в другом дереве."
 
 #, fuzzy, php-format
 #| msgid "UID %s was found in another tree."
@@ -1345,7 +1347,7 @@ msgstr "Автоматически обновлять таблицу данны�
 
 msgid ""
 "This renumbers the records whose XREF collides with another family tree, and "
-"keeps the linkenhancer le-links and the le_* index in sync."
+"keeps the linkenhancer links and the le_* index in sync."
 msgstr ""
 
 msgid ""
@@ -1373,8 +1375,8 @@ msgstr ""
 
 #, php-format
 msgid ""
-"The link index was last fully scanned at %s. Some le-links may not be "
-"detected in this pass."
+"The link index was last fully scanned at %s. Some linkenhancer links may not "
+"be detected in this pass."
 msgstr ""
 
 #, php-format
@@ -1416,11 +1418,6 @@ msgid ""
 msgstr ""
 "Возможность встраивать изображения, уже добавленные в родословное дерево, в "
 "заметки завершает этот подход."
-
-msgid ""
-"Renumber records whose XREF collides with another family tree, keeping "
-"linkenhancer links in sync."
-msgstr ""
 
 #. I18N: Settings - section title
 msgid "Activate Support"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 13:50+0200\n"
+"POT-Creation-Date: 2026-10-11 19:11+0200\n"
 "PO-Revision-Date: 2026-03-28 03:57+0000\n"
 "Last-Translator: RickM <rickm@noreply.codeberg.org>\n"
 "Language-Team: English (Australia) <https://translate.codeberg.org/projects/"
@@ -44,12 +44,13 @@ msgid "Report dangling link targets"
 msgstr ""
 
 msgid ""
-"This fix reports le-links whose target record does not exist. No changes are "
-"made (report-only)."
+"This fix reports linkenhancer links whose target record does not exist. No "
+"changes are made (report-only)."
 msgstr ""
 
+#. I18N: 1=xref, 2=tree name
 #, php-format
-msgid "no record %s in tree \"%s\""
+msgid "no record %1$s in tree \"%2$s\""
 msgstr ""
 
 #, php-format
@@ -1218,7 +1219,7 @@ msgstr ""
 
 msgid ""
 "This renumbers the records whose XREF collides with another family tree, and "
-"keeps the linkenhancer le-links and the le_* index in sync."
+"keeps the linkenhancer links and the le_* index in sync."
 msgstr ""
 
 msgid ""
@@ -1242,8 +1243,8 @@ msgstr ""
 
 #, php-format
 msgid ""
-"The link index was last fully scanned at %s. Some le-links may not be "
-"detected in this pass."
+"The link index was last fully scanned at %s. Some linkenhancer links may not "
+"be detected in this pass."
 msgstr ""
 
 #, php-format
@@ -1277,11 +1278,6 @@ msgstr ""
 msgid ""
 "The option of embedding the images already inserted in the family tree in "
 "the notes rounds off this approach."
-msgstr ""
-
-msgid ""
-"Renumber records whose XREF collides with another family tree, keeping "
-"linkenhancer links in sync."
 msgstr ""
 
 #. I18N: Settings - section title

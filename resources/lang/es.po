@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 13:50+0200\n"
+"POT-Creation-Date: 2026-10-11 19:11+0200\n"
 "PO-Revision-Date: 2026-10-11 16:55+0000\n"
 "Last-Translator: gallegonovato <gallegonovato@noreply.codeberg.org>\n"
 "Language-Team: Spanish <https://translate.codeberg.org/projects/wt-modules/"
@@ -47,15 +47,21 @@ msgstr "Corregir tipo de letra wt= (establecer/reparar/eliminar)"
 msgid "Report dangling link targets"
 msgstr "Notificar enlaces rotos"
 
+#, fuzzy
+#| msgid ""
+#| "This fix reports le-links whose target record does not exist. No changes "
+#| "are made (report-only)."
 msgid ""
-"This fix reports le-links whose target record does not exist. No changes are "
-"made (report-only)."
+"This fix reports linkenhancer links whose target record does not exist. No "
+"changes are made (report-only)."
 msgstr ""
 "Esta solución detecta los enlaces dinámicos (le-links) que apuntan a "
 "registros inexistentes. No se aplican cambios (solo informe)."
 
-#, php-format
-msgid "no record %s in tree \"%s\""
+#. I18N: 1=xref, 2=tree name
+#, fuzzy, php-format
+#| msgid "no record %s in tree \"%s\""
+msgid "no record %1$s in tree \"%2$s\""
 msgstr "sin registros %s en los árboles \"%s\""
 
 #, php-format
@@ -1356,7 +1362,7 @@ msgstr ""
 
 msgid ""
 "This renumbers the records whose XREF collides with another family tree, and "
-"keeps the linkenhancer le-links and the le_* index in sync."
+"keeps the linkenhancer links and the le_* index in sync."
 msgstr ""
 
 msgid ""
@@ -1384,8 +1390,8 @@ msgstr ""
 
 #, php-format
 msgid ""
-"The link index was last fully scanned at %s. Some le-links may not be "
-"detected in this pass."
+"The link index was last fully scanned at %s. Some linkenhancer links may not "
+"be detected in this pass."
 msgstr ""
 
 #, php-format
@@ -1426,11 +1432,6 @@ msgid ""
 msgstr ""
 "La opción de incrustar las imágenes ya insertadas en el árbol genealógico "
 "enlas notas, completan este procedimiento."
-
-msgid ""
-"Renumber records whose XREF collides with another family tree, keeping "
-"linkenhancer links in sync."
-msgstr ""
 
 #. I18N: Settings - section title
 msgid "Activate Support"

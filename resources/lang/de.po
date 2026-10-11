@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 13:50+0200\n"
-"PO-Revision-Date: 2026-10-11 16:55+0000\n"
+"POT-Creation-Date: 2026-10-11 19:11+0200\n"
+"PO-Revision-Date: 2026-10-11 17:14+0000\n"
 "Last-Translator: bschwede <bschwede@noreply.codeberg.org>\n"
 "Language-Team: German <https://translate.codeberg.org/projects/wt-modules/"
 "linkenhancer/de/>\n"
@@ -31,8 +31,8 @@ msgid ""
 "index. No changes are made (report-only)."
 msgstr ""
 "Diese Korrektur berichtet UIDs, die im UID-Index mehreren Datensätzen "
-"zugewiesen sind. Es werden keine Änderungen vorgenommen (nur zur Information)"
-"."
+"zugewiesen sind. Es werden keine Änderungen vorgenommen (nur zur "
+"Information)."
 
 msgid "No duplicate UIDs found for this record."
 msgstr "Für diesen Datensatz wurden keine doppelten UIDs gefunden."
@@ -48,15 +48,16 @@ msgid "Report dangling link targets"
 msgstr "Fehlerhafte Verweisziele berichten"
 
 msgid ""
-"This fix reports le-links whose target record does not exist. No changes are "
-"made (report-only)."
+"This fix reports linkenhancer links whose target record does not exist. No "
+"changes are made (report-only)."
 msgstr ""
-"Diese Korrektur meldet le-Verweise, deren Ziel-Datensatz nicht existiert. Es "
-"werden keine Änderungen vorgenommen (nur Meldung)."
+"Diese Korrektur meldet Linkenhancer-Verweise, deren Ziel-Datensatz nicht "
+"existiert. Es werden keine Änderungen vorgenommen (nur Meldung)."
 
+#. I18N: 1=xref, 2=tree name
 #, php-format
-msgid "no record %s in tree \"%s\""
-msgstr ""
+msgid "no record %1$s in tree \"%2$s\""
+msgstr "kein Datensatz %1$s im Stammbaum \"%2$s\" vorhanden"
 
 #, php-format
 msgid "UID not found in tree \"%s\""
@@ -1227,10 +1228,8 @@ msgstr "XREF → UID"
 msgid "UID → XREF"
 msgstr "UID → XREF"
 
-#, fuzzy
-#| msgid "All Block records"
 msgid "Block modules"
-msgstr "Alle Block-Datensätze"
+msgstr "Block-Datensätze"
 
 msgid "Process block modules"
 msgstr "Block-Module bearbeiten"
@@ -1241,10 +1240,8 @@ msgstr "geprüft"
 msgid "updated"
 msgstr "aktualisiert"
 
-#, fuzzy
-#| msgid "Skipped"
 msgid "skipped"
-msgstr "Übersprungen"
+msgstr "übersprungen"
 
 msgid "change(s)"
 msgstr "Änderung(en)"
@@ -1363,8 +1360,11 @@ msgstr "Daten-Tabelle automatisch auffrischen, wenn Modul aktualisiert wird"
 
 msgid ""
 "This renumbers the records whose XREF collides with another family tree, and "
-"keeps the linkenhancer le-links and the le_* index in sync."
+"keeps the linkenhancer links and the le_* index in sync."
 msgstr ""
+"Dadurch werden die Datensätze, deren XREF mit einem anderen Stammbaum "
+"kollidiert, neu nummeriert und die Linkenhancer-Verweise sowie der „le_*“-"
+"Index synchronisiert."
 
 msgid ""
 "The time limit was reached. Partial progress saved — run again to continue."
@@ -1378,24 +1378,22 @@ msgstr "Die Neunummerierung wurde erfolgreich abgeschlossen."
 msgid "XREF mapping"
 msgstr "XREF-Zuordnung"
 
-#, fuzzy
-#| msgid "XREF"
 msgid "Old XREF"
-msgstr "XREF"
+msgstr "Alte XREF"
 
-#, fuzzy
-#| msgid "XREF"
 msgid "New XREF"
-msgstr "XREF"
+msgstr "Neue XREF"
 
 msgid "Select a family tree"
 msgstr "Wählen Sie einen Stammbaum aus"
 
 #, php-format
 msgid ""
-"The link index was last fully scanned at %s. Some le-links may not be "
-"detected in this pass."
+"The link index was last fully scanned at %s. Some linkenhancer links may not "
+"be detected in this pass."
 msgstr ""
+"Der Link-Index wurde zuletzt um %s vollständig gescannt. Einige Linkenhancer-"
+"Verweise werden bei diesem Durchlauf möglicherweise nicht erkannt."
 
 #, php-format
 msgid "%s inbound link"
@@ -1409,7 +1407,8 @@ msgstr ""
 "aktualisiert."
 
 msgid "After the renumber the le_* index will be updated inline."
-msgstr "Nach der Umnummerierung wird der Index „le_*“ automatisch aktualisiert."
+msgstr ""
+"Nach der Umnummerierung wird der Index „le_*“ automatisch aktualisiert."
 
 msgid "reset to default"
 msgstr "Zurücksetzen auf Vorgabewerte"
@@ -1438,13 +1437,6 @@ msgstr ""
 "Die Möglichkeit, die im Stammbaum bereits eingefügten Bilder in den Notizen "
 "einzubetten, rundet diesen Ansatz ab."
 
-msgid ""
-"Renumber records whose XREF collides with another family tree, keeping "
-"linkenhancer links in sync."
-msgstr ""
-"Nummeriere Datensätze neu, deren XREF mit einem anderen Stammbaum "
-"kollidiert, und halte dabei die „Linkenhancer“-Verweise synchron."
-
 #. I18N: Settings - section title
 msgid "Activate Support"
 msgstr "Aktivieren der Unterstützung"
@@ -1463,6 +1455,13 @@ msgid "Also enabled per-request with ?debug=1 (non-sensitive info only)"
 msgstr ""
 "Wird außerdem pro Anfrage mit ?debug=1 aktiviert (nur für nicht sensible "
 "Informationen)"
+
+#~ msgid ""
+#~ "Renumber records whose XREF collides with another family tree, keeping "
+#~ "linkenhancer links in sync."
+#~ msgstr ""
+#~ "Nummeriere Datensätze neu, deren XREF mit einem anderen Stammbaum "
+#~ "kollidiert, und halte dabei die „Linkenhancer“-Verweise synchron."
 
 #~ msgid "tree"
 #~ msgstr "Stammbaum"
