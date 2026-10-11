@@ -117,13 +117,13 @@ $trees_w_text = $trees_w_text ? "<ol class=\"treelist\"><li>{$trees_w_text}</li>
                         <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
                         <div class="form-text">
                             <p><?= I18N::translate('Allow resolving UID tags (%s) to the corresponding records.', implode(' / ', UidTagCollector::DEFAULT_TAGS)) ?></p>
-                            <?php if (!empty($uid_index_status)): ?>
-                            <p class="text-muted small">
-                                <?= I18N::translate('Index status: %1$s rows, last built: %2$s', I18N::number($uid_index_status['rows']), $uid_index_status['last_run'] ? MoreI18N::localizedDatetimeString($uid_index_status['last_run']) : '—') ?>
-                                <?php if (!$uid_index_status['source_available']): ?>
-                                    <br><em><?= I18N::translate('Index source (link-index scan) not available.') ?></em>
-                                <?php endif; ?>
-                            </p>
+                            <?php if (!empty($uid_index_status)): ?>                           
+                                <?= view(LinkEnhancerModule::MODULE_NAME . '::datafix-index-status', [
+                                    'tree' => null,
+                                    'link_status' => null,
+                                    'uid_status' => $uid_index_status,
+                                    'cron_plan' => null,
+                                ]) ?>
                             <?php endif; ?>
                         </div>
                     </div>

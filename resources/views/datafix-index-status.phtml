@@ -8,45 +8,54 @@ use Schwendinger\Webtrees\Helpers\MoreI18N;
 
 /**
  * @var Tree                   $tree
- * @var array{rows: int, scanned_at: string|null, fresh: bool} $link_status
- * @var array{rows: int, last_run: string|null, fresh: bool}  $uid_status
- * @var array{link: bool, uid: bool} $cron_plan
+ * @var null|array{rows: int, scanned_at: string|null, fresh: bool} $link_status
+ * @var null|array{rows: int, last_run: string|null, fresh: bool}  $uid_status
+ * @var null|array{link: bool, uid: bool} $cron_plan
  */
 
-$link_ts = $link_status['scanned_at'] !== null
-    ? MoreI18N::localizedDatetimeString($link_status['scanned_at'])
-    : '—';
-$link_fresh = $link_status['fresh'] ? '' : ' <span class="text-warning">(' . e(I18N::translate('stale')) . ')</span>';
-$uid_ts = $uid_status['last_run'] !== null
-    ? MoreI18N::localizedDatetimeString($uid_status['last_run'])
-    : '—';
-$uid_fresh = $uid_status['fresh'] ? '' : ' <span class="text-warning">(' . e(I18N::translate('stale')) . ')</span>';
+if ($link_status) {
+    $link_ts = $link_status['scanned_at'] !== null
+        ? MoreI18N::localizedDatetimeString($link_status['scanned_at'])
+        : '—';
+    $link_fresh = $link_status['fresh'] ? '' : ' <span class="text-warning">(' . e(I18N::translate('stale')) . ')</span>';
+}
+if ($uid_status) {
+    $uid_ts = $uid_status['last_run'] !== null
+        ? MoreI18N::localizedDatetimeString($uid_status['last_run'])
+        : '—';
+    $uid_fresh = $uid_status['fresh'] ? '' : ' <span class="text-warning">(' . e(I18N::translate('stale')) . ')</span>';
+}
 ?>
 
 <div class="alert alert-light py-2 small">
     <strong><?= e(I18N::translate('Index status')) ?>:</strong>
+<?php if ($link_status): ?>
     <div class="d-flex justify-content-between align-items-center">
         <span>
-            <?= e(I18N::translate('Link index')) ?>: <?= I18N::number($link_status['rows']) ?> <?= e(I18N::translate('rows')) ?>,
-            <?= e(I18N::translate('last built')) ?>: <?= e($link_ts) ?><?= $link_fresh ?>
+            <?= e(I18N::translate('Link index: %1$s rows, last built: %2$s', I18N::number($link_status['rows']), $link_ts)) ?><?= $link_fresh ?>
         </span>
-        <?php if ($cron_plan['link'] && $tree instanceof Tree): ?>
+        <?php if (($cron_plan['link'] ?? null) && $tree instanceof Tree): ?>
         <button type="button" class="btn btn-outline-secondary btn-sm" data-rebuild="link" title="<?= e(I18N::translate('Trigger link index rebuild')) ?>">
             &#8635; <?= e(I18N::translate('Rebuild')) ?>
         </button>
         <?php endif; ?>
     </div>
+<?php endif; ?>
+<?php if ($uid_status): ?>
     <div class="d-flex justify-content-between align-items-center">
         <span>
-            <?= e(I18N::translate('UID index')) ?>: <?= I18N::number($uid_status['rows']) ?> <?= e(I18N::translate('rows')) ?>,
-            <?= e(I18N::translate('last built')) ?>: <?= e($uid_ts) ?><?= $uid_fresh ?>
+            <?= e(I18N::translate('UID index: %1$s rows, last built: %2$s', I18N::number($uid_status['rows']), $uid_ts)) ?><?= $uid_fresh ?>
+            <?php if (!$uid_status['source_available']): ?>
+                <br><em><?= I18N::translate('Index source (link-index scan) not available.') ?></em>
+            <?php endif; ?>            
         </span>
-        <?php if ($cron_plan['uid'] && $tree instanceof Tree): ?>
+        <?php if (($cron_plan['uid'] ?? null) && $tree instanceof Tree): ?>
         <button type="button" class="btn btn-outline-secondary btn-sm" data-rebuild="uid" title="<?= e(I18N::translate('Trigger UID index rebuild')) ?>">
             &#8635; <?= e(I18N::translate('Rebuild')) ?>
         </button>
         <?php endif; ?>
     </div>
+<?php endif; ?>
 </div>
 
 <?php if ($tree instanceof Tree): ?>
