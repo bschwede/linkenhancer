@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-11 13:50+0200\n"
-"PO-Revision-Date: 2026-09-29 04:20+0000\n"
+"PO-Revision-Date: 2026-10-11 16:55+0000\n"
 "Last-Translator: bschwede <bschwede@noreply.codeberg.org>\n"
 "Language-Team: German <https://translate.codeberg.org/projects/wt-modules/"
 "linkenhancer/de/>\n"
@@ -18,75 +18,77 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.9.1\n"
+"X-Generator: Weblate 2026.10.1\n"
 
 msgid "XREF ⇄ UID reference swap"
-msgstr ""
+msgstr "XREF ⇄ UID Verweis tauschen"
 
-#, fuzzy
-#| msgid "Update the UID index"
 msgid "Report duplicate UIDs in index"
-msgstr "UID-Index aktualisieren"
+msgstr "Doppelte UIDs im Index berichten"
 
 msgid ""
 "This fix reports UIDs that are assigned to multiple records in the UID "
 "index. No changes are made (report-only)."
 msgstr ""
+"Diese Korrektur berichtet UIDs, die im UID-Index mehreren Datensätzen "
+"zugewiesen sind. Es werden keine Änderungen vorgenommen (nur zur Information)"
+"."
 
 msgid "No duplicate UIDs found for this record."
-msgstr ""
+msgstr "Für diesen Datensatz wurden keine doppelten UIDs gefunden."
 
 #, php-format
 msgid "%d duplicate UID(s) on this record:"
-msgstr ""
+msgstr "%d doppelte UIDs in diesem Datensatz:"
 
 msgid "Fix wt= type letter (set/repair/remove)"
-msgstr ""
+msgstr "Korrektur wt= Typ-Buchstabe (setzen/korrigieren/entfernen)"
 
-#, fuzzy
-#| msgid "JavaScript for additional link targets"
 msgid "Report dangling link targets"
-msgstr "JavaScript-Objekt für zusätzliche Link-Ziele"
+msgstr "Fehlerhafte Verweisziele berichten"
 
 msgid ""
 "This fix reports le-links whose target record does not exist. No changes are "
 "made (report-only)."
 msgstr ""
+"Diese Korrektur meldet le-Verweise, deren Ziel-Datensatz nicht existiert. Es "
+"werden keine Änderungen vorgenommen (nur Meldung)."
 
 #, php-format
 msgid "no record %s in tree \"%s\""
 msgstr ""
 
-#, fuzzy, php-format
-#| msgid "UID %s was found in another tree."
+#, php-format
 msgid "UID not found in tree \"%s\""
-msgstr "UID %s wurde in einem anderen Stammbaum gefunden."
+msgstr "UID im Stammbaum „%s“ nicht gefunden"
 
 msgid "No dangling links found."
-msgstr ""
+msgstr "Es wurden keine ungültigen Verweise gefunden."
 
 #, php-format
 msgid "%d missing target(s):"
-msgstr ""
+msgstr "%d fehlende Ziele:"
 
 msgid "Report ambiguous UID targets"
-msgstr ""
+msgstr "Mehrdeutige UID-Ziele berichten"
 
 msgid ""
 "This fix reports UID targets that resolve to multiple records (ambiguous). "
 "No changes are made (report-only)."
 msgstr ""
+"Diese Korrektur berichtet UID-Ziele, die zu mehreren Datensätzen führen "
+"(mehrdeutig). Es werden keine Änderungen vorgenommen (nur Meldung)."
 
 msgid "No ambiguous UIDs found."
-msgstr ""
+msgstr "Es wurden keine mehrdeutigen UIDs gefunden."
 
 #, php-format
 msgid "%d ambiguous UID target(s):"
-msgstr ""
+msgstr "%d Ziel(e) mit mehrdeutiger UID:"
 
 #, php-format
 msgid "Renumbered @%1$s@ → @%2$s@ (%3$s, %4$d core rows, %5$d links)"
-msgstr ""
+msgstr "Renumbered @%1$s@ → @%2$s@ (%3$s, %4$d core rows, %5$d links)"
 
 msgid "Cross-references"
 msgstr "Querverweise"
@@ -446,7 +448,7 @@ msgstr "Dauerhafter Link"
 #. I18N: renumber xrefs
 #, php-format
 msgid "%s (with links)"
-msgstr ""
+msgstr "%s (mit Verweisen)"
 
 #, php-format
 msgid "No record for %s was found."
@@ -527,7 +529,7 @@ msgstr ""
 "zum GenWiki Webtrees Handbuch"
 
 msgid "Some settings could not be saved."
-msgstr ""
+msgstr "Einige Einstellungen konnten nicht gespeichert werden."
 
 msgid "Cross-Reference Overview"
 msgstr "Querverweis-Übersicht"
@@ -880,35 +882,33 @@ msgid "picture with defined height, width and additional css class"
 msgstr "Bild mit Angaben zu Höhe, Breite und zusätzlicher CSS Klasse"
 
 msgid "stale"
-msgstr ""
+msgstr "veraltet"
 
 msgid "Index status"
-msgstr ""
+msgstr "Index-Status"
 
-#, fuzzy, php-format
-#| msgid "Index status: %1$s rows, last built: %2$s"
+#, php-format
 msgid "Link index: %1$s rows, last built: %2$s"
-msgstr "Index-Status: %1$s Zeilen, zuletzt erzeugt: %2$s"
+msgstr "Verweis-Index: %1$s Zeile(n), zuletzt erzeugt: %2$s"
 
 msgid "Trigger link index rebuild"
-msgstr ""
+msgstr "Verweis Neu-Indizierung anstoßen"
 
 msgid "Rebuild"
-msgstr ""
+msgstr "Neuerstellung"
 
-#, fuzzy, php-format
-#| msgid "Index status: %1$s rows, last built: %2$s"
+#, php-format
 msgid "UID index: %1$s rows, last built: %2$s"
-msgstr "Index-Status: %1$s Zeilen, zuletzt erzeugt: %2$s"
+msgstr "UID-Index: %1$s Zeilen, zuletzt erzeugt: %2$s"
 
 msgid "Index source (link-index scan) not available."
 msgstr "Index-Quelle (link-index scan) nicht verfügbar."
 
 msgid "Trigger UID index rebuild"
-msgstr ""
+msgstr "UID Neu-Indizierung anstoßen"
 
 msgid "queued"
-msgstr ""
+msgstr "wartend"
 
 msgid "The context help topics provided by webtrees are listed below."
 msgstr ""
@@ -922,28 +922,35 @@ msgid ""
 "Adds the correct type letter to wt= targets that have none (e.g. wt=@SOUR1@ "
 "→ wt=s@SOUR1@)."
 msgstr ""
+"Fügt den korrekten Typbuchstaben zu „wt=“-Zielen hinzu, die noch keinen "
+"haben (z. B. wt=@SOUR1@ → wt=s@SOUR1@)."
 
 msgid ""
 "Corrects the type letter when it does not match the resolved target record "
 "(e.g. wt=i@SOUR1@ → wt=s@SOUR1@)."
 msgstr ""
+"Korrigiert den Typbuchstaben, wenn er nicht mit dem aufgelösten "
+"Zieldatensatz übereinstimmt (z. B. wt=i@SOUR1@ → wt=s@SOUR1@)."
 
 msgid ""
 "Removes ALL type letters from wt= targets (e.g. wt=i@INDI1@ → wt=@INDI1@). "
 "The letters were originally only needed for JavaScript routing."
 msgstr ""
+"Entfernt ALLE Typenbuchstaben aus den „wt=“-Zielen (z. B. wt=i@INDI1@ → "
+"wt=@INDI1@). Diese Buchstaben wurden ursprünglich nur für das JavaScript-"
+"Routing benötigt."
 
 msgid "Mode"
-msgstr ""
+msgstr "Modus"
 
 msgid "Set — add missing type letters"
-msgstr ""
+msgstr "Setzen — fehlende Typ-Buchstaben anfügen"
 
 msgid "Repair — correct wrong type letters"
-msgstr ""
+msgstr "Korrigieren — falsche Typ-Buchstaben ändern"
 
 msgid "Remove — strip all type letters"
-msgstr ""
+msgstr "Entfernen — alle Typ-Buchstaben entfernen"
 
 msgid ""
 "Only broken targets: every matching record is loaded and its targets "
@@ -1199,21 +1206,26 @@ msgid ""
 "Note: the current setting \"%s\" is OFF. You should enable this option for "
 "the links to resolve correctly."
 msgstr ""
+"Hinweis: Die aktuelle Einstellung „%s“ ist deaktiviert. Sie sollten diese "
+"Option aktivieren, damit die Verweise korrekt aufgelöst werden."
 
 #, php-format
 msgid ""
 "Note: the current setting \"%s\" is ON. After converting UIDs to XREFs, you "
 "can disable this option if the index is not used otherwise."
 msgstr ""
+"Hinweis: Die aktuelle Einstellung „%s“ ist aktiviert. Nach der Konvertierung "
+"der UIDs in XREFs können Sie diese Option deaktivieren, sofern der Index "
+"nicht anderweitig verwendet wird."
 
 msgid "Direction"
-msgstr ""
+msgstr "Richtung"
 
 msgid "XREF → UID"
-msgstr ""
+msgstr "XREF → UID"
 
 msgid "UID → XREF"
-msgstr ""
+msgstr "UID → XREF"
 
 #, fuzzy
 #| msgid "All Block records"
@@ -1221,13 +1233,13 @@ msgid "Block modules"
 msgstr "Alle Block-Datensätze"
 
 msgid "Process block modules"
-msgstr ""
+msgstr "Block-Module bearbeiten"
 
 msgid "checked"
-msgstr ""
+msgstr "geprüft"
 
 msgid "updated"
-msgstr ""
+msgstr "aktualisiert"
 
 #, fuzzy
 #| msgid "Skipped"
@@ -1235,7 +1247,7 @@ msgid "skipped"
 msgstr "Übersprungen"
 
 msgid "change(s)"
-msgstr ""
+msgstr "Änderung(en)"
 
 msgid "Top menu"
 msgstr "Kopfmenü"
@@ -1357,12 +1369,14 @@ msgstr ""
 msgid ""
 "The time limit was reached. Partial progress saved — run again to continue."
 msgstr ""
+"Das Zeitlimit ist abgelaufen. Teilfortschritt gespeichert – bitte erneut "
+"ausführen, um fortzufahren."
 
 msgid "Renumber completed successfully."
-msgstr ""
+msgstr "Die Neunummerierung wurde erfolgreich abgeschlossen."
 
 msgid "XREF mapping"
-msgstr ""
+msgstr "XREF-Zuordnung"
 
 #, fuzzy
 #| msgid "XREF"
@@ -1375,7 +1389,7 @@ msgid "New XREF"
 msgstr "XREF"
 
 msgid "Select a family tree"
-msgstr ""
+msgstr "Wählen Sie einen Stammbaum aus"
 
 #, php-format
 msgid ""
@@ -1386,14 +1400,16 @@ msgstr ""
 #, php-format
 msgid "%s inbound link"
 msgid_plural "%s inbound links"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s eingehender Verweis"
+msgstr[1] "%s eingehende Verweise"
 
 msgid "After the renumber the le_* index will be refreshed by the cron job."
 msgstr ""
+"Nach der Umnummerierung wird der Index „le_*“ durch den Cron-Job "
+"aktualisiert."
 
 msgid "After the renumber the le_* index will be updated inline."
-msgstr ""
+msgstr "Nach der Umnummerierung wird der Index „le_*“ automatisch aktualisiert."
 
 msgid "reset to default"
 msgstr "Zurücksetzen auf Vorgabewerte"
@@ -1426,6 +1442,8 @@ msgid ""
 "Renumber records whose XREF collides with another family tree, keeping "
 "linkenhancer links in sync."
 msgstr ""
+"Nummeriere Datensätze neu, deren XREF mit einem anderen Stammbaum "
+"kollidiert, und halte dabei die „Linkenhancer“-Verweise synchron."
 
 #. I18N: Settings - section title
 msgid "Activate Support"
@@ -1439,10 +1457,12 @@ msgid "Output of debug information on the JS console"
 msgstr "Ausgabe von Debug-Informationen auf der JS-Konsole"
 
 msgid "Enable PHP debug log output"
-msgstr ""
+msgstr "PHP-Debug-Protokollausgabe aktivieren"
 
 msgid "Also enabled per-request with ?debug=1 (non-sensitive info only)"
 msgstr ""
+"Wird außerdem pro Anfrage mit ?debug=1 aktiviert (nur für nicht sensible "
+"Informationen)"
 
 #~ msgid "tree"
 #~ msgstr "Stammbaum"
