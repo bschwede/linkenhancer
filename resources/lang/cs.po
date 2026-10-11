@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: modules_v 4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-28 09:14+0200\n"
+"POT-Creation-Date: 2026-10-11 13:50+0200\n"
 "PO-Revision-Date: 2026-10-04 18:41+0000\n"
 "Last-Translator: jpretired <jpretired@noreply.codeberg.org>\n"
 "Language-Team: Czech <https://translate.codeberg.org/projects/wt-modules/"
@@ -20,313 +20,297 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 "X-Generator: Weblate 2026.9.1\n"
 
-#: src/Services/XrefOverviewColumns.php:500
-msgid "tree"
-msgstr "strom"
+msgid "XREF ⇄ UID reference swap"
+msgstr ""
 
-#: src/Services/MarkdownEditorActivationService.php:187
-#: src/Services/MarkdownEditorActivationService.php:191
-msgid "Option is disabled"
-msgstr "Volba je vypnuta"
+#, fuzzy
+#| msgid "Update the UID index"
+msgid "Report duplicate UIDs in index"
+msgstr "Aktualizovat index UID"
 
-#. I18N: Settings - section title
-#: src/Services/MarkdownEditorActivationService.php:187
-#: resources/views/settings-main.phtml:47 resources/views/settings.phtml:148
-msgid "Markdown enhancements"
-msgstr "Vylepšení Markdownu"
+msgid ""
+"This fix reports UIDs that are assigned to multiple records in the UID "
+"index. No changes are made (report-only)."
+msgstr ""
 
-#: src/Services/MarkdownEditorActivationService.php:191
-#: resources/views/help-md.phtml:60 resources/views/settings-md.phtml:94
-msgid "Markdown editor for note textareas"
-msgstr "Editor Markdown pro textová pole poznámek"
+msgid "No duplicate UIDs found for this record."
+msgstr ""
 
-#. I18N: MDE
-#: src/Services/MarkdownEditorActivationService.php:196
-#: resources/views/settings-main.phtml:54
 #, php-format
-msgid "Precondition: Tree preference '%s' need to be set to markdown."
-msgstr "Předpoklad: Předvolba stromu „%s“ musí být nastavena na markdown."
+msgid "%d duplicate UID(s) on this record:"
+msgstr ""
 
-#: src/Services/XrefsService.php:777 src/LinkEnhancerModule.php:1124
+msgid "Fix wt= type letter (set/repair/remove)"
+msgstr ""
+
+#, fuzzy
+#| msgid "JavaScript for additional link targets"
+msgid "Report dangling link targets"
+msgstr "JavaScript pro další cíle odkazů"
+
+msgid ""
+"This fix reports le-links whose target record does not exist. No changes are "
+"made (report-only)."
+msgstr ""
+
+#, php-format
+msgid "no record %s in tree \"%s\""
+msgstr ""
+
+#, fuzzy, php-format
+#| msgid "UID %s was found in another tree."
+msgid "UID not found in tree \"%s\""
+msgstr "UID %s bylo nalezeno v jiném rodokmenu."
+
+msgid "No dangling links found."
+msgstr ""
+
+#, php-format
+msgid "%d missing target(s):"
+msgstr ""
+
+msgid "Report ambiguous UID targets"
+msgstr ""
+
+msgid ""
+"This fix reports UID targets that resolve to multiple records (ambiguous). "
+"No changes are made (report-only)."
+msgstr ""
+
+msgid "No ambiguous UIDs found."
+msgstr ""
+
+#, php-format
+msgid "%d ambiguous UID target(s):"
+msgstr ""
+
+#, php-format
+msgid "Renumbered @%1$s@ → @%2$s@ (%3$s, %4$d core rows, %5$d links)"
+msgstr ""
+
 msgid "Cross-references"
 msgstr "Křížové odkazy"
 
-#: src/Services/XrefsService.php:778
 msgid "External links"
 msgstr "Externí odkazy"
 
-#: src/Services/XrefsService.php:779
 msgid "Pictures"
 msgstr "Obrázky"
 
-#: src/Services/XrefsService.php:780
 msgid "Classic cross-references"
 msgstr "Klasické křížové odkazy"
 
-#: src/Services/XrefsService.php:781
 msgid "Other - maybe damaged - links"
 msgstr "Ostatní – možná poškozené – odkazy"
 
-#: src/Services/XrefsService.php:934
-#: resources/views/xref-overview-list.phtml:117
-#: resources/views/xref-overview.phtml:144
 msgid "target not found"
 msgstr "cíl nenalezen"
 
 #. I18N: JS enhanced link
-#: src/Services/XrefsService.php:942 src/Services/XrefsService.php:974
-#: src/Services/XrefsService.php:977 src/LinkEnhancerUtils.php:139
-#: resources/views/help-wt-helptext.phtml:16
 msgid "Cross-reference"
 msgstr "Křížový odkaz"
 
-#: src/Services/XrefsService.php:944
 #, php-format
 msgid "expected %1$s, is %2$s"
 msgstr "očekáváno %1$s, je %2$s"
 
-#: src/Services/XrefsService.php:968
-#: resources/views/xref-overview-list.phtml:119
-#: resources/views/xref-overview.phtml:146
 msgid "target not unique"
 msgstr "cíl není jednoznačný"
 
-#: src/Services/XrefsService.php:968
 #, php-format
 msgid "%1$s - %2$d matches in other trees"
 msgstr "%1$s – %2$d shod v jiných rodokmenech"
 
+msgid "Option is disabled"
+msgstr "Volba je vypnuta"
+
 #. I18N: Settings - section title
-#: src/Services/WthbService.php:111 src/Services/WthbService.php:144
-#: src/Services/WthbService.php:271 src/LinkEnhancerUtils.php:166
-#: src/Http/RequestHandlers/HelpWthbAction.php:49
-#: resources/views/help-wt-helptext.phtml:16 resources/views/settings.phtml:156
+msgid "Markdown enhancements"
+msgstr "Vylepšení Markdownu"
+
+msgid "Markdown editor for note textareas"
+msgstr "Editor Markdown pro textová pole poznámek"
+
+#. I18N: MDE
+#, php-format
+msgid "Precondition: Tree preference '%s' need to be set to markdown."
+msgstr "Předpoklad: Předvolba stromu „%s“ musí být nastavena na markdown."
+
+msgid "Settings"
+msgstr "Nastavení"
+
+msgid "Home link - JSON with CSS rules seems to be invalid."
+msgstr "Odkaz na domovskou stránku – JSON s pravidly CSS se zdá být neplatný."
+
+#. I18N: Settings - section title
 msgid "Webtrees manual"
 msgstr "Příručka webtrees"
 
-#: src/Services/WthbService.php:111
 msgid "Error occurred"
 msgstr "Došlo k chybě"
 
 #. I18N: csv import
-#: src/Services/WthbService.php:124
 msgid "empty rows"
 msgstr "prázdné řádky"
 
 #. I18N: csv import
-#: src/Services/WthbService.php:125
 msgid "rows whose number of fields differs from the header row"
 msgstr "řádky, jejichž počet polí se liší od záhlaví"
 
 #. I18N: data import with seeder
-#: src/Services/WthbService.php:126
 msgid "rows in which at least one required field is not set"
 msgstr "řádky, v nichž není vyplněno alespoň jedno povinné pole"
 
 #. I18N: data import with seeder
-#: src/Services/WthbService.php:127
 msgid "rows in which the maximum field value length has been exceeded"
 msgstr "řádky, v nichž byla překročena maximální délka hodnoty pole"
 
-#: src/Services/WthbService.php:144
 msgid "Routes imported"
 msgstr "Importované trasy"
 
 #. I18N: wthb import skipped rows
-#: src/Services/WthbService.php:148
 msgid "Skipped"
 msgstr "Přeskočeno"
 
-#: src/Services/WthbService.php:160 resources/views/settings-wthb.phtml:266
 msgid "CSV-Import"
 msgstr "Import CSV"
 
-#: src/Services/WthbService.php:271
 msgid "Table for context help is missing - fallback to standard url"
 msgstr "Chybí tabulka kontextové nápovědy – použije se standardní URL"
 
-#: src/Services/WthbService.php:464 src/Services/WthbService.php:499
 msgid "Table for context help is missing - nothing to do."
 msgstr "Chybí tabulka kontextové nápovědy – není co dělat."
 
-#: src/Services/WthbService.php:470
 msgid "No data available for export."
 msgstr "Pro export nejsou k dispozici žádná data."
 
-#: src/Services/WthbService.php:508
 msgid "No CSV file was received."
 msgstr "Nebyl přijat žádný soubor CSV."
 
-#: src/Services/WthbService.php:526
 msgid "Separator is not set."
 msgstr "Oddělovač není nastaven."
 
-#: src/Services/WthbService.php:529
 msgid "For the separator is only a single character allowed."
 msgstr "Oddělovačem může být pouze jeden znak."
 
-#: src/LinkEnhancerUtils.php:97
 msgid "webtrees FAQ"
 msgstr "FAQ webtrees"
 
-#: src/LinkEnhancerUtils.php:98 src/LinkEnhancerUtils.php:99
 msgid "webtrees Forum"
 msgstr "Fórum webtrees"
 
-#: src/LinkEnhancerUtils.php:99 src/LinkEnhancerUtils.php:101
 msgid "ask a question (account necessary)"
 msgstr "položit dotaz (nutný účet)"
 
-#: src/LinkEnhancerUtils.php:100 src/LinkEnhancerUtils.php:101
 msgid "CompGen Discourse"
 msgstr "CompGen Discourse"
 
-#: src/LinkEnhancerUtils.php:102
 msgid "GitHub - webtrees issues"
 msgstr "GitHub – problémy webtrees"
 
-#: src/LinkEnhancerUtils.php:103
 msgid "GitHub - webtrees related projects"
 msgstr "GitHub – projekty související s webtrees"
 
 #. I18N: JS MDE
-#: src/LinkEnhancerUtils.php:117 src/LinkEnhancerUtils.php:209
-#: src/LinkEnhancerUtils.php:210
 msgid "bold"
 msgstr "tučné"
 
 #. I18N: JS MDE
-#: src/LinkEnhancerUtils.php:118 src/LinkEnhancerUtils.php:205
-#: src/LinkEnhancerUtils.php:206
 msgid "italic"
 msgstr "kurzíva"
 
 #. I18N: JS MDE
-#: src/LinkEnhancerUtils.php:119 src/LinkEnhancerUtils.php:220
-#: src/LinkEnhancerUtils.php:221
 msgid "strikethrough"
 msgstr "přeškrtnuté"
 
 #. I18N: JS MDE
-#: src/LinkEnhancerUtils.php:120 src/LinkEnhancerUtils.php:213
-#: src/LinkEnhancerUtils.php:214
 msgid "format as code"
 msgstr "formátovat jako kód"
 
 #. I18N: JS MDE
-#: src/LinkEnhancerUtils.php:121 src/LinkEnhancerUtils.php:229
-#: src/LinkEnhancerUtils.php:230
 msgid "highlight"
 msgstr "zvýraznit"
 
 #. I18N: JS MDE
-#: src/LinkEnhancerUtils.php:122 src/LinkEnhancerUtils.php:236
-#: src/LinkEnhancerUtils.php:237 src/LinkEnhancerUtils.php:240
-#: src/LinkEnhancerUtils.php:242
 #, php-format
 msgid "Level %s heading"
 msgstr "Nadpis úrovně %s"
 
 #. I18N: JS MDE
-#: src/LinkEnhancerUtils.php:123 src/LinkEnhancerUtils.php:245
-#: src/LinkEnhancerUtils.php:246 src/Factories/CustomMarkdownFactory.php:71
 msgid "Bulleted list"
 msgstr "Odrážkový seznam"
 
 #. I18N: JS MDE
-#: src/LinkEnhancerUtils.php:124 src/LinkEnhancerUtils.php:249
-#: src/LinkEnhancerUtils.php:250 src/Factories/CustomMarkdownFactory.php:72
 msgid "Numbered list"
 msgstr "Číslovaný seznam"
 
 #. I18N: JS MDE blockquote
-#: src/LinkEnhancerUtils.php:125 src/LinkEnhancerUtils.php:291
-#: src/LinkEnhancerUtils.php:292
 msgid "quote"
 msgstr "citace"
 
 #. I18N: JS MDE
-#: src/LinkEnhancerUtils.php:126 src/LinkEnhancerUtils.php:273
-#: src/LinkEnhancerUtils.php:274
 msgid "Insert link"
 msgstr "Vložit odkaz"
 
 #. I18N: JS MDE
-#: src/LinkEnhancerUtils.php:127 src/LinkEnhancerUtils.php:277
-#: src/LinkEnhancerUtils.php:278
 msgid "Insert image"
 msgstr "Vložit obrázek"
 
 #. I18N: JS MDE
-#: src/LinkEnhancerUtils.php:128 src/LinkEnhancerUtils.php:282
-#: src/LinkEnhancerUtils.php:283
 msgid "Horizontal rule"
 msgstr "Vodorovná čára"
 
 #. I18N: JS MDE
-#: src/LinkEnhancerUtils.php:129
 msgid "Undo"
 msgstr "Zpět"
 
 #. I18N: JS MDE
-#: src/LinkEnhancerUtils.php:130
 msgid "Redo"
 msgstr "Znovu"
 
 #. I18N: JS MDE
-#: src/LinkEnhancerUtils.php:132
 msgid "Link destination"
 msgstr "Cíl odkazu"
 
 #. I18N: JS MDE
-#: src/LinkEnhancerUtils.php:133 src/LinkEnhancerUtils.php:286
 msgid "Insert table"
 msgstr "Vložit tabulku"
 
 #. I18N: JS MDE
-#: src/LinkEnhancerUtils.php:134
 msgid ""
 "How many columns and rows should the table have (input: [number] [number])?"
 msgstr "Kolik sloupců a řádků má mít tabulka (zadání: [číslo] [číslo])?"
 
 #. I18N: JS enhanced link, %s name of location
-#: src/LinkEnhancerUtils.php:140
 #, php-format
 msgid "Online Local heritage book of %s at CompGen"
 msgstr "Online místní rodopisná kniha obce %s na CompGen"
 
 #. I18N: JS enhanced link
-#: src/LinkEnhancerUtils.php:141
 msgid "Historic Geo Information System (GOV)"
 msgstr "Historický geoinformační systém (GOV)"
 
 #. I18N: JS enhanced link
-#: src/LinkEnhancerUtils.php:142
 msgid "GEDBAS (Genealogical Database - collected personal data)"
 msgstr "GEDBAS (genealogická databáze – shromážděné osobní údaje)"
 
 #. I18N: JS enhanced link
-#: src/LinkEnhancerUtils.php:143
 msgid "wer-wir-waren.at"
 msgstr "wer-wir-waren.at"
 
 #. I18N: JS enhanced link
-#: src/LinkEnhancerUtils.php:144
 msgid "Residents database - Family research in West Prussia"
 msgstr "Databáze obyvatel – rodinný výzkum v Západním Prusku"
 
 #. I18N: JS enhanced link
-#: src/LinkEnhancerUtils.php:146
 msgid "Syntax error"
 msgstr "Syntaktická chyba"
 
 #. I18N: JS enhanced link
-#: src/LinkEnhancerUtils.php:147
 msgid "Unknown parameter keys"
 msgstr "Neznámé klíče parametrů"
 
 #. I18N: JS enhanced link wt1 - %s=rectypes
-#: src/LinkEnhancerUtils.php:148
 #, php-format
 msgid ""
 "standard link to note (available record types: %s) with XREF in active tree"
@@ -335,247 +319,195 @@ msgstr ""
 "rodokmenu"
 
 #. I18N: JS enhanced link wt2
-#: src/LinkEnhancerUtils.php:149
 msgid ""
 "link to record type individual with XREF from \"othertree\" and also link to"
 msgstr ""
 "odkaz na záznam typu osoba s XREF z rodokmenu „othertree“ a také odkaz na"
 
 #. I18N: JS enhanced link wt3
-#: src/LinkEnhancerUtils.php:150
 msgid "link to record without given record type - access via redirect url"
 msgstr ""
 "odkaz na záznam bez zadaného typu záznamu – přístup přes přesměrovací URL"
 
 #. I18N: JS enhanced link osm1
-#: src/LinkEnhancerUtils.php:151
 msgid "zoom/lat/lon for locating map"
 msgstr "zoom/šířka/délka pro umístění mapy"
 
 #. I18N: JS enhanced link osm2
-#: src/LinkEnhancerUtils.php:152
 msgid "same as before with additional marker"
 msgstr "totéž co výše s dodatečnou značkou"
 
 #. I18N: JS enhanced link osm3
-#: src/LinkEnhancerUtils.php:153
 msgid "show also node/way/relation, see also"
 msgstr "zobrazit také uzel/cestu/relaci, viz také"
 
 #. I18N: JS enhanced link osm4
-#: src/LinkEnhancerUtils.php:154
 msgid "show also node/way/relation - alternative notation"
 msgstr "zobrazit také uzel/cestu/relaci – alternativní zápis"
 
 #. I18N: JS enhanced link ofb1
-#: src/LinkEnhancerUtils.php:155
 msgid "link to Online Local heritage book at CompGen with given uid"
 msgstr "odkaz na online místní rodopisnou knihu na CompGen se zadaným uid"
 
 #. I18N: JS enhanced link wp1
-#: src/LinkEnhancerUtils.php:156
 msgid "open the article in the german wikipedia"
 msgstr "otevřít článek v německé Wikipedii"
 
 #. I18N: JS enhanced link wp2
-#: src/LinkEnhancerUtils.php:157
 msgid "open the english version of the article"
 msgstr "otevřít anglickou verzi článku"
 
 #. I18N: JS enhanced link wp3
-#: src/LinkEnhancerUtils.php:158
 msgid "you can address every subdomain instance of wikipedia.org"
 msgstr "lze oslovit každou subdoménu wikipedia.org"
 
 #. I18N: JS enhanced link gedbas1
-#: src/LinkEnhancerUtils.php:159
 msgid "open person record with given number"
 msgstr "otevřít záznam osoby se zadaným číslem"
 
 #. I18N: JS enhanced link gedbas2
 #. I18N: JS enhanced link gedbas3
-#: src/LinkEnhancerUtils.php:160 src/LinkEnhancerUtils.php:161
 msgid "open person record with UID"
 msgstr "otevřít záznam osoby podle UID"
 
-#: src/LinkEnhancerUtils.php:161
 msgid "without database number"
 msgstr "bez čísla databáze"
 
-#: src/LinkEnhancerUtils.php:162
 msgid "Data Entry System (DES)"
 msgstr "Systém pro zadávání dat (DES)"
 
-#: src/LinkEnhancerUtils.php:162
 msgid "Casualty lists"
 msgstr "Seznamy ztrát"
 
 #. I18N: wthb link user setting title
-#: src/LinkEnhancerUtils.php:168 resources/views/wthb-modal.phtml:12
 msgid "Webtrees manual link - user setting"
 msgstr "Odkaz na příručku webtrees – uživatelské nastavení"
 
-#: src/LinkEnhancerUtils.php:169 resources/views/help-wthb.phtml:37
-#: resources/views/settings-wthb.phtml:69
 msgid "Full-text search"
 msgstr "Fulltextové vyhledávání"
 
-#: src/LinkEnhancerUtils.php:169 resources/views/md-toc-dropdown.phtml:15
-#: resources/views/help-wthb.phtml:53 resources/views/settings-md.phtml:272
-#: resources/views/settings-wthb.phtml:69
 msgid "Table of contents"
 msgstr "Obsah"
 
-#: src/LinkEnhancerUtils.php:170
-#: src/Http/RequestHandlers/HelpWtCoreAction.php:50
-#: resources/views/settings-wthb.phtml:81
 msgid "webtrees help topics (included)"
 msgstr "témata nápovědy webtrees (součást modulu)"
 
-#: src/LinkEnhancerUtils.php:171
 msgid "start page"
 msgstr "úvodní stránka"
 
-#: src/LinkEnhancerUtils.php:172 resources/views/settings-jscss.phtml:347
-#: resources/views/settings-jscss.phtml:352 resources/views/settings.phtml:38
-msgid "Settings"
-msgstr "Nastavení"
-
-#: src/LinkEnhancerUtils.php:176
 msgid "Limit cell height"
 msgstr "Omezit výšku buňky"
 
-#: src/LinkEnhancerUtils.php:241
 #, php-format
 msgid "and so on until level %s"
 msgstr "a tak dále až do úrovně %s"
 
-#: src/LinkEnhancerUtils.php:256 src/LinkEnhancerUtils.php:258
 msgid "Term"
 msgstr "Pojem"
 
-#: src/LinkEnhancerUtils.php:266 src/LinkEnhancerUtils.php:267
 msgid "Text with a footnote reference"
 msgstr "Text s odkazem na poznámku pod čarou"
 
-#: src/LinkEnhancerUtils.php:266 src/LinkEnhancerUtils.php:267
 msgid "Footnote text"
 msgstr "Text poznámky pod čarou"
 
-#: src/Factories/CustomMarkdownFactory.php:73
 msgid "list without marker"
 msgstr "seznam bez odrážek"
 
 #. I18N::translate('Insert at the very top of the document, before any content'),
-#: src/Factories/CustomMarkdownFactory.php:78
-#: src/Factories/CustomMarkdownFactory.php:79
 msgid "Insert just before the very first heading"
 msgstr "Vložit těsně před úplně první nadpis"
 
-#: src/Factories/CustomMarkdownFactory.php:80
 msgid "Location is manually defined by a placeholder"
 msgstr "Umístění je určeno ručně zástupným znakem"
 
-#: src/Factories/CustomMarkdownFactory.php:83
 msgid "applies nesting, but handles edge cases"
 msgstr "používá vnoření, ale zvládá okrajové případy"
 
-#: src/Factories/CustomMarkdownFactory.php:84
-#: src/Factories/CustomMarkdownFactory.php:85
 msgid "a flat, single-level list"
 msgstr "plochý, jednoúrovňový seznam"
 
-#: src/Factories/CustomMarkdownFactory.php:85
 msgid "inline"
 msgstr "v řádku"
 
-#: src/Factories/CustomMarkdownFactory.php:86
 msgid "nesting exactly as headings occur within the document"
 msgstr "vnoření přesně podle výskytu nadpisů v dokumentu"
 
-#: src/Factories/CustomMarkdownFactory.php:213
 msgid "Permalink"
 msgstr "Trvalý odkaz"
 
-#: src/Http/RequestHandlers/GotoIdAction.php:86
+#. I18N: renumber xrefs
+#, php-format
+msgid "%s (with links)"
+msgstr ""
+
 #, php-format
 msgid "No record for %s was found."
 msgstr "Pro %s nebyl nalezen žádný záznam."
 
-#: src/Http/RequestHandlers/GotoIdAction.php:92
 #, php-format
 msgid "%s was found in another tree."
 msgstr "%s bylo nalezeno v jiném rodokmenu."
 
-#: src/Http/RequestHandlers/GotoIdAction.php:110
 #, php-format
 msgid "Multiple records for %s"
 msgstr "Více záznamů pro %s"
 
-#: src/Http/RequestHandlers/GotoUidAction.php:87
+msgid "Import registered routes"
+msgstr "Importovat registrované trasy"
+
 #, php-format
 msgid ""
 "No record with UID %s was found. The UID index may not be available yet."
 msgstr ""
 "Nebyl nalezen žádný záznam s UID %s. Index UID možná ještě není k dispozici."
 
-#: src/Http/RequestHandlers/GotoUidAction.php:93
 #, php-format
 msgid "UID %s was found in another tree."
 msgstr "UID %s bylo nalezeno v jiném rodokmenu."
 
-#: src/Http/RequestHandlers/GotoUidAction.php:100
 #, php-format
 msgid "Multiple records for UID %s"
 msgstr "Více záznamů pro UID %s"
 
 #. I18N: MD img error precondition
-#: src/CommonMark/LeImageRenderer.php:134
 msgid ""
 "Neither a media object nor a file from the public directory was specified."
 msgstr "Nebyl zadán ani objekt médií, ani soubor z veřejného adresáře."
 
 #. I18N: MD img error precondition
-#: src/CommonMark/LeImageRenderer.php:140
 msgid ""
 "Only one media object OR one file from the public directory can be specified."
 msgstr ""
 "Lze zadat pouze jeden objekt médií NEBO jeden soubor z veřejného adresáře."
 
 #. I18N: MD img error crossreference
-#: src/CommonMark/LeImageRenderer.php:180
 msgid "There is no image file available for display."
 msgstr "Pro zobrazení není k dispozici žádný soubor s obrázkem."
 
 #. I18N: MD img error public folder
-#: src/CommonMark/LeImageRenderer.php:202
 msgid "The public folder does not exist."
 msgstr "Složka public neexistuje."
 
 #. I18N: MD img error public file, %s the relative filename
-#: src/CommonMark/LeImageRenderer.php:211
 #, php-format
 msgid "File ‘%s’ does not exist in the public folder"
 msgstr "Soubor „%s“ ve složce public neexistuje"
 
 #. I18N: MD img error public file
-#: src/CommonMark/LeImageRenderer.php:218
 msgid "Only files within the public folder are supported"
 msgstr "Jsou podporovány pouze soubory uvnitř složky public"
 
 #. I18N: MD img error public file, %s1=rel. filename, %s2=mimetype
-#: src/CommonMark/LeImageRenderer.php:226
 #, php-format
 msgid "File '%1$s' in the public folder is not an image but '%2$s'"
 msgstr "Soubor „%1$s“ ve složce public není obrázek, ale „%2$s“"
 
 #. I18N: Module title
-#: src/LinkEnhancerModule.php:335
 msgid "Link-Enhancer"
 msgstr "Link-Enhancer"
 
 #. I18N: Module description
-#: src/LinkEnhancerModule.php:345
 msgid ""
 "Cross-references to Gedcom datasets, Markdown editor, context-sensitive link "
 "to the GenWiki webtrees manual"
@@ -583,69 +515,48 @@ msgstr ""
 "Křížové odkazy na záznamy GEDCOM, editor Markdown, kontextový odkaz na "
 "příručku webtrees na GenWiki"
 
-#: src/LinkEnhancerModule.php:764
-msgid "Home link - JSON with CSS rules seems to be invalid."
-msgstr "Odkaz na domovskou stránku – JSON s pravidly CSS se zdá být neplatný."
+msgid "Some settings could not be saved."
+msgstr ""
 
-#: src/LinkEnhancerModule.php:814 resources/views/settings-wthb.phtml:251
-msgid "Import registered routes"
-msgstr "Importovat registrované trasy"
-
-#: src/LinkEnhancerModule.php:971 src/LinkEnhancerModule.php:1089
-#: src/LinkEnhancerModule.php:1228 resources/views/settings.phtml:75
 msgid "Cross-Reference Overview"
 msgstr "Přehled křížových odkazů"
 
-#: cron-jobs.php:11
 msgid "Update the link index"
 msgstr "Aktualizovat index odkazů"
 
-#: cron-jobs.php:24
 msgid "Update the UID index"
 msgstr "Aktualizovat index UID"
 
-#: cron-jobs.php:38
 msgid "Rebuild the link index incrementally."
 msgstr "Postupně znovu sestavit index odkazů."
 
-#: cron-jobs.php:40 cron-jobs.php:50
 msgid "max records per run"
 msgstr "max. počet záznamů na jedno spuštění"
 
-#: cron-jobs.php:41 cron-jobs.php:51
 msgid "number of the tree to be scanned - all if not set"
 msgstr "číslo rodokmenu k prohledání – pokud není zadáno, všechny"
 
-#: cron-jobs.php:42 cron-jobs.php:52
 msgid "force a full rebuild"
 msgstr "vynutit úplné přestavění"
 
-#: cron-jobs.php:43 cron-jobs.php:53
 msgid "empty the index and exit"
 msgstr "vyprázdnit index a skončit"
 
-#: cron-jobs.php:48
 msgid "Rebuild the UID index incrementally."
 msgstr "Postupně znovu sestavit index UID."
 
-#: cron-jobs.php:58
 msgid "The link index is out of date."
 msgstr "Index odkazů je zastaralý."
 
-#: cron-jobs.php:59
 msgid "The UID index is out of date."
 msgstr "Index UID je zastaralý."
 
-#: resources/views/xref-overview-list.phtml:45
-#: resources/views/xref-overview.phtml:62 resources/views/settings.phtml:79
 msgid ""
 "List all records that contain cross-references (XREFs) or linkenhancer links."
 msgstr ""
 "Vypíše všechny záznamy, které obsahují křížové odkazy (XREF) nebo odkazy "
 "linkenhanceru."
 
-#: resources/views/xref-overview-list.phtml:50
-#: resources/views/xref-overview.phtml:67
 msgid ""
 "Limited mode: this database engine has no regex support - the table is "
 "scanned live with a LIKE filter on every request, which can be slow on large "
@@ -655,15 +566,11 @@ msgstr ""
 "se při každém požadavku prohledává přímo pomocí filtru LIKE, což může být u "
 "velkých rodokmenů pomalé. Index odkazů na tomto stroji není k dispozici."
 
-#: resources/views/xref-overview-list.phtml:56
-#: resources/views/xref-overview.phtml:73
 #, php-format
 msgid "Link index active: %1$s scanned records, last verified %2$s."
 msgstr ""
 "Index odkazů je aktivní: prohledáno záznamů: %1$s, naposledy ověřeno %2$s."
 
-#: resources/views/xref-overview-list.phtml:60
-#: resources/views/xref-overview.phtml:77
 msgid ""
 "Live scan forced - the link index is bypassed for this view, which can be "
 "slow on large trees."
@@ -671,18 +578,15 @@ msgstr ""
 "Vynuceno přímé prohledávání – index odkazů je pro toto zobrazení obejit, což "
 "může být u velkých rodokmenů pomalé."
 
-#: resources/views/xref-overview-list.phtml:64
-#: resources/views/xref-overview.phtml:81
 msgid ""
 "No fresh link index - the table below scans the GEDCOM tables live, which "
-"can be slow on large trees. Build the index with the CLI script (see README."
-"md, \"CLI scripts & maintenance\")."
+"can be slow on large trees. Build the index with the CLI script (see "
+"README.md, \"CLI scripts & maintenance\")."
 msgstr ""
 "Žádný aktuální index odkazů – tabulka níže prohledává tabulky GEDCOM přímo, "
 "což může být u velkých rodokmenů pomalé. Index sestavte pomocí skriptu CLI "
 "(viz README.md, „CLI scripts & maintenance“)."
 
-#: resources/views/xref-overview-list.phtml:70
 msgid ""
 "Only broken targets: every matching record is loaded and its targets "
 "resolved on the server, which can be slow on large trees. Combine with the "
@@ -692,90 +596,58 @@ msgstr ""
 "vyhodnotí na serveru, což může být u velkých rodokmenů pomalé. Pro zúžení "
 "prohledávání kombinujte s filtrem typu."
 
-#: resources/views/xref-overview-list.phtml:81
-#: resources/views/xref-overview.phtml:99
 msgid "referencing XREF"
 msgstr "odkazující XREF"
 
-#: resources/views/xref-overview-list.phtml:86
-#: resources/views/xref-overview.phtml:105
 msgid "Bypass the link index and scan the GEDCOM tables live"
 msgstr "Obejít index odkazů a prohledat tabulky GEDCOM přímo"
 
-#: resources/views/xref-overview-list.phtml:86
-#: resources/views/xref-overview.phtml:105
 msgid "Force live scan"
 msgstr "Vynutit přímé prohledání"
 
-#: resources/views/xref-overview-list.phtml:90
-#: resources/views/xref-overview.phtml:109
 msgid "Record types"
 msgstr "Typy záznamů"
 
-#: resources/views/xref-overview-list.phtml:91
-#: resources/views/xref-overview.phtml:110
 msgid "All types"
 msgstr "Všechny typy"
 
-#: resources/views/xref-overview-list.phtml:92
-#: resources/views/xref-overview.phtml:111
 msgid "All GEDCOM records"
 msgstr "Všechny záznamy GEDCOM"
 
-#: resources/views/xref-overview-list.phtml:93
-#: resources/views/xref-overview.phtml:112
 msgid "All Block records"
 msgstr "Všechny záznamy bloků"
 
-#: resources/views/xref-overview-list.phtml:94
-#: resources/views/xref-overview.phtml:113
 msgid "GEDCOM records"
 msgstr "Záznamy GEDCOM"
 
-#: resources/views/xref-overview-list.phtml:107
-#: resources/views/xref-overview.phtml:134
 msgid "links per class"
 msgstr "odkazy podle třídy"
 
-#: resources/views/xref-overview-list.phtml:115
-#: resources/views/xref-overview.phtml:142
 msgid "Only rows with a missing or wrong-type target are shown"
 msgstr "Zobrazí se pouze řádky s chybějícím cílem nebo cílem nesprávného typu"
 
-#: resources/views/xref-overview-list.phtml:116
-#: resources/views/xref-overview.phtml:143
 msgid "Only broken targets"
 msgstr "Pouze porušené cíle"
 
-#: resources/views/xref-overview-list.phtml:118
-#: resources/views/xref-overview.phtml:145
 msgid "The target type differs from the declaration"
 msgstr "Typ cíle se liší od deklarace"
 
-#: resources/views/xref-overview-list.phtml:148
-#: resources/views/xref-overview.phtml:180
 msgid "XREF"
 msgstr "XREF"
 
 #. I18N: user defined url
 #. I18N: Settings - section title
-#: resources/views/settings-home.phtml:18 resources/views/settings.phtml:166
 msgid "Home link"
 msgstr "Odkaz na domovskou stránku"
 
 #. I18N: see also fancy-research-links
-#: resources/views/settings-home.phtml:33 resources/views/settings-md.phtml:47
-#: resources/views/settings-le.phtml:112
-#: resources/views/settings-wthb.phtml:166 resources/views/settings.phtml:121
 msgid "Open links in a new tab"
 msgstr "Otevírat odkazy v nové záložce"
 
-#: resources/views/settings-home.phtml:46
 msgid "JSON for home link styling"
 msgstr "JSON pro stylování odkazu na domovskou stránku"
 
 #. I18N: Home link js
-#: resources/views/settings-home.phtml:53
 msgid ""
 "JSON object that can be used to dynamically apply CSS styles for the home "
 "link that match the current theme."
@@ -784,25 +656,17 @@ msgstr ""
 "domovskou stránku odpovídající aktuálnímu motivu."
 
 #. I18N: Home link js
-#: resources/views/settings-home.phtml:55
 msgid "Standard CSS class name"
 msgstr "Výchozí název třídy CSS"
 
 #. I18N: Home link js
-#: resources/views/settings-home.phtml:59 resources/views/settings-md.phtml:70
-#: resources/views/settings-md.phtml:82 resources/views/settings-md.phtml:258
-#: resources/views/settings-md.phtml:334 resources/views/settings-md.phtml:348
-#: resources/views/settings-md.phtml:363 resources/views/settings-md.phtml:400
-#: resources/views/settings-wthb.phtml:115
 msgid "Example"
 msgstr "Příklad"
 
-#: resources/views/settings-main.phtml:31
 msgid "Activate enhanced links?"
 msgstr "Aktivovat vylepšené odkazy?"
 
 #. I18N: Enhanced Links
-#: resources/views/settings-main.phtml:36
 msgid ""
 "This function is implemented via Javascript and only affects links in notes "
 "and HTML blocks on the client side."
@@ -811,16 +675,13 @@ msgstr ""
 "ovlivňuje pouze odkazy v poznámkách a blocích HTML."
 
 #. I18N: MD img - sentence 1
-#: resources/views/settings-main.phtml:52
 msgid "Only works in notes that are formatted with Markdown."
 msgstr "Funguje pouze v poznámkách formátovaných pomocí Markdownu."
 
-#: resources/views/settings-main.phtml:75
 msgid "Show Help Link"
 msgstr "Zobrazit odkaz na nápovědu"
 
 #. I18N:
-#: resources/views/settings-main.phtml:81
 msgid ""
 "Context sensitive help links to the german webtrees manual can be activated "
 "in the small menu at the top of the page and for subcontext topics on the "
@@ -829,79 +690,52 @@ msgstr ""
 "Kontextové odkazy na nápovědu v německé příručce webtrees lze aktivovat v "
 "malém menu v horní části stránky a pro podkontextová témata na stránce."
 
-#: resources/views/settings-main.phtml:92
 msgid "Site title as home link"
 msgstr "Název webu jako odkaz na domovskou stránku"
 
 #. I18N: home link
-#: resources/views/settings-main.phtml:100
 msgid "home page of the current tree"
 msgstr "domovská stránka aktuálního rodokmenu"
 
 #. I18N: home link
-#: resources/views/settings-main.phtml:101
 msgid "my page of the registered user"
 msgstr "moje stránka registrovaného uživatele"
 
 #. I18N:
 #. I18N: wthb translate
 #. I18N:
-#: resources/views/settings-main.phtml:102
-#: resources/views/settings-md.phtml:384
-#: resources/views/settings-wthb.phtml:101
-#: resources/views/settings-wthb.phtml:152 resources/views/settings.phtml:129
 msgid "user defined"
 msgstr "definováno uživatelem"
 
-#: resources/views/settings-main.phtml:114
 msgid "UID lookup"
 msgstr "Vyhledávání podle UID"
 
-#: resources/views/settings-main.phtml:119
 #, php-format
 msgid "Allow resolving UID tags (%s) to the corresponding records."
 msgstr "Povolit převod tagů UID (%s) na odpovídající záznamy."
 
-#: resources/views/settings-main.phtml:122
-#, php-format
-msgid "Index status: %1$s rows, last built: %2$s"
-msgstr "Stav indexu: %1$s řádků, naposledy sestaven: %2$s"
-
-#: resources/views/settings-main.phtml:124
-msgid "Index source (link-index scan) not available."
-msgstr "Zdroj indexu (prohledání indexu odkazů) není k dispozici."
-
-#: resources/views/goto-uid-select.phtml:21
 #, php-format
 msgid ""
 "Multiple records match UID %s. Please choose the one you are looking for."
 msgstr "UID %s odpovídá více záznamům. Vyberte ten, který hledáte."
 
-#: resources/views/help-md.phtml:19
 msgid ""
 "Webtrees uses a CommonMark implementation and supports a subset of the markup"
 msgstr "Webtrees používá implementaci CommonMark a podporuje podmnožinu značek"
 
-#: resources/views/help-md.phtml:20 resources/views/help-md.phtml:52
-#: resources/views/help-md.phtml:62 resources/views/settings-md.phtml:170
-#: resources/views/settings-le.phtml:131 resources/views/settings.phtml:68
 msgid "See also"
 msgstr "Viz také"
 
-#: resources/views/help-md.phtml:24
 msgid "The following overview only briefly lists common formatting options"
 msgstr "Následující přehled pouze stručně uvádí běžné možnosti formátování"
 
-#: resources/views/help-md.phtml:33
 msgid "Rendered output"
 msgstr "Vykreslený výstup"
 
-#: resources/views/help-md.phtml:52
 msgid "For more depth of detail"
 msgstr "Podrobnější informace"
 
 #. I18N: MDE
-#: resources/views/help-md.phtml:61
 msgid ""
 "The project “TinyMDE - A tiny, dependency-free embeddable HTML/JavaScript "
 "Markdown editor” is used"
@@ -910,7 +744,6 @@ msgstr ""
 "editor Markdown v HTML/JavaScriptu“"
 
 #. I18N: MDE
-#: resources/views/help-md.phtml:67
 msgid ""
 "Note: Unfortunately, the on-screen keyboard does NOT work as before with the "
 "previous text input field. The selected characters end up as an intermediate "
@@ -923,13 +756,11 @@ msgstr ""
 
 #. I18N: help md - section title
 #. I18N: Settings - section title
-#: resources/views/help-md.phtml:70 resources/views/settings.phtml:139
 msgid "Enhanced Link Support"
 msgstr "Podpora vylepšených odkazů"
 
 #. I18N: Enhanced Links
 #. I18N: Settings - prologue sentence 3
-#: resources/views/help-md.phtml:71 resources/views/settings.phtml:65
 msgid ""
 "By linking the notes to the GEDCOM data records (persons, families, sources, "
 "etc.) from the text makes story telling much easier and thus also save this "
@@ -940,7 +771,6 @@ msgstr ""
 "do souboru GEDCOM."
 
 #. I18N: Enhanced Links
-#: resources/views/help-md.phtml:72
 msgid ""
 "Different destinations can be addressed with one link definition, whereby "
 "the internal cross-reference is always the first link and the other external "
@@ -951,22 +781,18 @@ msgstr ""
 "klikacími ikonami."
 
 #. I18N: Enhanced Links code example 1
-#: resources/views/help-md.phtml:75
 msgid "Link display title"
 msgstr "Zobrazený název odkazu"
 
 #. I18N: Enhanced Links code
-#: resources/views/help-md.phtml:76
 msgid "The following parameters can be used"
 msgstr "Lze použít následující parametry"
 
 #. I18N: Enhanced Links
-#: resources/views/help-md.phtml:77
 msgid "The parameter definitions will be inserted by a javascript routine"
 msgstr "Definice parametrů vloží rutina v JavaScriptu"
 
 #. I18N: Enhanced Links
-#: resources/views/help-md.phtml:78
 msgid ""
 "The existence of the linked data records is not checked in advance. Errors "
 "only appear when the link is clicked."
@@ -975,12 +801,10 @@ msgstr ""
 "kliknutí na odkaz."
 
 #. I18N: help md - section title
-#: resources/views/help-md.phtml:83
 msgid "Markdown Image Support"
 msgstr "Podpora obrázků v Markdownu"
 
 #. I18N: MD img - sentence 1
-#: resources/views/help-md.phtml:84
 msgid ""
 "This option allows you to easily embed images from GEDCOM media records or "
 "from the public directory into notes."
@@ -989,7 +813,6 @@ msgstr ""
 "GEDCOM nebo z veřejného adresáře."
 
 #. I18N: MD img - sentence 2
-#: resources/views/help-md.phtml:86
 msgid ""
 "Technically the images are packed into a div container together with an "
 "image subtitle - which is also a link to the media data set for GEDCOM "
@@ -999,7 +822,6 @@ msgstr ""
 "ten je u objektů GEDCOM zároveň odkazem na záznam média."
 
 #. I18N: MD img - sentence 3
-#: resources/views/help-md.phtml:87
 msgid ""
 "The display can be customized as required using the following standard CSS "
 "classes or additional CSS classes."
@@ -1007,47 +829,94 @@ msgstr ""
 "Zobrazení lze podle potřeby upravit pomocí následujících standardních tříd "
 "CSS nebo dalších tříd CSS."
 
-#: resources/views/help-md.phtml:89 resources/views/settings-md.phtml:57
-#: resources/views/settings-md.phtml:342
 msgid "CSS class name(s)"
 msgstr "Název(y) třídy CSS"
 
-#: resources/views/help-md.phtml:90 resources/views/settings-md.phtml:64
 msgid "Markdown image container"
 msgstr "Kontejner obrázku Markdown"
 
-#: resources/views/help-md.phtml:91 resources/views/help-md.phtml:94
 msgid "not defined"
 msgstr "není definováno"
 
-#: resources/views/help-md.phtml:93 resources/views/settings-md.phtml:75
 msgid "Markdown image title container"
 msgstr "Kontejner titulku obrázku Markdown"
 
 #. I18N: MD img code example 1
-#: resources/views/help-md.phtml:100
 msgid "alternate text for gedcom object"
 msgstr "alternativní text pro objekt GEDCOM"
 
 #. I18N: MD img code example 2
-#: resources/views/help-md.phtml:102
 msgid "alternate text for picture in public folder"
 msgstr "alternativní text pro obrázek ve složce public"
 
 #. I18N: MD img code example 3
-#: resources/views/help-md.phtml:104
 msgid "picture with defined height, width and additional css class"
 msgstr "obrázek s definovanou výškou, šířkou a další třídou CSS"
 
-#: resources/views/help-wt-helptext.phtml:115
+msgid "stale"
+msgstr ""
+
+msgid "Index status"
+msgstr ""
+
+#, fuzzy, php-format
+#| msgid "Index status: %1$s rows, last built: %2$s"
+msgid "Link index: %1$s rows, last built: %2$s"
+msgstr "Stav indexu: %1$s řádků, naposledy sestaven: %2$s"
+
+msgid "Trigger link index rebuild"
+msgstr ""
+
+msgid "Rebuild"
+msgstr ""
+
+#, fuzzy, php-format
+#| msgid "Index status: %1$s rows, last built: %2$s"
+msgid "UID index: %1$s rows, last built: %2$s"
+msgstr "Stav indexu: %1$s řádků, naposledy sestaven: %2$s"
+
+msgid "Index source (link-index scan) not available."
+msgstr "Zdroj indexu (prohledání indexu odkazů) není k dispozici."
+
+msgid "Trigger UID index rebuild"
+msgstr ""
+
+msgid "queued"
+msgstr ""
+
 msgid "The context help topics provided by webtrees are listed below."
 msgstr "Níže jsou uvedena témata kontextové nápovědy poskytovaná webtrees."
 
-#: resources/views/help-wt-helptext.phtml:148
 msgid "Further information can be found on a separate help page."
 msgstr "Další informace naleznete na samostatné stránce nápovědy."
 
-#: resources/views/xref-overview.phtml:87
+msgid ""
+"Adds the correct type letter to wt= targets that have none (e.g. wt=@SOUR1@ "
+"→ wt=s@SOUR1@)."
+msgstr ""
+
+msgid ""
+"Corrects the type letter when it does not match the resolved target record "
+"(e.g. wt=i@SOUR1@ → wt=s@SOUR1@)."
+msgstr ""
+
+msgid ""
+"Removes ALL type letters from wt= targets (e.g. wt=i@INDI1@ → wt=@INDI1@). "
+"The letters were originally only needed for JavaScript routing."
+msgstr ""
+
+msgid "Mode"
+msgstr ""
+
+msgid "Set — add missing type letters"
+msgstr ""
+
+msgid "Repair — correct wrong type letters"
+msgstr ""
+
+msgid "Remove — strip all type letters"
+msgstr ""
+
 msgid ""
 "Only broken targets: every matching record is loaded and its targets "
 "resolved on the server, which can be slow on large trees. Combine with the "
@@ -1057,23 +926,18 @@ msgstr ""
 "vyhodnotí na serveru, což může být u velkých rodokmenů pomalé. Pro zúžení "
 "prohledávání kombinujte s filtry typu a rodokmenu."
 
-#: resources/views/xref-overview.phtml:127
 msgid "All trees"
 msgstr "Všechny rodokmeny"
 
-#: resources/views/md-toc-dropdown.phtml:19
 msgid "Goto top of cell content"
 msgstr "Přejít na začátek obsahu buňky"
 
-#: resources/views/help-wthb.phtml:14
 msgid "Select search engine"
 msgstr "Vybrat vyhledávač"
 
-#: resources/views/help-wthb.phtml:33
 msgid "Goto section"
 msgstr "Přejít na sekci"
 
-#: resources/views/help-wthb.phtml:64
 msgid ""
 "A local copy of the table of contents does not appear to be available. "
 "Please visit the website directly."
@@ -1081,51 +945,40 @@ msgstr ""
 "Místní kopie obsahu zřejmě není k dispozici. Navštivte prosím přímo webovou "
 "stránku."
 
-#: resources/views/settings-md.phtml:34
 msgid "Activate markdown image tweak?"
 msgstr "Aktivovat úpravu obrázků v Markdownu?"
 
-#: resources/views/settings-md.phtml:100
 msgid "Debug info - registered custom modules"
 msgstr "Ladicí informace – registrované vlastní moduly"
 
-#: resources/views/settings-md.phtml:113
 msgid "Table cell height control"
 msgstr "Řízení výšky buněk tabulky"
 
 #. I18N:
-#: resources/views/settings-md.phtml:121 resources/views/settings-md.phtml:122
 msgid "available"
 msgstr "k dispozici"
 
-#: resources/views/settings-md.phtml:121
 msgid "disabled"
 msgstr "vypnuto"
 
-#: resources/views/settings-md.phtml:122
 msgid "enabled"
 msgstr "zapnuto"
 
-#: resources/views/settings-md.phtml:127
 msgid ""
 "Toggle checkbox in order to set max-height and make longer content scrollable"
 msgstr ""
 "Přepínač (zaškrtávací pole) pro nastavení maximální výšky a zpřístupnění "
 "posouvání delšího obsahu"
 
-#: resources/views/settings-md.phtml:138
 msgid "Checkbox always visible"
 msgstr "Zaškrtávací pole vždy viditelné"
 
-#: resources/views/settings-md.phtml:155
 msgid "Markdown extensions"
 msgstr "Rozšíření Markdownu"
 
-#: resources/views/settings-md.phtml:162
 msgid "Warning"
 msgstr "Upozornění"
 
-#: resources/views/settings-md.phtml:165
 msgid ""
 "Please keep in mind when using this extensions, you are deviating from the "
 "smallest common markdown dialect set."
@@ -1133,7 +986,6 @@ msgstr ""
 "Mějte prosím na paměti, že používáním těchto rozšíření se odchylujete od "
 "nejmenší společné podmnožiny dialektu Markdown."
 
-#: resources/views/settings-md.phtml:166
 msgid ""
 "If the library used to render markdown in HTML needs to be changed for any "
 "reason, there is a possibility that not all of the extended markup used here "
@@ -1143,55 +995,42 @@ msgstr ""
 "vykreslování Markdownu do HTML, je možné, že nebude podporována všechna zde "
 "použitá rozšířená syntaxe."
 
-#: resources/views/settings-md.phtml:182
 msgid "Strikethrough"
 msgstr "Přeškrtnutí"
 
-#: resources/views/settings-md.phtml:196
 msgid "Description list"
 msgstr "Seznam definic"
 
-#: resources/views/settings-md.phtml:211
 msgid "Highlight"
 msgstr "Zvýraznění"
 
-#: resources/views/settings-md.phtml:226
 msgid "Footnotes"
 msgstr "Poznámky pod čarou"
 
-#: resources/views/settings-md.phtml:238
 msgid "Add hr-tag at the beginning of the footnote container"
 msgstr "Přidat značku hr na začátek kontejneru poznámek pod čarou"
 
-#: resources/views/settings-md.phtml:251
 msgid "Backreference symbol"
 msgstr "Symbol zpětného odkazu"
 
-#: resources/views/settings-md.phtml:283
 msgid "Normalize"
 msgstr "Normalizovat"
 
-#: resources/views/settings-md.phtml:298
 msgid "Style"
 msgstr "Styl"
 
-#: resources/views/settings-md.phtml:313
 msgid "Position"
 msgstr "Pozice"
 
-#: resources/views/settings-md.phtml:328
 msgid "Placeholder"
 msgstr "Zástupný znak"
 
-#: resources/views/settings-md.phtml:355
 msgid "Permalink symbol"
 msgstr "Symbol trvalého odkazu"
 
-#: resources/views/settings-md.phtml:376
 msgid "Punctuation"
 msgstr "Interpunkce"
 
-#: resources/views/settings-md.phtml:390
 msgid ""
 "The SmartPunctExtension intelligently converts ASCII quotes, dashes, and "
 "ellipses to their Unicode equivalents."
@@ -1199,78 +1038,61 @@ msgstr ""
 "Rozšíření SmartPunctExtension inteligentně převádí uvozovky ASCII, pomlčky a "
 "výpustky na jejich ekvivalenty v Unicode."
 
-#: resources/views/settings-md.phtml:394
 msgid ""
 "The quotation marks are automatically replaced in accordance with the "
 "conventions of the selected language."
 msgstr "Uvozovky se automaticky nahrazují podle konvencí zvoleného jazyka."
 
-#: resources/views/settings-md.phtml:399
 msgid ""
 "You can specify replacement characters for the beginning and end of the "
 "quoted text."
 msgstr "Můžete určit náhradní znaky pro začátek a konec citovaného textu."
 
-#: resources/views/settings-md.phtml:409
 msgid "Double quotation marks"
 msgstr "Dvojité uvozovky"
 
-#: resources/views/settings-md.phtml:421 resources/views/settings-md.phtml:440
 #, php-format
 msgid "Replacement for the %s character"
 msgstr "Náhrada za znak %s"
 
-#: resources/views/settings-md.phtml:428
 msgid "Single quotation marks"
 msgstr "Jednoduché uvozovky"
 
-#: resources/views/settings-jscss.phtml:33
 msgid "JSON is invalid"
 msgstr "JSON je neplatný"
 
-#: resources/views/settings-jscss.phtml:35
 msgid "Javascript is invalid"
 msgstr "JavaScript je neplatný"
 
-#: resources/views/settings-jscss.phtml:74
 msgid "Input required"
 msgstr "Vstup je povinný"
 
-#: resources/views/settings-jscss.phtml:347 resources/views/settings.phtml:43
 msgid "JSON export"
 msgstr "Export JSON"
 
-#: resources/views/settings-jscss.phtml:352 resources/views/settings.phtml:44
 msgid "JSON import"
 msgstr "Import JSON"
 
-#: resources/views/settings-jscss.phtml:440
 msgid "Enable for more options"
 msgstr "Zapnutím získáte další možnosti"
 
-#: resources/views/settings-le.phtml:42 resources/views/settings-le.phtml:43
 #, php-format
 msgid "Reset list item access level overwrites - %s"
 msgstr "Obnovit přepsání úrovně přístupových práv položek seznamu – %s"
 
-#: resources/views/settings-le.phtml:43
 msgid "with configured access level"
 msgstr "s nastavenou úrovní přístupových práv"
 
-#: resources/views/settings-le.phtml:69
 msgid "Per-tree overrides are available in the control panel"
 msgstr "Přepsání pro jednotlivé rodokmeny jsou k dispozici v panelu správy"
 
-#: resources/views/settings-le.phtml:87
 msgid "of which with this access level"
 msgstr "z toho s touto úrovní přístupových práv"
 
-#: resources/views/settings-le.phtml:123
 msgid "JavaScript for additional link targets"
 msgstr "JavaScript pro další cíle odkazů"
 
 #. I18N: Enhanced Links js
-#: resources/views/settings-le.phtml:128
 msgid ""
 "The JavaScript object overwrites and supplements the predefined settings, "
 "which are taken from the following code excerpt and can also serve as a "
@@ -1281,14 +1103,12 @@ msgstr ""
 "úpravy."
 
 #. I18N: Enhanced Links js
-#: resources/views/settings-le.phtml:130
 msgid "Any CSS rules required are best added via the “CSS and JS” module."
 msgstr ""
 "Případná potřebná pravidla CSS je nejlépe přidat prostřednictvím modulu „CSS "
 "a JS“."
 
 #. I18N: Enhanced Links js
-#: resources/views/settings-le.phtml:131
 msgid ""
 "Only the definition of the icon as a background image is actually needed - "
 "referencing as data: URL."
@@ -1296,28 +1116,22 @@ msgstr ""
 "Skutečně je potřeba pouze definice ikony jako obrázku na pozadí – odkazem "
 "jako URL data:."
 
-#: resources/views/settings-le.phtml:141
 msgid "Non-admin cross-reference overview"
 msgstr "Přehled křížových odkazů pro neadministrátory"
 
-#: resources/views/settings-le.phtml:148
 msgid "Max rows"
 msgstr "Max. počet řádků"
 
-#: resources/views/settings-le.phtml:163
 msgid "Record detail cross-references"
 msgstr "Křížové odkazy v detailu záznamu"
 
-#: resources/views/settings-le.phtml:174
 msgid "Include block references"
 msgstr "Zahrnout odkazy z bloků"
 
-#: resources/views/settings-le.phtml:193
 msgid "Confirmation Prompt - Do you really want to perform this action?"
 msgstr "Potvrzovací dotaz – Opravdu chcete tuto akci provést?"
 
 #. I18N: wthb link user setting prologue
-#: resources/views/wthb-modal.phtml:18
 msgid ""
 "Please select whether you want to access the help page directly or via a "
 "translation service."
@@ -1326,32 +1140,68 @@ msgstr ""
 "prostřednictvím překladatelské služby."
 
 #. I18N: wthb link setting option
-#: resources/views/wthb-modal.phtml:22 resources/views/settings-wthb.phtml:144
 msgid "Open webtrees manual URL with Google Translate?"
 msgstr "Otevřít URL příručky webtrees pomocí Google Translate?"
 
 #. I18N: wthb link user setting epilogue 1
-#: resources/views/wthb-modal.phtml:34
 msgid "This setting can be adjusted at any time."
 msgstr "Toto nastavení lze kdykoli změnit."
 
-#: resources/views/xref-detail-tab.phtml:18
 msgid "Outgoing references"
 msgstr "Odchozí odkazy"
 
-#: resources/views/xref-detail-tab.phtml:23
 msgid "Incoming references"
 msgstr "Příchozí odkazy"
 
-#: resources/views/xref-detail-tab.phtml:60
 msgid "No cross-references found."
 msgstr "Nebyly nalezeny žádné křížové odkazy."
 
-#: resources/views/settings-wthb.phtml:25
+#, php-format
+msgid ""
+"Note: the current setting \"%s\" is OFF. You should enable this option for "
+"the links to resolve correctly."
+msgstr ""
+
+#, php-format
+msgid ""
+"Note: the current setting \"%s\" is ON. After converting UIDs to XREFs, you "
+"can disable this option if the index is not used otherwise."
+msgstr ""
+
+msgid "Direction"
+msgstr ""
+
+msgid "XREF → UID"
+msgstr ""
+
+msgid "UID → XREF"
+msgstr ""
+
+#, fuzzy
+#| msgid "All Block records"
+msgid "Block modules"
+msgstr "Všechny záznamy bloků"
+
+msgid "Process block modules"
+msgstr ""
+
+msgid "checked"
+msgstr ""
+
+msgid "updated"
+msgstr ""
+
+#, fuzzy
+#| msgid "Skipped"
+msgid "skipped"
+msgstr "Přeskočeno"
+
+msgid "change(s)"
+msgstr ""
+
 msgid "Top menu"
 msgstr "Horní menu"
 
-#: resources/views/settings-wthb.phtml:30
 msgid ""
 "An entry is added to the top menu, which provides access to a context-"
 "sensitive help link for the current page."
@@ -1359,15 +1209,12 @@ msgstr ""
 "Do horního menu se přidá položka, která poskytuje přístup ke kontextovému "
 "odkazu na nápovědu pro aktuální stránku."
 
-#: resources/views/settings-wthb.phtml:40
 msgid "Precede the top menu link with an icon"
 msgstr "Předřadit odkazu v horním menu ikonu"
 
-#: resources/views/settings-wthb.phtml:52
 msgid "Split top menu item"
 msgstr "Rozdělit položku horního menu"
 
-#: resources/views/settings-wthb.phtml:58
 msgid ""
 "This option controls whether the help link is located in the submenu or can "
 "be clicked directly, opening the submenu via a separate link."
@@ -1375,19 +1222,15 @@ msgstr ""
 "Tato volba určuje, zda je odkaz na nápovědu umístěn v podmenu, nebo na něj "
 "lze kliknout přímo, přičemž podmenu se otevírá samostatným odkazem."
 
-#: resources/views/settings-wthb.phtml:93
 msgid "Additional help links"
 msgstr "Další odkazy na nápovědu"
 
-#: resources/views/settings-wthb.phtml:132
 msgid "Help link for subcontext topics"
 msgstr "Odkaz na nápovědu pro podkontextová témata"
 
-#: resources/views/settings-wthb.phtml:177
 msgid "Help link in the admin backend"
 msgstr "Odkaz na nápovědu v administraci"
 
-#: resources/views/settings-wthb.phtml:181
 msgid ""
 "Vesta modules override the admin layout view and provide a way to insert "
 "code through custom modules."
@@ -1395,22 +1238,18 @@ msgstr ""
 "Moduly Vesta přepisují zobrazení administračního rozvržení a poskytují "
 "způsob, jak vkládat kód prostřednictvím vlastních modulů."
 
-#: resources/views/settings-wthb.phtml:182
 msgid "As they are frequently used, this module first attempts this approach."
 msgstr ""
 "Protože se hojně používají, tento modul se nejprve pokusí použít tento "
 "postup."
 
-#: resources/views/settings-wthb.phtml:194
 msgid "Fallback patch for admin layout view"
 msgstr "Záložní oprava zobrazení administračního rozvržení"
 
-#: resources/views/settings-wthb.phtml:208
 msgid "Link to GenWiki"
 msgstr "Odkaz na GenWiki"
 
 #. I18N: WTHB Link
-#: resources/views/settings-wthb.phtml:214
 msgid ""
 "This is the base link that is combined with the relative context links from "
 "the database table."
@@ -1418,23 +1257,19 @@ msgstr ""
 "Toto je základní odkaz, který se kombinuje s relativními kontextovými odkazy "
 "z databázové tabulky."
 
-#: resources/views/settings-wthb.phtml:221
 msgid "Standard Link to webtrees manual"
 msgstr "Výchozí odkaz na příručku webtrees"
 
 #. I18N: WTHB Link
-#: resources/views/settings-wthb.phtml:227
 msgid "This fallback link is used, when no specific context link was defined."
 msgstr ""
 "Tento záložní odkaz se použije, pokud nebyl definován žádný konkrétní "
 "kontextový odkaz."
 
-#: resources/views/settings-wthb.phtml:236
 msgid "Data table"
 msgstr "Datová tabulka"
 
 #. I18N: WTHB Link table
-#: resources/views/settings-wthb.phtml:240
 msgid ""
 "The context is established by assigning the routes used in webtrees to the "
 "corresponding sections in the manual."
@@ -1443,55 +1278,90 @@ msgstr ""
 "odpovídajícím kapitolám příručky."
 
 #. I18N: WTHB Link table
-#: resources/views/settings-wthb.phtml:242
 msgid "The data is stored in the database table"
 msgstr "Data jsou uložena v databázové tabulce"
 
 #. I18N: WTHB Link table rows
-#: resources/views/settings-wthb.phtml:244
 msgid "Data rows"
 msgstr "Datové řádky"
 
 #. I18N: WTHB Link table rows assigned/total
-#: resources/views/settings-wthb.phtml:245
 #, php-format
 msgid "%1$s of %2$s assigned"
 msgstr "přiřazeno %1$s z %2$s"
 
-#: resources/views/settings-wthb.phtml:253
 msgid "truncate table before import routes or csv file"
 msgstr "před importem tras nebo souboru CSV vyprázdnit tabulku"
 
-#: resources/views/settings-wthb.phtml:255
 msgid "Table truncate"
 msgstr "Vyprázdnění tabulky"
 
-#: resources/views/settings-wthb.phtml:259
 msgid "Reset routes to delivery status"
 msgstr "Obnovit trasy do stavu při dodání"
 
-#: resources/views/settings-wthb.phtml:270
 msgid "Separator"
 msgstr "Oddělovač"
 
-#: resources/views/settings-wthb.phtml:278
 msgid "CSV-Export"
 msgstr "Export CSV"
 
-#: resources/views/settings-wthb.phtml:293
 msgid "CSV import file"
 msgstr "Importní soubor CSV"
 
-#: resources/views/settings-wthb.phtml:315
 msgid "Automatically refresh data table when module is updated"
 msgstr "Automaticky obnovit datovou tabulku při aktualizaci modulu"
 
-#: resources/views/settings.phtml:42
+msgid ""
+"This renumbers the records whose XREF collides with another family tree, and "
+"keeps the linkenhancer le-links and the le_* index in sync."
+msgstr ""
+
+msgid ""
+"The time limit was reached. Partial progress saved — run again to continue."
+msgstr ""
+
+msgid "Renumber completed successfully."
+msgstr ""
+
+msgid "XREF mapping"
+msgstr ""
+
+#, fuzzy
+#| msgid "XREF"
+msgid "Old XREF"
+msgstr "XREF"
+
+#, fuzzy
+#| msgid "XREF"
+msgid "New XREF"
+msgstr "XREF"
+
+msgid "Select a family tree"
+msgstr ""
+
+#, php-format
+msgid ""
+"The link index was last fully scanned at %s. Some le-links may not be "
+"detected in this pass."
+msgstr ""
+
+#, php-format
+msgid "%s inbound link"
+msgid_plural "%s inbound links"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+msgid "After the renumber the le_* index will be refreshed by the cron job."
+msgstr ""
+
+msgid "After the renumber the le_* index will be updated inline."
+msgstr ""
+
 msgid "reset to default"
 msgstr "obnovit výchozí"
 
 #. I18N: Settings - prologue sentence 1
-#: resources/views/settings.phtml:63
 msgid ""
 "The main purpose of this module is to make links to data records stored in "
 "family trees more convenient."
@@ -1500,7 +1370,6 @@ msgstr ""
 "uložené v rodokmenech."
 
 #. I18N: Settings - prologue sentence 2
-#: resources/views/settings.phtml:64
 msgid ""
 "This avoids having to store fully qualified links, which impairs the "
 "portability of Gedcom data."
@@ -1509,7 +1378,6 @@ msgstr ""
 "přenositelnost dat GEDCOM."
 
 #. I18N: Settings - prologue sentence 4
-#: resources/views/settings.phtml:66
 msgid ""
 "The option of embedding the images already inserted in the family tree in "
 "the notes rounds off this approach."
@@ -1517,16 +1385,27 @@ msgstr ""
 "Možnost vkládat do poznámek obrázky, které jsou již v rodokmenu, tento "
 "přístup doplňuje."
 
+msgid ""
+"Renumber records whose XREF collides with another family tree, keeping "
+"linkenhancer links in sync."
+msgstr ""
+
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:89
 msgid "Activate Support"
 msgstr "Aktivace podpory"
 
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:100
 msgid "More options"
 msgstr "Další možnosti"
 
-#: resources/views/settings.phtml:107
 msgid "Output of debug information on the JS console"
 msgstr "Výpis ladicích informací do konzole JS"
+
+msgid "Enable PHP debug log output"
+msgstr ""
+
+msgid "Also enabled per-request with ?debug=1 (non-sensitive info only)"
+msgstr ""
+
+#~ msgid "tree"
+#~ msgstr "strom"
