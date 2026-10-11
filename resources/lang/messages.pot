@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 13:50+0200\n"
+"POT-Creation-Date: 2026-10-11 18:57+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -51,13 +51,14 @@ msgstr ""
 
 #: src/DataFix/Handlers/DanglingLinksFix.php:41
 msgid ""
-"This fix reports le-links whose target record does not exist. No changes are "
-"made (report-only)."
+"This fix reports linkenhancer links whose target record does not exist. No "
+"changes are made (report-only)."
 msgstr ""
 
+#. I18N: 1=xref, 2=tree name
 #: src/DataFix/Handlers/DanglingLinksFix.php:83
 #, php-format
-msgid "no record %s in tree \"%s\""
+msgid "no record %1$s in tree \"%2$s\""
 msgstr ""
 
 #: src/DataFix/Handlers/DanglingLinksFix.php:84
@@ -1612,7 +1613,7 @@ msgstr ""
 #: resources/views/renumber-with-links.phtml:63
 msgid ""
 "This renumbers the records whose XREF collides with another family tree, and "
-"keeps the linkenhancer le-links and the le_* index in sync."
+"keeps the linkenhancer links and the le_* index in sync."
 msgstr ""
 
 #: resources/views/renumber-with-links.phtml:75
@@ -1643,8 +1644,8 @@ msgstr ""
 #: resources/views/renumber-with-links.phtml:138
 #, php-format
 msgid ""
-"The link index was last fully scanned at %s. Some le-links may not be "
-"detected in this pass."
+"The link index was last fully scanned at %s. Some linkenhancer links may not "
+"be detected in this pass."
 msgstr ""
 
 #: resources/views/renumber-with-links.phtml:153
