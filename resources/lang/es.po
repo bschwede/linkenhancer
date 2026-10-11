@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-11 13:50+0200\n"
-"PO-Revision-Date: 2026-10-03 16:27+0000\n"
-"Last-Translator: Iberni2 <iberni2@noreply.codeberg.org>\n"
+"PO-Revision-Date: 2026-10-11 16:55+0000\n"
+"Last-Translator: gallegonovato <gallegonovato@noreply.codeberg.org>\n"
 "Language-Team: Spanish <https://translate.codeberg.org/projects/wt-modules/"
 "linkenhancer/es/>\n"
 "Language: es\n"
@@ -15,79 +15,80 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.9.1\n"
+"X-Generator: Weblate 2026.10.1\n"
 "X-Poedit-Basepath: ../..\n"
 "X-Poedit-SearchPath-0: CustomMarkdownFactory.php\n"
 "X-Poedit-SearchPath-1: LinkEnhancerModule.php\n"
 "X-Poedit-SearchPath-2: module.php\n"
 
 msgid "XREF ⇄ UID reference swap"
-msgstr ""
+msgstr "Intercambio de referencias XREF ⇄ UID"
 
-#, fuzzy
-#| msgid "Update the UID index"
 msgid "Report duplicate UIDs in index"
-msgstr "Actualizar el índice UID"
+msgstr "Informar sobre UID duplicados en el índice"
 
 msgid ""
 "This fix reports UIDs that are assigned to multiple records in the UID "
 "index. No changes are made (report-only)."
 msgstr ""
+"Esta corrección detecta los identificadores (UID) asignados a más de un "
+"registro en el índice. No se realiza ningún cambio (solo informe)."
 
 msgid "No duplicate UIDs found for this record."
-msgstr ""
+msgstr "Sin UID duplicados en este registro."
 
 #, php-format
 msgid "%d duplicate UID(s) on this record:"
-msgstr ""
+msgstr "%d UID duplicado(s) en este registro:"
 
 msgid "Fix wt= type letter (set/repair/remove)"
-msgstr ""
+msgstr "Corregir tipo de letra wt= (establecer/reparar/eliminar)"
 
-#, fuzzy
-#| msgid "JavaScript for additional link targets"
 msgid "Report dangling link targets"
-msgstr "JavaScrip para enlaces adicionales"
+msgstr "Notificar enlaces rotos"
 
 msgid ""
 "This fix reports le-links whose target record does not exist. No changes are "
 "made (report-only)."
 msgstr ""
+"Esta solución detecta los enlaces dinámicos (le-links) que apuntan a "
+"registros inexistentes. No se aplican cambios (solo informe)."
 
 #, php-format
 msgid "no record %s in tree \"%s\""
-msgstr ""
+msgstr "sin registros %s en los árboles \"%s\""
 
-#, fuzzy, php-format
-#| msgid "UID %s was found in another tree."
+#, php-format
 msgid "UID not found in tree \"%s\""
-msgstr "UID %s se encontró en otro árbol."
+msgstr "UID no encontrado en el árbol \"%s\""
 
 msgid "No dangling links found."
-msgstr ""
+msgstr "Sin enlaces rotos."
 
 #, php-format
 msgid "%d missing target(s):"
-msgstr ""
+msgstr "Falta(n) %d destino(s):"
 
 msgid "Report ambiguous UID targets"
-msgstr ""
+msgstr "Reportar destinos de UID ambiguos"
 
 msgid ""
 "This fix reports UID targets that resolve to multiple records (ambiguous). "
 "No changes are made (report-only)."
 msgstr ""
+"Esta solución reporta los objetivos de UID que apuntan a múltiples registros "
+"(ambiguos). No se hace ningún cambio (solo lectura/informe)."
 
 msgid "No ambiguous UIDs found."
-msgstr ""
+msgstr "Sin UIDs ambiguos encontrados."
 
 #, php-format
 msgid "%d ambiguous UID target(s):"
-msgstr ""
+msgstr "%d objetivo(s) de UID ambiguo(s):"
 
 #, php-format
 msgid "Renumbered @%1$s@ → @%2$s@ (%3$s, %4$d core rows, %5$d links)"
-msgstr ""
+msgstr "Reenumerado @%1$s@ → @%2$s@ %3$s, %4$d filas base, %5$d enlaces)"
 
 msgid "Cross-references"
 msgstr "referencias cruzadas"
@@ -443,7 +444,7 @@ msgstr "Enlace permanente"
 #. I18N: renumber xrefs
 #, php-format
 msgid "%s (with links)"
-msgstr ""
+msgstr "%s (con enlaces)"
 
 #, php-format
 msgid "No record for %s was found."
@@ -524,7 +525,7 @@ msgstr ""
 "enlaces contextuales al manual GenWiki webtrees"
 
 msgid "Some settings could not be saved."
-msgstr ""
+msgstr "Error al guardar algunos ajustes."
 
 msgid "Cross-Reference Overview"
 msgstr "Resumen de referencias cruzadas"
@@ -877,35 +878,33 @@ msgid "picture with defined height, width and additional css class"
 msgstr "imagen con altura, anchura y clase CSS adicional definidas"
 
 msgid "stale"
-msgstr ""
+msgstr "Desactualizado"
 
 msgid "Index status"
-msgstr ""
+msgstr "Estado de indexación"
 
-#, fuzzy, php-format
-#| msgid "Index status: %1$s rows, last built: %2$s"
+#, php-format
 msgid "Link index: %1$s rows, last built: %2$s"
-msgstr "Estado del índice: %1$s filas, última compilación: %2$s"
+msgstr "Estado de indexación: %1$s filas, última compilación: %2$s"
 
 msgid "Trigger link index rebuild"
-msgstr ""
+msgstr "Reconstruir índice de enlaces"
 
 msgid "Rebuild"
-msgstr ""
+msgstr "Reconstruir"
 
-#, fuzzy, php-format
-#| msgid "Index status: %1$s rows, last built: %2$s"
+#, php-format
 msgid "UID index: %1$s rows, last built: %2$s"
-msgstr "Estado del índice: %1$s filas, última compilación: %2$s"
+msgstr "Índice UID: %1$s filas, última compilación: %2$s"
 
 msgid "Index source (link-index scan) not available."
 msgstr "Origen del índice (barrido de índice de enlaces) no disponible."
 
 msgid "Trigger UID index rebuild"
-msgstr ""
+msgstr "Iniciar la reconstrucción del índice UID"
 
 msgid "queued"
-msgstr ""
+msgstr "en cola"
 
 msgid "The context help topics provided by webtrees are listed below."
 msgstr ""
@@ -919,28 +918,35 @@ msgid ""
 "Adds the correct type letter to wt= targets that have none (e.g. wt=@SOUR1@ "
 "→ wt=s@SOUR1@)."
 msgstr ""
+"Añade la letra de tipo correcta a los objetivos «wt=» que no la tienen (por "
+"ejemplo, «wt=@SOUR1@» → «wt=s@SOUR1@»)."
 
 msgid ""
 "Corrects the type letter when it does not match the resolved target record "
 "(e.g. wt=i@SOUR1@ → wt=s@SOUR1@)."
 msgstr ""
+"Esta corrección corrige la letra de tipo cuando no coincide con el registro "
+"de destino resuelto (p. ej., wt=i@SOUR1@ → wt=s@SOUR1@)."
 
 msgid ""
 "Removes ALL type letters from wt= targets (e.g. wt=i@INDI1@ → wt=@INDI1@). "
 "The letters were originally only needed for JavaScript routing."
 msgstr ""
+"Elimina TODAS las letras de tipo de los destinos wt= (p. ej., wt=i@INDI1@ → "
+"wt=@INDI1@). Originalmente, estas letras solo eran necesarias para el "
+"enrutamiento de JavaScript."
 
 msgid "Mode"
-msgstr ""
+msgstr "Modo"
 
 msgid "Set — add missing type letters"
-msgstr ""
+msgstr "Ajustar: rellenar letras iguales que falten"
 
 msgid "Repair — correct wrong type letters"
-msgstr ""
+msgstr "Reparar: corregir el indicador de tipo erróneo"
 
 msgid "Remove — strip all type letters"
-msgstr ""
+msgstr "Eliminar: limpiar indicadores de tipo en los enlaces"
 
 msgid ""
 "Only broken targets: every matching record is loaded and its targets "
@@ -1193,26 +1199,29 @@ msgid ""
 "Note: the current setting \"%s\" is OFF. You should enable this option for "
 "the links to resolve correctly."
 msgstr ""
+"Nota: la opción \"%s\" está DESACTIVADA. Actívala para que los enlaces "
+"funcionen correctamente."
 
 #, php-format
 msgid ""
 "Note: the current setting \"%s\" is ON. After converting UIDs to XREFs, you "
 "can disable this option if the index is not used otherwise."
 msgstr ""
+"Nota: el ajuste actual \"%s\" está ACTIVADO. Después de convertir los UIDs a "
+"XREFs, puedes desactivar esta opción si el índice no se utiliza para otros "
+"fines."
 
 msgid "Direction"
-msgstr ""
+msgstr "Sentido"
 
 msgid "XREF → UID"
-msgstr ""
+msgstr "XREF → UID"
 
 msgid "UID → XREF"
-msgstr ""
+msgstr "UID → XREF"
 
-#, fuzzy
-#| msgid "All Block records"
 msgid "Block modules"
-msgstr "Todos los registros de bloques"
+msgstr "bloquear los módulos"
 
 msgid "Process block modules"
 msgstr ""
@@ -1439,6 +1448,8 @@ msgstr ""
 
 msgid "Also enabled per-request with ?debug=1 (non-sensitive info only)"
 msgstr ""
+"También se puede activar por solicitud con ?debug=1 (solo información no "
+"sensible)"
 
 #~ msgid "tree"
 #~ msgstr "árbol"
