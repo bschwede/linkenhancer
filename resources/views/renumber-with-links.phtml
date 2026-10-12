@@ -139,7 +139,7 @@ document.getElementById('renumber-tree').addEventListener('change', function (e)
         </div>
     <?php endif; ?>
 
-    <p><?= e(MoreI18N::xlatePlural('This family tree has %s record which uses the same "XREF" as another family tree.', 'This family tree has %s records which use the same "XREF" as another family tree.', $count, I18N::number($count))) ?></p>
+    <p><?= e(MoreI18N::xlatePlural('This family tree has %s record which uses the same “XREF” as another family tree.', 'This family tree has %s records which use the same “XREF” as another family tree.', $count, I18N::number($count))) ?></p>
 
     <?php if ($count > 0): ?>
         <div style="max-height:250px; overflow: scroll;">
@@ -177,8 +177,6 @@ document.getElementById('renumber-tree').addEventListener('change', function (e)
 
             <?= csrf_field() ?>
         </form>
-    <?php else: ?>
-        <p class="text-success"><?= e(MoreI18N::xlate('There are no XREF collisions to fix in this family tree.')) ?></p>
     <?php endif; ?>
 <?php endif; ?>
 </div>
