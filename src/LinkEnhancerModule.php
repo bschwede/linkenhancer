@@ -562,7 +562,10 @@ class LinkEnhancerModule extends AbstractModule implements
 
             $preferences = array_diff(
                 array_keys(self::PREFERENCES_SCHEMA),
-                [ self::PREF_WTHB_LASTHASH ]
+                [ 
+                    self::PREF_WTHB_LASTHASH,
+                    self::PREF_MDE_RULES,
+                ]
             );
             foreach ($preferences as $preference) {
                 try {
