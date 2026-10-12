@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-11 19:11+0200\n"
-"PO-Revision-Date: 2026-10-06 09:27+0000\n"
+"PO-Revision-Date: 2026-10-12 10:59+0000\n"
 "Last-Translator: Iberni2 <iberni2@noreply.codeberg.org>\n"
 "Language-Team: Catalan <https://translate.codeberg.org/projects/wt-modules/"
 "linkenhancer/ca/>\n"
@@ -14,81 +14,81 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.9.1\n"
+"X-Generator: Weblate 2026.10.1\n"
 "X-Poedit-Basepath: ../..\n"
 "X-Poedit-SearchPath-0: CustomMarkdownFactory.php\n"
 "X-Poedit-SearchPath-1: LinkEnhancerModule.php\n"
 "X-Poedit-SearchPath-2: module.php\n"
 
 msgid "XREF ⇄ UID reference swap"
-msgstr ""
+msgstr "XREF ⇄ intercanvi de referència UID"
 
-#, fuzzy
-#| msgid "Update the UID index"
 msgid "Report duplicate UIDs in index"
-msgstr "Actualitza l'índex UID"
+msgstr "Informeu els UID duplicats a l'índex"
 
 msgid ""
 "This fix reports UIDs that are assigned to multiple records in the UID "
 "index. No changes are made (report-only)."
 msgstr ""
+"Aquesta correcció informa dels UID que s'assignen a diversos registres a "
+"l'índex de UID. No es fan canvis (només informe)."
 
 msgid "No duplicate UIDs found for this record."
-msgstr ""
+msgstr "No s'han trobat UID duplicats per a aquest registre."
 
 #, php-format
 msgid "%d duplicate UID(s) on this record:"
-msgstr ""
+msgstr "%d UID duplicats en aquest registre:"
 
 msgid "Fix wt= type letter (set/repair/remove)"
-msgstr ""
+msgstr "Fixar el tipus de lletra wt= (establir/reparar/eliminar)"
 
-#, fuzzy
-#| msgid "JavaScript for additional link targets"
 msgid "Report dangling link targets"
-msgstr "JavaScrip per a enllaços addicionals"
+msgstr "JavaScript per a objectius d'enllaços penjants addicionals de report"
 
 msgid ""
 "This fix reports linkenhancer links whose target record does not exist. No "
 "changes are made (report-only)."
 msgstr ""
+"Aquesta correcció informa dels enllaços Linkenhancer que tenen un registre "
+"de destinació que no existeix. No es fan canvis (només informe)."
 
 #. I18N: 1=xref, 2=tree name
-#, fuzzy, php-format
-#| msgid "UID %s was found in another tree."
+#, php-format
 msgid "no record %1$s in tree \"%2$s\""
-msgstr "UID %s es va trobar en un altre arbre."
+msgstr "Cap registre %1$s a l'arbre \"%2$s\""
 
-#, fuzzy, php-format
-#| msgid "UID %s was found in another tree."
+#, php-format
 msgid "UID not found in tree \"%s\""
-msgstr "UID %s es va trobar en un altre arbre."
+msgstr "UID no trobat a l'arbre \"%s\""
 
 msgid "No dangling links found."
-msgstr ""
+msgstr "No s'han trobat enllaços penjants."
 
 #, php-format
 msgid "%d missing target(s):"
-msgstr ""
+msgstr "%d objectius no assolits:"
 
 msgid "Report ambiguous UID targets"
-msgstr ""
+msgstr "Informa els objectius de UID ambiguos"
 
 msgid ""
 "This fix reports UID targets that resolve to multiple records (ambiguous). "
 "No changes are made (report-only)."
 msgstr ""
+"Aquesta correcció informa dels objectius UID que es resolen en diversos "
+"registres (ambigus). No es fan canvis (només informe)."
 
 msgid "No ambiguous UIDs found."
-msgstr ""
+msgstr "No s'han trobat cap UID ambigu."
 
 #, php-format
 msgid "%d ambiguous UID target(s):"
-msgstr ""
+msgstr "%d objectius de UID ambigus:"
 
 #, php-format
 msgid "Renumbered @%1$s@ → @%2$s@ (%3$s, %4$d core rows, %5$d links)"
-msgstr ""
+msgstr "Renumerat @%1$s@ → @%2$s@ (%3$s, %4$d files principals, %5$d enllaços)"
 
 msgid "Cross-references"
 msgstr "Referències creuades"
@@ -445,7 +445,7 @@ msgstr "Enllaç permanent"
 #. I18N: renumber xrefs
 #, php-format
 msgid "%s (with links)"
-msgstr ""
+msgstr "%s (amb enllaços)"
 
 #, php-format
 msgid "No record for %s was found."
@@ -525,13 +525,13 @@ msgstr ""
 "contextuals al manual GenWiki webtrees"
 
 msgid "Some settings could not be saved."
-msgstr ""
+msgstr "Algunes configuracions no s'han pogut desar."
 
 msgid "Cross-Reference Overview"
 msgstr "Referència - Visió general"
 
 msgid "Update the link index"
-msgstr "Actualitza l'índex d'enllaços"
+msgstr "Actualitza l'índex dels enllaços"
 
 msgid "Update the UID index"
 msgstr "Actualitza l'índex UID"
@@ -874,35 +874,33 @@ msgid "picture with defined height, width and additional css class"
 msgstr "imatge amb alçada, amplada i classe CSS addicional definides"
 
 msgid "stale"
-msgstr ""
+msgstr "passat"
 
 msgid "Index status"
-msgstr ""
+msgstr "Estat de l'índex"
 
-#, fuzzy, php-format
-#| msgid "Index status: %1$s rows, last built: %2$s"
+#, php-format
 msgid "Link index: %1$s rows, last built: %2$s"
-msgstr "Estat de l'índex: %1$s Files, últimes construccions: %2$s"
+msgstr "Estat de l'índex: %1$s registres, darrera construcció: %2$s"
 
 msgid "Trigger link index rebuild"
-msgstr ""
+msgstr "Inicia la reconstrucció de l'índex de vincles"
 
 msgid "Rebuild"
-msgstr ""
+msgstr "Reconstruir"
 
-#, fuzzy, php-format
-#| msgid "Index status: %1$s rows, last built: %2$s"
+#, php-format
 msgid "UID index: %1$s rows, last built: %2$s"
-msgstr "Estat de l'índex: %1$s Files, últimes construccions: %2$s"
+msgstr "Estat de l'índex UID: %1$s registres, darrer muntatge: %2$s"
 
 msgid "Index source (link-index scan) not available."
 msgstr "Font de l'índex (escaneig enllaç-índex) no disponible."
 
 msgid "Trigger UID index rebuild"
-msgstr ""
+msgstr "Inicia la reconstrucció de l'índex UID"
 
 msgid "queued"
-msgstr ""
+msgstr "en cua"
 
 msgid "The context help topics provided by webtrees are listed below."
 msgstr ""
@@ -916,28 +914,35 @@ msgid ""
 "Adds the correct type letter to wt= targets that have none (e.g. wt=@SOUR1@ "
 "→ wt=s@SOUR1@)."
 msgstr ""
+"Afegeix el tipus de lletra correcte als objectius wt= que no en tenen cap "
+"(p. ex. wt=@SOUR1@ → wt=s@SOUR1@)."
 
 msgid ""
 "Corrects the type letter when it does not match the resolved target record "
 "(e.g. wt=i@SOUR1@ → wt=s@SOUR1@)."
 msgstr ""
+"Corregeix la lletra de tipus quan no coincideix amb el registre de "
+"destinació resolt (p. ex. wt=i@SOUR1@ → wt=s@SOUR1@)."
 
 msgid ""
 "Removes ALL type letters from wt= targets (e.g. wt=i@INDI1@ → wt=@INDI1@). "
 "The letters were originally only needed for JavaScript routing."
 msgstr ""
+"Elimina TOTS els tipus de caràcters de les adreces wt= (per exemple, "
+"wt=i@INDI1@ → wt=@INDI1@). Originalment, aquests caràcters només eren "
+"necessaris per a la ruteig de JavaScript."
 
 msgid "Mode"
-msgstr ""
+msgstr "Mode"
 
 msgid "Set — add missing type letters"
-msgstr ""
+msgstr "Conjunt — afegeix les lletres de tipus que falten"
 
 msgid "Repair — correct wrong type letters"
-msgstr ""
+msgstr "Reparar — corregir les lletres de tipus incorrecte"
 
 msgid "Remove — strip all type letters"
-msgstr ""
+msgstr "Elimina — treu totes les lletres tipogràfiques"
 
 msgid ""
 "Only broken targets: every matching record is loaded and its targets "
@@ -1113,7 +1118,7 @@ msgstr "amb nivell d'accés configurat"
 msgid "Per-tree overrides are available in the control panel"
 msgstr ""
 "Es poden establir configuracions específiques per a cada arbre des del "
-"tauler de control."
+"tauler de control"
 
 msgid "of which with this access level"
 msgstr "d'aquest nivell d'accés"
@@ -1146,7 +1151,7 @@ msgstr ""
 
 msgid "Non-admin cross-reference overview"
 msgstr ""
-"Visió general de les referències creuades per als usuaris no administradors."
+"Visió general de les referències creuades per als usuaris no administradors"
 
 msgid "Max rows"
 msgstr "Màxim de files"
@@ -1184,50 +1189,51 @@ msgid "Incoming references"
 msgstr "Referències entrants"
 
 msgid "No cross-references found."
-msgstr "No s'han trobat referències creuades"
+msgstr "No s'han trobat referències creuades."
 
 #, php-format
 msgid ""
 "Note: the current setting \"%s\" is OFF. You should enable this option for "
 "the links to resolve correctly."
 msgstr ""
+"Nota: l'ajust actual \"%s\" està desactivat. Hauries d'activar aquesta opció "
+"perquè els enllaços es resolguin correctament."
 
 #, php-format
 msgid ""
 "Note: the current setting \"%s\" is ON. After converting UIDs to XREFs, you "
 "can disable this option if the index is not used otherwise."
 msgstr ""
+"Nota: l'ajust actual \"%s\" està ACTIUS. Després de convertir els UID en "
+"XREF, podeu desactivar aquesta opció si l'índex no s'utilitza d'una altra "
+"manera."
 
 msgid "Direction"
-msgstr ""
+msgstr "Direcció"
 
 msgid "XREF → UID"
-msgstr ""
+msgstr "XREF → UID (Referència creuada → Identificador únic)"
 
 msgid "UID → XREF"
-msgstr ""
+msgstr "UID → XREF (Identificador únic → Contrastació creuada)"
 
-#, fuzzy
-#| msgid "All Block records"
 msgid "Block modules"
-msgstr "Tots el registres del bloc"
+msgstr "Tots els mòduls de registre de Bloc"
 
 msgid "Process block modules"
-msgstr ""
+msgstr "Mòduls de bloc de procés"
 
 msgid "checked"
-msgstr ""
+msgstr "comprovat"
 
 msgid "updated"
-msgstr ""
+msgstr "actualitzat"
 
-#, fuzzy
-#| msgid "Skipped"
 msgid "skipped"
-msgstr "Saltat"
+msgstr "saltat"
 
 msgid "change(s)"
-msgstr ""
+msgstr "canvis"
 
 msgid "Top menu"
 msgstr "Menú superior"
@@ -1345,47 +1351,51 @@ msgid ""
 "This renumbers the records whose XREF collides with another family tree, and "
 "keeps the linkenhancer links and the le_* index in sync."
 msgstr ""
+"Això renumera els registres els XREF dels quals xoquen amb un altre arbre "
+"genealògic, i manté en sincronització els enllaços LinkEnhancer i l'índex "
+"le_*."
 
 msgid ""
 "The time limit was reached. Partial progress saved — run again to continue."
 msgstr ""
+"S'ha assolit el límit de temps. S'ha desat un progrés parcial — torna a "
+"executar per continuar."
 
 msgid "Renumber completed successfully."
-msgstr ""
+msgstr "El renumerament s'ha completat correctament."
 
 msgid "XREF mapping"
-msgstr ""
+msgstr "Mapeig XREF"
 
-#, fuzzy
-#| msgid "XREF"
 msgid "Old XREF"
-msgstr "XREF"
+msgstr "XREF antic"
 
-#, fuzzy
-#| msgid "XREF"
 msgid "New XREF"
-msgstr "XREF"
+msgstr "Nou XREF"
 
 msgid "Select a family tree"
-msgstr ""
+msgstr "Seleccioneu un arbre genealògic"
 
 #, php-format
 msgid ""
 "The link index was last fully scanned at %s. Some linkenhancer links may not "
 "be detected in this pass."
 msgstr ""
+"L'índex d'enllaços es va escanejar completament per última vegada a %s. És "
+"possible que alguns enllaços de Linkenhancer no es detectin en aquesta "
+"passada."
 
 #, php-format
 msgid "%s inbound link"
 msgid_plural "%s inbound links"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s enllaç entrant"
+msgstr[1] "%s enllaços entrants"
 
 msgid "After the renumber the le_* index will be refreshed by the cron job."
-msgstr ""
+msgstr "Després de la renumeració, l'índex le_* es renovarà pel cron job."
 
 msgid "After the renumber the le_* index will be updated inline."
-msgstr ""
+msgstr "Després de la renumeració, l'índex le_* s'actualitzarà in situ."
 
 msgid "reset to default"
 msgstr "Restablir als valors per defecte"
@@ -1426,10 +1436,11 @@ msgid "Output of debug information on the JS console"
 msgstr "Sortida d'informació de depuració a la consola JS"
 
 msgid "Enable PHP debug log output"
-msgstr ""
+msgstr "Activa el registre de depuració de PHP"
 
 msgid "Also enabled per-request with ?debug=1 (non-sensitive info only)"
 msgstr ""
+"També s'activa per a cada petició amb ?debug=1 (només informació no sensible)"
 
 #~ msgid "tree"
 #~ msgstr "Arbre"
