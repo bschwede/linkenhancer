@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-11 19:11+0200\n"
-"PO-Revision-Date: 2026-09-29 04:20+0000\n"
+"PO-Revision-Date: 2026-10-12 10:59+0000\n"
 "Last-Translator: TheDutchJewel <thedutchjewel@noreply.codeberg.org>\n"
 "Language-Team: Dutch <https://translate.codeberg.org/projects/wt-modules/"
 "linkenhancer/nl/>\n"
@@ -14,81 +14,82 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.9.1\n"
+"X-Generator: Weblate 2026.10.1\n"
 "X-Poedit-Basepath: ../..\n"
 "X-Poedit-SearchPath-0: CustomMarkdownFactory.php\n"
 "X-Poedit-SearchPath-1: LinkEnhancerModule.php\n"
 "X-Poedit-SearchPath-2: module.php\n"
 
 msgid "XREF ⇄ UID reference swap"
-msgstr ""
+msgstr "XREF ⇄ UID-referentiewissel"
 
-#, fuzzy
-#| msgid "Update the UID index"
 msgid "Report duplicate UIDs in index"
-msgstr "UID-index bijwerken"
+msgstr "Dubbele UID's in index rapporteren"
 
 msgid ""
 "This fix reports UIDs that are assigned to multiple records in the UID "
 "index. No changes are made (report-only)."
 msgstr ""
+"Met deze controle worden UID's gerapporteerd die aan meerdere records in de "
+"UID-index zijn toegewezen. Er worden geen wijzigingen aangebracht (alleen "
+"rapportage)."
 
 msgid "No duplicate UIDs found for this record."
-msgstr ""
+msgstr "Geen dubbele UID's gevonden voor dit record."
 
 #, php-format
 msgid "%d duplicate UID(s) on this record:"
-msgstr ""
+msgstr "%d dubbele UID's in dit record:"
 
 msgid "Fix wt= type letter (set/repair/remove)"
-msgstr ""
+msgstr "Correctie wt= typeletter (instellen/corrigeren/verwijderen)"
 
-#, fuzzy
-#| msgid "JavaScript for additional link targets"
 msgid "Report dangling link targets"
-msgstr "JavaScript voor extra linkdoelen"
+msgstr "Verbroken koppelingsdoelen rapporteren"
 
 msgid ""
 "This fix reports linkenhancer links whose target record does not exist. No "
 "changes are made (report-only)."
 msgstr ""
+"Deze controle rapporteert linkenhancer-koppelingen waarvan het doelrecord "
+"niet bestaat. Er worden geen wijzigingen aangebracht (alleen rapportage)."
 
 #. I18N: 1=xref, 2=tree name
-#, fuzzy, php-format
-#| msgid "UID %s was found in another tree."
+#, php-format
 msgid "no record %1$s in tree \"%2$s\""
-msgstr "UID %s is gevonden in een andere stamboom."
+msgstr "geen record %1$s in stamboom \"%2$s\""
 
-#, fuzzy, php-format
-#| msgid "UID %s was found in another tree."
+#, php-format
 msgid "UID not found in tree \"%s\""
-msgstr "UID %s is gevonden in een andere stamboom."
+msgstr "UID niet gevonden in stamboom \"%s\""
 
 msgid "No dangling links found."
-msgstr ""
+msgstr "Geen verbroken koppelingen gevonden."
 
 #, php-format
 msgid "%d missing target(s):"
-msgstr ""
+msgstr "%d ontbrekende doelen:"
 
 msgid "Report ambiguous UID targets"
-msgstr ""
+msgstr "Rapporteer dubbelzinnige UID-doelen"
 
 msgid ""
 "This fix reports UID targets that resolve to multiple records (ambiguous). "
 "No changes are made (report-only)."
 msgstr ""
+"Deze controle rapporteert UID-doelen die naar meerdere records verwijzen "
+"(dubbelzinnig). Er worden geen wijzigingen aangebracht (alleen rapportage)."
 
 msgid "No ambiguous UIDs found."
-msgstr ""
+msgstr "Geen dubbelzinnige UID's gevonden."
 
 #, php-format
 msgid "%d ambiguous UID target(s):"
-msgstr ""
+msgstr "%d dubbelzinnige UID-doelen:"
 
 #, php-format
 msgid "Renumbered @%1$s@ → @%2$s@ (%3$s, %4$d core rows, %5$d links)"
-msgstr ""
+msgstr "Hernummerd: @%1$s@ → @%2$s@ (%3$s, %4$d kernrijen, %5$d koppelingen)"
 
 msgid "Cross-references"
 msgstr "Kruisverwijzingen"
@@ -442,7 +443,7 @@ msgstr "Permalink"
 #. I18N: renumber xrefs
 #, php-format
 msgid "%s (with links)"
-msgstr ""
+msgstr "%s (met koppelingen)"
 
 #, php-format
 msgid "No record for %s was found."
@@ -521,7 +522,7 @@ msgstr ""
 "contextgevoelige link naar de GenWiki-webtreeshandleiding"
 
 msgid "Some settings could not be saved."
-msgstr ""
+msgstr "Sommige instellingen konden niet worden opgeslagen."
 
 msgid "Cross-Reference Overview"
 msgstr "Kruisverwijzingsoverzicht"
@@ -871,35 +872,33 @@ msgid "picture with defined height, width and additional css class"
 msgstr "afbeelding met gedefinieerde hoogte, breedte en extra CSS-klasse"
 
 msgid "stale"
-msgstr ""
+msgstr "verouderd"
 
 msgid "Index status"
-msgstr ""
+msgstr "Indexstatus"
 
-#, fuzzy, php-format
-#| msgid "Index status: %1$s rows, last built: %2$s"
+#, php-format
 msgid "Link index: %1$s rows, last built: %2$s"
-msgstr "Indexstatus: %1$s rijen, laatst opgebouwd: %2$s"
+msgstr "Linkindex: %1$s rijen, laatst opgebouwd: %2$s"
 
 msgid "Trigger link index rebuild"
-msgstr ""
+msgstr "Herindexering van koppelingen initiëren"
 
 msgid "Rebuild"
-msgstr ""
+msgstr "Opnieuw opbouwen"
 
-#, fuzzy, php-format
-#| msgid "Index status: %1$s rows, last built: %2$s"
+#, php-format
 msgid "UID index: %1$s rows, last built: %2$s"
-msgstr "Indexstatus: %1$s rijen, laatst opgebouwd: %2$s"
+msgstr "UID-index: %1$s rijen, laatst opgebouwd: %2$s"
 
 msgid "Index source (link-index scan) not available."
 msgstr "Indexbron (linkindexscan) niet beschikbaar."
 
 msgid "Trigger UID index rebuild"
-msgstr ""
+msgstr "Herindexering van de UID-index initiëren"
 
 msgid "queued"
-msgstr ""
+msgstr "in wachtrij"
 
 msgid "The context help topics provided by webtrees are listed below."
 msgstr ""
@@ -913,28 +912,35 @@ msgid ""
 "Adds the correct type letter to wt= targets that have none (e.g. wt=@SOUR1@ "
 "→ wt=s@SOUR1@)."
 msgstr ""
+"Voegt de juiste typeletter toe aan wt=-doelen die er geen hebben "
+"(bijvoorbeeld wt=@SOUR1@ → wt=s@SOUR1@)."
 
 msgid ""
 "Corrects the type letter when it does not match the resolved target record "
 "(e.g. wt=i@SOUR1@ → wt=s@SOUR1@)."
 msgstr ""
+"Corrigeert de typeletter wanneer deze niet overeenkomt met het gevonden "
+"doelrecord (bijvoorbeeld wt=i@SOUR1@ → wt=s@SOUR1@)."
 
 msgid ""
 "Removes ALL type letters from wt= targets (e.g. wt=i@INDI1@ → wt=@INDI1@). "
 "The letters were originally only needed for JavaScript routing."
 msgstr ""
+"Verwijdert ALLE typeletters uit wt=-doelen (bijvoorbeeld wt=i@INDI1@ → "
+"wt=@INDI1@). De letters waren oorspronkelijk alleen nodig voor de JavaScript-"
+"routering."
 
 msgid "Mode"
-msgstr ""
+msgstr "Modus"
 
 msgid "Set — add missing type letters"
-msgstr ""
+msgstr "Instellen — ontbrekende typeletters toevoegen"
 
 msgid "Repair — correct wrong type letters"
-msgstr ""
+msgstr "Corrigeren — onjuiste typeletters corrigeren"
 
 msgid "Remove — strip all type letters"
-msgstr ""
+msgstr "Verwijderen — alle typeletters verwijderen"
 
 msgid ""
 "Only broken targets: every matching record is loaded and its targets "
@@ -1186,45 +1192,44 @@ msgid ""
 "Note: the current setting \"%s\" is OFF. You should enable this option for "
 "the links to resolve correctly."
 msgstr ""
+"Opmerking: de huidige instelling \"%s\" staat UIT. U moet deze optie "
+"inschakelen zodat de koppelingen correct kunnen worden opgelost."
 
 #, php-format
 msgid ""
 "Note: the current setting \"%s\" is ON. After converting UIDs to XREFs, you "
 "can disable this option if the index is not used otherwise."
 msgstr ""
+"Opmerking: de huidige instelling \"%s\" staat AAN. Nadat UID's naar XREF's "
+"zijn geconverteerd, kunt u deze optie uitschakelen als de index verder niet "
+"wordt gebruikt."
 
-#, fuzzy
-#| msgid "Definition"
 msgid "Direction"
-msgstr "Definitie"
+msgstr "Richting"
 
 msgid "XREF → UID"
-msgstr ""
+msgstr "XREF → UID"
 
 msgid "UID → XREF"
-msgstr ""
+msgstr "UID → XREF"
 
-#, fuzzy
-#| msgid "All Block records"
 msgid "Block modules"
-msgstr "Alle Block-records"
+msgstr "Blokmodules"
 
 msgid "Process block modules"
-msgstr ""
+msgstr "Blokmodules verwerken"
 
 msgid "checked"
-msgstr ""
+msgstr "gecontroleerd"
 
 msgid "updated"
-msgstr ""
+msgstr "bijgewerkt"
 
-#, fuzzy
-#| msgid "Skipped"
 msgid "skipped"
-msgstr "Overgeslagen"
+msgstr "overgeslagen"
 
 msgid "change(s)"
-msgstr ""
+msgstr "wijziging(en)"
 
 msgid "Top menu"
 msgstr "Hoofdmenu"
@@ -1341,47 +1346,50 @@ msgid ""
 "This renumbers the records whose XREF collides with another family tree, and "
 "keeps the linkenhancer links and the le_* index in sync."
 msgstr ""
+"Hiermee worden de records hernummerd waarvan de XREF conflicteert met die "
+"van een andere stamboom, terwijl de linkenhancer-koppelingen en de le_*-"
+"index gesynchroniseerd blijven."
 
 msgid ""
 "The time limit was reached. Partial progress saved — run again to continue."
 msgstr ""
+"De tijdslimiet is bereikt. Gedeeltelijke voortgang opgeslagen — voer de "
+"actie opnieuw uit om verder te gaan."
 
 msgid "Renumber completed successfully."
-msgstr ""
+msgstr "Hernummering voltooid."
 
 msgid "XREF mapping"
-msgstr ""
+msgstr "XREF-toewijzing"
 
-#, fuzzy
-#| msgid "XREF"
 msgid "Old XREF"
-msgstr "XREF"
+msgstr "Oude XREF"
 
-#, fuzzy
-#| msgid "XREF"
 msgid "New XREF"
-msgstr "XREF"
+msgstr "Nieuwe XREF"
 
 msgid "Select a family tree"
-msgstr ""
+msgstr "Selecteer een stamboom"
 
 #, php-format
 msgid ""
 "The link index was last fully scanned at %s. Some linkenhancer links may not "
 "be detected in this pass."
 msgstr ""
+"De linkindex is voor het laatst volledig gescand op %s. Sommige linkenhancer-"
+"koppelingen worden mogelijk niet gedetecteerd tijdens deze uitvoering."
 
 #, php-format
 msgid "%s inbound link"
 msgid_plural "%s inbound links"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s inkomende koppeling"
+msgstr[1] "%s inkomende koppelingen"
 
 msgid "After the renumber the le_* index will be refreshed by the cron job."
-msgstr ""
+msgstr "Na de hernummering wordt de le_*-index door de cron-taak vernieuwd."
 
 msgid "After the renumber the le_* index will be updated inline."
-msgstr ""
+msgstr "Na de hernummering wordt de le_*-index direct bijgewerkt."
 
 msgid "reset to default"
 msgstr "terugzetten naar standaard"
@@ -1422,10 +1430,12 @@ msgid "Output of debug information on the JS console"
 msgstr "Uitvoer van debug-informatie op de JS-console"
 
 msgid "Enable PHP debug log output"
-msgstr ""
+msgstr "PHP-debugloguitvoer inschakelen"
 
 msgid "Also enabled per-request with ?debug=1 (non-sensitive info only)"
 msgstr ""
+"Wordt ook per verzoek geactiveerd met ?debug=1 (alleen voor niet-gevoelige "
+"informatie)"
 
 #~ msgid "tree"
 #~ msgstr "stamboom"

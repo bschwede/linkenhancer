@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-11 19:11+0200\n"
-"PO-Revision-Date: 2026-10-11 16:55+0000\n"
-"Last-Translator: gallegonovato <gallegonovato@noreply.codeberg.org>\n"
+"PO-Revision-Date: 2026-10-12 10:59+0000\n"
+"Last-Translator: Iberni2 <iberni2@noreply.codeberg.org>\n"
 "Language-Team: Spanish <https://translate.codeberg.org/projects/wt-modules/"
 "linkenhancer/es/>\n"
 "Language: es\n"
@@ -47,22 +47,17 @@ msgstr "Corregir tipo de letra wt= (establecer/reparar/eliminar)"
 msgid "Report dangling link targets"
 msgstr "Notificar enlaces rotos"
 
-#, fuzzy
-#| msgid ""
-#| "This fix reports le-links whose target record does not exist. No changes "
-#| "are made (report-only)."
 msgid ""
 "This fix reports linkenhancer links whose target record does not exist. No "
 "changes are made (report-only)."
 msgstr ""
-"Esta solución detecta los enlaces dinámicos (le-links) que apuntan a "
-"registros inexistentes. No se aplican cambios (solo informe)."
+"Esta solución solo detecta enlaces rotos de LinkEnhancer que apuntan a "
+"registros que ya no existen. No cambia nada, solo avisa."
 
 #. I18N: 1=xref, 2=tree name
-#, fuzzy, php-format
-#| msgid "no record %s in tree \"%s\""
+#, php-format
 msgid "no record %1$s in tree \"%2$s\""
-msgstr "sin registros %s en los árboles \"%s\""
+msgstr "El registro %1$s no está en el árbol \"%2$s\""
 
 #, php-format
 msgid "UID not found in tree \"%s\""
@@ -949,7 +944,7 @@ msgid "Set — add missing type letters"
 msgstr "Ajustar: rellenar letras iguales que falten"
 
 msgid "Repair — correct wrong type letters"
-msgstr "Reparar: corregir el indicador de tipo erróneo"
+msgstr "Corrección: corregir las letras de tipo incorrecto"
 
 msgid "Remove — strip all type letters"
 msgstr "Eliminar: limpiar indicadores de tipo en los enlaces"
@@ -1230,21 +1225,19 @@ msgid "Block modules"
 msgstr "bloquear los módulos"
 
 msgid "Process block modules"
-msgstr ""
+msgstr "Procesar módulos de bloques"
 
 msgid "checked"
-msgstr ""
+msgstr "Verificado"
 
 msgid "updated"
-msgstr ""
+msgstr "Actualizado"
 
-#, fuzzy
-#| msgid "Skipped"
 msgid "skipped"
-msgstr "Omitido"
+msgstr "omitido"
 
 msgid "change(s)"
-msgstr ""
+msgstr "Cambio(s)"
 
 msgid "Top menu"
 msgstr "Menú superior"
@@ -1364,47 +1357,52 @@ msgid ""
 "This renumbers the records whose XREF collides with another family tree, and "
 "keeps the linkenhancer links and the le_* index in sync."
 msgstr ""
+"Esta opción cambia la numeración de los registros cuando su XREF se duplica "
+"en otro árbol familiar. Así, los enlaces de LinkEnhancer y el índice le_* se "
+"mantienen sincronizados automáticamente."
 
 msgid ""
 "The time limit was reached. Partial progress saved — run again to continue."
 msgstr ""
+"Se acabó el tiempo, pero guardamos lo que se había hecho. Vuelve a ejecutar "
+"el proceso para continuar."
 
 msgid "Renumber completed successfully."
-msgstr ""
+msgstr "La numeración se cambió correctamente."
 
 msgid "XREF mapping"
-msgstr ""
+msgstr "Mapeo de XREF"
 
-#, fuzzy
-#| msgid "XREF"
 msgid "Old XREF"
-msgstr "XREF"
+msgstr "XREF original"
 
-#, fuzzy
-#| msgid "XREF"
 msgid "New XREF"
-msgstr "XREF"
+msgstr "XREF nuevo"
 
 msgid "Select a family tree"
-msgstr ""
+msgstr "Seleccione un árbol genealógico"
 
 #, php-format
 msgid ""
 "The link index was last fully scanned at %s. Some linkenhancer links may not "
 "be detected in this pass."
 msgstr ""
+"El índice de enlaces se revisó por última vez el %s. Es posible que algunos "
+"enlaces de LinkEnhancer no se detecten en esta vuelta."
 
 #, php-format
 msgid "%s inbound link"
 msgid_plural "%s inbound links"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Apunta a este registro: %s"
+msgstr[1] "Apuntan a este registro: %s"
 
 msgid "After the renumber the le_* index will be refreshed by the cron job."
 msgstr ""
+"Después del cambio de numeración, el trabajo programado (cron job) "
+"actualizará el índice le_*."
 
 msgid "After the renumber the le_* index will be updated inline."
-msgstr ""
+msgstr "Después de la renumeración, el índice le_* se actualizará en línea."
 
 msgid "reset to default"
 msgstr "restablecer a los valores predeterminados"
@@ -1445,7 +1443,7 @@ msgid "Output of debug information on the JS console"
 msgstr "Salida de información de depuración en la consola JS"
 
 msgid "Enable PHP debug log output"
-msgstr ""
+msgstr "Habilitar la salida del registro de depuración de PHP"
 
 msgid "Also enabled per-request with ?debug=1 (non-sensitive info only)"
 msgstr ""
