@@ -27,14 +27,14 @@ declare(strict_types=1);
 namespace Schwendinger\Webtrees\Module\LinkEnhancer\Services;
 
 use Fisharebest\Webtrees\I18N;
+use Schwendinger\Webtrees\Helpers\Functions;
 use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Tree;
-use Fisharebest\Webtrees\Validator;
-use Fisharebest\Webtrees\Webtrees;
 use Fisharebest\Webtrees\Services\ModuleService;
 use Psr\Http\Message\ServerRequestInterface;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
+use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
 use Schwendinger\Webtrees\Module\LinkEnhancer\SettingInterface;
 
 
@@ -57,24 +57,24 @@ final class MarkdownEditorActivationService
     {
         $default = [
             'handler' => [ // wt core edit pages
-                'EditFactPage',
-                'EditMainFieldsPage',
-                'EditNotePage',
-                'EditRecordPage',
-                'AddChildToFamilyPage',
-                'AddChildToIndividualPage',
+                'EditFact',
+                'EditMainFields',
+                'EditNote',
+                'EditRecord',
+                'AddChildToFamily',
+                'AddChildToIndividual',
                 'AddNewFact',
-                'AddParentToIndividualPage',
-                'AddSpouseToFamilyPage',
-                'AddSpouseToIndividualPage',
-                'AddUnlinkedPage',                
+                'AddParentToIndividual',
+                'AddSpouseToFamily',
+                'AddSpouseToIndividual',
+                'AddUnlinked',
             ],
             'filter' => [ // elements the mde should be applied to
                 "textarea[id$='NOTE']",
                 "textarea[id$='note']",
             ]
         ];
-        if (version_compare(Webtrees::VERSION, '2.2.5', '>=')) {
+        if (Functions::webtreesAtLeast('2.2.5')) {
             $default['filter'][] = "textarea[id$='_TODO']";
         }
         return $default;
@@ -150,8 +150,8 @@ final class MarkdownEditorActivationService
         if (!$request) {
             $request = Registry::container()->get(ServerRequestInterface::class);
         }
-        $route = Validator::attributes($request)->route();
-        $routename = basename(strtr($route->name ?? '/', ['\\' => '/']));
+        $route = Utils::getActiveRoute($request);
+        $routename = basename(strtr($route['handler_key'] ?? '/', ['\\' => '/']));
 
         $handler = $this->getEffectiveRules()['handler'];
 
