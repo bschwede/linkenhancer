@@ -16,6 +16,7 @@ use Fisharebest\Webtrees\Validator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Schwendinger\Webtrees\Helpers\MoreI18N;
+use Schwendinger\Webtrees\Helpers\ClassName;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\IndexRebuildScheduler;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\RenumberWithLinksService;
@@ -105,7 +106,7 @@ final class RenumberActionHandler
             }
         }
 
-        $redirect = route('module', ['module' => $module->name(), 'action' => 'AdminRenumber']
+        $redirect = route(ClassName::get(ClassName::MODULE), ['module' => $module->name(), 'action' => 'AdminRenumber']
             + ($tree_id > 0 ? ['target_tree' => $tree_id] : []));
 
         if ($tree === null) {

@@ -6,22 +6,23 @@ namespace Schwendinger\Webtrees\Module\LinkEnhancer\Services;
 
 use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\FlashMessages;
-use Fisharebest\Webtrees\Http\RequestHandlers\HomePage;
-use Fisharebest\Webtrees\Http\RequestHandlers\TreePage;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Session;
 use Fisharebest\Webtrees\Validator;
+use Fisharebest\Webtrees\Module\ModuleTabInterface;
+use Fisharebest\Webtrees\Http\RequestHandlers\ModuleAction; // also in wt2.3
 use Psr\Http\Message\ServerRequestInterface;
 use Schwendinger\Webtrees\Helpers\Functions;
 use Schwendinger\Webtrees\Helpers\MoreI18N;
+use Schwendinger\Webtrees\Helpers\ClassName;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoUidTreeAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpMdAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpWtCoreAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpWthbAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\XrefDetailData;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils as Utils;
-use Fisharebest\Webtrees\Module\ModuleTabInterface;
 
 use function boolval;
 use function e;
@@ -103,13 +104,13 @@ final class ContentBuilder
             if (Auth::isAdmin()) {
                 $admin_settings[] = [ 
                     'title' => $module->title() . ' - ' . I18N::translate('Settings'),
-                    'url' => route('module', ['module' => $module->name(), 'action' => 'Admin']),
+                    'url' => route(ModuleAction::class, ['module' => $module->name(), 'action' => 'Admin']),
                 ];
 
                 if (class_exists('\Schwendinger\Webtrees\Module\Cronjob\CronjobModule')) {
                     $admin_settings[] = [
                         'title' => MoreI18N::xlate('Cron Job Scheduler') . ' - ' . I18N::translate('Settings'),
-                        'url' => route('module', ['module' => '_cronjob_', 'action' => 'Admin']),
+                        'url' => route(ModuleAction::class, ['module' => '_cronjob_', 'action' => 'Admin']),
                     ];
                 }
             }
@@ -153,10 +154,10 @@ final class ContentBuilder
             $target = '';
             switch ($cfg_home_type) {
                 case 1:
-                    $url = route(TreePage::class, $params);
+                    $url = route(ClassName::get(ClassName::TREE_PAGE), $params);
                     break;
                 case 2:
-                    $url = route(HomePage::class, $params);
+                    $url = route(ClassName::get(ClassName::HOME_PAGE), $params);
                     break;
                 case 3:
                     $url = $module->getPref(LinkEnhancerModule::PREF_HOME_LINK_URL);
@@ -169,7 +170,7 @@ final class ContentBuilder
 
         // --- UID search in quick search field
         if ($module->getPref(LinkEnhancerModule::PREF_UID_ACTIVE, true) && $tree !== null) {
-            $uid_route = route('le.goto-uid.tree', ['tree' => $tree->name(), 'uid' => '__UID__']);
+            $uid_route = route(GotoUidTreeAction::class, ['tree' => $tree->name(), 'uid' => '__UID__']);
             $this->docReadyJs .= '
 (function(){
     var f = document.querySelector("form.wt-header-search-form");
@@ -206,7 +207,7 @@ final class ContentBuilder
                 'openInNewTab' => $module->getPref(LinkEnhancerModule::PREF_LINKSPP_OPEN_IN_NEW_TAB, true),
                 'uidActive'    => $module->getPref(LinkEnhancerModule::PREF_UID_ACTIVE, true),
                 'tree'         => $treename,
-                'baseurl'      => route(TreePage::class, ['tree' => $treename]),
+                'baseurl'      => route(ClassName::get(ClassName::TREE_PAGE), ['tree' => $treename]),
                 'urlmode'      => (Validator::attributes($request)->boolean('rewrite_urls', false) ? 'pretty' : 'default'),
             ];
             $this->docReadyJs .= "LinkEnhMod.initLE($lecfg, " . json_encode($options) . ");";

@@ -6,6 +6,7 @@ namespace Schwendinger\Webtrees\Module\LinkEnhancer\Services;
 
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Services\TreeService;
+use Schwendinger\Webtrees\Helpers\ClassName;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 
 use function count;
@@ -44,24 +45,25 @@ final class AdminSettingsBuilder
         $response['jscode_linkpp'] = $jscode;
 
         $response['links'] = [];
-        $response['links']['csvexport'] = route('module', [
+        $moduleClass = ClassName::get(ClassName::MODULE);
+        $response['links']['csvexport'] = route($moduleClass, [
             'module' => $module->name(),
             'action' => 'AdminCsvExport'
         ]);
-        $response['links']['csvimport'] = route('module', [
+        $response['links']['csvimport'] = route($moduleClass, [
             'module' => $module->name(),
             'action' => 'AdminCsvImport'
         ]);
-        $response['links']['routeimport'] = route('module', [
+        $response['links']['routeimport'] = route($moduleClass, [
             'module' => $module->name(),
             'action' => 'AdminImportRoutes'
         ]);
-        $response['links']['resetroutes'] = route('module', [
+        $response['links']['resetroutes'] = route($moduleClass, [
             'module' => $module->name(),
             'action' => 'AdminResetRoutes'
         ]);
         $response['links']['csvexportcmm'] = ($module->wthb()->isCmmAvailable() ?
-            route('module', [
+            route($moduleClass, [
                 'module' => $module->name(),
                 'action' => 'AdminCmmConfig2Csv'
             ])

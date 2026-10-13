@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Tree;
 use Schwendinger\Webtrees\Helpers\MoreI18N;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\DataFixRebuildIndexAction;
 
 /**
  * @var Tree                   $tree
@@ -61,7 +62,7 @@ if ($uid_status) {
 <?php if ($tree instanceof Tree): ?>
 <script>
 (function() {
-    var rebuildUrl = <?= json_encode(route('le.datafix-rebuild-index', ['tree' => $tree->name()]), JSON_THROW_ON_ERROR) ?>;
+    var rebuildUrl = <?= json_encode(route(DataFixRebuildIndexAction::class, ['tree' => $tree->name()]), JSON_THROW_ON_ERROR) ?>;
     document.querySelectorAll('[data-rebuild]').forEach(function(btn) {
         btn.addEventListener('click', function() {
             var index = this.dataset.rebuild;

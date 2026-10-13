@@ -125,7 +125,7 @@ $count = count($xrefs);
 
 <script>
 document.getElementById('renumber-tree').addEventListener('change', function (e) {
-    const url = '<?= route('module', ['module' => $module->name(), 'action' => 'AdminRenumber', 'target_tree' => 'X']) ?>';
+    const url = '<?= route(ClassName::get(ClassName::MODULE), ['module' => $module->name(), 'action' => 'AdminRenumber', 'target_tree' => 'X']) ?>';
     const tree = e.target.value ?? 0;
     location.href = url.replace(/target_tree=X/, `target_tree=${tree}`);
 });
@@ -163,7 +163,7 @@ document.getElementById('renumber-tree').addEventListener('change', function (e)
                 : I18N::translate('After the renumber the le_* index will be updated inline.')) ?>
         </p>
 
-        <form method="post" action="<?= e(route('module', ['module' => $module->name(), 'action' => 'AdminRenumber'])) ?>">
+        <form method="post" action="<?= e(route(ClassName::get(ClassName::MODULE), ['module' => $module->name(), 'action' => 'AdminRenumber'])) ?>">
             <input type="hidden" name="target_tree" value="<?= (int) $tree->id() ?>">
 
             <div class="alert alert-warning">

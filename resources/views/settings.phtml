@@ -71,7 +71,7 @@ $module = Registry::container()->get(LinkEnhancerModule::class);
 <!-- XREF Overview link -->
 <div class="row mt-5">
     <p class="col-sm-3 text-center">
-        <a href="<?= route('module', ['module' => $module->name(), 'action' => 'AdminXrefOverview']) ?>" class="btn btn-outline-primary">
+        <a href="<?= route(ClassName::get(ClassName::MODULE), ['module' => $module->name(), 'action' => 'AdminXrefOverview']) ?>" class="btn btn-outline-primary">
             <?= I18N::translate('Cross-Reference Overview') ?>
         </a>
     </p>
@@ -83,7 +83,7 @@ $module = Registry::container()->get(LinkEnhancerModule::class);
 <!-- Renumber XREFs link -->
 <div class="row mt-3">
     <p class="col-sm-3 text-center">
-        <a href="<?= route('module', ['module' => $module->name(), 'action' => 'AdminRenumber']) ?>" class="btn btn-outline-primary">
+        <a href="<?= route(ClassName::get(ClassName::MODULE), ['module' => $module->name(), 'action' => 'AdminRenumber']) ?>" class="btn btn-outline-primary">
             <?= MoreI18N::xlate('Renumber XREFs') ?>
         </a>
     </p>

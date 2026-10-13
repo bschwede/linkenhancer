@@ -39,6 +39,7 @@ use Fisharebest\Webtrees\Module\ModuleConfigInterface;
 use Fisharebest\Webtrees\Module\ModuleDataFixInterface;
 use Fisharebest\Webtrees\Module\ModuleConfigTrait;
 use Fisharebest\Webtrees\Module\ModuleCustomInterface;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoIdTreeAction;
 use Schwendinger\Webtrees\Traits\ModuleCustomTrait;
 use Fisharebest\Webtrees\Module\ModuleGlobalInterface;
 use Fisharebest\Webtrees\Module\ModuleGlobalTrait;
@@ -65,6 +66,7 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\DataFixBlocks
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\DataFixRebuildIndexAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoIdAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoUidAction;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoUidTreeAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoXrefAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpMdAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\HelpWtCoreAction;
@@ -440,20 +442,20 @@ class LinkEnhancerModule extends AbstractModule implements
 
         if ($this->getPref(self::PREF_UID_ACTIVE, true)) {
             // use unique custom name, if different routes use the same handler class
-            Functions::registerRoute('/tree/{tree}/goto-uid/{uid}', 'le.goto-uid.tree', GotoUidAction::class);
-            Functions::registerRoute('/goto-uid/{uid}', 'le.goto-uid.global', GotoUidAction::class);
-            Functions::registerRoute('/tree/{tree}/goto-id/{id}', 'le.goto-id.tree', GotoIdAction::class);
-            Functions::registerRoute('/goto-id/{id}', 'le.goto-id.global', GotoIdAction::class);
+            Functions::registerRoute('/tree/{tree}/goto-uid/{uid}', GotoUidTreeAction::class);
+            Functions::registerRoute('/goto-uid/{uid}', GotoUidAction::class);
+            Functions::registerRoute('/tree/{tree}/goto-id/{id}', GotoIdTreeAction::class);
+            Functions::registerRoute('/goto-id/{id}', GotoIdAction::class);
         }
 
         // XREF overview - server-side DataTables data endpoint (admin only)
         Functions::registerRoute('/admin-xref-overview-data', AdminXrefOverviewData::class);
 
         // Datafix: process block modules (AJAX POST)
-        Functions::registerRoute('/admin/datafix-process-blocks/{tree}', 'le.datafix-process-blocks', DataFixBlocksAction::class, [], true);
+        Functions::registerRoute('/admin/datafix-process-blocks/{tree}', DataFixBlocksAction::class, DataFixBlocksAction::class, [], true);
 
         // Datafix: trigger index rebuild (AJAX POST)
-        Functions::registerRoute('/admin/datafix-rebuild-index/{tree}', 'le.datafix-rebuild-index', DataFixRebuildIndexAction::class, [], true);
+        Functions::registerRoute('/admin/datafix-rebuild-index/{tree}', DataFixRebuildIndexAction::class, DataFixRebuildIndexAction::class, [], true);
     }
  
 
@@ -840,10 +842,10 @@ class LinkEnhancerModule extends AbstractModule implements
     public function listUrl(Tree $tree, array $parameters = []): string
     {
         if (Auth::isAdmin()) {
-            return route('module', ['module' => $this->name(), 'action' => 'AdminXrefOverview', 'tree' => $tree->name()]);
+            return route(ClassName::get(ClassName::MODULE), ['module' => $this->name(), 'action' => 'AdminXrefOverview', 'tree' => $tree->name()]);
         }
 
-        return route('module', [
+        return route(ClassName::get(ClassName::MODULE), [
                 'module' => $this->name(),
                 'action' => 'List',
                 'tree'    => $tree->name(),

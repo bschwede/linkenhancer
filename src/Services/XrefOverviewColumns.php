@@ -33,6 +33,7 @@ use Fisharebest\Webtrees\GedcomRecord;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Services\TreeService;
 use Fisharebest\Webtrees\Tree;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\GotoIdAction;
 use Throwable;
 use Schwendinger\Webtrees\Helpers\ClassName;
 use Schwendinger\Webtrees\Helpers\Functions;
@@ -419,7 +420,7 @@ final class XrefOverviewColumns
 
         $action = $module_name === '_vesta_classic_look_and_feel_' ? 'Admin2Edit' : 'AdminEdit';
 
-        return route('module-tree', [
+        return route(ClassName::get(ClassName::MODULE), [ //'module-tree'
             'module'   => $module_name,
             'action'   => $action,
             'tree'     => $url_tree->name(),
@@ -629,7 +630,7 @@ final class XrefOverviewColumns
 
         $goto_url = '';
         try {
-            $goto_url = route('le.goto-id.global', ['id' => $id]);
+            $goto_url = route(GotoIdAction::class, ['id' => $id]);
         } catch (Throwable) {
             // route not registered (PREF_UID_ACTIVE off) - the list still works,
             // only the >3 goto link degrades
