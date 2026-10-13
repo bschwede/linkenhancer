@@ -120,7 +120,7 @@ if ($lock === false || !flock($lock, LOCK_EX | LOCK_NB)) {
     exit(0);
 }
 
-$table_prefix = DB::getTablePrefix();
+$table_prefix = DB::prefix('');
 
 // ------------------------------------------------------------- flush
 // --flush (without --rebuild): empty the index tables and stop. The meta
@@ -132,9 +132,9 @@ if ($flush && !$rebuild) {
         DB::table(XrefsService::INDEX_LINK_TABLE)->where('file', '=', $tree_id)->delete();
         DB::table(XrefsService::INDEX_SCAN_TABLE)->where('file', '=', $tree_id)->delete();
     } else {
-        DB::statement('TRUNCATE TABLE ' . $table_prefix . XrefsService::INDEX_LINK_TABLE);
-        DB::statement('TRUNCATE TABLE ' . $table_prefix . XrefsService::INDEX_SCAN_TABLE);
-        DB::statement('TRUNCATE TABLE ' . $table_prefix . XrefsService::INDEX_META_TABLE);
+        DB::exec('TRUNCATE TABLE ' . $table_prefix . XrefsService::INDEX_LINK_TABLE);
+        DB::exec('TRUNCATE TABLE ' . $table_prefix . XrefsService::INDEX_SCAN_TABLE);
+        DB::exec('TRUNCATE TABLE ' . $table_prefix . XrefsService::INDEX_META_TABLE);
     }
     DB::table(XrefsService::INDEX_META_TABLE)
         ->where('id', '=', 1)
@@ -223,8 +223,8 @@ if ($is_initial) {
         DB::table(XrefsService::INDEX_LINK_TABLE)->where('file', '=', $tree_id)->delete();
         DB::table(XrefsService::INDEX_SCAN_TABLE)->where('file', '=', $tree_id)->delete();
     } else {
-        DB::statement('TRUNCATE TABLE ' . $table_prefix . XrefsService::INDEX_LINK_TABLE);
-        DB::statement('TRUNCATE TABLE ' . $table_prefix . XrefsService::INDEX_SCAN_TABLE);
+        DB::exec('TRUNCATE TABLE ' . $table_prefix . XrefsService::INDEX_LINK_TABLE);
+        DB::exec('TRUNCATE TABLE ' . $table_prefix . XrefsService::INDEX_SCAN_TABLE);
     }
 
     // Bulk scan rows: pure SQL, server-side, zero row transfer.
@@ -240,7 +240,7 @@ if ($is_initial) {
         if ($tree_id > 0) {
             $sql .= ($rectype === 'OTHER' ? ' AND ' : ' WHERE ') . $prefix . '_file = ' . $tree_id;
         }
-        DB::statement($sql);
+        DB::exec($sql);
     }
 
     // Candidate pass: only records that pass the link pre-filter (same

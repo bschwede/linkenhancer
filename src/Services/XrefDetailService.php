@@ -97,7 +97,7 @@ final class XrefDetailService
     {
         $uids = UidIndexService::uidsForRecord((int) $tree->id(), $xref);
 
-        $table_prefix = DB::getTablePrefix();
+        $table_prefix = DB::prefix('');
         $rows = DB::table(XrefsService::INDEX_SCAN_TABLE . ' AS s')
             ->join(XrefsService::INDEX_LINK_TABLE . ' AS l', static function ($join): void {
                 $join->on('l.file', '=', 's.file')

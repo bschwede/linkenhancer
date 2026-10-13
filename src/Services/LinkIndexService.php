@@ -105,7 +105,7 @@ final class LinkIndexService
     public static function getBlockQuery(Tree|null $tree, array $rectypes, bool $index_mode = false, int|null $user_id = null, string $filter_xref = ''): ?Builder
     {
         $module_names = self::blockModuleNames();
-        $table_prefix = DB::getTablePrefix();
+        $table_prefix = DB::prefix('');
 
         if ($rectypes !== []) {
             $module_names = array_values(array_intersect($module_names, $rectypes));
@@ -225,7 +225,7 @@ final class LinkIndexService
      */
     private static function getGedcomRecTypeSubquery(array $params, string $xref = Gedcom::REGEX_XREF, int|null $file = null): Builder
     {
-        $table_prefix = DB::getTablePrefix();
+        $table_prefix = DB::prefix('');
         $p = $params['prefix'];
 
         $subquery = DB::table($params['table'] . " AS {$p}")
@@ -277,7 +277,7 @@ final class LinkIndexService
      */
     public static function getIndexQuery(Tree|null $tree = null, ?string $target_xref = null, array $rectypes = [], bool $ordered = true): Builder
     {
-        $table_prefix = DB::getTablePrefix();
+        $table_prefix = DB::prefix('');
         $links = DB::table(XrefsService::INDEX_LINK_TABLE)
             ->distinct()
             ->select('file', 'xref', 'rectype');
