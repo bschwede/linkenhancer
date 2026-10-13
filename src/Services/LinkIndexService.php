@@ -22,6 +22,7 @@ use function array_unique;
 use function array_values;
 use function count;
 use function in_array;
+use function preg_quote;
 use function strtotime;
 use function time;
 
@@ -231,21 +232,30 @@ final class LinkIndexService
 
         $subquery = DB::table($params['table'] . " AS {$p}")
             ->select([
-                new Expression("{$table_prefix}{$p}.{$p}_file AS file"),
                 new Expression("{$table_prefix}{$p}.{$p}_id AS xref"),
+                new Expression("{$table_prefix}{$p}.{$p}_file AS file"),
                 new Expression($params['typestr'] . ' AS type'),
+                new Expression("{$table_prefix}{$p}.{$p}_gedcom AS gedcom"),
                 new Expression('NULL AS block_id'),
                 new Expression('NULL AS user_id'),
             ]);
 
         if ($file !== null) {
-            $subquery->where("{$p}.{$p}_id", '=', $file);
+            $subquery->where("{$p}.{$p}_file", '=', $file);
         }
 
         if (self::supportsRegexp()) {
-            $subquery->where("{$p}.{$p}_gedcom", DB::regexOperator(), XrefsService::LIKE_XREF_PREDICATE);
+            $subquery->where("{$p}.{$p}_gedcom", DB::regexOperator(), XrefsService::REGEX_XREF_PREDICATE);
         } else {
             $subquery->where("{$p}.{$p}_gedcom", 'like', XrefsService::LIKE_XREF_PREDICATE);
+        }
+
+        if ($xref !== Gedcom::REGEX_XREF) {
+            if (self::supportsRegexp()) {
+                $subquery->where("{$p}.{$p}_gedcom", DB::regexOperator(), '@' . preg_quote($xref, '@') . '@');
+            } else {
+                $subquery->where("{$p}.{$p}_gedcom", 'like', '%@' . $xref . '@%');
+            }
         }
 
         return $subquery;

@@ -167,6 +167,7 @@ final class XrefsService { // stuff related with handling cross-references
      * fetched as candidates.
      */
     public const LIKE_XREF_PREDICATE = '%@%@';
+    public const REGEX_XREF_PREDICATE = '@[A-Za-z0-9:_.-]{1,20}@';
 
     /**
      * Mirror of Fisharebest\Webtrees\Gedcom::REGEX_XREF - the XREF format
