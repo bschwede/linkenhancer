@@ -63,6 +63,7 @@ require __DIR__ . '/../autoload.php';
 
 use Fisharebest\Webtrees\DB;
 use Fisharebest\Webtrees\Webtrees;
+use Illuminate\Database\Query\Expression;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\UidIndexService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 use Schwendinger\Webtrees\Services\CliBootstrap;
@@ -226,8 +227,8 @@ if ($is_initial) {
                 $idcol . ' AS xref',
                 $filecol . ' AS file',
                 $gedcomcol . ' AS gedcom',
-                $rectype === 'OTHER' ? 'o_type' : DB::raw("'" . $rectype . "' AS o_type"),
-                DB::raw('MD5(' . $gedcomcol . ') AS hash'),
+                $rectype === 'OTHER' ? 'o_type' : new Expression("'" . $rectype . "' AS o_type"),
+                new Expression('MD5(' . $gedcomcol . ') AS hash'),
             ]);
             if ($batch->isEmpty()) {
                 break;
@@ -264,7 +265,7 @@ if ($is_initial) {
                 if ($rectype === 'OTHER') {
                     $join->on('t.o_type', '=', 's.rectype');
                 } else {
-                    $join->on('s.rectype', '=', DB::raw("'" . $rectype . "'"));
+                    $join->on('s.rectype', '=', new Expression("'" . $rectype . "'"));
                 }
             })
             ->whereNull('t.' . $idcol);
@@ -308,7 +309,7 @@ if ($is_initial) {
                     if ($rectype === 'OTHER') {
                         $join->on('t.o_type', '=', 's.rectype');
                     } else {
-                        $join->on('s.rectype', '=', DB::raw("'" . $rectype . "'"));
+                        $join->on('s.rectype', '=', new Expression("'" . $rectype . "'"));
                     }
                 })
                 ->whereRaw($table_prefix . 't.' . $idcol . ' > ?', [$cursor])
@@ -318,8 +319,8 @@ if ($is_initial) {
                     't.' . $idcol . ' AS xref',
                     't.' . $filecol . ' AS file',
                     't.' . $gedcomcol . ' AS gedcom',
-                    $rectype === 'OTHER' ? 't.o_type' : DB::raw("'" . $rectype . "' AS o_type"),
-                    DB::raw("MD5({$table_prefix}t." . $gedcomcol . ') AS hash'),
+                    $rectype === 'OTHER' ? 't.o_type' : new Expression("'" . $rectype . "' AS o_type"),
+                    new Expression("MD5({$table_prefix}t." . $gedcomcol . ') AS hash'),
                 ])
                 ->orderBy('t.' . $idcol)
                 ->limit($n);
@@ -363,7 +364,7 @@ if ($is_initial) {
                 })
                 ->whereNotExists(static function ($q) use ($prefix, $rectype, $table_prefix): void {
                     $q->from(UidIndexService::UID_INDEX_TABLE . ' AS s')
-                        ->select(DB::raw('1'))
+                        ->select(new Expression('1'))
                         ->whereRaw($table_prefix . "s.file = {$table_prefix}t." . $prefix . '_file')
                         ->whereRaw($table_prefix . "s.xref = {$table_prefix}t." . $prefix . '_id');
                     if ($rectype === 'OTHER') {
@@ -376,8 +377,8 @@ if ($is_initial) {
                     't.' . $idcol . ' AS xref',
                     't.' . $filecol . ' AS file',
                     't.' . $gedcomcol . ' AS gedcom',
-                    $rectype === 'OTHER' ? 't.o_type' : DB::raw("'" . $rectype . "' AS o_type"),
-                    DB::raw("MD5({$table_prefix}t." . $gedcomcol . ') AS hash'),
+                    $rectype === 'OTHER' ? 't.o_type' : new Expression("'" . $rectype . "' AS o_type"),
+                    new Expression("MD5({$table_prefix}t." . $gedcomcol . ') AS hash'),
                 ])
                 ->orderBy('t.' . $idcol)
                 ->limit($n);

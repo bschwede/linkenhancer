@@ -60,6 +60,7 @@ require __DIR__ . '/../autoload.php';
 use Fisharebest\Webtrees\DB;
 use Fisharebest\Webtrees\Gedcom;
 use Fisharebest\Webtrees\Webtrees;
+use Illuminate\Database\Query\Expression;
 use Schwendinger\Webtrees\Services\CliBootstrap;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\IdResolver;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\TextTagCollector;
@@ -279,7 +280,7 @@ if ($is_initial) {
                 $idcol . ' AS xref',
                 $filecol . ' AS file',
                 $gedcomcol . ' AS gedcom',
-                $rectype === 'OTHER' ? 'o_type' : DB::raw("'" . $rectype . "' AS o_type"),
+                $rectype === 'OTHER' ? 'o_type' : new Expression("'" . $rectype . "' AS o_type"),
             ]);
             if ($batch->isEmpty()) {
                 break;
@@ -316,7 +317,7 @@ if ($is_initial) {
                 if ($rectype === 'OTHER') {
                     $join->on('t.o_type', '=', 's.rectype');
                 } else {
-                    $join->on('s.rectype', '=', DB::raw("'" . $rectype . "'"));
+                    $join->on('s.rectype', '=', new Expression("'" . $rectype . "'"));
                 }
             })
             ->whereNull('t.' . $idcol);
@@ -358,7 +359,7 @@ if ($is_initial) {
                     if ($rectype === 'OTHER') {
                         $join->on('s.rectype', '=', 't.o_type');
                     } else {
-                        $join->on('s.rectype', '=', DB::raw("'" . $rectype . "'"));
+                        $join->on('s.rectype', '=', new Expression("'" . $rectype . "'"));
                     }
                 })
                 ->whereRaw($table_prefix . 't.' . $idcol . ' > ?', [$cursor])
@@ -367,8 +368,8 @@ if ($is_initial) {
                     't.' . $idcol . ' AS xref',
                     't.' . $filecol . ' AS file',
                     't.' . $gedcomcol . ' AS gedcom',
-                    $rectype === 'OTHER' ? 't.o_type' : DB::raw("'" . $rectype . "' AS o_type"),
-                    DB::raw("MD5({$table_prefix}t." . $gedcomcol . ') AS hash'),
+                    $rectype === 'OTHER' ? 't.o_type' : new Expression("'" . $rectype . "' AS o_type"),
+                    new Expression("MD5({$table_prefix}t." . $gedcomcol . ') AS hash'),
                 ])
                 ->orderBy('t.' . $idcol)
                 ->limit($n);

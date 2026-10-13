@@ -32,6 +32,7 @@ use Fisharebest\Webtrees\GedcomRecord;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Services\TreeService;
 use Fisharebest\Webtrees\Tree;
+use Illuminate\Database\Query\Expression;
 use Schwendinger\Webtrees\Helpers\Functions;
 
 /**
@@ -119,7 +120,7 @@ final class XrefDetailService
                     }
                 });
             })
-            ->select(['s.file', 's.xref', DB::raw("{$table_prefix}s.rectype AS rectype"), DB::raw('COUNT(*) AS link_count')])
+            ->select(['s.file', 's.xref', new Expression("{$table_prefix}s.rectype AS rectype"), new Expression('COUNT(*) AS link_count')])
             ->groupBy('s.file', 's.xref', 's.rectype')
             ->orderBy('s.file')
             ->orderBy('s.rectype')
@@ -212,7 +213,7 @@ final class XrefDetailService
 
             $rows = $query
                 ->groupBy('b.block_id', 'b.gedcom_id', 'b.module_name')
-                ->select(['b.block_id', 'b.gedcom_id', 'b.module_name', DB::raw('COUNT(*) AS link_count')])
+                ->select(['b.block_id', 'b.gedcom_id', 'b.module_name', new Expression('COUNT(*) AS link_count')])
                 ->get();
 
             foreach ($rows as $row) {
