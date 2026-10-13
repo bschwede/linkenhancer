@@ -231,21 +231,21 @@ final class LinkIndexService
 
         $subquery = DB::table($params['table'] . " AS {$p}")
             ->select([
-                new Expression("{$p}.{$table_prefix}id AS file"),
-                new Expression("{$p}._id AS xref"),
+                new Expression("{$table_prefix}{$p}.{$p}_file AS file"),
+                new Expression("{$table_prefix}{$p}.{$p}_id AS xref"),
                 new Expression($params['typestr'] . ' AS type'),
                 new Expression('NULL AS block_id'),
                 new Expression('NULL AS user_id'),
             ]);
 
         if ($file !== null) {
-            $subquery->where("{$p}.{$table_prefix}id", '=', $file);
+            $subquery->where("{$p}.{$p}_id", '=', $file);
         }
 
         if (self::supportsRegexp()) {
-            $subquery->where("{$p}.gedcom", DB::regexOperator(), XrefsService::LIKE_XREF_PREDICATE);
+            $subquery->where("{$p}.{$p}_gedcom", DB::regexOperator(), XrefsService::LIKE_XREF_PREDICATE);
         } else {
-            $subquery->where("{$p}.gedcom", 'like', XrefsService::LIKE_XREF_PREDICATE);
+            $subquery->where("{$p}.{$p}_gedcom", 'like', XrefsService::LIKE_XREF_PREDICATE);
         }
 
         return $subquery;
