@@ -75,7 +75,7 @@ class WthbService { // stuff related to webtrees manual link handling
     {
         $data = [];
 
-        $header = fgetcsv($stream, null, $separator);
+        $header = fgetcsv($stream, null, $separator, "\"", "\\");
         $hdrcnt = count($header);
         
         $err_empty = [];
@@ -84,7 +84,7 @@ class WthbService { // stuff related to webtrees manual link handling
         $linenum = 2;
         $rowtotal = 0;
 
-        while (($row = fgetcsv($stream, null, $separator)) !== false) {
+        while (($row = fgetcsv($stream, null, $separator, "\"", "\\")) !== false) {
             $rowcnt = count($row);
             if ($rowcnt === $hdrcnt) {
                 $data[] = array_combine($header, $row);
