@@ -11,7 +11,6 @@ use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Session;
 use Fisharebest\Webtrees\Validator;
 use Fisharebest\Webtrees\Module\ModuleTabInterface;
-use Fisharebest\Webtrees\Http\RequestHandlers\ModuleAction; // also in wt2.3
 use Psr\Http\Message\ServerRequestInterface;
 use Schwendinger\Webtrees\Helpers\Functions;
 use Schwendinger\Webtrees\Helpers\MoreI18N;
@@ -104,13 +103,13 @@ final class ContentBuilder
             if (Auth::isAdmin()) {
                 $admin_settings[] = [ 
                     'title' => $module->title() . ' - ' . I18N::translate('Settings'),
-                    'url' => route(ModuleAction::class, ['module' => $module->name(), 'action' => 'Admin']),
+                    'url' => route(ClassName::get(ClassName::MODULE), ['module' => $module->name(), 'action' => 'Admin']),
                 ];
 
                 if (class_exists('\Schwendinger\Webtrees\Module\Cronjob\CronjobModule')) {
                     $admin_settings[] = [
                         'title' => MoreI18N::xlate('Cron Job Scheduler') . ' - ' . I18N::translate('Settings'),
-                        'url' => route(ModuleAction::class, ['module' => '_cronjob_', 'action' => 'Admin']),
+                        'url' => route(ClassName::get(ClassName::MODULE), ['module' => '_cronjob_', 'action' => 'Admin']),
                     ];
                 }
             }
