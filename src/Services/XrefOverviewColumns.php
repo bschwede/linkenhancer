@@ -420,7 +420,7 @@ final class XrefOverviewColumns
 
         $action = $module_name === '_vesta_classic_look_and_feel_' ? 'Admin2Edit' : 'AdminEdit';
 
-        return route(ClassName::get(ClassName::MODULE), [ //'module-tree'
+        return route(ClassName::get(ClassName::MODULE_TREE), [ //'module-tree'
             'module'   => $module_name,
             'action'   => $action,
             'tree'     => $url_tree->name(),
