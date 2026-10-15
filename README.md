@@ -453,7 +453,7 @@ Just activate the option "Output of debug information on the JS console" in orde
 <a name="xref-overview"></a>
 ### Cross-reference overview
 
-The cross-reference overview admin page (Control panel → LinkEnhancer → Cross-reference overview) is a server-side paginated DataTable. It lists all records that contain classic `@XREF@` cross-references or linkenhancer links, with a per-record link inventory. Optional filters: referenced XREF (only available while a fresh link index is active - in live-scan mode the field is hidden, because it would only be a coarse pre-filter there), record type, tree, and the number of tokens shown per link class (all / 5 / 10 / 20, default 5). The XREF cell shows the tree name as a second muted line; the type is its own sortable column. Each inventory token is displayed as a short display context (snippet) with the link token itself in bold.
+The cross-reference overview admin page (Control panel → LinkEnhancer → Cross-reference overview) is a server-side paginated DataTable. It lists all records that contain classic `@XREF@` cross-references or linkenhancer links, with a per-record link inventory. Optional filters: referenced XREF (only available while a fresh link index is active - in live-scan mode the field is hidden, because it would only be a coarse pre-filter there - no classic references are found), record type, tree, and the number of tokens shown per link class (all / 5 / 10 / 20, default 5). The XREF cell shows the tree name as a second muted line; the type is its own sortable column. Each inventory token is displayed as a short display context (snippet) with the link token itself in bold.
 
 Optionally you can enable an user overview per tree and a list of incoming and outgoing references per GEDCOM record.
 

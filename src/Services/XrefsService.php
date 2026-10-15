@@ -161,13 +161,13 @@ final class XrefsService { // stuff related with handling cross-references
     public const REGEXP_DRIVERS = [DB::MARIADB, DB::MYSQL, DB::POSTGRESQL];
 
     /**
-     * Limited mode (no REGEXP support): coarse LIKE over-approximation of
-     * "the text contains an @xref-like pair". The PHP link classifier
+     * Live scan limited mode: coarse over-approximation of
+     * "the text contains an #@ linkenhancer construct". The PHP link classifier
      * stays the source of truth - this only decides which records are
-     * fetched as candidates.
+     * fetched as candidates. Doesn't find classic xrefs!
      */
-    public const LIKE_XREF_PREDICATE = '%@%@';
-    public const REGEX_XREF_PREDICATE = '@[A-Za-z0-9:_.-]{1,20}@';
+    public const LIKE_LIVESCAN_PREDICATE = '%](#@%';
+    public const REGEX_LIVESCAN_PREDICATE = '\]\(#@';
 
     /**
      * Mirror of Fisharebest\Webtrees\Gedcom::REGEX_XREF - the XREF format

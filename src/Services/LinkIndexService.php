@@ -245,9 +245,9 @@ final class LinkIndexService
         }
 
         if (self::supportsRegexp()) {
-            $subquery->where("{$p}.{$p}_gedcom", DB::regexOperator(), XrefsService::REGEX_XREF_PREDICATE);
+            $subquery->where("{$p}.{$p}_gedcom", DB::regexOperator(), XrefsService::REGEX_LIVESCAN_PREDICATE);
         } else {
-            $subquery->where("{$p}.{$p}_gedcom", 'like', XrefsService::LIKE_XREF_PREDICATE);
+            $subquery->where("{$p}.{$p}_gedcom", 'like', XrefsService::LIKE_LIVESCAN_PREDICATE);
         }
 
         if ($xref !== Gedcom::REGEX_XREF) {
