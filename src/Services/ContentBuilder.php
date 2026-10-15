@@ -216,7 +216,7 @@ final class ContentBuilder
             $handler_key = Functions::canonicalHandlerKey($activeRouteInfo['handler'] ?? '');
             $record_type = LinkEnhancerModule::XREF_DETAIL_HANDLER_KEYS[$handler_key] ?? null;
             if ($record_type !== null && $xref_attr !== '' && $tree !== null
-                && $module->accessLevel($tree, ModuleTabInterface::class) >= Auth::accessLevel($tree, Validator::attributes($request)->user())) {
+                && Functions::moduleAllowsUserAccess($module->accessLevel($tree, ModuleTabInterface::class), Auth::accessLevel($tree, Validator::attributes($request)->user()))) {
                 $url_params = [
                     'tree' => $tree->name(),
                     'xref' => $xref_attr,
