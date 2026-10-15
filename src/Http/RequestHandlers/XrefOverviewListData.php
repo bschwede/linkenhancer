@@ -38,6 +38,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Schwendinger\Webtrees\Helpers\ClassName;
+use Schwendinger\Webtrees\Helpers\Functions;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefOverviewColumns;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
@@ -86,6 +87,10 @@ final class XrefOverviewListData implements RequestHandlerInterface
             return $this->emptyResponse($request);
         }
 
+        // This table issues a GET; wt 2.3 DatatablesService reads draw/start/length/
+        // order/search from the body, so align both param sources first (no-op on 2.2.6).
+        $request = Functions::normalizeDataTablesRequest($request);
+                
         $params        = Validator::queryParams($request);
         $xref          = trim((string) $params->string('xref', ''));
         $rectype       = (string) $params->string('rectype', '');
