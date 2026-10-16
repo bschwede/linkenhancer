@@ -2,7 +2,7 @@
 
 [TL;DR](#tlrdr) | [Description](#description) | [webtrees](#webtrees) | [Requirements](#requirements) | [Installation](#installation) | [Contributing](#contributing) | [Translation](#translation) | [Support](#support) | [License](#license)
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0) ![webtrees major version](https://img.shields.io/badge/webtrees-v2.2.x-green) ![Latest Release](https://img.shields.io/github/v/release/bschwede/linkenhancer) ![Downloads](https://img.shields.io/github/downloads/bschwede/linkenhancer/total.svg)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0) ![webtrees major version](https://img.shields.io/badge/webtrees-v2.2|v2.3-green) ![Latest Release](https://img.shields.io/github/v/release/bschwede/linkenhancer) ![Downloads](https://img.shields.io/github/downloads/bschwede/linkenhancer/total.svg)
 
 
 > [!IMPORTANT]
@@ -40,7 +40,7 @@ This module wraps up some [examples mentioned in the German Webtrees Manual](htt
 
 The main purpose of this module is to make [**links to data records**](#enhancedlinks) stored in family trees more convenient. This avoids having to store fully qualified links, which impairs the portability of Gedcom data. By linking the notes to the GEDCOM data records (persons, families, sources, etc.) from the text makes story telling much easier and thus also save this information in the GEDCOM file (maybe this is an alternative for the [stories module](https://wiki.genealogy.net/Webtrees_Handbuch/Anleitung_f%C3%BCr_Besucher#Geschichten)). The option of embedding the [**images**](#mdimg) already inserted in the family tree in the notes rounds off this approach. The link function is controlled via the [anchor part of the URI](https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Web_mechanics/What_is_a_URL), so it's no problem, if this module is not active - the url just points to the current webtrees page.
 
-For the admin there is an [**overview of cross-references**](#xref-overview), that lists all GEDCOM records and html based records stored in the `block / block_setting` tables (like html, faq, stories and vesta classic look and feel badges) which contain linkenhancer cross-references, classic cross-references and embedded picture references. The latter two references are only supported in GEDCOM records. For a configurable user access level, an overview can be provided for each tree. On the GEDCOM record detail view you can have an additional tab "cross-references" that lists incoming and outgoing references.
+For the admin there is an [**overview of cross-references**](#xref-overview), that lists all GEDCOM records and html based records stored in the `block / block_setting` tables (like html, faq, stories and vesta classic look and feel badges) which contain linkenhancer cross-references, classic cross-references and embedded picture references. The latter two references are only supported in GEDCOM records. For a configurable user access level, an overview can be provided for each tree. On the GEDCOM record detail view you can have an additional tab "cross-references" that lists incoming and outgoing references. The records xref and uids entries (which are sometimes truncated by webtrees core) are also listed to make it easier to reuse them as references in notes.
 
 Additionally there are some goodies more or less related with links:
 
@@ -453,6 +453,12 @@ Just activate the option "Output of debug information on the JS console" in orde
 <a name="xref-overview"></a>
 ### Cross-reference overview
 
+There are three types of overviews:
+
+1. overview about all data for the admin,
+2. tree based overview and
+3. record based overview on the record details view (tab or modal).
+
 The cross-reference overview admin page (Control panel → LinkEnhancer → Cross-reference overview) is a server-side paginated DataTable. It lists all records that contain classic `@XREF@` cross-references or linkenhancer links, with a per-record link inventory. Optional filters: referenced XREF (only available while a fresh link index is active - in live-scan mode the field is hidden, because it would only be a coarse pre-filter there - no classic references are found), record type, tree, and the number of tokens shown per link class (all / 5 / 10 / 20, default 5). The XREF cell shows the tree name as a second muted line; the type is its own sortable column. Each inventory token is displayed as a short display context (snippet) with the link token itself in bold.
 
 Optionally you can enable an user overview per tree and a list of incoming and outgoing references per GEDCOM record.
@@ -588,11 +594,11 @@ This can be hosted on your own server by following the [Install instructions](ht
 <a name="requirements"></a>
 ## Requirements
 
-This module requires **webtrees** version 2.2.
+This module requires **webtrees** version 2.2 or 2.3.
 This module has the same requirements as [webtrees#system-requirements](https://github.com/fisharebest/webtrees#system-requirements).
 
-This module was tested with **webtrees** version 2.2.4
-and build-in themes and some other custom modules.
+It was initially created for version 2.2.4, since linkenhancer 1.6.1 it should also work with webtrees 2.3.
+Test were usually run with build-in themes and some other custom modules.
 
 > [!TIP]
 > It's recommended installing the [Cronjob](https://github.com/bschwede/wt-cronjob) module as well.
