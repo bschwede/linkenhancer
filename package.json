@@ -23,7 +23,7 @@
     "test:php": "bash -c 'fail=0; for f in tests/test-*.php; do echo \"--- $f\"; php \"$f\" || fail=1; done; exit $fail'"
   },
   "dependencies": {
-    "tiny-markdown-editor": "^0.2.34"
+    "tiny-markdown-editor": "^0.2.35"
   },
   "devDependencies": {
     "@rollup/plugin-babel": "^6.1.0",
