@@ -6,7 +6,11 @@
         { "type": "path", "url": "../wt-shared-libs", "options": { "symlink": false } }
     ],
     "require": {
-        "bschwede/wt-shared-libs": "^1.1.5"
+        "bschwede/wt-shared-libs": "^1.1.6"
+    },
+    "conflict": {
+        "fisharebest/webtrees": "<2.2",
+        "elysch/webtrees-mitalteli-misc-features": "*"
     },
     "config": {
         "prepend-autoloader": false
