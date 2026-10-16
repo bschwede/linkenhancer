@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 19:11+0200\n"
+"POT-Creation-Date: 2026-10-16 18:00+0200\n"
 "PO-Revision-Date: 2026-10-12 10:59+0000\n"
 "Last-Translator: TheDutchJewel <thedutchjewel@noreply.codeberg.org>\n"
 "Language-Team: Dutch <https://translate.codeberg.org/projects/wt-modules/"
@@ -1177,6 +1177,12 @@ msgstr "Open webtreeshandleiding-URL met Google Translate?"
 #. I18N: wthb link user setting epilogue 1
 msgid "This setting can be adjusted at any time."
 msgstr "Deze instelling kan op elk moment worden aangepast."
+
+msgid "Copy to clipboard"
+msgstr ""
+
+msgid "UID"
+msgstr ""
 
 msgid "Outgoing references"
 msgstr "Uitgaande verwijzingen"

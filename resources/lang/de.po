@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 19:11+0200\n"
+"POT-Creation-Date: 2026-10-16 18:00+0200\n"
 "PO-Revision-Date: 2026-10-11 17:14+0000\n"
 "Last-Translator: bschwede <bschwede@noreply.codeberg.org>\n"
 "Language-Team: German <https://translate.codeberg.org/projects/wt-modules/"
@@ -1192,6 +1192,12 @@ msgstr "Webtrees Handbuch URL mit Google Translate öffnen?"
 #. I18N: wthb link user setting epilogue 1
 msgid "This setting can be adjusted at any time."
 msgstr "Diese Einstellung kann jederzeit angepasst werden."
+
+msgid "Copy to clipboard"
+msgstr ""
+
+msgid "UID"
+msgstr ""
 
 msgid "Outgoing references"
 msgstr "Ausgehende Verweise"
