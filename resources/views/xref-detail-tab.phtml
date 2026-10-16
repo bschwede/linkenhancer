@@ -26,7 +26,7 @@ use Schwendinger\Webtrees\Helpers\MoreI18N;
             <?php endif ?>
             <?php foreach ($uid_entries as $entry) : ?>
                 <li class="le-xref-identifiers__item">
-                    <span class="le-xref-identifiers__label"><?= I18N::translate('UID') ?> (<?= e($entry['tag_path']) ?>):</span>
+                    <span class="le-xref-identifiers__label"><?= I18N::translate('UID') ?> <em>(<?= e($entry['tag_path']) ?>)</em>:</span>
                     <code class="le-xref-identifiers__value" data-copy-value="<?= e('@' . $entry['uid'] . '@') ?>">@<?= e($entry['uid']) ?>@</code>
                     <button type="button" class="le-xref-identifiers__copy" data-le-copy title="<?= I18N::translate('Copy to clipboard') ?>">⧉</button>
                 </li>
