@@ -21,11 +21,11 @@ function getResetLinks(null|array $link_params, string $type, null|int $access_l
 
     if (is_array($link_params)) {
         $link_params['type'] = $type;
-        $link_reset_all = route('module', $link_params);
+        $link_reset_all = route(ClassName::get(ClassName::MODULE), $link_params);
 
         if (is_int($access_level)) {
             $link_params['access_level'] = $access_level;
-            $link_reset_one = route('module', $link_params);
+            $link_reset_one = route(ClassName::get(ClassName::MODULE), $link_params);
         }
     }
 

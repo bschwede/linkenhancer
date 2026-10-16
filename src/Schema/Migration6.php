@@ -26,8 +26,6 @@ namespace Schwendinger\Webtrees\Module\LinkEnhancer\Schema;
 use Fisharebest\Webtrees\DB;
 use Fisharebest\Webtrees\Schema\MigrationInterface;
 
-use function in_array;
-
 /**
  * Upgrade the database schema from version 6 to version 7.
  *
@@ -49,15 +47,14 @@ class Migration6 implements MigrationInterface
     {
         // (1) Table rename
         if (DB::schema()->hasTable('route_help_map') && !DB::schema()->hasTable('le_route_help_map')) {
-            $prefix = DB::getTablePrefix();
-            $old    = $prefix . 'route_help_map';
-            $new    = $prefix . 'le_route_help_map';
-            $driver = DB::connection()->getDriverName();
+            $old = DB::prefix('route_help_map');
+            $new = DB::prefix('le_route_help_map');
+            $driver = DB::driverName();
 
-            if (in_array($driver, ['mysql', 'mariadb'], true)) {
-                DB::statement("RENAME TABLE {$old} TO {$new}");
+            if ($driver === DB::MYSQL) {
+                DB::exec("RENAME TABLE {$old} TO {$new}");
             } else {
-                DB::statement("ALTER TABLE {$old} RENAME TO {$new}");
+                DB::exec("ALTER TABLE {$old} RENAME TO {$new}");
             }
         }
 

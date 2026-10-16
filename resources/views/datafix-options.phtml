@@ -6,6 +6,8 @@ use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Tree;
 use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Schwendinger\Webtrees\Module\LinkEnhancer\DataFix\FixHandlerInterface;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\DataFixBlocksAction;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Http\RequestHandlers\DataFixRebuildIndexAction;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 
 /**
@@ -77,7 +79,7 @@ $uid_fresh = $uid_status['fresh'] ? '' : ' <span class="text-warning">(' . e(I18
 
     var btn = document.getElementById('btn-process-blocks');
     if (btn) {
-        var blocksUrl = <?= json_encode(route('le.datafix-process-blocks', ['tree' => $tree->name()]), JSON_THROW_ON_ERROR) ?>;
+        var blocksUrl = <?= json_encode(route(DataFixBlocksAction::class, ['tree' => $tree->name()]), JSON_THROW_ON_ERROR) ?>;
         btn.addEventListener('click', function() {
             btn.disabled = true;
             var resultEl = document.getElementById('blocks-result');
@@ -113,7 +115,7 @@ $uid_fresh = $uid_status['fresh'] ? '' : ' <span class="text-warning">(' . e(I18
         });
     }
 
-    var rebuildUrl = <?= json_encode(route('le.datafix-rebuild-index', ['tree' => $tree->name()]), JSON_THROW_ON_ERROR) ?>;
+    var rebuildUrl = <?= json_encode(route(DataFixRebuildIndexAction::class, ['tree' => $tree->name()]), JSON_THROW_ON_ERROR) ?>;
     document.querySelectorAll('[data-rebuild]').forEach(function(btn) {
         btn.addEventListener('click', function() {
             var index = this.dataset.rebuild;

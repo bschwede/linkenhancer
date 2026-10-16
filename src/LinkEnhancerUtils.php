@@ -318,7 +318,7 @@ class LinkEnhancerUtils { // misc helper functions
 
         $info['handler_key'] = Functions::canonicalHandlerKey($info['handler']);
 
-        if (version_compare(Webtrees::VERSION, '2.3', '>=')) {
+        if (Functions::wtIsAtLeast2_3()) {
             // 2.3: matched route tokens live on the request (Router middleware), not on the route
             $info['attr'] = Functions::routeParams($route, $request);
         }

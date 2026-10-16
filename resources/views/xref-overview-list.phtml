@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Fisharebest\Webtrees\I18N;
 use Schwendinger\Webtrees\Helpers\Functions;
+use Schwendinger\Webtrees\Helpers\ClassName;
 use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
@@ -24,7 +25,7 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
  * @var bool                                          $limited_mode
  */
 
-$page_url = route('module', ['module' => $module->name(), 'action' => 'List', 'tree' => $tree->name()]);
+$page_url = route(ClassName::get(ClassName::MODULE), ['module' => $module->name(), 'action' => 'List', 'tree' => $tree->name()]);
 $use_index = $index_status['fresh'] && !$live;
 
 $action_query  = (string) (parse_url($page_url, PHP_URL_QUERY) ?: '');

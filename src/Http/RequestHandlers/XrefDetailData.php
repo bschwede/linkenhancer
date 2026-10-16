@@ -34,6 +34,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Schwendinger\Webtrees\Helpers\ClassName;
+use Schwendinger\Webtrees\Helpers\Functions;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefDetailService;
 
@@ -60,7 +61,7 @@ final class XrefDetailData implements RequestHandlerInterface
         $module = Registry::container()->get(LinkEnhancerModule::class);
         $denied = ClassName::get(ClassName::EXCEPTION_HTTP_FORBIDDEN);
         if (!$module instanceof LinkEnhancerModule
-            || $module->accessLevel($tree, ModuleTabInterface::class) < Auth::accessLevel($tree, $user)) {
+            || !Functions::moduleAllowsUserAccess($module->accessLevel($tree, ModuleTabInterface::class), Auth::accessLevel($tree, $user))) {
             throw new $denied();
         }
 

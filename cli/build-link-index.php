@@ -60,6 +60,7 @@ require __DIR__ . '/../autoload.php';
 use Fisharebest\Webtrees\DB;
 use Fisharebest\Webtrees\Gedcom;
 use Fisharebest\Webtrees\Webtrees;
+use Illuminate\Database\Query\Expression;
 use Schwendinger\Webtrees\Services\CliBootstrap;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\IdResolver;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\TextTagCollector;
@@ -120,7 +121,7 @@ if ($lock === false || !flock($lock, LOCK_EX | LOCK_NB)) {
     exit(0);
 }
 
-$table_prefix = DB::getTablePrefix();
+$table_prefix = DB::prefix('');
 
 // ------------------------------------------------------------- flush
 // --flush (without --rebuild): empty the index tables and stop. The meta
@@ -132,9 +133,9 @@ if ($flush && !$rebuild) {
         DB::table(XrefsService::INDEX_LINK_TABLE)->where('file', '=', $tree_id)->delete();
         DB::table(XrefsService::INDEX_SCAN_TABLE)->where('file', '=', $tree_id)->delete();
     } else {
-        DB::statement('TRUNCATE TABLE ' . $table_prefix . XrefsService::INDEX_LINK_TABLE);
-        DB::statement('TRUNCATE TABLE ' . $table_prefix . XrefsService::INDEX_SCAN_TABLE);
-        DB::statement('TRUNCATE TABLE ' . $table_prefix . XrefsService::INDEX_META_TABLE);
+        DB::exec('TRUNCATE TABLE ' . $table_prefix . XrefsService::INDEX_LINK_TABLE);
+        DB::exec('TRUNCATE TABLE ' . $table_prefix . XrefsService::INDEX_SCAN_TABLE);
+        DB::exec('TRUNCATE TABLE ' . $table_prefix . XrefsService::INDEX_META_TABLE);
     }
     DB::table(XrefsService::INDEX_META_TABLE)
         ->where('id', '=', 1)
@@ -223,8 +224,8 @@ if ($is_initial) {
         DB::table(XrefsService::INDEX_LINK_TABLE)->where('file', '=', $tree_id)->delete();
         DB::table(XrefsService::INDEX_SCAN_TABLE)->where('file', '=', $tree_id)->delete();
     } else {
-        DB::statement('TRUNCATE TABLE ' . $table_prefix . XrefsService::INDEX_LINK_TABLE);
-        DB::statement('TRUNCATE TABLE ' . $table_prefix . XrefsService::INDEX_SCAN_TABLE);
+        DB::exec('TRUNCATE TABLE ' . $table_prefix . XrefsService::INDEX_LINK_TABLE);
+        DB::exec('TRUNCATE TABLE ' . $table_prefix . XrefsService::INDEX_SCAN_TABLE);
     }
 
     // Bulk scan rows: pure SQL, server-side, zero row transfer.
@@ -240,7 +241,7 @@ if ($is_initial) {
         if ($tree_id > 0) {
             $sql .= ($rectype === 'OTHER' ? ' AND ' : ' WHERE ') . $prefix . '_file = ' . $tree_id;
         }
-        DB::statement($sql);
+        DB::exec($sql);
     }
 
     // Candidate pass: only records that pass the link pre-filter (same
@@ -279,7 +280,7 @@ if ($is_initial) {
                 $idcol . ' AS xref',
                 $filecol . ' AS file',
                 $gedcomcol . ' AS gedcom',
-                $rectype === 'OTHER' ? 'o_type' : DB::raw("'" . $rectype . "' AS o_type"),
+                $rectype === 'OTHER' ? 'o_type' : new Expression("'" . $rectype . "' AS o_type"),
             ]);
             if ($batch->isEmpty()) {
                 break;
@@ -316,7 +317,7 @@ if ($is_initial) {
                 if ($rectype === 'OTHER') {
                     $join->on('t.o_type', '=', 's.rectype');
                 } else {
-                    $join->on('s.rectype', '=', DB::raw("'" . $rectype . "'"));
+                    $join->on('s.rectype', '=', new Expression("'" . $rectype . "'"));
                 }
             })
             ->whereNull('t.' . $idcol);
@@ -358,7 +359,7 @@ if ($is_initial) {
                     if ($rectype === 'OTHER') {
                         $join->on('s.rectype', '=', 't.o_type');
                     } else {
-                        $join->on('s.rectype', '=', DB::raw("'" . $rectype . "'"));
+                        $join->on('s.rectype', '=', new Expression("'" . $rectype . "'"));
                     }
                 })
                 ->whereRaw($table_prefix . 't.' . $idcol . ' > ?', [$cursor])
@@ -367,8 +368,8 @@ if ($is_initial) {
                     't.' . $idcol . ' AS xref',
                     't.' . $filecol . ' AS file',
                     't.' . $gedcomcol . ' AS gedcom',
-                    $rectype === 'OTHER' ? 't.o_type' : DB::raw("'" . $rectype . "' AS o_type"),
-                    DB::raw("MD5({$table_prefix}t." . $gedcomcol . ') AS hash'),
+                    $rectype === 'OTHER' ? 't.o_type' : new Expression("'" . $rectype . "' AS o_type"),
+                    new Expression("MD5({$table_prefix}t." . $gedcomcol . ') AS hash'),
                 ])
                 ->orderBy('t.' . $idcol)
                 ->limit($n);

@@ -8,6 +8,7 @@ use Fisharebest\Webtrees\DB;
 use Fisharebest\Webtrees\Gedcom;
 use Fisharebest\Webtrees\Tree;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Query\Expression;
 use InvalidArgumentException;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Throwable;
@@ -21,6 +22,7 @@ use function array_unique;
 use function array_values;
 use function count;
 use function in_array;
+use function preg_quote;
 use function strtotime;
 use function time;
 
@@ -105,7 +107,7 @@ final class LinkIndexService
     public static function getBlockQuery(Tree|null $tree, array $rectypes, bool $index_mode = false, int|null $user_id = null, string $filter_xref = ''): ?Builder
     {
         $module_names = self::blockModuleNames();
-        $table_prefix = DB::getTablePrefix();
+        $table_prefix = DB::prefix('');
 
         if ($rectypes !== []) {
             $module_names = array_values(array_intersect($module_names, $rectypes));
@@ -123,20 +125,20 @@ final class LinkIndexService
 
             if ($index_mode) {
                 $select = [
-                    DB::raw("{$table_prefix}b.gedcom_id AS file"),
-                    DB::raw("CONCAT('BLOCK-', {$table_prefix}b.block_id) AS xref"),
-                    DB::raw("'" . $module_name . "' AS type"),
-                    DB::raw($table_prefix . 'b.block_id AS block_id'),
-                    DB::raw($table_prefix . 'b.user_id'),
+                    new Expression("{$table_prefix}b.gedcom_id AS file"),
+                    new Expression("CONCAT('BLOCK-', {$table_prefix}b.block_id) AS xref"),
+                    new Expression("'" . $module_name . "' AS type"),
+                    new Expression($table_prefix . 'b.block_id AS block_id'),
+                    new Expression($table_prefix . 'b.user_id'),
                 ];
             } else {
                 $select = [
-                    DB::raw("CONCAT('BLOCK-', {$table_prefix}b.block_id) AS xref"),
-                    DB::raw($table_prefix . 'b.gedcom_id AS file'),
-                    DB::raw("'" . $module_name . "' AS type"),
-                    DB::raw('NULL AS gedcom'),
-                    DB::raw($table_prefix . 'b.block_id AS block_id'),
-                    DB::raw($table_prefix . 'b.user_id'),
+                    new Expression("CONCAT('BLOCK-', {$table_prefix}b.block_id) AS xref"),
+                    new Expression($table_prefix . 'b.gedcom_id AS file'),
+                    new Expression("'" . $module_name . "' AS type"),
+                    new Expression('NULL AS gedcom'),
+                    new Expression($table_prefix . 'b.block_id AS block_id'),
+                    new Expression($table_prefix . 'b.user_id'),
                 ];
             }
 
@@ -161,7 +163,7 @@ final class LinkIndexService
             if ($filter_xref !== '') {
                 $uids = ($tree instanceof Tree) ? UidIndexService::uidsForRecord($tree->id(), $filter_xref) : [];
                 $subquery->whereExists(static function ($q) use ($filter_xref, $uids, $text_settings): void {
-                    $q->select(DB::raw(1))
+                    $q->select(new Expression(1))
                         ->from('block_setting')
                         ->whereColumn('block_setting.block_id', 'b.block_id')
                         ->whereIn('block_setting.setting_name', $text_settings)
@@ -177,7 +179,7 @@ final class LinkIndexService
             $subquery->where(static function ($q) use ($text_settings): void {
                 foreach ($text_settings as $setting_name) {
                     $q->orWhereExists(static function ($sub) use ($setting_name): void {
-                        $sub->select(DB::raw(1))
+                        $sub->select(new Expression(1))
                             ->from('block_setting')
                             ->whereColumn('block_setting.block_id', 'b.block_id')
                             ->where('block_setting.setting_name', '=', $setting_name);
@@ -225,26 +227,35 @@ final class LinkIndexService
      */
     private static function getGedcomRecTypeSubquery(array $params, string $xref = Gedcom::REGEX_XREF, int|null $file = null): Builder
     {
-        $table_prefix = DB::getTablePrefix();
+        $table_prefix = DB::prefix('');
         $p = $params['prefix'];
 
         $subquery = DB::table($params['table'] . " AS {$p}")
             ->select([
-                DB::raw("{$p}.{$table_prefix}id AS file"),
-                DB::raw("{$p}._id AS xref"),
-                DB::raw($params['typestr'] . ' AS type'),
-                DB::raw('NULL AS block_id'),
-                DB::raw('NULL AS user_id'),
+                new Expression("{$table_prefix}{$p}.{$p}_id AS xref"),
+                new Expression("{$table_prefix}{$p}.{$p}_file AS file"),
+                new Expression($params['typestr'] . ' AS type'),
+                new Expression("{$table_prefix}{$p}.{$p}_gedcom AS gedcom"),
+                new Expression('NULL AS block_id'),
+                new Expression('NULL AS user_id'),
             ]);
 
         if ($file !== null) {
-            $subquery->where("{$p}.{$table_prefix}id", '=', $file);
+            $subquery->where("{$p}.{$p}_file", '=', $file);
         }
 
         if (self::supportsRegexp()) {
-            $subquery->where("{$p}.gedcom", DB::regexOperator(), XrefsService::LIKE_XREF_PREDICATE);
+            $subquery->where("{$p}.{$p}_gedcom", DB::regexOperator(), XrefsService::REGEX_LIVESCAN_PREDICATE);
         } else {
-            $subquery->where("{$p}.gedcom", 'like', XrefsService::LIKE_XREF_PREDICATE);
+            $subquery->where("{$p}.{$p}_gedcom", 'like', XrefsService::LIKE_LIVESCAN_PREDICATE);
+        }
+
+        if ($xref !== Gedcom::REGEX_XREF) {
+            if (self::supportsRegexp()) {
+                $subquery->where("{$p}.{$p}_gedcom", DB::regexOperator(), '@' . preg_quote($xref, '@') . '@');
+            } else {
+                $subquery->where("{$p}.{$p}_gedcom", 'like', '%@' . $xref . '@%');
+            }
         }
 
         return $subquery;
@@ -277,7 +288,7 @@ final class LinkIndexService
      */
     public static function getIndexQuery(Tree|null $tree = null, ?string $target_xref = null, array $rectypes = [], bool $ordered = true): Builder
     {
-        $table_prefix = DB::getTablePrefix();
+        $table_prefix = DB::prefix('');
         $links = DB::table(XrefsService::INDEX_LINK_TABLE)
             ->distinct()
             ->select('file', 'xref', 'rectype');
@@ -292,7 +303,7 @@ final class LinkIndexService
                     ->on('l.rectype', '=', 's.rectype');
             })
             ->distinct()
-            ->select(['s.file', 's.xref', DB::raw($table_prefix . 's.rectype AS type'), DB::raw('NULL AS block_id'), DB::raw('NULL AS user_id')])
+            ->select(['s.file', 's.xref', new Expression($table_prefix . 's.rectype AS type'), new Expression('NULL AS block_id'), new Expression('NULL AS user_id')])
             ->whereIn('s.rectype', self::normalizeIndexRectypes($rectypes));
 
         if ($ordered) {
