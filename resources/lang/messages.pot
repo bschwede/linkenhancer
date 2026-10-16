@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-11 19:11+0200\n"
+"POT-Creation-Date: 2026-10-16 18:00+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -99,7 +99,7 @@ msgstr ""
 msgid "Renumbered @%1$s@ → @%2$s@ (%3$s, %4$d core rows, %5$d links)"
 msgstr ""
 
-#: src/Services/LinkRenderer.php:39 src/LinkEnhancerModule.php:863
+#: src/Services/LinkRenderer.php:39 src/LinkEnhancerModule.php:869
 msgid "Cross-references"
 msgstr ""
 
@@ -120,7 +120,7 @@ msgid "Other - maybe damaged - links"
 msgstr ""
 
 #: src/Services/LinkRenderer.php:136
-#: resources/views/xref-overview-list.phtml:114
+#: resources/views/xref-overview-list.phtml:115
 #: resources/views/xref-overview.phtml:142
 msgid "target not found"
 msgstr ""
@@ -138,7 +138,7 @@ msgid "expected %1$s, is %2$s"
 msgstr ""
 
 #: src/Services/LinkRenderer.php:166
-#: resources/views/xref-overview-list.phtml:116
+#: resources/views/xref-overview-list.phtml:117
 #: resources/views/xref-overview.phtml:144
 msgid "target not unique"
 msgstr ""
@@ -574,22 +574,22 @@ msgid "Permalink"
 msgstr ""
 
 #. I18N: renumber xrefs
-#: src/Http/RequestHandlers/RenumberActionHandler.php:80
+#: src/Http/RequestHandlers/RenumberActionHandler.php:81
 #, php-format
 msgid "%s (with links)"
 msgstr ""
 
-#: src/Http/RequestHandlers/GotoIdAction.php:77
+#: src/Http/RequestHandlers/GotoIdAction.php:76
 #, php-format
 msgid "No record for %s was found."
 msgstr ""
 
-#: src/Http/RequestHandlers/GotoIdAction.php:83
+#: src/Http/RequestHandlers/GotoIdAction.php:82
 #, php-format
 msgid "%s was found in another tree."
 msgstr ""
 
-#: src/Http/RequestHandlers/GotoIdAction.php:101
+#: src/Http/RequestHandlers/GotoIdAction.php:100
 #, php-format
 msgid "Multiple records for %s"
 msgstr ""
@@ -655,23 +655,23 @@ msgid "File '%1$s' in the public folder is not an image but '%2$s'"
 msgstr ""
 
 #. I18N: Module title
-#: src/LinkEnhancerModule.php:337
+#: src/LinkEnhancerModule.php:340
 msgid "Link-Enhancer"
 msgstr ""
 
 #. I18N: Module description
-#: src/LinkEnhancerModule.php:347
+#: src/LinkEnhancerModule.php:350
 msgid ""
 "Cross-references to Gedcom datasets, Markdown editor, context-sensitive link "
 "to the GenWiki webtrees manual"
 msgstr ""
 
-#: src/LinkEnhancerModule.php:572
+#: src/LinkEnhancerModule.php:578
 msgid "Some settings could not be saved."
 msgstr ""
 
-#: src/LinkEnhancerModule.php:636 src/LinkEnhancerModule.php:828
-#: src/LinkEnhancerModule.php:967 resources/views/settings.phtml:75
+#: src/LinkEnhancerModule.php:642 src/LinkEnhancerModule.php:834
+#: src/LinkEnhancerModule.php:978 resources/views/settings.phtml:75
 msgid "Cross-Reference Overview"
 msgstr ""
 
@@ -715,13 +715,13 @@ msgstr ""
 msgid "The UID index is out of date."
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:42
+#: resources/views/xref-overview-list.phtml:43
 #: resources/views/xref-overview.phtml:60 resources/views/settings.phtml:79
 msgid ""
 "List all records that contain cross-references (XREFs) or linkenhancer links."
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:47
+#: resources/views/xref-overview-list.phtml:48
 #: resources/views/xref-overview.phtml:65
 msgid ""
 "Limited mode: this database engine has no regex support - the table is "
@@ -729,20 +729,20 @@ msgid ""
 "trees. The link index is not available on this engine."
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:53
+#: resources/views/xref-overview-list.phtml:54
 #: resources/views/xref-overview.phtml:71
 #, php-format
 msgid "Link index active: %1$s scanned records, last verified %2$s."
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:57
+#: resources/views/xref-overview-list.phtml:58
 #: resources/views/xref-overview.phtml:75
 msgid ""
 "Live scan forced - the link index is bypassed for this view, which can be "
 "slow on large trees."
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:61
+#: resources/views/xref-overview-list.phtml:62
 #: resources/views/xref-overview.phtml:79
 msgid ""
 "No fresh link index - the table below scans the GEDCOM tables live, which "
@@ -750,76 +750,77 @@ msgid ""
 "md, \"CLI scripts & maintenance\")."
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:67
+#: resources/views/xref-overview-list.phtml:68
 msgid ""
 "Only broken targets: every matching record is loaded and its targets "
 "resolved on the server, which can be slow on large trees. Combine with the "
 "type filter to narrow the scan."
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:78
+#: resources/views/xref-overview-list.phtml:79
 #: resources/views/xref-overview.phtml:97
 msgid "referencing XREF"
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:83
+#: resources/views/xref-overview-list.phtml:84
 #: resources/views/xref-overview.phtml:103
 msgid "Bypass the link index and scan the GEDCOM tables live"
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:83
+#: resources/views/xref-overview-list.phtml:84
 #: resources/views/xref-overview.phtml:103
 msgid "Force live scan"
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:87
+#: resources/views/xref-overview-list.phtml:88
 #: resources/views/xref-overview.phtml:107
 #: resources/views/datafix-xref-uid-swap-options.phtml:49
 msgid "Record types"
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:88
+#: resources/views/xref-overview-list.phtml:89
 #: resources/views/xref-overview.phtml:108
 msgid "All types"
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:89
+#: resources/views/xref-overview-list.phtml:90
 #: resources/views/xref-overview.phtml:109
 msgid "All GEDCOM records"
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:90
+#: resources/views/xref-overview-list.phtml:91
 #: resources/views/xref-overview.phtml:110
 msgid "All Block records"
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:91
+#: resources/views/xref-overview-list.phtml:92
 #: resources/views/xref-overview.phtml:111
 msgid "GEDCOM records"
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:104
+#: resources/views/xref-overview-list.phtml:105
 #: resources/views/xref-overview.phtml:132
 msgid "links per class"
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:112
+#: resources/views/xref-overview-list.phtml:113
 #: resources/views/xref-overview.phtml:140
 msgid "Only rows with a missing or wrong-type target are shown"
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:113
+#: resources/views/xref-overview-list.phtml:114
 #: resources/views/xref-overview.phtml:141
 msgid "Only broken targets"
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:115
+#: resources/views/xref-overview-list.phtml:116
 #: resources/views/xref-overview.phtml:143
 msgid "The target type differs from the declaration"
 msgstr ""
 
-#: resources/views/xref-overview-list.phtml:145
+#: resources/views/xref-overview-list.phtml:146
 #: resources/views/xref-overview.phtml:178
+#: resources/views/xref-detail-tab.phtml:22
 msgid "XREF"
 msgstr ""
 
@@ -1073,46 +1074,46 @@ msgstr ""
 msgid "picture with defined height, width and additional css class"
 msgstr ""
 
-#: resources/views/datafix-index-status.phtml:20
-#: resources/views/datafix-index-status.phtml:26
-#: resources/views/datafix-options.phtml:26
-#: resources/views/datafix-options.phtml:30
+#: resources/views/datafix-index-status.phtml:21
+#: resources/views/datafix-index-status.phtml:27
+#: resources/views/datafix-options.phtml:28
+#: resources/views/datafix-options.phtml:32
 msgid "stale"
 msgstr ""
 
-#: resources/views/datafix-index-status.phtml:31
+#: resources/views/datafix-index-status.phtml:32
 msgid "Index status"
 msgstr ""
 
-#: resources/views/datafix-index-status.phtml:35
+#: resources/views/datafix-index-status.phtml:36
 #, php-format
 msgid "Link index: %1$s rows, last built: %2$s"
 msgstr ""
 
-#: resources/views/datafix-index-status.phtml:38
+#: resources/views/datafix-index-status.phtml:39
 msgid "Trigger link index rebuild"
 msgstr ""
 
-#: resources/views/datafix-index-status.phtml:39
-#: resources/views/datafix-index-status.phtml:54
+#: resources/views/datafix-index-status.phtml:40
+#: resources/views/datafix-index-status.phtml:55
 msgid "Rebuild"
 msgstr ""
 
-#: resources/views/datafix-index-status.phtml:47
+#: resources/views/datafix-index-status.phtml:48
 #, php-format
 msgid "UID index: %1$s rows, last built: %2$s"
 msgstr ""
 
-#: resources/views/datafix-index-status.phtml:49
+#: resources/views/datafix-index-status.phtml:50
 msgid "Index source (link-index scan) not available."
 msgstr ""
 
-#: resources/views/datafix-index-status.phtml:53
+#: resources/views/datafix-index-status.phtml:54
 msgid "Trigger UID index rebuild"
 msgstr ""
 
-#: resources/views/datafix-index-status.phtml:76
-#: resources/views/datafix-options.phtml:128
+#: resources/views/datafix-index-status.phtml:77
+#: resources/views/datafix-options.phtml:130
 msgid "queued"
 msgstr ""
 
@@ -1423,15 +1424,24 @@ msgstr ""
 msgid "This setting can be adjusted at any time."
 msgstr ""
 
-#: resources/views/xref-detail-tab.phtml:18
+#: resources/views/xref-detail-tab.phtml:24
+#: resources/views/xref-detail-tab.phtml:31
+msgid "Copy to clipboard"
+msgstr ""
+
+#: resources/views/xref-detail-tab.phtml:29
+msgid "UID"
+msgstr ""
+
+#: resources/views/xref-detail-tab.phtml:38
 msgid "Outgoing references"
 msgstr ""
 
-#: resources/views/xref-detail-tab.phtml:23
+#: resources/views/xref-detail-tab.phtml:43
 msgid "Incoming references"
 msgstr ""
 
-#: resources/views/xref-detail-tab.phtml:60
+#: resources/views/xref-detail-tab.phtml:80
 msgid "No cross-references found."
 msgstr ""
 
@@ -1461,27 +1471,27 @@ msgstr ""
 msgid "UID → XREF"
 msgstr ""
 
-#: resources/views/datafix-options.phtml:57
+#: resources/views/datafix-options.phtml:59
 msgid "Block modules"
 msgstr ""
 
-#: resources/views/datafix-options.phtml:60
+#: resources/views/datafix-options.phtml:62
 msgid "Process block modules"
 msgstr ""
 
-#: resources/views/datafix-options.phtml:95
+#: resources/views/datafix-options.phtml:97
 msgid "checked"
 msgstr ""
 
-#: resources/views/datafix-options.phtml:96
+#: resources/views/datafix-options.phtml:98
 msgid "updated"
 msgstr ""
 
-#: resources/views/datafix-options.phtml:97
+#: resources/views/datafix-options.phtml:99
 msgid "skipped"
 msgstr ""
 
-#: resources/views/datafix-options.phtml:104
+#: resources/views/datafix-options.phtml:106
 msgid "change(s)"
 msgstr ""
 
