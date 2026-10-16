@@ -79,6 +79,7 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\Services\AdminSettingsBuilder;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\MarkdownEditorActivationService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\ContentBuilder;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\WthbService;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Services\UidIndexService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefDetailService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\SettingInterface;
@@ -911,11 +912,16 @@ class LinkEnhancerModule extends AbstractModule implements
         $total_count    = count($service->outgoingLinks($record)['entries'])
             + array_sum(array_column($incoming, 'link_count'));
 
+        $uid_entries = UidIndexService::uidFeatureEnabled()
+            ? UidIndexService::uidsWithPathsForRecord($record->tree()->id(), $record->xref())
+            : [];
+
         return view($this->name() . '::xref-detail-tab', [
             'record'        => $record,
             'outgoing_html' => $outgoing_html,
             'incoming'      => $incoming,
             'total_count'   => $total_count,
+            'uid_entries'   => $uid_entries,
         ]);
     }
     // ─── ModuleListInterface: listAction ────────────────────────────────────

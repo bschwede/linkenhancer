@@ -85,3 +85,34 @@ mark.icon-wt-xref { font-weight: bold; } /* xref of actually displayed gedcom re
 .le-xref-inventory ol>li { /* also in xref-overview.phtml */
     margin-bottom: 0.2em;
 }
+
+/* xref-detail-tab identifiers */
+.le-xref-identifiers {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 0.5em 0;
+}
+.le-xref-identifiers__item {
+    margin-bottom: 0.2em;
+}
+.le-xref-identifiers__label {
+    margin-right: 0.3em;
+}
+.le-xref-identifiers__value {
+    user-select: all;
+}
+.le-xref-identifiers__copy {
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 0 0.2em;
+    margin-left: 0.2em;
+    font-size: 0.9em;
+    color: #888;
+}
+.le-xref-identifiers__copy:hover {
+    color: #333;
+}
+.le-xref-identifiers__copy[data-le-copied] {
+    color: #28a745;
+}

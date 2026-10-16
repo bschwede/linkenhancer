@@ -202,6 +202,34 @@ final class UidIndexService
     }
 
     /**
+     * Get all UIDs with their GEDCOM tag paths for a given record in the UID index.
+     *
+     * @param int    $file tree (file) ID
+     * @param string $xref GEDCOM XREF of the record
+     *
+     * @return list<array{uid: string, tag_path: string}>
+     *         (empty if the record has no UIDs or the index is unavailable)
+     */
+    public static function uidsWithPathsForRecord(int $file, string $xref): array
+    {
+        try {
+            $rows = DB::table(self::UID_INDEX_TABLE)
+                ->where('file', '=', $file)
+                ->where('xref', '=', $xref)
+                ->get(['uid', 'tag_path']);
+
+            return $rows
+                ->filter(fn (object $r) => $r->uid !== '')
+                ->map(fn (object $r) => ['uid' => (string) $r->uid, 'tag_path' => (string) $r->tag_path])
+                ->values()
+                ->all();
+        } catch (Throwable $e) {
+            LinkEnhancerModule::log()->debug('uidsWithPathsForRecord query failed: ' . $e->getMessage(), 'UidIndex');
+            return [];
+        }
+    }
+
+    /**
      * Freshness / status of the UID index, from the shared le_index_meta row
      * (id = 1) under its own columns (D5).
      *

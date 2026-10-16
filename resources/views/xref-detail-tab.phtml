@@ -11,9 +11,29 @@ use Schwendinger\Webtrees\Helpers\MoreI18N;
  * @var string       $outgoing_html
  * @var array        $incoming
  * @var int          $total_count
+ * @var list<array{uid: string, tag_path: string}> $uid_entries
  */
 ?>
 <div class="p-3" data-xref-count="<?= $total_count ?>">
+    <?php if ($record->xref() !== '' || $uid_entries !== []) : ?>
+        <ul class="le-xref-identifiers">
+            <?php if ($record->xref() !== '') : ?>
+                <li class="le-xref-identifiers__item">
+                    <span class="le-xref-identifiers__label"><?= I18N::translate('XREF') ?>:</span>
+                    <code class="le-xref-identifiers__value" data-copy-value="<?= e('@' . $record->xref() . '@') ?>">@<?= e($record->xref()) ?>@</code>
+                    <button type="button" class="le-xref-identifiers__copy" data-le-copy title="<?= I18N::translate('Copy to clipboard') ?>">⧉</button>
+                </li>
+            <?php endif ?>
+            <?php foreach ($uid_entries as $entry) : ?>
+                <li class="le-xref-identifiers__item">
+                    <span class="le-xref-identifiers__label"><?= I18N::translate('UID') ?> (<?= e($entry['tag_path']) ?>):</span>
+                    <code class="le-xref-identifiers__value" data-copy-value="<?= e('@' . $entry['uid'] . '@') ?>">@<?= e($entry['uid']) ?>@</code>
+                    <button type="button" class="le-xref-identifiers__copy" data-le-copy title="<?= I18N::translate('Copy to clipboard') ?>">⧉</button>
+                </li>
+            <?php endforeach ?>
+        </ul>
+    <?php endif ?>
+
     <?php if ($outgoing_html !== '') : ?>
         <h6 class="le-xref-section-title outbound mt-2"><?= I18N::translate('Outgoing references') ?></h6>
         <div class="le-xref-outgoing row"><?= $outgoing_html ?></div>
