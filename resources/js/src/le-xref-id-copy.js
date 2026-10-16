@@ -4,6 +4,8 @@
 
 const FLICKER_MS = 1500;
 
+
+
 document.addEventListener('click', (event) => {
     const btn = event.target.closest('[data-le-copy]');
     if (!btn) {
@@ -29,24 +31,56 @@ document.addEventListener('click', (event) => {
     };
 
     if (navigator.clipboard?.writeText) {
-        navigator.clipboard.writeText(text).then(flick).catch(() => fallback(text, flick));
-    } else {
-        fallback(text, flick);
+        navigator.clipboard.writeText(text).then(flick).catch(() => {
+            if (!copyViaExecCommand(text)) {
+                console.warn('LE: clipboard copy failed (Clipboard API rejected, execCommand blocked)');
+            }
+        });
+    } else if (!copyViaExecCommand(text)) {
+        // Non-secure (HTTP) context: Clipboard API unavailable. execCommand is
+        // the only route — it returns false when the browser refuses (e.g. no
+        // committed selection in a fixed modal overlay). Do NOT flash green.
+        console.warn('LE: clipboard copy failed (execCommand not permitted in this context)');
     }
 });
 
-function fallback(text, done) {
+/**
+* Copy via a transient textarea + execCommand('copy'). Used on non-secure
+* (HTTP) origins where the async Clipboard API is unavailable.
+*
+* @param {string} text
+* @returns {boolean} true only if execCommand actually committed the text
+*/
+function copyViaExecCommand(text) {
     const ta = document.createElement('textarea');
     ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.opacity = '0';
-    document.body.appendChild(ta);
+    Object.assign(ta.style, {
+        position: 'fixed',
+        top: '0',
+        left: '0',
+        width: '1px',
+        height: '1px',
+        padding: '0',
+        border: '0',
+        fontSize: '12px',
+        opacity: '0',
+        overflow: 'hidden',
+    });
+
+    // Host inside the open modal when present, so the helper textarea lives in
+    // the currently-active stacking/focus context (Bootstrap fixed overlay)
+    // rather than behind it in document.body.
+    const host = document.querySelector('.modal.show') ?? document.body;
+    host.appendChild(ta);
+    ta.focus();
     ta.select();
+    ta.setSelectionRange(0, ta.value.length);
+    let ok = false;
     try {
-        document.execCommand('copy');
-        done();
+        ok = document.execCommand('copy') === true;
     } catch {
-        /* ignore */
+        ok = false;
     }
-    document.body.removeChild(ta);
+    host.removeChild(ta);
+    return ok;
 }
