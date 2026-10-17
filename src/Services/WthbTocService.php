@@ -317,13 +317,33 @@ final class WthbTocService
     }
 
     /**
+     * The effective TOC download base URL (module pref; empty = built-in default).
+     * Always ends with a trailing slash.
+     */
+    public function baseUrl(): string
+    {
+        return self::normalizeBaseUrl($this->readPref(LinkEnhancerModule::PREF_WTHB_TOC_BASE_URL, ''));
+    }
+
+    /**
+     * Normalize a base URL: empty → built-in default; trim; ensure one trailing slash.
+     * Pure (no I/O) — unit-testable without a webtrees bootstrap.
+     */
+    public static function normalizeBaseUrl(string $url): string
+    {
+        $url = trim($url);
+
+        return $url === '' ? self::BASE_URL : rtrim($url, '/') . '/';
+    }
+
+    /**
      * Download from GitHub Pages → data/ (persisted).
      *
      * @return array<string, mixed>
      */
     private function download(string $filename): array
     {
-        $url = self::BASE_URL . $filename;
+        $url = $this->baseUrl() . $filename;
         $ctx = stream_context_create([
             'http' => ['timeout' => 10, 'header' => "User-Agent: webtrees-linkenhancer/1.x\n"],
         ]);

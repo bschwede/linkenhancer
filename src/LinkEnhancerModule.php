@@ -155,6 +155,7 @@ class LinkEnhancerModule extends AbstractModule implements
     public const PREF_GENWIKI_LINK = 'GENWIKI_LINK'; // base link to GenWiki
     public const PREF_WTHB_TOC_DL_SCOPE = 'WTHB_TOC_DL_SCOPE'; // TOC download scope: 'all' | 'active' | 'custom'
     public const PREF_WTHB_TOC_DL_LANGS = 'WTHB_TOC_DL_LANGS'; // comma-separated lang list (when scope=custom)
+    public const PREF_WTHB_TOC_BASE_URL = 'WTHB_TOC_BASE_URL'; // TOC download base URL (empty = built-in default)
 
     public const PREF_LINKSPP_ACTIVE = 'LINKSPP_ACTIVE'; // enable links++
     public const PREF_LINKSPP_JS = 'LINKSPP_JS'; // Javascript
@@ -270,6 +271,7 @@ class LinkEnhancerModule extends AbstractModule implements
         self::PREF_GENWIKI_LINK              => [ 'type' => 'string', 'default' => self::STDLINK_GENWIKI ], // url
         self::PREF_WTHB_TOC_DL_SCOPE         => [ 'type' => 'string', 'default' => 'all' ], // 'all' | 'active' | 'custom'
         self::PREF_WTHB_TOC_DL_LANGS         => [ 'type' => 'string', 'default' => '' ], // comma-separated (when scope=custom)
+        self::PREF_WTHB_TOC_BASE_URL         => [ 'type' => 'string', 'default' => '' ], // empty = built-in default (WthbTocService::BASE_URL)
         self::PREF_WTHB_TRANSLATE            => [ 'type' => 'int',    'default' => '1' ], // triple-state. 0=off, 1=user defined, 2=on
         self::PREF_LINKSPP_ACTIVE            => [ 'type' => 'bool',   'default' => '1' ],
         self::PREF_LINKSPP_JS                => [ 'type' => 'string', 'default' => '' ],

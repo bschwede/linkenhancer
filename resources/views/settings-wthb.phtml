@@ -7,6 +7,7 @@ use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Fisharebest\Webtrees\DB;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils As Utils;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Services\WthbTocService;
 use Fisharebest\Webtrees\Registry;
 
 /**
@@ -128,6 +129,18 @@ $link_cmm = $links['csvexportcmm'] ?? '';
                     <?php if (!empty($toc_langs_active) && is_array($toc_langs_active)): ?>
                         <p><?= I18N::translate('Active in webtrees') ?>: <code><?= e(implode(', ', $toc_langs_active)) ?></code></p>
                     <?php endif; ?>
+                </div>
+            </div>
+
+            <!-- wthb toc multilingual: download base url --><?php $prefId = LinkEnhancerModule::PREF_WTHB_TOC_BASE_URL; ?>
+            <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
+                <?= I18N::translate('TOC download base URL') ?>
+            </label>
+            <div class="col-sm-9 wt-page-options-value mb-3">
+                <input class="form-control" id="<?= $prefId ?>" name="<?= $prefId ?>" type="text"
+                    value="<?= e($prefs[$prefId]) ?>" placeholder="<?= e(WthbTocService::BASE_URL) ?>">
+                <div class="form-text">
+                    <p><?= I18N::translate('Base URL of the table of contents data (wthb-toc.json, languages.json, [lang].json). Leave empty to use the built-in default. Useful for testing against a local server.') ?></p>
                 </div>
             </div>
 
