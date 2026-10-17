@@ -38,47 +38,39 @@ foreach ($items as $item):
     $href   = $wiki_base . $item['href'];
 
     if ($depth === 0):
+        $line = '';
         while ($open > 0) {
-            echo '</span></dd>';
-            if ($open > 1) {
-                echo '</dl>';
-            }
+            $line .= '</dd></dl>';
             $open--;
         }
         // Pipe/Sonderzeichen aus SecNumber aus dem In-Page-Anchor entfernen (num kann "|" enthalten)
         $chapnum = preg_replace('/[^A-Za-z0-9]/', '', $item['num']) ?: 'sec';
-        ?>
-<h2><span class="mw-headline" id="ch<?= e($chapnum) ?>">
-    <?php if ($prefix !== ''): ?><?= e($prefix) ?> <?php endif ?><a href="<?= e($href) ?>" title="<?= e($title) ?>"><?= e($title) ?></a>
-</span></h2>
-        <?php
+        $pre     = ($prefix !== '') ? $prefix . ' ' : '';
+        $line   .= '<h2><span class="mw-headline" id="ch' . e($chapnum) . '">' . $pre
+                 . '<a href="' . e($href) . '" title="' . e($title) . '">' . e($title) . '</a></span></h2>';
     else:
+        // Tiefer: eine dl-Ebene auf; gleichbleibend/raus: dd als Geschwister.
+        $line = '';
         while ($open < $depth) {
-            echo '<dl><dd><span class="item">';
+            $line .= '<dl>';
             $open++;
         }
         while ($open > $depth) {
-            echo '</span></dd>';
-            if ($open > 1) {
-                echo '</dl>';
-            }
+            $line .= '</dd></dl>';
             $open--;
         }
-        if ($open === $depth && $open > 1) {
-            echo '</span>';
-        }
-        ?>
-<span class="num"><?= e($prefix) ?> </span>
-<a href="<?= e($href) ?>" title="<?= e($title) ?>"><?= e($title) ?></a>
-        <?php
+        $line .= '<dd><span class="item"><span class="num">' . e($prefix) . ' </span>'
+              . '<a href="' . e($href) . '" title="' . e($title) . '">' . e($title) . '</a></span>';
     endif;
+    echo $line, "\n";
 endforeach;
+$line = '';
 while ($open > 0) {
-    echo '</span></dd>';
-    if ($open > 1) {
-        echo '</dl>';
-    }
+    $line .= '</dd></dl>';
     $open--;
+}
+if ($line !== '') {
+    echo $line, "\n";
 }
 ?>
 </div>
