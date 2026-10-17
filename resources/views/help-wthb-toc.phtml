@@ -35,7 +35,7 @@ foreach ($items as $item):
     $depth  = substr_count($item['num'], '.');
     $title  = $translations[$item['title_de']] ?? $item['title_de'];
     $prefix = $prefix_out($item);
-    $href   = $wiki_base . $item['href'];
+    $href   = $wiki_base . '/' . ltrim($item['href'], '/');
 
     if ($depth === 0):
         $line = '';
