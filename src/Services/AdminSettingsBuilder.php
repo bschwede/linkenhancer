@@ -100,6 +100,16 @@ final class AdminSettingsBuilder
 
         $response['uid_index_status'] = UidIndexService::indexStatus();
 
+        // Available languages for the multilingual TOC download settings.
+        try {
+            $toc = $module->wthbToc();
+            $response['toc_langs'] = $toc->allNonDefaultLanguages();
+            $response['toc_langs_active'] = $toc->activeWebtreesLanguages();
+        } catch (\Throwable) {
+            $response['toc_langs'] = [];
+            $response['toc_langs_active'] = [];
+        }
+
         $mde_rules = $module->mde()->getAllRules();
         $response['mde_custom'] = $mde_rules['custom'] ?? false ? print_r($mde_rules['custom'], true) : '';
 
