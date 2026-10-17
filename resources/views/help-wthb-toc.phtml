@@ -5,13 +5,26 @@ declare(strict_types=1);
 use Fisharebest\Webtrees\I18N;
 
 /**
- * @var array<int, array{num: string, title_de: string, href: string}> $items
+ * @var array<int, array{num: string, title_de: string, href: string, prefix?: string, prefix_tmpl?: string|null, prefix_arg?: string|null}> $items
  * @var array<string, string> $translations
  * @var string $generated
  * @var string $wiki_base
  */
 
 $wiki_base = rtrim($wiki_base, '/');
+
+// Präfix (z.B. "Kapitel 1 -") übersetzen: Template (prefix_tmpl) über die Weblate-Map,
+// sonst rohes prefix (Deutsch / numerisch). Leer bei Einhängen ohne Wort-Präfix.
+$prefix_out = static function (array $item) use ($translations): string {
+    $raw  = rtrim($item['prefix'] ?? '');
+    $tmpl = $item['prefix_tmpl'] ?? null;
+    if ($tmpl === null) {
+        return $raw;
+    }
+    return isset($translations[$tmpl])
+        ? vsprintf($translations[$tmpl], [(string) ($item['prefix_arg'] ?? '')])
+        : $raw;
+};
 ?>
 <div class="mw-parser-output">
 <p><?= e(I18N::translate('As of %s', $generated)) ?></p>
@@ -19,9 +32,10 @@ $wiki_base = rtrim($wiki_base, '/');
 <?php
 $open = 0;
 foreach ($items as $item):
-    $depth = substr_count($item['num'], '.');
-    $title = $translations[$item['title_de']] ?? $item['title_de'];
-    $href  = $wiki_base . $item['href'];
+    $depth  = substr_count($item['num'], '.');
+    $title  = $translations[$item['title_de']] ?? $item['title_de'];
+    $prefix = $prefix_out($item);
+    $href   = $wiki_base . $item['href'];
 
     if ($depth === 0):
         while ($open > 0) {
@@ -31,11 +45,11 @@ foreach ($items as $item):
             }
             $open--;
         }
-        $chapnum = explode('.', $item['num'])[0];
+        // Pipe/Sonderzeichen aus SecNumber aus dem In-Page-Anchor entfernen (num kann "|" enthalten)
+        $chapnum = preg_replace('/[^A-Za-z0-9]/', '', $item['num']) ?: 'sec';
         ?>
 <h2><span class="mw-headline" id="ch<?= e($chapnum) ?>">
-    <?= e(I18N::translate('Chapter %s', $chapnum)) ?> -
-    <a href="<?= e($href) ?>" title="<?= e($title) ?>"><?= e($title) ?></a>
+    <?php if ($prefix !== ''): ?><?= e($prefix) ?> <?php endif ?><a href="<?= e($href) ?>" title="<?= e($title) ?>"><?= e($title) ?></a>
 </span></h2>
         <?php
     else:
@@ -54,7 +68,7 @@ foreach ($items as $item):
             echo '</span>';
         }
         ?>
-<span class="num"><?= e($item['num']) ?> </span>
+<span class="num"><?= e($prefix) ?> </span>
 <a href="<?= e($href) ?>" title="<?= e($title) ?>"><?= e($title) ?></a>
         <?php
     endif;

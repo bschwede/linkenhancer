@@ -73,9 +73,9 @@ final class WthbTocService
     // ─── Public API (Runtime) ───────────────────────────────────────────────
 
     /**
-     * Load the TOC structure (items: num, title_de, href).
+     * Load the TOC structure.
      *
-     * @return array{version?: string, source?: string, items: array<int, array{num: string, title_de: string, href: string}>}
+     * @return array{version?: string, source?: string, items: array<int, array{num: string, title_de: string, href: string, prefix?: string, prefix_tmpl?: string|null, prefix_arg?: string|null}>}
      */
     public function loadStructure(): array
     {
