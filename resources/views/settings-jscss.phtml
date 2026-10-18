@@ -304,7 +304,8 @@ $defaults_json = LinkEnhancerModule::getDefaultPrefsAsJson();
             ['<?= LinkEnhancerModule::PREF_OPEN_IN_NEW_TAB; ?>', '.openinnewtab', [0, 2], 'disabled'],
             ['<?= LinkEnhancerModule::PREF_WTHB_LINKS_TYPE; ?>', '#wthb-links-json', [0, 2], 'disabled'],
             ['<?= LinkEnhancerModule::PREF_HOME_LINK_TYPE; ?>', '#homeuserurl', [0, 1, 2], 'disabled'],
-            ['<?= LinkEnhancerModule::PREF_MDE_ACTIVE; ?>', '#mde_debug', [0], 'disabled']
+            ['<?= LinkEnhancerModule::PREF_MDE_ACTIVE; ?>', '#mde_debug', [0], 'disabled'],
+            ['<?= LinkEnhancerModule::PREF_WTHB_TOCNSEARCH; ?>', '#wthb-toc' , [0], 'disabled'],
         ].forEach((sec) => {
             [secName, secSelector, indexes, cname] = sec;
             indexes = (indexes === null || !Array.isArray(indexes) ? [0] : indexes);
@@ -318,7 +319,8 @@ $defaults_json = LinkEnhancerModule::getDefaultPrefsAsJson();
         });
 
         [['<?= LinkEnhancerModule::PREF_MD_EXT_TOC_POS; ?>', 'pos-is-placeholder', ['placeholder'], false],
-        ['<?= LinkEnhancerModule::PREF_MD_EXT_TOC_NORMALIZE; ?>', 'md-toc-style', ['flat-inline'], true]
+        ['<?= LinkEnhancerModule::PREF_MD_EXT_TOC_NORMALIZE; ?>', 'md-toc-style', ['flat-inline'], true],
+        ['<?= LinkEnhancerModule::PREF_WTHB_TOC_DL_SCOPE; ?>', 'wthb-toc-custom-langs', ['custom'], false]
         ].forEach((elem) => {
             [selname, secId, cvalues, dii] = elem;
             ((selname, secId, cvalues, dii = true) => {

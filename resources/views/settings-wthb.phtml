@@ -90,11 +90,79 @@ $link_cmm = $links['csvexportcmm'] ?? '';
                 </div>
             </fieldset>
 
+            <!-- wthb links activation type --><?php $prefId = LinkEnhancerModule::PREF_WTHB_LINKS_TYPE; ?>
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
+                        <?= I18N::translate('Additional help links') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= view('components/radios-inline', [
+                            'id' => $prefId,
+                            'name' => $prefId,
+                            'options' => [
+                                MoreI18N::xlate('no'),
+                                /*I18N: */ I18N::translate('user defined'),
+                                MoreI18N::xlate('yes')
+                            ],
+                            'selected' => (int) $prefs[$prefId]
+                        ]) ?>
+
+<section id="wthb-links-json">          
+                        <!-- wthb links json --><?php $prefId = LinkEnhancerModule::PREF_WTHB_LINKS_JSON; ?>
+                        <div class="row">
+                            <div class="col-sm-12 wt-page-options-value mt-2">
+                            <div class="form-text">JSON</div>
+                            <textarea id="<?= $prefId ?>" name="<?= $prefId ?>" class="form-control font-monospace" dir="ltr"
+                                    rows="5"><?= e($prefs[$prefId]) ?></textarea>
+                                <div class="form-text">
+                                    <p><?= I18N::translate('Example') ?>:
+                                        <textarea class="form-control font-monospace" dir="ltr" rows="5" disabled readonly wrap="off" style="font-size:0.9em; color: gray;"><?= e(LinkEnhancerModule::STD_WTHB_LINKS_JSON) ?></textarea>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+</section>
+
+                    </div>
+                </div>
+            </fieldset>
+
+<section id="wthb-toc">
+            <div class="row">
+                <div class="col-form-label col-sm-3 wt-page-options-label">
+                    <?= I18N::translate('Table of contents') ?>
+                </div>
+                <div class="col-sm-9 wt-page-options-value mt-2">
+                    <div class="form-text">
+                        <p>
+                            
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- wthb toc multilingual: download base url --><?php $prefId = LinkEnhancerModule::PREF_WTHB_TOC_BASE_URL; ?>
+                <label class="col-sm-3 col-form-label wt-page-options-label sub" for="<?= $prefId ?>">
+                    <?= I18N::translate('download base URL') ?>
+                </label>
+                <div class="col-sm-9 wt-page-options-value mb-3">
+                    <input class="form-control" id="<?= $prefId ?>" name="<?= $prefId ?>" type="text" value="<?= e($prefs[$prefId]) ?>"
+                        placeholder="<?= e(WthbTocService::BASE_URL) ?>">
+                    <div class="form-text">
+                        <p>
+                            <?= I18N::translate('Base URL of the table of contents data (wthb-toc.json, languages.json, [lang].json). Leave empty to use the built-in default. Useful for testing against a local server.') ?>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
             <!-- wthb toc multilingual: download scope --><?php $prefId = LinkEnhancerModule::PREF_WTHB_TOC_DL_SCOPE; ?>
             <fieldset class="form-group mb-1">
                 <div class="row">
                     <legend class="col-form-label col-sm-3 wt-page-options-label sub">
-                        <?= I18N::translate('Table of contents: languages to download') ?>
+                        <?= I18N::translate('languages to download') ?>
                     </legend>
                     <div class="col-sm-9 wt-page-options-value mt-2">
                         <?= view('components/select', [
@@ -110,45 +178,36 @@ $link_cmm = $links['csvexportcmm'] ?? '';
                         <div class="form-text">
                             <p><?= I18N::translate('Selects which languages of the webtrees manual table of contents are downloaded and cached.') ?></p>
                         </div>
+
+<section id="wthb-toc-custom-langs" class="row">
+
+                        <!-- wthb toc multilingual: custom languages --><?php $prefId = LinkEnhancerModule::PREF_WTHB_TOC_DL_LANGS; ?>
+                        <label class="col-sm-4 col-form-label wt-page-options-label" for="<?= $prefId ?>">
+                            <?= I18N::translate('Custom languages (comma separated)') ?>
+                        </label>
+                        <div class="col-sm-8 wt-page-options-value mb-3">
+                            <input class="form-control" id="<?= $prefId ?>" name="<?= $prefId ?>" type="text"
+                                value="<?= e($prefs[$prefId]) ?>" placeholder="en,nl,es">
+                            <div class="form-text">
+                                <p><?= I18N::translate('Used when the download scope above is "Custom list".') ?></p>
+                                <?php if (!empty($toc_langs) && is_array($toc_langs)): ?>
+                                    <p><?= I18N::translate('Available') ?>: <code><?= e(implode(', ', $toc_langs)) ?></code></p>
+                                <?php endif; ?>
+                                <?php if (!empty($toc_langs_active) && is_array($toc_langs_active)): ?>
+                                    <p><?= I18N::translate('Active in webtrees') ?>: <code><?= e(implode(', ', $toc_langs_active)) ?></code></p>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+</section>                        
                     </div>
                 </div>
             </fieldset>
-
-            <!-- wthb toc multilingual: custom languages --><?php $prefId = LinkEnhancerModule::PREF_WTHB_TOC_DL_LANGS; ?>
-            <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
-                <?= I18N::translate('Custom languages (comma separated)') ?>
-            </label>
-            <div class="col-sm-9 wt-page-options-value mb-3">
-                <input class="form-control" id="<?= $prefId ?>" name="<?= $prefId ?>" type="text"
-                    value="<?= e($prefs[$prefId]) ?>" placeholder="en,nl,es">
-                <div class="form-text">
-                    <p><?= I18N::translate('Used when the download scope above is "Custom list".') ?></p>
-                    <?php if (!empty($toc_langs) && is_array($toc_langs)): ?>
-                        <p><?= I18N::translate('Available') ?>: <code><?= e(implode(', ', $toc_langs)) ?></code></p>
-                    <?php endif; ?>
-                    <?php if (!empty($toc_langs_active) && is_array($toc_langs_active)): ?>
-                        <p><?= I18N::translate('Active in webtrees') ?>: <code><?= e(implode(', ', $toc_langs_active)) ?></code></p>
-                    <?php endif; ?>
-                </div>
-            </div>
-
-            <!-- wthb toc multilingual: download base url --><?php $prefId = LinkEnhancerModule::PREF_WTHB_TOC_BASE_URL; ?>
-            <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
-                <?= I18N::translate('TOC download base URL') ?>
-            </label>
-            <div class="col-sm-9 wt-page-options-value mb-3">
-                <input class="form-control" id="<?= $prefId ?>" name="<?= $prefId ?>" type="text"
-                    value="<?= e($prefs[$prefId]) ?>" placeholder="<?= e(WthbTocService::BASE_URL) ?>">
-                <div class="form-text">
-                    <p><?= I18N::translate('Base URL of the table of contents data (wthb-toc.json, languages.json, [lang].json). Leave empty to use the built-in default. Useful for testing against a local server.') ?></p>
-                </div>
-            </div>
 
             <!-- wthb toc multilingual: status -->
             <fieldset class="form-group mb-3">
                 <div class="row">
                     <legend class="col-form-label col-sm-3 wt-page-options-label sub">
-                        <?= I18N::translate('Table of contents: status') ?>
+                        <?= I18N::translate('Status') ?>
                     </legend>
                     <div class="col-sm-9 wt-page-options-value mt-2">
                         <?php
@@ -192,45 +251,7 @@ $link_cmm = $links['csvexportcmm'] ?? '';
                     </div>
                 </div>
             </fieldset>
-
-            <!-- wthb links activation type --><?php $prefId = LinkEnhancerModule::PREF_WTHB_LINKS_TYPE; ?>
-            <fieldset class="form-group mb-3">
-                <div class="row">
-                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
-                        <?= I18N::translate('Additional help links') ?>
-                    </legend>
-                    <div class="col-sm-9 wt-page-options-value mt-2">
-                        <?= view('components/radios-inline', [
-                            'id' => $prefId,
-                            'name' => $prefId,
-                            'options' => [
-                                MoreI18N::xlate('no'),
-                                /*I18N: */ I18N::translate('user defined'),
-                                MoreI18N::xlate('yes')
-                            ],
-                            'selected' => (int) $prefs[$prefId]
-                        ]) ?>
-
-<section id="wthb-links-json">          
-                        <!-- wthb links json --><?php $prefId = LinkEnhancerModule::PREF_WTHB_LINKS_JSON; ?>
-                        <div class="row">
-                            <div class="col-sm-12 wt-page-options-value mt-2">
-                            <div class="form-text">JSON</div>
-                            <textarea id="<?= $prefId ?>" name="<?= $prefId ?>" class="form-control font-monospace" dir="ltr"
-                                    rows="5"><?= e($prefs[$prefId]) ?></textarea>
-                                <div class="form-text">
-                                    <p><?= I18N::translate('Example') ?>:
-                                        <textarea class="form-control font-monospace" dir="ltr" rows="5" disabled readonly wrap="off" style="font-size:0.9em; color: gray;"><?= e(LinkEnhancerModule::STD_WTHB_LINKS_JSON) ?></textarea>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
 </section>
-
-                    </div>
-                </div>
-            </fieldset>
-
 
             <!-- support subcontext wthb-links --><?php $prefId = LinkEnhancerModule::PREF_WTHB_SUBCONTEXT; ?>
             <fieldset class="form-group mb-3">
