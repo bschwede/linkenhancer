@@ -65,7 +65,7 @@ use function trim;
  */
 final class WthbTocService
 {
-    public const BASE_URL = 'https://bschwede.github.io/linkenhancer-wthb-toc-lang/';
+    public const BASE_URL = 'https://bschwede.codeberg.page/linkenhancer-wthb-toc-lang/';
 
     private const DATA_SUBDIR = 'linkenhancer/wthb-toc-lang/';
     private const CACHE_TTL   = 86400;
