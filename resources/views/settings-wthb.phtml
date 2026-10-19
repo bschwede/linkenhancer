@@ -210,6 +210,12 @@ $link_cmm = $links['csvexportcmm'] ?? '';
                         <?= I18N::translate('Status') ?>
                     </legend>
                     <div class="col-sm-9 wt-page-options-value mt-2">
+                        <div class="mb-2">
+                            <button type="submit" class="btn btn-secondary btn-sm" formaction="<?= e($links['refresh_toc']) ?>">
+                                <?= I18N::translate('Force refresh data') ?>
+                            </button>
+                            <span class="form-text ms-2"><?= I18N::translate('Downloads the latest structure, translations and version info from the feed.') ?></span>
+                        </div>
                         <?php
                         $toc_status  = $toc_status ?? [];
                         $toc_struct  = $toc_status['structure'] ?? [];

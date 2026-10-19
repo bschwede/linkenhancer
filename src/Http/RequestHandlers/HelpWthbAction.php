@@ -58,7 +58,7 @@ class HelpWthbAction implements RequestHandlerInterface
                 'items'        => $toc_data['items'],
                 'translations' => $translations,
                 'generated'    => Registry::timestampFactory()->fromString($toc_data['version'] ?? null, 'Y-m-d')->format(strtr(I18N::dateFormat(), ['%' => ''])),
-                'wiki_base'    => 'https://wiki.genealogy.net',
+                'wiki_base'    => $module->getPref(LinkEnhancerModule::PREF_GENWIKI_LINK, true),
             ]);
         }
 

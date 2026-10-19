@@ -46,9 +46,11 @@ use function explode;
 use function file_get_contents;
 use function filemtime;
 use function glob;
+use function is_array;
 use function is_dir;
 use function is_file;
 use function json_decode;
+use function json_encode;
 use function mkdir;
 use function strtolower;
 use function substr;
@@ -56,12 +58,16 @@ use function time;
 use function trim;
 
 /**
- * WTHB TOC multilingual loader — two-layer cache, download, validation,
- * and language scope resolution.
+ * WTHB TOC multilingual loader — hash-based change detection, download,
+ * validation, and language scope resolution.
  *
- * Layer 1: Registry::cache()->file() (data/cache/, TTL 24h)
+ * Change detection: version.json (per-file hashes) is re-fetched at most once per
+ * VERSION_TTL; a data file is served from disk while its hash matches the feed and
+ * re-downloaded when the feed changed. Degrades to a filemtime TTL when version.json
+ * is unavailable.
+ *
+ * Layer 1: Registry::cache()->file() (data/cache/, hash-aware keys, TTL 24h)
  * Layer 2: data/linkenhancer/wthb-toc-lang/ (persistent, offline fallback)
- * Download: GitHub Pages (only when Layer 2 > 24h old)
  */
 final class WthbTocService
 {
@@ -69,6 +75,8 @@ final class WthbTocService
 
     private const DATA_SUBDIR = 'linkenhancer/wthb-toc-lang/';
     private const CACHE_TTL   = 86400;
+    private const VERSION_TTL = 86400; // manifest (version.json) re-check cadence
+    private const STATE_FILE  = 'feed-state.json'; // per-file applied hashes (in DATA_SUBDIR)
 
     // ─── Public API (Runtime) ───────────────────────────────────────────────
 
@@ -79,8 +87,10 @@ final class WthbTocService
      */
     public function loadStructure(): array
     {
+        $hash = $this->currentFeedVersion()['files']['wthb-toc.json'] ?? '';
+
         return Registry::cache()->file()->remember(
-            'wthb-toc-structure',
+            'wthb-toc-structure-' . $hash,
             fn (): array => $this->fetchJson('wthb-toc.json'),
             self::CACHE_TTL
         );
@@ -205,6 +215,8 @@ final class WthbTocService
 
         $this->download('languages.json');
 
+        $this->syncFeedState($this->download('version.json'));
+
         if ($langs === null) {
             $info  = $this->availableLanguages();
             $langs = array_values(array_diff($info['languages'], [$info['default']]));
@@ -263,6 +275,7 @@ final class WthbTocService
      */
     public function clearCache(): void
     {
+        Registry::cache()->file()->forget('wthb-toc-version');
         Registry::cache()->file()->forget('wthb-toc-structure');
 
         $info = $this->availableLanguages();
@@ -287,19 +300,22 @@ final class WthbTocService
      */
     private function loadLang(string $lang): array
     {
+        $hash = $this->currentFeedVersion()['files'][$lang . '.json'] ?? '';
+
         return Registry::cache()->file()->remember(
-            'wthb-toc-lang-' . $lang,
+            'wthb-toc-lang-' . $lang . '-' . $hash,
             fn (): array => $this->fetchJson($lang . '.json'),
             self::CACHE_TTL
         );
     }
 
     /**
-     * Two-layer cache: Registry (TTL) + data/ (persistent).
+     * Plain cache: data/ file while fresh (filemtime < CACHE_TTL), else download,
+     * falling back to the local file on download failure. No hash awareness.
      *
      * @return array<string, mixed>
      */
-    private function fetchJson(string $filename): array
+    private function _fetchPlain(string $filename): array
     {
         $local = Webtrees::DATA_DIR . self::DATA_SUBDIR . $filename;
 
@@ -314,6 +330,94 @@ final class WthbTocService
         }
 
         return $data;
+    }
+
+    /**
+     * Hash-gated fetch: serve the local file while its per-file hash matches the
+     * current feed version; re-download when the feed changed. Degrades to
+     * _fetchPlain when version.json (or its "files" map) is unavailable.
+     *
+     * @return array<string, mixed>
+     */
+    private function fetchJson(string $filename): array
+    {
+        if ($filename === 'version.json') {
+            return $this->_fetchPlain($filename);
+        }
+
+        $files = $this->currentFeedVersion()['files'] ?? null;
+        $state = $this->readFeedState();
+        $local = Webtrees::DATA_DIR . self::DATA_SUBDIR . $filename;
+
+        if (self::shouldServeLocal($files, $state, is_file($local), $filename)) {
+            return json_decode((string) file_get_contents($local), true) ?? [];
+        }
+
+        if ($files === null || !isset($files[$filename])) {
+            return $this->_fetchPlain($filename); // no per-file hash → degrade to TTL
+        }
+
+        $data = $this->download($filename);
+        if ($data !== []) {
+            $state[$filename] = $files[$filename];
+            $this->writeFeedState($state);
+        }
+
+        return $data !== [] ? $data : $this->_fetchPlain($filename);
+    }
+
+    /**
+     * The current feed manifest (version.json) — re-fetched at most once per
+     * VERSION_TTL. Never via the hash-gated fetchJson (avoids recursion).
+     *
+     * @return array<string, mixed>|null null when unavailable or without a "files" map
+     */
+    public function currentFeedVersion(): ?array
+    {
+        $data = Registry::cache()->file()->remember(
+            'wthb-toc-version',
+            fn (): array => $this->download('version.json'),
+            self::VERSION_TTL
+        );
+
+        return is_array($data) && isset($data['files']) ? $data : null;
+    }
+
+    /**
+     * Per-file applied hashes (feed-state.json in DATA_SUBDIR).
+     *
+     * @return array<string, string>
+     */
+    private function readFeedState(): array
+    {
+        $state = $this->localJson(self::STATE_FILE);
+
+        return is_array($state) ? $state : [];
+    }
+
+    /**
+     * @param array<string, string> $state
+     */
+    private function writeFeedState(array $state): void
+    {
+        $dir = Webtrees::DATA_DIR . self::DATA_SUBDIR;
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+        file_put_contents($dir . self::STATE_FILE, json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    }
+
+    /**
+     * After a forced refresh: record the feed version's per-file hashes as applied.
+     *
+     * @param array<string, mixed> $version
+     */
+    private function syncFeedState(array $version): void
+    {
+        $files = $version['files'] ?? null;
+        if (is_array($files)) {
+            $this->writeFeedState($files);
+        }
     }
 
     /**
@@ -334,6 +438,23 @@ final class WthbTocService
         $url = trim($url);
 
         return $url === '' ? self::BASE_URL : rtrim($url, '/') . '/';
+    }
+
+    /**
+     * Decide whether a hash-gated fetch can be served from the local file.
+     * Pure — unit-testable. True only when a per-file hash exists for the file,
+     * the local file is present, and the applied hash matches the feed hash.
+     *
+     * @param array<string, string>|null $files  per-file hashes from version.json (null = unavailable)
+     * @param array<string, string>      $state  applied hashes (feed-state.json)
+     */
+    public static function shouldServeLocal(?array $files, array $state, bool $local_exists, string $filename): bool
+    {
+        if ($files === null || !isset($files[$filename])) {
+            return false; // no per-file hash → caller degrades to TTL logic
+        }
+
+        return $local_exists && ($state[$filename] ?? null) === $files[$filename];
     }
 
     /**

@@ -561,6 +561,31 @@ class LinkEnhancerModule extends AbstractModule implements
 
 
     /**
+     * Force-refresh the webtrees manual TOC data (structure + translations + version.json).
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    public function postAdminRefreshTocAction(ServerRequestInterface $request): ResponseInterface
+    {
+        try {
+            $svc     = $this->wthbToc();
+            $results = $svc->refresh($svc->resolveLanguages(null));
+            FlashMessages::addMessage(
+                MoreI18N::xlate('Table of contents data refreshed: %d file(s).', count($results)),
+                'success'
+            );
+        } catch (Exception $ex) {
+            FlashMessages::addMessage(
+                MoreI18N::xlate('TOC refresh failed') . '<hr><samp dir="ltr">' . $ex->getMessage() . '</samp>',
+                'danger'
+            );
+        }
+        return redirect($this->getConfigLink());
+    }
+
+
+    /**
      * Save the user preferences in the database
      *
      * @param ServerRequestInterface $request

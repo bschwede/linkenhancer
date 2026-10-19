@@ -79,5 +79,26 @@ check('B7 built-in default ends with slash', str_ends_with(WthbTocService::BASE_
 // B8 - normalizing the built-in default is a no-op
 check('B8 normalizing default is a no-op', WthbTocService::normalizeBaseUrl(WthbTocService::BASE_URL), WthbTocService::BASE_URL);
 
+// ── shouldServeLocal (pure hash-gate decision) ──────────────────────────────
+$files = ['en.json' => 'aaaa', 'de.json' => 'bbbb'];
+
+// G1 - no manifest (null) → degrade (false)
+check('G1 no manifest → false', WthbTocService::shouldServeLocal(null, [], true, 'en.json'), false);
+
+// G2 - filename not in manifest → false
+check('G2 file not in manifest → false', WthbTocService::shouldServeLocal($files, [], true, 'xx.json'), false);
+
+// G3 - local exists + state matches → true
+check('G3 local + state match → true', WthbTocService::shouldServeLocal($files, ['en.json' => 'aaaa'], true, 'en.json'), true);
+
+// G4 - local exists + state mismatch → false (feed changed)
+check('G4 state mismatch → false', WthbTocService::shouldServeLocal($files, ['en.json' => 'zzzz'], true, 'en.json'), false);
+
+// G5 - local exists + state missing key → false (never fetched)
+check('G5 state missing key → false', WthbTocService::shouldServeLocal($files, [], true, 'en.json'), false);
+
+// G6 - no local file (state matches) → false (must download)
+check('G6 no local file → false', WthbTocService::shouldServeLocal($files, ['en.json' => 'aaaa'], false, 'en.json'), false);
+
 echo "\n{$total} checks, {$failures} failure(s)\n";
 exit($failures === 0 ? 0 : 1);
