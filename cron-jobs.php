@@ -86,6 +86,11 @@ return [
                     'optional'    => true,
                     'description' => MoreI18N::translate('Only clear the cache, no download.'),
                 ],
+                [
+                    'name'        => '--jitter=...',
+                    'optional'    => true,
+                    'description' => MoreI18N::translate('Max. random delay in seconds before refresh (default 30, env WTHB_TOC_JITTER).'),
+                ],
             ],
         ],
         [

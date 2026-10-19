@@ -50,9 +50,11 @@ CliBootstrap::guard();
 // ---------------------------------------------------------------- arguments
 $override = null;
 $clear_only = false;
+$jitter_max = null;
 foreach (array_slice($argv, 1) as $arg) {
     if ($arg === '--help' || $arg === '-h') {
-        echo 'usage: php ' . basename(__FILE__) . ' [--all] [--lang=<codes>] [--clear]' . PHP_EOL;
+        echo 'usage: php ' . basename(__FILE__) . ' [--all] [--lang=<codes>] [--clear] [--jitter=<seconds>]' . PHP_EOL;
+        echo '  --jitter=<seconds>  max. Zufallsverzögerung vor dem Refresh (Default 30, Env WTHB_TOC_JITTER)' . PHP_EOL;
         exit(0);
     }
     if ($arg === '--all') {
@@ -64,6 +66,14 @@ foreach (array_slice($argv, 1) as $arg) {
     if ($arg === '--clear') {
         $clear_only = true;
     }
+    if (str_starts_with($arg, '--jitter=')) {
+        $jitter_max = (int) substr($arg, 9);
+    }
+}
+// Jitter-Fenster: --jitter > Env WTHB_TOC_JITTER > Default 30
+if ($jitter_max === null) {
+    $env_jitter = getenv('WTHB_TOC_JITTER');
+    $jitter_max = ($env_jitter !== false && $env_jitter !== '') ? (int) $env_jitter : 30;
 }
 
 // ---------------------------------------------------------------- bootstrap
@@ -79,6 +89,14 @@ if ($clear_only) {
 }
 
 // ---------------------------------------------------------------- refresh
+// de-thunder: verteilt Requests über ein Jitter-Fenster, damit bei identischen
+// Cron-Zeiten nicht alle Instanzen gleichzeitig den Feed anfragen.
+$jitter = random_int(0, max(0, $jitter_max));
+echo 'Jitter: ' . $jitter . ' s vor dem Refresh.' . PHP_EOL;
+if ($jitter > 0) {
+    sleep($jitter);
+}
+
 $start = microtime(true);
 
 $langs = $svc->resolveLanguages($override);
