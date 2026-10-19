@@ -97,18 +97,22 @@ $defaults_json = LinkEnhancerModule::getDefaultPrefsAsJson();
     });
 
     function toggleSectionByRadio(secSelector, radioGroupname, cname, indexes) {
-        const section = document.querySelector(secSelector);
-        if (!section) {
+        const sections = document.querySelectorAll(secSelector);
+        if (sections.length === 0) {
             return;
         }
 
-        for (const idx of indexes) {
-            if (document.getElementById(`${radioGroupname}-${idx}`)?.checked) { // radio is selected - disable
+        const disable = indexes.some((idx) =>
+            document.getElementById(`${radioGroupname}-${idx}`)?.checked
+        );
+
+        sections.forEach((section) => {
+            if (disable) {
                 section.classList.add(cname);
-                return;
+            } else {
+                section.classList.remove(cname);
             }
-        }
-        section.classList.remove(cname);
+        });
     }
 
     function toggleSectionBySelectSingle(secId, selectName, cname, checkvalues, disableifincluded = true) {
