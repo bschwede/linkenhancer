@@ -235,7 +235,7 @@ class LinkEnhancerModule extends AbstractModule implements
 
     public const HELP_CSV = __DIR__ . DIRECTORY_SEPARATOR . 'Schema' . DIRECTORY_SEPARATOR . 'SeedHelpTable.csv';
 
-    public const int HELP_SCHEMA_TARGET_VERSION = 7;
+    public const int HELP_SCHEMA_TARGET_VERSION = 8;
 
     public const PREFERENCES_SCHEMA = [
         // required settings:
@@ -442,7 +442,6 @@ class LinkEnhancerModule extends AbstractModule implements
         }
 
         if ($this->getPref(self::PREF_UID_ACTIVE, true)) {
-            // use unique custom name, if different routes use the same handler class
             Functions::registerRoute('/tree/{tree}/goto-uid/{uid}', GotoUidTreeAction::class);
             Functions::registerRoute('/goto-uid/{uid}', GotoUidAction::class);
             Functions::registerRoute('/tree/{tree}/goto-id/{id}', GotoIdTreeAction::class);
