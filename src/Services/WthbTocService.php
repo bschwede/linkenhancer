@@ -30,7 +30,6 @@ use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Module\ModuleLanguageInterface;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Services\ModuleService;
-use Fisharebest\Webtrees\Webtrees;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 
 use function array_diff;
@@ -73,7 +72,7 @@ final class WthbTocService
 {
     public const BASE_URL = 'https://bschwede.codeberg.page/linkenhancer-wthb-toc-lang/';
 
-    private const DATA_SUBDIR = 'linkenhancer/wthb-toc-lang/';
+    private const DATA_SUBDIR = 'wthb-toc-lang/';
     private const CACHE_TTL   = 86400;
     private const VERSION_TTL = 86400; // manifest (version.json) re-check cadence
     private const STATE_FILE  = 'feed-state.json'; // per-file applied hashes (in DATA_SUBDIR)
@@ -283,7 +282,7 @@ final class WthbTocService
             Registry::cache()->file()->forget('wthb-toc-lang-' . $lang);
         }
 
-        $dir = Webtrees::DATA_DIR . self::DATA_SUBDIR;
+        $dir = DataFiles::dir() . self::DATA_SUBDIR;
         if (is_dir($dir)) {
             foreach (glob($dir . '/*.json') ?: [] as $file) {
                 @unlink($file);
@@ -317,7 +316,7 @@ final class WthbTocService
      */
     private function _fetchPlain(string $filename): array
     {
-        $local = Webtrees::DATA_DIR . self::DATA_SUBDIR . $filename;
+        $local = DataFiles::dir() . self::DATA_SUBDIR . $filename;
 
         if (is_file($local) && (time() - (int) filemtime($local)) < self::CACHE_TTL) {
             return json_decode((string) file_get_contents($local), true) ?? [];
@@ -351,7 +350,7 @@ final class WthbTocService
 
         $files = $this->currentFeedVersion()['files'] ?? null;
         $state = $this->readFeedState();
-        $local = Webtrees::DATA_DIR . self::DATA_SUBDIR . $filename;
+        $local = DataFiles::dir() . self::DATA_SUBDIR . $filename;
 
         if (self::shouldServeLocal($files, $state, is_file($local), $filename)) {
             return json_decode((string) file_get_contents($local), true) ?? [];
@@ -404,7 +403,7 @@ final class WthbTocService
      */
     private function writeFeedState(array $state): void
     {
-        $dir = Webtrees::DATA_DIR . self::DATA_SUBDIR;
+        $dir = DataFiles::dir() . self::DATA_SUBDIR;
         if (!is_dir($dir)) {
             mkdir($dir, 0755, true);
         }
@@ -475,7 +474,7 @@ final class WthbTocService
         $json = @file_get_contents($url, false, $ctx);
 
         if ($json !== false && $json !== '') {
-            $local = Webtrees::DATA_DIR . self::DATA_SUBDIR . $filename;
+            $local = DataFiles::dir() . self::DATA_SUBDIR . $filename;
             $dir   = dirname($local);
             if (!is_dir($dir)) {
                 mkdir($dir, 0755, true);
@@ -485,7 +484,7 @@ final class WthbTocService
             return json_decode($json, true) ?? [];
         }
 
-        $local = Webtrees::DATA_DIR . self::DATA_SUBDIR . $filename;
+        $local = DataFiles::dir() . self::DATA_SUBDIR . $filename;
         if (is_file($local)) {
             return json_decode((string) file_get_contents($local), true) ?? [];
         }
@@ -500,7 +499,7 @@ final class WthbTocService
      */
     private function localJson(string $filename): array
     {
-        $local = Webtrees::DATA_DIR . self::DATA_SUBDIR . $filename;
+        $local = DataFiles::dir() . self::DATA_SUBDIR . $filename;
         if (!is_file($local)) {
             return [];
         }

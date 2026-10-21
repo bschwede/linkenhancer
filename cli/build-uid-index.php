@@ -62,8 +62,8 @@ require __DIR__ . '/../../../vendor/autoload.php';
 require __DIR__ . '/../autoload.php';
 
 use Fisharebest\Webtrees\DB;
-use Fisharebest\Webtrees\Webtrees;
 use Illuminate\Database\Query\Expression;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Services\DataFiles;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\UidIndexService;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
 use Schwendinger\Webtrees\Services\CliBootstrap;
@@ -119,7 +119,7 @@ if (!DB::schema()->hasTable(UidIndexService::UID_INDEX_TABLE)
 }
 
 // ---------------------------------------------------------------- lock
-$lock_file = Webtrees::DATA_DIR . 'linkenhancer-build-uid-index.lock';
+$lock_file = DataFiles::path('build-uid-index.lock');
 $lock      = fopen($lock_file, 'c');
 if ($lock === false || !flock($lock, LOCK_EX | LOCK_NB)) {
     echo "already running (lock: {$lock_file})" . PHP_EOL;

@@ -59,9 +59,9 @@ require __DIR__ . '/../autoload.php';
 
 use Fisharebest\Webtrees\DB;
 use Fisharebest\Webtrees\Gedcom;
-use Fisharebest\Webtrees\Webtrees;
 use Illuminate\Database\Query\Expression;
 use Schwendinger\Webtrees\Services\CliBootstrap;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Services\DataFiles;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\IdResolver;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\TextTagCollector;
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\XrefsService;
@@ -114,7 +114,7 @@ if (!DB::schema()->hasTable(XrefsService::INDEX_SCAN_TABLE)
 }
 
 // ---------------------------------------------------------------- lock
-$lock_file = Webtrees::DATA_DIR . 'linkenhancer-build-link-index.lock';
+$lock_file = DataFiles::path('build-link-index.lock');
 $lock      = fopen($lock_file, 'c');
 if ($lock === false || !flock($lock, LOCK_EX | LOCK_NB)) {
     echo "already running (lock: {$lock_file})" . PHP_EOL;
