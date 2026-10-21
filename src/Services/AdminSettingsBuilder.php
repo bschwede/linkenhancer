@@ -73,6 +73,10 @@ final class AdminSettingsBuilder
             'module' => $module->name(),
             'action' => 'AdminResetAccessOverwrites'
         ];
+        $response['links']['refresh_toc'] = route($moduleClass, [
+            'module' => $module->name(),
+            'action' => 'AdminRefreshToc'
+        ]);
 
         $response['tablerows'] = $module->wthb()->getHelpTableCount();
 
