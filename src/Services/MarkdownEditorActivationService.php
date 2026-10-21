@@ -72,6 +72,8 @@ final class MarkdownEditorActivationService
             'filter' => [ // elements the mde should be applied to
                 "textarea[id$='NOTE']",
                 "textarea[id$='note']",
+                "textarea[id$='SOUR-DATA-TEXT']",
+                "textarea[id$='SOUR-TEXT']",
             ]
         ];
         if (Functions::webtreesAtLeast('2.2.5')) {
