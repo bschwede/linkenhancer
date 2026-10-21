@@ -143,6 +143,19 @@ $link_cmm = $links['csvexportcmm'] ?? '';
             </div>
 
             <div class="row">
+                <!-- wthb toc multilingual: auto-update toggle --><?php $prefId = LinkEnhancerModule::PREF_WTHB_TOC_AUTO_UPDATE; ?>
+                <label class="col-sm-3 col-form-label wt-page-options-label sub" for="<?= $prefId ?>">
+                    <?= I18N::translate('Auto-update') ?>
+                </label>
+                <div class="col-sm-9 wt-page-options-value mb-3">
+                    <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                    <div class="form-text">
+                        <p><?= I18N::translate('When disabled, only locally cached data is served (no downloads). The admin force-refresh button and CLI with --force still work. Tip: refresh data before disabling to ensure the latest version is cached.') ?></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
                 <!-- wthb toc multilingual: download base url --><?php $prefId = LinkEnhancerModule::PREF_WTHB_TOC_BASE_URL; ?>
                 <label class="col-sm-3 col-form-label wt-page-options-label sub" for="<?= $prefId ?>">
                     <?= I18N::translate('download base URL') ?>

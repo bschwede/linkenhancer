@@ -31,6 +31,7 @@ declare(strict_types=1);
 //   php modules_v4/linkenhancer/cli/refresh-wthb-toc.php --all        # override: all available
 //   php modules_v4/linkenhancer/cli/refresh-wthb-toc.php --lang=en,fr # override: specific
 //   php modules_v4/linkenhancer/cli/refresh-wthb-toc.php --clear      # only clear cache
+//   php modules_v4/linkenhancer/cli/refresh-wthb-toc.php --force      # run even if auto-update is disabled
 //
 // The download scope is read from the module preference WTHB_TOC_DL_SCOPE:
 //   all    - all languages from languages.json (except default)
@@ -38,6 +39,10 @@ declare(strict_types=1);
 //   custom - user-defined list from WTHB_TOC_DL_LANGS
 //
 // CLI arguments override the pref when given.
+//
+// Auto-update gate: when the module preference WTHB_TOC_AUTO_UPDATE is '0',
+// the refresh is skipped (exit 0) unless --force is given. --clear is not
+// affected by the gate.
 
 require __DIR__ . '/../../../vendor/autoload.php';
 require __DIR__ . '/../autoload.php';
@@ -51,9 +56,11 @@ CliBootstrap::guard();
 $override = null;
 $clear_only = false;
 $jitter_max = null;
+$force = false;
 foreach (array_slice($argv, 1) as $arg) {
     if ($arg === '--help' || $arg === '-h') {
-        echo 'usage: php ' . basename(__FILE__) . ' [--all] [--lang=<codes>] [--clear] [--jitter=<seconds>]' . PHP_EOL;
+        echo 'usage: php ' . basename(__FILE__) . ' [--all] [--lang=<codes>] [--clear] [--force] [--jitter=<seconds>]' . PHP_EOL;
+        echo '  --force             run even if auto-update is disabled (WTHB_TOC_AUTO_UPDATE=0)' . PHP_EOL;
         echo '  --jitter=<seconds>  max. Zufallsverzögerung vor dem Refresh (Default 30, Env WTHB_TOC_JITTER)' . PHP_EOL;
         exit(0);
     }
@@ -65,6 +72,9 @@ foreach (array_slice($argv, 1) as $arg) {
     }
     if ($arg === '--clear') {
         $clear_only = true;
+    }
+    if ($arg === '--force') {
+        $force = true;
     }
     if (str_starts_with($arg, '--jitter=')) {
         $jitter_max = (int) substr($arg, 9);
@@ -85,6 +95,16 @@ $svc = new WthbTocService();
 if ($clear_only) {
     $svc->clearCache();
     echo 'Cache cleared.' . PHP_EOL;
+    exit(0);
+}
+
+// ---------------------------------------------------------------- feature gate
+// The refresh honors the module's auto-update switch (PREF_WTHB_TOC_AUTO_UPDATE):
+// with it off the runtime serves local-only data, so a scheduled refresh is a
+// no-op. --force overrides for maintenance (e.g. one-time refresh before
+// disabling the toggle).
+if (!$force && !$svc->autoUpdateEnabled()) {
+    echo 'Auto-update disabled (module preference WTHB_TOC_AUTO_UPDATE) - nothing to refresh; use --force to refresh anyway' . PHP_EOL;
     exit(0);
 }
 

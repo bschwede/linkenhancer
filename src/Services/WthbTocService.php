@@ -341,6 +341,10 @@ final class WthbTocService
      */
     private function fetchJson(string $filename): array
     {
+        if (!$this->autoUpdateEnabled()) {
+            return $this->localJson($filename);
+        }
+
         if ($filename === 'version.json') {
             return $this->_fetchPlain($filename);
         }
@@ -518,6 +522,16 @@ final class WthbTocService
         }
 
         return array_keys($titles);
+    }
+
+    /**
+     * Is the TOC auto-update feature enabled? When disabled, the runtime path
+     * serves only locally cached files (no HTTP download). The admin force-refresh
+     * button and CLI (with --force) remain unaffected.
+     */
+    public function autoUpdateEnabled(): bool
+    {
+        return $this->readPref(LinkEnhancerModule::PREF_WTHB_TOC_AUTO_UPDATE, '1') === '1';
     }
 
     /**

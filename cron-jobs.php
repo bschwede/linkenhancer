@@ -87,6 +87,11 @@ return [
                     'description' => MoreI18N::translate('Only clear the cache, no download.'),
                 ],
                 [
+                    'name'        => '--force',
+                    'optional'    => true,
+                    'description' => MoreI18N::translate('Run even if auto-update is disabled (WTHB_TOC_AUTO_UPDATE=0).'),
+                ],
+                [
                     'name'        => '--jitter=...',
                     'optional'    => true,
                     'description' => MoreI18N::translate('Max. random delay in seconds before refresh (default 30, env WTHB_TOC_JITTER).'),
