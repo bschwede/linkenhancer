@@ -69,7 +69,7 @@ return [
         [
             'command'      => 'modules_v4/linkenhancer/cli/refresh-wthb-toc.php',
             'command_type' => 'module',
-            'description'  => MoreI18N::translate('Download/refresh WTHB TOC translations from GitHub Pages. Scope is read from the module settings (all / active / custom).'),
+            'description'  => MoreI18N::translate('Download/refresh WTHB TOC translations from Codeberg Pages. Scope is read from the module settings (all / active / custom).'),
             'params'       => [
                 [
                     'name'        => '--all',

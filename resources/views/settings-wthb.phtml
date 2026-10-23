@@ -165,7 +165,7 @@ $link_cmm = $links['csvexportcmm'] ?? '';
                         placeholder="<?= e(WthbTocService::BASE_URL) ?>">
                     <div class="form-text">
                         <p>
-                            <?= I18N::translate('Base URL of the table of contents data (wthb-toc.json, languages.json, [lang].json). Leave empty to use the built-in default. Useful for testing against a local server.') ?>
+                            <?= /* I18N: %s=list of filenames*/I18N::translate('Base URL of the table of contents data (%s). Leave empty to use the built-in default. Useful for testing against a local server.', 'wthb-toc.json, languages.json, [lang].json') ?>
                         </p>
                     </div>
                 </div>
@@ -202,7 +202,6 @@ $link_cmm = $links['csvexportcmm'] ?? '';
                             <input class="form-control" id="<?= $prefId ?>" name="<?= $prefId ?>" type="text"
                                 value="<?= e($prefs[$prefId]) ?>" placeholder="en,nl,es">
                             <div class="form-text">
-                                <p><?= I18N::translate('Used when the download scope above is "Custom list".') ?></p>
                                 <?php if (!empty($toc_langs) && is_array($toc_langs)): ?>
                                     <p><?= I18N::translate('Available') ?>: <code><?= e(implode(', ', $toc_langs)) ?></code></p>
                                 <?php endif; ?>
@@ -220,7 +219,7 @@ $link_cmm = $links['csvexportcmm'] ?? '';
             <fieldset class="form-group mb-3">
                 <div class="row">
                     <legend class="col-form-label col-sm-3 wt-page-options-label sub">
-                        <?= I18N::translate('Status') ?>
+                        <?= MoreI18N::xlate('Status') ?>
                     </legend>
                     <div class="col-sm-9 wt-page-options-value mt-2">
                         <div class="mb-2">
@@ -238,13 +237,13 @@ $link_cmm = $links['csvexportcmm'] ?? '';
                             <div class="form-text">
                                 <p><?= I18N::translate('Structure') ?>:
                                     <strong><?= (int) ($toc_struct['items'] ?? 0) ?></strong>
-                                    <?= I18N::translate('entries') ?>,
+                                    <?= I18N::plural('entry', 'entries', (int) ($toc_struct['items'] ?? 0)) ?>,
                                     v<?= e((string) ($toc_struct['version'] ?? '?')) ?></p>
                             </div>
                             <table class="table table-sm w-auto mb-2">
                                 <thead>
                                     <tr>
-                                        <th><?= I18N::translate('Language') ?></th>
+                                        <th><?= MoreI18N::xlate('Language') ?></th>
                                         <th class="text-end"><?= I18N::translate('Translated') ?></th>
                                         <th class="text-end"><?= I18N::translate('Coverage') ?></th>
                                     </tr>
@@ -264,7 +263,7 @@ $link_cmm = $links['csvexportcmm'] ?? '';
                             </table>
                         <?php else: ?>
                             <div class="form-text">
-                                <p class="text-muted"><?= I18N::translate('No table of contents data is cached yet. Run the "refresh-wthb-toc" command to download it.') ?></p>
+                                <p class="text-muted"><?= /* I18N: %s=CLI scriptname */I18N::translate('No table of contents data is cached yet. Run the "%s" command to download it.', 'refresh-wthb-toc') ?></p>
                             </div>
                         <?php endif; ?>
                     </div>
