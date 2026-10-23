@@ -69,10 +69,10 @@ final class XrefOverviewColumns
     /** D3: the UID feature pref (module is the source of truth). */
     private bool $uid_active;
 
-    /** Per-request cache for referenced-record lookups: "tree_id\0xref" => label|null. */
+    /** @var array<string, string|null> Per-request cache: "tree_id\0xref" => label|null. */
     private array $target_cache = [];
 
-    /** Per-request cache for global UID ("not unique") lookups: "GLOBAL\0uid" => payload|null. */
+    /** @var array<string, array<string, mixed>|null> Per-request cache: "GLOBAL\0uid" => payload|null. */
     private array $ambiguous_cache = [];
 
     public function __construct(TreeService $tree_service, bool $uid_active = false)
@@ -87,6 +87,7 @@ final class XrefOverviewColumns
      * @param object $row row with xref, file, type (and gedcom on live rows,
      *                    block_id/user_id on block rows)
      */
+    /** @return array<int, string> */
     public function dispatchRow(object $row, int $max_links, string $highlight_xref, bool $index_fresh, ?Tree $context_tree = null, bool $show_snippets = true, bool $with_edit_urls = true): array
     {
         $block_id = property_exists($row, 'block_id') ? (int) $row->block_id : 0;
@@ -121,6 +122,7 @@ final class XrefOverviewColumns
      *
      * Snippets are safe by construction: they come from the privatized text.
      */
+    /** @return array<int, string>|null */
     public function privatizedRowToColumns(
         int $file, string $xref, string $type,
         int $max_links, string $highlight_xref,
@@ -292,6 +294,7 @@ final class XrefOverviewColumns
     /**
      * Live scan row: the record text is already part of the row (C4).
      */
+    /** @return array<int, string> */
     private function liveRowToColumns(object $row, int $max_links, bool $highlight_problems = false, bool $show_snippets = true, bool $with_edit_urls = true): array
     {
         $gedcom = (string) $row->gedcom;
@@ -471,6 +474,7 @@ final class XrefOverviewColumns
      * $highlight_xref is the active "referencing XREF" filter (empty = none);
      * it is forwarded so the inventory can mark that XREF's occurrence.
      */
+    /** @return array<int, string> */
     private function indexRowToColumns(object $row, int $max_links, string $highlight_xref = '', bool $highlight_problems = false, bool $show_snippets = true, bool $with_edit_urls = true): array
     {
         $tree = $this->findTree((int) $row->file);
@@ -488,6 +492,7 @@ final class XrefOverviewColumns
      * @param array{entries: array<int, array{path: string, class: string, token: string, snippet: string}>, counts: array<string, int>} $inventory
      * @param string $highlight_xref active "referencing XREF" filter (index path only; empty = none)
      */
+    /** @return array<int, string> */
     private function inventoryColumns(object $row, ?Tree $tree, ?GedcomRecord $record, array $inventory, int $max_links, string $highlight_xref = '', bool $highlight_problems = false, bool $show_snippets = true, bool $with_edit_urls = true): array
     {
         $xref = (string) $row->xref;

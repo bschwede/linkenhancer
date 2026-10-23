@@ -65,6 +65,7 @@ class CustomMarkdownFactory extends MarkdownFactory {
     }
 
 
+    /** @return array<string, string> */
     public static function getExtensionSettingOptions(ExtensionSettingOption $option):array {
         return match($option) {
             ExtensionSettingOption::TOC_STYLE => [
@@ -88,6 +89,7 @@ class CustomMarkdownFactory extends MarkdownFactory {
         };
     }
 
+    /** @return array<string, mixed> */
     private function initConfig(): array {
         $config = [...self::CONFIG_MARKDOWN];
         $ext = [];
@@ -136,6 +138,7 @@ class CustomMarkdownFactory extends MarkdownFactory {
         return $config;
     }
 
+    /** @return array<string, string|bool> */
     private function footnoteConfig(): array {
         return [
             'backref_class'      => 'footnote-backref',
@@ -149,6 +152,7 @@ class CustomMarkdownFactory extends MarkdownFactory {
         ];
     }
 
+    /** @return array<string, mixed> */
     private function tocConfig(): array {
         $html_user_class = $this->module->getPref(LinkEnhancerModule::PREF_MD_EXT_TOC_CSSCLASS);
         $user_classes = array_diff(explode(' ', $html_user_class), [
@@ -213,6 +217,7 @@ class CustomMarkdownFactory extends MarkdownFactory {
         ];
     }
 
+    /** @return array<string, mixed> */
     private function smartPunctConfig(int $type): array {
         // https://commonmark.thephpleague.com/2.x/extensions/smart-punctuation/
         $quote_def = match($type) {
@@ -241,7 +246,7 @@ class CustomMarkdownFactory extends MarkdownFactory {
     /**
      * create commonmark environment for markdown routine
      * @param Tree|null $tree
-     * @param array|null $config
+     * @param array<string, mixed>|null $config
      *
      * @return Environment
      */

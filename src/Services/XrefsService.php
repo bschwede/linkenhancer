@@ -476,10 +476,12 @@ final class XrefsService { // stuff related with handling cross-references
     }
 
     
+    /** @return array<int, string> */
     public static function supportedGedcomTableKeys() : array {
         return LinkIndexService::supportedGedcomTableKeys();
     }
 
+    /** @return array<int, string> */
     public static function supportedGedcomRecordKeys(): array
     {
         return LinkIndexService::supportedGedcomRecordKeys();
@@ -679,6 +681,7 @@ final class XrefsService { // stuff related with handling cross-references
      * a shared-note record itself (level 0) is NOT a pointer and stays
      * classified.
      */
+    /** @param array<string, mixed> $entry */
     private static function isSharedNotePointer(array $entry): bool
     {
         return $entry['tag'] === 'NOTE'
@@ -888,6 +891,8 @@ final class XrefsService { // stuff related with handling cross-references
      * Extract the href value from an HTML anchor token (matched by RE_LE_HTML_LINK).
      * Returns ['value' => string, 'is_le' => bool] or null when no href found.
      * The "#@" prefix is stripped from value when present (is_le = true).
+     *
+     * @return array{value: string, is_le: bool}|null
      */
     public static function extractHtmlLinkHref(string $token): ?array
     {

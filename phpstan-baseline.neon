@@ -7,18 +7,6 @@ parameters:
 			path: src/CommonMark/LeImageRenderer.php
 
 		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\CommonMark\\LeImageRenderer\:\:renderEnhancedImageSrc\(\) has parameter \$attrs with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/CommonMark/LeImageRenderer.php
-
-		-
-			message: '#^Property Schwendinger\\Webtrees\\Module\\LinkEnhancer\\CommonMark\\LeImageRenderer\:\:\$img_stdclassnames type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/CommonMark/LeImageRenderer.php
-
-		-
 			message: '#^Variable \$attr on left side of \?\? is never defined\.$#'
 			identifier: nullCoalesce.variable
 			count: 2
@@ -31,112 +19,22 @@ parameters:
 			path: src/CommonMark/LeTableOfContentsRenderer.php
 
 		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\CommonMark\\SmartPunctHelper\:\:array_value_or_default\(\) has parameter \$array with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/CommonMark/SmartPunctHelper.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\CommonMark\\SmartPunctHelper\:\:getSmartPunctExtConfig\(\) has parameter \$quote_def with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/CommonMark/SmartPunctHelper.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\DataFix\\DataFixDispatcher\:\:apply\(\) has parameter \$params with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/DataFix/DataFixDispatcher.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\DataFix\\DataFixDispatcher\:\:needsUpdate\(\) has parameter \$params with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/DataFix/DataFixDispatcher.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\DataFix\\DataFixDispatcher\:\:optionsHtml\(\) has parameter \$params with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/DataFix/DataFixDispatcher.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\DataFix\\DataFixDispatcher\:\:preview\(\) has parameter \$params with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/DataFix/DataFixDispatcher.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\DataFix\\DataFixDispatcher\:\:processBlocks\(\) has parameter \$params with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/DataFix/DataFixDispatcher.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\DataFix\\DataFixDispatcher\:\:processBlocks\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/DataFix/DataFixDispatcher.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\DataFix\\DataFixDispatcher\:\:recordsToFix\(\) has parameter \$params with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/DataFix/DataFixDispatcher.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\DataFix\\DataFixDispatcher\:\:recordsToFix\(\) return type with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/DataFix/DataFixDispatcher.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\DataFix\\DataFixDispatcher\:\:resolve\(\) has parameter \$params with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/DataFix/DataFixDispatcher.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\DataFix\\Handlers\\XrefUidSwapFix\:\:selectedRectypes\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\DataFix\\Handlers\\XrefUidSwapFix\:\:selectedRectypes\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/DataFix/Handlers/XrefUidSwapFix.php
 
 		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Factories\\CustomMarkdownFactory\:\:createEnvironment\(\) has parameter \$config with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
+			message: '#^Offset ''end'' does not exist on array\{value\: string, is_le\: bool\}\.$#'
+			identifier: offsetAccess.notFound
 			count: 1
-			path: src/Factories/CustomMarkdownFactory.php
+			path: src/DataFix/Handlers/XrefUidSwapFix.php
 
 		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Factories\\CustomMarkdownFactory\:\:footnoteConfig\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
+			message: '#^Offset ''start'' does not exist on array\{value\: string, is_le\: bool\}\.$#'
+			identifier: offsetAccess.notFound
 			count: 1
-			path: src/Factories/CustomMarkdownFactory.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Factories\\CustomMarkdownFactory\:\:getExtensionSettingOptions\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Factories/CustomMarkdownFactory.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Factories\\CustomMarkdownFactory\:\:initConfig\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Factories/CustomMarkdownFactory.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Factories\\CustomMarkdownFactory\:\:smartPunctConfig\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Factories/CustomMarkdownFactory.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Factories\\CustomMarkdownFactory\:\:tocConfig\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Factories/CustomMarkdownFactory.php
+			path: src/DataFix/Handlers/XrefUidSwapFix.php
 
 		-
 			message: '#^Call to function method_exists\(\) with Fisharebest\\Webtrees\\GedcomRecord and ''fullName'' will always evaluate to true\.$#'
@@ -163,32 +61,8 @@ parameters:
 			path: src/LinkEnhancerModule.php
 
 		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\LinkEnhancerModule\:\:getAllPrefs\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/LinkEnhancerModule.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\LinkEnhancerModule\:\:getInitializedOptions\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/LinkEnhancerModule.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\LinkEnhancerModule\:\:listUrl\(\) has parameter \$parameters with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/LinkEnhancerModule.php
-
-		-
 			message: '#^Offset ''type'' on array\{type\: ''bool'', default\: ''1'', parent\: ''MD_ACTIVE''\|''MD_EXT_ACTIVE''\|''WTHB_LINK_ACTIVE''\|''WTHB_TOCNSEARCH'', mode\: Schwendinger\\Webtrees\\Module\\LinkEnhancer\\OverwriteMode\:\:ParentIsZero\}\|array\{type\: ''bool'', default\: ''1'', parent\: ''OPEN_IN_NEW_TAB'', mode\: Schwendinger\\Webtrees\\Module\\LinkEnhancer\\OverwriteMode\:\:ParentIsNotOne\}\|array\{type\: ''bool''\|''int'', default\: ''0''\|''1''\|''10000''\|''2''\}\|array\{type\: ''int'', default\: ''2'', parent\: ''MD_EXT_ACTIVE'', mode\: Schwendinger\\Webtrees\\Module\\LinkEnhancer\\OverwriteMode\:\:ParentIsZero\}\|array\{type\: ''string'', default\?\: ''''\|''\#''\|"\[\\n\{\\"title\\"\:…"\|''\[TOC\]''\|''all''\|''dropdown''\|''https\://wiki…''\|''md\-img''\|''md\-img\-title''\|''none''\|''relative''\|''↩''\} on left side of \?\? always exists and is not nullable\.$#'
 			identifier: nullCoalesce.offset
-			count: 1
-			path: src/LinkEnhancerModule.php
-
-		-
-			message: '#^Property Schwendinger\\Webtrees\\Module\\LinkEnhancer\\LinkEnhancerModule\:\:\$prefs_cache type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
 			count: 1
 			path: src/LinkEnhancerModule.php
 
@@ -203,8 +77,6 @@ parameters:
 			identifier: identical.alwaysFalse
 			count: 1
 			path: src/LinkEnhancerModule.php
-
-
 
 		-
 			message: '#^Variable \$setting on left side of \?\? always exists and is not nullable\.$#'
@@ -225,42 +97,6 @@ parameters:
 			path: src/LinkEnhancerUtils.php
 
 		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\LinkEnhancerUtils\:\:getActiveRoute\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/LinkEnhancerUtils.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\LinkEnhancerUtils\:\:getIncludeWebressourceString\(\) has parameter \$bundleShortcuts with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/LinkEnhancerUtils.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\LinkEnhancerUtils\:\:getJsI18N\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/LinkEnhancerUtils.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\LinkEnhancerUtils\:\:getMarkdownHelpExamples\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/LinkEnhancerUtils.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\LinkEnhancerUtils\:\:getSearchEngines\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/LinkEnhancerUtils.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\LinkEnhancerUtils\:\:getWthbLinksTranslations\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/LinkEnhancerUtils.php
-
-		-
 			message: '#^Expression on left side of \?\? is not nullable\.$#'
 			identifier: nullCoalesce.expr
 			count: 2
@@ -270,24 +106,6 @@ parameters:
 			message: '#^Loose comparison using \=\= between '''' and '''' will always evaluate to true\.$#'
 			identifier: equal.alwaysTrue
 			count: 3
-			path: src/Schema/SeedHelpTable.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Schema\\SeedHelpTable\:\:__construct\(\) has parameter \$data with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Schema/SeedHelpTable.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Schema\\SeedHelpTable\:\:setRowDefaults\(\) has parameter \$row with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Schema/SeedHelpTable.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Schema\\SeedHelpTable\:\:skipRow\(\) has parameter \$row with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
 			path: src/Schema/SeedHelpTable.php
 
 		-
@@ -303,14 +121,8 @@ parameters:
 			path: src/Schema/SeedHelpTable.php
 
 		-
-			message: '#^Property Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Schema\\SeedHelpTable\:\:\$data type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Schema/SeedHelpTable.php
-
-		-
-			message: '#^Property Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Schema\\SeedHelpTable\:\:\$skippedRows type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
+			message: '#^Parameter &\$row by\-ref type of method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Schema\\SeedHelpTable\:\:setRowDefaults\(\) expects array\<string, string\|null\>, array\<string, int\|string\|null\> given\.$#'
+			identifier: parameterByRef.type
 			count: 1
 			path: src/Schema/SeedHelpTable.php
 
@@ -327,100 +139,10 @@ parameters:
 			path: src/Schema/SeedHelpTable.php
 
 		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\AdminSettingsBuilder\:\:build\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Services/AdminSettingsBuilder.php
-
-		-
-			message: '#^Property Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\ContentBuilder\:\:\$bundleShortcuts type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Services/ContentBuilder.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\LinkIndexService\:\:indexStatus\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Services/LinkIndexService.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\LinkIndexService\:\:rectypeSources\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Services/LinkIndexService.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\LinkIndexService\:\:supportedGedcomRecordKeys\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Services/LinkIndexService.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\LinkIndexService\:\:supportedGedcomTableKeys\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Services/LinkIndexService.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\LinkRenderer\:\:emptyCounts\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Services/LinkRenderer.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\LinkRenderer\:\:expectedTagFor\(\) has parameter \$target with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Services/LinkRenderer.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\LinkRenderer\:\:targetStatus\(\) has parameter \$resolved with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Services/LinkRenderer.php
-
-		-
 			message: '#^Strict comparison using \!\=\= between non\-empty\-list and array\{\} will always evaluate to true\.$#'
 			identifier: notIdentical.alwaysTrue
 			count: 1
 			path: src/Services/LinkRenderer.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\MarkdownEditorActivationService\:\:getAllRules\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Services/MarkdownEditorActivationService.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\MarkdownEditorActivationService\:\:getCustomRule\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Services/MarkdownEditorActivationService.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\MarkdownEditorActivationService\:\:getDefaultRules\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Services/MarkdownEditorActivationService.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\MarkdownEditorActivationService\:\:setCustomRule\(\) has parameter \$filter with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Services/MarkdownEditorActivationService.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\MarkdownEditorActivationService\:\:setCustomRule\(\) has parameter \$handler with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Services/MarkdownEditorActivationService.php
-
-		-
-			message: '#^Property Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\MarkdownEditorActivationService\:\:\$rules type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Services/MarkdownEditorActivationService.php
 
 		-
 			message: '#^Left side of && is always false\.$#'
@@ -447,74 +169,20 @@ parameters:
 			path: src/Services/WthbService.php
 
 		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\WthbService\:\:getContextHelp\(\) has parameter \$activeroute with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Services/WthbService.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\WthbService\:\:getHelpTableCount\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Services/WthbService.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\WthbService\:\:importCsv\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Services/WthbService.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\WthbService\:\:importCsvFlash\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Services/WthbService.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\WthbService\:\:importRoutesAction\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Services/WthbService.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\WthbService\:\:loadCsvStream\(\) has parameter \$result with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Services/WthbService.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\WthbService\:\:loadCsvStream\(\) has parameter \$stream with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Services/WthbService.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\WthbService\:\:loadCsvStream\(\) should return array\<string\> but returns list\<array\<string\|null\>\>\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Services/WthbService.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\WthbService\:\:setImportFlashError\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Services/WthbService.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\WthbService\:\:setImportFlashOk\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Services/WthbService.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\WthbService\:\:setImportFlashOk\(\) has parameter \$result with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Services/WthbService.php
-
-		-
 			message: '#^PHPDoc tag @var with type string is not subtype of native type Fisharebest\\Webtrees\\Module\\ModuleInterface\|null\.$#'
 			identifier: varTag.nativeType
+			count: 1
+			path: src/Services/WthbService.php
+
+		-
+			message: '#^Parameter \#1 \$data of class Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Schema\\SeedHelpTable constructor expects array\<int, array\<string, string\|null\>\>, list\<array\<string, array\|string\>\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Services/WthbService.php
+
+		-
+			message: '#^Result of method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\WthbService\:\:importCsvFlash\(\) \(void\) is used\.$#'
+			identifier: method.void
 			count: 1
 			path: src/Services/WthbService.php
 
@@ -523,12 +191,6 @@ parameters:
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: src/Services/WthbTocService.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\XrefDetailService\:\:outgoingLinks\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Services/XrefDetailService.php
 
 		-
 			message: '#^Instanceof between Fisharebest\\Webtrees\\GedcomRecord and Fisharebest\\Webtrees\\GedcomRecord will always evaluate to true\.$#'
@@ -543,50 +205,20 @@ parameters:
 			path: src/Services/XrefOverviewColumns.php
 
 		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\XrefOverviewColumns\:\:dispatchRow\(\) return type has no value type specified in iterable type array\.$#'
+			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\XrefOverviewColumns\:\:inventoryColumns\(\) has parameter \$inventory with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Services/XrefOverviewColumns.php
 
 		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\XrefOverviewColumns\:\:indexRowToColumns\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Services/XrefOverviewColumns.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\XrefOverviewColumns\:\:inventoryColumns\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Services/XrefOverviewColumns.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\XrefOverviewColumns\:\:liveRowToColumns\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Services/XrefOverviewColumns.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\XrefOverviewColumns\:\:privatizedRowToColumns\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
+			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\XrefOverviewColumns\:\:resolveTarget\(\) should return array\{name\: string, url\: string, tree_label\: string, actual\: string\}\|null but returns string\|null\.$#'
+			identifier: return.type
 			count: 1
 			path: src/Services/XrefOverviewColumns.php
 
 		-
 			message: '#^PHPDoc tag @return with type \(callable\)\|null is not subtype of native type callable\.$#'
 			identifier: return.phpDocType
-			count: 1
-			path: src/Services/XrefOverviewColumns.php
-
-		-
-			message: '#^Property Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\XrefOverviewColumns\:\:\$ambiguous_cache type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Services/XrefOverviewColumns.php
-
-		-
-			message: '#^Property Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\XrefOverviewColumns\:\:\$target_cache type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
 			count: 1
 			path: src/Services/XrefOverviewColumns.php
 
@@ -601,27 +233,3 @@ parameters:
 			identifier: nullCoalesce.variable
 			count: 1
 			path: src/Services/XrefOverviewColumns.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\XrefsService\:\:extractHtmlLinkHref\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Services/XrefsService.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\XrefsService\:\:isSharedNotePointer\(\) has parameter \$entry with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Services/XrefsService.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\XrefsService\:\:supportedGedcomRecordKeys\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Services/XrefsService.php
-
-		-
-			message: '#^Method Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\XrefsService\:\:supportedGedcomTableKeys\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Services/XrefsService.php

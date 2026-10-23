@@ -312,6 +312,7 @@ class LinkEnhancerModule extends AbstractModule implements
         self::PREF_MD_EXT_SMAPU_DEF          => [ 'type' => 'string', 'default' => '' ], //JSON
     ];
 
+    /** @var array<string, string>|null */
     private array|null $prefs_cache = null;
 
     protected WthbService $wthb;
@@ -871,7 +872,7 @@ class LinkEnhancerModule extends AbstractModule implements
     /**
      * The URL for a page showing list options. (ModuleListInterface)
      * @param Tree $tree
-     * @param array $parameters
+     * @param array<string, string> $parameters
      * @return string
      */
     public function listUrl(Tree $tree, array $parameters = []): string
@@ -1096,8 +1097,8 @@ class LinkEnhancerModule extends AbstractModule implements
     /**
      * Load all module settings as array.
      *
-     * @return array
-     */    
+     * @return array<string, string>
+     */
     public function getAllPrefs(): array {
         $result = DB::table('module_setting')
             ->where('module_name', '=', $this->name())
@@ -1145,7 +1146,7 @@ class LinkEnhancerModule extends AbstractModule implements
      * prepare preferences and values used in settings view
      * @param ServerRequestInterface $request
      *
-     * @return array
+     * @return array<string, mixed>
      */
     private function getInitializedOptions(ServerRequestInterface $request): array
     {

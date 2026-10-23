@@ -66,10 +66,11 @@ class WthbService { // stuff related to webtrees manual link handling
     /**
      * load csv data from stream into array needed to populate route_help_map table
      *
-     * @param $stream
+     * @param resource $stream
      * @param string $separator  character between data fields
+     * @param array<string, mixed> $result
      *
-     * @return array<string>
+     * @return array<int, array<string, string|null>>
      */
     private function loadCsvStream($stream, string $separator = ";", array &$result = []): array
     {
@@ -108,7 +109,8 @@ class WthbService { // stuff related to webtrees manual link handling
     /**
      * set flash message if an error occured while importing routes (wthb)
      */
-    public function setImportFlashError(string $title, string $msg) {
+    public function setImportFlashError(string $title, string $msg): void
+    {
         FlashMessages::addMessage(
             '<div class="import-flash"><strong>' . I18N::translate('Webtrees manual') . '</strong>: ' . $title . ' - ' . I18N::translate('Error occurred')
             . "<br/><code>$msg</code></div>",
@@ -119,7 +121,9 @@ class WthbService { // stuff related to webtrees manual link handling
     /**
      * set flash message for successfully or partially importing routes (wthb)
      */
-    public function setImportFlashOk(string $title, array $result) {
+    /** @param array<string, mixed> $result */
+    public function setImportFlashOk(string $title, array $result): void
+    {
         $skippedcnt = 0;
 
         $warnings = [
@@ -158,7 +162,8 @@ class WthbService { // stuff related to webtrees manual link handling
     /**
      * wrapper function with try-catch and flash message for import csv data from file or stream and feed it to the seeder
      */    
-    public function importCsvFlash(string|StreamInterface $file, string $separator = ';', bool $truncate = true, string $encoding = '') {
+    public function importCsvFlash(string|StreamInterface $file, string $separator = ';', bool $truncate = true, string $encoding = ''): void
+    {
         $title = I18N::translate('CSV-Import');
         try {
             $result = $this->importCsv($file, $separator, $truncate, $encoding);
@@ -173,8 +178,10 @@ class WthbService { // stuff related to webtrees manual link handling
 
     /**
      * import csv data from file or stream and feed it to the seeder
+     *
+     * @return array<string, int>
      */
-    public function importCsv(string|StreamInterface $file, string $separator = ';', bool $truncate = true, string $encoding = '')
+    public function importCsv(string|StreamInterface $file, string $separator = ';', bool $truncate = true, string $encoding = ''): array
     {
         $result = ['total' => 0, 'total_seeder' => 0, 'skipped_seeder' => 0];
         $data = [];
@@ -204,7 +211,7 @@ class WthbService { // stuff related to webtrees manual link handling
     /**
      * Query route to help mapping table for total count of rows and count of mapped rows (where an url is set)
      *
-     * @return array
+     * @return array<string, int>
      */
     public function getHelpTableCount(): array
     {
@@ -229,7 +236,7 @@ class WthbService { // stuff related to webtrees manual link handling
     /**
      * import in webtrees registered routes into table route_help_map
      *
-     * @return array  count of rows in total and skipped
+     * @return array<string, int>  count of rows in total and skipped
      */
     public function importRoutesAction(ServerRequestInterface $request): array
     {
@@ -258,7 +265,7 @@ class WthbService { // stuff related to webtrees manual link handling
     /**
      * Query route to help mapping table for matching entries
      *
-     * @param array|null $activeroute
+     * @param array<string, mixed>|null $activeroute
      * @param bool $withSubcontext     also query for subcontext topic rows
      *
      * @return mixed

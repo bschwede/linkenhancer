@@ -77,6 +77,7 @@ final class LeImageRenderer implements NodeRendererInterface, XmlNodeRendererInt
 
     private LinkEnhancerModule $module;
 
+    /** @var array<int, string> */
     private array $img_stdclassnames;
 
     private string $img_titleclassnames;
@@ -105,7 +106,7 @@ final class LeImageRenderer implements NodeRendererInterface, XmlNodeRendererInt
      * - wt Media   : ![img alt text](#@id=@XREF@&w=100&h=200&cname=css-classname1+css-classname2 "img title")
      * - Public-file: ![img alt text](#@public=relpath/file.jpg&w=100&h=200&cname=css-classname1+css-classname2 "img title")
      * 
-     * @param array $attrs
+     * @param array<string, string> $attrs
      * @return string
      */
     private function renderEnhancedImageSrc(array $attrs): string

@@ -59,7 +59,7 @@ final class XrefDetailService
      * For managers/admins the raw GEDCOM is used (privatization is a no-op).
      * For other users the privatized GEDCOM is classified.
      *
-     * @return array{entries: array, counts: array<string, int>}
+     * @return array{entries: array<int, array<string, string>>, counts: array<string, int>}
      */
     public function outgoingLinks(GedcomRecord $record): array
     {

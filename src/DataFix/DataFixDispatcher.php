@@ -66,12 +66,14 @@ class DataFixDispatcher
         return $this->handlers;
     }
 
+    /** @param array<string, string> $params */
     private function resolve(array $params): FixHandlerInterface
     {
         $id = (string) ($params['fix_type'] ?? self::DEFAULT_FIX);
         return $this->handlers[$id] ?? $this->handlers[self::DEFAULT_FIX];
     }
 
+    /** @param array<string, string> $params */
     public function optionsHtml(Tree $tree, array $params): string
     {
         return view(LinkEnhancerModule::MODULE_NAME . '::datafix-options', [
@@ -85,26 +87,37 @@ class DataFixDispatcher
         ]);
     }
 
+    /**
+     * @param array<string, string> $params
+     * @return \Illuminate\Support\Collection<int, object>
+     */
     public function recordsToFix(Tree $tree, array $params): Collection
     {
         return $this->resolve($params)->recordsToFix($tree, $params);
     }
 
+    /** @param array<string, string> $params */
     public function needsUpdate(GedcomRecord $record, array $params): bool
     {
         return $this->resolve($params)->needsUpdate($record, $params);
     }
 
+    /** @param array<string, string> $params */
     public function preview(GedcomRecord $record, array $params): string
     {
         return $this->resolve($params)->preview($record, $params);
     }
 
+    /** @param array<string, string> $params */
     public function apply(GedcomRecord $record, array $params): void
     {
         $this->resolve($params)->apply($record, $params);
     }
 
+    /**
+     * @param array<string, string> $params
+     * @return array<string, mixed>
+     */
     public function processBlocks(Tree $tree, array $params): array
     {
         return $this->resolve($params)->processBlocks($tree, $params);

@@ -377,6 +377,7 @@ final class XrefUidSwapFix implements FixHandlerInterface
      *
      * @return array<int, string>
      */
+    /** @param array<string, string> $params */
     private function selectedRectypes(array $params): array
     {
         $all = ['INDI', 'FAM', 'NOTE', 'SOUR', 'REPO', '_LOC', 'OBJE'];

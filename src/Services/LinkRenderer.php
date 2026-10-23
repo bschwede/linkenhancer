@@ -28,6 +28,7 @@ final class LinkRenderer
     public const TARGET_TYPE_MISMATCH_GLYPH = XrefsService::TARGET_TYPE_MISMATCH_GLYPH;
     public const TARGET_AMBIGUOUS_GLYPH = XrefsService::TARGET_AMBIGUOUS_GLYPH;
 
+    /** @return array<string, int> */
     public static function emptyCounts(): array
     {
         return array_fill_keys(XrefsService::LINK_CLASSES, 0);
@@ -180,6 +181,7 @@ final class LinkRenderer
         return $html;
     }
 
+    /** @param array<string, string|null> $target */
     private static function expectedTagFor(array $target, string $class): ?string
     {
         return $target['type'] !== null
@@ -187,6 +189,7 @@ final class LinkRenderer
             : ($class === 'pic' ? 'OBJE' : null);
     }
 
+    /** @param array<string, string>|null $resolved */
     private static function targetStatus(?array $resolved, ?string $expected_tag): string
     {
         if ($resolved === null) {
