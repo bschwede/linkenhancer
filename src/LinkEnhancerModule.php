@@ -1173,11 +1173,9 @@ class LinkEnhancerModule extends AbstractModule implements
                 $setting = $this->getPref(self::PREF_MDE_RULES);
                 $setting = $setting ? (unserialize($setting, ['allowed_classes' => false]) ?: []) : [];
                 return $setting ?? [];
-                break;
             
             default:
                 throw new Exception("loadSetting not implemented for class $class");
-                break;
         }
     }
     
@@ -1190,7 +1188,6 @@ class LinkEnhancerModule extends AbstractModule implements
 
             default:
                 throw new Exception("saveSetting not implemented for class $class");
-                break;
         }
     }
 

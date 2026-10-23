@@ -204,11 +204,7 @@ parameters:
 			count: 1
 			path: src/LinkEnhancerModule.php
 
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 3
-			path: src/LinkEnhancerModule.php
+
 
 		-
 			message: '#^Variable \$setting on left side of \?\? always exists and is not nullable\.$#'
