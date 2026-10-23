@@ -16,7 +16,7 @@
         "elysch/webtrees-mitalteli-misc-features": "*"
     },
     "scripts": {
-        "analyse": "phpstan analyse -c phpstan.neon"
+        "analyse": "phpstan analyse -c phpstan.neon --memory-limit=1G"
     },
     "config": {
         "prepend-autoloader": false

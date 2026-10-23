@@ -2,10 +2,14 @@ parameters:
     level: 6
     paths:
         - src/
+    excludePaths:
+        - src/LinkEnhancerModuleExt.php
     bootstrapFiles:
-        - ../../../vendor/autoload.php
-        - autoload.php
+        - ../../vendor/autoload.php
+        - phpstan-bootstrap.php
     scanDirectories:
-        - ../../../app/
+        - ../../app/
     ignoreErrors:
         - '#Call to method .* on mixed#'
+    parallel:
+        maximumNumberOfProcesses: 0
