@@ -346,8 +346,21 @@ The settings dialogue can be accessed via the help submenu in the  top menu. Whe
 ![WTHB full-text search and toc](resources/img/screenshot_wthb-help.png)
 
 > [!NOTE]
-> This module comes with a local copy of the german webtrees manual **table of contents**. An automatic update is not implemented so far.
-> If you wish to update it without updating this module, you can use the utility script [update-wthb-toc.sh](util/update-wthb-toc.sh).
+> This module downloads a multilingual **table of contents** for the german webtrees manual from a remote feed (JSON files: structure, language translations, and a version manifest). The data is cached locally and refreshed automatically:
+> - **On-the-fly**: when a user views the TOC page and the cache has expired (24 h), the service checks the feed manifest (`version.json`) for per-file hash changes and re-downloads only the files that changed.
+> - **Proactive (cron)**: the `refresh-wthb-toc` cron job (daily at 03:00 by default) downloads all files regardless of cache state.
+>
+> **Auto-update toggle**: the module admin page offers an "Auto-update" switch for the TOC data. When disabled, only locally cached data is served (no HTTP downloads). The admin **Force refresh** button and the CLI with `--force` still work regardless of the switch. Tip: refresh the data before disabling to ensure the latest version is cached.
+>
+> **CLI**:
+> ```
+> php modules_v4/linkenhancer/cli/refresh-wthb-toc.php              # scope from module pref
+> php modules_v4/linkenhancer/cli/refresh-wthb-toc.php --all        # all available languages
+> php modules_v4/linkenhancer/cli/refresh-wthb-toc.php --lang=en,fr # specific languages
+> php modules_v4/linkenhancer/cli/refresh-wthb-toc.php --clear      # only clear cache
+> php modules_v4/linkenhancer/cli/refresh-wthb-toc.php --force      # run even if auto-update is disabled
+> ```
+> While auto-update is switched off, scheduled refreshes are skipped (the cron run exits 0 without doing work). `--force` refreshes anyway (e.g. to prepare for re-enabling), and `--clear` works regardless of the switch.
 
 In addition, the **submenu** contains an overview of the help topics included in Webtrees and customisable external help links (e.g. Webtrees FAQ and forum, GitHub repo, etc.). The top menu item can be split into two links - one to directly open the context help article and the other to open the submenu.
 

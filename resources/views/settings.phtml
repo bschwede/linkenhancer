@@ -20,6 +20,9 @@ use Fisharebest\Webtrees\Registry;
  * @var bool                    $vesta_common_enabled
  * @var string                  $mde_custom             registrations of custom modules
  * @var array                   $uid_index_status       [int rows, string|null last_run, bool fresh, bool source_available]
+ * @var list<string>            $toc_langs              available TOC languages (non-default)
+ * @var list<string>            $toc_langs_active       active webtrees languages
+ * @var array<string,mixed>     $toc_status             cached TOC status (structure + coverage) 
  */
 
 function getFormButtons(string $idSuffix):string { 
@@ -186,7 +189,10 @@ $module = Registry::container()->get(LinkEnhancerModule::class);
     'prefs' => $prefs,
     'links' => $links,
     'tablerows' => $tablerows,
-    'vesta_common_enabled' => $vesta_common_enabled
+    'vesta_common_enabled' => $vesta_common_enabled,
+    'toc_langs' => $toc_langs,
+    'toc_langs_active' => $toc_langs_active,
+    'toc_status' => $toc_status,
 ]) ?>
 </section>
 

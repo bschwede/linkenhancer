@@ -73,6 +73,10 @@ final class AdminSettingsBuilder
             'module' => $module->name(),
             'action' => 'AdminResetAccessOverwrites'
         ];
+        $response['links']['refresh_toc'] = route($moduleClass, [
+            'module' => $module->name(),
+            'action' => 'AdminRefreshToc'
+        ]);
 
         $response['tablerows'] = $module->wthb()->getHelpTableCount();
 
@@ -99,6 +103,18 @@ final class AdminSettingsBuilder
         $response['vesta_common_enabled'] = $module->vesta_common_enabled;
 
         $response['uid_index_status'] = UidIndexService::indexStatus();
+
+        // Available languages for the multilingual TOC download settings.
+        try {
+            $toc = $module->wthbToc();
+            $response['toc_langs']        = $toc->allNonDefaultLanguages();
+            $response['toc_langs_active'] = $toc->activeWebtreesLanguages();
+            $response['toc_status']       = $toc->validate();
+        } catch (\Throwable) {
+            $response['toc_langs']        = [];
+            $response['toc_langs_active'] = [];
+            $response['toc_status']       = [];
+        }
 
         $mde_rules = $module->mde()->getAllRules();
         $response['mde_custom'] = $mde_rules['custom'] ?? false ? print_r($mde_rules['custom'], true) : '';

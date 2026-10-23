@@ -440,7 +440,7 @@ class LinkEnhancerUtils { // misc helper functions
         return $prev_language_tag;
     }
 
-    public static function getCachedResponse(string $content):ResponseInterface {
+    public static function getCachedResponse(string $content, bool $immutable = true):ResponseInterface {
         return response($content)
             ->withHeader('Cache-Control', 'public, max-age=' . self::CACHE_TTL_1D . ', immutable')
             ->withHeader('Expires', gmdate('D, d M Y H:i:s', time() + self::CACHE_TTL_1D) . ' GMT') // force caching for Firefox

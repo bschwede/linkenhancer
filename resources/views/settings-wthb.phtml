@@ -7,6 +7,7 @@ use Schwendinger\Webtrees\Helpers\MoreI18N;
 use Fisharebest\Webtrees\DB;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerModule;
 use Schwendinger\Webtrees\Module\LinkEnhancer\LinkEnhancerUtils As Utils;
+use Schwendinger\Webtrees\Module\LinkEnhancer\Services\WthbTocService;
 use Fisharebest\Webtrees\Registry;
 
 /**
@@ -14,6 +15,9 @@ use Fisharebest\Webtrees\Registry;
  * @var array<string>           $links                  links for: csvexport
  * @var array<int>              $tablerows              [total, assigned]
  * @var bool                    $vesta_common_enabled
+ * @var list<string>            $toc_langs              available TOC languages (non-default)
+ * @var list<string>            $toc_langs_active       active webtrees languages
+ * @var array<string,mixed>     $toc_status             cached TOC status (structure + coverage)
  */
 
 $link_cmm = $links['csvexportcmm'] ?? '';
@@ -124,6 +128,149 @@ $link_cmm = $links['csvexportcmm'] ?? '';
                 </div>
             </fieldset>
 
+<section id="wthb-toc">
+            <div class="row">
+                <div class="col-form-label col-sm-3 wt-page-options-label">
+                    <?= I18N::translate('Table of contents') ?>
+                </div>
+                <div class="col-sm-9 wt-page-options-value mt-2">
+                    <div class="form-text">
+                        <p>
+                            
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- wthb toc multilingual: auto-update toggle --><?php $prefId = LinkEnhancerModule::PREF_WTHB_TOC_AUTO_UPDATE; ?>
+                <label class="col-sm-3 col-form-label wt-page-options-label sub" for="<?= $prefId ?>">
+                    <?= I18N::translate('Auto-update') ?>
+                </label>
+                <div class="col-sm-9 wt-page-options-value mb-3">
+                    <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                    <div class="form-text">
+                        <p><?= I18N::translate('When disabled, only locally cached data is served (no downloads). The admin force-refresh button and CLI with --force still work. Tip: refresh data before disabling to ensure the latest version is cached.') ?></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- wthb toc multilingual: download base url --><?php $prefId = LinkEnhancerModule::PREF_WTHB_TOC_BASE_URL; ?>
+                <label class="col-sm-3 col-form-label wt-page-options-label sub" for="<?= $prefId ?>">
+                    <?= I18N::translate('download base URL') ?>
+                </label>
+                <div class="col-sm-9 wt-page-options-value mb-3">
+                    <input class="form-control" id="<?= $prefId ?>" name="<?= $prefId ?>" type="text" value="<?= e($prefs[$prefId]) ?>"
+                        placeholder="<?= e(WthbTocService::BASE_URL) ?>">
+                    <div class="form-text">
+                        <p>
+                            <?= I18N::translate('Base URL of the table of contents data (wthb-toc.json, languages.json, [lang].json). Leave empty to use the built-in default. Useful for testing against a local server.') ?>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- wthb toc multilingual: download scope --><?php $prefId = LinkEnhancerModule::PREF_WTHB_TOC_DL_SCOPE; ?>
+            <fieldset class="form-group mb-1">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
+                        <?= I18N::translate('languages to download') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <?= view('components/select', [
+                            'id' => $prefId,
+                            'name' => $prefId,
+                            'selected' => (string) $prefs[$prefId],
+                            'options' => [
+                                'all'    => I18N::translate('All available languages'),
+                                'active' => I18N::translate('Active webtrees languages only'),
+                                'custom' => I18N::translate('Custom list'),
+                            ],
+                        ]) ?>
+                        <div class="form-text">
+                            <p><?= I18N::translate('Selects which languages of the webtrees manual table of contents are downloaded and cached.') ?></p>
+                        </div>
+
+<section id="wthb-toc-custom-langs" class="row">
+
+                        <!-- wthb toc multilingual: custom languages --><?php $prefId = LinkEnhancerModule::PREF_WTHB_TOC_DL_LANGS; ?>
+                        <label class="col-sm-4 col-form-label wt-page-options-label" for="<?= $prefId ?>">
+                            <?= I18N::translate('Custom languages (comma separated)') ?>
+                        </label>
+                        <div class="col-sm-8 wt-page-options-value mb-3">
+                            <input class="form-control" id="<?= $prefId ?>" name="<?= $prefId ?>" type="text"
+                                value="<?= e($prefs[$prefId]) ?>" placeholder="en,nl,es">
+                            <div class="form-text">
+                                <p><?= I18N::translate('Used when the download scope above is "Custom list".') ?></p>
+                                <?php if (!empty($toc_langs) && is_array($toc_langs)): ?>
+                                    <p><?= I18N::translate('Available') ?>: <code><?= e(implode(', ', $toc_langs)) ?></code></p>
+                                <?php endif; ?>
+                                <?php if (!empty($toc_langs_active) && is_array($toc_langs_active)): ?>
+                                    <p><?= I18N::translate('Active in webtrees') ?>: <code><?= e(implode(', ', $toc_langs_active)) ?></code></p>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+</section>                        
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- wthb toc multilingual: status -->
+            <fieldset class="form-group mb-3">
+                <div class="row">
+                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
+                        <?= I18N::translate('Status') ?>
+                    </legend>
+                    <div class="col-sm-9 wt-page-options-value mt-2">
+                        <div class="mb-2">
+                            <button type="submit" class="btn btn-secondary btn-sm" formaction="<?= e($links['refresh_toc']) ?>">
+                                <?= I18N::translate('Force refresh data') ?>
+                            </button>
+                            <span class="form-text ms-2"><?= I18N::translate('Downloads the latest structure, translations and version info from the feed.') ?></span>
+                        </div>
+                        <?php
+                        $toc_status  = $toc_status ?? [];
+                        $toc_struct  = $toc_status['structure'] ?? [];
+                        $toc_coverage = $toc_status['languages'] ?? [];
+                        ?>
+                        <?php if (!empty($toc_struct['valid'])): ?>
+                            <div class="form-text">
+                                <p><?= I18N::translate('Structure') ?>:
+                                    <strong><?= (int) ($toc_struct['items'] ?? 0) ?></strong>
+                                    <?= I18N::translate('entries') ?>,
+                                    v<?= e((string) ($toc_struct['version'] ?? '?')) ?></p>
+                            </div>
+                            <table class="table table-sm w-auto mb-2">
+                                <thead>
+                                    <tr>
+                                        <th><?= I18N::translate('Language') ?></th>
+                                        <th class="text-end"><?= I18N::translate('Translated') ?></th>
+                                        <th class="text-end"><?= I18N::translate('Coverage') ?></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <?php foreach ($toc_coverage as $toc_cov_lang => $toc_cov_data): ?>
+                                    <tr>
+                                        <td><code><?= e((string) $toc_cov_lang) ?></code></td>
+                                        <td class="text-end"><?= (int) ($toc_cov_data['translated'] ?? 0) ?> / <?= (int) ($toc_cov_data['total'] ?? 0) ?></td>
+                                        <td class="text-end"><?= (int) ($toc_cov_data['pct'] ?? 0) ?>%</td>
+                                    </tr>
+                                <?php endforeach; ?>
+                                <?php if ($toc_coverage === []): ?>
+                                    <tr><td colspan="3" class="text-muted"><?= I18N::translate('No language data cached yet.') ?></td></tr>
+                                <?php endif; ?>
+                                </tbody>
+                            </table>
+                        <?php else: ?>
+                            <div class="form-text">
+                                <p class="text-muted"><?= I18N::translate('No table of contents data is cached yet. Run the "refresh-wthb-toc" command to download it.') ?></p>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </fieldset>
+</section>
 
             <!-- support subcontext wthb-links --><?php $prefId = LinkEnhancerModule::PREF_WTHB_SUBCONTEXT; ?>
             <fieldset class="form-group mb-3">

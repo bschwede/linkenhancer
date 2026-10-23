@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 // manifest is sourced by cronjob module
@@ -30,6 +31,18 @@ return [
             'command'      => 'modules_v4/linkenhancer/cli/build-uid-index.php',
             'args'         => '--limit=5000',
         ],
+        [
+            'name'         => 'refresh-wthb-toc',
+            'title'        => MoreI18N::translate('Refresh Webtrees manual table of contents translations'),
+            'triggers'     => [
+                ['type' => 'time', 'cron' => '0 3 * * *'],
+            ],
+            'command_type' => 'module',
+            'command'      => 'modules_v4/linkenhancer/cli/refresh-wthb-toc.php',
+            'args'         => '',
+            'timeout_sec'  => 60,
+            'enabled'      => false,
+        ],
     ],
     'commands' => [
         [
@@ -52,6 +65,44 @@ return [
                 ['name' => '--rebuild', 'optional' => true, 'description' => MoreI18N::translate('force a full rebuild')],
                 ['name' => '--flush', 'optional' => true, 'description' => MoreI18N::translate('empty the index and exit')],
             ],
+        ],
+        [
+            'command'      => 'modules_v4/linkenhancer/cli/refresh-wthb-toc.php',
+            'command_type' => 'module',
+            'description'  => MoreI18N::translate('Download/refresh WTHB TOC translations from GitHub Pages. Scope is read from the module settings (all / active / custom).'),
+            'params'       => [
+                [
+                    'name'        => '--all',
+                    'optional'    => true,
+                    'description' => MoreI18N::translate('Override: download all available languages.'),
+                ],
+                [
+                    'name'        => '--lang=...',
+                    'optional'    => true,
+                    'description' => MoreI18N::translate('Override: download specific languages (comma-separated).'),
+                ],
+                [
+                    'name'        => '--clear',
+                    'optional'    => true,
+                    'description' => MoreI18N::translate('Only clear the cache, no download.'),
+                ],
+                [
+                    'name'        => '--force',
+                    'optional'    => true,
+                    'description' => MoreI18N::translate('Run even if auto-update is disabled (WTHB_TOC_AUTO_UPDATE=0).'),
+                ],
+                [
+                    'name'        => '--jitter=...',
+                    'optional'    => true,
+                    'description' => MoreI18N::translate('Max. random delay in seconds before refresh (default 30, env WTHB_TOC_JITTER).'),
+                ],
+            ],
+        ],
+        [
+            'command'      => 'modules_v4/linkenhancer/cli/validate-wthb-toc.php',
+            'command_type' => 'module',
+            'description'  => MoreI18N::translate('Validate locally cached WTHB TOC data: schema check + coverage report.'),
+            'params'       => [],
         ],
     ],
     'events' => [

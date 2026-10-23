@@ -88,7 +88,7 @@ php modules_v4/linkenhancer/tests/smoke-text-tag-collector.php 10
 - **SAPI guard**: every script starts with `CliBootstrap::guard()` - the directory is URL-addressable, the guard answers `403` instead of running.
 - **Bootstrap**: use `CliBootstrap::boot()` - the core CLI bootstrap sequence (app bootstrap, i18n, config, database) with a hard failure on missing config or DB connection.
 - **Arguments**: plain `$argv` (`--limit=N`, `--help`).
-- **Lock**: `flock()` on `data/linkenhancer-<name>.lock` so overlapping cron runs do not collide; a held lock is not an error (exit 0).
+- **Lock**: `flock()` on `data/linkenhancer/<name>.lock` so overlapping cron runs do not collide; a held lock is not an error (exit 0).
 - **Idempotent batches**: design the job so one run finishes in roughly 5-10 minutes and the next run continues where the last one stopped.
 - **Logging**: plain stdout lines (cron mail / log file). Never print personal data - counters and XREFs, never names.
 - **Exit codes**: `0` = ok (incl. "nothing to do", "lock held"), `1` = error.
