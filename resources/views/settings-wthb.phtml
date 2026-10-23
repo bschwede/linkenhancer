@@ -203,7 +203,7 @@ $link_cmm = $links['csvexportcmm'] ?? '';
                                 value="<?= e($prefs[$prefId]) ?>" placeholder="en,nl,es">
                             <div class="form-text">
                                 <?php if (!empty($toc_langs) && is_array($toc_langs)): ?>
-                                    <p><?= I18N::translate('Available') ?>: <code><?= e(implode(', ', $toc_langs)) ?></code></p>
+                                    <p><?= I18N::translate('available') ?>: <code><?= e(implode(', ', $toc_langs)) ?></code></p>
                                 <?php endif; ?>
                                 <?php if (!empty($toc_langs_active) && is_array($toc_langs_active)): ?>
                                     <p><?= I18N::translate('Active in webtrees') ?>: <code><?= e(implode(', ', $toc_langs_active)) ?></code></p>

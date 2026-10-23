@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-23 09:33+0200\n"
+"POT-Creation-Date: 2026-10-23 09:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1244,6 +1244,7 @@ msgstr ""
 
 #. I18N:
 #: resources/views/settings-md.phtml:121 resources/views/settings-md.phtml:122
+#: resources/views/settings-wthb.phtml:206
 msgid "available"
 msgstr ""
 
@@ -1612,10 +1613,6 @@ msgstr ""
 
 #: resources/views/settings-wthb.phtml:199
 msgid "Custom languages (comma separated)"
-msgstr ""
-
-#: resources/views/settings-wthb.phtml:206
-msgid "Available"
 msgstr ""
 
 #: resources/views/settings-wthb.phtml:209
