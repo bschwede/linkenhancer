@@ -1071,17 +1071,16 @@ class LinkEnhancerModule extends AbstractModule implements
 
         $value = trim( (string) ($value !== '' ? $value : $setting_schema['default'] ?? ''));
 
-        if ($resolveCascade 
+        if ($resolveCascade
             && ($setting_schema['parent'] ?? null) && array_key_exists($setting_schema['parent'], self::PREFERENCES_SCHEMA)
-            && ($setting_schema['mode'] ?? null)
+            && isset($setting_schema['mode'])
         ) {
             $parentvalue = trim((string) $this->getPref($setting_schema['parent'], false, true) );
 
             $value = match ($setting_schema['mode']) {
                 OverwriteMode::ParentIsZero   => ($parentvalue == 0 ? $parentvalue : $value),
                 OverwriteMode::ParentIsNotOne => ($parentvalue != 1 ? $parentvalue : $value),
-                default => $value,
-            };            
+            };
         }
         
         if ($typecasted) {
@@ -1127,8 +1126,7 @@ class LinkEnhancerModule extends AbstractModule implements
 
         //allow user to blank a setting, also if we have a DEFAULT_PREFERENCE
         if (array_key_exists($setting_name, self::PREFERENCES_SCHEMA)) {
-            $setting_value = match(self::PREFERENCES_SCHEMA[$setting_name]['type'] ?? '') {
-                'string' => ((self::PREFERENCES_SCHEMA[$setting_name]['default'] ?? false) && $setting_value === '' ? ' ' : $setting_value),
+            $setting_value = match(self::PREFERENCES_SCHEMA[$setting_name]['type']) {
                 'bool'   => boolval(trim($setting_value)) ? '1' : '0',
                 'int'    => (string) intval(trim($setting_value)),
                 default  => $setting_value

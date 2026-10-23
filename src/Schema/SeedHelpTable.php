@@ -95,7 +95,7 @@ class SeedHelpTable implements SeedInterface
         // handler_key it's a function of handler (version-independent) -> derive anew each time
         $row['handler_key'] = Functions::canonicalHandlerKey((string) $row['handler']);
        
-        $handler = $row['handler'] ?? null;
+        $handler = $row['handler'];
         $category = $row['category'] ?? '';
 
         if ($handler && !$category) {
@@ -108,7 +108,9 @@ class SeedHelpTable implements SeedInterface
             }
         }
 
-        $row['category'] = $category ?? ($row['path'] ?? '' == '' || $row['handler'] ?? '' == '' || $row['method'] ?? '' == '' ? 'generic' : 'standard');
+        $row['category'] = $category !== ''
+            ? $category
+            : ($row['path'] === '' || $row['handler'] === '' || $row['method'] === '' ? 'generic' : 'standard');
         
         if (!isset($row['order']) || !is_int($row['order'])) {
             $row['order'] ??= $row['category'] == 'generic' ? 20 : 10;

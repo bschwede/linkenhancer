@@ -195,8 +195,8 @@ final class LeImageRenderer implements NodeRendererInterface, XmlNodeRendererInt
             //--- public file - alt_text and title are used
             //    alt_text for a[data-title] and img[alt] and visible picture title,
             //    title for img[title]
-            $title = $attr['title'] ?? '';
-            $alt_text = $attr['alt'] ?? '';
+            $title = $attrs['title'] ?? '';
+            $alt_text = $attrs['alt'] ?? '';
 
             $public_relpath = $params['public'];
             $public_basedir = realpath(Webtrees::ROOT_DIR . 'public');

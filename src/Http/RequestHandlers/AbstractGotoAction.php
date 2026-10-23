@@ -43,11 +43,9 @@ abstract class AbstractGotoAction implements RequestHandlerInterface
      */    
     protected static function recordLabel(GedcomRecord $record): string
     {
-        if (method_exists($record, 'fullName')) {
-            $label = trim((string) $record->fullName());
-            if ($label !== '') {
-                return $label;
-            }
+        $label = trim((string) $record->fullName());
+        if ($label !== '') {
+            return $label;
         }
 
         return '@' . $record->xref() . '@';

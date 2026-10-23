@@ -149,7 +149,7 @@ final class XrefOverviewColumns
             return null;
         }
 
-        $url = $record instanceof GedcomRecord ? $record->url() : null;
+        $url = $record->url();
 
         $xref_html  = '<a href="' . e($url ?? '#') . '">' . e($xref) . '</a>'
             . '<br><small class="text-muted">'
@@ -158,12 +158,8 @@ final class XrefOverviewColumns
 
         $type_html  = e($type);
 
-        $name = $record instanceof GedcomRecord ? $record->fullName() : $xref;
-        $name_html = '<strong>' . (
-                $record instanceof GedcomRecord
-                ? '<a href="' . e($url) . '">' . $name . '</a>' // name contains html, so no escape needed
-                : e($name)
-            ) . '</strong>';
+        $name = $record->fullName();
+        $name_html = '<strong><a href="' . e($url) . '">' . $name . '</a></strong>';
         $name_html .= XrefsService::linkInventoryHtml(
             $result['entries'], $max_links, $highlight_xref,
             $this->makeTargetLinker($tree, $file), false,
@@ -537,7 +533,7 @@ final class XrefOverviewColumns
     }
 
     /**
-     * @return callable(string, ?string): (array{name: string, url: string, tree_label: string}|null)
+     * @return callable(string, ?string): (array{name: string, url: string, tree_label: string, actual?: string}|null)
      */
     private function makeTargetLinker(?Tree $source_tree, int $source_tree_id): callable
     {

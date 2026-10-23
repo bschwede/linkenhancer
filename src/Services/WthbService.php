@@ -294,9 +294,8 @@ class WthbService { // stuff related to webtrees manual link handling
         $subcontext = [];
 
 
-        if (is_array($activeroute) 
-            && array_key_exists('path', $activeroute) 
-            && array_key_exists('handler', $activeroute) 
+        if (array_key_exists('path', $activeroute)
+            && array_key_exists('handler', $activeroute)
             && array_key_exists('extras', $activeroute)
             && array_key_exists('attr', $activeroute)
         ) {

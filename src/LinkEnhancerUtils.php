@@ -341,8 +341,7 @@ class LinkEnhancerUtils { // misc helper functions
 
         $activeRouteInfo = self::getActiveRoute($request);
 
-        if (is_array($activeRouteInfo)
-            && array_key_exists('path', $activeRouteInfo) 
+        if (array_key_exists('path', $activeRouteInfo)
             && array_key_exists('extras', $activeRouteInfo)
         ) {
             $action = strtolower(($request->getAttribute('action') ?? ''));
