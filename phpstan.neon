@@ -9,7 +9,9 @@ parameters:
         - phpstan-bootstrap.php
     scanDirectories:
         - ../../app/
+    treatPhpDocTypesAsCertain: false
     ignoreErrors:
-        - '#Call to method .* on mixed#'
+        - '#Call to static method from\(\) on an unknown class Fisharebest\\Webtrees\\Enums\\AccessLevel#'
+        - '#Parameter \#1 \$identifier of static method Fisharebest\\Webtrees\\DB::prefix\(\) expects non-empty-string, '''' given#'
     parallel:
         maximumNumberOfProcesses: 0

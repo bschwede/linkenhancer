@@ -75,7 +75,7 @@ final class DuplicateUidFix implements FixHandlerInterface
         }
 
         $html = '<div class="alert alert-warning"><strong>' . e(I18N::translate(
-            '%d duplicate UID(s) on this record:', $duplicates->count()
+            '%d duplicate UID(s) on this record:', (string) $duplicates->count()
         )) . '</strong><ul>';
         foreach ($duplicates as $row) {
             $html .= '<li><code>' . e($row->uid) . '</code>: @' . e($row->xref1) . '@ (' . e($row->type1) . ') ⇄ @' . e($row->xref2) . '@ (' . e($row->type2) . ')</li>';

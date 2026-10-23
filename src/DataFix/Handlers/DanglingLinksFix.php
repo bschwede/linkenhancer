@@ -91,7 +91,7 @@ final class DanglingLinksFix implements FixHandlerInterface
         }
 
         $html = '<div class="alert alert-warning"><strong>' . e(I18N::translate(
-            '%d missing target(s):', count($findings)
+            '%d missing target(s):', (string) count($findings)
         )) . '</strong><ul>';
         foreach ($findings as $f) {
             $html .= '<li>' . e($f) . '</li>';

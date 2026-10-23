@@ -147,7 +147,7 @@ final class RenumberWithLinksService
             $report['index_rows'] += $index;
 
             Log::addEditLog(
-                I18N::translate('Renumbered @%1$s@ → @%2$s@ (%3$s, %4$d core rows, %5$d links)', $old_xref, $new_xref, $type, $core, $links),
+                I18N::translate('Renumbered @%1$s@ → @%2$s@ (%3$s, %4$d core rows, %5$d links)', $old_xref, $new_xref, $type, (string) $core, (string) $links),
                 $tree
             );
 

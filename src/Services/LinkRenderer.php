@@ -47,7 +47,7 @@ final class LinkRenderer
 
     /**
      * @param array<int, array{path: string, class: string, token: string, snippet: string}> $entries
-     * @param callable(string, ?string): (array{name: string, url: string, tree_label: string}|null)|null $target_linker
+     * @param callable(string, ?string): (array{name: string, url: string, tree_label: string, actual?: string}|null)|null $target_linker
      * @param callable(string, ?string): array{count: int, hits: array<int, array{name: string, url: string, tree_label: string}>, goto_url: string}|null $ambiguous_linker
      */
     public static function linkInventoryHtml(array $entries, int $max_per_class = XrefsService::LINKS_PER_CLASS_DEFAULT, string $highlight_xref = '', ?callable $target_linker = null, bool $highlight_problems = false, ?callable $ambiguous_linker = null, bool $show_snippets = true): string
@@ -163,7 +163,7 @@ final class LinkRenderer
     {
         $count = (int) $ambiguous['count'];
         $html  = '<span class="le-target-ambiguous" title="'
-            . e(I18N::translate('%1$s - %2$d matches in other trees', I18N::translate('target not unique'), $count))
+            . e(I18N::translate('%1$s - %2$d matches in other trees', I18N::translate('target not unique'), (string) $count))
             . '">' . self::TARGET_AMBIGUOUS_GLYPH . ' ' . $count . ' @' . e($uid) . '@</span>';
 
         if ($count <= 3) {
