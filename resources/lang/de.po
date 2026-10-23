@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 18:00+0200\n"
-"PO-Revision-Date: 2026-10-16 16:05+0000\n"
+"POT-Creation-Date: 2026-10-23 09:33+0200\n"
+"PO-Revision-Date: 2026-10-23 07:47+0000\n"
 "Last-Translator: bschwede <bschwede@noreply.codeberg.org>\n"
 "Language-Team: German <https://translate.codeberg.org/projects/wt-modules/"
 "linkenhancer/de/>\n"
@@ -541,6 +541,9 @@ msgstr "Link-Index aktualisieren"
 msgid "Update the UID index"
 msgstr "UID-Index aktualisieren"
 
+msgid "Refresh Webtrees manual table of contents translations"
+msgstr "Übersetzungen des Webtrees-Handbuch Inhaltsverzeichnisses aktualisieren"
+
 msgid "Rebuild the link index incrementally."
 msgstr "Den Link-Index schrittweise neu aufbauen."
 
@@ -558,6 +561,40 @@ msgstr "Index leeren und beenden"
 
 msgid "Rebuild the UID index incrementally."
 msgstr "Den UID-Index schrittweise neu aufbauen."
+
+msgid ""
+"Download/refresh WTHB TOC translations from Codeberg Pages. Scope is read "
+"from the module settings (all / active / custom)."
+msgstr ""
+"WTHB-Inhaltsverzeichnis-Übersetzungen von Codeberg Pages herunterladen bzw. "
+"aktualisieren. Der Umfang wird aus den Moduleinstellungen ausgelesen (alle / "
+"aktiv / benutzerdefiniert)."
+
+msgid "Override: download all available languages."
+msgstr "Übersteuern: Alle verfügbaren Sprachen herunterladen."
+
+msgid "Override: download specific languages (comma-separated)."
+msgstr "Übersteuern: Bestimmte Sprachen herunterladen (durch Kommas getrennt)."
+
+msgid "Only clear the cache, no download."
+msgstr "Nur den Cache leeren, kein Download."
+
+msgid "Run even if auto-update is disabled (WTHB_TOC_AUTO_UPDATE=0)."
+msgstr ""
+"Auch dann ausführen, wenn die automatische Aktualisierung deaktiviert ist "
+"(WTHB_TOC_AUTO_UPDATE=0)."
+
+msgid ""
+"Max. random delay in seconds before refresh (default 30, env "
+"WTHB_TOC_JITTER)."
+msgstr ""
+"Max. zufällige Verzögerung in Sekunden vor der Aktualisierung (Standardwert "
+"30, Umgebungsvariable WTHB_TOC_JITTER)."
+
+msgid "Validate locally cached WTHB TOC data: schema check + coverage report."
+msgstr ""
+"Lokal zwischengespeicherte WTHB-Inhaltsverzeichnis-Daten validieren: Schema-"
+"Prüfung + Abdeckungsbericht."
 
 msgid "The link index is out of date."
 msgstr "Der Link-Index ist veraltet."
@@ -732,6 +769,10 @@ msgstr "UID-Abfrage"
 msgid "Allow resolving UID tags (%s) to the corresponding records."
 msgstr ""
 "Auflösung von UID-Tags (%s) auf die korrespondierenden Datensätze erlauben."
+
+#, php-format
+msgid "As of %s"
+msgstr "Stand: %s"
 
 #, php-format
 msgid ""
@@ -1278,6 +1319,96 @@ msgstr ""
 
 msgid "Additional help links"
 msgstr "Zusätzliche Hilfe-Links"
+
+msgid "Auto-update"
+msgstr "Automatische Aktualisierung"
+
+msgid ""
+"When disabled, only locally cached data is served (no downloads). The admin "
+"force-refresh button and CLI with --force still work. Tip: refresh data "
+"before disabling to ensure the latest version is cached."
+msgstr ""
+"Wenn diese Option deaktiviert ist, werden nur lokal zwischengespeicherte "
+"Daten bereitgestellt (keine Downloads). Die Schaltfläche für die erzwungene "
+"Aktualisierung im Admin-Bereich und die CLI-Option „--force“ funktionieren "
+"weiterhin. Tipp: Aktualisieren Sie die Daten vor der Deaktivierung, um "
+"sicherzustellen, dass die aktuellste Version zwischengespeichert wird."
+
+msgid "download base URL"
+msgstr "Basis-URL zum Herunterladen"
+
+#. I18N: %s=list of filenames
+#, php-format
+msgid ""
+"Base URL of the table of contents data (%s). Leave empty to use the built-in "
+"default. Useful for testing against a local server."
+msgstr ""
+"Basis-URL der Inhaltsverzeichnisdaten (%s). Lassen Sie das Feld leer, um die "
+"integrierte Standardeinstellung zu verwenden. Nützlich für Tests auf einem "
+"lokalen Server."
+
+msgid "languages to download"
+msgstr "Sprachen zum Herunterladen"
+
+msgid "All available languages"
+msgstr "Alle verfügbaren Sprachen"
+
+msgid "Active webtrees languages only"
+msgstr "Nur aktive Webtrees-Sprachen"
+
+msgid "Custom list"
+msgstr "Benutzerdefinierte Liste"
+
+msgid ""
+"Selects which languages of the webtrees manual table of contents are "
+"downloaded and cached."
+msgstr ""
+"Legt fest, welche Sprachversionen Webtrees-Handbuch Inhaltsverzeichnisses "
+"heruntergeladen und zwischengespeichert werden."
+
+msgid "Custom languages (comma separated)"
+msgstr "Benutzerdefinierte Sprachen (durch Kommas getrennt)"
+
+msgid "Available"
+msgstr "verfügbar"
+
+msgid "Active in webtrees"
+msgstr "In Webtrees aktiv"
+
+msgid "Force refresh data"
+msgstr "Datenaktualisierung erzwingen"
+
+msgid ""
+"Downloads the latest structure, translations and version info from the feed."
+msgstr ""
+"Lädt die aktuellste Struktur, Übersetzungen und Versionsinformationen aus "
+"dem Feed herunter."
+
+msgid "Structure"
+msgstr "Struktur"
+
+msgid "entry"
+msgid_plural "entries"
+msgstr[0] "Eintrag"
+msgstr[1] "Einträge"
+
+msgid "Translated"
+msgstr "Übersetzt"
+
+msgid "Coverage"
+msgstr "Abdeckung"
+
+msgid "No language data cached yet."
+msgstr "Es wurden noch keine Sprachdaten zwischengespeichert."
+
+#. I18N: %s=CLI scriptname
+#, php-format
+msgid ""
+"No table of contents data is cached yet. Run the \"%s\" command to download "
+"it."
+msgstr ""
+"Es wurden noch keine Inhaltsverzeichnisdaten zwischengespeichert. Führen Sie "
+"den Befehl „%s“ aus, um diese herunterzuladen."
 
 msgid "Help link for subcontext topics"
 msgstr "Hilfe-Link für Unterthemen"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 18:00+0200\n"
+"POT-Creation-Date: 2026-10-23 09:33+0200\n"
 "PO-Revision-Date: 2026-03-28 03:57+0000\n"
 "Last-Translator: RickM <rickm@noreply.codeberg.org>\n"
 "Language-Team: English (Australia) <https://translate.codeberg.org/projects/"
@@ -515,6 +515,9 @@ msgstr ""
 msgid "Update the UID index"
 msgstr ""
 
+msgid "Refresh Webtrees manual table of contents translations"
+msgstr ""
+
 msgid "Rebuild the link index incrementally."
 msgstr ""
 
@@ -531,6 +534,31 @@ msgid "empty the index and exit"
 msgstr ""
 
 msgid "Rebuild the UID index incrementally."
+msgstr ""
+
+msgid ""
+"Download/refresh WTHB TOC translations from Codeberg Pages. Scope is read "
+"from the module settings (all / active / custom)."
+msgstr ""
+
+msgid "Override: download all available languages."
+msgstr ""
+
+msgid "Override: download specific languages (comma-separated)."
+msgstr ""
+
+msgid "Only clear the cache, no download."
+msgstr ""
+
+msgid "Run even if auto-update is disabled (WTHB_TOC_AUTO_UPDATE=0)."
+msgstr ""
+
+msgid ""
+"Max. random delay in seconds before refresh (default 30, env "
+"WTHB_TOC_JITTER)."
+msgstr ""
+
+msgid "Validate locally cached WTHB TOC data: schema check + coverage report."
 msgstr ""
 
 msgid "The link index is out of date."
@@ -680,6 +708,10 @@ msgstr ""
 
 #, php-format
 msgid "Allow resolving UID tags (%s) to the corresponding records."
+msgstr ""
+
+#, php-format
+msgid "As of %s"
 msgstr ""
 
 #, php-format
@@ -1145,6 +1177,82 @@ msgid ""
 msgstr ""
 
 msgid "Additional help links"
+msgstr ""
+
+msgid "Auto-update"
+msgstr ""
+
+msgid ""
+"When disabled, only locally cached data is served (no downloads). The admin "
+"force-refresh button and CLI with --force still work. Tip: refresh data "
+"before disabling to ensure the latest version is cached."
+msgstr ""
+
+msgid "download base URL"
+msgstr ""
+
+#. I18N: %s=list of filenames
+#, php-format
+msgid ""
+"Base URL of the table of contents data (%s). Leave empty to use the built-in "
+"default. Useful for testing against a local server."
+msgstr ""
+
+msgid "languages to download"
+msgstr ""
+
+msgid "All available languages"
+msgstr ""
+
+msgid "Active webtrees languages only"
+msgstr ""
+
+msgid "Custom list"
+msgstr ""
+
+msgid ""
+"Selects which languages of the webtrees manual table of contents are "
+"downloaded and cached."
+msgstr ""
+
+msgid "Custom languages (comma separated)"
+msgstr ""
+
+msgid "Available"
+msgstr ""
+
+msgid "Active in webtrees"
+msgstr ""
+
+msgid "Force refresh data"
+msgstr ""
+
+msgid ""
+"Downloads the latest structure, translations and version info from the feed."
+msgstr ""
+
+msgid "Structure"
+msgstr ""
+
+msgid "entry"
+msgid_plural "entries"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Translated"
+msgstr ""
+
+msgid "Coverage"
+msgstr ""
+
+msgid "No language data cached yet."
+msgstr ""
+
+#. I18N: %s=CLI scriptname
+#, php-format
+msgid ""
+"No table of contents data is cached yet. Run the \"%s\" command to download "
+"it."
 msgstr ""
 
 msgid "Help link for subcontext topics"
