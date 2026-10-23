@@ -530,17 +530,17 @@ final class WthbTocService
      */
     public function autoUpdateEnabled(): bool
     {
-        return $this->readPref(LinkEnhancerModule::PREF_WTHB_TOC_AUTO_UPDATE, '1') === '1';
+        return $this->readPref(LinkEnhancerModule::PREF_WTHB_TOC_AUTO_UPDATE, '1', true) === '1';
     }
 
     /**
      * Read a module preference (works in web + CLI context after boot).
      */
-    private function readPref(string $key, string $default): string
+    private function readPref(string $key, string $default, bool $resolveCascade = false): string
     {
         try {
             $module = Registry::container()->get(LinkEnhancerModule::class);
-            $value  = $module->getPref($key, true);
+            $value  = $module->getPref($key, true, $resolveCascade);
 
             return ($value !== '' && $value !== null) ? (string) $value : $default;
         } catch (\Throwable) {

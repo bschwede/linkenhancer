@@ -255,7 +255,7 @@ class LinkEnhancerModule extends AbstractModule implements
         self::PREF_HOME_LINK_JSON            => [ 'type' => 'string', 'default' => '' ], // json object { '*': stylerules-string, 'theme': stylerules-string}
         self::PREF_WTHB_ACTIVE               => [ 'type' => 'bool',   'default' => '1' ],
         self::PREF_WTHB_SUBCONTEXT           => [ 'type' => 'bool',   'default' => '1' ],
-        self::PREF_WTHB_TOCNSEARCH           => [ 'type' => 'bool',   'default' => '1' ],
+        self::PREF_WTHB_TOCNSEARCH           => [ 'type' => 'bool',   'default' => '1', 'parent' => self::PREF_WTHB_ACTIVE, 'mode' => OverwriteMode::ParentIsZero ],
         self::PREF_WTHB_FAICON               => [ 'type' => 'bool',   'default' => '1' ],
         self::PREF_WTHB_UPDATE               => [ 'type' => 'bool',   'default' => '1' ],
         self::PREF_WTHB_ADMINVIEWPATCH       => [ 'type' => 'bool',   'default' => '1' ],
@@ -273,7 +273,7 @@ class LinkEnhancerModule extends AbstractModule implements
         self::PREF_WTHB_TOC_DL_SCOPE         => [ 'type' => 'string', 'default' => 'all' ], // 'all' | 'active' | 'custom'
         self::PREF_WTHB_TOC_DL_LANGS         => [ 'type' => 'string', 'default' => '' ], // comma-separated (when scope=custom)
         self::PREF_WTHB_TOC_BASE_URL         => [ 'type' => 'string', 'default' => '' ], // empty = built-in default (WthbTocService::BASE_URL)
-        self::PREF_WTHB_TOC_AUTO_UPDATE      => [ 'type' => 'bool',   'default' => '1' ], // 0 = freeze (serve local only), 1 = auto-update
+        self::PREF_WTHB_TOC_AUTO_UPDATE      => [ 'type' => 'bool',   'default' => '1', 'parent' => self::PREF_WTHB_TOCNSEARCH, 'mode' => OverwriteMode::ParentIsZero ], // 0 = freeze (serve local only), 1 = auto-update
         self::PREF_WTHB_TRANSLATE            => [ 'type' => 'int',    'default' => '1' ], // triple-state. 0=off, 1=user defined, 2=on
         self::PREF_LINKSPP_ACTIVE            => [ 'type' => 'bool',   'default' => '1' ],
         self::PREF_LINKSPP_JS                => [ 'type' => 'string', 'default' => '' ],
