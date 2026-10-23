@@ -47,14 +47,17 @@ class SeedHelpTable implements SeedInterface
         'url'        => 250
     ];
 
+    /** @var array<int, array<string, string|null>> */
     private array $data = [];
     private bool $truncate;
 
     public int $cntRowsTotal;
     public int $cntRowsProcessed;
+    /** @var array<string, int> */
     public array $skippedRows;
-    
 
+
+    /** @param array<int, array<string, string|null>> $data */
     public function __construct(array $data, bool $truncate = true) {
         $this->data = $data;
         $this->truncate = $truncate;
@@ -64,6 +67,7 @@ class SeedHelpTable implements SeedInterface
     }
 
 
+    /** @param array<string, string|null> $row */
     public function skipRow(array $row, string &$skipreason = ''): bool
     {
         if ((bool) (($row['path'] ?? '') . ($row['handler'] ?? '') . ($row['method'] ?? '') . ($row['extras'] ?? '')) == '') {
@@ -80,6 +84,7 @@ class SeedHelpTable implements SeedInterface
     }
 
 
+    /** @param array<string, string|null> $row */
     public function setRowDefaults(array &$row): void {
         $row['path'] ??= '';
         $row['handler'] ??= '';
@@ -90,7 +95,7 @@ class SeedHelpTable implements SeedInterface
         // handler_key it's a function of handler (version-independent) -> derive anew each time
         $row['handler_key'] = Functions::canonicalHandlerKey((string) $row['handler']);
        
-        $handler = $row['handler'] ?? null;
+        $handler = $row['handler'];
         $category = $row['category'] ?? '';
 
         if ($handler && !$category) {
@@ -103,7 +108,9 @@ class SeedHelpTable implements SeedInterface
             }
         }
 
-        $row['category'] = $category ?? ($row['path'] ?? '' == '' || $row['handler'] ?? '' == '' || $row['method'] ?? '' == '' ? 'generic' : 'standard');
+        $row['category'] = $category !== ''
+            ? $category
+            : ($row['path'] === '' || $row['handler'] === '' || $row['method'] === '' ? 'generic' : 'standard');
         
         if (!isset($row['order']) || !is_int($row['order'])) {
             $row['order'] ??= $row['category'] == 'generic' ? 20 : 10;

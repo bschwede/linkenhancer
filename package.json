@@ -18,7 +18,8 @@
   "author": "Bernd Schwendinger",
   "type": "module",
   "scripts": {
-    "test": "npm run test:php && npm run test:js",
+    "test": "npm run test:php && npm run analyse:php && npm run test:js",
+    "analyse:php": "bash -c '[ -f vendor/bin/phpstan ] || { echo \"skip (run composer install first)\"; exit 0; }; vendor/bin/phpstan analyse -c phpstan.neon --error-format=table'",
     "test:js": "mocha 'resources/js/tests/**/*.test.js' --require jsdom-global/register",
     "test:php": "bash -c 'fail=0; for f in tests/test-*.php; do echo \"--- $f\"; php \"$f\" || fail=1; done; exit $fail'"
   },

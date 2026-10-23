@@ -41,11 +41,13 @@ final class LinkIndexService
         }
     }
 
+    /** @return array<int, string> */
     public static function supportedGedcomTableKeys(): array
     {
         return array_keys(XrefsService::GEDCOM_TABLES);
     }
 
+    /** @return array<int, string> */
     public static function supportedGedcomRecordKeys(): array
     {
         return array_merge(self::supportedGedcomTableKeys(), XrefsService::GEDCOM_OTHER_SUBTYPES);
@@ -198,6 +200,7 @@ final class LinkIndexService
         return $union;
     }
 
+    /** @return array{gedcom: bool, blocks: bool, rectypes: array<int, string>} */
     public static function rectypeSources(string $rectype): array
     {
         if ($rectype === '') {
@@ -261,6 +264,7 @@ final class LinkIndexService
         return $subquery;
     }
 
+    /** @return array<string, mixed> */
     public static function indexStatus(int $fresh_seconds = XrefsService::INDEX_FRESH_SECONDS): array
     {
         try {

@@ -91,9 +91,9 @@ class LinkEnhancerUtils { // misc helper functions
     /**
      * array of I18N strings needed for by javascript routines
      *
-     * @return array
-     */    
-    public static function getWthbLinksTranslations(): array 
+     * @return array<string, string>
+     */
+    public static function getWthbLinksTranslations(): array
     {
         // see also: LinkEnhancerModule::STD_WTHB_LINKS_JSON
         return [
@@ -110,7 +110,7 @@ class LinkEnhancerUtils { // misc helper functions
     /**
      * array of I18N strings needed by javascript routines
      *
-     * @return array
+     * @return array<string, string>
      */
     public static function getJsI18N(string $component, AbstractModule $module): array
     {
@@ -186,7 +186,7 @@ class LinkEnhancerUtils { // misc helper functions
      * Markdown examples for help screen
      *
      * @param string $base_url
-     * @return array
+     * @return array<int, array{md: string, html: string, out?: string}>
      */
     public static function getMarkdownHelpExamples(
         string $base_url, 
@@ -303,7 +303,7 @@ class LinkEnhancerUtils { // misc helper functions
      *
      * @param ServerRequestInterface|null $request
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public static function getActiveRoute(ServerRequestInterface|null $request = null): array
     {
@@ -341,8 +341,7 @@ class LinkEnhancerUtils { // misc helper functions
 
         $activeRouteInfo = self::getActiveRoute($request);
 
-        if (is_array($activeRouteInfo)
-            && array_key_exists('path', $activeRouteInfo) 
+        if (array_key_exists('path', $activeRouteInfo)
             && array_key_exists('extras', $activeRouteInfo)
         ) {
             $action = strtolower(($request->getAttribute('action') ?? ''));
@@ -359,7 +358,7 @@ class LinkEnhancerUtils { // misc helper functions
      * include bundle-{infix}.min.[css|js] from ressource folder depending on given bundle shortcuts
      * css files smaler than 500 Bytes are included directly, otherwise per link- and script-tag (js)
      * @param AbstractModule $module   methods assetUrl (ModuleCustomTrait) and resourcesFolder (AbstractModule) are used
-     * @param array $bundleShortcuts
+     * @param array<int, string> $bundleShortcuts
      * @return string
      */
     public static function getIncludeWebressourceString(AbstractModule $module, array $bundleShortcuts, WebRessource $resType): string
@@ -400,6 +399,7 @@ class LinkEnhancerUtils { // misc helper functions
     }
 
 
+    /** @return array<string, string> */
     public static function getSearchEngines(): array
     {
         // key   = Displayname without whitespaces, in lower case prepended with 'icon-' it's the css class name for background icon to be displayed

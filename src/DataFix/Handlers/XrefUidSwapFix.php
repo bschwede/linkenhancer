@@ -166,6 +166,8 @@ final class XrefUidSwapFix implements FixHandlerInterface
             $rows = $query->get();
 
             $block_changes = 0;
+            $new_value = null;
+            $row = null;
             foreach ($rows as $row) {
                 $processed++;
                 $swapped = 0;
@@ -205,7 +207,7 @@ final class XrefUidSwapFix implements FixHandlerInterface
                 }
             }
 
-            if ($new_value !==  $row->setting_value) { //$processed > 0) {
+            if ($row !== null && $new_value !== null && $new_value !== $row->setting_value) { //$processed > 0) {
                 $block_title = $title_setting !== null
                     ? (string) DB::table('block_setting')
                         ->where('block_id', '=', $row->block_id)
@@ -375,6 +377,7 @@ final class XrefUidSwapFix implements FixHandlerInterface
      *
      * @return array<int, string>
      */
+    /** @param array<string, string> $params */
     private function selectedRectypes(array $params): array
     {
         $all = ['INDI', 'FAM', 'NOTE', 'SOUR', 'REPO', '_LOC', 'OBJE'];

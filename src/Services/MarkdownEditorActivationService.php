@@ -40,6 +40,7 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\SettingInterface;
 
 final class MarkdownEditorActivationService
 {
+    /** @var array<string, mixed> */
     private array $rules = [];
 
     
@@ -51,7 +52,7 @@ final class MarkdownEditorActivationService
     /**
      * Standard Rules for webtrees core
      *
-     * @return array
+     * @return array{handler: array<int, string>, filter: array<int, string>}
      */
     public function getDefaultRules() : array
     {
@@ -85,8 +86,8 @@ final class MarkdownEditorActivationService
     /**
      * Set or delete ruleset for cutsom module
      * @param string $key      custom module name
-     * @param array $handler   last name part of handler class name for edit page
-     * @param array $filter    element selector expression(s)
+     * @param array<int, string> $handler   last name part of handler class name for edit page
+     * @param array<int, string> $filter    element selector expression(s)
      * @return void
      */
     public function setCustomRule(string $key, array $handler = [], array $filter = []): void
@@ -107,7 +108,7 @@ final class MarkdownEditorActivationService
     /**
      * get rule set for custom module
      * @param string $key
-     * @return array
+     * @return array<string, mixed>
      */
     public function getCustomRule(string $key): array
     {
@@ -136,6 +137,7 @@ final class MarkdownEditorActivationService
         return $this->rules['effective'];
     }
 
+    /** @return array<string, mixed> */
     public function getAllRules(): array
     {
         return $this->rules;

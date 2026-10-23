@@ -24,6 +24,7 @@ final class AdminSettingsBuilder
 {
     public function __construct(private readonly LinkEnhancerModule $module) {}
 
+    /** @return array<string, mixed> */
     public function build(): array
     {
         $module = $this->module;

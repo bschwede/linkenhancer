@@ -35,6 +35,39 @@ Join us on the real FLOSS platform! 🎉
 ### Dependencies
 This module requires shared code, which is managed in the [wt-shared-libs](https://codeberg.org/bschwede/wt-shared-libs) package. Just clone that repo into a folder named `wt-shared-libs` beside this module, in order to include it via `composer update`.
 
+### VSCode / IDE setup
+
+`wt-shared-libs` uses a custom autoloader (no PSR-4 in `composer.json`), so IDEs may not resolve its classes (`ModuleCustomTrait`, `Functions`, etc.). Add to `.vscode/settings.json`:
+
+```json
+{
+    "intelephense.environment.includePaths": [
+        "${workspaceFolder}/../wt-shared-libs/src"
+    ]
+}
+```
+
+### PHPStan
+
+Static analysis is configured via `phpstan.neon` (Level 6, baseline in `phpstan-baseline.neon`). Run with:
+
+```bash
+composer analyse
+```
+
+The analysis requires a webtrees installation (for `app/` classes + `vendor/autoload.php`). Run it from the bind-mounted path:
+
+```bash
+cd /path/to/webtrees/modules_v4/linkenhancer
+composer analyse
+```
+
+Regenerate the baseline after intentional changes:
+
+```bash
+vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=1G --generate-baseline=phpstan-baseline.neon
+```
+
 ### How the POT is generated
 
 All user-facing strings are extracted with `xgettext` (no manual PO entries) by

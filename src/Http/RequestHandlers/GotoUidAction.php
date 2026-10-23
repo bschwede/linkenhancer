@@ -104,6 +104,7 @@ class GotoUidAction extends AbstractGotoAction
      *
      * @return array<int, array{record: GedcomRecord, uid: string, rectype: string, tag_path: string, label: string}>
      */
+    /** @param \Illuminate\Support\Collection<int, object> $hits */
     private function visibleRecords(Collection $hits): array
     {
         $tree_service = Registry::container()->get(TreeService::class);

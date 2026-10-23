@@ -52,6 +52,7 @@ final class LeTableOfContentsRenderer implements NodeRendererInterface, XmlNodeR
     public function __construct(
         private readonly NodeRendererInterface $innerRenderer,
         private readonly LinkEnhancerModule $module,
+        /** @param array<string, mixed> $config */
         private array $config
     )
     {

@@ -106,7 +106,7 @@ final class AmbiguousUidFix implements FixHandlerInterface
         }
 
         $html = '<div class="alert alert-warning"><strong>' . e(I18N::translate(
-            '%d ambiguous UID target(s):', count($findings)
+            '%d ambiguous UID target(s):', (string) count($findings)
         )) . '</strong><ul>';
         foreach ($findings as $f) {
             $html .= '<li>' . e($f) . '</li>';

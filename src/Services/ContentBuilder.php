@@ -39,6 +39,7 @@ use function view;
  */
 final class ContentBuilder
 {
+    /** @var array<int, string> */
     private array $bundleShortcuts = [];
     private string $docReadyJs = '';
     private string $initJs = '';

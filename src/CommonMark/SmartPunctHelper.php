@@ -138,6 +138,7 @@ class SmartPunctHelper { // helper routines for SmartPunctExtension configuratio
         return self::STD_QUOTE_DEF; // just in case - en is standard def
     }
 
+    /** @param array<string|int, mixed> $array */
     public static function array_value_or_default(array $array, string|int $key, mixed $default = null): mixed
     {
         return array_key_exists($key, $array) && $array[$key] !== '' && $array[$key] !== null
@@ -147,7 +148,7 @@ class SmartPunctHelper { // helper routines for SmartPunctExtension configuratio
 
     /**
      * converts quote definition into configuration array needed for the commonmark environment
-     * @param array $quote_def
+     * @param array<string, mixed> $quote_def
      * @return array{double_quote_closer: mixed, double_quote_opener: mixed, single_quote_closer: mixed, single_quote_opener: mixed}
      */
     public static function getSmartPunctExtConfig(array $quote_def) :array {

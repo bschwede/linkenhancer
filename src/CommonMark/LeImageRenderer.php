@@ -77,6 +77,7 @@ final class LeImageRenderer implements NodeRendererInterface, XmlNodeRendererInt
 
     private LinkEnhancerModule $module;
 
+    /** @var array<int, string> */
     private array $img_stdclassnames;
 
     private string $img_titleclassnames;
@@ -105,7 +106,7 @@ final class LeImageRenderer implements NodeRendererInterface, XmlNodeRendererInt
      * - wt Media   : ![img alt text](#@id=@XREF@&w=100&h=200&cname=css-classname1+css-classname2 "img title")
      * - Public-file: ![img alt text](#@public=relpath/file.jpg&w=100&h=200&cname=css-classname1+css-classname2 "img title")
      * 
-     * @param array $attrs
+     * @param array<string, string> $attrs
      * @return string
      */
     private function renderEnhancedImageSrc(array $attrs): string
@@ -194,8 +195,8 @@ final class LeImageRenderer implements NodeRendererInterface, XmlNodeRendererInt
             //--- public file - alt_text and title are used
             //    alt_text for a[data-title] and img[alt] and visible picture title,
             //    title for img[title]
-            $title = $attr['title'] ?? '';
-            $alt_text = $attr['alt'] ?? '';
+            $title = $attrs['title'] ?? '';
+            $alt_text = $attrs['alt'] ?? '';
 
             $public_relpath = $params['public'];
             $public_basedir = realpath(Webtrees::ROOT_DIR . 'public');
