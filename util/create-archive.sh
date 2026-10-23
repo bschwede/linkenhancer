@@ -22,6 +22,7 @@ util/wt-patch/patch.log
 util/create-archive.sh
 util/update-po-files.sh
 util/convert-po2mo.sh
+util/pre-commit.sh
 resources/*/index-*.*
 resources/js/src
 resources/js/tests
@@ -37,6 +38,7 @@ requirements.txt
 .env
 tests
 .npmrc
+vendor/phpstan
 EOT
 
 cd "$SRCDIR" || exit 1

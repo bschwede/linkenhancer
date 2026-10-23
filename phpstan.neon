@@ -1,0 +1,11 @@
+parameters:
+    level: 6
+    paths:
+        - src/
+    bootstrapFiles:
+        - ../../../vendor/autoload.php
+        - autoload.php
+    scanDirectories:
+        - ../../../app/
+    ignoreErrors:
+        - '#Call to method .* on mixed#'
