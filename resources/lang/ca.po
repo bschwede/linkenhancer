@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-23 09:49+0200\n"
-"PO-Revision-Date: 2026-10-19 09:27+0000\n"
+"PO-Revision-Date: 2026-10-26 09:01+0000\n"
 "Last-Translator: Iberni2 <iberni2@noreply.codeberg.org>\n"
 "Language-Team: Catalan <https://translate.codeberg.org/projects/wt-modules/"
 "linkenhancer/ca/>\n"
@@ -537,7 +537,7 @@ msgid "Update the UID index"
 msgstr "Actualitza l'índex UID"
 
 msgid "Refresh Webtrees manual table of contents translations"
-msgstr ""
+msgstr "Actualitza les traduccions de l'índex del manual de Webtrees"
 
 msgid "Rebuild the link index incrementally."
 msgstr "Reconstrueix l'índex d'enllaç de manera incremental."
@@ -561,26 +561,35 @@ msgid ""
 "Download/refresh WTHB TOC translations from Codeberg Pages. Scope is read "
 "from the module settings (all / active / custom)."
 msgstr ""
+"Baixa o actualitza les traduccions de la taula de continguts (TOC) de WTHB "
+"des de les pàgines de Codeberg. L'abast es llig dels paràmetres del mòdul "
+"(totes / actives / personalitzades)."
 
 msgid "Override: download all available languages."
-msgstr ""
+msgstr "Ignora l'abast configurat i baixa tots els idiomes disponibles."
 
 msgid "Override: download specific languages (comma-separated)."
-msgstr ""
+msgstr "Força la descàrrega d'idiomes específics (separats per comes)."
 
 msgid "Only clear the cache, no download."
-msgstr ""
+msgstr "Només esborra la memòria cau, sense cap descàrrega."
 
 msgid "Run even if auto-update is disabled (WTHB_TOC_AUTO_UPDATE=0)."
 msgstr ""
+"Executa aquesta acció encara que l'actualització automàtica estigui "
+"desactivada (WTHB_TOC_AUTO_UPDATE=0)."
 
 msgid ""
 "Max. random delay in seconds before refresh (default 30, env "
 "WTHB_TOC_JITTER)."
 msgstr ""
+"Retard aleatori màxim, en segons, abans de l'actualització (per defecte: 30; "
+"variable d'entorn WTHB_TOC_JITTER)."
 
 msgid "Validate locally cached WTHB TOC data: schema check + coverage report."
 msgstr ""
+"Valida les dades de la taula de continguts (TOC) de WTHB emmagatzemades "
+"localment: comprovació de l'esquema i informe de cobertura."
 
 msgid "The link index is out of date."
 msgstr "L'índex d'enllaços està desactualitzat."
@@ -756,7 +765,7 @@ msgstr "Permetre resoldre etiquetes UID (%s) als registres corresponents."
 
 #, php-format
 msgid "As of %s"
-msgstr ""
+msgstr "A data de %s"
 
 #, php-format
 msgid ""
@@ -1299,19 +1308,22 @@ msgstr ""
 msgid "Additional help links"
 msgstr "Enllaços d'ajuda addicionals"
 
-#, fuzzy
-#| msgid "updated"
 msgid "Auto-update"
-msgstr "actualitzat"
+msgstr "Actualització automàtica"
 
 msgid ""
 "When disabled, only locally cached data is served (no downloads). The admin "
 "force-refresh button and CLI with --force still work. Tip: refresh data "
 "before disabling to ensure the latest version is cached."
 msgstr ""
+"Quan està desactivat, només se serveixen les dades emmagatzemades localment "
+"a la memòria cau (sense descàrregues). El botó d'actualització forçada de "
+"l'administrador i l'ordre CLI amb l'opció --force continuen funcionant. "
+"Consell: actualitzeu les dades abans de desactivar-lo per assegurar-vos que "
+"la versió més recent quedi emmagatzemada a la memòria cau."
 
 msgid "download base URL"
-msgstr ""
+msgstr "URL base de descàrrega"
 
 #. I18N: %s=list of filenames
 #, php-format
@@ -1319,55 +1331,60 @@ msgid ""
 "Base URL of the table of contents data (%s). Leave empty to use the built-in "
 "default. Useful for testing against a local server."
 msgstr ""
+"URL base de les dades de la taula de continguts (%s). Deixeu-la en blanc per "
+"utilitzar el valor predeterminat incorporat. És útil per fer proves amb un "
+"servidor local."
 
 msgid "languages to download"
-msgstr ""
+msgstr "Idiomes per descarregar"
 
 msgid "All available languages"
-msgstr ""
+msgstr "Tots els idiomes disponibles"
 
 msgid "Active webtrees languages only"
-msgstr ""
+msgstr "Només els idiomes actius de webtrees"
 
-#, fuzzy
-#| msgid "Casualty lists"
 msgid "Custom list"
-msgstr "Llistes de baixes"
+msgstr "Llista personalitzada"
 
 msgid ""
 "Selects which languages of the webtrees manual table of contents are "
 "downloaded and cached."
 msgstr ""
+"Selecciona quins idiomes de la taula de continguts del manual de webtrees es "
+"descarreguen i s'emmagatzemen a la memòria cau."
 
 msgid "Custom languages (comma separated)"
-msgstr ""
+msgstr "Idiomes personalitzats (separats per comes)"
 
 msgid "Active in webtrees"
-msgstr ""
+msgstr "Actiu a webtrees"
 
 msgid "Force refresh data"
-msgstr ""
+msgstr "Força l'actualització de les dades"
 
 msgid ""
 "Downloads the latest structure, translations and version info from the feed."
 msgstr ""
+"Descarrega del canal de dades l'estructura, les traduccions i la informació "
+"de versió més recents."
 
 msgid "Structure"
-msgstr ""
+msgstr "Estructura"
 
 msgid "entry"
 msgid_plural "entries"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Entrada"
+msgstr[1] "Entrades"
 
 msgid "Translated"
-msgstr ""
+msgstr "Traduït"
 
 msgid "Coverage"
-msgstr ""
+msgstr "Cobertura"
 
 msgid "No language data cached yet."
-msgstr ""
+msgstr "Encara no hi ha dades d’idioma emmagatzemades a la memòria cau."
 
 #. I18N: %s=CLI scriptname
 #, php-format
@@ -1375,6 +1392,8 @@ msgid ""
 "No table of contents data is cached yet. Run the \"%s\" command to download "
 "it."
 msgstr ""
+"Les dades de la taula de continguts encara no estan a la memòria cau. "
+"Executeu l'ordre «%s» per baixar-les."
 
 msgid "Help link for subcontext topics"
 msgstr "Enllaç d'ajuda per a temes de subcontext"
