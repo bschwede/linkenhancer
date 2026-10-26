@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: modules_v 4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-23 09:33+0200\n"
+"POT-Creation-Date: 2026-10-23 09:49+0200\n"
 "PO-Revision-Date: 2026-09-27 16:25+0000\n"
 "Last-Translator: Xapitonov <xapitonov@noreply.codeberg.org>\n"
 "Language-Team: Russian <https://translate.codeberg.org/projects/wt-modules/"
@@ -1338,11 +1338,6 @@ msgstr ""
 msgid "Custom languages (comma separated)"
 msgstr ""
 
-#, fuzzy
-#| msgid "available"
-msgid "Available"
-msgstr "доступно"
-
 msgid "Active in webtrees"
 msgstr ""
 
@@ -1554,3 +1549,8 @@ msgstr ""
 
 msgid "Also enabled per-request with ?debug=1 (non-sensitive info only)"
 msgstr ""
+
+#, fuzzy
+#~| msgid "available"
+#~ msgid "Available"
+#~ msgstr "доступно"

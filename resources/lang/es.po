@@ -5,9 +5,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-23 09:33+0200\n"
-"PO-Revision-Date: 2026-10-16 16:05+0000\n"
-"Last-Translator: bschwede <bschwede@noreply.codeberg.org>\n"
+"POT-Creation-Date: 2026-10-23 09:49+0200\n"
+"PO-Revision-Date: 2026-10-26 09:01+0000\n"
+"Last-Translator: Iberni2 <iberni2@noreply.codeberg.org>\n"
 "Language-Team: Spanish <https://translate.codeberg.org/projects/wt-modules/"
 "linkenhancer/es/>\n"
 "Language: es\n"
@@ -539,6 +539,7 @@ msgstr "Actualizar el índice UID"
 
 msgid "Refresh Webtrees manual table of contents translations"
 msgstr ""
+"Actualizar las traducciones de la tabla de contenido del manual de Webtrees"
 
 msgid "Rebuild the link index incrementally."
 msgstr "Actualizar el índice de enlaces progresivamente."
@@ -562,26 +563,35 @@ msgid ""
 "Download/refresh WTHB TOC translations from Codeberg Pages. Scope is read "
 "from the module settings (all / active / custom)."
 msgstr ""
+"Descarga o actualiza las traducciones del índice de WTHB desde Codeberg "
+"Pages. El alcance de la acción se determina según los ajustes del módulo "
+"(todas, activas o personalizadas)."
 
 msgid "Override: download all available languages."
-msgstr ""
+msgstr "Anular: descargar todos los idiomas disponibles."
 
 msgid "Override: download specific languages (comma-separated)."
-msgstr ""
+msgstr "Anulación: descargar idiomas específicos (separados por comas)."
 
 msgid "Only clear the cache, no download."
-msgstr ""
+msgstr "Solo borrar la caché, sin descarga."
 
 msgid "Run even if auto-update is disabled (WTHB_TOC_AUTO_UPDATE=0)."
 msgstr ""
+"Ejecutar incluso si la actualización automática está desactivada "
+"(WTHB_TOC_AUTO_UPDATE=0)."
 
 msgid ""
 "Max. random delay in seconds before refresh (default 30, env "
 "WTHB_TOC_JITTER)."
 msgstr ""
+"Retraso aleatorio máximo en segundos antes de la actualización (valor "
+"predeterminado 30, variable de entorno WTHB_TOC_JITTER)."
 
 msgid "Validate locally cached WTHB TOC data: schema check + coverage report."
 msgstr ""
+"Validar los datos de la tabla de contenido de WTHB almacenados en caché "
+"localmente: comprobación del esquema e informe de cobertura."
 
 msgid "The link index is out of date."
 msgstr "Índice de enlaces desactualizado."
@@ -761,7 +771,7 @@ msgstr "Permitir resolver etiquetas UID (%s) a los registros correspondientes."
 
 #, php-format
 msgid "As of %s"
-msgstr ""
+msgstr "A partir del %s"
 
 #, php-format
 msgid ""
@@ -976,7 +986,7 @@ msgid "Set — add missing type letters"
 msgstr "Ajustar: rellenar letras iguales que falten"
 
 msgid "Repair — correct wrong type letters"
-msgstr "Corrección: corregir las letras de tipo incorrecto"
+msgstr "Reparar: corregir caracteres incorrectos"
 
 msgid "Remove — strip all type letters"
 msgstr "Eliminar: limpiar indicadores de tipo en los enlaces"
@@ -1304,19 +1314,22 @@ msgstr ""
 msgid "Additional help links"
 msgstr "Enlaces de ayuda adicionales"
 
-#, fuzzy
-#| msgid "updated"
 msgid "Auto-update"
-msgstr "Actualizado"
+msgstr "Actualización automática"
 
 msgid ""
 "When disabled, only locally cached data is served (no downloads). The admin "
 "force-refresh button and CLI with --force still work. Tip: refresh data "
 "before disabling to ensure the latest version is cached."
 msgstr ""
+"Si se desactiva, solo se ofrecerán los datos de la caché local (sin realizar "
+"descargas). El botón del administrador para forzar la actualización y la "
+"línea de comandos (CLI) con --force seguirán operativos. Consejo: actualiza "
+"los datos antes de la desactivación para garantizar que esté almacenada la "
+"última versión."
 
 msgid "download base URL"
-msgstr ""
+msgstr "URL base para la descarga"
 
 #. I18N: %s=list of filenames
 #, php-format
@@ -1324,60 +1337,60 @@ msgid ""
 "Base URL of the table of contents data (%s). Leave empty to use the built-in "
 "default. Useful for testing against a local server."
 msgstr ""
+"URL base de los datos de la tabla de contenido ( %s ). Déjelo vacío para "
+"usar la configuración predeterminada. Útil para realizar pruebas en un "
+"servidor local."
 
 msgid "languages to download"
-msgstr ""
+msgstr "idiomas para descargar"
 
 msgid "All available languages"
-msgstr ""
+msgstr "Todos los idiomas disponibles"
 
 msgid "Active webtrees languages only"
-msgstr ""
+msgstr "Solo idiomas activos de Webtrees"
 
-#, fuzzy
-#| msgid "Casualty lists"
 msgid "Custom list"
-msgstr "Lista de bajas"
+msgstr "Lista personalizada"
 
 msgid ""
 "Selects which languages of the webtrees manual table of contents are "
 "downloaded and cached."
 msgstr ""
+"Selecciona qué idiomas del índice del manual de Webtrees se descargan y se "
+"almacenan en caché."
 
 msgid "Custom languages (comma separated)"
-msgstr ""
-
-#, fuzzy
-#| msgid "available"
-msgid "Available"
-msgstr "disponible"
+msgstr "Idiomas personalizados (separados por comas)"
 
 msgid "Active in webtrees"
-msgstr ""
+msgstr "Activo en Webtrees"
 
 msgid "Force refresh data"
-msgstr ""
+msgstr "Forzar la actualización de datos"
 
 msgid ""
 "Downloads the latest structure, translations and version info from the feed."
 msgstr ""
+"Descarga la estructura más reciente, las traducciones y la información de "
+"versión del feed."
 
 msgid "Structure"
-msgstr ""
+msgstr "Estructura"
 
 msgid "entry"
 msgid_plural "entries"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "entrada"
+msgstr[1] "entradas"
 
 msgid "Translated"
-msgstr ""
+msgstr "Traducido"
 
 msgid "Coverage"
-msgstr ""
+msgstr "Porcentaje traducido"
 
 msgid "No language data cached yet."
-msgstr ""
+msgstr "Aún no se han almacenado en caché los datos de idioma."
 
 #. I18N: %s=CLI scriptname
 #, php-format
@@ -1385,6 +1398,8 @@ msgid ""
 "No table of contents data is cached yet. Run the \"%s\" command to download "
 "it."
 msgstr ""
+"Aún no se ha almacenado en caché ningún dato de la tabla de contenido. "
+"Ejecute el comando \" %s \" para descargarlo."
 
 msgid "Help link for subcontext topics"
 msgstr "Enlace de ayuda para temas secundarios"
@@ -1569,6 +1584,11 @@ msgid "Also enabled per-request with ?debug=1 (non-sensitive info only)"
 msgstr ""
 "También se puede activar por solicitud con ?debug=1 (solo información no "
 "sensible)"
+
+#, fuzzy
+#~| msgid "available"
+#~ msgid "Available"
+#~ msgstr "disponible"
 
 #~ msgid "tree"
 #~ msgstr "árbol"

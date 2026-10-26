@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-23 09:33+0200\n"
+"POT-Creation-Date: 2026-10-23 09:49+0200\n"
 "PO-Revision-Date: 2026-03-28 03:57+0000\n"
 "Last-Translator: RickM <rickm@noreply.codeberg.org>\n"
 "Language-Team: English (Australia) <https://translate.codeberg.org/projects/"
@@ -1216,9 +1216,6 @@ msgid ""
 msgstr ""
 
 msgid "Custom languages (comma separated)"
-msgstr ""
-
-msgid "Available"
 msgstr ""
 
 msgid "Active in webtrees"
