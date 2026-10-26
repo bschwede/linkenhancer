@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LinkEnhancer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-23 09:33+0200\n"
+"POT-Creation-Date: 2026-10-23 09:49+0200\n"
 "PO-Revision-Date: 2026-10-19 09:27+0000\n"
 "Last-Translator: Iberni2 <iberni2@noreply.codeberg.org>\n"
 "Language-Team: Catalan <https://translate.codeberg.org/projects/wt-modules/"
@@ -1342,11 +1342,6 @@ msgstr ""
 msgid "Custom languages (comma separated)"
 msgstr ""
 
-#, fuzzy
-#| msgid "available"
-msgid "Available"
-msgstr "disponible"
-
 msgid "Active in webtrees"
 msgstr ""
 
@@ -1561,6 +1556,11 @@ msgstr "Activa el registre de depuració de PHP"
 msgid "Also enabled per-request with ?debug=1 (non-sensitive info only)"
 msgstr ""
 "També s'activa per a cada petició amb ?debug=1 (només informació no sensible)"
+
+#, fuzzy
+#~| msgid "available"
+#~ msgid "Available"
+#~ msgstr "disponible"
 
 #~ msgid "tree"
 #~ msgstr "Arbre"

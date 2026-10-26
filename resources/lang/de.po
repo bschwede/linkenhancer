@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-23 09:33+0200\n"
+"POT-Creation-Date: 2026-10-23 09:49+0200\n"
 "PO-Revision-Date: 2026-10-23 07:47+0000\n"
 "Last-Translator: bschwede <bschwede@noreply.codeberg.org>\n"
 "Language-Team: German <https://translate.codeberg.org/projects/wt-modules/"
@@ -542,7 +542,8 @@ msgid "Update the UID index"
 msgstr "UID-Index aktualisieren"
 
 msgid "Refresh Webtrees manual table of contents translations"
-msgstr "Übersetzungen des Webtrees-Handbuch Inhaltsverzeichnisses aktualisieren"
+msgstr ""
+"Übersetzungen des Webtrees-Handbuch Inhaltsverzeichnisses aktualisieren"
 
 msgid "Rebuild the link index incrementally."
 msgstr "Den Link-Index schrittweise neu aufbauen."
@@ -1369,9 +1370,6 @@ msgstr ""
 msgid "Custom languages (comma separated)"
 msgstr "Benutzerdefinierte Sprachen (durch Kommas getrennt)"
 
-msgid "Available"
-msgstr "verfügbar"
-
 msgid "Active in webtrees"
 msgstr "In Webtrees aktiv"
 
@@ -1592,6 +1590,9 @@ msgid "Also enabled per-request with ?debug=1 (non-sensitive info only)"
 msgstr ""
 "Wird außerdem pro Anfrage mit ?debug=1 aktiviert (nur für nicht sensible "
 "Informationen)"
+
+#~ msgid "Available"
+#~ msgstr "verfügbar"
 
 #~ msgid ""
 #~ "Renumber records whose XREF collides with another family tree, keeping "
