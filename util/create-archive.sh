@@ -40,6 +40,7 @@ tests
 .npmrc
 vendor/phpstan
 phpstan-bootstrap.php
+phpstan*
 EOT
 
 cd "$SRCDIR" || exit 1
