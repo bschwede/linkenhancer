@@ -5,6 +5,7 @@ resources/lang/*.mo
 dist/*
 *.hash
 util/wthb-toc
+util/le-i18n-en.json
 resources/views/*.phtml.~*
 .vscode/*
 .venv/*
