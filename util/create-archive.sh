@@ -28,6 +28,7 @@ util/export-le-i18n.php
 util/generate-link-params.mjs
 util/le-i18n-en.json
 util/generate-cron-jobs-doc.php
+util/sync-docs-local.sh
 resources/*/index-*.*
 resources/js/src
 resources/js/tests
