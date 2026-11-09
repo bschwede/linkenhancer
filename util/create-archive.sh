@@ -23,6 +23,7 @@ util/create-archive.sh
 util/update-po-files.sh
 util/convert-po2mo.sh
 util/pre-commit.sh
+util/generate-class-hierarchy.php
 resources/*/index-*.*
 resources/js/src
 resources/js/tests

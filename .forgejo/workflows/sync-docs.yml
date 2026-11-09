@@ -4,25 +4,34 @@ on:
     branches: [main]
     paths:
       - 'src/Schema/SeedHelpTable.csv'
+      - 'src/**/*.php'
+      - 'util/generate-class-hierarchy.php'
 
 jobs:
   sync:
     runs-on: codeberg-tiny
     steps:
       - uses: actions/checkout@v4
-      - name: Sync help-mapping data to wt-modules
+      - name: Sync artifacts to wt-modules
         env:
           WT_MODULES_TOKEN: ${{ secrets.WT_MODULES_TOKEN }}
         run: |
           git clone --depth 1 https://x-access-token:${WT_MODULES_TOKEN}@codeberg.org/bschwede/wt-modules.git /tmp/wt-modules
+
+          # --- help-mapping CSV ---
           mkdir -p /tmp/wt-modules/static/data
           cp src/Schema/SeedHelpTable.csv /tmp/wt-modules/static/data/help-mapping.csv
           HASH=$(sha256sum src/Schema/SeedHelpTable.csv | cut -c1-12)
           echo "{\"hash\": \"${HASH}\", \"updated\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"}" > /tmp/wt-modules/static/data/help-mapping.version.json
+
+          # --- class-hierarchy fragment ---
+          mkdir -p /tmp/wt-modules/assets/includes/linkenhancer
+          php util/generate-class-hierarchy.php > /tmp/wt-modules/assets/includes/linkenhancer/class-hierarchy.md
+
           cd /tmp/wt-modules
-          git add static/data/help-mapping.csv static/data/help-mapping.version.json
+          git add static/data/help-mapping.csv static/data/help-mapping.version.json assets/includes/linkenhancer/class-hierarchy.md
           if ! git diff --cached --quiet; then
-            git commit -m "sync: help-mapping data $(date -u +%Y-%m-%d)"
+            git commit -m "sync: linkenhancer artifacts $(date -u +%Y-%m-%d)"
             git push
           else
             echo "No changes - skipping commit"
