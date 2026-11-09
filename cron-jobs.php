@@ -43,6 +43,18 @@ return [
             'timeout_sec'  => 60,
             'enabled'      => false,
         ],
+        [
+            'name'         => 'update-help-mapping',
+            'title'        => MoreI18N::translate('Update help mapping data'),
+            'triggers'     => [
+                ['type' => 'time', 'cron' => '0 4 * * *'],
+            ],
+            'command_type' => 'module',
+            'command'      => 'modules_v4/linkenhancer/cli/update-help-mapping.php',
+            'args'         => '',
+            'timeout_sec'  => 30,
+            'enabled'      => false,
+        ],
     ],
     'commands' => [
         [
@@ -103,6 +115,33 @@ return [
             'command_type' => 'module',
             'description'  => MoreI18N::translate('Validate locally cached WTHB TOC data: schema check + coverage report.'),
             'params'       => [],
+        ],
+        [
+            'command'      => 'modules_v4/linkenhancer/cli/update-help-mapping.php',
+            'command_type' => 'module',
+            'description'  => MoreI18N::translate('Update the route→help-URL mapping from the wt-modules docs site. Hash-based change detection; only downloads and imports when the data changed.'),
+            'params'       => [
+                [
+                    'name'        => '--force',
+                    'optional'    => true,
+                    'description' => MoreI18N::translate('Run even if auto-update is disabled (HELP_MAPPING_AUTO_UPDATE=0).'),
+                ],
+                [
+                    'name'        => '--clear',
+                    'optional'    => true,
+                    'description' => MoreI18N::translate('Only clear the local cache, no download.'),
+                ],
+                [
+                    'name'        => '--status',
+                    'optional'    => true,
+                    'description' => MoreI18N::translate('Show current state (applied hash, bundled hash, auto-update toggle).'),
+                ],
+                [
+                    'name'        => '--jitter=...',
+                    'optional'    => true,
+                    'description' => MoreI18N::translate('Max. random delay in seconds before refresh (default 30, env HELP_MAPPING_JITTER).'),
+                ],
+            ],
         ],
     ],
     'events' => [

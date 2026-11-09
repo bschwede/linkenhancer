@@ -78,6 +78,10 @@ final class AdminSettingsBuilder
             'module' => $module->name(),
             'action' => 'AdminRefreshToc'
         ]);
+        $response['links']['refresh_mapping'] = route($moduleClass, [
+            'module' => $module->name(),
+            'action' => 'AdminRefreshMapping'
+        ]);
 
         $response['tablerows'] = $module->wthb()->getHelpTableCount();
 

@@ -406,6 +406,26 @@ $link_cmm = $links['csvexportcmm'] ?? '';
                     </div>
 
                 </div>
+                <!-- help-mapping: auto-update toggle --><?php $prefId = LinkEnhancerModule::PREF_HELP_MAPPING_AUTO_UPDATE; ?>
+                <div class="row mt-3 mb-1">
+                    <label class="col-sm-3 col-form-label wt-page-options-label sub" for="<?= $prefId ?>">
+                        <?= I18N::translate('Auto-update help mapping') ?>
+                    </label>
+                    <div class="col-sm-9 wt-page-options-value">
+                        <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                        <div class="form-text">
+                            <p><?= I18N::translate('When disabled, only locally cached data is used (no downloads). The admin button and CLI with --force still work.') ?></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-1 mb-1">
+                    <div class="col-5 d-flex align-items-center justify-content-start">
+                        <button type="submit" class="btn btn-secondary btn-sm" formaction="<?= e($links['refresh_mapping']) ?>">
+                            <?= I18N::translate('Update help mapping') ?>
+                        </button>
+                        <span class="form-text ms-2"><?= I18N::translate('Downloads the latest route→help-URL mapping from the docs site.') ?></span>
+                    </div>
+                </div>
                 <div class="row mt-3 mb-1">
                     <div class="col-5 d-flex align-items-center justify-content-start">
                         <button type="submit" class="btn btn-secondary" formaction="<?= e($links['csvimport']) ?>">
