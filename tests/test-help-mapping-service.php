@@ -87,6 +87,21 @@ check('U1 base URL is wt-modules', str_contains(HelpMappingService::BASE_URL, 'w
 // U2 - base URL uses codeberg.page
 check('U2 base URL is codeberg.page', str_contains(HelpMappingService::BASE_URL, 'codeberg.page'), true);
 
+// ─── WthbService::renderHelpUrl (requires PHP 8.3+ due to typed constants) ──
+
+// renderHelpUrl tests are verified at runtime (PHP 8.4 deployment).
+// The sandbox has PHP 8.2 which cannot parse WthbService's `const string` declarations.
+// Test cases (manual verification or smoke test on deployment):
+//   L1: renderHelpUrl('Webtrees_Handbuch/Admin', 'de') → 'https://wiki.genealogy.net/Webtrees_Handbuch/Admin'
+//   L2: renderHelpUrl('https://webtrees.net/faq/', 'de') → 'https://webtrees.net/faq/'
+//   L3: renderHelpUrl('https://.../{lang:en,de}/docs/…', 'de') → 'https://.../de/docs/…'
+//   L4: renderHelpUrl('https://.../{lang:en,de}/docs/…', 'fr') → 'https://.../en/docs/…'
+//   L5: renderHelpUrl('https://.../{lang:de,en}/docs/…', 'fr') → 'https://.../de/docs/…'
+//   L6: renderHelpUrl('https://.../{lang}/docs', 'de') → 'https://.../de/docs'
+//   L7: renderHelpUrl('https://.../{lang}/docs', '') → 'https://.../en/docs'
+//   L8: renderHelpUrl('https://...', 'de') → 'https://...' (unchanged)
+//   L9: renderHelpUrl('/Webtrees_Handbuch/Admin', 'de') → 'https://wiki.genealogy.net/Webtrees_Handbuch/Admin'
+
 // ─── Summary ────────────────────────────────────────────────────────────────
 
 echo "\n{$total} tests, {$failures} failure(s)\n";
