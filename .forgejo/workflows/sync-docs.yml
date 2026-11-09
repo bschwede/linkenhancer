@@ -5,7 +5,9 @@ on:
     paths:
       - 'src/Schema/SeedHelpTable.csv'
       - 'src/**/*.php'
+      - 'cron-jobs.php'
       - 'util/generate-class-hierarchy.php'
+      - 'util/generate-cron-jobs-doc.php'
       - 'resources/js/src/le-config.js'
       - 'util/generate-link-params.mjs'
 
@@ -29,6 +31,9 @@ jobs:
 
           # --- class-hierarchy fragment ---
           php util/generate-class-hierarchy.php > /tmp/wt-modules/assets/includes/linkenhancer/class-hierarchy.md
+
+          # --- cron-jobs reference ---
+          php util/generate-cron-jobs-doc.php > /tmp/wt-modules/assets/includes/linkenhancer/cron-jobs.md
 
           # --- enhanced-links parameter reference ---
           php util/export-le-i18n.php > util/le-i18n-en.json

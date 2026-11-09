@@ -27,6 +27,7 @@ util/generate-class-hierarchy.php
 util/export-le-i18n.php
 util/generate-link-params.mjs
 util/le-i18n-en.json
+util/generate-cron-jobs-doc.php
 resources/*/index-*.*
 resources/js/src
 resources/js/tests
@@ -45,6 +46,7 @@ tests
 vendor/phpstan
 phpstan-bootstrap.php
 phpstan*
+.forgejo
 EOT
 
 cd "$SRCDIR" || exit 1
