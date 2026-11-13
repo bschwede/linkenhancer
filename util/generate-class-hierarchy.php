@@ -5,9 +5,9 @@
 // Markdown fragment with {{< repoFileURL "src/…" >}} links.
 //
 // Output: stdout (fragment, no frontmatter)
-// Target: assets/includes/linkenhancer/class-hierarchy.md (in wt-modules)
+// Target: content/{en,de}/includes/linkenhancer/class-hierarchy.md (in wt-modules)
 //
-// Run: php util/generate-class-hierarchy.php > /path/to/assets/includes/linkenhancer/class-hierarchy.md
+// Run: php util/generate-class-hierarchy.php > /path/to/content/en/includes/linkenhancer/class-hierarchy.md
 
 declare(strict_types=1);
 
@@ -123,7 +123,7 @@ foreach ($allLabels as $label) {
 
     echo "## {$label}\n\n";
     foreach ($items as $c) {
-        $line = '- `' . $c['name'] . '`';
+        $line = '- {{< repoFileURL "src/' . $c['file'] . '" "' . $c['name'] . '" >}}';
         if ($c['modifiers'] !== '') {
             $line .= ' (' . $c['modifiers'] . ')';
         }
@@ -136,7 +136,6 @@ foreach ($allLabels as $label) {
         if ($c['uses'] !== []) {
             $line .= ' uses `' . implode('`, `', $c['uses']) . '`';
         }
-        $line .= ' — {{< repoFileURL "src/' . $c['file'] . '" >}}';
         echo $line . "\n";
     }
     echo "\n";

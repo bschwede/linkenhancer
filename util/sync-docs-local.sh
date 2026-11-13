@@ -1,6 +1,6 @@
 #!/bin/sh
 # Local equivalent of the Forgejo sync-docs action.
-# Generates all doc artifacts and writes them to a target directory.
+# Generates all doc artifacts (EN + DE) and writes them to a target directory.
 # No git operations — manual commit is the user's responsibility.
 #
 # Usage:
@@ -32,9 +32,10 @@ if [ ! -f "$TARGET/hugo.yaml" ] && [ ! -f "$TARGET/hugo.toml" ]; then
     echo "" >&2
 fi
 
-# --- Prepare target directories ---
+# --- Prepare target directories (both languages) ---
 mkdir -p "$TARGET/static/data"
-mkdir -p "$TARGET/assets/includes/linkenhancer"
+mkdir -p "$TARGET/content/en/includes/linkenhancer"
+mkdir -p "$TARGET/content/de/includes/linkenhancer"
 
 changed=0
 total=0
@@ -78,19 +79,29 @@ else
     sync_artifact "$TMPDIR_SYNC/help-mapping.version.json" "$VERSION_DST"
 fi
 
-# --- 3. class-hierarchy fragment ---
+# --- 3. DE i18n extraction (raw PO → JSON, prerequisite for DE fragments) ---
+node util/extract-po-json.mjs > util/i18n-de.json
+
+# --- 4. class-hierarchy fragment (language-neutral, identical EN+DE) ---
 php util/generate-class-hierarchy.php > "$TMPDIR_SYNC/class-hierarchy.md"
-sync_artifact "$TMPDIR_SYNC/class-hierarchy.md" "$TARGET/assets/includes/linkenhancer/class-hierarchy.md"
+sync_artifact "$TMPDIR_SYNC/class-hierarchy.md" "$TARGET/content/en/includes/linkenhancer/class-hierarchy.md"
+sync_artifact "$TMPDIR_SYNC/class-hierarchy.md" "$TARGET/content/de/includes/linkenhancer/class-hierarchy.md"
 
-# --- 4. cron-jobs fragment ---
-php util/generate-cron-jobs-doc.php > "$TMPDIR_SYNC/cron-jobs.md"
-sync_artifact "$TMPDIR_SYNC/cron-jobs.md" "$TARGET/assets/includes/linkenhancer/cron-jobs.md"
+# --- 5. cron-jobs fragment (EN + DE) ---
+php util/generate-cron-jobs-doc.php > "$TMPDIR_SYNC/cron-jobs-en.md"
+sync_artifact "$TMPDIR_SYNC/cron-jobs-en.md" "$TARGET/content/en/includes/linkenhancer/cron-jobs.md"
 
-# --- 5. enhanced-links parameter reference ---
-php util/export-le-i18n.php > "$TMPDIR_SYNC/le-i18n-en.json"
-cp "$TMPDIR_SYNC/le-i18n-en.json" util/le-i18n-en.json
-node util/generate-link-params.mjs > "$TMPDIR_SYNC/le-link-parameters.md"
-sync_artifact "$TMPDIR_SYNC/le-link-parameters.md" "$TARGET/assets/includes/linkenhancer/le-link-parameters.md"
+php util/generate-cron-jobs-doc.php --i18n=util/i18n-de.json > "$TMPDIR_SYNC/cron-jobs-de.md"
+sync_artifact "$TMPDIR_SYNC/cron-jobs-de.md" "$TARGET/content/de/includes/linkenhancer/cron-jobs.md"
+
+# --- 6. enhanced-links parameter reference (EN + DE) ---
+php util/export-le-i18n.php > util/le-i18n-en.json
+php util/export-le-i18n.php --lang=de > util/le-i18n-de.json
+node util/generate-link-params.mjs > "$TMPDIR_SYNC/le-link-parameters-en.md"
+sync_artifact "$TMPDIR_SYNC/le-link-parameters-en.md" "$TARGET/content/en/includes/linkenhancer/le-link-parameters.md"
+
+node util/generate-link-params.mjs --i18n=util/le-i18n-de.json > "$TMPDIR_SYNC/le-link-parameters-de.md"
+sync_artifact "$TMPDIR_SYNC/le-link-parameters-de.md" "$TARGET/content/de/includes/linkenhancer/le-link-parameters.md"
 
 # --- Summary ---
 echo ""

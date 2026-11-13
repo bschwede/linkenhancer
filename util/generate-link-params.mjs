@@ -1,15 +1,21 @@
 #!/usr/bin/env node
 // Generates the enhanced-links parameter reference fragment for the documentation site.
 // Reads the target configuration from le-config.js (Single Source) and merges
-// EN i18n texts from le-i18n-en.json (exported by export-le-i18n.php).
+// i18n texts from le-i18n-en.json (exported by export-le-i18n.php).
+//
+// With --i18n=<json>, uses the given file instead of le-i18n-en.json
+// (e.g. util/le-i18n-de.json for German).
 //
 // Output: stdout (fragment, no frontmatter)
-// Target: assets/includes/linkenhancer/le-link-parameters.md (in wt-modules)
+// Target: content/{en,de}/includes/linkenhancer/le-link-parameters.md (in wt-modules)
 //
-// Run: node util/generate-link-params.mjs > /path/to/assets/includes/linkenhancer/le-link-parameters.md
+// Run:
+//   node util/generate-link-params.mjs > .../content/en/includes/linkenhancer/le-link-parameters.md
+//   node util/generate-link-params.mjs --i18n=util/le-i18n-de.json > .../content/de/includes/linkenhancer/le-link-parameters.md
 //
-// Phase 2 pre-step (regenerate EN texts after changing LinkEnhancerUtils.php):
+// Pre-step (regenerate texts after changing LinkEnhancerUtils.php):
 //   php util/export-le-i18n.php > util/le-i18n-en.json
+//   php util/export-le-i18n.php --lang=de > util/le-i18n-de.json
 
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -19,13 +25,16 @@ import { getLETargetCfg, getLEOptions } from '../resources/js/src/le-config.js';
 import { getLErecTypes } from '../resources/js/src/le-xref-parser.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const i18nPath = join(__dirname, 'le-i18n-en.json');
+const i18nArg = process.argv.find(a => a.startsWith('--i18n='));
+const i18nPath = i18nArg
+    ? i18nArg.slice(7)
+    : join(__dirname, 'le-i18n-en.json');
 
 let i18n = {};
 try {
     i18n = JSON.parse(readFileSync(i18nPath, 'utf8'));
 } catch {
-    process.stderr.write('WARNING: le-i18n-en.json not found — using raw keys (Phase 1 mode)\n');
+    process.stderr.write(`WARNING: ${i18nPath} not found — using raw keys\n`);
 }
 
 const options = Object.assign(getLEOptions(), {

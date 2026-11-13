@@ -6,6 +6,8 @@ dist/*
 *.hash
 util/wthb-toc
 util/le-i18n-en.json
+util/i18n-de.json
+util/le-i18n-de.json
 resources/views/*.phtml.~*
 .vscode/*
 .venv/*
