@@ -91,7 +91,7 @@ sync_artifact "$TMPDIR_SYNC/class-hierarchy.md" "$TARGET/content/de/includes/lin
 php util/generate-cron-jobs-doc.php > "$TMPDIR_SYNC/cron-jobs-en.md"
 sync_artifact "$TMPDIR_SYNC/cron-jobs-en.md" "$TARGET/content/en/includes/linkenhancer/cron-jobs.md"
 
-php util/generate-cron-jobs-doc.php --i18n=util/i18n-de.json > "$TMPDIR_SYNC/cron-jobs-de.md"
+php util/generate-cron-jobs-doc.php --lang=de > "$TMPDIR_SYNC/cron-jobs-de.md"
 sync_artifact "$TMPDIR_SYNC/cron-jobs-de.md" "$TARGET/content/de/includes/linkenhancer/cron-jobs.md"
 
 # --- 6. enhanced-links parameter reference (EN + DE) ---
@@ -100,7 +100,7 @@ php util/export-le-i18n.php --lang=de > util/le-i18n-de.json
 node util/generate-link-params.mjs > "$TMPDIR_SYNC/le-link-parameters-en.md"
 sync_artifact "$TMPDIR_SYNC/le-link-parameters-en.md" "$TARGET/content/en/includes/linkenhancer/le-link-parameters.md"
 
-node util/generate-link-params.mjs --i18n=util/le-i18n-de.json > "$TMPDIR_SYNC/le-link-parameters-de.md"
+node util/generate-link-params.mjs --lang=de > "$TMPDIR_SYNC/le-link-parameters-de.md"
 sync_artifact "$TMPDIR_SYNC/le-link-parameters-de.md" "$TARGET/content/de/includes/linkenhancer/le-link-parameters.md"
 
 # --- Summary ---

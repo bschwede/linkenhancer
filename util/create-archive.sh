@@ -26,9 +26,11 @@ util/pre-commit.sh
 util/generate-class-hierarchy.php
 util/export-le-i18n.php
 util/generate-link-params.mjs
-util/le-i18n-en.json
 util/generate-cron-jobs-doc.php
+util/extract-po-json.mjs
 util/sync-docs-local.sh
+util/i18n-*.json
+util/le-i18n-*.json
 resources/*/index-*.*
 resources/js/src
 resources/js/tests
