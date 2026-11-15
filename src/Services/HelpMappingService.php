@@ -173,7 +173,7 @@ final class HelpMappingService
     {
         $data = $this->parseCsv($csv_content);
         $seeder = new SeedHelpTable($data, true);
-        $seeder->run();
+        $seeder->run(PHP_SAPI === 'cli');
     }
 
     /**

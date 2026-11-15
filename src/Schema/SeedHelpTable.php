@@ -119,10 +119,10 @@ class SeedHelpTable implements SeedInterface
 
     /**
      *  Run the seeder.
-     *
+     * @param bool $end_transaction   explicit commit for cli call
      * @return void
      */
-    public function run(): void
+    public function run(bool $end_transaction = false): void
     {
         $table = LinkEnhancerModule::HELP_TABLE;
         if (!DB::schema()->hasTable($table)) return;
@@ -178,6 +178,9 @@ class SeedHelpTable implements SeedInterface
                 }
                 $rownum++;
             }
+            if ($end_transaction && $connection->transactionLevel() > 0) { // this is for CLI call
+                $connection->commit();
+            }            
         }
     
     }    
