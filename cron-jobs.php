@@ -52,7 +52,7 @@ return [
             'command_type' => 'module',
             'command'      => 'modules_v4/linkenhancer/cli/update-help-mapping.php',
             'args'         => '',
-            'timeout_sec'  => 30,
+            'timeout_sec'  => 60,
             'enabled'      => false,
         ],
     ],
