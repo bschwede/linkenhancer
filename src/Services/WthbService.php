@@ -209,27 +209,30 @@ class WthbService { // stuff related to webtrees manual link handling
     }
 
     /**
-     * Query route to help mapping table for total count of rows and count of mapped rows (where an url is set)
+     * Query route to help mapping table for total count of rows, count of mapped rows (where an url is
+     * set) and the last write time (MAX updated_at) — the latter reflects every import path.
      *
-     * @return array<string, int>
+     * @return array<string, int|string>
      */
     public function getHelpTableCount(): array
     {
-        $totalCnt = 0;
-        $mappedCnt = 0;
+        $totalCnt    = 0;
+        $mappedCnt   = 0;
+        $lastWritten = '';
         if (DB::schema()->hasTable($this->help_table)) {
             try {
-                $totalCnt = DB::table($this->help_table)->count();
-                $mappedCnt = DB::table($this->help_table)
+                $totalCnt    = DB::table($this->help_table)->count();
+                $mappedCnt   = DB::table($this->help_table)
                     ->whereNotNull('url')
                     ->where('url', '!=', '')
                     ->count();
+                $lastWritten = (string) (DB::table($this->help_table)->max('updated_at') ?? '');
             } catch (Exception $e) {
                 LinkEnhancerModule::log()->error('help_table count failed: ' . $e->getMessage(), 'WthbService');
             }
         }
 
-        return ['total' => (int) $totalCnt, 'assigned' => (int) $mappedCnt];
+        return ['total' => (int) $totalCnt, 'assigned' => (int) $mappedCnt, 'last_written' => $lastWritten];
     }
 
 

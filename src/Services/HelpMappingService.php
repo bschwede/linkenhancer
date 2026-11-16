@@ -167,6 +167,23 @@ final class HelpMappingService
         return $version['hash'] ?? $this->bundledHash();
     }
 
+    /**
+     * Read-only status report for the admin settings view (no downloads).
+     *
+     * @return array{applied_hash: string, updated: string, bundled_hash: string, cached: bool}
+     */
+    public function status(): array
+    {
+        $version = $this->localJson(self::REMOTE_VERSION);
+
+        return [
+            'applied_hash' => $this->currentAppliedHash(),
+            'updated'      => (string) ($version['updated'] ?? ''),
+            'bundled_hash' => $this->bundledHash(),
+            'cached'       => $version !== [],
+        ];
+    }
+
     // ─── Intern ─────────────────────────────────────────────────────────────
 
     private function importToDb(string $csv_content): void

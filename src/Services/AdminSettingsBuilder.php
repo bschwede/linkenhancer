@@ -121,6 +121,13 @@ final class AdminSettingsBuilder
             $response['toc_status']       = [];
         }
 
+        // Cached help-mapping feed status for the admin settings (read-only).
+        try {
+            $response['help_mapping_status'] = $module->helpMapping()->status();
+        } catch (\Throwable) {
+            $response['help_mapping_status'] = [];
+        }
+
         $mde_rules = $module->mde()->getAllRules();
         $response['mde_custom'] = $mde_rules['custom'] ?? false ? print_r($mde_rules['custom'], true) : '';
 
