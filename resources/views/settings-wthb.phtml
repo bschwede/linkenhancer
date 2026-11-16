@@ -19,6 +19,7 @@ use Fisharebest\Webtrees\Registry;
  * @var list<string>            $toc_langs              available TOC languages (non-default)
  * @var list<string>            $toc_langs_active       active webtrees languages
  * @var array<string,mixed>     $toc_status             cached TOC status (structure + coverage)
+ * @var array<string,mixed>     $help_mapping_status    status infos
  */
 
 $link_cmm = $links['csvexportcmm'] ?? '';
@@ -387,13 +388,14 @@ $link_cmm = $links['csvexportcmm'] ?? '';
                     <p><?= /*I18N: WTHB Link table */ I18N::translate('The context is established by assigning the routes used in webtrees to the corresponding sections in the manual.') ?>
                         <br>
                         <?= /*I18N: WTHB Link table */ I18N::translate('The data is stored in the database table') ?>:
-                        <code><?= DB::prefix(LinkEnhancerModule::HELP_TABLE) ?></code>
+                        <code><?= DB::prefix(LinkEnhancerModule::HELP_TABLE) ?></code><br>
                         <em>(<strong><?= /*I18N: WTHB Link table rows */ I18N::translate('Data rows') ?>:</strong>
-                            <?= /*I18N: WTHB Link table rows assigned/total */ I18N::translate('%1$s of %2$s assigned', $tablerows['assigned'] ?? 0, $tablerows['total'] ?? 0) ?>)</em>
-                        <?php if (!empty($tablerows['last_written'])): ?>
-                            <br><strong><?= I18N::translate('Last written') ?>:</strong>
-                            <code><?= e((string) $tablerows['last_written']) ?></code>
-                        <?php endif; ?>
+                            <?= /*I18N: WTHB Link table rows assigned/total */ I18N::translate('%1$s of %2$s assigned', $tablerows['assigned'] ?? 0, $tablerows['total'] ?? 0) ?>
+                            <?php if (!empty($tablerows['last_written'])): ?>
+                                , <strong><?= I18N::translate('Last written') ?>:</strong>
+                                <?= e((string) $tablerows['last_written']) ?>
+                            <?php endif; ?>                            
+                        )</em>
                     </p>
                 </div>                    
                 <div class="row mt-1">
@@ -471,60 +473,72 @@ $link_cmm = $links['csvexportcmm'] ?? '';
                 </div>
             </fieldset>
 
-            <!-- help-mapping: auto-update toggle --><?php $prefId = LinkEnhancerModule::PREF_HELP_MAPPING_AUTO_UPDATE; ?>
-            <div class="row mt-3 mb-1">
-                <label class="col-sm-3 col-form-label wt-page-options-label sub" for="<?= $prefId ?>">
-                    <?= I18N::translate('Auto-download') ?>
-                </label>
-                <div class="col-sm-9 wt-page-options-value">
-                    <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
-                    <div class="form-text">
-                        <p><?= I18N::translate('When disabled, only locally cached data is used (no downloads). The admin button and CLI with --force still work.') ?></p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- help-mapping: download base url --><?php $prefId = LinkEnhancerModule::PREF_HELP_MAPPING_BASE_URL; ?>
-            <div class="row">
-                <label class="col-sm-3 col-form-label wt-page-options-label sub" for="<?= $prefId ?>">
-                    <?= I18N::translate('download base URL') ?>
-                </label>
-                <div class="col-sm-9 wt-page-options-value mb-3">
-                    <input class="form-control" id="<?= $prefId ?>" name="<?= $prefId ?>" type="text"
-                        value="<?= e($prefs[$prefId]) ?>" placeholder="<?= e(HelpMappingService::BASE_URL) ?>">
-                    <div class="form-text">
-                        <p><?= /* I18N: %s=list of filenames */ I18N::translate('Base URL of the help-mapping data (%s). Leave empty to use the built-in default. Useful for testing against a local server.', 'help-mapping.csv, help-mapping.version.json') ?></p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- help-mapping: status -->
-            <?php $hm = $help_mapping_status ?? []; ?>
             <fieldset class="form-group mb-3">
+            <!-- help-mapping: auto-update toggle --><?php $prefId = LinkEnhancerModule::PREF_HELP_MAPPING_AUTO_UPDATE; ?>
                 <div class="row">
-                    <legend class="col-form-label col-sm-3 wt-page-options-label sub">
-                        <?= MoreI18N::xlate('Status') ?>
-                    </legend>
-                    <div class="col-sm-9 wt-page-options-value mt-2">
-                        <div class="mb-2">
-                            <button type="submit" class="btn btn-secondary btn-sm" formaction="<?= e($links['refresh_mapping']) ?>">
-                                <?= I18N::translate('Update help mapping') ?>
-                            </button>
-                            <span class="form-text ms-2"><?= I18N::translate('Downloads the latest route→help-URL mapping from the docs site.') ?></span>
+                    <label class="col-sm-3 col-form-label wt-page-options-label sub" for="<?= $prefId ?>">
+                        <?= I18N::translate('Auto-download') ?>
+                    </label>
+                    <div class="col-sm-9 wt-page-options-value">
+                        <?= Utils::insertNoYesInlineRadiobuttons($prefId, $prefs[$prefId]) ?>
+                        <div class="form-text">
+                            <p><?= I18N::translate('When disabled, only locally cached data is used (no downloads). The admin button and CLI with --force still work.') ?></p>
                         </div>
-                        <?php if (!empty($hm['cached'])): ?>
-                            <div class="form-text">
-                                <p><?= I18N::translate('Feed version') ?>: <code><?= e((string) ($hm['applied_hash'] ?? '')) ?></code>
-                                    <?= I18N::translate('updated') ?> <?= e((string) ($hm['updated'] ?? '')) ?></p>
-                                <p><?= $hm['applied_hash'] === $hm['bundled_hash']
-                                        ? I18N::translate('Matches the bundled version.')
-                                        : I18N::translate('Newer than the bundled version (bundled: %s).', (string) ($hm['bundled_hash'] ?? '')) ?></p>
+                    
+                        <!-- help-mapping: download base url --><?php $prefId = LinkEnhancerModule::PREF_HELP_MAPPING_BASE_URL; ?>
+                        <div class="row">
+                            <label class="col-sm-3 col-form-label wt-page-options-label" for="<?= $prefId ?>">
+                                <?= I18N::translate('download base URL') ?>
+                            </label>
+                            <div class="col-sm-9 wt-page-options-value mb-3">
+                                <input class="form-control" id="<?= $prefId ?>" name="<?= $prefId ?>" type="text"
+                                    value="<?= e($prefs[$prefId]) ?>" placeholder="<?= e(HelpMappingService::BASE_URL) ?>">
+                                <div class="form-text">
+                                    <p>
+                                        <?= /* I18N: %s=list of filenames */ I18N::translate('Base URL of the help-mapping data (%s). Leave empty to use the built-in default. Useful for testing against a local server.', 'help-mapping.csv, help-mapping.version.json') ?>
+                                    </p>
+                                </div>
                             </div>
-                        <?php else: ?>
-                            <div class="form-text">
-                                <p class="text-muted"><?= I18N::translate('No feed data cached yet. Use the button above to download it.') ?></p>
+                        </div>
+
+                        <!-- help-mapping: status -->
+                        <?php $hm = $help_mapping_status ?? []; ?>
+                        <div class="row">
+                            <legend class="col-form-label col-sm-3 wt-page-options-label">
+                                <?= MoreI18N::xlate('Status') ?>
+                            </legend>
+                            <div class="col-sm-9 wt-page-options-value mt-2">
+                                <div class="mb-2">
+                                    <button type="submit" class="btn btn-secondary btn-sm" formaction="<?= e($links['refresh_mapping']) ?>">
+                                        <?= I18N::translate('Update help mapping') ?>
+                                    </button>
+                                    <span class="form-text ms-2">
+                                        <?= I18N::translate('Downloads the latest route→help-URL mapping from the docs site.') ?>
+                                    </span>
+                                </div>
+                                <?php if (!empty($hm['cached'])): ?>
+                                    <div class="form-text">
+                                        <p>
+                                            <?= I18N::translate('Feed version') ?>: <code><?= e((string) ($hm['applied_hash'] ?? '')) ?></code>
+                                            <?= I18N::translate('updated') ?>
+                                            <?= e((string) ($hm['updated'] ?? '')) ?>
+                                        </p>
+                                        <p>
+                                            <?= $hm['applied_hash'] === $hm['bundled_hash']
+                                                ? I18N::translate('Matches the bundled version.')
+                                                : I18N::translate('Newer than the bundled version (bundled: %s).', (string) ($hm['bundled_hash'] ?? '')) ?>
+                                        </p>
+                                    </div>
+                                <?php else: ?>
+                                    <div class="form-text">
+                                        <p class="text-muted">
+                                            <?= I18N::translate('No feed data cached yet. Use the button above to download it.') ?>
+                                        </p>
+                                    </div>
+                                <?php endif; ?>
                             </div>
-                        <?php endif; ?>
+                        </div>
+
                     </div>
                 </div>
             </fieldset>

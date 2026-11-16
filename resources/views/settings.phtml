@@ -22,7 +22,8 @@ use Fisharebest\Webtrees\Registry;
  * @var array                   $uid_index_status       [int rows, string|null last_run, bool fresh, bool source_available]
  * @var list<string>            $toc_langs              available TOC languages (non-default)
  * @var list<string>            $toc_langs_active       active webtrees languages
- * @var array<string,mixed>     $toc_status             cached TOC status (structure + coverage) 
+ * @var array<string,mixed>     $toc_status             cached TOC status (structure + coverage)
+ * @var array<string,mixed>     $help_mapping_status    status infos
  */
 
 function getFormButtons(string $idSuffix):string { 
@@ -193,6 +194,7 @@ $module = Registry::container()->get(LinkEnhancerModule::class);
     'toc_langs' => $toc_langs,
     'toc_langs_active' => $toc_langs_active,
     'toc_status' => $toc_status,
+    'help_mapping_status' => $help_mapping_status,
 ]) ?>
 </section>
 
