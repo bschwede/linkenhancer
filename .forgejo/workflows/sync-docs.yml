@@ -16,9 +16,26 @@ on:
 
 jobs:
   sync:
-    runs-on: codeberg-tiny
+    runs-on: codeberg-small
     steps:
       - uses: actions/checkout@v4
+      - name: Install PHP
+        run: |
+          if command -v php >/dev/null 2>&1; then
+            php -v | head -1
+          else
+            if [ "$(id -u)" = "0" ]; then
+              SUDO=""
+            elif command -v sudo >/dev/null 2>&1; then
+              SUDO="sudo"
+            else
+              echo "ERROR: not root and sudo not available - cannot install php-cli"
+              exit 1
+            fi
+            $SUDO apt-get update
+            $SUDO DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends php-cli
+            php -v | head -1
+          fi
       - name: Sync artifacts to wt-modules
         env:
           WT_MODULES_TOKEN: ${{ secrets.WT_MODULES_TOKEN }}
