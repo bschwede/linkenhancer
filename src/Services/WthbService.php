@@ -209,27 +209,30 @@ class WthbService { // stuff related to webtrees manual link handling
     }
 
     /**
-     * Query route to help mapping table for total count of rows and count of mapped rows (where an url is set)
+     * Query route to help mapping table for total count of rows, count of mapped rows (where an url is
+     * set) and the last write time (MAX updated_at) — the latter reflects every import path.
      *
-     * @return array<string, int>
+     * @return array<string, int|string>
      */
     public function getHelpTableCount(): array
     {
-        $totalCnt = 0;
-        $mappedCnt = 0;
+        $totalCnt    = 0;
+        $mappedCnt   = 0;
+        $lastWritten = '';
         if (DB::schema()->hasTable($this->help_table)) {
             try {
-                $totalCnt = DB::table($this->help_table)->count();
-                $mappedCnt = DB::table($this->help_table)
+                $totalCnt    = DB::table($this->help_table)->count();
+                $mappedCnt   = DB::table($this->help_table)
                     ->whereNotNull('url')
                     ->where('url', '!=', '')
                     ->count();
+                $lastWritten = (string) (DB::table($this->help_table)->max('updated_at') ?? '');
             } catch (Exception $e) {
                 LinkEnhancerModule::log()->error('help_table count failed: ' . $e->getMessage(), 'WthbService');
             }
         }
 
-        return ['total' => (int) $totalCnt, 'assigned' => (int) $mappedCnt];
+        return ['total' => (int) $totalCnt, 'assigned' => (int) $mappedCnt, 'last_written' => $lastWritten];
     }
 
 
@@ -274,6 +277,7 @@ class WthbService { // stuff related to webtrees manual link handling
     {
         $std_url = $this->std_url;
         $wiki_url = $this->wiki_url;
+        $current_lang = substr(I18N::languageTag(), 0, 2);
         if (!DB::schema()->hasTable($this->help_table)) {
             Registry::cache()->file()->remember(
                 LinkEnhancerModule::MODULE_NAME . '-wthb-flash-missing-table',
@@ -368,9 +372,9 @@ class WthbService { // stuff related to webtrees manual link handling
 
             $result = $query
                 ->get()
-                ->map(function ($obj) use ($std_url, $wiki_url): mixed { // complete url by appending prefix to url path - also external url are possible
+                ->map(function ($obj) use ($std_url, $current_lang): mixed {
                     $first_url = trim($obj->url);
-                    $obj->url = $first_url == '' ? $std_url : (preg_match('/^https?:\/\//', $first_url) ? $first_url : $wiki_url . ltrim($first_url, '/'));
+                    $obj->url = $first_url === '' ? $std_url : $this->renderHelpUrl($first_url, $current_lang);
                     return $obj;
                 });
 
@@ -402,7 +406,38 @@ class WthbService { // stuff related to webtrees manual link handling
         ];
     }
 
-    
+    /**
+     * Resolve a help URL: substitute {lang} placeholders, then resolve
+     * relative URLs against the GenWiki base.
+     *
+     * Placeholder syntax:
+     *   {lang:en,de}  — use current lang if listed, else first code (default)
+     *   {lang}        — current lang, fallback 'en'
+     *
+     * @param string $url          the raw URL from the mapping table
+     * @param string $current_lang the current 2-letter language code (e.g. 'de')
+     */
+    public function renderHelpUrl(string $url, string $current_lang): string
+    {
+        // {lang:code1,code2,...} — first code = default
+        if (preg_match('/\{lang:([a-z]{2}(?:,[a-z]{2})*)\}/', $url, $m)) {
+            $codes = explode(',', $m[1]);
+            $lang  = in_array($current_lang, $codes, true) ? $current_lang : $codes[0];
+            $url   = str_replace($m[0], $lang, $url);
+        }
+        // {lang} without codes — fallback 'en'
+        elseif (str_contains($url, '{lang}')) {
+            $url = str_replace('{lang}', $current_lang !== '' ? $current_lang : 'en', $url);
+        }
+
+        // Relative URL → prepend GenWiki base
+        if (!preg_match('#^https?://#', $url)) {
+            $url = $this->wiki_url . ltrim($url, '/');
+        }
+
+        return $url;
+    }
+
     public function isCmmAvailable(): bool {
         $result = false;
         if (class_exists(self::CMM_CFG_CLASS, true)) {

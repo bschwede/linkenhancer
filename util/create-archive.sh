@@ -23,6 +23,14 @@ util/create-archive.sh
 util/update-po-files.sh
 util/convert-po2mo.sh
 util/pre-commit.sh
+util/generate-class-hierarchy.php
+util/export-le-i18n.php
+util/generate-link-params.mjs
+util/generate-cron-jobs-doc.php
+util/extract-po-json.mjs
+util/sync-docs-local.sh
+util/i18n-*.json
+util/le-i18n-*.json
 resources/*/index-*.*
 resources/js/src
 resources/js/tests
@@ -41,6 +49,7 @@ tests
 vendor/phpstan
 phpstan-bootstrap.php
 phpstan*
+.forgejo
 EOT
 
 cd "$SRCDIR" || exit 1

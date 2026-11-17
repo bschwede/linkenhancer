@@ -1,0 +1,63 @@
+name: Sync Docs
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/Schema/SeedHelpTable.csv'
+      - 'src/**/*.php'
+      - 'cron-jobs.php'
+      - 'util/generate-class-hierarchy.php'
+      - 'util/generate-cron-jobs-doc.php'
+      - 'util/extract-po-json.mjs'
+      - 'util/export-le-i18n.php'
+      - 'resources/js/src/le-config.js'
+      - 'util/generate-link-params.mjs'
+      - 'resources/lang/de.po'
+
+jobs:
+  sync:
+    runs-on: codeberg-tiny
+    steps:
+      - uses: actions/checkout@v4
+      - name: Sync artifacts to wt-modules
+        env:
+          WT_MODULES_TOKEN: ${{ secrets.WT_MODULES_TOKEN }}
+        run: |
+          git clone --depth 1 https://x-access-token:${WT_MODULES_TOKEN}@codeberg.org/bschwede/wt-modules.git /tmp/wt-modules
+          mkdir -p /tmp/wt-modules/static/data
+          mkdir -p /tmp/wt-modules/content/en/includes/linkenhancer
+          mkdir -p /tmp/wt-modules/content/de/includes/linkenhancer
+
+          # --- help-mapping CSV ---
+          cp src/Schema/SeedHelpTable.csv /tmp/wt-modules/static/data/help-mapping.csv
+          HASH=$(sha256sum src/Schema/SeedHelpTable.csv | cut -c1-12)
+          echo "{\"hash\": \"${HASH}\", \"updated\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"}" > /tmp/wt-modules/static/data/help-mapping.version.json
+
+          # --- npm dep (gettext-parser for PO extraction) ---
+          npm install gettext-parser --no-save --ignore-scripts
+
+          # --- DE i18n extraction (raw PO → JSON, prerequisite for DE fragments) ---
+          node util/extract-po-json.mjs > util/i18n-de.json
+
+          # --- class-hierarchy fragment (language-neutral, EN + DE) ---
+          php util/generate-class-hierarchy.php > /tmp/wt-modules/content/en/includes/linkenhancer/class-hierarchy.md
+          cp /tmp/wt-modules/content/en/includes/linkenhancer/class-hierarchy.md /tmp/wt-modules/content/de/includes/linkenhancer/class-hierarchy.md
+
+          # --- cron-jobs reference (EN + DE) ---
+          php util/generate-cron-jobs-doc.php > /tmp/wt-modules/content/en/includes/linkenhancer/cron-jobs.md
+          php util/generate-cron-jobs-doc.php --lang=de > /tmp/wt-modules/content/de/includes/linkenhancer/cron-jobs.md
+
+          # --- enhanced-links parameter reference (EN + DE) ---
+          php util/export-le-i18n.php > util/le-i18n-en.json
+          php util/export-le-i18n.php --lang=de > util/le-i18n-de.json
+          node util/generate-link-params.mjs > /tmp/wt-modules/content/en/includes/linkenhancer/le-link-parameters.md
+          node util/generate-link-params.mjs --lang=de > /tmp/wt-modules/content/de/includes/linkenhancer/le-link-parameters.md
+
+          cd /tmp/wt-modules
+          git add static/data/help-mapping.csv static/data/help-mapping.version.json content/en/includes/linkenhancer/ content/de/includes/linkenhancer/
+          if ! git diff --cached --quiet; then
+            git commit -m "sync: linkenhancer artifacts $(date -u +%Y-%m-%d)"
+            git push
+          else
+            echo "No changes - skipping commit"
+          fi

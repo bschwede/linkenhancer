@@ -78,6 +78,10 @@ final class AdminSettingsBuilder
             'module' => $module->name(),
             'action' => 'AdminRefreshToc'
         ]);
+        $response['links']['refresh_mapping'] = route($moduleClass, [
+            'module' => $module->name(),
+            'action' => 'AdminRefreshMapping'
+        ]);
 
         $response['tablerows'] = $module->wthb()->getHelpTableCount();
 
@@ -115,6 +119,13 @@ final class AdminSettingsBuilder
             $response['toc_langs']        = [];
             $response['toc_langs_active'] = [];
             $response['toc_status']       = [];
+        }
+
+        // Cached help-mapping feed status for the admin settings (read-only).
+        try {
+            $response['help_mapping_status'] = $module->helpMapping()->status();
+        } catch (\Throwable) {
+            $response['help_mapping_status'] = [];
         }
 
         $mde_rules = $module->mde()->getAllRules();

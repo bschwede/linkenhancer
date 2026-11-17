@@ -109,10 +109,10 @@ if (!$force && !$svc->autoUpdateEnabled()) {
 }
 
 // ---------------------------------------------------------------- refresh
-// de-thunder: verteilt Requests über ein Jitter-Fenster, damit bei identischen
-// Cron-Zeiten nicht alle Instanzen gleichzeitig den Feed anfragen.
+// de-thunder: Distributes requests across a jitter window so that, when
+// cron times are identical, not all instances request the feed at the same time.
 $jitter = random_int(0, max(0, $jitter_max));
-echo 'Jitter: ' . $jitter . ' s vor dem Refresh.' . PHP_EOL;
+echo 'Jitter: ' . $jitter . ' s before the refresh.' . PHP_EOL;
 if ($jitter > 0) {
     sleep($jitter);
 }

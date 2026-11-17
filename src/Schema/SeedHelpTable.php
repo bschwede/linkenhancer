@@ -119,7 +119,7 @@ class SeedHelpTable implements SeedInterface
 
     /**
      *  Run the seeder.
-     *
+     * @param bool $end_transaction   explicit commit for cli call
      * @return void
      */
     public function run(): void
@@ -178,6 +178,9 @@ class SeedHelpTable implements SeedInterface
                 }
                 $rownum++;
             }
+            if (PHP_SAPI === 'cli' && $connection->transactionLevel() > 0) { // this is for CLI call
+                $connection->commit();
+            }            
         }
     
     }    

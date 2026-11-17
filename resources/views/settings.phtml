@@ -22,7 +22,8 @@ use Fisharebest\Webtrees\Registry;
  * @var array                   $uid_index_status       [int rows, string|null last_run, bool fresh, bool source_available]
  * @var list<string>            $toc_langs              available TOC languages (non-default)
  * @var list<string>            $toc_langs_active       active webtrees languages
- * @var array<string,mixed>     $toc_status             cached TOC status (structure + coverage) 
+ * @var array<string,mixed>     $toc_status             cached TOC status (structure + coverage)
+ * @var array<string,mixed>     $help_mapping_status    status infos
  */
 
 function getFormButtons(string $idSuffix):string { 
@@ -112,7 +113,7 @@ $module = Registry::container()->get(LinkEnhancerModule::class);
 <?= getFormButtons('1') ?>
 
         <hr class="div" />
-        <h3><?= /*I18N: Settings - section title */ I18N::translate('More options') ?></h3>
+        <h3 id="common"><?= /*I18N: Settings - section title */ I18N::translate('More options') ?></h3>
 
         <div class="row">
             <!-- debug info in js console --><?php $prefId = LinkEnhancerModule::PREF_JS_DEBUG_CONSOLE; ?>
@@ -166,7 +167,7 @@ $module = Registry::container()->get(LinkEnhancerModule::class);
             </fieldset>            
         </div>
 
-        <h4 class="subdiv">[1] <a name="section1" href="#top"><?= /*I18N: Settings - section title */I18N::translate('Enhanced Link Support') ?></a></h4>
+        <h4 id="enhanced-links" class="subdiv">[1] <a name="section1" href="#top"><?= /*I18N: Settings - section title */I18N::translate('Enhanced Link Support') ?></a></h4>
 <section id="options1">
 <?= view($module->name() . '::' . 'settings-le', [
     'prefs' => $prefs,
@@ -175,7 +176,7 @@ $module = Registry::container()->get(LinkEnhancerModule::class);
 ]) ?>
 </section>
 
-        <h4 class="subdiv">[2] <a name="section2" href="#top"><?= /*I18N: Settings - section title */I18N::translate('Markdown enhancements') ?></a></h4>
+        <h4 id="markdown" class="subdiv">[2] <a name="section2" href="#top"><?= /*I18N: Settings - section title */I18N::translate('Markdown enhancements') ?></a></h4>
 <section id="options2">
 <?= view($module->name() . '::' . 'settings-md', [
     'prefs'      => $prefs,
@@ -183,7 +184,7 @@ $module = Registry::container()->get(LinkEnhancerModule::class);
 ]) ?>
 </section>
 
-        <h4 class="subdiv">[3] <a name="section3" href="#top"><?= /*I18N: Settings - section title */ I18N::translate('Webtrees manual') ?></a></h4>
+        <h4 id="wthb" class="subdiv">[3] <a name="section3" href="#top"><?= /*I18N: Settings - section title */ I18N::translate('Webtrees manual') ?></a></h4>
 <section id="options3">
 <?= view($module->name() . '::' . 'settings-wthb', [
     'prefs' => $prefs,
@@ -193,10 +194,11 @@ $module = Registry::container()->get(LinkEnhancerModule::class);
     'toc_langs' => $toc_langs,
     'toc_langs_active' => $toc_langs_active,
     'toc_status' => $toc_status,
+    'help_mapping_status' => $help_mapping_status,
 ]) ?>
 </section>
 
-        <h4 class="subdiv">[4] <a name="section4" href="#top"><?= /*I18N: Settings - section title */ I18N::translate('Home link') ?></a></h4>
+        <h4 id="home-link" class="subdiv">[4] <a name="section4" href="#top"><?= /*I18N: Settings - section title */ I18N::translate('Home link') ?></a></h4>
 <section id="options4">
 <?= view($module->name() . '::' . 'settings-home', [
     'prefs' => $prefs

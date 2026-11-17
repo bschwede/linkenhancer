@@ -1,9 +1,6 @@
 # webtrees module LinkEnhancer
 
-[TL;DR](#tlrdr) | [Description](#description) | [webtrees](#webtrees) | [Requirements](#requirements) | [Installation](#installation) | [Contributing](#contributing) | [Translation](#translation) | [Support](#support) | [License](#license)
-
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0) ![webtrees major version](https://img.shields.io/badge/webtrees-v2.2|v2.3-green) ![Latest Release](https://img.shields.io/github/v/release/bschwede/linkenhancer) ![Downloads](https://img.shields.io/github/downloads/bschwede/linkenhancer/total.svg)
-
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0) ![webtrees major version](https://img.shields.io/badge/webtrees-v2.2|v2.3-green) ![Latest Release](https://img.shields.io/github/v/release/bschwede/linkenhancer)
 
 > [!IMPORTANT]
 > **Primary Repository:** <https://codeberg.org/bschwede/linkenhancer>
@@ -16,7 +13,6 @@
 >
 > Mirror Repository: <https://github.com/bschwede/linkenhancer>
 
-<a name="tldr"></a>
 ## TL;DR
 **Cross-references to Gedcom datasets, Markdown editor, context-sensitive link to the GenWiki Webtrees manual**
 
@@ -29,644 +25,66 @@ What you can expect from the module, illustrated with screenshots:
 | [![Markdown editor](resources/img/screenshot_tinymde-sharednote_200.png)](resources/img/screenshot_tinymde-sharednote.png) | [![Markdown Help](resources/img/screenshot_markdown-help_200.png)](resources/img/screenshot_markdown-help.png) |
 | markdown editor | markdown help |
 
-Here are the available options that can be set on the admin page of this module:
-
-[![admin page](resources/img/screenshot_admin-page_small.png)](resources/img/screenshot_admin-page.png)
-
-<a name="description"></a>
 ## Description
 
 This module wraps up some [examples mentioned in the German Webtrees Manual](https://wiki.genealogy.net/Webtrees_Handbuch/Entwicklungsumgebung#Beispiel_-_Querverweise_zu_Datens.C3.A4tzen) and improves the application of these features - each component can be activated individually.
 
-The main purpose of this module is to make [**links to data records**](#enhancedlinks) stored in family trees more convenient. This avoids having to store fully qualified links, which impairs the portability of Gedcom data. By linking the notes to the GEDCOM data records (persons, families, sources, etc.) from the text makes story telling much easier and thus also save this information in the GEDCOM file (maybe this is an alternative for the [stories module](https://wiki.genealogy.net/Webtrees_Handbuch/Anleitung_f%C3%BCr_Besucher#Geschichten)). The option of embedding the [**images**](#mdimg) already inserted in the family tree in the notes rounds off this approach. The link function is controlled via the [anchor part of the URI](https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Web_mechanics/What_is_a_URL), so it's no problem, if this module is not active - the url just points to the current webtrees page.
+The main purpose of this module is to make [**links to data records**](https://bschwede.codeberg.page/wt-modules/en/docs/linkenhancer/features/enhanced-links/) stored in family trees more convenient. This avoids having to store fully qualified links, which impairs the portability of Gedcom data. By linking the notes to the GEDCOM data records (persons, families, sources, etc.) from the text makes story telling much easier and thus also save this information in the GEDCOM file (maybe this is an alternative for the [stories module](https://wiki.genealogy.net/Webtrees_Handbuch/Anleitung_f%C3%BCr_Besucher#Geschichten)). The option of embedding the [**images**](https://bschwede.codeberg.page/wt-modules/de/docs/linkenhancer/features/markdown/md-image/) already inserted in the family tree in the notes rounds off this approach. The link function is controlled via the [anchor part of the URI](https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Web_mechanics/What_is_a_URL), so it's no problem, if this module is not active - the url just points to the current webtrees page.
 
-For the admin there is an [**overview of cross-references**](#xref-overview), that lists all GEDCOM records and html based records stored in the `block / block_setting` tables (like html, faq, stories and vesta classic look and feel badges) which contain linkenhancer cross-references, classic cross-references and embedded picture references. The latter two references are only supported in GEDCOM records. For a configurable user access level, an overview can be provided for each tree. On the GEDCOM record detail view you can have an additional tab "cross-references" that lists incoming and outgoing references. The records xref and uids entries (which are sometimes truncated by webtrees core) are also listed to make it easier to reuse them as references in notes.
+For the admin there is an [**overview of cross-references**](https://bschwede.codeberg.page/wt-modules/de/docs/linkenhancer/features/enhanced-links/xref-overview/), that lists all GEDCOM records and html based records stored in the `block / block_setting` tables (like html, faq, stories and vesta classic look and feel badges) which contain linkenhancer cross-references, classic cross-references and embedded picture references. The latter two references are only supported in GEDCOM records. For a configurable user access level, an overview can be provided for each tree. On the GEDCOM record detail view you can have an additional tab "cross-references" that lists incoming and outgoing references. The records xref and uids entries (which are sometimes truncated by webtrees core) are also listed to make it easier to reuse them as references in notes.
 
 Additionally there are some goodies more or less related with links:
 
-- [**Renumber XREFs (with links)**](#renumber) provides an extended renumber that repairs all affected links in one step with solving the XREF collisions.
-- There are [**Datafixes**](#datafix) to address specific link integrity issues.
-- [**UID lookup**](#uid-lookup) — navigate to a record by its persistent UID (`_UID` / `UID` tag), surviving XREF renumbering.
-- The note textarea can be a [**visual markdown editor**](#mde) with **markdown help** (can also be utilized by other custom modules).
-- Enabling further [**markdown extensions**](#mdext).
-- Take control over [**table cell height**](#mdtdh) of longer markdown notes.
-- [**Context sensitive help links**](#wthb) to the [german webtrees manual](https://wiki.genealogy.net/Webtrees_Handbuch) can be activated in the small menu at the top of the page and for subcontext topics on the page. Furthermore, full-text search is supported and it is possible to browse the table of contents.
-- The [**site title can be a link**](#homelink) to the tree homepage or the user my page.
-- A few minor [**patches**](#patches), that can applied by bash script (not necessary for this module).
+- [**Renumber XREFs (with links)**](https://bschwede.codeberg.page/wt-modules/en/docs/linkenhancer/features/renumber/) provides an extended renumber that repairs all affected links in one step with solving the XREF collisions.
+- There are [**Datafixes**](https://bschwede.codeberg.page/wt-modules/en/docs/linkenhancer/features/datafix/) to address specific link integrity issues.
+- [**UID lookup**](https://bschwede.codeberg.page/wt-modules/en/docs/linkenhancer/features/uid-lookup/) — navigate to a record by its persistent UID (`_UID` / `UID` tag), surviving XREF renumbering.
+- The note textarea can be a [**visual markdown editor**](https://bschwede.codeberg.page/wt-modules/en/docs/linkenhancer/features/markdown/mde) with **markdown help** (can also be utilized by other custom modules).
+- Enabling further [**markdown extensions**](https://bschwede.codeberg.page/wt-modules/en/docs/linkenhancer/features/markdown/md-extensions).
+- Take control over [**table cell height**](https://bschwede.codeberg.page/wt-modules/en/docs/linkenhancer/features/markdown/cell-height) of longer markdown notes.
+- [**Context sensitive help links**](https://bschwede.codeberg.page/wt-modules/en/docs/linkenhancer/features/wthb/) to the [german webtrees manual](https://wiki.genealogy.net/Webtrees_Handbuch) can be activated in the small menu at the top of the page and for subcontext topics on the page. Furthermore, full-text search is supported and it is possible to browse the table of contents.
+- The [**site title can be a link**](https://bschwede.codeberg.page/wt-modules/en/docs/linkenhancer/features/home-link/) to the tree homepage or the user my page.
+- A few minor [**patches**](https://bschwede.codeberg.page/wt-modules/en/docs/linkenhancer/features/patches/), that can be applied by bash script (not necessary for this module).
+
+> **Full documentation** (EN/DE): <https://bschwede.codeberg.page/wt-modules/docs/linkenhancer/>
 
-<a name="enhancedlinks"></a>
-### Enhanced links
-Although webtrees replaces [XREFs](https://wiki.genealogy.net/GEDCOM/XREF_ID) such as `@I2@` in notes with a **cross-reference** and it's appropriate display name, this is not so flexible. You can't determine the display name, which means that in the event of an error (due to XREF renumbering or typing error), it is not easy or possible to resolve the cross-reference to the corresponding data record without any doubt. Unfortunately, this does not work in the HTML block on the start page if you want to refer to a data record in the continuous text without inserting absolute references (such absolute references could be entered in the source code of the HTML block as follows, for example: `<a href="https://mytree.somewhere/tree/mytree/individual/I2">Jon Doe</a>`).
-
-> [!TIP]
-> The custom module [webtrees-mitalteli-show-xref](https://github.com/elysch/webtrees-mitalteli-show-xref) can help you find the XREF and UID reference of personal data records.
-> Some UIDs (38 characters lentgh) are automatically shortend by webtrees in the standard view - this module shows the unchanged UIDs.
-
-The enhanced links function is implemented via Javascript and searches in the rendered output of webtrees for `<a>` tags whose href attribute values begin with `#@`. This way it is possible to handle links in markdown and html markup. Because it is processed in the browser on client side, the existence of the cross-referenced data records in webtrees is not checked in advance. Errors only occur when the link is clicked (e. g. if the access to the ressource is restricted).
-
-As a bonus different destinations can be addressed with one link definition, whereby the cross-reference is always the first link (if set) and the others are represented by attached clickable icons only. 
-Included are the following **predefined external targets** (the parameter keys are listed in parentheses):
-- Wikipedia *(wp)*
-- Family Search Family Tree *(fsft)*
-- [Residents database - Family research in West Prussia](https://westpreussen.de/pages/forschungsergebnisse/einwohnerdatenbank/einwohner.php) *(ewp)*
-- OpenStreetMap *(osm)*
-- [Wer-wir-waren.at](https://www.wer-wir-waren.at/) (*www*) - a service of the [Vorarlberger Landesmuseumsverein](https://vlmv.at/)
-- [WikiTree](https://www.wikitree.com/) *(wit)*
-- [CompGen](https://www.compgen.de/) services:
-  - [GenWiki](https://wiki.genealogy.net/) *(gw)*
-  - [Online Local heritage books](https://ofb.genealogy.net/?lang=en) *(ofb)*
-  - [The Historic Geo Information System](https://gov.genealogy.net/?lang=en) *(gov)*
-  - [GEDBAS - Genealogical Database - collected personal data](https://gedbas.genealogy.net/?lang=en) *(gedbas)*
-  - [Data Entry System (DES) - Casualty lists](https://des.genealogy.net/?lang=en) *(vl)*
-
-Each parameter key can be specified multiple times – but you shouldn’t overdo it for the sake of clarity.
-
-**Syntax:**
-
-* **Markdown**: In general, an enhanced link looks like this `[Link display title](#@param1&paramN)` so that one or more targets can be addressed at once. For cross-references in webtrees a record reference (REF can be the XREF or a UID) is expected, the parameter looks as follows
-  - `wt=@REF@` or `wt=@REF@othertree` - standard link - access to record page via redirect url
-  - `wt=n@REF@` - legacy link with given record type - here: to a note with REF in the current tree<br>available record types:
-    - i=individual
-    - f=family
-    - s=source
-    - r=repository
-    - n=note
-    - l=sharedPlace
-  - `wt=i@REF@othertree+dia` - link to record type individual with REF from tree "othertree" and also link to Interactive tree of this person
-* **HTML**: The same applies to html links: `<a href="#@wt=i@I1@">Link display title</a>`
-  So this is also useable in cooperation with the name badge function of the [“⚶ Vesta Classic Look & Feel” module](https://github.com/vesta-webtrees-2-custom-modules/vesta_classic_laf) in the HTML snippet field: `<a href="#@fsft=<ref/>"></a>` for linking to a record in the Family Search Family Tree. It's also possible to embed those links in news articles of Tywed's [news-menu module](https://github.com/Tywed/news-menu) or in [FAQ](https://wiki.genealogy.net/Webtrees_Handbuch/Anleitung_für_Besucher#H.C3.A4ufige_Fragen_.28FAQ.29) articles.
-
-The syntax of the external targets is listed by the markdown help function of this module. In most cases, only one key-value parameter pair needs to be specified, consisting of the short name of the desired target and the ID of the data record located there.
-
-After a lot of theory: How does it looks like in webtrees?! In the upper part of the image we can see the edit mode of a note record, below how it ist rendered in view mode:
-
-![Note with enhanced links - edit and view](resources/img/screenshot_note-enh-links-edit-and-view.png)
-
-
-**Additional external targets** can be configured by providing a custom JavaScript object on the admin page of this module. Here two example entries from [predefined targets](resources/js/index-le.js) to illustrate the principle:
-```javascript
-{
-  "fsft": {
-      name: 'Family Search Tree - $ID',
-      url: 'https://www.familysearch.org/tree/person/details/',
-      cname: 'icon-fsft'
-  },
-  "wp": {
-      name: 'Wikipedia',
-      url: (id, title) => {
-          let parts = id.split('/');
-          if (parts.length < 2) {
-              title = title + " - " + options.i18n('syntax error') + "!";
-              return { url: '', title };
-          }
-          let subdomain = parts[0];
-          let article = parts.slice(1).join('/');
-          title = `${title} - ` + decodeURIComponent(article) + ` (${subdomain})`;
-          return { url: `https://${subdomain}.wikipedia.org/wiki/${article}`, title };
-      },
-      cname: 'icon-wp',
-      help: [
-          { n: options.i18n('wp-help1'), e: 'de/Webtrees' },
-          { n: options.i18n('wp-help2'), e: 'en/Webtrees' },
-          { n: options.i18n('wp-help3'), e: 'other-subdomain/Webtrees' },
-      ]
-  }
-}
-```
-
-Now some **explanation** for the used properties in the code snippet above (as a reminder, how the syntax of a base enhanced link looks like: `#@param-key=param-value`):
-* *key* = is the above mentioned short name or query parameter key (param-key)
-* *name* = title or label to be displayed as link title;\
-  standard: the placeholder `$ID` will be replaced by the given id (param-value)
-* *url* = service url to be called\
-  standard: the parameter value / given record id (param-value) will be appended to the end of the url
-  It can also be a function provided, that accepts as parameter (id, title) and returns an object `{ url, title }`. This returned title will be set instead of the name-property.
-* *cname* = [CSS](https://en.wikipedia.org/wiki/CSS) class name(s) whitespace separated
-* *help* = optional array of objects `[{n:'', e:''},..]` to illustrate the use of a non standard target (where the url-property is a function) by examples (in e), provided with explanatory text (in n). This information is listed in the markdown help.
-
-`options.i18n` is a function passed through from this module in order to provide translated strings.
-
-Any CSS rules required are best added via the [“CSS and JS” module](https://wiki.genealogy.net/Webtrees_Handbuch/Anleitung_f%C3%BCr_Administratoren/Module#CSS_und_JS). Only the definition of the icon (size 30 x 30 pixels is sufficient) as a background image is actually needed - referencing as [data: URLs](https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Schemes/data)\
-For example: `.icon-whatever { background-image: url(...) }`
-
-
-<a name="uid-lookup"></a>
-### UID lookup
-
-A **UID** (`_UID` in GEDCOM 5.5.1, `UID` in GEDCOM 7.0) is a persistent identifier assigned to a record. The UID survives XREF renumbering and tree migrations, making it a stable reference point.
-
-This feature allows navigating directly to a record by its UID. The URL pattern is:
-
-- `/tree/{tree}/goto-uid/{uid}` — scoped to one tree
-- `/goto-uid/{uid}` — global (searches all trees)
-
-**Behavior:**
-- **0 hits** → 404
-- **1 visible hit** → redirect to the record
-- **>1 visible hit** → selection list (case-variant UIDs or the same UID in multiple records)
-
-UID comparison is **case-insensitive** (GEDCOM specs do not define UID as case-sensitive). The stored value is verbatim; matching is done case-insensitively so that case-variant UIDs return a selection list rather than a possibly-wrong single redirect.
-
-You can lookup uids via the **quick search** input. For shorter uids, that can be regarded as XREF, the prefix `uid:` can be added to the search value.
-
-#### Standard navigation (`goto-id`)
-
-`goto-id` is the standard navigation target for **every** linkenhancer link — both untyped (`wt=@REF@`) and typed (`wt=<type>@REF@`) — and resolves a reference that is either a record **XREF** or a **UID**. The URL pattern is:
-
-- `/tree/{tree}/goto-id/{id}` — scoped to one tree (falls back to a global lookup when nothing is found in the tree, with a flash notice)
-- `/goto-id/{id}` — global (searches all trees)
-
-**Behavior** (shared `IdResolver`): the id is tried length-aware and bidirectionally — a long id (≥ 18 chars) as a UID first, a short one as an XREF first — and falls back to the other when the first yields nothing, so a resolution is never lost. 0 hits → 404, 1 visible hit → redirect, >1 → selection list.
-
-A typed `wt=<type>@REF@` link is a **legacy** form: the type letter is no longer used for routing (all links go through `goto-id`) and is only documentary — it still drives the diagram link for individuals and the type-mismatch hint in the cross-reference overview. New links should use the untyped `wt=@REF@` form.
-
-#### XREF route (`goto-xref`)
-There ist also the route `/tree/{tree}/goto-xref/{xref}` available, which allows you to navigate to the corresponding record in the tree, regardless of the record type.
-
-#### Cross-reference overview: UID targets in other trees
-
-In the admin *Cross-Reference Overview* a link whose UID target is not found in the record's own tree is normally shown as *"target not found"*. When the UID feature is enabled, such a target is additionally resolved **globally** (across the other trees); if matches exist it is rendered as **not unique** (`?`) with the match count instead: up to 3 matches are listed as direct cross-tree links, more than 3 collapse into a single `goto-id` link (title = the UID). This behavior is hard-gated on the UID feature preference and never applies to targets that name an explicit tree.
-
-#### Index
-
-The UID index is stored in the `le_uid_index` table (one row per UID tag occurrence, distinguished by `tag_path`). It is maintained exclusively by `cli/build-uid-index.php` (no live scan on request).
-
-- **Initial build** (first run, or `--rebuild`): full scan of all GEDCOM tables, extracting all UID tags via `UidTagCollector`.
-- **Incremental runs**: only records whose MD5 fingerprint changed (or were added/removed) are re-scanned.
-
-Cron example (every 10 minutes, up to 5000 records per run):
-
-```
-*/10 * * * * cd /path/to/webtrees && php modules_v4/linkenhancer/cli/build-uid-index.php --limit=5000 >> /var/log/linkenhancer-uid-index.log 2>&1
-```
-
-The feature can be toggled on/off in the module admin page ("Activate Support" → [5] UID lookup). The current index status (row count, last build time) is shown there.
-
-While the feature is switched off, index builds are skipped automatically (the cron run exits 0 without doing work). `--force` builds the index anyway (e.g. to prepare for re-enabling), and `--flush` works regardless of the switch.
-
-> [!NOTE]
-> UID tags at any nesting level are indexed (e.g. `0 @I1@ INDI`, `1 _UID`, `1 FAMF`, `2 _UID`). The tag path is stored per row so duplicates are distinguishable in the selection list.
-
-### Markdown
-Markdown is a simple system of formatting, used on websites such as Wikipedia or Github. It uses unobtrusive punctuation characters to create headings and sub-headings, bold and italic text, lists, tables, etc.
-
-Webtrees uses a CommonMark implementation and supports a subset of the markup. It is optionally supported in note records on a per tree basis.
-
-On the subject of markdown see also:
-
-- <https://commonmark.thephpleague.com/>
-- [Github webtrees Issues](https://github.com/fisharebest/webtrees/issues?q=is%3Aissue%20markdown)
-- GEDCOM-Standard: [NOTE.MIME and markdown #222](https://github.com/FamilySearch/GEDCOM/issues/222) - support in GEDCOM 7.1
-
-> [!NOTE]
-> For the Markdown Image Support and the additional Markdown Extensions the [MarkDownFactory class](https://github.com/fisharebest/webtrees/blob/main/app/Factories/MarkdownFactory.php) needs to be extended by this module. This replacement class also fixes [fisharebest/webtrees#4841](https://github.com/fisharebest/webtrees/issues/4841), so that a pre-formatted markdown block is not rendered as a single line any more.
-
-
-<a name="mdimg"></a>
-#### Markdown Image Support
-
-![note with links](resources/img/screenshot_note-with-links-and-img.png)
-
-This feature allows you to easily embed images from GEDCOM media records (first image), which reside behind the media firewall or from the public directory into notes.
-If restriction rules apply to the record, instead of the image, a message is displayed.
-
-**Syntax:**
-- `![alternate text for gedcom object](#@id=@M1@)`
-- `![alternate text for picture in public folder](#@public=webtrees.png "title")`
-- `![picture with defined height, width and additional css class](#@id=@M1@&h=200&w=200&cname=float-right)`
-
-Technically the images are packed into a div container together with an image subtitle - which is also a link to the media data set for GEDCOM objects. The display can be customized as required using the standard CSS classes or per image additional CSS classes (e.g. `float-start` or `float-end` from webtrees vendor.css).
-
-
-<a name="mde"></a>
-#### Markdown editor
-You can also enable a visual **markdown editor** (mde) for note textareas. Under the hood the project “TinyMDE - A tiny, dependency-free embeddable HTML/JavaScript Markdown editor” is used - see also: <https://github.com/jefago/tiny-markdown-editor>
-
-![Markdown editor](resources/img/screenshot_tinymde-sharednote.png)
-
-Besides syntax highlighting it ships with an icon bar for common format commands, a help popup and line numbering.
-
-![Markdown Help](resources/img/screenshot_markdown-help.png)
-
-> [!NOTE]
-> Unfortunately, the on-screen keyboard does NOT work as before with the previous text input field. The selected characters end up as an intermediate step in the small text field below the Markdown editor and then must be copied manually to the desired position.
-
-If you as a developer also want to apply mde to text areas on the edit pages of other custom modules, you can do so using the `MarkdownEditorActivationService` (available since v1.2.11 - details see [#101](https://codeberg.org/bschwede/linkenhancer/issues/101)):
-
-```php
-    // This snippet could, for example, be placed in the main module class and invoked in the boot method.
-    /**
-     * toggles registration for using markdown editor on note fields provided by linkenhancer custom module
-     * registration is persisted by linkenhancer custom module so it's not necessary to force registering again each time
-     *
-     * @param bool $enable
-     * @param bool $force
-     * @return void
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    private function toggleTinyMde(bool $enable, bool $force = false): void
-    {
-        $class = "Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\MarkdownEditorActivationService";
-        if (Registry::container()->has($class)) {
-            /** @var Schwendinger\Webtrees\Module\LinkEnhancer\Services\MarkdownEditorActivationService $mde_service */
-            $mde_service = Registry::container()->get($class);
-            $existingRule = $mde_service->getCustomRule(self::CUSTOM_TITLE);
-            if (
-                $force ||
-                $enable && !$existingRule ||
-                !$enable && $existingRule
-            ) {
-                $mde_service->setCustomRule(
-                    self::CUSTOM_TITLE,  // module name as key
-                    $enable ? ["source-transcription-detail", "source-transcription-create-manual"] : [], // handler: usually the short class name / last part of the route name - see js console with enabled debug info
-                    $enable ? ["textarea[id$='_text']"] : [] // filter: querySelector filter expressions; here: textarea id ends with "_text"
-                );
-            }
-        }
-    }
-```
-
-This only works if this feature has been enabled globally and the edit page is associated with a tree that also uses Markdown in its notes.
-
-Known custom modules that make use of this feature:
-- [Source Transcriptions](https://github.com/hartenthaler/hh_source_transcription)
-- [Ortsregister](https://github.com/thobgg/webtrees-ortsregister)
-
-<a name="mdext"></a>
-#### Markdown Extensions
-> [!WARNING]
-> Please keep in mind when using this extensions, you are deviating from the smallest common markdown dialect set.
-> If the library used to render markdown in HTML needs to be changed for any reason, there is a possibility that not all of the extended markup used here will be supported. (see also [#32](https://codeberg.org/bschwede/linkenhancer/issues/32)).
-> Since the markup is not intrusive, the impact should not be serious – of course, it's a minor drawback.
-
-The package [League\CommonMarkdown](https://commonmark.thephpleague.com/) used for processing Markdown texts offers several useful extensions that can be activated optionally:
-- [Strikethrough](https://commonmark.thephpleague.com/2.x/extensions/strikethrough/) - see also fisharebest/webtrees#5113
-- [Description Lists](https://commonmark.thephpleague.com/2.x/extensions/description-lists/)
-- [Footnotes](https://commonmark.thephpleague.com/2.x/extensions/footnotes/)
-- [Highlight](https://commonmark.thephpleague.com/2.x/extensions/highlight/) (available with CommonMark v2.8.0 / webtrees v2.2.5)
-- [Table of contents](https://commonmark.thephpleague.com/2.x/extensions/table-of-contents/) along with [Heading Permalinks](https://commonmark.thephpleague.com/2.x/extensions/heading-permalinks/)
-- [Smart Punctuation](https://commonmark.thephpleague.com/2.x/extensions/smart-punctuation/)
-
-You can activate all or a few selected of these extensions. As far as possible they are of course integrated with the markdown editor and you find additional information in the markdown help.
-
-Footnotes can be placed near their references (there can be one or many references to one footnote) or everywhere you want. For the overview, it is advisable to place them at the bottom. When rendering, the footnote container resides at the end of the content.
-If your text is structured with headings, it is a good choice to activate the table of contents extension. The table of contents is generated automatically and included into the content above the very first heading or instead of a placeholder.
-
-<a name="mdtdh"></a>
-#### Table cell height control
-For longer markdown note texts it's sometimes a pain to scroll through if you are interested in the next facts beneath them at the moment. This feature should come in handy here: By activating the checkbox in the top right corner of the title cell (first table column), the maximum height of the content cell with the long note is set to about 80% of the view port height. This makes the content itself scrollable.
-Where applicable, the function can be activated by default (or simply made available) and can also be deactivated independently.
-
-![Markdown table cell height control](resources/img/screenshot_markdown-td-height.png)
-
-In combination with the table of contents extension (position = dropdown), you can navigate through the text easily - assuming the text is structured with headings.
-
-You can decide, if the checkbox is always visible or hidden until you hover the fact title cell with the mouse cursor. If the text length of the content cell doesn't exceed the defined maximum height, the checkbox can not be activated.
-
-<a name="wthb"></a>
-### German webtrees manual
-
-![small menu with help link](resources/img/screenshot_small-menu-wthb-link.png)
-
-A **context sensitive help link** to the [german webtrees manual](https://wiki.genealogy.net/Webtrees_Handbuch) can be added to the small navigation menu. Context links are also available for components on pages provided by custom extensions (e.g. on the individuals page, the start page or items in the main menu) – these can be identified by the i symbols in a circle.
-
-![WTHB subcontext help](resources/img/screenshot_wthb-subcontext.png)
-
-To ensure that this function is also available in the admin backend a modified version of [views/layouts/administration.phtml](https://github.com/fisharebest/webtrees/blob/main/resources/views/layouts/administration.phtml) must be registered. This module attempts to use the custom module [vesta_common](https://github.com/vesta-webtrees-2-custom-modules/vesta_common/tree/master) (if installed and enabled) or its own version of the view layout file. Alternatively, patch P002 could also be applied to the core code.
-
-If the webtrees page is displayed in a language other than german, it is possible to **open the webtrees manual URL via a translation service** ([Google Translate](https://translate.google.com/)). This can be enabled or disabled as a site setting or delegated to the visitor to decide.
-> [!NOTE]
-> Due to AI bot restrictions on the GenWiki, this feature is currently useless.
-
-![WTHB user setting](resources/img/screenshot_wthb-user-setting.png)
-
-The settings dialogue can be accessed via the help submenu in the  top menu. When this option is enabled, you will also find a link to a dialogue box that displays a **full-text search** in the german webtrees manual (using various search engines) and the **table of contents**.
-
-![WTHB full-text search and toc](resources/img/screenshot_wthb-help.png)
-
-> [!NOTE]
-> This module downloads a multilingual **table of contents** for the german webtrees manual from a remote feed (JSON files: structure, language translations, and a version manifest). The data is cached locally and refreshed automatically:
-> - **On-the-fly**: when a user views the TOC page and the cache has expired (24 h), the service checks the feed manifest (`version.json`) for per-file hash changes and re-downloads only the files that changed.
-> - **Proactive (cron)**: the `refresh-wthb-toc` cron job (daily at 03:00 by default) downloads all files regardless of cache state.
->
-> **Auto-update toggle**: the module admin page offers an "Auto-update" switch for the TOC data. When disabled, only locally cached data is served (no HTTP downloads). The admin **Force refresh** button and the CLI with `--force` still work regardless of the switch. Tip: refresh the data before disabling to ensure the latest version is cached.
->
-> **CLI**:
-> ```
-> php modules_v4/linkenhancer/cli/refresh-wthb-toc.php              # scope from module pref
-> php modules_v4/linkenhancer/cli/refresh-wthb-toc.php --all        # all available languages
-> php modules_v4/linkenhancer/cli/refresh-wthb-toc.php --lang=en,fr # specific languages
-> php modules_v4/linkenhancer/cli/refresh-wthb-toc.php --clear      # only clear cache
-> php modules_v4/linkenhancer/cli/refresh-wthb-toc.php --force      # run even if auto-update is disabled
-> ```
-> While auto-update is switched off, scheduled refreshes are skipped (the cron run exits 0 without doing work). `--force` refreshes anyway (e.g. to prepare for re-enabling), and `--clear` works regardless of the switch.
-
-In addition, the **submenu** contains an overview of the help topics included in Webtrees and customisable external help links (e.g. Webtrees FAQ and forum, GitHub repo, etc.). The top menu item can be split into two links - one to directly open the context help article and the other to open the submenu.
-
-![WTHB submenu and split menu item](resources/img/screenshot_wthb-submenu.png)
-
-The module contains some standard **external help links**, that are defined in JSON - array of objects with the following members:
-
-- `title`: display text for the link, can also contain html (string, mandatory), language should be en-US, for standard link titles translations are provided
-* `url`: link to web resource (string, mandatory)
-* `class` : additional css class names; (string, optional)
-* `self` : if set, link [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a#target) is `_self` (opens in place), otherwise `_blank` (any type, optional)
-* `i18n` : overwrite title with user defined translation for given language tags (object, optional; keys are language tags, values translated title)
-
-Example:
-```json
-[
-  {"title":"webtrees FAQ <i class=\"fa-solid fa-circle-question\"></i>",
-   "url":"https://webtrees.net/faq/",
-   "i18n": { "de": "webtrees Häufig-gestellte-Fragen <i class=\"fa-solid fa-circle-question\"></i>" }
-  }
-]
-```
-
-The **mapping of routes to help articles** in the manual is stored in the database table `route_help_map`. This module comes with predefined mapping rules. If there is something missing or you find an issue, don't hesitate to share it. I'll include it in the next release. 
-
-**Technical background information** follows now.\
-The table has the following headers (the headers required in a CSV file for import are marked with !!):
-
-* `id`: automatic key - not relevant, the data field is only used to make it easier to identify the data record during editing.
-* `path` **!!**: route path - corresponds to the path of webtres pretty urls
-* `handler` **!!**: usually corresponds to the php class name of the code that handles the request
-* `method` **!!**: web request method (GET, POST, HEAD)<br>Only GET routes are generally relevant for assignment to manual sections.
-* `extras` **!!**: php class name of access level (Fisharebest\Webtrees\Http\Middleware\Auth*)
-* `subcontext` **!!**: CSS selector string or JSON object string to address a component/subcontext topic on the given page
-* `category`: string value for better grouping data rows; only value 'generic' has a special meaning
-* `order` **!!**: arbitrary numerical sort key, matching data rows are sorted in ascending order
-  standard value is 10
-* `url` **!!**: path of the url to the webtrees manual (then it's concated with the given GenWiki base/domain url)
-  also fully qualified url to other web ressources are possible and supported (for example to Github repo readmes or wikis of custom modules, that aren't documented in the manual yet)
-* `updated_at`: timestamp of last update
-  this helps to identify possibly outdated data rows
-
-As we can see in [app/Http/Routes/WebRoutes.php](https://github.com/fisharebest/webtrees/blob/main/app/Http/Routes/WebRoutes.php), where standard webtrees routes are defined, for a route the following information is mandatory:
-1. `path`
-2. `handler`
-3. `method`
-
-Optionally `extras` can be provided. If none of those four mentioned fields is set, the data row ist filtered by the [seeder](Schema/SeedHelpTable.php). On import `category` and `order` are set automatically if not set.
-
-In order to get a first class match with the current route those four fields have to match.
-
-Normally, it is only necessary to assign GET routes to an article. We also have a few redirect routes and ajax helper routes (which provide data for form controls) that can be ignored.
-
-Special cases are the `path`s beginning with `/module/{module}/{action}` or `/tree/{tree}/data-fix/{data_fix}`: they are handled by an integrated proxy class that addresses the custom module by a route attribute:
-- [ModuleAction class](https://github.com/fisharebest/webtrees/blob/main/app/Http/RequestHandlers/ModuleAction.php): attribute `module`
-- [DataFixPage class](https://github.com/fisharebest/webtrees/blob/main/app/Http/RequestHandlers/DataFixPage.php): attribute `data_fix`
-
-For mapping such a route to a specific custom module help article the `handler` is set to the above mentioned routes attribut value (e.g. `_vesta_classic_look_and_feel_`). For a more generic rule, `path` can also be empty (then one rule can be used for both cases).
-
-Fallback rules for access levels are matched by `category='generic'` and the specific Auth classname in `extras`.
-
-In ascending order the first rule where `subcontext = ''` is selected for the top menu link. If nothing else applies, the link points to the startpage of the manual.
-
-If activated, `subcontext` topics on a page can be provided with an additional help link. You can set a CSS selector string or a JSON object string with the following properties: 
-
-- `p`: position of popover, optional (default is top, other possible values: left, right, bottom)
-- `f`: css selector/filter string (only necessary if you want the popover to be positioned differently) OR
-- `e`: javascript expression string
-
-
-This is useful, if there are components on the page that require more detailed information than offered by the help link in the top menu (e.g. for custom module functions on the individuals page). This help link is displayed in a popover (because an additional link does not always work in bootstrap tabs, accordeon headers or menu titles).
-Set `category='generic'` for rules that should apply to more than one page.
-
-On the **admin page** of this module it is possible to import routes registered in webtrees on demand. This make it easier to cover individual custom module configurations.
-Further more you can import and export data in csv format in order to make changes more convenient. You can define the separator and for import the character encoding (on export it is always utf-8).   You can see at a glance how many data rows are stored in the table and how many of them have an url assigned.
-
-![admin page data table](resources/img/screenshot_admin-page-data-table.png)
-
-In case of discrepancies the context help can be more easily adjusted by activating the option "Output of debug information on the JS console". This provides you with information on the active route and, if applicable, data table entries found for matching routing to help topics.
-
-
-<a name="homelink"></a>
-### Home link
-The site title can be a link to the tree homepage or the user my page. The webmaster can also set a user defined url.
-
-![site title as link](resources/img/screenshot_sitetitle-as-link.png)
-
-Dynamic CSS styles can be applied to match the current theme, ensuring that the display contrasts well. Of course it is not limited to the home link use case.
-
-On the admin page of this module you can configure a [JSON](https://en.wikipedia.org/wiki/JSON) object to achieve this:
-```javascript
-{ 
-  "*": ".homelink { color: #039; }",
-  "colors_nocturnal": ".homelink { color: antiquewhite; }"
-}
-```
-**Explanation:** The object key name is set to the theme name to be matched, and the string value contains one or more css style rules. In this example we have a fallback rule with key `*` that matches all themes unless there is a specific key.
-Theme *colors* is a special case, where we also have palettes. In order to address this combination the key is set to `theme name_palette name`. The Key *colors* matches to all subthemes.
-
-Just activate the option "Output of debug information on the JS console" in order to figure out the correct values.
-
-
-<a name="xref-overview"></a>
-### Cross-reference overview
-
-There are three types of overviews:
-
-1. overview about all data for the admin,
-2. tree based overview and
-3. record based overview on the record details view (tab or modal).
-
-The cross-reference overview admin page (Control panel → LinkEnhancer → Cross-reference overview) is a server-side paginated DataTable. It lists all records that contain classic `@XREF@` cross-references or linkenhancer links, with a per-record link inventory. Optional filters: referenced XREF (only available while a fresh link index is active - in live-scan mode the field is hidden, because it would only be a coarse pre-filter there - no classic references are found), record type, tree, and the number of tokens shown per link class (all / 5 / 10 / 20, default 5). The XREF cell shows the tree name as a second muted line; the type is its own sortable column. Each inventory token is displayed as a short display context (snippet) with the link token itself in bold.
-
-Optionally you can enable an user overview per tree and a list of incoming and outgoing references per GEDCOM record.
-
-#### Supported engines
-
-| | Live overview | Link index (CLI) |
-| --- | --- | --- |
-| MariaDB / MySQL | yes (REGEXP gate) | yes |
-| PostgreSQL | yes (REGEXP gate) | yes |
-| SQLite / SQL Server | **limited mode** - automatic fallback to a coarse `LIKE` gate + full table scan per request (banner on the page); the exact classification still happens in PHP | **not available** (needs REGEXP + `MD5`) - the CLI exits with an error |
-
-#### How it works
-
-On large trees the live regex scan over the GEDCOM tables can be slow, so the page can instead read a **link index** made of three module tables (created automatically by the module schema migration):
-
-- `le_record_scan` - one row per scanned record with an MD5 fingerprint of the record text (`file`, `xref`, `rectype`, `hash`, `scanned_at`)
-- `le_link_index` - one row per (link, target) found in the record (`tag_path`, `link_class`, `token`, `snippet` - the display context captured at build time, `target_xref`, `target_tree`) - the foundation for the planned Backlink feature
-- `le_index_meta` - single row (`id`, `last_run`, `rows`) - the state of the last **complete** index run
-
-The index is maintained by `cli/build-link-index.php`:
-
-- **Initial build** (first run, or `--rebuild`): both index tables are reset, all scan rows are created server-side in one bulk statement per GEDCOM table (fast, zero row transfer), and only the records that pass the link pre-filter are scanned in PHP. The initial build is a one-time cost - use a higher `--limit` for it. If it is interrupted by `--limit`, the next run converges (the build is idempotent).
-- **Incremental runs** (the normal cron case): only records whose MD5 fingerprint changed - or which were added/removed - are re-scanned (cursor chunked), so the job stays cheap even on large sites.
-
-Cron example (every 30 minutes, up to 2000 records per run):
-
-```
-*/30 * * * * cd /path/to/webtrees && php modules_v4/linkenhancer/cli/build-link-index.php --limit=2000 >> /var/log/linkenhancer-index.log 2>&1
-```
-
-Only a **full run** (without `--tree`) that is **not cut by `--limit`** marks the index fresh (`le_index_meta.last_run`). A run cut by `--limit` continues where it stopped; a `--tree` run only refreshes that tree.
-
-#### Flushing
-
-`--flush` empties the index tables and exits (no rebuild) - for testing (force the page onto the live scan) and maintenance (clean restart, broken index):
-
-```
-php modules_v4/linkenhancer/cli/build-link-index.php --flush            # all trees
-php modules_v4/linkenhancer/cli/build-link-index.php --flush --tree=5   # only tree 5
-```
-
-The freshness flag is always reset, so the page reliably falls back to the live scan afterwards. The next full run is an **initial build** again (full re-scan cost). `--flush` combined with `--rebuild` is redundant - `--rebuild` already resets and rebuilds.
-
-#### What counts as a link
-
-The overview and the index use one shared pre-filter (single source: `XrefsService::linkPrefilterPatterns()`):
-
-- `NOTE` (level >= 1) with an `@XREF@` **or** a `](#@` link, with content on the same line. A NOTE value that is *exactly one reference* (`1 NOTE @N5@`) is a GEDCOM **shared-note pointer** - a structural reference, not a text link, and is not listed.
-- `CONC`/`CONT`/`TEXT`/`_TODO` with an `@XREF@` (naked is a link) or a `](#@` link
-- an LE link may carry an optional `id=@XREF@` parameter (at most one, the position among the parameters does not matter) - like the `wt=` parameters it is indexed as a link target
-- a shared note's own level-0 text (`0 @N1@ NOTE …`)
-- matching is line-based (no cross-line matches), on the same lines the collector reads
-
-The page shows which source it uses:
-
-- **index active** (green note): a full, complete index run finished less than 2 hours ago (default; `XrefsService::INDEX_FRESH_SECONDS`)
-- **live scan** (blue note): no fresh index - the page falls back to the live scan
-- **limited mode** (yellow note, SQLite/SQL Server): see the engine table above
-
-Use `tests/p1-measure.php` (read-only) on your instance to check how expensive the live scan is for your data and to calibrate the cron schedule.
-
-
-<a name="renumber"></a>
-### Renumber XREFs (with links)
-
-The standard webtrees renumbering (Control panel → Data fixes → Renumber XREFs) resolves cross-tree XREF collisions but does not update linkenhancer links. This module provides an extended renumber that repairs all affected links in one step.
-
-**Access:** Control panel → LinkEnhancer → Renumber XREFs (with links)
-
-**Workflow:**
-1. Select the tree that has XREF collisions (duplicate XREFs with other trees).
-2. The page shows each conflicting XREF, its record type, and the number of inbound linkenhancer references from the link index.
-3. On submit, each conflicting XREF is:
-   - renamed in the GEDCOM core tables (same as the standard renumber)
-   - all `wt=@XREF@` / `id=@XREF@` links in notes and blocks are updated
-   - the link index (`le_link_index`) and UID index (`le_uid_index`) are repaired inline or deferred to cron
-4. Each renumbered record is logged in the edit log (Admin → Changes log), e.g. `Renumbered @I456@ → @I457@ (INDI, 3 core rows, 2 links)`.
-5. If the PHP time limit is reached, the run stops with partial progress — the remaining conflicts are renumbered on the next run.
-
-> [!NOTE]
-> The standard webtrees renumber (without links) remains available and is unaffected. Use this module's renumber when your notes or blocks contain linkenhancer links.
-> See also: [fisharebest/webtrees#5156](https://github.com/fisharebest/webtrees/issues/5156)
-
-
-<a name="datafix"></a>
-### Data fixes
-
-The module provides a set of data-fix handlers accessible from the standard webtrees data-fix interface (Control panel → Data fixes → LinkEnhancer). Each handler addresses a specific link integrity issue:
-
-| Fix | What it does |
-|-----|-------------|
-| **XREF ⇄ UID reference swap** | Converts linkenhancer link targets between XREF and UID form. Direction is selectable (XREF→UID or UID→XREF). Requires the UID index to be built. |
-| **Fix `wt=` type letter** | Sets, repairs, or removes the legacy type letter in `wt=<type>@REF@` links. Modes: *set* (add missing type), *repair* (fix wrong type), *remove* (strip type letter). |
-| **Report dangling link targets** | *Report-only*: lists linkenhancer links whose target record no longer exists. No changes are made. |
-| **Report ambiguous UID targets** | *Report-only*: lists links whose UID target resolves to more than one record. No changes are made. |
-| **Report duplicate UIDs in index** | *Report-only*: lists UIDs assigned to multiple records in the UID index. No changes are made. |
-
-Each fix follows the standard webtrees data-fix workflow: select fix type → preview → apply. The data-fix page also shows the current status of the link and UID indexes, and whether index updates will be deferred to the cron job.
-
-<a name="patches"></a>
-
-### Patches
-
-**The patches can be applied additionally — the module also works without them!**
-
-The util subfolder contains minor patches for the webtrees core.
-These are [diff-files](https://www.gnu.org/software/diffutils/) that can be easily applied or removed using shell from within the installed module folder (necessary for auto detecting webtrees sources):
-
-```bash
-Usage: util/wt-patch.sh [-R] [FILTER]
-  -R                  undo Patch (patch -R)
-  FILTER              '*' for all or specific (e.g. '01')
-```
-
-Don't forget to reapply the patches after updating webtrees.
-
-These are minor bug fixes or functional enhancements — usually in a single file — that are intended to bridge the gap until they are officially fixed/implemented in the webtrees core.
-
-| # | Description | applies to version |
-| :--: | :---- | :---: |
-| P001 | Backlink for level 1 shared notes [#5181](https://github.com/fisharebest/webtrees/issues/5181) - not necessary anymore except you would like to have an additional edit link <br> */app/Fact.php* | 2.2.1 - 2.2.6 |
-| P002 | Enable headContent/bodyContent for this module on admin backend in order to show the context help link [#5214](https://github.com/fisharebest/webtrees/issues/5214)<br> *resources/views/layouts/administration.phtml* | 2.2.1 - 2.2.6 |
-| ~~P003~~ | Record has multiple uid fields [#4828](https://github.com/fisharebest/webtrees/issues/4828) <br> *app/Services/GedcomEditService.php* | 2.2.1 |
-
-<a name="webtrees"></a>
-## webtrees
-
-**[webtrees](https://webtrees.net/)** is an online collaborative genealogy application.
-This can be hosted on your own server by following the [Install instructions](https://webtrees.net/install/).
-
-
-<a name="requirements"></a>
 ## Requirements
 
 This module requires **webtrees** version 2.2 or 2.3.
-This module has the same requirements as [webtrees#system-requirements](https://github.com/fisharebest/webtrees#system-requirements).
-
-It was initially created for version 2.2.4, since linkenhancer 1.6.1 it should also work with webtrees 2.3.
-Test were usually run with build-in themes and some other custom modules.
+It was initially created for version 2.2.4, since linkenhancer 1.6.1 it also works with webtrees 2.3.
 
 > [!TIP]
 > It's recommended installing the [Cronjob](https://github.com/bschwede/wt-cronjob) module as well.
 > This makes it easy to run the CLI scripts for maintaining the indexes.
 
-<a name="installation"></a>
 ## Installation
+
 - Install and use [Custom Module Manager](https://github.com/Jefferson49/CustomModuleManager) for an easy and convenient installation of webtrees custom modules.
 - Open the Custom Module Manager view in webtrees, select "linkenhancer", and click on the "Install Module" button.
 
-**Manual installation**:
-1. Download the [latest release](https://github.com/bschwede/linkenhancer/releases/latest) of the module.
+**Manual installation:**
+1. Download the [latest release](https://codeberg.org/bschwede/linkenhancer/releases/latest).
 2. Upload the downloaded file to your web server.
-3. Unzip the package into your ``modules_v4`` directory.
-4. Rename the folder to ``linkenhancer``
+3. Unzip the package into your `modules_v4` directory.
+4. Rename the folder to `linkenhancer`
 
-If everything was successful, you should see a subdirectory ``linkenhancer`` with the unpacked content in the ``modules_v4`` directory.
-
-During the initial installation, the following problem may occur: "PDO error - There is no active transaction" - for more details see [known issues](https://codeberg.org/bschwede/linkenhancer/issues?q=&type=all&labels=1288213&milestone=0&assignee=0&poster=0).
-
-
-<a name="contributing"></a>
 ## Contributing
 
-If you'd like to contribute to this module, great! You can contribute by
+See [CONTRIBUTING.md](CONTRIBUTING.md) or the [developer documentation](https://bschwede.codeberg.page/wt-modules/en/docs/linkenhancer/dev/).
 
-* Contributing code - check out the issues for things that need attention. If you have changes you want to make not listed in an issue, please create one, then you can link your pull request.
-* Testing - it's all manual currently, please [create an issue](https://codeberg.org/bschwede/linkenhancer/issues) for any bugs you find.
-
-<a name="translation"></a>
 ## Translation
 
-You can contribute to this project on [Codeberg Weblate](https://translate.codeberg.org/projects/linkenhancer/).
+You can contribute to this project on [Codeberg Weblate](https://translate.codeberg.org/projects/wt-modules/linkenhancer/).
 
 Updated translations will be included in the next release of this module.
 
-Beside English the following languages are available:
-* Catalan (by Bernat Josep Banyuls i Sala)
-* Dutch (by TheDutchJewel)
-* Español (by Bernat Josep Banyuls i Sala)
-* German
-
-
-<a name="support"></a>
 ## Support
 
-* **Issues**: for any ideas you have, or when finding a bug you can raise an [issue](https://codeberg.org/bschwede/linkenhancer/issues).
+- **Issues**: [Open on Codeberg](https://codeberg.org/bschwede/linkenhancer/issues)
+- **Forum**: general webtrees support at the [webtrees forum](http://www.webtrees.net/)
 
-* **Forum**: general webtrees support can be found at the [webtrees forum](http://www.webtrees.net/).
-
-<a name="license"></a>
 ## License
 
-* Copyright (C) 2026 Bernd Schwendinger
-* Derived from **webtrees** - Copyright 2025 webtrees development team.
+Copyright (C) 2026 Bernd Schwendinger. Derived from **webtrees** - Copyright 2025 webtrees development team.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -680,5 +98,3 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
-
-* * *

@@ -138,6 +138,7 @@ final class ContentBuilder
         if (Utils::isAdminPage($request)) {
             if ($cfg_wthb_active) {
                 $includeRes .= Utils::getIncludeWebressourceString($module, $this->bundleShortcuts, \Schwendinger\Webtrees\Module\LinkEnhancer\WebRessource::CssAndJs);
+                $includeRes .= $this->themeSpecificCss($cfg_js_debug_console, false, true);
                 $includeRes .= Utils::getJavascriptWrapper($this->docReadyJs, $this->initJs);
                 return $includeRes;
             }
@@ -302,7 +303,7 @@ final class ContentBuilder
         return $this->needAjax;
     }
 
-    private function themeSpecificCss(bool $jsDebugMsg, bool $isHomeLinkActive): string
+    private function themeSpecificCss(bool $jsDebugMsg, bool $isHomeLinkActive, bool $isAdminPage = false): string
     {
         $module = $this->module;
         $theme = Session::get('theme');
@@ -327,28 +328,41 @@ final class ContentBuilder
 
         // webtrees manual
         if (in_array('wthb', $this->bundleShortcuts)) {
-            $themeStyles = [
-                '_jc-theme-justlight_'    =>
-                ".nav-item.dropdown.menu-wthb { line-height: 1.25; }
-                .popover {
-                  background-clip: padding-box;
-                  background-color: hsl(0, 0%, 100%);;
-                  border: 1px solid hwb(0 0% 100% / 0.18);
-                  border-radius: 0.2rem;
-                  text-align: start;
-                  text-shadow: none;
-                  z-index:1070;
-                }
-                .popover-body { padding: 0.5rem 0.5rem;}
-                .helpsection .linkicon { background-size: 20px 20px !important; }",
-                '_webtrees-primer-theme_' =>
-                ".nav-item.dropdown.menu-wthb {
-                  line-height: 1.75;
-                  color: var(--fgColor-muted);
-                }
-                .nav-item.dropdown.menu-wthb svg { color: var(--fgColor-muted); }
-                .helpsection .linkicon { background-size: 20px 20px !important; }",
-            ];
+            if ($isAdminPage) {
+                $themeStyles = [
+                    "webtrees" =>
+                    ".popover-trigger {
+                    padding: 0.2em;
+                    font-size: 0.7em;
+                    vertical-align: center;
+                    text-align: center;
+                    color: darkgray;
+                    }",
+                ];
+            } else {
+                $themeStyles = [
+                    '_jc-theme-justlight_'    =>
+                    ".nav-item.dropdown.menu-wthb { line-height: 1.25; }
+                    .popover {
+                    background-clip: padding-box;
+                    background-color: hsl(0, 0%, 100%);;
+                    border: 1px solid hwb(0 0% 100% / 0.18);
+                    border-radius: 0.2rem;
+                    text-align: start;
+                    text-shadow: none;
+                    z-index:1070;
+                    }
+                    .popover-body { padding: 0.5rem 0.5rem;}
+                    .helpsection .linkicon { background-size: 20px 20px !important; }",
+                    '_webtrees-primer-theme_' =>
+                    ".nav-item.dropdown.menu-wthb {
+                    line-height: 1.75;
+                    color: var(--fgColor-muted);
+                    }
+                    .nav-item.dropdown.menu-wthb svg { color: var(--fgColor-muted); }
+                    .helpsection .linkicon { background-size: 20px 20px !important; }",
+                ];
+            }
             $stylerules = $themeStyles[$theme_palette] ?? $themeStyles[$theme] ?? '';
             $includeRes .= $stylerules ? "<style>{$stylerules}</style>\n" : '';
         }
