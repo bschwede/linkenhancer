@@ -41,7 +41,14 @@ jobs:
         env:
           WT_MODULES_TOKEN: ${{ secrets.WT_MODULES_TOKEN }}
         run: |
-          git clone --depth 1 https://x-access-token:${WT_MODULES_TOKEN}@codeberg.org/bschwede/wt-modules.git /tmp/wt-modules
+          set -euo pipefail
+
+          CRED_FILE="$RUNNER_TEMP/wt-modules-git-credentials"
+          printf 'protocol=https\nhost=codeberg.org\nusername=x-access-token\npassword=%s\n' \
+            "$WT_MODULES_TOKEN" \
+            | git credential approve
+
+          git clone --depth 1 https://codeberg.org/bschwede/wt-modules.git /tmp/wt-modules
           mkdir -p /tmp/wt-modules/static/data
           mkdir -p /tmp/wt-modules/content/en/includes/linkenhancer
           mkdir -p /tmp/wt-modules/content/de/includes/linkenhancer
@@ -72,6 +79,8 @@ jobs:
           node util/generate-link-params.mjs --lang=de > /tmp/wt-modules/content/de/includes/linkenhancer/le-link-parameters.md
 
           cd /tmp/wt-modules
+          git config user.name "linkenhancer-ci"
+          git config user.email "ci@users.noreply.codeberg.org"          
           git add static/data/help-mapping.csv static/data/help-mapping.version.json content/en/includes/linkenhancer/ content/de/includes/linkenhancer/
           if ! git diff --cached --quiet; then
             git commit -m "sync: linkenhancer artifacts $(date -u +%Y-%m-%d)"
