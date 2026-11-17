@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-23 09:49+0200\n"
+"POT-Creation-Date: 2026-11-17 18:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -99,154 +99,154 @@ msgstr ""
 msgid "Renumbered @%1$s@ → @%2$s@ (%3$s, %4$d core rows, %5$d links)"
 msgstr ""
 
-#: src/Services/LinkRenderer.php:39 src/LinkEnhancerModule.php:903
+#: src/Services/LinkRenderer.php:40 src/LinkEnhancerModule.php:934
 msgid "Cross-references"
 msgstr ""
 
-#: src/Services/LinkRenderer.php:40
+#: src/Services/LinkRenderer.php:41
 msgid "External links"
 msgstr ""
 
-#: src/Services/LinkRenderer.php:41
+#: src/Services/LinkRenderer.php:42
 msgid "Pictures"
 msgstr ""
 
-#: src/Services/LinkRenderer.php:42
+#: src/Services/LinkRenderer.php:43
 msgid "Classic cross-references"
 msgstr ""
 
-#: src/Services/LinkRenderer.php:43
+#: src/Services/LinkRenderer.php:44
 msgid "Other - maybe damaged - links"
 msgstr ""
 
-#: src/Services/LinkRenderer.php:136
+#: src/Services/LinkRenderer.php:137
 #: resources/views/xref-overview-list.phtml:115
 #: resources/views/xref-overview.phtml:142
 msgid "target not found"
 msgstr ""
 
 #. I18N: JS enhanced link
-#: src/Services/LinkRenderer.php:144 src/Services/LinkRenderer.php:174
-#: src/Services/LinkRenderer.php:177 src/LinkEnhancerUtils.php:142
+#: src/Services/LinkRenderer.php:145 src/Services/LinkRenderer.php:175
+#: src/Services/LinkRenderer.php:178 src/LinkEnhancerUtils.php:142
 #: resources/views/help-wt-helptext.phtml:16
 msgid "Cross-reference"
 msgstr ""
 
-#: src/Services/LinkRenderer.php:146
+#: src/Services/LinkRenderer.php:147
 #, php-format
 msgid "expected %1$s, is %2$s"
 msgstr ""
 
-#: src/Services/LinkRenderer.php:166
+#: src/Services/LinkRenderer.php:167
 #: resources/views/xref-overview-list.phtml:117
 #: resources/views/xref-overview.phtml:144
 msgid "target not unique"
 msgstr ""
 
-#: src/Services/LinkRenderer.php:166
+#: src/Services/LinkRenderer.php:167
 #, php-format
 msgid "%1$s - %2$d matches in other trees"
 msgstr ""
 
-#: src/Services/MarkdownEditorActivationService.php:189
-#: src/Services/MarkdownEditorActivationService.php:193
+#: src/Services/MarkdownEditorActivationService.php:191
+#: src/Services/MarkdownEditorActivationService.php:195
 msgid "Option is disabled"
 msgstr ""
 
 #. I18N: Settings - section title
-#: src/Services/MarkdownEditorActivationService.php:189
-#: resources/views/settings-main.phtml:47 resources/views/settings.phtml:178
+#: src/Services/MarkdownEditorActivationService.php:191
+#: resources/views/settings-main.phtml:47 resources/views/settings.phtml:179
 msgid "Markdown enhancements"
 msgstr ""
 
-#: src/Services/MarkdownEditorActivationService.php:193
+#: src/Services/MarkdownEditorActivationService.php:195
 #: resources/views/help-md.phtml:60 resources/views/settings-md.phtml:94
 msgid "Markdown editor for note textareas"
 msgstr ""
 
 #. I18N: MDE
-#: src/Services/MarkdownEditorActivationService.php:198
+#: src/Services/MarkdownEditorActivationService.php:200
 #: resources/views/settings-main.phtml:54
 #, php-format
 msgid "Precondition: Tree preference '%s' need to be set to markdown."
 msgstr ""
 
-#: src/Services/ContentBuilder.php:105 src/Services/ContentBuilder.php:111
+#: src/Services/ContentBuilder.php:106 src/Services/ContentBuilder.php:112
 #: resources/views/settings-jscss.phtml:353
-#: resources/views/settings-jscss.phtml:358 resources/views/settings.phtml:41
+#: resources/views/settings-jscss.phtml:358 resources/views/settings.phtml:42
 msgid "Settings"
 msgstr ""
 
-#: src/Services/ContentBuilder.php:369
+#: src/Services/ContentBuilder.php:384
 msgid "Home link - JSON with CSS rules seems to be invalid."
 msgstr ""
 
 #. I18N: Settings - section title
-#: src/Services/WthbService.php:113 src/Services/WthbService.php:146
-#: src/Services/WthbService.php:275 src/LinkEnhancerUtils.php:169
+#: src/Services/WthbService.php:115 src/Services/WthbService.php:150
+#: src/Services/WthbService.php:286 src/LinkEnhancerUtils.php:169
 #: src/Http/RequestHandlers/HelpWthbAction.php:49
-#: resources/views/help-wt-helptext.phtml:16 resources/views/settings.phtml:186
+#: resources/views/help-wt-helptext.phtml:16 resources/views/settings.phtml:187
 msgid "Webtrees manual"
 msgstr ""
 
-#: src/Services/WthbService.php:113
+#: src/Services/WthbService.php:115
 msgid "Error occurred"
 msgstr ""
 
 #. I18N: csv import
-#: src/Services/WthbService.php:126
+#: src/Services/WthbService.php:130
 msgid "empty rows"
 msgstr ""
 
 #. I18N: csv import
-#: src/Services/WthbService.php:127
+#: src/Services/WthbService.php:131
 msgid "rows whose number of fields differs from the header row"
 msgstr ""
 
 #. I18N: data import with seeder
-#: src/Services/WthbService.php:128
+#: src/Services/WthbService.php:132
 msgid "rows in which at least one required field is not set"
 msgstr ""
 
 #. I18N: data import with seeder
-#: src/Services/WthbService.php:129
+#: src/Services/WthbService.php:133
 msgid "rows in which the maximum field value length has been exceeded"
 msgstr ""
 
-#: src/Services/WthbService.php:146
+#: src/Services/WthbService.php:150
 msgid "Routes imported"
 msgstr ""
 
 #. I18N: wthb import skipped rows
-#: src/Services/WthbService.php:150
+#: src/Services/WthbService.php:154
 msgid "Skipped"
 msgstr ""
 
-#: src/Services/WthbService.php:162 resources/views/settings-wthb.phtml:412
+#: src/Services/WthbService.php:167 resources/views/settings-wthb.phtml:419
 msgid "CSV-Import"
 msgstr ""
 
-#: src/Services/WthbService.php:275
+#: src/Services/WthbService.php:286
 msgid "Table for context help is missing - fallback to standard url"
 msgstr ""
 
-#: src/Services/WthbService.php:469 src/Services/WthbService.php:504
+#: src/Services/WthbService.php:510 src/Services/WthbService.php:545
 msgid "Table for context help is missing - nothing to do."
 msgstr ""
 
-#: src/Services/WthbService.php:475
+#: src/Services/WthbService.php:516
 msgid "No data available for export."
 msgstr ""
 
-#: src/Services/WthbService.php:513
+#: src/Services/WthbService.php:554
 msgid "No CSV file was received."
 msgstr ""
 
-#: src/Services/WthbService.php:531
+#: src/Services/WthbService.php:572
 msgid "Separator is not set."
 msgstr ""
 
-#: src/Services/WthbService.php:534
+#: src/Services/WthbService.php:575
 msgid "For the separator is only a single character allowed."
 msgstr ""
 
@@ -314,13 +314,13 @@ msgstr ""
 
 #. I18N: JS MDE
 #: src/LinkEnhancerUtils.php:126 src/LinkEnhancerUtils.php:247
-#: src/LinkEnhancerUtils.php:248 src/Factories/CustomMarkdownFactory.php:71
+#: src/LinkEnhancerUtils.php:248 src/Factories/CustomMarkdownFactory.php:72
 msgid "Bulleted list"
 msgstr ""
 
 #. I18N: JS MDE
 #: src/LinkEnhancerUtils.php:127 src/LinkEnhancerUtils.php:251
-#: src/LinkEnhancerUtils.php:252 src/Factories/CustomMarkdownFactory.php:72
+#: src/LinkEnhancerUtils.php:252 src/Factories/CustomMarkdownFactory.php:73
 msgid "Numbered list"
 msgstr ""
 
@@ -497,20 +497,20 @@ msgid "Webtrees manual link - user setting"
 msgstr ""
 
 #: src/LinkEnhancerUtils.php:172 resources/views/help-wthb.phtml:37
-#: resources/views/settings-wthb.phtml:73
+#: resources/views/settings-wthb.phtml:75
 msgid "Full-text search"
 msgstr ""
 
 #: src/LinkEnhancerUtils.php:172 resources/views/md-toc-dropdown.phtml:15
 #: resources/views/help-wthb.phtml:53 resources/views/settings-md.phtml:272
-#: resources/views/settings-wthb.phtml:73
-#: resources/views/settings-wthb.phtml:134
+#: resources/views/settings-wthb.phtml:75
+#: resources/views/settings-wthb.phtml:136
 msgid "Table of contents"
 msgstr ""
 
 #: src/LinkEnhancerUtils.php:173
 #: src/Http/RequestHandlers/HelpWtCoreAction.php:50
-#: resources/views/settings-wthb.phtml:85
+#: resources/views/settings-wthb.phtml:87
 msgid "webtrees help topics (included)"
 msgstr ""
 
@@ -539,38 +539,38 @@ msgstr ""
 msgid "Footnote text"
 msgstr ""
 
-#: src/Factories/CustomMarkdownFactory.php:73
+#: src/Factories/CustomMarkdownFactory.php:74
 msgid "list without marker"
 msgstr ""
 
 #. I18N::translate('Insert at the very top of the document, before any content'),
-#: src/Factories/CustomMarkdownFactory.php:78
 #: src/Factories/CustomMarkdownFactory.php:79
+#: src/Factories/CustomMarkdownFactory.php:80
 msgid "Insert just before the very first heading"
 msgstr ""
 
-#: src/Factories/CustomMarkdownFactory.php:80
+#: src/Factories/CustomMarkdownFactory.php:81
 msgid "Location is manually defined by a placeholder"
 msgstr ""
 
-#: src/Factories/CustomMarkdownFactory.php:83
+#: src/Factories/CustomMarkdownFactory.php:84
 msgid "applies nesting, but handles edge cases"
 msgstr ""
 
-#: src/Factories/CustomMarkdownFactory.php:84
 #: src/Factories/CustomMarkdownFactory.php:85
+#: src/Factories/CustomMarkdownFactory.php:86
 msgid "a flat, single-level list"
 msgstr ""
 
-#: src/Factories/CustomMarkdownFactory.php:85
+#: src/Factories/CustomMarkdownFactory.php:86
 msgid "inline"
 msgstr ""
 
-#: src/Factories/CustomMarkdownFactory.php:86
+#: src/Factories/CustomMarkdownFactory.php:87
 msgid "nesting exactly as headings occur within the document"
 msgstr ""
 
-#: src/Factories/CustomMarkdownFactory.php:209
+#: src/Factories/CustomMarkdownFactory.php:213
 msgid "Permalink"
 msgstr ""
 
@@ -596,7 +596,7 @@ msgid "Multiple records for %s"
 msgstr ""
 
 #: src/Http/RequestHandlers/WthbAdminHandler.php:47
-#: resources/views/settings-wthb.phtml:397
+#: resources/views/settings-wthb.phtml:404
 msgid "Import registered routes"
 msgstr ""
 
@@ -617,62 +617,62 @@ msgid "Multiple records for UID %s"
 msgstr ""
 
 #. I18N: MD img error precondition
-#: src/CommonMark/LeImageRenderer.php:136
+#: src/CommonMark/LeImageRenderer.php:137
 msgid ""
 "Neither a media object nor a file from the public directory was specified."
 msgstr ""
 
 #. I18N: MD img error precondition
-#: src/CommonMark/LeImageRenderer.php:142
+#: src/CommonMark/LeImageRenderer.php:143
 msgid ""
 "Only one media object OR one file from the public directory can be specified."
 msgstr ""
 
 #. I18N: MD img error crossreference
-#: src/CommonMark/LeImageRenderer.php:182
+#: src/CommonMark/LeImageRenderer.php:183
 msgid "There is no image file available for display."
 msgstr ""
 
 #. I18N: MD img error public folder
-#: src/CommonMark/LeImageRenderer.php:204
+#: src/CommonMark/LeImageRenderer.php:205
 msgid "The public folder does not exist."
 msgstr ""
 
 #. I18N: MD img error public file, %s the relative filename
-#: src/CommonMark/LeImageRenderer.php:213
+#: src/CommonMark/LeImageRenderer.php:214
 #, php-format
 msgid "File ‘%s’ does not exist in the public folder"
 msgstr ""
 
 #. I18N: MD img error public file
-#: src/CommonMark/LeImageRenderer.php:220
+#: src/CommonMark/LeImageRenderer.php:221
 msgid "Only files within the public folder are supported"
 msgstr ""
 
 #. I18N: MD img error public file, %s1=rel. filename, %s2=mimetype
-#: src/CommonMark/LeImageRenderer.php:228
+#: src/CommonMark/LeImageRenderer.php:229
 #, php-format
 msgid "File '%1$s' in the public folder is not an image but '%2$s'"
 msgstr ""
 
 #. I18N: Module title
-#: src/LinkEnhancerModule.php:350
+#: src/LinkEnhancerModule.php:357
 msgid "Link-Enhancer"
 msgstr ""
 
 #. I18N: Module description
-#: src/LinkEnhancerModule.php:360
+#: src/LinkEnhancerModule.php:367
 msgid ""
 "Cross-references to Gedcom datasets, Markdown editor, context-sensitive link "
 "to the GenWiki webtrees manual"
 msgstr ""
 
-#: src/LinkEnhancerModule.php:612
+#: src/LinkEnhancerModule.php:643
 msgid "Some settings could not be saved."
 msgstr ""
 
-#: src/LinkEnhancerModule.php:676 src/LinkEnhancerModule.php:868
-#: src/LinkEnhancerModule.php:1012 resources/views/settings.phtml:78
+#: src/LinkEnhancerModule.php:707 src/LinkEnhancerModule.php:899
+#: src/LinkEnhancerModule.php:1043 resources/views/settings.phtml:79
 msgid "Cross-Reference Overview"
 msgstr ""
 
@@ -688,72 +688,100 @@ msgstr ""
 msgid "Refresh Webtrees manual table of contents translations"
 msgstr ""
 
-#: cron-jobs.php:51
+#: cron-jobs.php:48
+msgid "Update help mapping data"
+msgstr ""
+
+#: cron-jobs.php:63
 msgid "Rebuild the link index incrementally."
 msgstr ""
 
-#: cron-jobs.php:53 cron-jobs.php:63
+#: cron-jobs.php:65 cron-jobs.php:75
 msgid "max records per run"
 msgstr ""
 
-#: cron-jobs.php:54 cron-jobs.php:64
+#: cron-jobs.php:66 cron-jobs.php:76
 msgid "number of the tree to be scanned - all if not set"
 msgstr ""
 
-#: cron-jobs.php:55 cron-jobs.php:65
+#: cron-jobs.php:67 cron-jobs.php:77
 msgid "force a full rebuild"
 msgstr ""
 
-#: cron-jobs.php:56 cron-jobs.php:66
+#: cron-jobs.php:68 cron-jobs.php:78
 msgid "empty the index and exit"
 msgstr ""
 
-#: cron-jobs.php:61
+#: cron-jobs.php:73
 msgid "Rebuild the UID index incrementally."
 msgstr ""
 
-#: cron-jobs.php:72
+#: cron-jobs.php:84
 msgid ""
 "Download/refresh WTHB TOC translations from Codeberg Pages. Scope is read "
 "from the module settings (all / active / custom)."
 msgstr ""
 
-#: cron-jobs.php:77
+#: cron-jobs.php:89
 msgid "Override: download all available languages."
 msgstr ""
 
-#: cron-jobs.php:82
+#: cron-jobs.php:94
 msgid "Override: download specific languages (comma-separated)."
 msgstr ""
 
-#: cron-jobs.php:87
+#: cron-jobs.php:99
 msgid "Only clear the cache, no download."
 msgstr ""
 
-#: cron-jobs.php:92
+#: cron-jobs.php:104
 msgid "Run even if auto-update is disabled (WTHB_TOC_AUTO_UPDATE=0)."
 msgstr ""
 
-#: cron-jobs.php:97
+#: cron-jobs.php:109
 msgid ""
 "Max. random delay in seconds before refresh (default 30, env "
 "WTHB_TOC_JITTER)."
 msgstr ""
 
-#: cron-jobs.php:104
+#: cron-jobs.php:116
 msgid "Validate locally cached WTHB TOC data: schema check + coverage report."
 msgstr ""
 
-#: cron-jobs.php:109
+#: cron-jobs.php:122
+msgid ""
+"Update the route→help-URL mapping from the wt-modules docs site. Hash-based "
+"change detection; only downloads and imports when the data changed."
+msgstr ""
+
+#: cron-jobs.php:127
+msgid "Run even if auto-update is disabled (HELP_MAPPING_AUTO_UPDATE=0)."
+msgstr ""
+
+#: cron-jobs.php:132
+msgid "Only clear the local cache, no download."
+msgstr ""
+
+#: cron-jobs.php:137
+msgid "Show current state (applied hash, bundled hash, auto-update toggle)."
+msgstr ""
+
+#: cron-jobs.php:142
+msgid ""
+"Max. random delay in seconds before refresh (default 30, env "
+"HELP_MAPPING_JITTER)."
+msgstr ""
+
+#: cron-jobs.php:148
 msgid "The link index is out of date."
 msgstr ""
 
-#: cron-jobs.php:110
+#: cron-jobs.php:149
 msgid "The UID index is out of date."
 msgstr ""
 
 #: resources/views/xref-overview-list.phtml:43
-#: resources/views/xref-overview.phtml:60 resources/views/settings.phtml:82
+#: resources/views/xref-overview.phtml:60 resources/views/settings.phtml:83
 msgid ""
 "List all records that contain cross-references (XREFs) or linkenhancer links."
 msgstr ""
@@ -863,14 +891,14 @@ msgstr ""
 
 #. I18N: user defined url
 #. I18N: Settings - section title
-#: resources/views/settings-home.phtml:18 resources/views/settings.phtml:199
+#: resources/views/settings-home.phtml:18 resources/views/settings.phtml:201
 msgid "Home link"
 msgstr ""
 
 #. I18N: see also fancy-research-links
 #: resources/views/settings-home.phtml:33 resources/views/settings-md.phtml:47
 #: resources/views/settings-le.phtml:112
-#: resources/views/settings-wthb.phtml:312 resources/views/settings.phtml:151
+#: resources/views/settings-wthb.phtml:314 resources/views/settings.phtml:152
 msgid "Open links in a new tab"
 msgstr ""
 
@@ -895,7 +923,7 @@ msgstr ""
 #: resources/views/settings-md.phtml:82 resources/views/settings-md.phtml:258
 #: resources/views/settings-md.phtml:334 resources/views/settings-md.phtml:348
 #: resources/views/settings-md.phtml:363 resources/views/settings-md.phtml:400
-#: resources/views/settings-wthb.phtml:119
+#: resources/views/settings-wthb.phtml:121
 msgid "Example"
 msgstr ""
 
@@ -946,8 +974,8 @@ msgstr ""
 #. I18N:
 #: resources/views/settings-main.phtml:102
 #: resources/views/settings-md.phtml:384
-#: resources/views/settings-wthb.phtml:105
-#: resources/views/settings-wthb.phtml:298 resources/views/settings.phtml:159
+#: resources/views/settings-wthb.phtml:107
+#: resources/views/settings-wthb.phtml:300 resources/views/settings.phtml:160
 msgid "user defined"
 msgstr ""
 
@@ -980,7 +1008,7 @@ msgstr ""
 
 #: resources/views/help-md.phtml:20 resources/views/help-md.phtml:52
 #: resources/views/help-md.phtml:62 resources/views/settings-md.phtml:170
-#: resources/views/settings-le.phtml:131 resources/views/settings.phtml:71
+#: resources/views/settings-le.phtml:131 resources/views/settings.phtml:72
 msgid "See also"
 msgstr ""
 
@@ -1014,13 +1042,13 @@ msgstr ""
 
 #. I18N: help md - section title
 #. I18N: Settings - section title
-#: resources/views/help-md.phtml:70 resources/views/settings.phtml:169
+#: resources/views/help-md.phtml:70 resources/views/settings.phtml:170
 msgid "Enhanced Link Support"
 msgstr ""
 
 #. I18N: Enhanced Links
 #. I18N: Settings - prologue sentence 3
-#: resources/views/help-md.phtml:71 resources/views/settings.phtml:68
+#: resources/views/help-md.phtml:71 resources/views/settings.phtml:69
 msgid ""
 "By linking the notes to the GEDCOM data records (persons, families, sources, "
 "etc.) from the text makes story telling much easier and thus also save this "
@@ -1244,7 +1272,7 @@ msgstr ""
 
 #. I18N:
 #: resources/views/settings-md.phtml:121 resources/views/settings-md.phtml:122
-#: resources/views/settings-wthb.phtml:206
+#: resources/views/settings-wthb.phtml:208
 msgid "available"
 msgstr ""
 
@@ -1377,11 +1405,11 @@ msgstr ""
 msgid "Input required"
 msgstr ""
 
-#: resources/views/settings-jscss.phtml:353 resources/views/settings.phtml:46
+#: resources/views/settings-jscss.phtml:353 resources/views/settings.phtml:47
 msgid "JSON export"
 msgstr ""
 
-#: resources/views/settings-jscss.phtml:358 resources/views/settings.phtml:47
+#: resources/views/settings-jscss.phtml:358 resources/views/settings.phtml:48
 msgid "JSON import"
 msgstr ""
 
@@ -1458,7 +1486,7 @@ msgid ""
 msgstr ""
 
 #. I18N: wthb link setting option
-#: resources/views/wthb-modal.phtml:22 resources/views/settings-wthb.phtml:290
+#: resources/views/wthb-modal.phtml:22 resources/views/settings-wthb.phtml:292
 msgid "Open webtrees manual URL with Google Translate?"
 msgstr ""
 
@@ -1527,6 +1555,7 @@ msgid "checked"
 msgstr ""
 
 #: resources/views/datafix-options.phtml:98
+#: resources/views/settings-wthb.phtml:523
 msgid "updated"
 msgstr ""
 
@@ -1538,225 +1567,262 @@ msgstr ""
 msgid "change(s)"
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:29
+#: resources/views/settings-wthb.phtml:31
 msgid "Top menu"
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:34
+#: resources/views/settings-wthb.phtml:36
 msgid ""
 "An entry is added to the top menu, which provides access to a context-"
 "sensitive help link for the current page."
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:44
+#: resources/views/settings-wthb.phtml:46
 msgid "Precede the top menu link with an icon"
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:56
+#: resources/views/settings-wthb.phtml:58
 msgid "Split top menu item"
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:62
+#: resources/views/settings-wthb.phtml:64
 msgid ""
 "This option controls whether the help link is located in the submenu or can "
 "be clicked directly, opening the submenu via a separate link."
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:97
+#: resources/views/settings-wthb.phtml:99
 msgid "Additional help links"
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:148
+#: resources/views/settings-wthb.phtml:150
+#: resources/views/settings-wthb.phtml:480
 msgid "Auto-update"
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:153
+#: resources/views/settings-wthb.phtml:155
+#: resources/views/settings-wthb.phtml:485
 msgid ""
 "When disabled, only locally cached data is served (no downloads). The admin "
 "force-refresh button and CLI with --force still work. Tip: refresh data "
 "before disabling to ensure the latest version is cached."
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:161
+#: resources/views/settings-wthb.phtml:163
+#: resources/views/settings-wthb.phtml:491
 msgid "download base URL"
 msgstr ""
 
 #. I18N: %s=list of filenames
-#: resources/views/settings-wthb.phtml:168
+#: resources/views/settings-wthb.phtml:170
 #, php-format
 msgid ""
 "Base URL of the table of contents data (%s). Leave empty to use the built-in "
 "default. Useful for testing against a local server."
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:178
+#: resources/views/settings-wthb.phtml:180
 msgid "languages to download"
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:186
+#: resources/views/settings-wthb.phtml:188
 msgid "All available languages"
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:187
+#: resources/views/settings-wthb.phtml:189
 msgid "Active webtrees languages only"
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:188
+#: resources/views/settings-wthb.phtml:190
 msgid "Custom list"
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:192
+#: resources/views/settings-wthb.phtml:194
 msgid ""
 "Selects which languages of the webtrees manual table of contents are "
 "downloaded and cached."
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:199
+#: resources/views/settings-wthb.phtml:201
 msgid "Custom languages (comma separated)"
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:209
+#: resources/views/settings-wthb.phtml:211
 msgid "Active in webtrees"
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:227
+#: resources/views/settings-wthb.phtml:229
+#: resources/views/settings-wthb.phtml:513
 msgid "Force refresh data"
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:229
+#: resources/views/settings-wthb.phtml:231
 msgid ""
 "Downloads the latest structure, translations and version info from the feed."
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:238
+#: resources/views/settings-wthb.phtml:240
 msgid "Structure"
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:240
+#: resources/views/settings-wthb.phtml:242
 msgid "entry"
 msgid_plural "entries"
 msgstr[0] ""
 msgstr[1] ""
 
-#: resources/views/settings-wthb.phtml:247
+#: resources/views/settings-wthb.phtml:249
 msgid "Translated"
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:248
+#: resources/views/settings-wthb.phtml:250
 msgid "Coverage"
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:260
+#: resources/views/settings-wthb.phtml:262
 msgid "No language data cached yet."
 msgstr ""
 
 #. I18N: %s=CLI scriptname
-#: resources/views/settings-wthb.phtml:266
+#: resources/views/settings-wthb.phtml:268
 #, php-format
 msgid ""
 "No table of contents data is cached yet. Run the \"%s\" command to download "
 "it."
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:278
+#: resources/views/settings-wthb.phtml:280
 msgid "Help link for subcontext topics"
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:323
+#: resources/views/settings-wthb.phtml:325
 msgid "Help link in the admin backend"
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:327
+#: resources/views/settings-wthb.phtml:329
 msgid ""
 "Vesta modules override the admin layout view and provide a way to insert "
 "code through custom modules."
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:328
+#: resources/views/settings-wthb.phtml:330
 msgid "As they are frequently used, this module first attempts this approach."
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:340
+#: resources/views/settings-wthb.phtml:342
 msgid "Fallback patch for admin layout view"
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:354
+#: resources/views/settings-wthb.phtml:356
 msgid "Link to GenWiki"
 msgstr ""
 
 #. I18N: WTHB Link
-#: resources/views/settings-wthb.phtml:360
+#: resources/views/settings-wthb.phtml:362
 msgid ""
 "This is the base link that is combined with the relative context links from "
 "the database table."
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:367
+#: resources/views/settings-wthb.phtml:369
 msgid "Standard Link to webtrees manual"
 msgstr ""
 
 #. I18N: WTHB Link
-#: resources/views/settings-wthb.phtml:373
+#: resources/views/settings-wthb.phtml:375
 msgid "This fallback link is used, when no specific context link was defined."
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:382
+#: resources/views/settings-wthb.phtml:384
 msgid "Data table"
 msgstr ""
 
 #. I18N: WTHB Link table
-#: resources/views/settings-wthb.phtml:386
+#: resources/views/settings-wthb.phtml:388
 msgid ""
 "The context is established by assigning the routes used in webtrees to the "
 "corresponding sections in the manual."
 msgstr ""
 
 #. I18N: WTHB Link table
-#: resources/views/settings-wthb.phtml:388
+#: resources/views/settings-wthb.phtml:390
 msgid "The data is stored in the database table"
 msgstr ""
 
 #. I18N: WTHB Link table rows
-#: resources/views/settings-wthb.phtml:390
+#: resources/views/settings-wthb.phtml:392
 msgid "Data rows"
 msgstr ""
 
 #. I18N: WTHB Link table rows assigned/total
-#: resources/views/settings-wthb.phtml:391
+#: resources/views/settings-wthb.phtml:393
 #, php-format
 msgid "%1$s of %2$s assigned"
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:399
+#: resources/views/settings-wthb.phtml:395
+msgid "Last written"
+msgstr ""
+
+#: resources/views/settings-wthb.phtml:406
 msgid "truncate table before import routes or csv file"
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:401
+#: resources/views/settings-wthb.phtml:408
 msgid "Table truncate"
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:405
+#: resources/views/settings-wthb.phtml:412
 msgid "Reset routes to delivery status"
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:416
+#: resources/views/settings-wthb.phtml:423
 msgid "Separator"
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:424
+#: resources/views/settings-wthb.phtml:431
 msgid "CSV-Export"
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:439
+#: resources/views/settings-wthb.phtml:446
 msgid "CSV import file"
 msgstr ""
 
-#: resources/views/settings-wthb.phtml:461
+#: resources/views/settings-wthb.phtml:468
 msgid "Automatically refresh data table when module is updated"
 msgstr ""
 
+#. I18N: %s=list of filenames
+#: resources/views/settings-wthb.phtml:498
+#, php-format
+msgid ""
+"Base URL of the help-mapping data (%s). Leave empty to use the built-in "
+"default. Useful for testing against a local server."
+msgstr ""
+
+#: resources/views/settings-wthb.phtml:516
+msgid "Downloads the latest route→help-URL mapping from the docs site."
+msgstr ""
+
+#: resources/views/settings-wthb.phtml:522
+msgid "Feed version"
+msgstr ""
+
+#: resources/views/settings-wthb.phtml:528
+msgid "Matches the bundled version."
+msgstr ""
+
+#: resources/views/settings-wthb.phtml:529
+#, php-format
+msgid "Newer than the bundled version (bundled: %s)."
+msgstr ""
+
+#: resources/views/settings-wthb.phtml:535
+msgid "No feed data cached yet. Use the button above to download it."
+msgstr ""
+
 #: resources/views/renumber-with-links.phtml:63
-#: resources/views/settings.phtml:94
+#: resources/views/settings.phtml:95
 msgid ""
 "This renumbers the records whose XREF collides with another family tree, and "
 "keeps the linkenhancer links and the le_* index in sync."
@@ -1809,49 +1875,49 @@ msgstr ""
 msgid "After the renumber the le_* index will be updated inline."
 msgstr ""
 
-#: resources/views/settings.phtml:45
+#: resources/views/settings.phtml:46
 msgid "reset to default"
 msgstr ""
 
 #. I18N: Settings - prologue sentence 1
-#: resources/views/settings.phtml:66
+#: resources/views/settings.phtml:67
 msgid ""
 "The main purpose of this module is to make links to data records stored in "
 "family trees more convenient."
 msgstr ""
 
 #. I18N: Settings - prologue sentence 2
-#: resources/views/settings.phtml:67
+#: resources/views/settings.phtml:68
 msgid ""
 "This avoids having to store fully qualified links, which impairs the "
 "portability of Gedcom data."
 msgstr ""
 
 #. I18N: Settings - prologue sentence 4
-#: resources/views/settings.phtml:69
+#: resources/views/settings.phtml:70
 msgid ""
 "The option of embedding the images already inserted in the family tree in "
 "the notes rounds off this approach."
 msgstr ""
 
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:104
+#: resources/views/settings.phtml:105
 msgid "Activate Support"
 msgstr ""
 
 #. I18N: Settings - section title
-#: resources/views/settings.phtml:115
+#: resources/views/settings.phtml:116
 msgid "More options"
 msgstr ""
 
-#: resources/views/settings.phtml:122
+#: resources/views/settings.phtml:123
 msgid "Output of debug information on the JS console"
 msgstr ""
 
-#: resources/views/settings.phtml:136
+#: resources/views/settings.phtml:137
 msgid "Enable PHP debug log output"
 msgstr ""
 
-#: resources/views/settings.phtml:141
+#: resources/views/settings.phtml:142
 msgid "Also enabled per-request with ?debug=1 (non-sensitive info only)"
 msgstr ""
