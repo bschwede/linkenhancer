@@ -13,6 +13,7 @@ on:
       - 'resources/js/src/le-config.js'
       - 'util/generate-link-params.mjs'
       - 'resources/lang/de.po'
+  workflow_dispatch:
 
 jobs:
   sync:
