@@ -42,8 +42,15 @@ jobs:
           WT_MODULES_TOKEN: ${{ secrets.WT_MODULES_TOKEN }}
         run: |
           set -euo pipefail
+          export GIT_TERMINAL_PROMPT=0
+
+          if [ -z "${WT_MODULES_TOKEN:-}" ]; then
+            echo "ERROR: WT_MODULES_TOKEN is not set in repo secrets - cannot push to wt-modules."
+            exit 1
+          fi
 
           CRED_FILE="$RUNNER_TEMP/wt-modules-git-credentials"
+          git config --global credential.helper "store --file=$CRED_FILE"
           printf 'protocol=https\nhost=codeberg.org\nusername=x-access-token\npassword=%s\n' \
             "$WT_MODULES_TOKEN" \
             | git credential approve
@@ -88,3 +95,5 @@ jobs:
           else
             echo "No changes - skipping commit"
           fi
+
+          rm -f "$CRED_FILE"
